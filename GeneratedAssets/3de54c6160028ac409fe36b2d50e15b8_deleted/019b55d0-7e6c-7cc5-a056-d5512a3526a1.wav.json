@@ -1,0 +1,13 @@
+{
+    "asset": "3de54c6160028ac409fe36b2d50e15b8",
+    "fileName": "019b55d0-7e6c-7cc5-a056-d5512a3526a1.wav",
+    "prompt": "Bootser card opening, space and rockets themed",
+    "negativePrompt": "reverb",
+    "model": "5de0686a-fb27-40e5-9df0-28ae810d70ca",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "25fab321d158501ecdca642a771c8b70",
+    "duration": 1.5,
+    "autoTrim": true,
+    "hasReference": false
+}

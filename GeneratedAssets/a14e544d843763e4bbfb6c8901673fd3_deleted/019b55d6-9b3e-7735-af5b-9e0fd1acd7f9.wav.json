@@ -1,0 +1,13 @@
+{
+    "asset": "a14e544d843763e4bbfb6c8901673fd3",
+    "fileName": "019b55d6-9b3e-7735-af5b-9e0fd1acd7f9.wav",
+    "prompt": "Swoosh, Game card pack Opening, Space themed",
+    "negativePrompt": "",
+    "model": "5de0686a-fb27-40e5-9df0-28ae810d70ca",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "36848b30e7ad310bc2fabbd22d89dfd8",
+    "duration": 3.6500000953674318,
+    "autoTrim": true,
+    "hasReference": false
+}
