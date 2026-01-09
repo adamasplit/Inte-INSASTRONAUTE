@@ -605,6 +605,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LeaderboardController
   leaderboardElementPrefab: {fileID: 1866584082035267582, guid: 63a343ba3bbf85144b77446936a12e12, type: 3}
   contentParent: {fileID: 1832895111351074703}
+  separatorPrefab: {fileID: 5990558175897071278, guid: dcb5c9ad50ab19b48ab0872bbf1ac57e, type: 3}
+  submitScoreOnStart: 1
+  useDummyData: 0
 --- !u!1 &2337564263449717100
 GameObject:
   m_ObjectHideFlags: 0
@@ -987,6 +990,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 5636136491148060270}
   - {fileID: 3137332770835299595}
   - {fileID: 7506023875816916448}
   - {fileID: 4468314824977594511}
@@ -994,7 +998,6 @@ RectTransform:
   - {fileID: 539242089541865226}
   - {fileID: 5097040928989645257}
   - {fileID: 4239586575278339838}
-  - {fileID: 5636136491148060270}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
