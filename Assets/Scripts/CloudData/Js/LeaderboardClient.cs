@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using Unity.Services.Leaderboards;
 using Unity.Services.Leaderboards.Models;
 using UnityEngine;
@@ -31,6 +32,39 @@ public class MetadataWrapper
 public static class LeaderboardClient
 {
     private const string LeaderboardId = "PC";
+
+    /// <summary>
+    /// Extrait le displayName depuis le metadata JSON
+    /// </summary>
+    private static string ParseDisplayName(string metadata, string fallback = "Player")
+    {
+        if (string.IsNullOrEmpty(metadata))
+            return fallback;
+
+        // Essayer JsonUtility d'abord
+        try
+        {
+            var meta = JsonUtility.FromJson<MetadataWrapper>(metadata);
+            if (meta != null && !string.IsNullOrEmpty(meta.displayName))
+            {
+                return meta.displayName;
+            }
+        }
+        catch { }
+
+        // Fallback: parsing manuel avec regex
+        try
+        {
+            var match = Regex.Match(metadata, @"""displayName""\s*:\s*""([^""]+)""");
+            if (match.Success && match.Groups.Count > 1)
+            {
+                return match.Groups[1].Value;
+            }
+        }
+        catch { }
+
+        return fallback;
+    }
 
     /// <summary>
     /// Soumet le score PC du joueur courant au leaderboard
@@ -78,10 +112,15 @@ public static class LeaderboardClient
         {
             Debug.Log("[LeaderboardClient] Fetching leaderboard...");
 
-            // 1. Récupérer le top 10
+            // 1. Récupérer le top 10 avec metadata
             var scoresResponse = await LeaderboardsService.Instance.GetScoresAsync(
                 LeaderboardId,
-                new GetScoresOptions { Offset = 0, Limit = 10 }
+                new GetScoresOptions 
+                { 
+                    Offset = 0, 
+                    Limit = 10,
+                    IncludeMetadata = true  // Important: inclure le metadata!
+                }
             );
 
             var topPlayerIds = new HashSet<string>();
@@ -90,19 +129,9 @@ public static class LeaderboardClient
             {
                 topPlayerIds.Add(entry.PlayerId);
                 
-                string displayName = "Player";
-                if (!string.IsNullOrEmpty(entry.Metadata))
-                {
-                    try
-                    {
-                        var meta = JsonUtility.FromJson<MetadataWrapper>(entry.Metadata);
-                        if (!string.IsNullOrEmpty(meta?.displayName))
-                        {
-                            displayName = meta.displayName;
-                        }
-                    }
-                    catch { }
-                }
+                Debug.Log($"[LeaderboardClient] Raw metadata for {entry.PlayerId}: '{entry.Metadata}'");
+                string displayName = ParseDisplayName(entry.Metadata, "Player");
+                Debug.Log($"[LeaderboardClient] Parsed displayName: '{displayName}'");
 
                 result.topPlayers.Add(new LeaderboardEntry
                 {
@@ -116,24 +145,15 @@ public static class LeaderboardClient
             // 2. Récupérer le score du joueur courant
             try
             {
-                var playerScore = await LeaderboardsService.Instance.GetPlayerScoreAsync(LeaderboardId);
+                var playerScore = await LeaderboardsService.Instance.GetPlayerScoreAsync(
+                    LeaderboardId,
+                    new GetPlayerScoreOptions { IncludeMetadata = true }
+                );
                 
                 // Si le joueur n'est pas dans le top 10, l'ajouter
                 if (!topPlayerIds.Contains(playerScore.PlayerId))
                 {
-                    string displayName = PlayerProfileStore.DISPLAY_NAME;
-                    if (!string.IsNullOrEmpty(playerScore.Metadata))
-                    {
-                        try
-                        {
-                            var meta = JsonUtility.FromJson<MetadataWrapper>(playerScore.Metadata);
-                            if (!string.IsNullOrEmpty(meta?.displayName))
-                            {
-                                displayName = meta.displayName;
-                            }
-                        }
-                        catch { }
-                    }
+                    string displayName = ParseDisplayName(playerScore.Metadata, PlayerProfileStore.DISPLAY_NAME);
 
                     result.currentPlayer = new LeaderboardEntry
                     {

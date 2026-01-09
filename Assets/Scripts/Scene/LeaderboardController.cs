@@ -32,6 +32,14 @@ public class LeaderboardController : MonoBehaviour
         }
 
         currentPlayerId = AuthenticationService.Instance.PlayerId;
+        
+        // Charger le displayName depuis Cloud Save avant de soumettre
+        var displayName = await PlayerProfileStore.LoadDisplayNameAsync();
+        if (!string.IsNullOrEmpty(displayName))
+        {
+            PlayerProfileStore.DISPLAY_NAME = displayName;
+        }
+        
         await RefreshLeaderboardAsync();
     }
 
@@ -47,7 +55,7 @@ public class LeaderboardController : MonoBehaviour
             // 1. Soumettre le score PC du joueur (depuis Economy)
             if (submitScoreOnStart)
             {
-                Debug.Log("[Leaderboard] Fetching PC balance and submitting score...");
+                Debug.Log($"[Leaderboard] Submitting score with displayName: {PlayerProfileStore.DISPLAY_NAME}");
                 
                 // Récupérer le solde PC depuis Economy
                 var currencies = await Unity.Services.Economy.EconomyService.Instance.PlayerBalances.GetBalancesAsync();
