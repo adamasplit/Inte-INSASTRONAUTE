@@ -16,3 +16,5 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 007bbaa2dd15986428b768833184b263, type: 3}
   borderColor: {r: 1, g: 1, b: 1, a: 0}
   rarity: 0
+  FirstTimeValue: 3
+  SubsequentValue: 1

@@ -56,7 +56,8 @@ public static class PlayerProfileStore
 
     public static async Task UpdatePC()
     {
-        await CollectionPointsClient.UpdateCPAsync((int)PC);
+        await CollectionPointsClient.UpdatePCAsync((int)PC);
+        Debug.Log($"[UpdatePC] PC mis à jour dans Economy : {PC}");
     }
 
     public static async Task<string> LoadDisplayNameAsync()
@@ -72,7 +73,7 @@ public static class PlayerProfileStore
 
     public static async Task AddCardAsync(string cardId, int amount = 1)
     {
-        Debug.Log($"[AddCardAsync] Adding card {cardId} x{amount}");
+        //Debug.Log($"[AddCardAsync] Adding card {cardId} x{amount}");
         if (string.IsNullOrEmpty(cardId))
         {
             Debug.LogError("CardId invalide");
@@ -83,10 +84,25 @@ public static class PlayerProfileStore
             CARD_COLLECTION[cardId] = 0;
 
         CARD_COLLECTION[cardId] += amount;
-        Debug.Log($"[AddCardAsync] Carte {cardId} ajoutée x{amount}. Nouvelle quantité : {CARD_COLLECTION[cardId]}");
+        //Debug.Log($"[AddCardAsync] Carte {cardId} ajoutée x{amount}. Nouvelle quantité : {CARD_COLLECTION[cardId]}");
 
         await SaveCardCollectionAsync();
-        await UpdatePC();
+        await ComputePC();
+    }
+
+    public static async Task AddCards(CardData[] cards)
+    {
+        foreach (var card in cards)
+        {
+            if (card != null)
+            {
+                if (!CARD_COLLECTION.ContainsKey(card.cardId))
+                    CARD_COLLECTION[card.cardId] = 0;
+                CARD_COLLECTION[card.cardId] += 1;
+            }
+        }
+        await SaveCardCollectionAsync();
+        await ComputePC();
     }
 
     public static async Task ComputePC()
@@ -101,6 +117,7 @@ public static class PlayerProfileStore
             }
         }
         PC = totalPC;
+        Debug.Log($"[ComputePC] Total PC recalculé : {PC}");
         await UpdatePC();
     }
 
@@ -111,13 +128,13 @@ public static class PlayerProfileStore
             Debug.LogError("AddPackAsync: PackData null");
             return;
         }
-        Debug.Log($"[AddPackAsync] Adding pack {pack.packId} x{amount}");
+        //Debug.Log($"[AddPackAsync] Adding pack {pack.packId} x{amount}");
         if (!PACK_COLLECTION.ContainsKey(pack.packId))
             PACK_COLLECTION[pack.packId] = 0;
         PACK_COLLECTION[pack.packId] += amount;
-        Debug.Log($"[AddPackAsync] New amount: {PACK_COLLECTION[pack.packId]}");
+        //Debug.Log($"[AddPackAsync] New amount: {PACK_COLLECTION[pack.packId]}");
         await SavePackCollectionAsync();
-        Debug.Log("[AddPackAsync] Pack collection saved");
+        //Debug.Log("[AddPackAsync] Pack collection saved");
         OnPackCollectionChanged?.Invoke();
     }
 
@@ -148,7 +165,7 @@ public static class PlayerProfileStore
 
     public static async Task RemovePackAsync(string packId, int amount = 1)
     {
-        Debug.Log($"[RemovePackAsync] Removing pack {packId} x{amount}");
+        //Debug.Log($"[RemovePackAsync] Removing pack {packId} x{amount}");
         if (string.IsNullOrEmpty(packId))
         {
             Debug.LogError("RemovePackAsync: packId invalide");
@@ -162,7 +179,7 @@ public static class PlayerProfileStore
         }
 
         PACK_COLLECTION[packId] -= amount;
-        Debug.Log($"[RemovePackAsync] Pack {packId} retiré x{amount}. Nouvelle quantité : {PACK_COLLECTION[packId]}");
+        //Debug.Log($"[RemovePackAsync] Pack {packId} retiré x{amount}. Nouvelle quantité : {PACK_COLLECTION[packId]}");
 
         await SavePackCollectionAsync();
         OnPackCollectionChanged?.Invoke();

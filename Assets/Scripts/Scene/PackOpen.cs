@@ -35,14 +35,14 @@ public class PackOpen : MonoBehaviour
 
     private async Task OpenPackRoutine(PackData packData)
     {
-
-        await PlayerProfileStore.RemovePackAsync(packData.packId, 1);
+        CardData[] pulledCards = GetPulledCards(packData);
+        
         // Retirer 1 pack + générer les cartes
         foreach (Transform c in cardRevealAnchor)
             Destroy(c.gameObject);
 
         // Pour test : afficher les cartes générées
-        foreach (CardData cardData in GetPulledCards(packData))
+        foreach (CardData cardData in pulledCards)
         {
             var cardUI = Instantiate(cardRevealPrefab, cardRevealAnchor);
             cardUI.SetCardData(1, cardData.sprite, cardData.borderColor);
@@ -65,16 +65,31 @@ public class PackOpen : MonoBehaviour
             color.a = 1f;
             cg.color = color;
 
-            // Add card to player collection
-            if (cardData != null && !string.IsNullOrEmpty(cardData.cardId))
+            await Task.Delay(500);
+            // Fade out particle system by reducing start color alpha
+            float fadeDuration = 0.5f;
+            float fadeElapsed = 0f;
+            var ps = fx.GetComponent<ParticleSystem>();
+            if (ps != null)
             {
-                await PlayerProfileStore.AddCardAsync(cardData.cardId, 1);
+                var main = ps.main;
+                Color startColor = main.startColor.color;
+                while (fadeElapsed < fadeDuration)
+                {
+                    fadeElapsed += Time.deltaTime;
+                    float newAlpha = Mathf.Lerp(1f, 0f, fadeElapsed / fadeDuration);
+                    main.startColor = new Color(startColor.r, startColor.g, startColor.b, newAlpha);
+                    await Task.Yield();
+                }
+                main.startColor = new Color(startColor.r, startColor.g, startColor.b, 0f);
             }
             Destroy(fx.gameObject);
             await Task.Delay(500); // Pause between reveals
             Destroy(cardUI.gameObject);
         }
-
+        await PlayerProfileStore.RemovePackAsync(packData.packId, 1);
+        
+        await PlayerProfileStore.AddCards(pulledCards);
         panel.SetActive(false);
     }
 

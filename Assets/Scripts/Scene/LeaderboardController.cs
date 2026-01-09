@@ -33,14 +33,7 @@ public class LeaderboardController : MonoBehaviour
 
         currentPlayerId = AuthenticationService.Instance.PlayerId;
         
-        // Charger le displayName depuis Cloud Save avant de soumettre
-        var displayName = await PlayerProfileStore.LoadDisplayNameAsync();
-        if (!string.IsNullOrEmpty(displayName))
-        {
-            PlayerProfileStore.DISPLAY_NAME = displayName;
-        }
         
-        await RefreshLeaderboardAsync();
     }
 
     /// <summary>
@@ -57,18 +50,11 @@ public class LeaderboardController : MonoBehaviour
             {
                 Debug.Log($"[Leaderboard] Submitting score with displayName: {PlayerProfileStore.DISPLAY_NAME}");
                 
-                // Récupérer le solde PC depuis Economy
-                var currencies = await Unity.Services.Economy.EconomyService.Instance.PlayerBalances.GetBalancesAsync();
-                var pcBalance = currencies.Balances.FirstOrDefault(b => b.CurrencyId == "PC");
-                long pcScore = pcBalance?.Balance ?? 0;
-                bool submitted = await LeaderboardClient.SubmitScoreAsync(pcScore);
+                // Récupérer le score PC depuis PlayerProfileStore
+                bool submitted = await LeaderboardClient.SubmitScoreAsync(PlayerProfileStore.PC);
                 if (!submitted)
                 {
                     Debug.LogWarning("[Leaderboard] Submit failed");
-                }
-                else
-                {
-                    Debug.Log($"[Leaderboard] Score submitted: {pcScore}");
                 }
             }
 

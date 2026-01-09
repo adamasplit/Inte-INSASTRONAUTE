@@ -17,7 +17,9 @@ public class PlayerStatusController : MonoBehaviour
             FindObjectsInactive.Include,
             FindObjectsSortMode.None
         );
+        //await Task.Delay(500); // Attendre un peu pour s'assurer que tout est prêt
         await RefreshStatusAsync();
+        await FindFirstObjectByType<LeaderboardController>().RefreshLeaderboardAsync();
     }
 
     public async Task RefreshStatusAsync()
@@ -26,11 +28,11 @@ public class PlayerStatusController : MonoBehaviour
         var currencies = await EconomyService.Instance.PlayerBalances.GetBalancesAsync();
         var tokenBal = currencies.Balances.FirstOrDefault(b => b.CurrencyId == "TOKEN");
         var tokens = tokenBal?.Balance ?? 0;
-        var collectionPointsBal = currencies.Balances.FirstOrDefault(b => b.CurrencyId == "CP");
+        var collectionPointsBal = currencies.Balances.FirstOrDefault(b => b.CurrencyId == "PC");
         var collectionPoints = collectionPointsBal?.Balance ?? 0;
 
         PlayerProfileStore.TOKEN = tokens;
-        PlayerProfileStore.PC = collectionPoints;
+        await PlayerProfileStore.ComputePC();
 
         foreach (var ui in uIElements)
         {

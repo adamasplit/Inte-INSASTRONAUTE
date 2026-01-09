@@ -330,7 +330,6 @@ GameObject:
   - component: {fileID: 703802442059134247}
   - component: {fileID: 8367715591744212560}
   - component: {fileID: 667406285270275064}
-  - component: {fileID: 3942850831008507800}
   m_Layer: 5
   m_Name: Collection
   m_TagString: Untagged
@@ -442,31 +441,6 @@ MonoBehaviour:
   cardContainer: {fileID: 308462818184143525}
   cardPrefab: {fileID: 649949202483190076, guid: 851c40958f8fd804385a069c6438bd69, type: 3}
   allCards: []
---- !u!114 &3942850831008507800
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2576353717103024026}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42459e2de2a15e14290e767d54f61921, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CardDebugGrant
-  grantOnStart: 1
-  cardsToGrant:
-  - {fileID: 11400000, guid: 8e1e0b330961a0b4d81382a331a07211, type: 2}
-  - {fileID: 11400000, guid: e02f06e1158a7404a81da8addbba2cb0, type: 2}
-  - {fileID: 11400000, guid: 78ed47881e662184ea2a362864cd7ea1, type: 2}
-  - {fileID: 11400000, guid: 8ca6b75d886a0c84c9085d701d7e60c6, type: 2}
-  - {fileID: 11400000, guid: b4f6989befbcea449998a87c952ad938, type: 2}
-  - {fileID: 11400000, guid: 9292954f2119be44c804f6595d9df762, type: 2}
-  - {fileID: 11400000, guid: 0892b0b926a85f145bf4a9b4f18e851a, type: 2}
-  - {fileID: 11400000, guid: a828dad69704e7e41a0240addc6b420b, type: 2}
-  - {fileID: 11400000, guid: 00be3d3a11e4edc4796193e8821a345b, type: 2}
-  - {fileID: 11400000, guid: 6ff7f00e872659d4dbeb1b13a85f4db2, type: 2}
-  amountPerCard: 6
 --- !u!1 &4922131251752489990
 GameObject:
   m_ObjectHideFlags: 0
