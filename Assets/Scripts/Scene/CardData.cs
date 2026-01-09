@@ -11,4 +11,6 @@ public class CardData : ScriptableObject
 
     [Header("Gameplay")]
     public int rarity;
+    public int FirstTimeValue;
+    public int SubsequentValue;
 }
