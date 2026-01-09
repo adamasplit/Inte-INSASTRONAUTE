@@ -17,6 +17,12 @@ MonoBehaviour:
   cardCount: 5
   packSprite: {fileID: -6815612461161445448, guid: 32d83bbf3f2a9244b9e4afe748fe1eba, type: 3}
   possibleCards:
-  - cardId: 
+  - cardId: 8
     rarity: 0
-    weight: 0
+    weight: 1
+  - cardId: 4
+    rarity: 0
+    weight: 2
+  - cardId: 6
+    rarity: 0
+    weight: 1

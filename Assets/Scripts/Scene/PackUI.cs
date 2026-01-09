@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 public class PackUI : MonoBehaviour
 {
@@ -44,6 +45,21 @@ public class PackUI : MonoBehaviour
         else
         {
             Debug.LogWarning("PackCollectionController not found in the scene.");
+        }
+    }
+
+    public void OnPackConfirmed()
+    {
+        Debug.Log($"Pack confirmed: {packNameText.text}");
+        PackData packData = FindFirstObjectByType<PackCollectionController>()
+            .allPacks.FirstOrDefault(p => p.packId == packId);
+        if (packData != null)
+        {
+            PackOpen.Instance.OpenPack(packData);
+        }
+        else
+        {
+            Debug.LogError($"PackData not found for packId: {packId}");
         }
     }
 }

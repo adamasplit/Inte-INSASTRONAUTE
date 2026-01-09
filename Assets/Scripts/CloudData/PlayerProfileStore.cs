@@ -66,6 +66,7 @@ public static class PlayerProfileStore
 
     public static async Task AddCardAsync(string cardId, int amount = 1)
     {
+        Debug.Log($"[AddCardAsync] Adding card {cardId} x{amount}");
         if (string.IsNullOrEmpty(cardId))
         {
             Debug.LogError("CardId invalide");
@@ -76,6 +77,7 @@ public static class PlayerProfileStore
             CARD_COLLECTION[cardId] = 0;
 
         CARD_COLLECTION[cardId] += amount;
+        Debug.Log($"[AddCardAsync] Carte {cardId} ajoutée x{amount}. Nouvelle quantité : {CARD_COLLECTION[cardId]}");
 
         await SaveCardCollectionAsync();
     }
@@ -121,25 +123,23 @@ public static class PlayerProfileStore
         }
     }
 
-    public static async Task OpenPackAsync(PackData packData)
+    public static async Task RemovePackAsync(string packId, int amount = 1)
     {
-        if (!PACK_COLLECTION.ContainsKey(packData.packId) ||
-            PACK_COLLECTION[packData.packId] <= 0)
+        Debug.Log($"[RemovePackAsync] Removing pack {packId} x{amount}");
+        if (string.IsNullOrEmpty(packId))
         {
-            Debug.LogWarning("Aucun pack disponible");
+            Debug.LogError("RemovePackAsync: packId invalide");
             return;
         }
 
-        PACK_COLLECTION[packData.packId]--;
-
-        for (int i = 0; i < packData.cardCount; i++)
+        if (!PACK_COLLECTION.ContainsKey(packId) || PACK_COLLECTION[packId] < amount)
         {
-            var entry = packData.possibleCards[
-                Random.Range(0, packData.possibleCards.Count)
-            ];
-
-            await AddCardAsync(entry.cardId);
+            Debug.LogError($"RemovePackAsync: Pas assez de packs {packId} à retirer");
+            return;
         }
+
+        PACK_COLLECTION[packId] -= amount;
+        Debug.Log($"[RemovePackAsync] Pack {packId} retiré x{amount}. Nouvelle quantité : {PACK_COLLECTION[packId]}");
 
         await SavePackCollectionAsync();
         OnPackCollectionChanged?.Invoke();

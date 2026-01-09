@@ -18,7 +18,7 @@ public class PackDebugGrant : MonoBehaviour
                 await PlayerProfileStore.AddPackAsync(pack, amountPerPack);
         }
 
-        Debug.Log("DEBUG: Packs granted on start");
+        Debug.Log("[PackDebugGrant]DEBUG: Packs granted on start");
     #endif
     }
 }

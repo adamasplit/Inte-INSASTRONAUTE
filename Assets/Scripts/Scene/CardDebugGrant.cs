@@ -15,10 +15,13 @@ public class CardDebugGrant : MonoBehaviour
         foreach (var card in cardsToGrant)
         {
             if (card != null)
-                await PlayerProfileStore.AddCardAsync(card.cardId, amountPerCard);
+            {
+                Debug.Log($"[CardDebugGrant] Granting card {card.cardId} x{amountPerCard}");
+                //await PlayerProfileStore.AddCardAsync(card.cardId, amountPerCard);
+            }
         }
 
-        Debug.Log("DEBUG: Cards granted on start");
+        Debug.Log("[CardDebugGrant]DEBUG: Cards granted on start");
     #endif
     }
 }
