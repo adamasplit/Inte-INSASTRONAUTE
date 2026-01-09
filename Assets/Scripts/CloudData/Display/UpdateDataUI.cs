@@ -13,8 +13,8 @@ public class UpdateDataUI : MonoBehaviour
             case "TOKEN":
                 GetComponent<TextMeshProUGUI>().text = PlayerProfileStore.TOKEN.ToString();
                 break;
-            case "PACK":
-                GetComponent<TextMeshProUGUI>().text = PlayerProfileStore.PACK.ToString();
+            case "PC":
+                GetComponent<TextMeshProUGUI>().text = PlayerProfileStore.PC.ToString();
                 break;
             case "USERNAME":
                 GetComponent<TextMeshProUGUI>().text = PlayerProfileStore.DISPLAY_NAME;

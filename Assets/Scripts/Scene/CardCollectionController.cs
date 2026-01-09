@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Rendering;
+using System.Threading.Tasks;
 public class CardCollectionController : MonoBehaviour
 {
     public Transform cardContainer;

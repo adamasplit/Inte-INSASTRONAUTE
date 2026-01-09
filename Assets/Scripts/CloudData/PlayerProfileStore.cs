@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Services.CloudSave;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class PlayerProfileStore
 {
     //Static Data
     public static long TOKEN = 0;
-    public static long PACK = 0;
+    public static long PC = 0;
     public static string DISPLAY_NAME = "Guest";
     //Key for the display name in Cloud Save
     public const string DisplayNameKey = "displayName";
@@ -53,6 +54,11 @@ public static class PlayerProfileStore
         }
     }
 
+    public static async Task UpdatePC()
+    {
+        await CollectionPointsClient.UpdateCPAsync((int)PC);
+    }
+
     public static async Task<string> LoadDisplayNameAsync()
     {
         var keys = new HashSet<string> { DisplayNameKey };
@@ -80,7 +86,24 @@ public static class PlayerProfileStore
         Debug.Log($"[AddCardAsync] Carte {cardId} ajoutée x{amount}. Nouvelle quantité : {CARD_COLLECTION[cardId]}");
 
         await SaveCardCollectionAsync();
+        await UpdatePC();
     }
+
+    public static async Task ComputePC()
+    {
+        int totalPC = 0;
+        CardCollectionController cards = Object.FindFirstObjectByType<CardCollectionController>();
+        foreach (var card in cards.allCards)
+        {
+            if (CARD_COLLECTION.TryGetValue(card.cardId, out int qty))
+            {
+                if (qty > 0) totalPC += card.FirstTimeValue + Mathf.Max(0, qty - 1) * card.SubsequentValue;
+            }
+        }
+        PC = totalPC;
+        await UpdatePC();
+    }
+
     public static async Task AddPackAsync(PackData pack, int amount = 1)
     {
         if (pack == null)

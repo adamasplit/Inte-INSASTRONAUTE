@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine;
 using Unity.Services.Economy;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 public class PlayerStatusController : MonoBehaviour
 {
@@ -25,14 +26,11 @@ public class PlayerStatusController : MonoBehaviour
         var currencies = await EconomyService.Instance.PlayerBalances.GetBalancesAsync();
         var tokenBal = currencies.Balances.FirstOrDefault(b => b.CurrencyId == "TOKEN");
         var tokens = tokenBal?.Balance ?? 0;
-
-        // PACKS depuis Cloud Save (mémoire)
-        long packs = PlayerProfileStore.PACK_COLLECTION.Values.Sum();
-
-        Debug.Log($"TOKENS={tokens} | PACKS={packs}");
+        var collectionPointsBal = currencies.Balances.FirstOrDefault(b => b.CurrencyId == "CP");
+        var collectionPoints = collectionPointsBal?.Balance ?? 0;
 
         PlayerProfileStore.TOKEN = tokens;
-        PlayerProfileStore.PACK = packs;
+        PlayerProfileStore.PC = collectionPoints;
 
         foreach (var ui in uIElements)
         {
