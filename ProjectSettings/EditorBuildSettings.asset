@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Main.unity
     guid: 86411827169e8da43a96f0eb76d9f8a3
+  - enabled: 1
+    path: Assets/Scenes/Main - Copie.unity
+    guid: f74d83a19ae7f684a93bcb47c4a4ec28
   m_configObjects:
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 7ac0d2020611eb44486612eb24ce9a3f, type: 2}
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}

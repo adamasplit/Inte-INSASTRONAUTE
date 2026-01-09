@@ -8,10 +8,10 @@ public class CardUI : MonoBehaviour
     [SerializeField] private Image cardImage;
     [SerializeField] private Image borderImage;
 
-    public void SetCardData(int number, string spriteName, Color? borderColor = null)
+    public void SetCardData(int number, Sprite sprite, Color? borderColor = null)
     {
         numberText.text = number.ToString();
-        cardImage.sprite = Resources.Load<Sprite>("Sprites/" + spriteName);
+        cardImage.sprite = sprite;
 
         if (borderColor.HasValue)
         {

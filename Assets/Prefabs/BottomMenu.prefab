@@ -156,7 +156,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8669851150141791550}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1165269652540492360}
+        m_TargetAssemblyTypeName: BottomMenuController, Assembly-CSharp
+        m_MethodName: GoToScreen
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &4987637918519686376
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -185,7 +197,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 3046817259674528574, guid: 1c1eafdf827f78b4b90546ecbd6ba068, type: 3}
+  m_Sprite: {fileID: 3046817259674528574, guid: 632d0d7d0e2a26b42b4a8bb4652f7df0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -276,7 +288,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4531703307408668847}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1165269652540492360}
+        m_TargetAssemblyTypeName: BottomMenuController, Assembly-CSharp
+        m_MethodName: GoToScreen
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &941867964456501561
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -305,7 +329,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 9005214843641544707, guid: f4e95283fe2a7ee48b1e6fb155cf53a6, type: 3}
+  m_Sprite: {fileID: 9005214843641544707, guid: b6cd5b220788f2a43bde919fb9b8b630, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -396,7 +420,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8133706737090517111}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1165269652540492360}
+        m_TargetAssemblyTypeName: BottomMenuController, Assembly-CSharp
+        m_MethodName: GoToScreen
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &8798835144848264043
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -425,7 +461,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 8063346535778228606, guid: e0b8a7576c24a3c4d966e4124a086ec3, type: 3}
+  m_Sprite: {fileID: 8063346535778228606, guid: 317464c67fc105b44b8052b028203958, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -516,7 +552,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2432158251705050368}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1165269652540492360}
+        m_TargetAssemblyTypeName: BottomMenuController, Assembly-CSharp
+        m_MethodName: GoToScreen
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &5265464074469959385
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -545,7 +593,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -5154189640090123692, guid: f205832138ea2d64cbd5ab15b3b355f6, type: 3}
+  m_Sprite: {fileID: -5154189640090123692, guid: 586b6fbe40922fc4b88961d2b5d34aed, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -564,6 +612,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3726777452577281856}
+  - component: {fileID: 1165269652540492360}
+  - component: {fileID: 4818446514721758849}
   m_Layer: 5
   m_Name: BottomMenu
   m_TagString: Untagged
@@ -592,6 +642,37 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 120}
   m_Pivot: {x: 0.5, y: 0}
+--- !u!114 &1165269652540492360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7686601598617716381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 883a9089c9e998b4095e7c03204cadee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BottomMenuController
+  screensContainer: {fileID: 0}
+  screens:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+--- !u!114 &4818446514721758849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7686601598617716381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd45aedb682b0484ebf7d36e2108a282, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BottomSafeArea
 --- !u!1 &8466564152130816354
 GameObject:
   m_ObjectHideFlags: 0
@@ -673,7 +754,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5807184669331244356}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1165269652540492360}
+        m_TargetAssemblyTypeName: BottomMenuController, Assembly-CSharp
+        m_MethodName: GoToScreen
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &1187566620590973071
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -702,7 +795,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -5607316499083116316, guid: ef9829daa044ea94aa3d372fbc0bd0bd, type: 3}
+  m_Sprite: {fileID: -5607316499083116316, guid: 44e1de5921787634cb788390907ea07c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -750,7 +843,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 60}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7498614676670596727

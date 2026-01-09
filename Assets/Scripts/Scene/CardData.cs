@@ -1,0 +1,14 @@
+using UnityEngine;
+
+[CreateAssetMenu(menuName = "Cards/Card Data")]
+public class CardData : ScriptableObject
+{
+    public string cardId;
+
+    [Header("UI")]
+    public Sprite sprite;
+    public Color borderColor;
+
+    [Header("Gameplay")]
+    public int rarity;
+}

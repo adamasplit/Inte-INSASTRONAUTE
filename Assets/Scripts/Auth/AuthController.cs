@@ -39,7 +39,7 @@ public class AuthController : MonoBehaviour
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
         Debug.Log($"Guest signed in: {AuthenticationService.Instance.PlayerId}");
         PlayerProfileStore.DISPLAY_NAME = "Guest";
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadScene("Main - Copie");
     }
 
     public async Task SignUp(string username, string password)
@@ -54,7 +54,7 @@ public class AuthController : MonoBehaviour
         Debug.Log("displayName saved.");
         PlayerProfileStore.DISPLAY_NAME = username;
 
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadScene("Main - Copie");
     }
 
     public async Task SignIn(string username, string password)
@@ -68,7 +68,7 @@ public class AuthController : MonoBehaviour
         // Tu peux le faire ici ou dans Main, mais évite les appels cloud lourds au chargement de Main.
         PlayerProfileStore.DISPLAY_NAME = username;
 
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadScene("Main - Copie");
     }
 
     public void SignOut()

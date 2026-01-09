@@ -4,29 +4,66 @@ using TMPro;
 public class CardCollectionController : MonoBehaviour
 {
     public Transform cardContainer;
-    public GameObject cardPrefab;
-    public void AddCardToCollection(int number, string cardSprite, Color? borderColor = null)
-    {
-        GameObject newCard = Instantiate(cardPrefab, cardContainer);
-        CardUI cardUI = newCard.GetComponent<CardUI>();
-        if (cardUI != null)
-        {
-            cardUI.SetCardData(number, cardSprite, borderColor);
-        }
-    }
+    public CardUI cardPrefab;
+
+    [Header("Data")]
+    public CardData[] allCards;
 
     void Start()
     {
-        // Example usage
-        PopulateDummyCards();
+        allCards = Resources.LoadAll<CardData>("Cards");
+    }
+    private void OnEnable()
+    {
+        
+        RefreshCollection();
     }
 
-    void PopulateDummyCards()
+    public void RefreshCollection()
     {
-        for (int i = 1; i <= 15; i++)
+        Debug.Log("Refreshing card collection UI...");
+        foreach (Transform child in cardContainer)
+            Destroy(child.gameObject);
+
+        foreach (var card in allCards)
         {
-            Color? borderColor = (i % 2 == 0) ? (Color?)Color.red : Color.green;
-            AddCardToCollection(i, "tests" + i, borderColor);
+            Debug.Log($"Checking card: {card.cardId}");
+            if (PlayerProfileStore.CARD_COLLECTION.TryGetValue(card.cardId, out int qty))
+            {
+                Debug.Log($"Adding card to UI: {card.cardId} with quantity {qty}");
+                var item = Instantiate(cardPrefab, cardContainer);
+
+                item.SetCardData(
+                    qty,
+                    card.sprite,
+                    card.borderColor
+                );
+            }
         }
     }
+    
+    //public void AddCardToCollection(int number, string cardSprite, Color? borderColor = null)
+    //{
+    //    GameObject newCard = Instantiate(cardPrefab, cardContainer);
+    //    CardUI cardUI = newCard.GetComponent<CardUI>();
+    //    if (cardUI != null)
+    //    {
+    //        cardUI.SetCardData(number, cardSprite, borderColor);
+    //    }
+    //}
+//
+    //void Start()
+    //{
+    //    // Example usage
+    //    PopulateDummyCards();
+    //}
+//
+    //void PopulateDummyCards()
+    //{
+    //    for (int i = 1; i <= 15; i++)
+    //    {
+    //        Color? borderColor = (i % 2 == 0) ? (Color?)Color.red : Color.green;
+    //        AddCardToCollection(i, "tests" + i, borderColor);
+    //    }
+    //}
 }
