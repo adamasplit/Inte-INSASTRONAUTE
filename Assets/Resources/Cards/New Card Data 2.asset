@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c0bf12de0a81f0240a0f7221679b7dc4, type: 3}
-  m_Name: New Card Data
+  m_Name: New Card Data 2
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  cardId: Test
-  sprite: {fileID: 21300000, guid: 7d946d97ac0e08443ba35d6804be3120, type: 3}
+  cardId: Test2
+  sprite: {fileID: 21300000, guid: 007bbaa2dd15986428b768833184b263, type: 3}
   borderColor: {r: 1, g: 1, b: 1, a: 0}
   rarity: 0
