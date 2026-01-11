@@ -22,7 +22,7 @@ public class LeaderboardController : MonoBehaviour
 
     private string currentPlayerId;
 
-    async void Start()
+    void Start()
     {
         if (useDummyData)
         {

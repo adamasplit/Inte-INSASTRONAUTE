@@ -7,9 +7,11 @@ using System.Collections.ObjectModel;
 public class PlayerStatusController : MonoBehaviour
 {
     public UpdateDataUI[] uIElements;
+    public GameObject loadingIndicator;
 
     private async void Start()
     {
+        loadingIndicator.SetActive(true);
         await PlayerProfileStore.LoadPackCollectionAsync();
         await PlayerProfileStore.LoadCardCollectionAsync();
 
@@ -20,6 +22,7 @@ public class PlayerStatusController : MonoBehaviour
         //await Task.Delay(500); // Attendre un peu pour s'assurer que tout est prêt
         await RefreshStatusAsync();
         await FindFirstObjectByType<LeaderboardController>().RefreshLeaderboardAsync();
+        loadingIndicator.SetActive(false);
     }
 
     public async Task RefreshStatusAsync()
