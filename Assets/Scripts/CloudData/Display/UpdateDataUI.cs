@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Threading.Tasks;
-using Unity.AppUI;
 using TMPro;
 
 public class UpdateDataUI : MonoBehaviour
