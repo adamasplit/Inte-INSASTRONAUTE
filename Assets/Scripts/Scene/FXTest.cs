@@ -6,7 +6,7 @@ public class FXTest : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (UnityEngine.InputSystem.Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             Debug.Log("Spawning FX at center of screen");
             var fx = Instantiate(fxPrefab, fxCanvas.transform);
