@@ -41,6 +41,7 @@ public class PackOpen : MonoBehaviour
     public Canvas fxCanvas;
     public Transform summaryGrid;
     public GameObject bottomMenu;
+    public GameObject loadingScreen;
 
     private void Awake()
     {
@@ -50,14 +51,18 @@ public class PackOpen : MonoBehaviour
 
     public async void OpenPack(PackData packData)
     {
+        NavigationLock.IsScreenSwipeLocked = true;
+
         panel.SetActive(true);
         skipToNext = false;
         skipAll = false;
         await OpenPackRoutine(packData);
+        NavigationLock.IsScreenSwipeLocked = false;
     }
 
     private async Task OpenPackRoutine(PackData packData)
     {
+
         bottomMenu.SetActive(false);
         CardData[] pulledCards = GetPulledCards(packData);
         foreach (Transform c in summaryGrid)
@@ -135,9 +140,10 @@ public class PackOpen : MonoBehaviour
             skipSignal = null;
             skipToNext = false;
         }
-
+        loadingScreen.SetActive(true);
         await PlayerProfileStore.RemovePackAsync(packData.packId, 1);
         await PlayerProfileStore.AddCards(pulledCards);
+        loadingScreen.SetActive(false);
         panel.SetActive(false);
         bottomMenu.SetActive(true);
     }

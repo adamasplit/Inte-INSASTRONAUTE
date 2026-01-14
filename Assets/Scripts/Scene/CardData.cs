@@ -13,4 +13,6 @@ public class CardData : ScriptableObject
     public int rarity;
     public int FirstTimeValue;
     public int SubsequentValue;
+    public string cardName;
+    public string description;
 }
