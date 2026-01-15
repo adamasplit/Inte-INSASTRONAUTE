@@ -31,27 +31,7 @@ public class BottomMenuController : MonoBehaviour
         }
         Debug.Log("Changement vers l'écran : " + index);
         // Simulate LeanDrag transitions/events if LeanDrag is present
-        if (leanDrag != null)
-        {
-            // Simulate OnBeginDrag
-            if (leanDrag.BeginTransitions != null)
-                leanDrag.BeginTransitions.Begin();
-            if (leanDrag.OnBegin != null)
-                leanDrag.OnBegin.Invoke();
-        }
-
-        // Calculate offset based on anchors (works for any number of screens with normalized anchors)
-        //float offset = -screensContainer.rect.width * (screens[index].anchorMin.x);
-        //screensContainer.anchoredPosition = new Vector2(offset, screensContainer.anchoredPosition.y);
-
-        if (leanDrag != null)
-        {
-            // Simulate OnEndDrag
-            if (leanDrag.EndTransitions != null)
-                leanDrag.EndTransitions.Begin();
-            if (leanDrag.OnEnd != null)
-                leanDrag.OnEnd.Invoke();
-        }
+        screensContainer.anchoredPosition = new Vector2(-screensContainer.rect.width * (screens[index].anchorMin.x), screensContainer.anchoredPosition.y);
 
         // If the selected screen or its children have a CardCollectionController, call RefreshCollection
         var cardCollection = screens[index].GetComponentInChildren<CardCollectionController>(true);
