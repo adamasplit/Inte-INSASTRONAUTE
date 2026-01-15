@@ -1,26 +1,28 @@
 using UnityEngine;
-using UnityEngine.UI;
 
-public class StarfieldScaler : MonoBehaviour
+public class ResponsiveStarfield : MonoBehaviour
 {
-    public Slider sizeSlider;  // Slider pour ajuster la taille
-    public ParticleSystem starfield;  // Référence au système de particules
+    public ParticleSystem starfield;
     private ParticleSystem.ShapeModule shapeModule;
 
     void Start()
     {
-        // Récupère la référence au module Shape du système de particules
         shapeModule = starfield.shape;
-
-        // Initialise le slider avec une valeur par défaut
-        sizeSlider.onValueChanged.AddListener(OnSliderValueChanged);
-        OnSliderValueChanged(sizeSlider.value);  // Ajuste immédiatement la taille selon le slider
+        AdjustParticleBoxSize();
     }
 
-    void OnSliderValueChanged(float value)
+    void Update()
     {
-        // Ajuste la taille de la box (dépend de la valeur du Slider)
-        float newSize = Mathf.Lerp(10f, 200f, value);  // Change les limites selon tes besoins
-        shapeModule.scale = new Vector3(newSize, newSize, newSize);
+        // Si la résolution change en cours de jeu, on réajuste
+        AdjustParticleBoxSize();
+    }
+
+    void AdjustParticleBoxSize()
+    {
+        float screenWidth = Screen.width;
+        float screenHeight = Screen.height;
+
+        // Ajuste la taille de la Shape Box en fonction de la résolution
+        shapeModule.scale = new Vector3(screenWidth / 100f, screenHeight / 100f, 1); // Ajuste les valeurs selon tes besoins
     }
 }

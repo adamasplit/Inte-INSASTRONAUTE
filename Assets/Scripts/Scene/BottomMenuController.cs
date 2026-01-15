@@ -41,8 +41,8 @@ public class BottomMenuController : MonoBehaviour
         }
 
         // Calculate offset based on anchors (works for any number of screens with normalized anchors)
-        float offset = -screensContainer.rect.width * (screens[index].anchorMin.x);
-        screensContainer.anchoredPosition = new Vector2(offset, screensContainer.anchoredPosition.y);
+        //float offset = -screensContainer.rect.width * (screens[index].anchorMin.x);
+        //screensContainer.anchoredPosition = new Vector2(offset, screensContainer.anchoredPosition.y);
 
         if (leanDrag != null)
         {
