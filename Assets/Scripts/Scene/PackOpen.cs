@@ -134,6 +134,9 @@ public class PackOpen : MonoBehaviour
                 var cardData = pulledCards[i];
                 var cardUI = Instantiate(cardRevealPrefab, summaryGrid);
                 cardUI.SetCardData(1, cardData.sprite, cardData.borderColor);
+                CardReveal cardReveal = cardUI.GetComponent<CardReveal>();
+                cardReveal.RevealCard();
+                await Task.Delay(50);
             }
             skipSignal = new TaskCompletionSource<bool>();
             await Task.WhenAny(skipSignal.Task);
