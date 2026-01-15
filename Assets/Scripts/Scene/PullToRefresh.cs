@@ -18,7 +18,12 @@ public class PullToRefresh : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     bool IsAtTop()
     {
             return content.anchoredPosition.y <= pullThreshold;
+
     }
+    bool IsAtTopOfLeaderboard()
+{
+    return scrollRect.verticalNormalizedPosition >= 0.99f; // Use a threshold for floating point precision
+}
     private bool isRefreshing;
     private RectTransform content;
 
@@ -61,7 +66,7 @@ public class PullToRefresh : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         float dragDistance = content.anchoredPosition.y;
 
-        if (IsAtTop())
+        if (IsAtTop()&&(IsAtTopOfLeaderboard()))
         {
             await TriggerRefreshAsync();
         }

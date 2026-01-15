@@ -16,19 +16,22 @@ public class LeaderboardElement : MonoBehaviour
         nameText.text = playerName;
         scoreText.text = score.ToString();
 
-        if (userIcon != null)
+        if (userIconImage!= null)
         {
-            userIconImage.sprite = userIcon;
-            userIconImage.gameObject.SetActive(true);
+            if (userIcon != null)
+            {
+                userIconImage.sprite = userIcon;
+                userIconImage.gameObject.SetActive(true);
+            }
+            else
+            {
+                userIconImage.gameObject.SetActive(false);
+            }
         }
-        else
-        {
-            userIconImage.gameObject.SetActive(false);
-        }
-
-        if (backgroundColor.HasValue)
-        {
-            backgroundImage.color = backgroundColor.Value;
-        }
+            if (backgroundColor.HasValue)
+            {
+                backgroundImage.color = backgroundColor.Value;
+            }
+        
     }
 }

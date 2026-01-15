@@ -17,22 +17,21 @@ public class CardCollectionController : MonoBehaviour
     }
     private void OnEnable()
     {
-        
         RefreshCollection();
     }
 
     public void RefreshCollection()
     {
-        Debug.Log("Refreshing card collection UI...");
+        Debug.Log("[CardCollectionController] Refreshing card collection UI...");
         foreach (Transform child in cardContainer)
             Destroy(child.gameObject);
 
         foreach (var card in allCards)
         {
-            Debug.Log($"Checking card: {card.cardId}");
+            Debug.Log($"[CardCollectionController] Checking card: {card.cardId}");
             if (PlayerProfileStore.CARD_COLLECTION.TryGetValue(card.cardId, out int qty))
             {
-                Debug.Log($"Adding card to UI: {card.cardId} with quantity {qty}");
+                Debug.Log($"[CardCollectionController] Adding card to UI: {card.cardId} with quantity {qty}");
                 var item = Instantiate(cardPrefab, cardContainer);
 
                 item.SetCardData(
