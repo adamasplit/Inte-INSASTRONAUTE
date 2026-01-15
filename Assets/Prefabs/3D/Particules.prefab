@@ -4978,7 +4978,7 @@ ParticleSystemRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1513251827
   m_SortingLayer: 1
-  m_SortingOrder: 1001
+  m_SortingOrder: 1050
   m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
