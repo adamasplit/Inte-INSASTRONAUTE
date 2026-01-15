@@ -19,6 +19,7 @@ public static class PlayerProfileStore
     public static Dictionary<string, int> PACK_COLLECTION = new();
     public const string PackCollectionKey = "packCollection";
     public static System.Action OnPackCollectionChanged;
+    public static System.Action OnCardCollectionChanged;
 
     public static async Task SaveDisplayNameAsync(string displayName)
     {
@@ -88,6 +89,7 @@ public static class PlayerProfileStore
 
         await SaveCardCollectionAsync();
         await ComputePC();
+        OnCardCollectionChanged?.Invoke();
     }
 
     public static async Task AddCards(CardData[] cards)
@@ -103,6 +105,7 @@ public static class PlayerProfileStore
         }
         await SaveCardCollectionAsync();
         await ComputePC();
+        OnCardCollectionChanged?.Invoke();
     }
 
     public static async Task ComputePC()

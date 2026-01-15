@@ -18,6 +18,14 @@ public class CardCollectionController : MonoBehaviour
     private void OnEnable()
     {
         RefreshCollection();
+        Debug.Log("Refreshing card collection UI...");
+        RefreshCollection();
+        PlayerProfileStore.OnCardCollectionChanged += RefreshCollection;
+    }
+
+    private void OnDisable()
+    {
+        PlayerProfileStore.OnCardCollectionChanged -= RefreshCollection;
     }
 
     public void RefreshCollection()
