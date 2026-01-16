@@ -10,6 +10,7 @@ public class PackOpen : MonoBehaviour
     private bool skipToNext = false;
     private bool skipAll = false;
     private TaskCompletionSource<bool> skipSignal;
+    private bool isPackOpeningInProgress = false;
 
     // Call this to skip to the next card in the pack opening sequence
     public void SkipToNextCard()
@@ -48,6 +49,25 @@ public class PackOpen : MonoBehaviour
         Instance = this;
         panel.SetActive(false);
     }
+    void Update()
+    {
+        if (isPackOpeningInProgress)
+        {
+            if (bottomMenu.gameObject.activeSelf)
+            {
+                Debug.Log("[PackOpen]Hiding bottom menu during pack opening.");
+                bottomMenu.SetActive(false);
+                if(!bottomMenu.gameObject.activeSelf)
+                {
+                    Debug.Log("[PackOpen]Bottom menu successfully hidden.");
+                }
+            }
+            else
+            {
+                Debug.Log("[PackOpen]Bottom menu is already hidden.");
+            }
+        }
+    }
 
     public async void OpenPack(PackData packData)
     {
@@ -62,7 +82,7 @@ public class PackOpen : MonoBehaviour
 
     private async Task OpenPackRoutine(PackData packData)
     {
-
+        isPackOpeningInProgress = true;
         bottomMenu.SetActive(false);
         CardData[] pulledCards = GetPulledCards(packData);
         foreach (Transform c in summaryGrid)
@@ -148,6 +168,7 @@ public class PackOpen : MonoBehaviour
         await PlayerProfileStore.AddCards(pulledCards);
         loadingScreen.SetActive(false);
         panel.SetActive(false);
+        isPackOpeningInProgress = false;
         bottomMenu.SetActive(true);
     }
 
