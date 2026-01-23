@@ -6,7 +6,7 @@ namespace Lean.Gui
 {
 	/// <summary>This component allows you to change the size of the Target RectTransform based on the size of this one.
 	/// This is very useful for text that needs to be inside a parent container, but you don't know how big that container should be.</summary>
-	[ExecuteInEditMode]
+	//[ExecuteInEditMode]
 	[RequireComponent(typeof(RectTransform))]
 	[HelpURL(LeanGui.HelpUrlPrefix + "LeanSizer")]
 	[AddComponentMenu(LeanGui.ComponentMenuPrefix + "Sizer")]
@@ -76,7 +76,7 @@ namespace Lean.Gui
 #if UNITY_EDITOR
 		protected override void OnValidate()
 		{
-			UpdateSize();
+			//UpdateSize();
 		}
 #endif
 

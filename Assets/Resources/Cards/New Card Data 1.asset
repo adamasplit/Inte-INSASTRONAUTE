@@ -18,3 +18,7 @@ MonoBehaviour:
   rarity: 0
   FirstTimeValue: 3
   SubsequentValue: 1
+  cardName: shark
+  description: 
+  element: 1
+  baseDamage: 70

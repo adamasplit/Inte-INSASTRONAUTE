@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Lean.Gui;
 using System.Collections;
 using System.Threading.Tasks;
 public class PackOpen : MonoBehaviour
@@ -42,6 +43,7 @@ public class PackOpen : MonoBehaviour
     public Transform summaryGrid;
     public GameObject bottomMenu;
     public GameObject loadingScreen;
+    public LeanDrag leanDrag;
 
     private void Awake()
     {
@@ -64,6 +66,7 @@ public class PackOpen : MonoBehaviour
     {
 
         bottomMenu.SetActive(false);
+        leanDrag.enabled = false;
         CardData[] pulledCards = GetPulledCards(packData);
         foreach (Transform c in summaryGrid)
                 Destroy(c.gameObject);
@@ -149,6 +152,7 @@ public class PackOpen : MonoBehaviour
         loadingScreen.SetActive(false);
         panel.SetActive(false);
         bottomMenu.SetActive(true);
+        leanDrag.enabled = true;
     }
 
     private CardData[] GetPulledCards(PackData packData)

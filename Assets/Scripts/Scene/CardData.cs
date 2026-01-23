@@ -15,4 +15,6 @@ public class CardData : ScriptableObject
     public int SubsequentValue;
     public string cardName;
     public string description;
+    public Element element;
+    public float baseDamage;
 }

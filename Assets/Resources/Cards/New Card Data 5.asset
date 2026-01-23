@@ -18,3 +18,7 @@ MonoBehaviour:
   rarity: 0
   FirstTimeValue: 10
   SubsequentValue: 0
+  cardName: oph
+  description: 
+  element: 3
+  baseDamage: 150

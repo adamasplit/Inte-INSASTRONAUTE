@@ -18,3 +18,7 @@ MonoBehaviour:
   rarity: 0
   FirstTimeValue: 5
   SubsequentValue: 0
+  cardName: leo
+  description: 
+  element: 0
+  baseDamage: 50

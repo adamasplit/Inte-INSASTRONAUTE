@@ -22,6 +22,7 @@ public class PlayerStatusController : MonoBehaviour
         //await Task.Delay(500); // Attendre un peu pour s'assurer que tout est prêt
         await RefreshStatusAsync();
         await FindFirstObjectByType<LeaderboardController>().RefreshLeaderboardAsync();
+        await FindFirstObjectByType<ShopRemoteLoader>().UpdateShopFromRemoteTask();
         loadingIndicator.SetActive(false);
     }
 

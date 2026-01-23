@@ -1,7 +1,7 @@
 ﻿<Solution>
   <Project Path="LeanCommon.csproj" />
-  <Project Path="LeanTransition.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="LeanTransition.csproj" />
   <Project Path="LeanGUI.csproj" />
   <Project Path="CW.Common.csproj" />
   <Project Path="LeanTransition.Editor.csproj" />

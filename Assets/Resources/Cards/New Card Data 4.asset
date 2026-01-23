@@ -18,3 +18,7 @@ MonoBehaviour:
   rarity: 0
   FirstTimeValue: 5
   SubsequentValue: 3
+  cardName: q
+  description: 
+  element: 1
+  baseDamage: 200

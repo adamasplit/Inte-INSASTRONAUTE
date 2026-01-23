@@ -18,3 +18,7 @@ MonoBehaviour:
   rarity: 0
   FirstTimeValue: 4
   SubsequentValue: 1
+  cardName: nym2
+  description: 
+  element: 0
+  baseDamage: 50

@@ -49,5 +49,10 @@ public class BottomMenuController : MonoBehaviour
         {
             packCollection.RefreshCollection();
         }
+        var shopController = screens[index].GetComponentInChildren<ShopRemoteLoader>(true);
+        if (shopController != null)
+        {
+            shopController.UpdateShopFromRemote();
+        }
     }
 }
