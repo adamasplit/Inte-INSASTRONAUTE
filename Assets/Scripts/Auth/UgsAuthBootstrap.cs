@@ -18,11 +18,11 @@ public class UgsAuthBootstrap : MonoBehaviour
             await UnityServices.InitializeAsync();
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
-            Debug.Log($"✅ Signed in! PlayerId = {AuthenticationService.Instance.PlayerId}");
+            Debug.Log($" Signed in! PlayerId = {AuthenticationService.Instance.PlayerId}");
         }
         catch (Exception e)
         {
-            Debug.LogError($"❌ UGS Auth failed: {e}");
+            Debug.LogError($" UGS Auth failed: {e}");
         }
     }
 }
