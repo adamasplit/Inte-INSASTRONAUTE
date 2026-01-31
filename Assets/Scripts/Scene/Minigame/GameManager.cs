@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
         bottomMenu.SetActive(false);
         GameCardManager.GetComponent<GameCardManager>().Init();
         gridManager.SetActive(true);
+        gridManager.GetComponent<GridManager>().LayoutColumns();
         leanDrag.gameObject.GetComponent<LeanConstrainAnchoredPosition>().HorizontalRectMax=-5;
     }
 
@@ -52,6 +53,7 @@ public class GameManager : MonoBehaviour
         bottomMenu.SetActive(true);
         gridManager.SetActive(false);
         startPanel.SetActive(true);
+
         leanDrag.gameObject.GetComponent<LeanConstrainAnchoredPosition>().HorizontalRectMax=0;
         await GrantTokensOnGameOver();
     }

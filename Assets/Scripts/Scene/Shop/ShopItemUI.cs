@@ -57,7 +57,9 @@ public class ShopItemUI : MonoBehaviour
 
     async void OnBuyClicked()
     {
+        FindFirstObjectByType<ShopController>().loadingScreen.SetActive(true);
         Debug.Log("[ShopItemUI]Buying offer: " + offer.purchaseId.ToUpper());
         await StoreService.BuyAsync(offer.purchaseId);
+        FindFirstObjectByType<ShopController>().loadingScreen.SetActive(false);
     }
 }

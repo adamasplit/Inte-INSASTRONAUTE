@@ -24,6 +24,7 @@ public class Enemy : MonoBehaviour
     }
     public void Initialize(float health, float moveSpeed)
     {
+        if (this == null) return;
         Element elem = Random.Range(0, 4) switch
         {
             0 => Element.Fire,

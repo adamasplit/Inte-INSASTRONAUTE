@@ -7581,6 +7581,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShopController
   packContainer: {fileID: 1819601120}
   cardContainer: {fileID: 657845148}
+  loadingScreen: {fileID: 944070997}
   itemPrefab: {fileID: 8191247199329704683, guid: b904ccbfe0e469e4aa7ba70c50b60c2f, type: 3}
   offers: []
 --- !u!114 &1020725992
