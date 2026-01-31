@@ -308,7 +308,7 @@ public class MainUIBinder : MonoBehaviour
         if (sfxVolumeSlider) sfxVolumeSlider.onValueChanged.RemoveAllListeners();
     }
 
-    private void ShowNotification(string message)
+    public void ShowNotification(string message)
     {
         if (notificationPanel != null)
         {
@@ -324,7 +324,7 @@ public class MainUIBinder : MonoBehaviour
         Debug.Log($"[MainUI] {message}");
     }
 
-    private void ShowConfirmation(string title, string message, Action onYes, Action onNo = null)
+    public void ShowConfirmation(string title, string message, Action onYes, Action onNo = null)
     {
         if (confirmationPopup != null)
         {
