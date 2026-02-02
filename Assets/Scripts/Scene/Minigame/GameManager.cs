@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
         Playing,
         GameOver
     }
-    public int spawnInterval = 120;
+    public float spawnInterval = 2f;
     public static GameManager Instance;
     public int score;
     public int columnCount = 5;
@@ -28,12 +28,12 @@ public class GameManager : MonoBehaviour
     {
         score += value;
         //UIManager.Instance.UpdateScore(score);
-        spawnInterval = Mathf.Max(30, spawnInterval - 2); // Decrease interval but not below 30
+        spawnInterval = Mathf.Max(0.25f, spawnInterval - 0.05f); // Decrease interval but not below 0.5
     }
 
     public void StartGame()
     {
-        spawnInterval=120;
+        spawnInterval=2f;
         score = 0;
         currentState = GameState.Playing;
         startPanel.SetActive(false);

@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     public ParticleSystem hitEffect;
     public ParticleSystem criticalEffect;
     public ParticleSystem weakEffect;
+    private bool prismatic;
 
     Color GetElementColor(Element elem)
     {
@@ -25,17 +26,26 @@ public class Enemy : MonoBehaviour
     public void Initialize(float health, float moveSpeed)
     {
         if (this == null) return;
-        Element elem = Random.Range(0, 4) switch
+        if (Random.Range(0, 20) == 0)
         {
-            0 => Element.Fire,
-            1 => Element.Water,
-            2 => Element.Earth,
+            prismatic = true;
+            element = Element.Prismatic;
+        }
+        else
+        {
+            Element elem = Random.Range(0, 4) switch
+            {
+                0 => Element.Fire,
+                1 => Element.Water,
+                2 => Element.Earth,
             3 => Element.Air,
             _ => Element.Fire
-        };
+            };
+            element = elem;
+        }
         hp = health;
         speed = moveSpeed;
-        GetComponent<Image>().color = GetElementColor(elem);
+        GetComponent<Image>().color = GetElementColor(element);
     }
     public void TakeDamage(float dmg,Element element)
     {

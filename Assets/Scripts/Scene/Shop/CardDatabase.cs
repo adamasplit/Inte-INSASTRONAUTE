@@ -4,7 +4,18 @@ using System.Collections.Generic;
 public class CardDatabase : MonoBehaviour
 {
     public List<CardData> cards;
-
+    public static CardDatabase Instance;
+    void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        Init();
+    }
     private Dictionary<string, CardData> _byId;
     public void Init()
     {

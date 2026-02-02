@@ -5,10 +5,6 @@ public class ShopDatabase : MonoBehaviour
 {
     public static ShopDatabase Instance;
 
-    [Header("Databases")]
-    public PackDatabase packDatabase;
-    public CardDatabase cardDatabase;
-
     public List<ShopOffer> Offers { get; private set; } = new();
 
     void Awake()
@@ -20,8 +16,6 @@ public class ShopDatabase : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
-        packDatabase.Init();
     }
 
     public void SetOffers(List<ShopOffer> offers)
@@ -36,6 +30,6 @@ public class ShopDatabase : MonoBehaviour
 
     public PackData ResolvePack(ShopOffer offer)
     {
-        return packDatabase.Get(offer.rewardId);
+        return PackDatabase.Instance.Get(offer.rewardId);
     }
 }

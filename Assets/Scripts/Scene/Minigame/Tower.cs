@@ -60,7 +60,7 @@ public class Tower : MonoBehaviour
             var trail = trailParticles.trails;
             var main = trailParticles.main;
             Color elementColor = ElementCalculator.GetElementColor(card.element);
-            trail.colorOverTrail = elementColor; //new ParticleSystem.MinMaxGradient(elementColor);
+            trail.colorOverTrail = new ParticleSystem.MinMaxGradient(elementColor);
             main.startColor = elementColor;
         }
         if (trailParticles) trailParticles.Play();

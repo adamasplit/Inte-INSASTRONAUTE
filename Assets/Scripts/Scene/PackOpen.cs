@@ -5,13 +5,27 @@ using TMPro;
 using Lean.Gui;
 using System.Collections;
 using System.Threading.Tasks;
+using UnityEngine.SceneManagement;
+enum PackOpenPhase
+{
+    None,
+    Transit,
+    Constellation,
+    CardReveal,
+    Summary
+}
+
 public class PackOpen : MonoBehaviour
 {
     // State for skipping
     private bool skipToNext = false;
     private bool skipAll = false;
     private TaskCompletionSource<bool> skipSignal;
-    private bool isPackOpeningInProgress = false;
+    private PackOpenPhase currentPhase= PackOpenPhase.None;
+    private void SetPhase(PackOpenPhase phase)
+{
+    currentPhase = phase;
+}
 
     // Call this to skip to the next card in the pack opening sequence
     public void SkipToNextCard()
@@ -42,39 +56,22 @@ public class PackOpen : MonoBehaviour
     public GameObject particlePrefab;
     public Canvas fxCanvas;
     public Transform summaryGrid;
-    public GameObject bottomMenu;
     public GameObject loadingScreen;
-    public LeanDrag leanDrag;
+    public GameObject constellationRoot;
+    private ConstellationController constellationController;
+    public StarController ChosenStar => constellationController.GetSelectedStar();
 
     private void Awake()
     {
         Instance = this;
-        panel.SetActive(false);
-    }
-    void Update()
-    {
-        if (isPackOpeningInProgress)
-        {
-            if (bottomMenu.gameObject.activeSelf)
-            {
-                Debug.Log("[PackOpen]Hiding bottom menu during pack opening.");
-                bottomMenu.SetActive(false);
-                if(!bottomMenu.gameObject.activeSelf)
-                {
-                    Debug.Log("[PackOpen]Bottom menu successfully hidden.");
-                }
-            }
-            else
-            {
-                Debug.Log("[PackOpen]Bottom menu is already hidden.");
-            }
-        }
+        constellationController = constellationRoot.GetComponent<ConstellationController>();
+        OpenPack(PullManager.Instance.ChosenPack);
     }
 
     public async void OpenPack(PackData packData)
     {
         NavigationLock.IsScreenSwipeLocked = true;
-
+        PullManager.Instance.GeneratePull(packData);
         panel.SetActive(true);
         skipToNext = false;
         skipAll = false;
@@ -84,10 +81,16 @@ public class PackOpen : MonoBehaviour
 
     private async Task OpenPackRoutine(PackData packData)
     {
-        isPackOpeningInProgress = true;
-        bottomMenu.SetActive(false);
-        leanDrag.enabled = false;
-        CardData[] pulledCards = GetPulledCards(packData);
+        SetPhase(PackOpenPhase.Constellation);
+        await PlayConstellationPhase();
+        SetPhase(PackOpenPhase.CardReveal);
+        Debug.Log("[PackOpen] Starting card reveal phase...");
+        CardData[] pulledCards = ChosenStar.cards;
+        if (pulledCards == null || pulledCards.Length == 0)
+        {
+            Debug.LogError("[PackOpen] No cards pulled!");
+            return;
+        }
         foreach (Transform c in summaryGrid)
                 Destroy(c.gameObject);
         foreach (Transform c in cardRevealAnchor)
@@ -100,6 +103,11 @@ public class PackOpen : MonoBehaviour
                 break;
 
             var cardData = pulledCards[i];
+            if (cardData == null)
+            {
+                Debug.LogError("[PackOpen] Pulled card data is null at index " + i);
+                continue;
+            }
             var cardUI = Instantiate(cardRevealPrefab, cardRevealAnchor);
             cardUI.SetCardData(1, cardData.sprite, cardData.borderColor);
             var fx = Instantiate(particlePrefab, fxCanvas.transform);
@@ -171,37 +179,24 @@ public class PackOpen : MonoBehaviour
         await PlayerProfileStore.AddCards(pulledCards);
         loadingScreen.SetActive(false);
         panel.SetActive(false);
-        isPackOpeningInProgress = false;
-        bottomMenu.SetActive(true);
-        leanDrag.enabled = true;
+        SetPhase(PackOpenPhase.None);
+        SceneManager.LoadScene("Main - Copie");
     }
 
-    private CardData[] GetPulledCards(PackData packData)
+    private async Task PlayConstellationPhase()
     {
-        CardData[] result= new CardData[packData.cardCount];
-        for (int i = 0; i < packData.cardCount; i++)
-        {
-            // Sélectionner une carte aléatoire parmi les cartes possibles du pack
-            float totalWeight = 0f;
-            foreach (var entry in packData.possibleCards)
-            {
-                totalWeight += entry.weight;
-            }
-            float randomValue = Random.Range(0f, totalWeight);
-            float cumulativeWeight = 0f;
-            foreach (var entry in packData.possibleCards)
-            {
-                cumulativeWeight += entry.weight;
-                if (randomValue <= cumulativeWeight)
-                {
-                    var cardData = FindFirstObjectByType<CardCollectionController>()
-                        .allCards
-                        .FirstOrDefault(c => c.cardId == entry.cardId);
-                    result[i] = cardData;
-                    break;
-                }
-            }
-        }
-        return result;
+        // Afficher la constellation
+        constellationRoot.SetActive(true);
+        constellationController.GenerateStars();
+        // Attendre le choix du joueur
+        await constellationController.WaitForStarSelection();
+        // Récupérer la rareté
+        var rarity = PullManager.Instance.highestRarity;
+
+        // Jouer l’animation correspondante
+        await constellationController.PlayRarityReveal(rarity);
+
+        constellationRoot.SetActive(false);
     }
+
 }

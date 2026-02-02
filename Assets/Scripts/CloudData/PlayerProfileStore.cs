@@ -111,8 +111,7 @@ public static class PlayerProfileStore
     public static async Task ComputePC()
     {
         int totalPC = 0;
-        CardCollectionController cards = Object.FindFirstObjectByType<CardCollectionController>();
-        foreach (var card in cards.allCards)
+        foreach (var card in CardDatabase.Instance.cards)
         {
             if (CARD_COLLECTION.TryGetValue(card.cardId, out int qty))
             {

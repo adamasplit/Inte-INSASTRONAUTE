@@ -4,7 +4,8 @@ public enum Element
     Fire,
     Water,
     Earth,
-    Air
+    Air,
+    Prismatic
 }
 public enum Effectiveness
 {
@@ -42,15 +43,27 @@ public static class ElementCalculator
         return baseDamage;
     }
 
-    public static Color GetElementColor(Element elem)
+    public static Color GetElementColor(Element elem, bool enemy = false)
     {
         return elem switch
         {
             Element.Fire => Color.red,
-            Element.Water => new Color(0f, 0f, 1f),
+            Element.Water => Color.blue,
             Element.Earth => Color.green,
-            Element.Air => new Color(0.2f, 0.6f, 1f),
+            Element.Air => (enemy? Color.cyan : new Color(0.2f, 0.6f, 1f)),
             _ => Color.white,
+        };
+    }
+    public static Element GetFirstWeakElement(Element elem)
+    {
+        return elem switch
+        {
+            Element.Fire => Element.Water,
+            Element.Water => Element.Earth,
+            Element.Earth => Element.Air,
+            Element.Air => Element.Fire,
+            Element.Prismatic => Element.Prismatic,
+            _ => Element.Fire,
         };
     }
 
@@ -59,7 +72,8 @@ public static class ElementCalculator
         return (a == Element.Fire && b == Element.Earth)
             || (a == Element.Water && b == Element.Fire)
             || (a == Element.Earth && b == Element.Air)
-            || (a == Element.Air && b == Element.Water);
+            || (a == Element.Air && b == Element.Water)
+            || (a == Element.Prismatic && b != Element.Prismatic);
     }
 
     static bool IsWeak(Element a, Element b) => IsStrong(b, a);
