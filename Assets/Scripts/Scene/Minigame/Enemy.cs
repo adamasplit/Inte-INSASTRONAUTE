@@ -11,6 +11,8 @@ public class Enemy : MonoBehaviour
     public ParticleSystem criticalEffect;
     public ParticleSystem weakEffect;
     private bool prismatic;
+    public SpriteRenderer spriteRenderer;
+    public SpriteRenderer prismaticOverlay;
 
     Color GetElementColor(Element elem)
     {
@@ -26,7 +28,9 @@ public class Enemy : MonoBehaviour
     public void Initialize(float health, float moveSpeed)
     {
         if (this == null) return;
-        if (Random.Range(0, 20) == 0)
+        GetComponent<RectTransform>().position = new Vector3(transform.position.x, 1.5f, 0);
+        Debug.Log("Initializing enemy at " + transform.position);
+        if (Random.Range(0, 1) == 0)
         {
             prismatic = true;
             element = Element.Prismatic;
@@ -45,7 +49,11 @@ public class Enemy : MonoBehaviour
         }
         hp = health;
         speed = moveSpeed;
-        GetComponent<Image>().color = GetElementColor(element);
+        spriteRenderer.color = GetElementColor(element);
+        if (prismatic)
+        {
+            prismaticOverlay.gameObject.SetActive(true);
+        }
     }
     public void TakeDamage(float dmg,Element element)
     {
@@ -84,7 +92,7 @@ public class Enemy : MonoBehaviour
         deathEffect.gameObject.SetActive(true);
         deathEffect.Play();
         GameManager.Instance.AddScore(10);
-        GetComponent<Image>().enabled = false;
+        spriteRenderer.enabled = false;
         yield return new WaitForSeconds(1f);
         Destroy(gameObject);
     }

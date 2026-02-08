@@ -27,7 +27,7 @@ float GetScreenBasedRadius(float marginPercent = 0.15f)
 {
     Camera cam = Camera.main;
 
-    float screenHeightWorld = cam.orthographicSize * 800f;
+    float screenHeightWorld = cam.orthographicSize * 700f;
     float screenWidthWorld = screenHeightWorld * cam.aspect;
 
     float minDimension = Mathf.Min(screenWidthWorld, screenHeightWorld);
@@ -54,8 +54,13 @@ void GenerateLines()
 
     lineRenderer.positionCount = positions.Length;
     lineRenderer.SetPositions(positions);
+    lineRenderer.enabled = true;
 }
 
+public void HideStars()
+{
+    lineRenderer.enabled = false;
+}
 public void GenerateStars()
 {
     // Nettoyage
@@ -150,7 +155,7 @@ Vector2 GetValidStarPosition(
             star.OnOtherStarSelected();
 
         var selectedStar = GetSelectedStar();
-        await selectedStar.PlayRarityAnimation(rarity);
+        await selectedStar.PlayRarityAnimation();
     }
 
     public void OnStarSelected(StarController star)

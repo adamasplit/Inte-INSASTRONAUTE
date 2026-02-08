@@ -6,6 +6,7 @@ using Lean.Gui;
 using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 enum PackOpenPhase
 {
     None,
@@ -84,7 +85,6 @@ public class PackOpen : MonoBehaviour
         SetPhase(PackOpenPhase.Constellation);
         await PlayConstellationPhase();
         SetPhase(PackOpenPhase.CardReveal);
-        Debug.Log("[PackOpen] Starting card reveal phase...");
         CardData[] pulledCards = ChosenStar.cards;
         if (pulledCards == null || pulledCards.Length == 0)
         {
@@ -96,69 +96,99 @@ public class PackOpen : MonoBehaviour
         foreach (Transform c in cardRevealAnchor)
             Destroy(c.gameObject);
 
-        // Reveal cards with skip logic
+        // ===============================
+        // CARD REVEAL – JAILLISSEMENT + FLIP
+        // ===============================
+
+        List<CardReveal> spawnedCards = new();
+
+        // Position centrale (UI)
+        Vector2 explosionPos = Vector2.zero;
+
+        // Spawn de toutes les cartes face cachée
         for (int i = 0; i < pulledCards.Length; i++)
+        {
+            var cardData = pulledCards[i];
+            if (cardData == null) continue;
+
+            var cardUI = Instantiate(cardRevealPrefab, cardRevealAnchor);
+            cardUI.SetCardData(1, cardData.sprite, cardData.borderColor);
+
+            var reveal = cardUI.GetComponent<CardReveal>();
+            reveal.SetFaceDown();
+
+            RectTransform rt = cardUI.GetComponent<RectTransform>();
+            rt.anchoredPosition = explosionPos;
+            rt.localScale = Vector3.one * 0.7f;
+
+            spawnedCards.Add(reveal);
+        }
+
+        // Animation de jaillissement
+        float radius = 420f;
+        float startAngle = -90f;
+
+        for (int i = 0; i < spawnedCards.Count; i++)
+        {
+            float angle = startAngle + (360f / spawnedCards.Count) * i;
+            Vector2 dir = new Vector2(
+                Mathf.Cos(angle * Mathf.Deg2Rad),
+                Mathf.Sin(angle * Mathf.Deg2Rad)
+            );
+
+            Vector2 targetPos = explosionPos + dir * radius;
+
+            AnimateCardMove(
+                spawnedCards[i].GetComponent<RectTransform>(),
+                targetPos
+            );
+            spawnedCards[i].MemorizeFaceDown(targetPos);
+        }
+
+
+        // Petite pause après explosion
+        await Task.Delay(600);
+        for (int i = 0; i < spawnedCards.Count; i++)
+        {
+            spawnedCards[i].gameObject.SetActive(false);
+        }
+
+        // Révélation une par une
+        for (int i = 0; i < spawnedCards.Count; i++)
         {
             if (skipAll)
                 break;
 
-            var cardData = pulledCards[i];
-            if (cardData == null)
-            {
-                Debug.LogError("[PackOpen] Pulled card data is null at index " + i);
-                continue;
-            }
-            var cardUI = Instantiate(cardRevealPrefab, cardRevealAnchor);
-            cardUI.SetCardData(1, cardData.sprite, cardData.borderColor);
-            var fx = Instantiate(particlePrefab, fxCanvas.transform);
-            fx.transform.position = cardUI.transform.position;
-            Image cg = cardUI.GetComponent<CardUI>().cardImage;
-
-            Color color = cg.color;
-            color.a = 0f;
-            cg.color = color;
-            float elapsed = 0f;
-            while (elapsed < 1f && !skipToNext && !skipAll)
-            {
-                elapsed += Time.deltaTime;
-                color.a = Mathf.Clamp01(elapsed / 1f);
-                cg.color = color;
-                await Task.Yield();
-            }
-            color.a = 1f;
-            cg.color = color;
-
-
-            // Fade out particle system by reducing start color alpha
-            float fadeDuration = 0.5f;
-            float fadeElapsed = 0f;
-            var ps = fx.GetComponent<ParticleSystem>();
-            if (ps != null)
-            {
-                var main = ps.main;
-                Color startColor = main.startColor.color;
-                while (fadeElapsed < fadeDuration && !skipToNext && !skipAll)
-                {
-                    fadeElapsed += Time.deltaTime;
-                    float newAlpha = Mathf.Lerp(1f, 0f, fadeElapsed / fadeDuration);
-                    main.startColor = new Color(startColor.r, startColor.g, startColor.b, newAlpha);
-                    await Task.Yield();
-                }
-                main.startColor = new Color(startColor.r, startColor.g, startColor.b, 0f);
-            }
-            Destroy(fx.gameObject);
-
-            // Wait for 500ms or skip
             skipSignal = new TaskCompletionSource<bool>();
-            var completed = await Task.WhenAny(skipSignal.Task);
-            skipSignal = null;
-            skipToNext = false;
 
-            Destroy(cardUI.gameObject);
+            await Task.WhenAny(spawnedCards[i].Reveal(),
+                skipSignal.Task);
+            if (skipSignal.Task.IsCompleted)
+                spawnedCards[i].forceEndFlip();
+
+            skipSignal = new TaskCompletionSource<bool>();
+            await Task.WhenAny(
+                skipSignal.Task
+            );
+
+            skipSignal = null;
+            spawnedCards[i].SetFaceDown();
+            spawnedCards[i].HideCard();
         }
 
+        // Skip all → tout révéler
+        {
+            foreach (var card in spawnedCards)
+            {
+                card.RevealCard();
+                card.endReveal();
+                await Task.Delay(20);
+            }
+        }
+
+
         // If skipping all, reveal all remaining cards instantly
-        if (skipAll)
+        /*if (skipAll)
         {
             for (int i = 0; i < pulledCards.Length; i++)
             {
@@ -173,7 +203,9 @@ public class PackOpen : MonoBehaviour
             await Task.WhenAny(skipSignal.Task);
             skipSignal = null;
             skipToNext = false;
-        }
+        }*/
+        skipSignal = new TaskCompletionSource<bool>();
+        await Task.WhenAny(skipSignal.Task);
         loadingScreen.SetActive(true);
         await PlayerProfileStore.RemovePackAsync(packData.packId, 1);
         await PlayerProfileStore.AddCards(pulledCards);
@@ -183,10 +215,35 @@ public class PackOpen : MonoBehaviour
         SceneManager.LoadScene("Main - Copie");
     }
 
+    async void AnimateCardMove(RectTransform rt, Vector2 target)
+    {
+        Vector2 start = rt.anchoredPosition;
+        float duration = 0.6f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            float eased = EaseOutCubic(t);
+
+            rt.anchoredPosition = Vector2.Lerp(start, target, eased);
+            await Task.Yield();
+        }
+
+        rt.anchoredPosition = target;
+    }
+
+    float EaseOutCubic(float t)
+    {
+        return 1f - Mathf.Pow(1f - t, 3f);
+    }
+
     private async Task PlayConstellationPhase()
     {
         // Afficher la constellation
         constellationRoot.SetActive(true);
+        constellationRoot.GetComponent<Image>().enabled = true;
         constellationController.GenerateStars();
         // Attendre le choix du joueur
         await constellationController.WaitForStarSelection();
@@ -195,8 +252,6 @@ public class PackOpen : MonoBehaviour
 
         // Jouer l’animation correspondante
         await constellationController.PlayRarityReveal(rarity);
-
-        constellationRoot.SetActive(false);
     }
 
 }

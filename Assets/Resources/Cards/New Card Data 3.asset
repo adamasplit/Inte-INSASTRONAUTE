@@ -15,7 +15,7 @@ MonoBehaviour:
   cardId: Test3
   sprite: {fileID: 21300000, guid: b9bfe6b2380d65d48804a1e7d639cf3b, type: 3}
   borderColor: {r: 1, g: 1, b: 1, a: 0}
-  rarity: 0
+  rarity: 4
   FirstTimeValue: 5
   SubsequentValue: 2
   cardName: ad

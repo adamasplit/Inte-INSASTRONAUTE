@@ -27,7 +27,19 @@ public class CardDatabase : MonoBehaviour
                 _byId[card.cardId] = card;
         }
     }
-
+    public Color GetRarityColor(int rarity)
+{
+    return rarity switch
+    {
+        0 => Color.white,
+        1 => new Color(0.6f, 0.7f, 1f),
+        2 => new Color(1f, 0.85f, 0.2f),
+        3 => Color.magenta,
+        4 => Color.red,
+        5 => new Color(1f, 0.5f, 0f),
+        _ => Color.white
+    };
+}
     public CardData Get(string cardId)
     {
         if (_byId == null) Init();

@@ -14,9 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PackData
   packId: test5
   packName: Pack de test
-  cardCount: 5
+  cardCount: 15
   packSprite: {fileID: 21300000, guid: aa1dd11218dd0cb4cbd273ce8fafbb4a, type: 3}
   possibleCards:
-  - cardId: 
-    rarity: 0
-    weight: 0
+  - cardId: 4
+    weight: 45
+  - cardId: Test3
+    weight: 45
+  - cardId: Test
+    weight: 1
