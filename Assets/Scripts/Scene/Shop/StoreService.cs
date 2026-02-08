@@ -52,14 +52,14 @@ public static class StoreService
         {
             case ShopOfferType.Pack:
                 await PlayerProfileStore.AddPackAsync(
-                    ShopDatabase.Instance.packDatabase.Get(offer.rewardId),
+                    PackDatabase.Instance.Get(offer.rewardId),
                     offer.amount
                 );
                 break;
 
             case ShopOfferType.Card:
                 await PlayerProfileStore.AddCardAsync(
-                    offer.rewardId,
+                    CardDatabase.Instance.Get(offer.rewardId).cardId,
                     offer.amount
                 );
                 break;

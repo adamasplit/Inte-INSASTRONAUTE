@@ -4,7 +4,18 @@ using System.Collections.Generic;
 public class PackDatabase : MonoBehaviour
 {
     public List<PackData> packs;
-
+    public static PackDatabase Instance;
+    void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        Init();
+    }
     private Dictionary<string, PackData> _byId;
 
     public void Init()

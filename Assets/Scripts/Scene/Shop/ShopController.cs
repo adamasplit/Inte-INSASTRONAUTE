@@ -5,6 +5,7 @@ public class ShopController : MonoBehaviour
 {
     public Transform packContainer;
     public Transform cardContainer;
+    public GameObject loadingScreen;
 
     public ShopItemUI itemPrefab;
 

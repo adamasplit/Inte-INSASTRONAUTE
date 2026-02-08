@@ -11,6 +11,7 @@ public class Column : MonoBehaviour
     {
         foreach (var enemy in enemies)
         {
+            if (enemy == null) continue;
             float damage = ElementCalculator.GetDamage(card.element, enemy.element, card.baseDamage);
             enemy.TakeDamage(damage, card.element);
         }

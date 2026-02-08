@@ -10,6 +10,9 @@ public class Enemy : MonoBehaviour
     public ParticleSystem hitEffect;
     public ParticleSystem criticalEffect;
     public ParticleSystem weakEffect;
+    private bool prismatic;
+    public SpriteRenderer spriteRenderer;
+    public SpriteRenderer prismaticOverlay;
 
     Color GetElementColor(Element elem)
     {
@@ -24,17 +27,33 @@ public class Enemy : MonoBehaviour
     }
     public void Initialize(float health, float moveSpeed)
     {
-        Element elem = Random.Range(0, 4) switch
+        if (this == null) return;
+        GetComponent<RectTransform>().position = new Vector3(transform.position.x, 1.5f, 0);
+        Debug.Log("Initializing enemy at " + transform.position);
+        if (Random.Range(0, 1) == 0)
         {
-            0 => Element.Fire,
-            1 => Element.Water,
-            2 => Element.Earth,
+            prismatic = true;
+            element = Element.Prismatic;
+        }
+        else
+        {
+            Element elem = Random.Range(0, 4) switch
+            {
+                0 => Element.Fire,
+                1 => Element.Water,
+                2 => Element.Earth,
             3 => Element.Air,
             _ => Element.Fire
-        };
+            };
+            element = elem;
+        }
         hp = health;
         speed = moveSpeed;
-        GetComponent<Image>().color = GetElementColor(elem);
+        spriteRenderer.color = GetElementColor(element);
+        if (prismatic)
+        {
+            prismaticOverlay.gameObject.SetActive(true);
+        }
     }
     public void TakeDamage(float dmg,Element element)
     {
@@ -73,7 +92,7 @@ public class Enemy : MonoBehaviour
         deathEffect.gameObject.SetActive(true);
         deathEffect.Play();
         GameManager.Instance.AddScore(10);
-        GetComponent<Image>().enabled = false;
+        spriteRenderer.enabled = false;
         yield return new WaitForSeconds(1f);
         Destroy(gameObject);
     }

@@ -18,21 +18,17 @@ public class ShopItemUI : MonoBehaviour
         {
             if (data.type == ShopOfferType.Card)
             {
-                icon.sprite = ShopDatabase.Instance.cardDatabase.Get(data.rewardId).sprite;
+                icon.sprite = CardDatabase.Instance.Get(data.rewardId).sprite;
             }
             else // Pack
             {
-                if (ShopDatabase.Instance == null)
+                if (PackDatabase.Instance == null)
                 {
-                    Debug.LogError("ShopDatabase.Instance is null");
-                }
-                else if (ShopDatabase.Instance.packDatabase == null)
-                {
-                    Debug.LogError("ShopDatabase.Instance.packDatabase is null");
+                    Debug.LogError("PackDatabase.Instance is null");
                 }
                 else
                 {
-                    var pack = ShopDatabase.Instance.packDatabase.Get(data.rewardId);
+                    var pack = PackDatabase.Instance.Get(data.rewardId);
                     if (pack == null)
                     {
                         Debug.LogError($"Pack with rewardId {data.rewardId} is null");
@@ -57,7 +53,9 @@ public class ShopItemUI : MonoBehaviour
 
     async void OnBuyClicked()
     {
+        FindFirstObjectByType<ShopController>().loadingScreen.SetActive(true);
         Debug.Log("[ShopItemUI]Buying offer: " + offer.purchaseId.ToUpper());
         await StoreService.BuyAsync(offer.purchaseId);
+        FindFirstObjectByType<ShopController>().loadingScreen.SetActive(false);
     }
 }

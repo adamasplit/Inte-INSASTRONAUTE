@@ -23,12 +23,30 @@ public class PlayerStatusController : MonoBehaviour
             FindObjectsSortMode.None
         );
         //await Task.Delay(500); // Attendre un peu pour s'assurer que tout est prêt
+        await AllNecessaryComponentsPresentAsync();
         await RefreshStatusAsync();
         await FindFirstObjectByType<LeaderboardController>().RefreshLeaderboardAsync();
         await FindFirstObjectByType<ShopRemoteLoader>().UpdateShopFromRemoteTask();
         await ResolveBetsOnLoginAsync();
         await FindFirstObjectByType<EventsMenuController>().RefreshEventsAsync();
         loadingIndicator.SetActive(false);
+    }
+
+    private async Task AllNecessaryComponentsPresentAsync()
+    {
+        while (FindFirstObjectByType<LeaderboardController>() == null ||
+               FindFirstObjectByType<ShopRemoteLoader>() == null ||
+               FindFirstObjectByType<EventsMenuController>() == null)
+        {
+            await Task.Delay(100);
+            Debug.Log("[PlayerStatusController] Null components");
+            if (FindFirstObjectByType<LeaderboardController>() == null)
+                Debug.Log("[PlayerStatusController] LeaderboardController not found");
+            if (FindFirstObjectByType<ShopRemoteLoader>() == null)
+                Debug.Log("[PlayerStatusController] ShopRemoteLoader not found");
+            if (FindFirstObjectByType<EventsMenuController>() == null)
+                Debug.Log("[PlayerStatusController] EventsMenuController not found");
+        }
     }
 
     private async Task ResolveBetsOnLoginAsync()

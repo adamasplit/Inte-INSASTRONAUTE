@@ -9,7 +9,6 @@ public class PackData : ScriptableObject
     public int cardCount;
     public Sprite packSprite;
 
-    public enum Rarity { Common, Rare, Epic, Legendary }
 
     [Header("Possible cards in this pack")]
     public List<PackCardEntry> possibleCards;
@@ -19,6 +18,5 @@ public class PackData : ScriptableObject
 public class PackCardEntry
 {
     public string cardId;
-    public PackData.Rarity rarity;
     public float weight = 1f; // pour plus tard (drop rate)
 }

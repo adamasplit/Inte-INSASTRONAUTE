@@ -4,15 +4,17 @@ public class EnemySpawner : MonoBehaviour
 {
     public Enemy enemyPrefab;
     public GridManager grid;
-
+    private float nextSpawnTime = 0f;
+    private float spawnInterval = 2f;
     void Update()
     {
         if (GameManager.Instance.currentState != GameManager.GameState.Playing)
             return;
-
+        spawnInterval = GameManager.Instance.spawnInterval;
         // Example spawning logic: spawn an enemy every 2 seconds in a random column
-        if (Time.frameCount % GameManager.Instance.spawnInterval == 0)
+        if (Time.time >= nextSpawnTime)
         {
+            nextSpawnTime = Time.time + spawnInterval;
             int columnIndex = Random.Range(0, GameManager.Instance.columnCount);
             SpawnEnemy();
         }
@@ -51,15 +53,7 @@ public class EnemySpawner : MonoBehaviour
             int column = availableColumns[Random.Range(0, availableColumns.Count)];
             Column selectedColumn = grid.columns[column];
             Enemy e = Instantiate(enemyPrefab, selectedColumn.enemyContainer);
-            e.Initialize(100f, 50f);
+            e.Initialize(100f, 1f+(GameManager.Instance.score*0.1f));
             selectedColumn.enemies.Add(e);
         }
-
-    void SpawnEnemy(int columnIndex)
-    {
-        Column col = grid.columns[columnIndex];
-        Enemy e = Instantiate(enemyPrefab, col.enemyContainer);
-        e.Initialize(100f, 50f);
-        col.enemies.Add(e);
-    }
 }

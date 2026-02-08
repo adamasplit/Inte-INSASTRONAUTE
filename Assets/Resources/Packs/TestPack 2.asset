@@ -18,32 +18,22 @@ MonoBehaviour:
   packSprite: {fileID: 21300000, guid: d0ea8c8d589cc0441a642d3ae6748f9e, type: 3}
   possibleCards:
   - cardId: 4
-    rarity: 0
     weight: 1
   - cardId: 5
-    rarity: 0
     weight: 1
   - cardId: 6
-    rarity: 0
     weight: 1
   - cardId: 7
-    rarity: 0
     weight: 1
   - cardId: 8
-    rarity: 0
     weight: 1
   - cardId: 9
-    rarity: 0
     weight: 1
   - cardId: Test
-    rarity: 0
     weight: 1
   - cardId: Test1
-    rarity: 0
     weight: 1
   - cardId: Test2
-    rarity: 0
     weight: 1
   - cardId: Test3
-    rarity: 0
-    weight: 1
+    weight: 0.05

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class PackUI : MonoBehaviour
 {
@@ -55,7 +56,10 @@ public class PackUI : MonoBehaviour
             .allPacks.FirstOrDefault(p => p.packId == packId);
         if (packData != null)
         {
-            PackOpen.Instance.OpenPack(packData);
+            PullManager.Instance.ChosenPack = packData;
+            PullManager.Instance.GeneratePull(packData);
+            SceneManager.LoadScene("PullScene");
+
         }
         else
         {
