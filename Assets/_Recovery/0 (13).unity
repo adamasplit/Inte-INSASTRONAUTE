@@ -9893,9 +9893,6 @@ GameObject:
   - component: {fileID: 1824987900}
   - component: {fileID: 1824987899}
   - component: {fileID: 1824987901}
-  - component: {fileID: 1824987903}
-  - component: {fileID: 1824987902}
-  - component: {fileID: 1824987904}
   m_Layer: 0
   m_Name: Bootstrap
   m_TagString: Untagged
@@ -9954,46 +9951,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0f4a5db8ad864f4fb43a16740dae0ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1824987902
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1824987896}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3542c7844fbff2459a29dd60f4a84d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CardDatabase
-  cards: []
---- !u!114 &1824987903
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1824987896}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b77e54eb3c654ec438ae3a5aa045d9e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PackDatabase
-  packs: []
---- !u!114 &1824987904
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1824987896}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b97f7723f9c43d448f2de31e7ec45d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PullManager
-  ChosenPack: {fileID: 0}
-  highestRarity: 0
 --- !u!1 &1825981450
 GameObject:
   m_ObjectHideFlags: 0

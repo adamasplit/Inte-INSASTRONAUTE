@@ -111,6 +111,11 @@ public static class PlayerProfileStore
     public static async Task ComputePC()
     {
         int totalPC = 0;
+        if (CardDatabase.Instance.cards == null || CardDatabase.Instance.cards.Count == 0)
+        {
+            Debug.LogWarning("CardDatabase non initialisée ou vide lors du calcul du PC.");
+            CardDatabase.Instance.Init();
+        }
         foreach (var card in CardDatabase.Instance.cards)
         {
             if (CARD_COLLECTION.TryGetValue(card.cardId, out int qty))
