@@ -11,11 +11,15 @@ public class AuthUIBinder : MonoBehaviour
     [Header("Sign In")]
     [SerializeField] private TMP_InputField signInUsername;
     [SerializeField] private TMP_InputField signInPassword;
+    [SerializeField] private TMP_Text signInUsernameHint;
+    [SerializeField] private TMP_Text signInPasswordHint;
 
     [Header("Sign Up")]
     [SerializeField] private TMP_InputField signUpUsername;
     [SerializeField] private TMP_InputField signUpPassword;
     [SerializeField] private TMP_InputField signUpPasswordConfirm;
+    [SerializeField] private TMP_Text signUpUsernameHint;
+    [SerializeField] private TMP_Text signUpPasswordHint;
 
     [Header("Feedback")]
     [SerializeField] private TMP_Text statusText;
@@ -24,8 +28,18 @@ public class AuthUIBinder : MonoBehaviour
     [SerializeField] private Color validColor = new Color(0.2f, 0.8f, 0.4f);
     [SerializeField] private Color invalidColor = new Color(0.9f, 0.3f, 0.3f);
     [SerializeField] private Color neutralColor = Color.white;
+    [SerializeField] private Color selectedColor = new Color(0.4f, 0.7f, 1.0f, 1f); // Bright blue highlight
+    [SerializeField] private Color caretColor = new Color(0.2f, 0.2f, 0.2f, 1f); // Dark caret for visibility
+    [SerializeField] private int caretWidth = 2; // Wider caret for mobile
+    [SerializeField] private Color hintTextColor = new Color(0.6f, 0.6f, 0.6f); // Gray hint text
+    [SerializeField] private Color warningTextColor = new Color(0.9f, 0.6f, 0.3f); // Orange warning
+
+    [Header("Haptic Feedback")]
+    [SerializeField] private bool enableHaptics = true;
 
     private Vector3 statusTextInitialPos;
+    private TMP_InputField currentSelectedField;
+    private Color currentFieldOriginalColor;
 
     private void Start()
     {
@@ -33,16 +47,45 @@ public class AuthUIBinder : MonoBehaviour
             statusTextInitialPos = statusText.transform.localPosition;
 
         // Add real-time validation listeners
-        if (signInUsername) signInUsername.onValueChanged.AddListener(_ => ValidateSignInFields());
-        if (signInPassword) signInPassword.onValueChanged.AddListener(_ => ValidateSignInFields());
+        if (signInUsername)
+        {
+            signInUsername.onValueChanged.AddListener(_ => ValidateSignInFields());
+            signInUsername.onSelect.AddListener(_ => OnFieldSelected(signInUsername));
+            signInUsername.onDeselect.AddListener(_ => OnFieldDeselected(signInUsername));
+        }
+        if (signInPassword)
+        {
+            signInPassword.onValueChanged.AddListener(_ => ValidateSignInFields());
+            signInPassword.onSelect.AddListener(_ => OnFieldSelected(signInPassword));
+            signInPassword.onDeselect.AddListener(_ => OnFieldDeselected(signInPassword));
+        }
         
-        if (signUpUsername) signUpUsername.onValueChanged.AddListener(_ => ValidateSignUpFields());
-        if (signUpPassword) signUpPassword.onValueChanged.AddListener(_ => ValidateSignUpFields());
-        if (signUpPasswordConfirm) signUpPasswordConfirm.onValueChanged.AddListener(_ => ValidateSignUpFields());
+        if (signUpUsername)
+        {
+            signUpUsername.onValueChanged.AddListener(_ => ValidateSignUpFields());
+            signUpUsername.onSelect.AddListener(_ => OnFieldSelected(signUpUsername));
+            signUpUsername.onDeselect.AddListener(_ => OnFieldDeselected(signUpUsername));
+        }
+        if (signUpPassword)
+        {
+            signUpPassword.onValueChanged.AddListener(_ => ValidateSignUpFields());
+            signUpPassword.onSelect.AddListener(_ => OnFieldSelected(signUpPassword));
+            signUpPassword.onDeselect.AddListener(_ => OnFieldDeselected(signUpPassword));
+        }
+        if (signUpPasswordConfirm)
+        {
+            signUpPasswordConfirm.onValueChanged.AddListener(_ => ValidateSignUpFields());
+            signUpPasswordConfirm.onSelect.AddListener(_ => OnFieldSelected(signUpPasswordConfirm));
+            signUpPasswordConfirm.onDeselect.AddListener(_ => OnFieldDeselected(signUpPasswordConfirm));
+        }
+
+        // Mobile optimization: Configure input fields
+        ConfigureForMobile();
     }
 
     public async void OnClick_Guest()
     {
+        TriggerHaptic();
         await Run(async () =>
         {
             await AuthController.Instance.SignInGuest();
@@ -52,6 +95,7 @@ public class AuthUIBinder : MonoBehaviour
 
     public async void OnClick_SignIn()
     {
+        TriggerHaptic();
         await Run(async () =>
         {
             var u = (signInUsername ? signInUsername.text : "").Trim();
@@ -67,6 +111,7 @@ public class AuthUIBinder : MonoBehaviour
 
     public async void OnClick_SignUp()
     {
+        TriggerHaptic();
         await Run(async () =>
         {
             var u = (signUpUsername ? signUpUsername.text : "").Trim();
@@ -91,6 +136,7 @@ public class AuthUIBinder : MonoBehaviour
     // Nécessite d'être déjà connecté en invité.
     public async void OnClick_LinkGuestToAccount()
     {
+        TriggerHaptic();
         await Run(async () =>
         {
             var u = (signUpUsername ? signUpUsername.text : "").Trim();
@@ -121,14 +167,17 @@ public class AuthUIBinder : MonoBehaviour
         }
         catch (AuthenticationException ae)
         {
+            TriggerHaptic(50); // Longer vibration for errors
             SetStatus(MapAuthError(ae));
         }
         catch (RequestFailedException rfe)
         {
+            TriggerHaptic(50);
             SetStatus(MapRequestError(rfe));
         }
         catch (Exception e)
         {
+            TriggerHaptic(50);
             SetStatus(e.Message);
         }
     }
@@ -259,14 +308,20 @@ public class AuthUIBinder : MonoBehaviour
             if (string.IsNullOrEmpty(username))
             {
                 SetFieldColor(signInUsername, neutralColor);
+                SetHint(signInUsernameHint, "");
             }
             else if (username.Length >= 3 && username.Length <= 20)
             {
                 SetFieldColor(signInUsername, validColor);
+                SetHint(signInUsernameHint, "Valide !", validColor);
             }
             else
             {
                 SetFieldColor(signInUsername, invalidColor);
+                if (username.Length < 3)
+                    SetHint(signInUsernameHint, $"Trop court ({username.Length}/3)", warningTextColor);
+                else
+                    SetHint(signInUsernameHint, $"Trop long ({username.Length}/20)", warningTextColor);
             }
         }
 
@@ -277,14 +332,17 @@ public class AuthUIBinder : MonoBehaviour
             if (string.IsNullOrEmpty(password))
             {
                 SetFieldColor(signInPassword, neutralColor);
+                SetHint(signInPasswordHint, "");
             }
             else if (password.Length >= 8)
             {
                 SetFieldColor(signInPassword, validColor);
+                SetHint(signInPasswordHint, " OK", validColor);
             }
             else
             {
                 SetFieldColor(signInPassword, invalidColor);
+                SetHint(signInPasswordHint, $"Minimum 8 caractères ({password.Length}/8)", warningTextColor);
             }
         }
     }
@@ -298,14 +356,20 @@ public class AuthUIBinder : MonoBehaviour
             if (string.IsNullOrEmpty(username))
             {
                 SetFieldColor(signUpUsername, neutralColor);
+                SetHint(signUpUsernameHint, "");
             }
             else if (username.Length >= 3 && username.Length <= 20)
             {
                 SetFieldColor(signUpUsername, validColor);
+                SetHint(signUpUsernameHint, " Nom d'utilisateur valide", validColor);
             }
             else
             {
                 SetFieldColor(signUpUsername, invalidColor);
+                if (username.Length < 3)
+                    SetHint(signUpUsernameHint, $"Trop court ({username.Length}/3)", warningTextColor);
+                else
+                    SetHint(signUpUsernameHint, $"Trop long ({username.Length}/20)", warningTextColor);
             }
         }
 
@@ -316,14 +380,17 @@ public class AuthUIBinder : MonoBehaviour
             if (string.IsNullOrEmpty(password))
             {
                 SetFieldColor(signUpPassword, neutralColor);
+                SetHint(signUpPasswordHint, "Min 8 caractères, 1 majuscule, 1 minuscule, 1 chiffre, 1 symbole");
             }
             else if (IsPasswordValid(password))
             {
                 SetFieldColor(signUpPassword, validColor);
+                SetHint(signUpPasswordHint, " Mot de passe fort", validColor);
             }
             else
             {
                 SetFieldColor(signUpPassword, invalidColor);
+                SetHint(signUpPasswordHint, GetPasswordRequirementsHint(password), warningTextColor);
             }
         }
 
@@ -371,5 +438,142 @@ public class AuthUIBinder : MonoBehaviour
         {
             field.image.color = color;
         }
+    }
+
+    private void SetHint(TMP_Text hintText, string text, Color? color = null)
+    {
+        if (!hintText) return;
+        
+        hintText.text = text;
+        hintText.color = color ?? hintTextColor;
+    }
+
+    private string GetPasswordRequirementsHint(string password)
+    {
+        var missing = new System.Collections.Generic.List<string>();
+        
+        if (password.Length < 8)
+            missing.Add($"{password.Length}/8 caractères");
+        
+        bool hasUpper = false, hasLower = false, hasDigit = false, hasSymbol = false;
+        
+        foreach (char c in password)
+        {
+            if (char.IsUpper(c)) hasUpper = true;
+            else if (char.IsLower(c)) hasLower = true;
+            else if (char.IsDigit(c)) hasDigit = true;
+            else if (!char.IsLetterOrDigit(c)) hasSymbol = true;
+        }
+        
+        if (!hasUpper) missing.Add("majuscule");
+        if (!hasLower) missing.Add("minuscule");
+        if (!hasDigit) missing.Add("chiffre");
+        if (!hasSymbol) missing.Add("symbole (!@#$%)");
+        
+        if (missing.Count == 0)
+            return " Mot de passe fort";
+        
+        return "Manque: " + string.Join(" • ", missing);
+    }
+
+    private void OnFieldSelected(TMP_InputField field)
+    {
+        if (!field || !field.image) return;
+        
+        TriggerHaptic(10); // Light haptic feedback
+        
+        currentSelectedField = field;
+        currentFieldOriginalColor = field.image.color;
+        
+        // Apply selection highlight
+        field.image.color = selectedColor;
+    }
+
+    private void OnFieldDeselected(TMP_InputField field)
+    {
+        if (!field || !field.image) return;
+        
+        currentSelectedField = null;
+        
+        // Restore validation color based on current content
+        if (field == signInUsername || field == signInPassword)
+            ValidateSignInFields();
+        else
+            ValidateSignUpFields();
+    }
+
+    private void ConfigureForMobile()
+    {
+        // Configure username fields for mobile
+        if (signInUsername)
+        {
+            signInUsername.contentType = TMP_InputField.ContentType.Standard;
+            signInUsername.keyboardType = TouchScreenKeyboardType.Default;
+            signInUsername.inputType = TMP_InputField.InputType.Standard;
+            signInUsername.characterValidation = TMP_InputField.CharacterValidation.None;
+            signInUsername.lineType = TMP_InputField.LineType.SingleLine;
+            ConfigureCaret(signInUsername);
+        }
+        
+        if (signUpUsername)
+        {
+            signUpUsername.contentType = TMP_InputField.ContentType.Standard;
+            signUpUsername.keyboardType = TouchScreenKeyboardType.Default;
+            signUpUsername.inputType = TMP_InputField.InputType.Standard;
+            signUpUsername.characterValidation = TMP_InputField.CharacterValidation.None;
+            signUpUsername.lineType = TMP_InputField.LineType.SingleLine;
+            ConfigureCaret(signUpUsername);
+        }
+
+        // Configure password fields for mobile
+        if (signInPassword)
+        {
+            signInPassword.contentType = TMP_InputField.ContentType.Password;
+            signInPassword.inputType = TMP_InputField.InputType.Password;
+            signInPassword.lineType = TMP_InputField.LineType.SingleLine;
+            ConfigureCaret(signInPassword);
+        }
+        
+        if (signUpPassword)
+        {
+            signUpPassword.contentType = TMP_InputField.ContentType.Password;
+            signUpPassword.inputType = TMP_InputField.InputType.Password;
+            signUpPassword.lineType = TMP_InputField.LineType.SingleLine;
+            ConfigureCaret(signUpPassword);
+        }
+        
+        if (signUpPasswordConfirm)
+        {
+            signUpPasswordConfirm.contentType = TMP_InputField.ContentType.Password;
+            signUpPasswordConfirm.inputType = TMP_InputField.InputType.Password;
+            signUpPasswordConfirm.lineType = TMP_InputField.LineType.SingleLine;
+            ConfigureCaret(signUpPasswordConfirm);
+        }
+    }
+
+    private void ConfigureCaret(TMP_InputField field)
+    {
+        if (!field) return;
+        
+        // Make caret visible and wider for mobile
+        field.customCaretColor = true;
+        field.caretColor = caretColor;
+        field.caretWidth = caretWidth;
+        
+        // Ensure caret blink rate is visible
+        field.caretBlinkRate = 0.85f;
+        
+        // Set selection color for better visibility
+        field.selectionColor = new Color(0.65f, 0.8f, 1f, 0.5f);
+    }
+
+    private void TriggerHaptic(int durationMs = 20)
+    {
+#if UNITY_ANDROID || UNITY_IOS
+        if (enableHaptics)
+        {
+            Handheld.Vibrate();
+        }
+#endif
     }
 }
