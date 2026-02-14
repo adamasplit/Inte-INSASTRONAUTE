@@ -19,7 +19,8 @@ enum PackOpenPhase
 public class PackOpen : MonoBehaviour
 {
     // State for skipping
-    private bool skipToNext = false;
+
+    
     private bool skipAll = false;
     private TaskCompletionSource<bool> skipSignal;
     private PackOpenPhase currentPhase= PackOpenPhase.None;
@@ -31,7 +32,6 @@ public class PackOpen : MonoBehaviour
     // Call this to skip to the next card in the pack opening sequence
     public void SkipToNextCard()
     {
-        skipToNext = true;
         skipSignal?.TrySetResult(true);
     }
 
@@ -54,8 +54,6 @@ public class PackOpen : MonoBehaviour
     public CardUI cardRevealPrefab;
     public Transform cardRevealAnchor;
     private CardData[] pulledCards;
-    public GameObject particlePrefab;
-    public Canvas fxCanvas;
     public Transform summaryGrid;
     public GameObject loadingScreen;
     public GameObject constellationRoot;
@@ -68,13 +66,13 @@ public class PackOpen : MonoBehaviour
         constellationController = constellationRoot.GetComponent<ConstellationController>();
         OpenPack(PullManager.Instance.ChosenPack);
     }
+    
 
     public async void OpenPack(PackData packData)
     {
         NavigationLock.IsScreenSwipeLocked = true;
         PullManager.Instance.GeneratePull(packData);
         panel.SetActive(true);
-        skipToNext = false;
         skipAll = false;
         await OpenPackRoutine(packData);
         NavigationLock.IsScreenSwipeLocked = false;
@@ -115,6 +113,7 @@ public class PackOpen : MonoBehaviour
             cardUI.SetCardData(1, cardData.sprite, cardData.borderColor);
 
             var reveal = cardUI.GetComponent<CardReveal>();
+            reveal.SetRarity(cardData.rarity);
             reveal.SetFaceDown();
 
             RectTransform rt = cardUI.GetComponent<RectTransform>();
@@ -148,6 +147,8 @@ public class PackOpen : MonoBehaviour
 
         // Petite pause après explosion
         await Task.Delay(600);
+        skipSignal = new TaskCompletionSource<bool>();
+        await Task.WhenAny(skipSignal.Task);
         for (int i = 0; i < spawnedCards.Count; i++)
         {
             spawnedCards[i].gameObject.SetActive(false);
@@ -161,8 +162,7 @@ public class PackOpen : MonoBehaviour
 
             skipSignal = new TaskCompletionSource<bool>();
 
-            await Task.WhenAny(spawnedCards[i].Reveal(),
-                skipSignal.Task);
+            await Task.WhenAny(spawnedCards[i].Reveal(),skipSignal.Task);
             if (skipSignal.Task.IsCompleted)
                 spawnedCards[i].forceEndFlip();
 
@@ -172,7 +172,6 @@ public class PackOpen : MonoBehaviour
             );
 
             skipSignal = null;
-            spawnedCards[i].SetFaceDown();
             spawnedCards[i].HideCard();
         }
 
@@ -202,7 +201,6 @@ public class PackOpen : MonoBehaviour
             skipSignal = new TaskCompletionSource<bool>();
             await Task.WhenAny(skipSignal.Task);
             skipSignal = null;
-            skipToNext = false;
         }*/
         skipSignal = new TaskCompletionSource<bool>();
         await Task.WhenAny(skipSignal.Task);
@@ -244,7 +242,7 @@ public class PackOpen : MonoBehaviour
         // Afficher la constellation
         constellationRoot.SetActive(true);
         constellationRoot.GetComponent<Image>().enabled = true;
-        constellationController.GenerateStars();
+        await constellationController.GenerateStars();
         // Attendre le choix du joueur
         await constellationController.WaitForStarSelection();
         // Récupérer la rareté

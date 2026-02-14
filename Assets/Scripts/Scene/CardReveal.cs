@@ -12,6 +12,18 @@ public class CardReveal:MonoBehaviour
     private Vector2 originalPosition;
     public bool revealed = false;
     public bool endFlip = false;
+    public ParticleSystem shineParticles;
+    public ParticleSystem revealParticles;
+    private int rarity  = 0;
+    public void SetRarity(int rarity)
+    {
+        this.rarity = rarity;
+        if (rarity == 4)
+        {
+            shineParticles.gameObject.SetActive(true);
+            shineParticles.Play();
+        }
+    }
     public void forceEndFlip()
     {
         endFlip = true;
@@ -25,6 +37,8 @@ public class CardReveal:MonoBehaviour
         cardImage.gameObject.SetActive(false);
         backImage.gameObject.SetActive(false);
         effectImage.gameObject.SetActive(false);
+        revealParticles.gameObject.SetActive(false);
+        shineParticles.gameObject.SetActive(false);
 
         cardRoot.localRotation = Quaternion.identity;
         cardRoot.localScale = Vector3.one*0.6f;
@@ -39,6 +53,7 @@ public class CardReveal:MonoBehaviour
     }
     public void RevealCard()
     {
+        revealParticles.transform.localScale*=0.5f;
         gameObject.SetActive(true);
         cardImage.gameObject.SetActive(true);
         backImage.gameObject.SetActive(false);
@@ -79,7 +94,7 @@ public class CardReveal:MonoBehaviour
     }
     private async Task FlipRoutine()
     {
-        float duration = 0.25f;
+        float duration = 0.25f*(0.3f+0.3f*rarity);
         float elapsed = 0f;
 
         while (elapsed < duration)
@@ -115,16 +130,30 @@ public class CardReveal:MonoBehaviour
     }
     public IEnumerator RevealCardRoutine()
     {
-        // Simple reveal animation
-        float elapsed = 0f;
-        float duration=1f;
-        while (elapsed < duration)
+        if (rarity>1)
         {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            effectImage.color = new Color(1f, 1f, 1f,Mathf.Lerp(1f, 0f, t));
-            effectImage.transform.localScale = (1.5f-0.5f*Mathf.Lerp(1f, 0f, t))*Vector3.one;
-            yield return null;
+            revealParticles.gameObject.SetActive(true);
+            var trails = revealParticles.trails;
+            trails.colorOverLifetime = new ParticleSystem.MinMaxGradient(CardDatabase.Instance.GetRarityColor(rarity));
+            var main = revealParticles.main;
+            main.startLifetime = 0.5f+0.3f*rarity;
+            main.startSize = 0.5f+0.3f*rarity;
+            main.startSpeed = 100f/(0.5f+0.3f*rarity);
+            revealParticles.Play();
+        }
+        if (rarity>0)
+        {
+            // Simple reveal animation
+            float elapsed = 0f;
+            float duration=0.5f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+                effectImage.color = new Color(1f, 1f, 1f,Mathf.Lerp(1f, 0f, t));
+                effectImage.transform.localScale = (1.5f-0.5f*Mathf.Lerp(1f, 0f, t))*Vector3.one;
+                yield return null;
+            }
         }
     }
 }
