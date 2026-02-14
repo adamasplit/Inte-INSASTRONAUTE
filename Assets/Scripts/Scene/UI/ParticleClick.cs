@@ -157,9 +157,7 @@ public class ParticleClick : MonoBehaviour
     {
         if (!enableHaptics) return;
         
-#if UNITY_ANDROID || UNITY_IOS
-        Handheld.Vibrate();
-#endif
+        HapticFeedback.Light();
     }
 
     // Public method to spawn particles programmatically

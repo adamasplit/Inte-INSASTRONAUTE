@@ -10,26 +10,52 @@ public class PlayerStatusController : MonoBehaviour
 
     [Header("Refs")]
     [SerializeField] private MainUIBinder ui;
-    public GameObject loadingIndicator;
+    public LoadingScreen loadingScreen;
 
     private async void Start()
     {
-        loadingIndicator.SetActive(true);
+        // Initialize loading screen with total steps
+        if (loadingScreen != null)
+        {
+            loadingScreen.gameObject.SetActive(true);
+            loadingScreen.Initialize(8); // Total number of loading steps
+        }
+
         await PlayerProfileStore.LoadPackCollectionAsync();
+        loadingScreen?.IncrementStep();
+        
         await PlayerProfileStore.LoadCardCollectionAsync();
+        loadingScreen?.IncrementStep();
 
         uIElements = FindObjectsByType<UpdateDataUI>(
             FindObjectsInactive.Include,
             FindObjectsSortMode.None
         );
+        loadingScreen?.IncrementStep();
+        
         //await Task.Delay(500); // Attendre un peu pour s'assurer que tout est prêt
         await AllNecessaryComponentsPresentAsync();
+        loadingScreen?.IncrementStep();
+        
         await RefreshStatusAsync();
+        loadingScreen?.IncrementStep();
+        
         await FindFirstObjectByType<LeaderboardController>().RefreshLeaderboardAsync();
+        loadingScreen?.IncrementStep();
+        
         await FindFirstObjectByType<ShopRemoteLoader>().UpdateShopFromRemoteTask();
+        loadingScreen?.IncrementStep();
+        
         await ResolveBetsOnLoginAsync();
+        loadingScreen?.IncrementStep();
+        
         await FindFirstObjectByType<EventsMenuController>().RefreshEventsAsync();
-        loadingIndicator.SetActive(false);
+        
+        if (loadingScreen != null)
+        {
+            loadingScreen.CompleteLoading();
+            loadingScreen.HideWithFade();
+        }
     }
 
     private async Task AllNecessaryComponentsPresentAsync()

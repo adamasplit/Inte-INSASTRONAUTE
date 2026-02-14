@@ -2,39 +2,18 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using System.Collections.Generic;
 using Lean.Transition;
 
 /// <summary>
-/// Binder principal pour tous les boutons et éléments UI de l'interface de jeu.
-/// Organisé par catégories : Main Page, Settings, Collection, etc.
-/// Utilise LeanGUI pour les transitions et animations.
-/// 
-/// === COMMENT UTILISER LES TRANSITIONS LEAN ===
-/// 1. Créez un GameObject vide comme enfant de votre panel (ex: "ShowTransition")
-/// 2. Sur ce GameObject, ajoutez des composants LeanTransition (ex: LeanCanvasGroupAlpha, LeanScale)
-///    - Trouvez-les dans : Add Component > Lean > Transition > Method
-/// 3. Configurez chaque composant :
-///    - Target: le panel à animer (ou laissez vide pour animer le GameObject lui-même)
-///    - Duration: durée de l'animation (ex: 0.3)
-///    - Ease: courbe d'animation (ex: Smooth)
-///    - Pour Show: Alpha 0→1, Scale 0.8→1, etc.
-///    - Pour Hide: Alpha 1→0, Scale 1→0.8, etc.
-/// 4. Dans l'inspecteur de MainUIBinder, assignez ce GameObject au champ LeanPlayer correspondant
-/// 
-/// Exemple de transitions recommandées :
-/// - Popup Show: Scale (0.8→1) + CanvasGroup Alpha (0→1) sur 0.3s avec Ease Smooth
-/// - Popup Hide: Scale (1→0.8) + CanvasGroup Alpha (1→0) sur 0.2s avec Ease Smooth
-/// - Panel Slide: Position (offset→0) + CanvasGroup Alpha (0→1) sur 0.3s
+/// Main UI binder for settings, daily rewards, and notification panels.
+/// Manages transitions and user interactions.
 /// </summary>
 public class MainUIBinder : MonoBehaviour
 {
     #region Bottom Bar
     [Header("=== Bottom Bar ===")]
-    [SerializeField] private Button leaderboardButton;
-    [SerializeField] private Button collectionButton;
-    [SerializeField] private Button shopButton;
     [SerializeField] private Button dailyRewardButton;
-    [SerializeField] private Button achievementsButton;
     #endregion
 
     #region Settings
@@ -44,71 +23,16 @@ public class MainUIBinder : MonoBehaviour
     [SerializeField] private Button closeSettingsButton;
     [SerializeField] private Button disconnectButton;
     [SerializeField] private Button deleteAccountButton;
-    [SerializeField] private Button creditsButton;
-    [SerializeField] private Button supportButton;
     
     [Header("Settings Transitions")]
     [SerializeField] private LeanPlayer settingsShowTransition;
     [SerializeField] private LeanPlayer settingsHideTransition;
 
     [Header("Settings - Audio")]
-    [SerializeField] private Slider musicVolumeSlider;
-    [SerializeField] private Slider sfxVolumeSlider;
     [SerializeField] private Toggle muteToggle;
 
     [Header("Settings - Graphics")]
     [SerializeField] private Toggle fullscreenToggle;
-    [SerializeField] private TMP_Dropdown qualityDropdown;
-    [SerializeField] private TMP_Dropdown resolutionDropdown;
-
-    [Header("Settings - Gameplay")]
-    [SerializeField] private Toggle vibrationToggle;
-    [SerializeField] private Toggle notificationsToggle;
-    [SerializeField] private TMP_Dropdown languageDropdown;
-    #endregion
-
-    #region Collection Page
-    [Header("=== Collection Page ===")]
-    [SerializeField] private GameObject collectionPanel;
-    [SerializeField] private Button openCollectionButton;
-    [SerializeField] private Button closeCollectionButton;
-    [SerializeField] private Button collectionFilterAllButton;
-    [SerializeField] private Button collectionFilterOwnedButton;
-    [SerializeField] private Button collectionFilterLockedButton;
-    [SerializeField] private Transform collectionItemsContainer;
-    [SerializeField] private GameObject collectionItemPrefab;
-    
-    [Header("Collection Transitions")]
-    [SerializeField] private LeanPlayer collectionShowTransition;
-    [SerializeField] private LeanPlayer collectionHideTransition;
-
-    [Header("Collection - Item Details")]
-    [SerializeField] private TMP_Text itemNameText;
-    [SerializeField] private TMP_Text itemDescriptionText;
-    [SerializeField] private Image itemIconImage;
-    [SerializeField] private Button equipItemButton;
-    [SerializeField] private Button unequipItemButton;
-    #endregion
-
-    #region Shop Page
-    [Header("=== Shop Page ===")]
-    [SerializeField] private GameObject shopPanel;
-    [SerializeField] private Button openShopButton;
-    [SerializeField] private Button closeShopButton;
-    [SerializeField] private Button shopTabCurrencyButton;
-    [SerializeField] private Button shopTabItemsButton;
-    [SerializeField] private Button shopTabSpecialButton;
-    [SerializeField] private Transform shopItemsContainer;
-    [SerializeField] private GameObject shopItemPrefab;
-    
-    [Header("Shop Transitions")]
-    [SerializeField] private LeanPlayer shopShowTransition;
-    [SerializeField] private LeanPlayer shopHideTransition;
-    
-    [Header("Shop - Purchase")]
-    [SerializeField] private Button purchaseButton;
-    [SerializeField] private TMP_Text purchasePriceText;
-    [SerializeField] private TMP_Text shopStatusText;
     #endregion
 
     #region Daily Reward
@@ -124,37 +48,6 @@ public class MainUIBinder : MonoBehaviour
     [SerializeField] private LeanPlayer dailyRewardShowTransition;
     [SerializeField] private LeanPlayer dailyRewardHideTransition;
     [SerializeField] private LeanPlayer dailyRewardClaimTransition;
-    #endregion
-
-    #region Profile Page
-    [Header("=== Profile Page ===")]
-    [SerializeField] private Button openProfileButton;
-    [SerializeField] private Button closeProfileButton;
-    [SerializeField] private Button editProfileButton;
-    [SerializeField] private Button changeAvatarButton;
-    [SerializeField] private TMP_InputField usernameInputField;
-    
-    [Header("Profile - Stats")]
-    [SerializeField] private TMP_Text profileLevelText;
-    [SerializeField] private TMP_Text profileXPText;
-    [SerializeField] private TMP_Text gamesPlayedText;
-    [SerializeField] private TMP_Text winsText;
-    [SerializeField] private TMP_Text lossesText;
-    [SerializeField] private Image avatarImage;
-    #endregion
-
-    #region Leaderboard
-    [Header("=== Leaderboard ===")]
-    [SerializeField] private GameObject leaderboardEntryPrefab;
-    #endregion
-
-    #region Achievements
-    [Header("=== Achievements === (OPTIONAL)")]
-    [SerializeField] private Button openAchievementsButton;
-    [SerializeField] private Button closeAchievementsButton;
-    [SerializeField] private Transform achievementsContainer;
-    [SerializeField] private GameObject achievementItemPrefab;
-    [SerializeField] private TMP_Text achievementProgressText;
     #endregion
 
     #region Notifications & Popups
@@ -180,13 +73,18 @@ public class MainUIBinder : MonoBehaviour
     #endregion
 
     private PlayerStatusController userController;
+    private Queue<string> notificationQueue = new Queue<string>();
+    private bool isShowingNotification = false;
+
+    [Header("Notification Settings")]
+    [SerializeField] private float notificationDisplayDuration = 3f;
+    [SerializeField] private bool autoCloseNotifications = true;
 
     #region Unity Lifecycle
     private void Start()
     {
         InitializeButtons();
         InitializeToggles();
-        InitializeSliders();
         userController = FindFirstObjectByType<PlayerStatusController>();
     }
 
@@ -194,7 +92,6 @@ public class MainUIBinder : MonoBehaviour
     {
         UnregisterButtons();
         UnregisterToggles();
-        UnregisterSliders();
     }
     #endregion
 
@@ -202,50 +99,17 @@ public class MainUIBinder : MonoBehaviour
     private void InitializeButtons()
     {
         // Main Page
-        RegisterButton(collectionButton, OnClick_OpenCollection);
-        RegisterButton(shopButton, OnClick_OpenShop);
         RegisterButton(dailyRewardButton, OnClick_OpenDailyReward);
-        RegisterButton(achievementsButton, OnClick_OpenAchievements);
-        RegisterButton(leaderboardButton, OnClick_OpenLeaderboard);
 
         // Settings
         RegisterButton(settingsButton, OnClick_OpenSettings);
         RegisterButton(closeSettingsButton, OnClick_CloseSettings);
         RegisterButton(disconnectButton, OnClick_Disconnect);
         RegisterButton(deleteAccountButton, OnClick_DeleteAccount);
-        RegisterButton(creditsButton, OnClick_Credits);
-        RegisterButton(supportButton, OnClick_Support);
-
-        // Collection
-        RegisterButton(openCollectionButton, OnClick_OpenCollection);
-        RegisterButton(closeCollectionButton, OnClick_CloseCollection);
-        RegisterButton(collectionFilterAllButton, () => OnClick_CollectionFilter("All"));
-        RegisterButton(collectionFilterOwnedButton, () => OnClick_CollectionFilter("Owned"));
-        RegisterButton(collectionFilterLockedButton, () => OnClick_CollectionFilter("Locked"));
-        RegisterButton(equipItemButton, OnClick_EquipItem);
-        RegisterButton(unequipItemButton, OnClick_UnequipItem);
-
-        // Shop
-        RegisterButton(openShopButton, OnClick_OpenShop);
-        RegisterButton(closeShopButton, OnClick_CloseShop);
-        RegisterButton(shopTabCurrencyButton, () => OnClick_ShopTab("Currency"));
-        RegisterButton(shopTabItemsButton, () => OnClick_ShopTab("Items"));
-        RegisterButton(shopTabSpecialButton, () => OnClick_ShopTab("Special"));
-        RegisterButton(purchaseButton, OnClick_Purchase);
 
         // Daily Reward
         RegisterButton(closeDailyRewardButton, OnClick_CloseDailyReward);
         RegisterButton(claimDailyRewardButton, OnClick_ClaimDailyReward);
-
-        // Profile
-        RegisterButton(openProfileButton, OnClick_OpenProfile);
-        RegisterButton(closeProfileButton, OnClick_CloseProfile);
-        RegisterButton(editProfileButton, OnClick_EditProfile);
-        RegisterButton(changeAvatarButton, OnClick_ChangeAvatar);
-
-        // Achievements
-        RegisterButton(openAchievementsButton, OnClick_OpenAchievements);
-        RegisterButton(closeAchievementsButton, OnClick_CloseAchievements);
 
         // Notifications
         RegisterButton(closeNotificationButton, OnClick_CloseNotification);
@@ -257,14 +121,6 @@ public class MainUIBinder : MonoBehaviour
     {
         RegisterToggle(muteToggle, OnToggle_Mute);
         RegisterToggle(fullscreenToggle, OnToggle_Fullscreen);
-        RegisterToggle(vibrationToggle, OnToggle_Vibration);
-        RegisterToggle(notificationsToggle, OnToggle_Notifications);
-    }
-
-    private void InitializeSliders()
-    {
-        RegisterSlider(musicVolumeSlider, OnSlider_MusicVolume);
-        RegisterSlider(sfxVolumeSlider, OnSlider_SFXVolume);
     }
     #endregion
 
@@ -281,35 +137,51 @@ public class MainUIBinder : MonoBehaviour
             toggle.onValueChanged.AddListener(value => callback?.Invoke(value));
     }
 
-    private void RegisterSlider(Slider slider, Action<float> callback)
-    {
-        if (slider != null)
-            slider.onValueChanged.AddListener(value => callback?.Invoke(value));
-    }
-
     private void UnregisterButtons()
     {
-        // Cleanup all button listeners
         if (settingsButton) settingsButton.onClick.RemoveAllListeners();
+        if (closeSettingsButton) closeSettingsButton.onClick.RemoveAllListeners();
         if (disconnectButton) disconnectButton.onClick.RemoveAllListeners();
-        // Add more as needed...
+        if (deleteAccountButton) deleteAccountButton.onClick.RemoveAllListeners();
+        if (dailyRewardButton) dailyRewardButton.onClick.RemoveAllListeners();
+        if (closeDailyRewardButton) closeDailyRewardButton.onClick.RemoveAllListeners();
+        if (claimDailyRewardButton) claimDailyRewardButton.onClick.RemoveAllListeners();
+        if (closeNotificationButton) closeNotificationButton.onClick.RemoveAllListeners();
+        if (confirmYesButton) confirmYesButton.onClick.RemoveAllListeners();
+        if (confirmNoButton) confirmNoButton.onClick.RemoveAllListeners();
     }
 
     private void UnregisterToggles()
     {
         if (muteToggle) muteToggle.onValueChanged.RemoveAllListeners();
         if (fullscreenToggle) fullscreenToggle.onValueChanged.RemoveAllListeners();
-        // Add more as needed...
-    }
-
-    private void UnregisterSliders()
-    {
-        if (musicVolumeSlider) musicVolumeSlider.onValueChanged.RemoveAllListeners();
-        if (sfxVolumeSlider) sfxVolumeSlider.onValueChanged.RemoveAllListeners();
     }
 
     public void ShowNotification(string message)
     {
+        Debug.Log($"[MainUI] {message}");
+        
+        // Add to queue
+        notificationQueue.Enqueue(message);
+        
+        // Process queue if not already showing a notification
+        if (!isShowingNotification)
+        {
+            ProcessNextNotification();
+        }
+    }
+
+    private void ProcessNextNotification()
+    {
+        if (notificationQueue.Count == 0)
+        {
+            isShowingNotification = false;
+            return;
+        }
+
+        isShowingNotification = true;
+        string message = notificationQueue.Dequeue();
+        
         if (notificationPanel != null)
         {
             notificationPanel.SetActive(true);
@@ -320,8 +192,14 @@ public class MainUIBinder : MonoBehaviour
             {
                 notificationShowTransition.Begin();
             }
+            
+            // Auto-close after duration if enabled
+            if (autoCloseNotifications)
+            {
+                CancelInvoke(nameof(OnClick_CloseNotification));
+                Invoke(nameof(OnClick_CloseNotification), notificationDisplayDuration);
+            }
         }
-        Debug.Log($"[MainUI] {message}");
     }
 
     public void ShowConfirmation(string title, string message, Action onYes, Action onNo = null)
@@ -346,73 +224,6 @@ public class MainUIBinder : MonoBehaviour
 
     private Action currentConfirmationYesCallback;
     private Action currentConfirmationNoCallback;
-    #endregion
-
-    #region Main Page Callbacks
-    private void OnClick_Play()
-    {
-        Debug.Log("[MainUI] Play button clicked");
-        // TODO: Implement game start logic
-        ShowNotification("Lancement de la partie...");
-    }
-
-    private void OnClick_OpenCollection()
-    {
-        Debug.Log("[MainUI] Opening collection");
-        if (collectionPanel)
-        {
-            collectionPanel.SetActive(true);
-            if (collectionShowTransition != null && collectionShowTransition.IsUsed)
-            {
-                collectionShowTransition.Begin();
-            }
-        }
-    }
-
-    private void OnClick_OpenShop()
-    {
-        Debug.Log("[MainUI] Opening shop");
-        if (shopPanel)
-        {
-            shopPanel.SetActive(true);
-            if (shopShowTransition != null && shopShowTransition.IsUsed)
-            {
-                shopShowTransition.Begin();
-            }
-        }
-    }
-
-    private void OnClick_OpenProfile()
-    {
-        Debug.Log("[MainUI] Opening profile");
-        // TODO: Open profile panel
-    }
-
-    private void OnClick_OpenDailyReward()
-    {
-        Debug.Log("[MainUI] Opening daily reward");
-        if (dailyRewardPanel)
-        {
-            dailyRewardPanel.SetActive(true);
-            if (dailyRewardShowTransition != null && dailyRewardShowTransition.IsUsed)
-            {
-                dailyRewardShowTransition.Begin();
-            }
-        }
-        // TODO: Load daily reward data
-    }
-
-    private void OnClick_OpenAchievements()
-    {
-        Debug.Log("[MainUI] Opening achievements");
-        // TODO: Open achievements panel
-    }
-
-    private void OnClick_OpenLeaderboard()
-    {
-        Debug.Log("[MainUI] Opening leaderboard");
-        // TODO: Open leaderboard panel
-    }
     #endregion
 
     #region Settings Callbacks
@@ -481,22 +292,9 @@ public class MainUIBinder : MonoBehaviour
         );
     }
 
-    private void OnClick_Credits()
-    {
-        Debug.Log("[MainUI] Opening credits");
-        // TODO: Show credits panel
-    }
-
-    private void OnClick_Support()
-    {
-        Debug.Log("[MainUI] Opening support");
-        // TODO: Open support link or panel
-    }
-
     private void OnToggle_Mute(bool isMuted)
     {
         Debug.Log($"[MainUI] Mute toggled: {isMuted}");
-        // TODO: Implement audio muting
         AudioListener.volume = isMuted ? 0f : 1f;
     }
 
@@ -505,114 +303,22 @@ public class MainUIBinder : MonoBehaviour
         Debug.Log($"[MainUI] Fullscreen toggled: {isFullscreen}");
         Screen.fullScreen = isFullscreen;
     }
-
-    private void OnToggle_Vibration(bool isEnabled)
-    {
-        Debug.Log($"[MainUI] Vibration toggled: {isEnabled}");
-        // TODO: Save vibration preference
-    }
-
-    private void OnToggle_Notifications(bool isEnabled)
-    {
-        Debug.Log($"[MainUI] Notifications toggled: {isEnabled}");
-        // TODO: Save notification preference
-    }
-
-    private void OnSlider_MusicVolume(float value)
-    {
-        Debug.Log($"[MainUI] Music volume: {value}");
-        // TODO: Set music volume
-    }
-
-    private void OnSlider_SFXVolume(float value)
-    {
-        Debug.Log($"[MainUI] SFX volume: {value}");
-        // TODO: Set SFX volume
-    }
-    #endregion
-
-    #region Collection Callbacks
-    private void OnClick_CloseCollection()
-    {
-        Debug.Log("[MainUI] Closing collection");
-        if (collectionPanel)
-        {
-            if (collectionHideTransition != null && collectionHideTransition.IsUsed)
-            {
-                collectionHideTransition.Begin();
-                Invoke(nameof(HideCollectionPanel), 0.3f);
-            }
-            else
-            {
-                collectionPanel.SetActive(false);
-            }
-        }
-    }
-
-    private void HideCollectionPanel()
-    {
-        if (collectionPanel) collectionPanel.SetActive(false);
-    }
-
-    private void OnClick_CollectionFilter(string filterType)
-    {
-        Debug.Log($"[MainUI] Collection filter: {filterType}");
-        // TODO: Filter collection items
-    }
-
-    private void OnClick_EquipItem()
-    {
-        Debug.Log("[MainUI] Equipping item");
-        // TODO: Equip selected item
-        ShowNotification("Objet équipé");
-    }
-
-    private void OnClick_UnequipItem()
-    {
-        Debug.Log("[MainUI] Unequipping item");
-        // TODO: Unequip selected item
-        ShowNotification("Objet déséquipé");
-    }
-    #endregion
-
-    #region Shop Callbacks
-    private void OnClick_CloseShop()
-    {
-        Debug.Log("[MainUI] Closing shop");
-        if (shopPanel)
-        {
-            if (shopHideTransition != null && shopHideTransition.IsUsed)
-            {
-                shopHideTransition.Begin();
-                Invoke(nameof(HideShopPanel), 0.3f);
-            }
-            else
-            {
-                shopPanel.SetActive(false);
-            }
-        }
-    }
-
-    private void HideShopPanel()
-    {
-        if (shopPanel) shopPanel.SetActive(false);
-    }
-
-    private void OnClick_ShopTab(string tabName)
-    {
-        Debug.Log($"[MainUI] Shop tab: {tabName}");
-        // TODO: Switch shop tab
-    }
-
-    private void OnClick_Purchase()
-    {
-        Debug.Log("[MainUI] Purchase requested");
-        // TODO: Implement purchase logic
-        ShowNotification("Achat effectué !");
-    }
     #endregion
 
     #region Daily Reward Callbacks
+    private void OnClick_OpenDailyReward()
+    {
+        Debug.Log("[MainUI] Opening daily reward");
+        if (dailyRewardPanel)
+        {
+            dailyRewardPanel.SetActive(true);
+            if (dailyRewardShowTransition != null && dailyRewardShowTransition.IsUsed)
+            {
+                dailyRewardShowTransition.Begin();
+            }
+        }
+    }
+
     private void OnClick_CloseDailyReward()
     {
         Debug.Log("[MainUI] Closing daily reward");
@@ -655,51 +361,12 @@ public class MainUIBinder : MonoBehaviour
     }
     #endregion
 
-    #region Profile Callbacks
-    private void OnClick_CloseProfile()
-    {
-        Debug.Log("[MainUI] Closing profile");
-        // TODO: Close profile panel
-    }
-
-    private void OnClick_EditProfile()
-    {
-        Debug.Log("[MainUI] Editing profile");
-        // TODO: Enable profile editing
-    }
-
-    private void OnClick_ChangeAvatar()
-    {
-        Debug.Log("[MainUI] Changing avatar");
-        // TODO: Open avatar selection
-    }
-    #endregion
-
-    #region Leaderboard Callbacks
-    private void OnClick_CloseLeaderboard()
-    {
-        Debug.Log("[MainUI] Closing leaderboard");
-        // TODO: Close leaderboard panel
-    }
-
-    private void OnClick_LeaderboardPeriod(string period)
-    {
-        Debug.Log($"[MainUI] Leaderboard period: {period}");
-        // TODO: Load leaderboard for specified period
-    }
-    #endregion
-
-    #region Achievements Callbacks
-    private void OnClick_CloseAchievements()
-    {
-        Debug.Log("[MainUI] Closing achievements");
-        // TODO: Close achievements panel
-    }
-    #endregion
-
     #region Notifications Callbacks
     private void OnClick_CloseNotification()
     {
+        // Cancel auto-close if manually closing
+        CancelInvoke(nameof(OnClick_CloseNotification));
+        
         // Play hide transition before closing
         if (notificationHideTransition != null && notificationHideTransition.IsUsed)
         {
@@ -709,13 +376,16 @@ public class MainUIBinder : MonoBehaviour
         }
         else
         {
-            if (notificationPanel) notificationPanel.SetActive(false);
+            HideNotificationPanel();
         }
     }
 
     private void HideNotificationPanel()
     {
         if (notificationPanel) notificationPanel.SetActive(false);
+        
+        // Process next notification in queue
+        ProcessNextNotification();
     }
 
     private void OnClick_ConfirmYes()

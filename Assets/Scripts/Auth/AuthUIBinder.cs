@@ -167,17 +167,17 @@ public class AuthUIBinder : MonoBehaviour
         }
         catch (AuthenticationException ae)
         {
-            TriggerHaptic(50); // Longer vibration for errors
+            TriggerHaptic(30); // Lighter vibration for errors
             SetStatus(MapAuthError(ae));
         }
         catch (RequestFailedException rfe)
         {
-            TriggerHaptic(50);
+            TriggerHaptic(30);
             SetStatus(MapRequestError(rfe));
         }
         catch (Exception e)
         {
-            TriggerHaptic(50);
+            TriggerHaptic(30);
             SetStatus(e.Message);
         }
     }
@@ -480,7 +480,7 @@ public class AuthUIBinder : MonoBehaviour
     {
         if (!field || !field.image) return;
         
-        TriggerHaptic(10); // Light haptic feedback
+        TriggerHaptic(8); // Very light haptic feedback
         
         currentSelectedField = field;
         currentFieldOriginalColor = field.image.color;
@@ -567,13 +567,11 @@ public class AuthUIBinder : MonoBehaviour
         field.selectionColor = new Color(0.65f, 0.8f, 1f, 0.5f);
     }
 
-    private void TriggerHaptic(int durationMs = 20)
+    private void TriggerHaptic(int durationMs = 15)
     {
-#if UNITY_ANDROID || UNITY_IOS
         if (enableHaptics)
         {
-            Handheld.Vibrate();
+            HapticFeedback.Trigger(durationMs);
         }
-#endif
     }
 }
