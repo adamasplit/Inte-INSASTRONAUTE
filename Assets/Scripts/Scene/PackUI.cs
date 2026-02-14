@@ -58,8 +58,7 @@ public class PackUI : MonoBehaviour
         {
             PullManager.Instance.ChosenPack = packData;
             PullManager.Instance.GeneratePull(packData);
-            SceneManager.LoadScene("PullScene");
-
+            StartCoroutine(FindFirstObjectByType<PackCollectionController>().OpenPackAnimation());
         }
         else
         {

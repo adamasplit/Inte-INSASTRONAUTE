@@ -13,15 +13,71 @@ public class StarController : MonoBehaviour, IPointerClickHandler
     public ParticleSystem sparklePS;
     public ParticleSystem slightSparklePS;
     public ParticleSystem raysPS;
+    public ParticleSystem pulsePS;
     public Image image;
     public Image glowImage;
     private float pulsePower = 5f;
+    public Transform visualRoot;
+    public CanvasGroup canvasGroup;
+    public bool IsVisible => canvasGroup.alpha > 0f;
+
+    public void SetVisible(bool visible)
+    {
+        canvasGroup.alpha = visible ? 1f : 0f;
+    }
+
+    public async Task FadeIn(float duration)
+    {
+        visualRoot.localScale = Vector3.one * 0.5f;
+
+        float t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+            float eased = EaseOutCubic(t);
+
+            canvasGroup.alpha = eased;
+            visualRoot.localScale = Vector3.Lerp(
+                Vector3.one * 0.5f,
+                Vector3.one,
+                eased
+            );
+
+            await Task.Yield();
+        }
+    }
+
+    public async Task Pulse()
+    {
+        float t = 0f;
+        float duration = 0.15f;
+        pulsePS.gameObject.SetActive(true);
+        pulsePS.Play();
+        slightSparklePS.gameObject.SetActive(true);
+
+        Vector3 baseScale = Vector3.one;
+        Vector3 pulseScale = Vector3.one * 1.3f;
+        var main = slightSparklePS.main;
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+            float s = Mathf.Sin(t * Mathf.PI);
+
+            visualRoot.localScale = Vector3.Lerp(baseScale, pulseScale, s);
+            main.startColor = new Color(1f, 1f, 1f, t);
+            await Task.Yield();
+        }
+
+        visualRoot.localScale = baseScale;
+    }
+
 
     public void Init(ConstellationController c)
     {
         controller = c;
         var emission = slightSparklePS.emission;
-        emission.rateOverTime = Random.Range(10, 40)/10f;
+        emission.rateOverTime = Random.Range(10, 40)/8f;
+        slightSparklePS.gameObject.SetActive(false);
     }
     private int getHighestRarity()
     {
@@ -133,10 +189,10 @@ public void SetPreviewPull(CardData[] pull)
         switch (rarity)
         {
             case 0: return 0f;
-            case 1: return 0.1f;
+            case 1: return 0.2f;
             case 2: return 0.3f;
             case 3: return 0.6f;
-            case 4: return 1.4f;
+            case 4: return 0.9f;
             default: return 0.8f;
         }
     }
