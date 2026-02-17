@@ -1,6 +1,14 @@
 using UnityEngine;
 public enum Element
 {
+    Rite,
+    Asso,
+    Event,
+    Bar_boite,
+    Liste,
+    Personne,
+    Galere,
+    Spam,
     Fire,
     Water,
     Earth,
