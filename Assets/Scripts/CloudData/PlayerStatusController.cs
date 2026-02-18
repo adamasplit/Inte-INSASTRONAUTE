@@ -56,6 +56,20 @@ public class PlayerStatusController : MonoBehaviour
             loadingScreen.CompleteLoading();
             loadingScreen.HideWithFade();
         }
+        
+        // Start tutorial for first-time users after loading is complete
+        await Task.Delay(1000); // Wait for loading screen to fade
+        StartTutorialIfNeeded();
+    }
+    
+    private void StartTutorialIfNeeded()
+    {
+        var tutorialManager = FindFirstObjectByType<TutorialManager>();
+        if (tutorialManager != null && tutorialManager.IsFirstTime())
+        {
+            Debug.Log("[PlayerStatusController] Starting first-time tutorial");
+            tutorialManager.StartFirstTimeTutorial();
+        }
     }
 
     private async Task AllNecessaryComponentsPresentAsync()

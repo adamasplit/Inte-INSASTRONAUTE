@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - Enemy
+  - MenuButton
+  - CollectionButton
+  - ShopButton
   layers:
   - Default
   - TransparentFX

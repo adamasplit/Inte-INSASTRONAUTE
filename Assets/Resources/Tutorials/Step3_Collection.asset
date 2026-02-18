@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea9f730ed3868c043af3ab77ed37f6c2, type: 3}
+  m_Name: Step3_Collection
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
+  stepId: Step3_Collection
+  title: Votre Collection
+  description: Ici vous pouvez voir toutes vos cartes. Collectionnez-les toutes !
+  highlightType: 2
+  targetTag: CollectionButton
+  targetTransform: {fileID: 0}
+  overlayAlpha: 0.7
+  highlightPadding: {x: 10, y: 10}
+  pulseHighlight: 1
+  advanceType: 0
+  buttonText: Suivant
+  waitForTargetClick: 0
+  autoAdvanceDelay: 0
+  openTopMenu: 1
+  navigateToScreen: 0
+  delayBeforeShow: 0
+  icon: {fileID: 0}
