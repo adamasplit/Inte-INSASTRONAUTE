@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: purple_rouen
   sprite: {fileID: 21300000, guid: b7d63cd89f7aac945a8015c50cb3d606, type: 3}
-  borderColor: {r: 0, g: 0, b: 0, a: 0}
   rarity: 1
   FirstTimeValue: 5
   SubsequentValue: 2
   cardName: Purple Rouen
   description: 
   element: 2
-  baseDamage: 0
+  baseDamage: 60
+  duration: 1
+  targetingType: 0
+  attackType: 2

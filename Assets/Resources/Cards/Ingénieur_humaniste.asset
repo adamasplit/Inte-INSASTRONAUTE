@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: ingenieur_humaniste
   sprite: {fileID: 21300000, guid: 13bf0121f97ad6f44932c433deba082c, type: 3}
-  borderColor: {r: 0, g: 0, b: 0, a: 0}
   rarity: 4
   FirstTimeValue: 50
   SubsequentValue: 20
   cardName: "Ing\xE9nieur humaniste!!!"
   description: 
   element: 5
-  baseDamage: 10
+  baseDamage: 1000
+  duration: 1
+  targetingType: 1
+  attackType: 0

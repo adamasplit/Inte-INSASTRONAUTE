@@ -7,8 +7,7 @@ public enum Element
     Bar_boite,
     Liste,
     Personne,
-    Galere,
-    Spam,
+    Galere_spam,
     Fire,
     Water,
     Earth,
@@ -59,6 +58,13 @@ public static class ElementCalculator
             Element.Water => Color.blue,
             Element.Earth => Color.green,
             Element.Air => (enemy? Color.cyan : new Color(0.2f, 0.6f, 1f)),
+            Element.Rite => Color.blue,
+            Element.Asso => Color.orange,
+            Element.Event => Color.red,
+            Element.Bar_boite => Color.yellow,
+            Element.Liste => Color.cyan,
+            Element.Personne => Color.pink,
+            Element.Galere_spam => Color.grey,
             _ => Color.white,
         };
     }

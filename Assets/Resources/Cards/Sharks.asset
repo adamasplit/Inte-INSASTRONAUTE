@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: sharks
   sprite: {fileID: 21300000, guid: 30bf013f75588a149870cbeb783ef7ca, type: 3}
-  borderColor: {r: 0, g: 0, b: 0, a: 0}
   rarity: 1
   FirstTimeValue: 5
   SubsequentValue: 2
   cardName: Sharks
   description: 
   element: 1
-  baseDamage: 0
+  baseDamage: 50
+  duration: 1
+  targetingType: 0
+  attackType: 0

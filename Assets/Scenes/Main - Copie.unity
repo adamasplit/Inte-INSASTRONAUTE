@@ -18956,16 +18956,20 @@ PrefabInstance:
       objectReference: {fileID: 523088637}
     - target: {fileID: 2501685219706151687, guid: 931e868ea156f4344a75d636fb5fbf70, type: 3}
       propertyPath: m_SizeDelta.y
-      value: -200
+      value: -400
       objectReference: {fileID: 0}
     - target: {fileID: 2501685219706151687, guid: 931e868ea156f4344a75d636fb5fbf70, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 100
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 5621105202074980638, guid: 931e868ea156f4344a75d636fb5fbf70, type: 3}
       propertyPath: leanDrag
       value: 
       objectReference: {fileID: 1776633662}
+    - target: {fileID: 5621105202074980638, guid: 931e868ea156f4344a75d636fb5fbf70, type: 3}
+      propertyPath: background
+      value: 
+      objectReference: {fileID: 1724807839}
     - target: {fileID: 5621105202074980638, guid: 931e868ea156f4344a75d636fb5fbf70, type: 3}
       propertyPath: bottomMenu
       value: 
@@ -18987,7 +18991,10 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 336898977991962502, guid: 931e868ea156f4344a75d636fb5fbf70, type: 3}
     - {fileID: 7226168217231741528, guid: 931e868ea156f4344a75d636fb5fbf70, type: 3}
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 121722545048378959, guid: 931e868ea156f4344a75d636fb5fbf70, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 1724807842}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 481755341253549498, guid: 931e868ea156f4344a75d636fb5fbf70, type: 3}
       insertIndex: -1
@@ -19648,6 +19655,81 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1696369523}
   m_CullTransparentMesh: 0
+--- !u!1 &1724807839
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1724807842}
+  - component: {fileID: 1724807841}
+  - component: {fileID: 1724807840}
+  m_Layer: 5
+  m_Name: Background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1724807840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1724807839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 7059705054109782429, guid: c6cbf56960f65ec43a2d4688ce65a94a, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1724807841
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1724807839}
+  m_CullTransparentMesh: 1
+--- !u!224 &1724807842
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1724807839}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1578505567}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1742197537
 GameObject:
   m_ObjectHideFlags: 0
@@ -28830,6 +28912,7 @@ MonoBehaviour:
   cardContainer: {fileID: 8897998761801500847}
   cardPrefab: {fileID: 649949202483190076, guid: 851c40958f8fd804385a069c6438bd69, type: 3}
   allCards: []
+  playerCards: []
 --- !u!222 &8541397998761044606
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -29080,7 +29163,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4242686799109442557}
   m_HandleRect: {fileID: 2922512759154851770}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

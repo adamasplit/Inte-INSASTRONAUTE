@@ -12,12 +12,17 @@ public class WaveManager : MonoBehaviour
     {
         nextDescentTime = Time.time + descentInterval;
     }
-
+    public void Init()
+    {
+        nextDescentTime = Time.time + descentInterval+2f;
+    }
     void Update()
     {
         if (GameManager.Instance.currentState != GameManager.GameState.Playing)
+        {
+            
             return;
-
+        }
         if (Time.time >= nextDescentTime)
         {
             _ = DescendEnemies();
@@ -38,11 +43,13 @@ public class WaveManager : MonoBehaviour
         foreach (var enemy in enemies)
         {
             enemy.transform.position += Vector3.down * descentStep;
-
             if (enemy.transform.position.y < loseY)
+            {
+                Debug.Log("[WaveManager] Enemy reached " + enemy.transform.position.y + ". Game Over.");
                 await GameManager.Instance.GameOver();
+            }
         }
         descentInterval2 = Mathf.Max(0.5f, descentInterval - (meanMoveSpeed / enemies.Length) * 0.1f);
-        Debug.Log("[WaveManager] New descent interval: " + descentInterval2);
+        //Debug.Log("[WaveManager] New descent interval: " + descentInterval2);
     }
 }

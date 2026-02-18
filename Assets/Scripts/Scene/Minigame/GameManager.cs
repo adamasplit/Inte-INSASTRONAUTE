@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public GameObject bottomMenu;
     public GameObject gridManager;  
     public GameObject GameCardManager;
+    public GameObject background;
     public LeanDrag leanDrag;
 
     void Awake() => Instance = this;
@@ -35,25 +36,40 @@ public class GameManager : MonoBehaviour
     {
         spawnInterval=2f;
         score = 0;
-        currentState = GameState.Playing;
+        foreach (var enemy in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
+            {
+                if (enemy != null)
+                    Destroy(enemy.gameObject);
+            }
+        
         startPanel.SetActive(false);
         gameOverPanel.SetActive(false);
         bottomMenu.SetActive(false);
+        GameCardManager.SetActive(true);
         GameCardManager.GetComponent<GameCardManager>().Init();
         gridManager.SetActive(true);
         gridManager.GetComponent<GridManager>().LayoutColumns();
         leanDrag.gameObject.GetComponent<LeanConstrainAnchoredPosition>().HorizontalRectMax=-5;
+        WaveManager waveManager = FindFirstObjectByType<WaveManager>();
+        waveManager.Init();
+        EnemySpawner enemySpawner = FindFirstObjectByType<EnemySpawner>();
+        enemySpawner.Init();
+        background.SetActive(true);
+        currentState = GameState.Playing;
     }
 
     public async Task GameOver()
     {
+        currentState = GameState.GameOver;
         int best = PlayerPrefs.GetInt("BestScore", 0);
         if (score > best)
             PlayerPrefs.SetInt("BestScore", score);
-        bottomMenu.SetActive(true);
+        //bottomMenu.SetActive(true);
+        
         gridManager.SetActive(false);
         startPanel.SetActive(true);
-
+        GameCardManager.SetActive(false);
+        background.SetActive(false);
         leanDrag.gameObject.GetComponent<LeanConstrainAnchoredPosition>().HorizontalRectMax=0;
         await GrantTokensOnGameOver();
     }

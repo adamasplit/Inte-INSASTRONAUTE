@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: okallaghan
   sprite: {fileID: 21300000, guid: 7c3b4b2a6709405468661dcaf825bb21, type: 3}
-  borderColor: {r: 0, g: 0, b: 0, a: 0}
   rarity: 0
   FirstTimeValue: 2
   SubsequentValue: 1
   cardName: O'Kallaghan
   description: 
   element: 3
-  baseDamage: 10
+  baseDamage: 100
+  duration: 1
+  targetingType: 0
+  attackType: 3

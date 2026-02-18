@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2504137762460412732}
   - component: {fileID: 8777305158556294996}
   - component: {fileID: 4463885857739929024}
-  - component: {fileID: 2835927415212313984}
   m_Layer: 5
   m_Name: Column
   m_TagString: Untagged
@@ -38,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 200}
-  m_SizeDelta: {x: 1, y: 400}
+  m_SizeDelta: {x: 1, y: -400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8777305158556294996
 MonoBehaviour:
@@ -63,32 +62,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6432578954537099757}
   m_CullTransparentMesh: 1
---- !u!114 &2835927415212313984
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6432578954537099757}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.VerticalLayoutGroup
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: -2
-    m_Bottom: 2
-  m_ChildAlignment: 7
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 1
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
 --- !u!1 &6434564544808894395
 GameObject:
   m_ObjectHideFlags: 0
@@ -5026,10 +4999,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2504137762460412732}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 1}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -4}
+  m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8625159433279471699
 GameObject:
@@ -5045,6 +5018,16 @@ GameObject:
   - component: {fileID: 5707275463303231302}
   - component: {fileID: 7701508831064253551}
   - component: {fileID: 3671776789707174645}
+  - component: {fileID: 425287348121907076}
+  - component: {fileID: 3278235836869698035}
+  - component: {fileID: 7510147292604091435}
+  - component: {fileID: 8420833007519656651}
+  - component: {fileID: 4686411630092840324}
+  - component: {fileID: 8789868855656679120}
+  - component: {fileID: 2563753163477650591}
+  - component: {fileID: 1131094490826030035}
+  - component: {fileID: 102571351666678740}
+  - component: {fileID: 2417848205254288796}
   m_Layer: 5
   m_Name: Tower
   m_TagString: Untagged
@@ -5069,10 +5052,10 @@ RectTransform:
   - {fileID: 1054131822454284508}
   m_Father: {fileID: 2504137762460412732}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 400}
+  m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1784148727948129155
 MonoBehaviour:
@@ -5174,6 +5157,130 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &425287348121907076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8625159433279471699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44fa0caf7444a5641a6bbeafa9d93a4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FirstEnemyTargeting
+--- !u!114 &3278235836869698035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8625159433279471699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c053353f182bd64c9241a8e92d92990, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AllEnemiesTargeting
+--- !u!114 &7510147292604091435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8625159433279471699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f0deda5bfdc2984799887edaec48c32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ColumnBeamAttack
+--- !u!114 &8420833007519656651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8625159433279471699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 720cee8c5fd90d4418388f5f1541e6f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InstantDamageAttack
+--- !u!114 &4686411630092840324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8625159433279471699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2eefeffc0b20a654797fe91de50d2193, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ContinuousBeamAttack
+--- !u!114 &8789868855656679120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8625159433279471699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c714e213decba14fb292e8f684460c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectileAttack
+  projectilePrefab: {fileID: 4064365081586820624, guid: 493042790a1fd70408238491d6e4ef54, type: 3}
+  firePoint: {fileID: 6712501505176646300}
+--- !u!114 &2563753163477650591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8625159433279471699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88f8fbf2421ce0a4eb71b42b301187c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AllEnemiesAllColumnsTargeting
+--- !u!114 &1131094490826030035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8625159433279471699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0bb0fdb45cf4784f83ec29eb9e823cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AllFirstEnemiesTargeting
+--- !u!114 &102571351666678740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8625159433279471699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07e13a02a046ea64eb48226aa8667012, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectileFlurryAttack
+  projectilePrefab: {fileID: 6514821641220133061, guid: bdacbf181fcc604458665a519992e910, type: 3}
+--- !u!114 &2417848205254288796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8625159433279471699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37e19bf9d6508f74099384cca4abae79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MultiProjectileAttack
+  projectilePrefab: {fileID: 6514821641220133061, guid: bdacbf181fcc604458665a519992e910, type: 3}
 --- !u!1 &8831579435256229912
 GameObject:
   m_ObjectHideFlags: 0

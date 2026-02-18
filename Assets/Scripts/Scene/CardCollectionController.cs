@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Rendering;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 public class CardCollectionController : MonoBehaviour
 {
     public Transform cardContainer;
@@ -10,6 +11,7 @@ public class CardCollectionController : MonoBehaviour
 
     [Header("Data")]
     public CardData[] allCards;
+    public List<CardData> playerCards = new List<CardData>();
 
     void Start()
     {
@@ -44,9 +46,9 @@ public class CardCollectionController : MonoBehaviour
 
                 item.SetCardData(
                     qty,
-                    card.sprite,
-                    card.borderColor
+                    card.sprite
                 );
+                playerCards.Add(card);
             }
         }
     }

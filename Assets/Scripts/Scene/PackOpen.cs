@@ -110,7 +110,7 @@ public class PackOpen : MonoBehaviour
             if (cardData == null) continue;
 
             var cardUI = Instantiate(cardRevealPrefab, cardRevealAnchor);
-            cardUI.SetCardData(1, cardData.sprite, cardData.borderColor);
+            cardUI.SetCardData(1, cardData.sprite);
 
             var reveal = cardUI.GetComponent<CardReveal>();
             reveal.SetRarity(cardData.rarity);

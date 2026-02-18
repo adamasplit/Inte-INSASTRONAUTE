@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: 
   sprite: {fileID: 21300000, guid: ed2c98665352f674a9ce91e931be87c5, type: 3}
-  borderColor: {r: 0, g: 0, b: 0, a: 0}
   rarity: 0
   FirstTimeValue: 0
   SubsequentValue: 0
   cardName: 
   description: 
-  element: 0
+  element: 1
   baseDamage: 0
+  duration: 1
+  targetingType: 0
+  attackType: 0

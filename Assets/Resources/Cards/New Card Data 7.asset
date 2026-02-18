@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: 7
   sprite: {fileID: 21300000, guid: 3e7e9a9aef1bdd848a3f41c02a6029eb, type: 3}
-  borderColor: {r: 1, g: 1, b: 1, a: 0}
   rarity: 0
   FirstTimeValue: 2
   SubsequentValue: 3
@@ -22,3 +21,7 @@ MonoBehaviour:
   description: 
   element: 3
   baseDamage: 80
+  duration: 1
+  targetingType: 3
+  attackType: 4
+  projectileCount: 20

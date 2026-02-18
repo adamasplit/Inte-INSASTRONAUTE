@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: insaopaulo
   sprite: {fileID: 21300000, guid: 6dab815884e2be5419de80ea1e5293e3, type: 3}
-  borderColor: {r: 0, g: 0, b: 0, a: 0}
   rarity: 1
   FirstTimeValue: 4
   SubsequentValue: 2
   cardName: INSAOPAULO
   description: 
   element: 4
-  baseDamage: 10
+  baseDamage: 50
+  duration: 1
+  targetingType: 0
+  attackType: 1

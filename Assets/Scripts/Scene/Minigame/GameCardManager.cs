@@ -10,7 +10,8 @@ public class GameCardManager : MonoBehaviour
         if (FindFirstObjectByType<CardCollectionController>() != null)
         {
             CardCollectionController collectionController = FindFirstObjectByType<CardCollectionController>();
-            availableCards.AddRange(collectionController.allCards);
+            collectionController.RefreshCollection();
+            availableCards.AddRange(collectionController.playerCards);
         }
         else
         {
@@ -32,7 +33,7 @@ public class GameCardManager : MonoBehaviour
         {
             Debug.Log("Adding a new card to hand");
             CardData newCard = GetRandomCard();
-            // Instantiate cardPrefab and set its data to newCard
+
             GameObject cardObject = Instantiate(cardPrefab, transform);
             GameCardUI cardUI = cardObject.GetComponent<GameCardUI>();
             cardUI.Initialize(newCard);

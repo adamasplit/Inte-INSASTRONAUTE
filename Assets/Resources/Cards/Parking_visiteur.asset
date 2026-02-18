@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: parking_visiteur
   sprite: {fileID: 21300000, guid: bb29aee64c7d77441ad6ff6d53d051de, type: 3}
-  borderColor: {r: 0, g: 0, b: 0, a: 0}
   rarity: 1
   FirstTimeValue: 0
   SubsequentValue: 0
@@ -22,3 +21,6 @@ MonoBehaviour:
   description: 
   element: 6
   baseDamage: 10
+  duration: 1
+  targetingType: 0
+  attackType: 0

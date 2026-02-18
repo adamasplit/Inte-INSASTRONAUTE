@@ -6,6 +6,10 @@ public class EnemySpawner : MonoBehaviour
     public GridManager grid;
     private float nextSpawnTime = 0f;
     private float spawnInterval = 2f;
+    public void Init()
+    {
+        nextSpawnTime = Time.time + spawnInterval;
+    }
     void Update()
     {
         if (GameManager.Instance.currentState != GameManager.GameState.Playing)

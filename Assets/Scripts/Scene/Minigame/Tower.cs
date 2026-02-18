@@ -1,9 +1,10 @@
 using System.Collections;
 using UnityEngine;
-
+using System.Collections.Generic;
 public class Tower : MonoBehaviour
 {
     public Column column;
+    
     public Transform rocket;
     public ParticleSystem takeoffParticles;
     public ParticleSystem trailParticles;
@@ -17,12 +18,13 @@ public class Tower : MonoBehaviour
 
     private Vector3 originalScale;
     private Vector3 startLocalPos;
+    private ITargetingBehaviour targeting;
+    private IAttackBehaviour attack;
 
     void Awake()
     {
         originalScale = transform.localScale;
         startLocalPos = rocket.localPosition;
-
         if (takeoffParticles) takeoffParticles.Stop();
         if (trailParticles) trailParticles.Stop();
     }
@@ -30,6 +32,7 @@ public class Tower : MonoBehaviour
     public void Activate(CardData card)
     {
         this.card = card;
+        ConfigureFromCard(card);
         transform.localScale = originalScale;
         StartCoroutine(LaunchSequence());
     }
@@ -48,7 +51,14 @@ public class Tower : MonoBehaviour
         }
 
         // --- Phase 2 : décollage instantané ---
-        
+
+
+        // Appliquer dégâts / effets
+        if (attack != null)        {
+            List<Enemy> targets = targeting.GetTargets(column);
+            attack.ExecuteAttack(this, column, targets, card);
+        }
+
 
         Vector3 launchPos = startLocalPos + Vector3.up * launchDistance;
         rocket.localPosition = launchPos;
@@ -63,12 +73,7 @@ public class Tower : MonoBehaviour
             trail.colorOverTrail = new ParticleSystem.MinMaxGradient(elementColor);
             main.startColor = elementColor;
         }
-        if (trailParticles) trailParticles.Play();
-        
-
-        // Appliquer dégâts / effets
-        column.DamageEnemies(card);
-
+        if (trailParticles&&(this.card.attackType==AttackType.Beam||this.card.attackType==AttackType.ContinuousBeam)) trailParticles.Play();
         yield return new WaitForSeconds(launchTime);
 
         // --- Phase 3 : retour depuis le bas ---
@@ -90,6 +95,30 @@ public class Tower : MonoBehaviour
         if (trailParticles) trailParticles.Stop();
         if (takeoffParticles) takeoffParticles.Stop();
     }
+    public void ConfigureFromCard(CardData card)
+    {
+        targeting = card.targetingType switch
+        {
+            TargetingType.FirstEnemy => GetComponent<FirstEnemyTargeting>(),
+            TargetingType.AllEnemies => GetComponent<AllEnemiesTargeting>(),
+            TargetingType.AllEnemiesAllColumns => GetComponent<AllEnemiesAllColumnsTargeting>(),
+            TargetingType.AllFirstEnemies => GetComponent<AllFirstEnemiesTargeting>(),
+            _ => null
+        };
+
+        attack = card.attackType switch
+        {
+            AttackType.Instant => GetComponent<InstantDamageAttack>(),
+            AttackType.Beam => GetComponent<ColumnBeamAttack>(),
+            AttackType.ContinuousBeam => GetComponent<ContinuousBeamAttack>(),
+            AttackType.Projectile => GetComponent<ProjectileAttack>(),
+            AttackType.MultiProjectiles => GetComponent<MultiProjectileAttack>(),
+            AttackType.ProjectileFlurry => GetComponent<ProjectileFlurryAttack>(),
+
+            _ => null
+        };
+    }
+
 }
 
         

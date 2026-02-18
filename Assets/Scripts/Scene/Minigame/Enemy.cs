@@ -13,7 +13,23 @@ public class Enemy : MonoBehaviour
     private bool prismatic;
     public SpriteRenderer spriteRenderer;
     public SpriteRenderer prismaticOverlay;
-
+    private bool dead = false;
+    private Vector3 lastPosition;
+    void Update()
+    {
+        
+        float distance = Mathf.Abs(lastPosition.y-transform.position.y);
+        if (distance>0.01f)
+        {
+            //Debug.Log("Enemy moved from " + lastPosition + " to " + transform.position);
+            if (distance>5f&&lastPosition.y>transform.position.y)
+            {
+                Debug.LogWarning("Enemy moved a large distance! Possible teleportation bug.");
+                transform.position = lastPosition;
+            }
+        }
+        lastPosition = transform.position;
+    }
     Color GetElementColor(Element elem)
     {
         switch (elem)
@@ -28,8 +44,8 @@ public class Enemy : MonoBehaviour
     public void Initialize(float health, float moveSpeed)
     {
         if (this == null) return;
-        GetComponent<RectTransform>().position = new Vector3(transform.position.x, 1.5f, 0);
-        Debug.Log("Initializing enemy at " + transform.position);
+        GetComponent<RectTransform>().position = new Vector3(transform.position.x, 3.5f, 0);
+        //Debug.Log("Initializing enemy at " + transform.position);
         if (Random.Range(0, 16) == 0)
         {
             prismatic = true;
@@ -57,6 +73,7 @@ public class Enemy : MonoBehaviour
     }
     public void TakeDamage(float dmg,Element element)
     {
+        if (dead) return;
         switch (ElementCalculator.GetEffectiveness(element, this.element))
         {
         case Effectiveness.Strong:
@@ -83,8 +100,11 @@ public class Enemy : MonoBehaviour
         }
         
         hp -= dmg;
-        if (hp <= 0)
+        if (hp <= 0 && !dead)
+        {
+            dead = true;
             StartCoroutine(Die());
+        }
     }
 
     IEnumerator Die()

@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: 3b
   sprite: {fileID: 21300000, guid: 4aa918eb82de3ed4b891aa77e6b8f9cb, type: 3}
-  borderColor: {r: 0, g: 0, b: 0, a: 0}
   rarity: 3
   FirstTimeValue: 15
   SubsequentValue: 10
   cardName: La 3B
   description: hein loris
   element: 2
-  baseDamage: 0
+  baseDamage: 60
+  duration: 1
+  targetingType: 0
+  attackType: 2

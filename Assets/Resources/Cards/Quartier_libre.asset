@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: quartier_libre
   sprite: {fileID: 21300000, guid: d83ef4e63f56b3345b3a2b2e8f574d13, type: 3}
-  borderColor: {r: 0, g: 0, b: 0, a: 0}
   rarity: 3
   FirstTimeValue: 15
   SubsequentValue: 8
@@ -22,3 +21,6 @@ MonoBehaviour:
   description: 
   element: 3
   baseDamage: 10
+  duration: 1
+  targetingType: 0
+  attackType: 0

@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: paix_dieu
   sprite: {fileID: 21300000, guid: e0eeae2277ed7264bade351f7d348306, type: 3}
-  borderColor: {r: 0, g: 0, b: 0, a: 0}
   rarity: 0
   FirstTimeValue: 10
   SubsequentValue: 5
@@ -22,3 +21,6 @@ MonoBehaviour:
   description: 
   element: 0
   baseDamage: 5000
+  duration: 1
+  targetingType: 0
+  attackType: 0

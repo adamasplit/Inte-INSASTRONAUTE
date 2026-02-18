@@ -1,0 +1,26 @@
+using UnityEngine;
+using System.Collections.Generic;
+using System.Collections;
+public class ProjectileFlurryAttack : MonoBehaviour, IAttackBehaviour
+{
+    public GameObject projectilePrefab;
+    public void ExecuteAttack(Tower tower, Column column, List<Enemy> targets, CardData card)
+    {
+        StartCoroutine(FlurryCoroutine(tower, targets, card));
+    }
+    private IEnumerator FlurryCoroutine(Tower tower, List<Enemy> targets, CardData card)
+    {
+        for (int i = 0; i < card.projectileCount; i++)
+        {
+            int randomIndex = Random.Range(0, targets.Count);
+            Enemy target = targets[randomIndex];
+            GameObject projObj = Instantiate(projectilePrefab, tower.transform.position, Quaternion.identity);
+            ProjectileArc proj = projObj.GetComponent<ProjectileArc>();
+            proj.Init(target, enemy =>
+            {
+                enemy.TakeDamage(card.baseDamage, card.element);
+            });
+            yield return new WaitForSeconds(card.duration / card.projectileCount); // Delay between projectiles
+        }
+    }
+}

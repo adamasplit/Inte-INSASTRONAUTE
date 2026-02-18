@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0bf12de0a81f0240a0f7221679b7dc4, type: 3}
   m_Name: Barouf
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  cardId: 
+  cardId: barouf
   sprite: {fileID: 21300000, guid: e3de432e2b0edcf4ab023d7cb8329280, type: 3}
-  borderColor: {r: 0, g: 0, b: 0, a: 0}
-  rarity: 2
-  FirstTimeValue: 5
+  rarity: 1
+  FirstTimeValue: 4
   SubsequentValue: 2
-  cardName: "Caf\xE9"
+  cardName: Bar'ouf
   description: 
-  element: 0
-  baseDamage: 10
+  element: 3
+  baseDamage: 60
+  duration: 1
+  targetingType: 0
+  attackType: 0

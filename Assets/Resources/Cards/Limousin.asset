@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: limousin
   sprite: {fileID: 21300000, guid: 687a7ad90af285d4c864041e1408902c, type: 3}
-  borderColor: {r: 0, g: 0, b: 0, a: 0}
   rarity: 3
   FirstTimeValue: 15
   SubsequentValue: 7
   cardName: Limousin
   description: adam va nous danser la danse du limousin
   element: 0
-  baseDamage: 10
+  baseDamage: 50
+  duration: 10
+  targetingType: 0
+  attackType: 3

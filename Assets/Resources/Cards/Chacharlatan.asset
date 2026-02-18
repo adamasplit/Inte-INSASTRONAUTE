@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: chacharlatan
   sprite: {fileID: 21300000, guid: 43fb2ba91d8e2684795382efa41dc562, type: 3}
-  borderColor: {r: 0, g: 0, b: 0, a: 0}
   rarity: 2
   FirstTimeValue: 10
   SubsequentValue: 4
   cardName: Chacharlatan
   description: 
   element: 5
-  baseDamage: 10
+  baseDamage: 50
+  duration: 1
+  targetingType: 0
+  attackType: 1

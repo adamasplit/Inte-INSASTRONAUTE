@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0bf12de0a81f0240a0f7221679b7dc4, type: 3}
   m_Name: Bar_des_fleurs
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  cardId: 
+  cardId: bar_des_fleurs
   sprite: {fileID: 21300000, guid: 5af6c32a5c97b0941b4183b846aeb490, type: 3}
-  borderColor: {r: 0, g: 0, b: 0, a: 0}
-  rarity: 2
-  FirstTimeValue: 5
-  SubsequentValue: 2
-  cardName: "Caf\xE9"
+  rarity: 0
+  FirstTimeValue: 2
+  SubsequentValue: 1
+  cardName: Bar des fleurs
   description: 
-  element: 0
-  baseDamage: 10
+  element: 3
+  baseDamage: 60
+  duration: 1
+  targetingType: 0
+  attackType: 0

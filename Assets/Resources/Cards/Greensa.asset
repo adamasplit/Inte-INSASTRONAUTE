@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: greensa
   sprite: {fileID: 21300000, guid: 0eb352c8c71a56b49a711cbabb6daac3, type: 3}
-  borderColor: {r: 0, g: 0, b: 0, a: 0}
   rarity: 2
   FirstTimeValue: 10
   SubsequentValue: 4
   cardName: Greensa
   description: 
   element: 1
-  baseDamage: 0
+  baseDamage: 5
+  duration: 1
+  targetingType: 1
+  attackType: 0
