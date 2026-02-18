@@ -30,7 +30,7 @@ public class Enemy : MonoBehaviour
         if (this == null) return;
         GetComponent<RectTransform>().position = new Vector3(transform.position.x, 1.5f, 0);
         Debug.Log("Initializing enemy at " + transform.position);
-        if (Random.Range(0, 1) == 0)
+        if (Random.Range(0, 16) == 0)
         {
             prismatic = true;
             element = Element.Prismatic;

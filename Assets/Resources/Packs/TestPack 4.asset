@@ -13,13 +13,17 @@ MonoBehaviour:
   m_Name: TestPack 4
   m_EditorClassIdentifier: Assembly-CSharp::PackData
   packId: test4
-  packName: Pack de test
+  packName: Pack galeres
   cardCount: 10
   packSprite: {fileID: 21300000, guid: 372e4e1a921e2344eb6af7feef13f6d4, type: 3}
   possibleCards:
-  - cardId: 5
-    weight: 1
-  - cardId: 7
-    weight: 1
-  - cardId: 9
-    weight: 1
+  - cardId: parking_visiteur
+    weight: 2
+  - cardId: rattrapages
+    weight: 0.5
+  - cardId: souillard
+    weight: 2
+  - cardId: controleur_astuce
+    weight: 0.25
+  - cardId: degats_des_eaux
+    weight: 0.5

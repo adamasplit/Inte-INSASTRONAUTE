@@ -13,13 +13,21 @@ MonoBehaviour:
   m_Name: TestPack 1
   m_EditorClassIdentifier: Assembly-CSharp::PackData
   packId: test1
-  packName: Pack de test1
+  packName: Packs bars boites
   cardCount: 6
   packSprite: {fileID: -6815612461161445448, guid: 32d83bbf3f2a9244b9e4afe748fe1eba, type: 3}
   possibleCards:
-  - cardId: 8
+  - cardId: stadium
+    weight: 0.5
+  - cardId: delirium
     weight: 1
-  - cardId: 4
-    weight: 0.2
-  - cardId: 6
+  - cardId: okallaghan
+    weight: 2
+  - cardId: quartier_libre
+    weight: 0.25
+  - cardId: bar_des_fleurs
+    weight: 2
+  - cardId: barouf
+    weight: 1
+  - cardId: la_suite
     weight: 1

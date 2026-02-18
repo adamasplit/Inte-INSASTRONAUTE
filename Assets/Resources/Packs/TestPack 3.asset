@@ -13,13 +13,21 @@ MonoBehaviour:
   m_Name: TestPack 3
   m_EditorClassIdentifier: Assembly-CSharp::PackData
   packId: test3
-  packName: Pack de test
+  packName: Pack event assos
   cardCount: 8
   packSprite: {fileID: 21300000, guid: 311d998a75dd25249b2e08d5b7edf34a, type: 3}
   possibleCards:
-  - cardId: Test
+  - cardId: 3b
+    weight: 0.25
+  - cardId: fdm
+    weight: 0.125
+  - cardId: gala
+    weight: 2
+  - cardId: purple_rouen
     weight: 1
-  - cardId: Test1
+  - cardId: sharks
     weight: 1
-  - cardId: Test2
-    weight: 1
+  - cardId: amir
+    weight: 2
+  - cardId: greensa
+    weight: 0.25
