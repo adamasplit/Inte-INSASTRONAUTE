@@ -10,9 +10,13 @@ public class ProjectileFlurryAttack : MonoBehaviour, IAttackBehaviour
     }
     private IEnumerator FlurryCoroutine(Tower tower, List<Enemy> targets, CardData card)
     {
+        int randomIndex;
         for (int i = 0; i < card.projectileCount; i++)
         {
-            int randomIndex = Random.Range(0, targets.Count);
+            do
+            {
+                randomIndex = Random.Range(0, targets.Count);
+            } while (randomIndex >= targets.Count || targets[randomIndex] == null);
             Enemy target = targets[randomIndex];
             GameObject projObj = Instantiate(projectilePrefab, tower.transform.position, Quaternion.identity);
             ProjectileArc proj = projObj.GetComponent<ProjectileArc>();

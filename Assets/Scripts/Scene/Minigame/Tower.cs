@@ -56,6 +56,10 @@ public class Tower : MonoBehaviour
         // Appliquer dégâts / effets
         if (attack != null)        {
             List<Enemy> targets = targeting.GetTargets(column);
+            foreach (Enemy target in targets)
+            {
+                if (target == null) targets.Remove(target);
+            }
             attack.ExecuteAttack(this, column, targets, card);
         }
 

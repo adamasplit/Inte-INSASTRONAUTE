@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     private bool prismatic;
     public SpriteRenderer spriteRenderer;
     public SpriteRenderer prismaticOverlay;
-    private bool dead = false;
+    public bool dead = false;
     private Vector3 lastPosition;
     void Update()
     {
@@ -30,42 +30,33 @@ public class Enemy : MonoBehaviour
         }
         lastPosition = transform.position;
     }
-    Color GetElementColor(Element elem)
-    {
-        switch (elem)
-        {
-            case Element.Fire: return Color.red;
-            case Element.Water: return Color.blue;
-            case Element.Earth: return Color.green;
-            case Element.Air: return Color.cyan;
-            default: return Color.white;
-        }
-    }
     public void Initialize(float health, float moveSpeed)
     {
         if (this == null) return;
         GetComponent<RectTransform>().position = new Vector3(transform.position.x, 3.5f, 0);
-        //Debug.Log("Initializing enemy at " + transform.position);
-        if (Random.Range(0, 16) == 0)
+        if (Random.Range(0, 20) == 0)
         {
             prismatic = true;
             element = Element.Prismatic;
         }
         else
         {
-            Element elem = Random.Range(0, 4) switch
+            Element elem = Random.Range(0, 7) switch
             {
-                0 => Element.Fire,
-                1 => Element.Water,
-                2 => Element.Earth,
-            3 => Element.Air,
+                0 => Element.Rite,
+                1 => Element.Asso,
+                2 => Element.Event,
+            3 => Element.Bar_boite,
+            4 => Element.Liste,
+            5 => Element.Personne,
+            6 => Element.Galere_spam,
             _ => Element.Fire
             };
             element = elem;
         }
         hp = health;
         speed = moveSpeed;
-        spriteRenderer.color = GetElementColor(element);
+        spriteRenderer.color = ElementCalculator.GetElementColor(ElementCalculator.GetFirstWeakElement(element));
         if (prismatic)
         {
             prismaticOverlay.gameObject.SetActive(true);

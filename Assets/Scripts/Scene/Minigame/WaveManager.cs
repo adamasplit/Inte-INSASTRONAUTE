@@ -42,6 +42,7 @@ public class WaveManager : MonoBehaviour
         }
         foreach (var enemy in enemies)
         {
+            if (enemy == null||enemy.dead) continue;
             enemy.transform.position += Vector3.down * descentStep;
             if (enemy.transform.position.y < loseY)
             {

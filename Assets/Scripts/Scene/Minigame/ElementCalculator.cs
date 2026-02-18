@@ -52,7 +52,7 @@ public static class ElementCalculator
 
     public static Color GetElementColor(Element elem, bool enemy = false)
     {
-        return elem switch
+        var color = elem switch
         {
             Element.Fire => Color.red,
             Element.Water => Color.blue,
@@ -63,10 +63,11 @@ public static class ElementCalculator
             Element.Event => Color.red,
             Element.Bar_boite => Color.yellow,
             Element.Liste => Color.cyan,
-            Element.Personne => Color.pink,
+            Element.Personne => Color.magenta,
             Element.Galere_spam => Color.grey,
             _ => Color.white,
         };
+        return color;
     }
     public static Element GetFirstWeakElement(Element elem)
     {
@@ -76,6 +77,13 @@ public static class ElementCalculator
             Element.Water => Element.Earth,
             Element.Earth => Element.Air,
             Element.Air => Element.Fire,
+            Element.Rite => Element.Asso,
+            Element.Asso => Element.Event,
+            Element.Event => Element.Bar_boite,
+            Element.Bar_boite => Element.Liste,
+            Element.Liste => Element.Personne,
+            Element.Personne => Element.Galere_spam,
+            Element.Galere_spam => Element.Rite,
             Element.Prismatic => Element.Prismatic,
             _ => Element.Fire,
         };
@@ -87,6 +95,13 @@ public static class ElementCalculator
             || (a == Element.Water && b == Element.Fire)
             || (a == Element.Earth && b == Element.Air)
             || (a == Element.Air && b == Element.Water)
+            || (a == Element.Galere_spam && b == Element.Personne)
+            || (a == Element.Personne && b == Element.Liste)
+            || (a == Element.Liste && b == Element.Bar_boite)
+            || (a == Element.Bar_boite && b == Element.Event)
+            || (a == Element.Event && b == Element.Asso)
+            || (a == Element.Asso && b == Element.Rite)
+            || (a == Element.Rite && b == Element.Galere_spam)
             || (a == Element.Prismatic && b != Element.Prismatic);
     }
 
