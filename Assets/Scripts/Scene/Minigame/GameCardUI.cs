@@ -103,10 +103,11 @@ public class GameCardUI : MonoBehaviour
             Tower tower = hit.collider.GetComponent<Tower>();
             if (tower != null)
             {
-                if (hoveredTower != tower)
+                if (hoveredTower != tower&&!tower.isAttacking)
                 {
                     ResetHoveredTower();
                     hoveredTower = tower;
+                    tower.ShowTargets(data);
                     originalTowerScale = tower.transform.localScale;
                     tower.transform.localScale = originalTowerScale * 1.2f;
                 }
@@ -121,6 +122,7 @@ public class GameCardUI : MonoBehaviour
     {
         if (hoveredTower != null)
         {
+            hoveredTower.UnshowTargets(data);
             hoveredTower.transform.localScale = originalTowerScale;
             hoveredTower = null;
         }
@@ -135,8 +137,9 @@ public class GameCardUI : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Tower tower = hit.collider.GetComponent<Tower>();
-            if (tower != null)
+            if (tower != null&& !tower.isAttacking)
             {
+                ResetHoveredTower();
                 tower.Activate(data);
                 Destroy(gameObject);
                 return true;

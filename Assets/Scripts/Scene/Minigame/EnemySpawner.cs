@@ -6,9 +6,11 @@ public class EnemySpawner : MonoBehaviour
     public GridManager grid;
     private float nextSpawnTime = 0f;
     private float spawnInterval = 2f;
+    public int spawnedEnemies = 1;
     public void Init()
     {
         nextSpawnTime = Time.time + spawnInterval;
+        spawnedEnemies = 1;
     }
     void Update()
     {
@@ -19,8 +21,11 @@ public class EnemySpawner : MonoBehaviour
         if (Time.time >= nextSpawnTime)
         {
             nextSpawnTime = Time.time + spawnInterval;
-            int columnIndex = Random.Range(0, GameManager.Instance.columnCount);
-            SpawnEnemy();
+            int enemyCount = Mathf.Min(Random.Range(1, spawnedEnemies + 1), 5); // Cap at 5 enemies per spawn
+            for (int i = 0; i < enemyCount; i++)
+            {
+                SpawnEnemy();
+            }
         }
     }
         private void SpawnEnemy()
@@ -57,7 +62,7 @@ public class EnemySpawner : MonoBehaviour
             int column = availableColumns[Random.Range(0, availableColumns.Count)];
             Column selectedColumn = grid.columns[column];
             Enemy e = Instantiate(enemyPrefab, selectedColumn.enemyContainer);
-            e.Initialize(100f, 1f+(GameManager.Instance.score*0.1f));
+            e.Initialize(100f, 0.5f+(GameManager.Instance.score*0.01f));
             selectedColumn.enemies.Add(e);
         }
 }

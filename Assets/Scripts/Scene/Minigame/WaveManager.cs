@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 public class WaveManager : MonoBehaviour
 {
-    public float descentInterval = 2f;
-    private float descentInterval2 = 2f;
+    private float descentInterval = 3f;
+    private float descentInterval2 = 3f;
     private float nextDescentTime = 0f;
     public float descentStep = 0.5f;
     private float loseY = -1.2f;
@@ -51,6 +51,6 @@ public class WaveManager : MonoBehaviour
             }
         }
         descentInterval2 = Mathf.Max(0.5f, descentInterval - (meanMoveSpeed / enemies.Length) * 0.1f);
-        //Debug.Log("[WaveManager] New descent interval: " + descentInterval2);
+        Debug.Log("[WaveManager] New descent interval: " + descentInterval2);
     }
 }
