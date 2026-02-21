@@ -48,6 +48,9 @@ public class PlayerStatusController : MonoBehaviour
         
         await ResolveBetsOnLoginAsync();
         loadingScreen?.IncrementStep();
+
+        FindFirstObjectByType<CardCollectionController>().RefreshCollection();
+        loadingScreen?.IncrementStep();
         
         await FindFirstObjectByType<EventsMenuController>().RefreshEventsAsync();
         

@@ -53,7 +53,18 @@ public class ShopItemUI : MonoBehaviour
 
     async void OnBuyClicked()
     {
-        FindFirstObjectByType<ShopController>().loadingScreen.gameObject.SetActive(true);
+        ShopController shopController = FindFirstObjectByType<ShopController>();
+        if (shopController == null)
+        {
+            Debug.LogError("ShopController is null");
+            return;
+        }
+        if (shopController.loadingScreen == null)
+        {
+            Debug.LogError("ShopController's loadingScreen is null");
+            return;
+        }
+        shopController.loadingScreen.gameObject.SetActive(true);
 
         FindFirstObjectByType<ShopController>().loadingScreen.Initialize(1);
         Debug.Log("[ShopItemUI]Buying offer: " + offer.purchaseId.ToUpper());
