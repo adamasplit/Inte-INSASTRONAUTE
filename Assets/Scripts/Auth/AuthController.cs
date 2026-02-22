@@ -135,4 +135,51 @@ public class AuthController : MonoBehaviour
             Debug.Log("Pas de session active");
         }
     }
+
+    /// <summary>
+    /// Supprime le compte utilisateur et toutes les données associées
+    /// Note: Unity Authentication ne permet pas de supprimer directement un compte.
+    /// Cette méthode efface toutes les données locales et cloud, puis déconnecte l'utilisateur.
+    /// </summary>
+    public async Task DeleteAccount()
+    {
+        if (!AuthenticationService.Instance.IsSignedIn)
+        {
+            Debug.LogWarning("Aucun utilisateur connecté pour effectuer la suppression");
+            return;
+        }
+
+        try
+        {
+            Debug.Log("[AuthController] Début de la suppression du compte...");
+
+            // 1. Effacer toutes les données Cloud Save
+            await PlayerProfileStore.ClearAllDataAsync();
+            Debug.Log("[AuthController] Données Cloud Save supprimées");
+
+            // 2. Effacer les données locales
+            ClearSavedCredentials();
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save();
+            Debug.Log("[AuthController] Données locales supprimées");
+
+            // 3. Déconnexion
+            AuthenticationService.Instance.SignOut();
+            Debug.Log("[AuthController] Compte supprimé et déconnecté");
+
+            // 4. Retour à l'écran de connexion
+            SceneManager.LoadScene("LoginScreen");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[AuthController] Erreur lors de la suppression du compte: {ex.Message}");
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// URL pour demander la suppression définitive du compte Unity Gaming Services
+    /// </summary>
+    public const string ACCOUNT_DELETION_REQUEST_URL = "https://forms.gle/XHAcg1pbsvjDoK6D6";
 }
+

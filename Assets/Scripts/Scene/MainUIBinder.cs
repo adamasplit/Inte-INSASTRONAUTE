@@ -23,10 +23,15 @@ public class MainUIBinder : MonoBehaviour
     [SerializeField] private Button closeSettingsButton;
     [SerializeField] private Button disconnectButton;
     [SerializeField] private Button deleteAccountButton;
+    [SerializeField] private Button privacyPolicyButton; // Nouveau bouton pour la politique de confidentialité
     
     [Header("Settings Transitions")]
     [SerializeField] private LeanPlayer settingsShowTransition;
     [SerializeField] private LeanPlayer settingsHideTransition;
+    
+    [Header("Privacy & Data")]
+    [Tooltip("URL de votre politique de confidentialité")]
+    [SerializeField] private string privacyPolicyURL = "https://docs.google.com/document/d/e/2PACX-1vRbrHDxjUO4o8WWpW8BSaMfJCUwnPLqkSXxPFk6RJzPlXx95g-HvNMNehf5jJO_Y5H4asb3CJfxFsUl/pub";
 
     [Header("Settings - Audio")]
     [SerializeField] private Toggle muteToggle;
@@ -106,6 +111,7 @@ public class MainUIBinder : MonoBehaviour
         RegisterButton(closeSettingsButton, OnClick_CloseSettings);
         RegisterButton(disconnectButton, OnClick_Disconnect);
         RegisterButton(deleteAccountButton, OnClick_DeleteAccount);
+        RegisterButton(privacyPolicyButton, OnClick_PrivacyPolicy);
 
         // Daily Reward
         RegisterButton(closeDailyRewardButton, OnClick_CloseDailyReward);
@@ -143,6 +149,7 @@ public class MainUIBinder : MonoBehaviour
         if (closeSettingsButton) closeSettingsButton.onClick.RemoveAllListeners();
         if (disconnectButton) disconnectButton.onClick.RemoveAllListeners();
         if (deleteAccountButton) deleteAccountButton.onClick.RemoveAllListeners();
+        if (privacyPolicyButton) privacyPolicyButton.onClick.RemoveAllListeners();
         if (dailyRewardButton) dailyRewardButton.onClick.RemoveAllListeners();
         if (closeDailyRewardButton) closeDailyRewardButton.onClick.RemoveAllListeners();
         if (claimDailyRewardButton) claimDailyRewardButton.onClick.RemoveAllListeners();
@@ -282,11 +289,25 @@ public class MainUIBinder : MonoBehaviour
         Debug.Log("[MainUI] Delete account requested");
         ShowConfirmation(
             "Suppression du compte",
-            "ATTENTION : Cette action est irréversible. Voulez-vous vraiment supprimer votre compte ?",
-            () => {
+            "Cette action supprimera toutes vos données de jeu. Pour supprimer définitivement votre compte Unity, un formulaire s'ouvrira. Continuer ?",
+            async () => {
                 Debug.Log("[MainUI] User confirmed account deletion");
-                // TODO: Call account deletion logic
-                ShowNotification("Compte supprimé");
+                
+                try
+                {
+                    // 1. Ouvrir le lien de demande de suppression
+                    Application.OpenURL(AuthController.ACCOUNT_DELETION_REQUEST_URL);
+                    
+                    // 2. Supprimer toutes les données locales et cloud
+                    await AuthController.Instance.DeleteAccount();
+                    
+                    ShowNotification("Données supprimées. Formulaire de suppression ouvert.");
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"[MainUI] Erreur lors de la suppression: {ex.Message}");
+                    ShowNotification("Erreur lors de la suppression du compte");
+                }
             },
             () => Debug.Log("[MainUI] Account deletion cancelled")
         );
@@ -302,6 +323,20 @@ public class MainUIBinder : MonoBehaviour
     {
         Debug.Log($"[MainUI] Fullscreen toggled: {isFullscreen}");
         Screen.fullScreen = isFullscreen;
+    }
+
+    private void OnClick_PrivacyPolicy()
+    {
+        Debug.Log($"[MainUI] Opening privacy policy: {privacyPolicyURL}");
+        if (!string.IsNullOrEmpty(privacyPolicyURL))
+        {
+            Application.OpenURL(privacyPolicyURL);
+        }
+        else
+        {
+            Debug.LogWarning("[MainUI] Privacy policy URL not configured");
+            ShowNotification("URL de la politique de confidentialité non configurée");
+        }
     }
     #endregion
 

@@ -192,4 +192,53 @@ public static class PlayerProfileStore
         OnPackCollectionChanged?.Invoke();
     }
 
+    /// <summary>
+    /// Efface toutes les données du joueur stockées dans Cloud Save
+    /// </summary>
+    public static async Task ClearAllDataAsync()
+    {
+        try
+        {
+            Debug.Log("[PlayerProfileStore] Suppression de toutes les données Cloud Save...");
+            
+            // Effacer les données locales
+            CARD_COLLECTION.Clear();
+            PACK_COLLECTION.Clear();
+            TOKEN = 0;
+            PC = 0;
+            DISPLAY_NAME = "Guest";
+
+            // Effacer toutes les clés dans Cloud Save (une par une)
+            var keysToDelete = new List<string>
+            {
+                DisplayNameKey,
+                CardCollectionKey,
+                PackCollectionKey
+            };
+
+            foreach (var key in keysToDelete)
+            {
+                try
+                {
+                    await CloudSaveService.Instance.Data.Player.DeleteAsync(key, new Unity.Services.CloudSave.Models.Data.Player.DeleteOptions());
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning($"[PlayerProfileStore] Impossible de supprimer la clé '{key}': {ex.Message}");
+                }
+            }
+            
+            Debug.Log("[PlayerProfileStore] Toutes les données Cloud Save ont été supprimées");
+
+            // Notifier les listeners
+            OnCardCollectionChanged?.Invoke();
+            OnPackCollectionChanged?.Invoke();
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[PlayerProfileStore] Erreur lors de la suppression des données: {e.Message}");
+            throw;
+        }
+    }
+
 }
