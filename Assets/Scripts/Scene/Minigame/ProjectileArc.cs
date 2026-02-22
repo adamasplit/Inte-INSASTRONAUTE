@@ -20,6 +20,12 @@ public class ProjectileArc : MonoBehaviour
         this.onHit = () => onHit?.Invoke(target);
 
         start = transform.position;
+        if (target == null)
+        {
+            Debug.LogError("Target is null in ProjectileArc.Init");
+            Destroy(gameObject);
+            return;
+        }
         end = target.transform.position;
 
         Vector3 dir = (end - start).normalized;

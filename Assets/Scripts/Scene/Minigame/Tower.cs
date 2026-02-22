@@ -20,6 +20,7 @@ public class Tower : MonoBehaviour
     private Vector3 startLocalPos;
     private ITargetingBehaviour targeting;
     private IAttackBehaviour attack;
+    public bool isAttacking = false;
 
     void Awake()
     {
@@ -39,6 +40,7 @@ public class Tower : MonoBehaviour
 
     private IEnumerator LaunchSequence()
     {
+        isAttacking = true;
         // --- Phase 1 : recul vers le bas ---
         if (takeoffParticles) takeoffParticles.Play();
         Vector3 recoilPos = startLocalPos - Vector3.up * recoilDistance;
@@ -56,10 +58,6 @@ public class Tower : MonoBehaviour
         // Appliquer dégâts / effets
         if (attack != null)        {
             List<Enemy> targets = targeting.GetTargets(column);
-            foreach (Enemy target in targets)
-            {
-                if (target == null) targets.Remove(target);
-            }
             attack.ExecuteAttack(this, column, targets, card);
         }
 
@@ -98,6 +96,29 @@ public class Tower : MonoBehaviour
         trailParticles.transform.position = rocket.position;
         if (trailParticles) trailParticles.Stop();
         if (takeoffParticles) takeoffParticles.Stop();
+        isAttacking = false;
+    }
+    public void ShowTargets(CardData card)
+    {
+        ConfigureFromCard(card);
+        if (targeting == null) return;
+        List<Enemy> targets = targeting.GetTargets(column);
+        foreach (Enemy e in targets)
+        {
+            if (e != null)
+                e.ShowTargetIndicator();
+        }
+    }
+    public void UnshowTargets(CardData card)
+    {
+        ConfigureFromCard(card);
+        if (targeting == null) return;
+        List<Enemy> targets = targeting.GetTargets(column);
+        foreach (Enemy e in targets)
+        {
+            if (e != null)
+                e.HideTargetIndicator();
+        }
     }
     public void ConfigureFromCard(CardData card)
     {

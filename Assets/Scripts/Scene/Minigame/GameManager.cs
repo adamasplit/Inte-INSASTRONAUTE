@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public int maxCardsInHand = 5;
     public GameState currentState= GameState.StartMenu;
     public GameObject startPanel;
-    public GameObject gameOverPanel;
+    public GameOverController gameOverPanel;
     public GameObject bottomMenu;
     public GameObject gridManager;  
     public GameObject GameCardManager;
@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
             }
         
         startPanel.SetActive(false);
-        gameOverPanel.SetActive(false);
+        var _=gameOverPanel.HideWithFade();
         bottomMenu.SetActive(false);
         GameCardManager.SetActive(true);
         GameCardManager.GetComponent<GameCardManager>().Init();
@@ -60,17 +60,19 @@ public class GameManager : MonoBehaviour
 
     public async Task GameOver()
     {
+        if (currentState == GameState.GameOver) return; // Prevent multiple game over triggers
         currentState = GameState.GameOver;
         int best = PlayerPrefs.GetInt("BestScore", 0);
         if (score > best)
             PlayerPrefs.SetInt("BestScore", score);
+        await gameOverPanel.ShowWithFade();
         //bottomMenu.SetActive(true);
-        
         gridManager.SetActive(false);
         startPanel.SetActive(true);
         GameCardManager.SetActive(false);
         background.SetActive(false);
         leanDrag.gameObject.GetComponent<LeanConstrainAnchoredPosition>().HorizontalRectMax=0;
+        
         await GrantTokensOnGameOver();
     }
 

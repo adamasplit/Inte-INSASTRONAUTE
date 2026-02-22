@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     private bool prismatic;
     public SpriteRenderer spriteRenderer;
     public SpriteRenderer prismaticOverlay;
+    public GameObject targetIndicator;
     public bool dead = false;
     private Vector3 lastPosition;
     void Update()
@@ -104,7 +105,25 @@ public class Enemy : MonoBehaviour
         deathEffect.Play();
         GameManager.Instance.AddScore(10);
         spriteRenderer.enabled = false;
-        yield return new WaitForSeconds(1f);
+        if (prismatic||Random.Range(0, 10) == 0)
+        {
+            FindFirstObjectByType<EnemySpawner>().spawnedEnemies++;
+        }
+        yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);
+    }
+    public void ShowTargetIndicator()
+    {
+        if (targetIndicator != null)        
+        {
+            targetIndicator.SetActive(true);
+        }
+    }
+    public void HideTargetIndicator()
+    {
+        if (targetIndicator != null)
+        {
+            targetIndicator.SetActive(false);
+        }
     }
 }
