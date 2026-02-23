@@ -191,5 +191,11 @@ public static class PlayerProfileStore
         await SavePackCollectionAsync();
         OnPackCollectionChanged?.Invoke();
     }
+    public static int GetCardQuantity(string cardId)
+    {
+        if (CARD_COLLECTION.TryGetValue(cardId, out int qty))
+            return qty;
+        return 0;
+    }
 
 }

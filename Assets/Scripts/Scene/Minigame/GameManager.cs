@@ -70,7 +70,6 @@ public class GameManager : MonoBehaviour
         gridManager.SetActive(false);
         startPanel.SetActive(true);
         GameCardManager.SetActive(false);
-        background.SetActive(false);
         leanDrag.gameObject.GetComponent<LeanConstrainAnchoredPosition>().HorizontalRectMax=0;
         
         await GrantTokensOnGameOver();

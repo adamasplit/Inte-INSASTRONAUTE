@@ -45,4 +45,9 @@ public class GameOverController : MonoBehaviour
         canvasGroup.alpha = 0;
         gameObject.SetActive(false);
     }
+
+    public void StartHide()
+    {
+        _ = HideWithFade();
+    }
 }

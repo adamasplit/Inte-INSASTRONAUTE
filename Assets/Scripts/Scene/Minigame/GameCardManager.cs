@@ -11,7 +11,7 @@ public class GameCardManager : MonoBehaviour
         {
             CardCollectionController collectionController = FindFirstObjectByType<CardCollectionController>();
             collectionController.RefreshCollection();
-            availableCards.AddRange(collectionController.playerCards);
+            availableCards = new List<CardData>(DeckManager.Instance.deck);
         }
         else
         {

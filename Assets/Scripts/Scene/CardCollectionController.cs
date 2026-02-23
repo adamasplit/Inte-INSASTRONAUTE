@@ -4,77 +4,42 @@ using TMPro;
 using UnityEngine.Rendering;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System;
+using System.Collections;
 public class CardCollectionController : MonoBehaviour
 {
     public Transform cardContainer;
     public CardUI cardPrefab;
-
-    [Header("Data")]
-    public CardData[] allCards;
-    public List<CardData> playerCards = new List<CardData>();
-
-    void Start()
-    {
-        allCards = Resources.LoadAll<CardData>("Cards");
-    }
+    public bool inCollection = false;
+    public bool inDeck = false;
     private void OnEnable()
     {
-        RefreshCollection();
+        RefreshCollection(inCollection, inDeck);
         Debug.Log("Refreshing card collection UI...");
-        RefreshCollection();
-        PlayerProfileStore.OnCardCollectionChanged += RefreshCollection;
     }
 
-    private void OnDisable()
-    {
-        PlayerProfileStore.OnCardCollectionChanged -= RefreshCollection;
-    }
-
-    public void RefreshCollection()
+    public void RefreshCollection(bool inCollection=false, bool inDeck=false)
     {
         Debug.Log("[CardCollectionController] Refreshing card collection UI...");
         foreach (Transform child in cardContainer)
             Destroy(child.gameObject);
 
-        foreach (var card in allCards)
+        foreach (var card in CardDatabase.Instance.cards)
         {
-            Debug.Log($"[CardCollectionController] Checking card: {card.cardId}");
+            //Debug.Log($"[CardCollectionController] Checking card: {card.cardId}");
             if (PlayerProfileStore.CARD_COLLECTION.TryGetValue(card.cardId, out int qty))
             {
-                Debug.Log($"[CardCollectionController] Adding card to UI: {card.cardId} with quantity {qty}");
+                //Debug.Log($"[CardCollectionController] Adding card to UI: {card.cardId} with quantity {qty}");
                 var item = Instantiate(cardPrefab, cardContainer);
 
                 item.SetCardData(
                     qty,
-                    card.sprite
+                    card.sprite,
+                    card,
+                    inCollection,
+                    inDeck
                 );
-                playerCards.Add(card);
             }
         }
     }
-    
-    //public void AddCardToCollection(int number, string cardSprite, Color? borderColor = null)
-    //{
-    //    GameObject newCard = Instantiate(cardPrefab, cardContainer);
-    //    CardUI cardUI = newCard.GetComponent<CardUI>();
-    //    if (cardUI != null)
-    //    {
-    //        cardUI.SetCardData(number, cardSprite, borderColor);
-    //    }
-    //}
-//
-    //void Start()
-    //{
-    //    // Example usage
-    //    PopulateDummyCards();
-    //}
-//
-    //void PopulateDummyCards()
-    //{
-    //    for (int i = 1; i <= 15; i++)
-    //    {
-    //        Color? borderColor = (i % 2 == 0) ? (Color?)Color.red : Color.green;
-    //        AddCardToCollection(i, "tests" + i, borderColor);
-    //    }
-    //}
 }

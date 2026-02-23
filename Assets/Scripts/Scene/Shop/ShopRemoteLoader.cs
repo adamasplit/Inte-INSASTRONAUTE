@@ -59,7 +59,7 @@ public class ShopRemoteLoader : MonoBehaviour
             Debug.LogWarning("[ShopRemoteLoader] Failed to parse shop_config");
             return;
         }
-        if (config.offers == null)
+        if (config.offers == null || config.offers.Count == 0)
         {
             Debug.LogWarning("[ShopRemoteLoader] No offers found in shop_config");
             return;
