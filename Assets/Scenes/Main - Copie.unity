@@ -12804,7 +12804,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShopController
   packContainer: {fileID: 1562115196}
   cardContainer: {fileID: 1143159257}
-  loadingScreen: {fileID: 3550744467258445727}
+  loadingScreen: {fileID: 0}
   itemPrefab: {fileID: 8191247199329704683, guid: b904ccbfe0e469e4aa7ba70c50b60c2f, type: 3}
   offers: []
 --- !u!1001 &548971618
@@ -15566,7 +15566,7 @@ MonoBehaviour:
     m_Right: 50
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 1
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 200, y: 100}
@@ -15942,7 +15942,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1244454264}
-  m_Father: {fileID: 1013815566}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -19293,9 +19293,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1326885645}
-  - component: {fileID: 1326885647}
-  - component: {fileID: 1326885646}
+  - component: {fileID: 1292376394}
+  - component: {fileID: 1292376395}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -19351,14 +19350,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &1292376396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1326885644}
-  m_CullTransparentMesh: 1
 --- !u!1 &1338453283
 GameObject:
   m_ObjectHideFlags: 0
@@ -19603,7 +19594,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1292376394}
-  m_Father: {fileID: 1013815566}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -20943,6 +20934,66 @@ Canvas:
   m_SortingLayerID: 1513251827
   m_SortingOrder: 2000
   m_TargetDisplay: 0
+--- !u!1 &1647074219
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1647074220}
+  - component: {fileID: 1647074221}
+  m_Layer: 5
+  m_Name: deck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1647074220
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1647074219}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2068314545}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1647074221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1647074219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GridLayoutGroup
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 200, y: 100}
+  m_Spacing: {x: 100, y: 100}
+  m_Constraint: 0
+  m_ConstraintCount: 2
 --- !u!1 &1656423926
 GameObject:
   m_ObjectHideFlags: 0
@@ -24405,7 +24456,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 996882486}
+  - {fileID: 1647074220}
   m_Father: {fileID: 2133857778}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -25140,7 +25191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63ef05bc6ec2f004fb9d7c90bdc83228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeckBuilderUI
-  deckContainer: {fileID: 996882486}
+  deckContainer: {fileID: 1647074220}
   cardPrefab: {fileID: 649949202483190076, guid: 851c40958f8fd804385a069c6438bd69, type: 3}
   collectionController: {fileID: 2133857782}
   playButton: {fileID: 3552094926246045785}
@@ -30830,7 +30881,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1326885645}
   - {fileID: 360738991}
   - {fileID: 576391802}
   m_Father: {fileID: 121722546559503121}
@@ -30864,7 +30914,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f8306f3034d716489ca1b5c576a1dc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameOverController
-  gameOverImage: {fileID: 1326885644}
+  gameOverImage: {fileID: 0}
   scoreText: {fileID: 576391803}
 --- !u!224 &6556009772914706117
 RectTransform:
@@ -31391,7 +31441,6 @@ RectTransform:
   - {fileID: 6517266635038481624}
   - {fileID: 3271864109990265421}
   - {fileID: 3434002558397143081}
-  - {fileID: 1013815566}
   - {fileID: 2024681918559174665}
   - {fileID: 5611748582419104806}
   m_Father: {fileID: 1776633659}
@@ -32633,7 +32682,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4242686799109442557}
   m_HandleRect: {fileID: 2922512759154851770}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -32780,3 +32829,5 @@ SceneRoots:
   - {fileID: 7107410594514882415}
   - {fileID: 649950810}
   - {fileID: 922021377}
+  - {fileID: 845044405}
+  - {fileID: 1353450302}
