@@ -62,7 +62,7 @@ public class ShopItemUI : MonoBehaviour
         if (shopController.loadingScreen == null)
         {
             Debug.LogError("ShopController's loadingScreen is null");
-            return;
+            shopController.loadingScreen = FindFirstObjectByType<PlayerStatusController>()?.loadingScreen;
         }
         shopController.loadingScreen.gameObject.SetActive(true);
 

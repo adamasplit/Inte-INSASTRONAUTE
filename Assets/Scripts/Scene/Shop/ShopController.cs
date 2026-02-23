@@ -18,6 +18,11 @@ public class ShopController : MonoBehaviour
 
     public void RefreshShop()
     {
+        if (loadingScreen ==null)
+        {
+            Debug.LogError("ShopController: loadingScreen is null");
+            loadingScreen = FindFirstObjectByType<PlayerStatusController>()?.loadingScreen;
+        }
         Clear(packContainer);
         Clear(cardContainer);
 
