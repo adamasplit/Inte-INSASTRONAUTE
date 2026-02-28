@@ -10,17 +10,37 @@ public class CardCollectionController : MonoBehaviour
 {
     public Transform cardContainer;
     public CardUI cardPrefab;
-    public bool inCollection = false;
-    public bool inDeck = false;
+    
+    // Current mode settings
+    private bool inCollection = false;
+    private bool inDeck = false;
+    private bool GetInfos = false;
+    
     private void OnEnable()
     {
-        RefreshCollection(inCollection, inDeck);
+        //RefreshCollection(inCollection, inDeck, true);
         Debug.Log("Refreshing card collection UI...");
     }
 
-    public void RefreshCollection(bool inCollection=false, bool inDeck=false)
+    // Set the mode before calling RefreshCollection
+    public void SetMode(bool inCollection = false, bool inDeck = false, bool GetInfos = false)
     {
-        Debug.Log("[CardCollectionController] Refreshing card collection UI...");
+        this.inCollection = inCollection;
+        this.inDeck = inDeck;
+        this.GetInfos = GetInfos;
+        Debug.Log($"[CardCollectionController] Mode set - inCollection: {inCollection}, inDeck: {inDeck}, GetInfos: {GetInfos}");
+    }
+
+    // Refresh using current mode (backward compatible with optional parameters)
+    public void RefreshCollection(bool? inCollection = null, bool? inDeck = null, bool? GetInfos = null)
+    {
+        // Update mode if parameters are provided
+        if (inCollection.HasValue) this.inCollection = inCollection.Value;
+        if (inDeck.HasValue) this.inDeck = inDeck.Value;
+        if (GetInfos.HasValue) this.GetInfos = GetInfos.Value;
+        
+        Debug.Log($"[CardCollectionController] Refreshing - inCollection: {this.inCollection}, inDeck: {this.inDeck}, GetInfos: {this.GetInfos}");
+        
         foreach (Transform child in cardContainer)
             Destroy(child.gameObject);
 
@@ -36,8 +56,9 @@ public class CardCollectionController : MonoBehaviour
                     qty,
                     card.sprite,
                     card,
-                    inCollection,
-                    inDeck
+                    this.inCollection,
+                    this.inDeck,
+                    this.GetInfos
                 );
             }
         }

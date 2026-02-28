@@ -37,7 +37,7 @@ public class DeckBuilderUI : MonoBehaviour
     public void Refresh()
     {
         Debug.Log("[DeckBuilderUI] Refreshing UI...");
-        collectionController.RefreshCollection(true,false);
+        collectionController.RefreshCollection(true,false,false);
         // Nettoyage UI
         foreach (Transform child in deckContainer)
             Destroy(child.gameObject);

@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea9f730ed3868c043af3ab77ed37f6c2, type: 3}
+  m_Name: Step11_CheckCard
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
+  stepId: Step11_CheckCard
+  title: Collection
+  description: Cliquez sur une carte pour voir sa description.
+  highlightType: 2
+  targetTag: CardButton
+  parentTag: CollectionPanel
+  allowAnyMatchingTarget: 1
+  allowParentTagClick: 1
+  highlightFirstAvailable: 1
+  targetTransform: {fileID: 0}
+  overlayAlpha: 0.212
+  highlightPadding: {x: 10, y: 10}
+  highlightScaleFactor: 1.2
+  pulseHighlight: 1
+  advanceType: 1
+  buttonText: Go !
+  waitForTargetClick: 1
+  lockInputToTarget: 1
+  autoAdvanceDelay: 0
+  isInMainScene: 1
+  openTopMenu: 0
+  navigateToScreen: 2
+  delayBeforeShow: 0.2
+  delayAfterSuccess: 0
+  successOverlayAlpha: 0.08
+  successOverlayFadeTime: 0.15
+  icon: {fileID: 0}

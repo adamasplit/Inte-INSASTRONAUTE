@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 /// <summary>
@@ -12,6 +14,8 @@ using System.Threading.Tasks;
 [RequireComponent(typeof(Canvas))]
 public class TutorialUI : MonoBehaviour
 {
+    public static TutorialUI Instance { get; private set; }
+
     [Header("UI References")]
     [SerializeField] private Image overlayImage;
     [SerializeField] private GameObject contentPanel;
@@ -42,10 +46,15 @@ public class TutorialUI : MonoBehaviour
     private TutorialStep currentStep;
     private RectTransform currentTarget;
     private Button currentTargetButton;
+    private readonly List<RectTransform> currentTargets = new List<RectTransform>();
+    private readonly List<Button> currentTargetButtons = new List<Button>();
+    private readonly Dictionary<Selectable, bool> lockedSelectables = new Dictionary<Selectable, bool>();
     private CanvasGroup canvasGroup;
     private Canvas canvas;
     private bool isVisible = false;
     private bool waitingForTargetClick = false;
+    private bool lockInputToTarget = false;
+    private bool allowParentTagClick = true;
     
     // Events
     public event Action OnAdvanceRequested;
@@ -54,6 +63,15 @@ public class TutorialUI : MonoBehaviour
     
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
         canvas = GetComponent<Canvas>();
         canvasGroup = GetComponent<CanvasGroup>();
         
@@ -79,11 +97,21 @@ public class TutorialUI : MonoBehaviour
         // Start hidden
         gameObject.SetActive(false);
     }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
     
-    public async Task ShowStep(TutorialStep step, int currentStepNumber, int totalSteps)
+    public async Task ShowStep(TutorialStep step, int currentStepNumber, int totalSteps, bool deferTargetSearch = false)
     {
         currentStep = step;
         gameObject.SetActive(true);
+
+        SetStepContentVisible(true);
         
         // Update text content
         if (titleText != null)
@@ -120,6 +148,8 @@ public class TutorialUI : MonoBehaviour
         
         // Setup target click detection
         waitingForTargetClick = (step.advanceType == AdvanceType.TargetClick || step.waitForTargetClick);
+        allowParentTagClick = step.allowParentTagClick;
+        lockInputToTarget = waitingForTargetClick && step.lockInputToTarget;
         
         // Update overlay
         if (overlayImage != null)
@@ -129,17 +159,30 @@ public class TutorialUI : MonoBehaviour
             overlayImage.color = color;
         }
         
-        // Find and setup target
-        await SetupHighlight(step);
+        // Find and setup target (defer if requested to allow animations/spawning)
+        if (!deferTargetSearch)
+        {
+            await SetupHighlight(step);
+        }
         
         // Animate in
         await AnimateIn();
+    }
+
+    public async Task RefreshTargets()
+    {
+        if (currentStep != null)
+        {
+            await SetupHighlight(currentStep);
+        }
     }
     
     private async Task SetupHighlight(TutorialStep step)
     {
         // Remove previous button listener if any
         RemoveTargetButtonListener();
+        RestoreLockedSelectables();
+        currentTargets.Clear();
         
         // Hide all highlights first
         if (highlightCircle != null)
@@ -154,43 +197,45 @@ public class TutorialUI : MonoBehaviour
             return;
         }
         
-        // Find target
-        RectTransform target = step.targetTransform;
-        
-        if (target == null && !string.IsNullOrEmpty(step.targetTag))
-        {
-            // Try to find by tag
-            var targetObj = GameObject.FindGameObjectWithTag(step.targetTag);
-            
-            // If not found by tag, try by name
-            if (targetObj == null)
-            {
-                targetObj = GameObject.Find(step.targetTag);
-            }
-            
-            if (targetObj != null)
-            {
-                target = targetObj.GetComponent<RectTransform>();
-            }
-        }
-        
-        if (target == null)
+        currentTargets.AddRange(FindTargets(step));
+
+        if (currentTargets.Count == 0)
         {
             Debug.LogWarning($"[TutorialUI] Target not found for step: {step.title}");
             return;
         }
-        
-        currentTarget = target;
-        currentTargetButton = target.GetComponent<Button>();
-        
-        // Log what we found
-        Debug.Log($"[TutorialUI] Found target: {target.name}, Has Button: {currentTargetButton != null}");
-        
-        // Add listener to the actual button if we're waiting for clicks
-        if (waitingForTargetClick && currentTargetButton != null)
+
+        currentTarget = currentTargets[0];
+
+        foreach (var target in currentTargets)
         {
-            currentTargetButton.onClick.AddListener(OnTargetButtonClicked);
-            Debug.Log($"[TutorialUI] Added click listener to button: {target.name}");
+            var targetButton = ResolveTargetButton(target, allowParentTagClick);
+            if (targetButton != null && !currentTargetButtons.Contains(targetButton))
+            {
+                currentTargetButtons.Add(targetButton);
+            }
+        }
+
+        currentTargetButton = currentTargetButtons.Count > 0 ? currentTargetButtons[0] : null;
+
+        Debug.Log($"[TutorialUI] Found {currentTargets.Count} target(s), clickable buttons: {currentTargetButtons.Count}");
+
+        if (waitingForTargetClick)
+        {
+            foreach (var button in currentTargetButtons)
+            {
+                button.onClick.AddListener(OnTargetButtonClicked);
+            }
+
+            if (currentTargetButtons.Count == 0)
+            {
+                Debug.LogWarning($"[TutorialUI] Step '{step.title}' expects target clicks but no Button was found on target or parent.");
+            }
+        }
+
+        if (lockInputToTarget)
+        {
+            LockInputToTargets();
         }
         
         // Position and size the highlight
@@ -220,12 +265,28 @@ public class TutorialUI : MonoBehaviour
             // Wait a frame to ensure layout is updated
             await Task.Yield();
             
+            // Force canvas rebuild to ensure world positions are calculated
+            Canvas.ForceUpdateCanvases();
+            
+            // Wait additional frames for layout to fully settle
+            await Task.Delay(50);
+            
             // Position highlight at target
-            highlightTransform.position = target.position;
+            Vector3 targetWorldPos = currentTarget.position;
+            highlightTransform.position = targetWorldPos;
+            
+            // Verify position was set correctly (if still at origin, try again)
+            if (highlightTransform.position.sqrMagnitude < 0.01f && targetWorldPos.sqrMagnitude > 0.01f)
+            {
+                await Task.Yield();
+                Canvas.ForceUpdateCanvases();
+                highlightTransform.position = targetWorldPos;
+            }
             
             // Size highlight to match target (with padding)
-            var targetSize = target.rect.size;
-            highlightTransform.sizeDelta = targetSize + step.highlightPadding;
+            var targetSize = currentTarget.rect.size;
+            var scaleFactor = Mathf.Max(0.01f, step.highlightScaleFactor);
+            highlightTransform.sizeDelta = (targetSize + step.highlightPadding) * scaleFactor;
             
             // Apply color
             if (highlightImage != null)
@@ -244,6 +305,9 @@ public class TutorialUI : MonoBehaviour
     private void OnTargetButtonClicked()
     {
         Debug.Log($"[TutorialUI] Target button clicked!");
+
+        // Hide highlights immediately on click
+        HideHighlights();
         
         // Notify that target was clicked
         OnTargetClicked?.Invoke();
@@ -255,13 +319,225 @@ public class TutorialUI : MonoBehaviour
             OnAdvanceRequested?.Invoke();
         }
     }
+
+    private void HideHighlights()
+    {
+        if (highlightCircle != null)
+        {
+            LeanTween.cancel(highlightCircle.gameObject);
+            highlightCircle.gameObject.SetActive(false);
+        }
+        if (highlightRect != null)
+        {
+            LeanTween.cancel(highlightRect.gameObject);
+            highlightRect.gameObject.SetActive(false);
+        }
+    }
     
     private void RemoveTargetButtonListener()
     {
-        if (currentTargetButton != null)
+        foreach (var targetButton in currentTargetButtons)
         {
-            currentTargetButton.onClick.RemoveListener(OnTargetButtonClicked);
-            Debug.Log($"[TutorialUI] Removed click listener from button");
+            if (targetButton != null)
+            {
+                targetButton.onClick.RemoveListener(OnTargetButtonClicked);
+            }
+        }
+
+        currentTargetButtons.Clear();
+        currentTargetButton = null;
+    }
+
+    private List<RectTransform> FindTargets(TutorialStep step)
+    {
+        var results = new List<RectTransform>();
+
+        if (step.targetTransform != null)
+        {
+            results.Add(step.targetTransform);
+            return results;
+        }
+
+        if (string.IsNullOrEmpty(step.targetTag))
+        {
+            return results;
+        }
+
+        GameObject[] foundByTag = Array.Empty<GameObject>();
+        try
+        {
+            foundByTag = GameObject.FindGameObjectsWithTag(step.targetTag);
+        }
+        catch (UnityException)
+        {
+            // Ignore invalid tag and fallback to name search below
+        }
+
+        foreach (var obj in foundByTag)
+        {
+            if (obj == null || !obj.activeInHierarchy)
+                continue;
+
+            // If parentTag is specified, check if any parent matches
+            if (!string.IsNullOrEmpty(step.parentTag))
+            {
+                if (!HasParentWithTag(obj.transform, step.parentTag))
+                    continue;
+            }
+
+            var rect = obj.GetComponent<RectTransform>() ?? obj.GetComponentInParent<RectTransform>();
+            if (rect != null && !results.Contains(rect))
+            {
+                results.Add(rect);
+            }
+        }
+
+        if (results.Count == 0)
+        {
+            var byName = GameObject.Find(step.targetTag);
+            if (byName != null && byName.activeInHierarchy)
+            {
+                // Check parent tag filter if specified
+                if (!string.IsNullOrEmpty(step.parentTag))
+                {
+                    if (!HasParentWithTag(byName.transform, step.parentTag))
+                        return results;
+                }
+
+                var rect = byName.GetComponent<RectTransform>() ?? byName.GetComponentInParent<RectTransform>();
+                if (rect != null)
+                {
+                    results.Add(rect);
+                }
+            }
+        }
+
+        if (!step.allowAnyMatchingTarget && results.Count > 1)
+        {
+            return new List<RectTransform> { results[0] };
+        }
+
+        if (step.highlightFirstAvailable && results.Count > 0)
+        {
+            currentTarget = results[0];
+        }
+
+        return results;
+    }
+
+    private bool HasParentWithTag(Transform target, string tag)
+    {
+        if (target == null || string.IsNullOrEmpty(tag))
+            return false;
+
+        var current = target.parent;
+        while (current != null)
+        {
+            if (current.CompareTag(tag))
+                return true;
+            current = current.parent;
+        }
+
+        return false;
+    }
+
+    private Button ResolveTargetButton(RectTransform target, bool allowParent)
+    {
+        if (target == null) return null;
+
+        var ownButton = target.GetComponent<Button>();
+        if (ownButton != null)
+            return ownButton;
+
+        if (allowParent)
+        {
+            return target.GetComponentInParent<Button>();
+        }
+
+        return null;
+    }
+
+    private void LockInputToTargets()
+    {
+        var allowed = new HashSet<Selectable>();
+
+        if (nextButton != null)
+            allowed.Add(nextButton);
+        if (skipButton != null)
+            allowed.Add(skipButton);
+
+        foreach (var button in currentTargetButtons)
+        {
+            if (button != null)
+                allowed.Add(button);
+        }
+
+        if (waitingForTargetClick && currentTargetButtons.Count == 0)
+        {
+            Debug.LogWarning("[TutorialUI] Input lock skipped: no clickable target buttons found.");
+            return;
+        }
+
+        var allSelectables = FindObjectsByType<Selectable>(FindObjectsSortMode.None);
+        foreach (var selectable in allSelectables)
+        {
+            if (selectable == null || selectable == nextButton || selectable == skipButton)
+                continue;
+
+            if (!lockedSelectables.ContainsKey(selectable))
+            {
+                lockedSelectables.Add(selectable, selectable.interactable);
+            }
+
+            selectable.interactable = allowed.Contains(selectable);
+        }
+    }
+
+    private void RestoreLockedSelectables()
+    {
+        foreach (var pair in lockedSelectables)
+        {
+            if (pair.Key != null)
+            {
+                pair.Key.interactable = pair.Value;
+            }
+        }
+
+        lockedSelectables.Clear();
+    }
+
+    public async Task FadeOverlayTo(float targetAlpha, float duration)
+    {
+        if (overlayImage == null)
+            return;
+
+        var startColor = overlayImage.color;
+        var endColor = startColor;
+        endColor.a = Mathf.Clamp01(targetAlpha);
+
+        if (duration <= 0f)
+        {
+            overlayImage.color = endColor;
+            return;
+        }
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            overlayImage.color = Color.Lerp(startColor, endColor, t);
+            await Task.Yield();
+        }
+
+        overlayImage.color = endColor;
+    }
+
+    public void SetStepContentVisible(bool visible)
+    {
+        if (contentPanel != null)
+        {
+            contentPanel.SetActive(visible);
         }
     }
     
@@ -344,6 +620,8 @@ public class TutorialUI : MonoBehaviour
         
         // Remove button listener before clearing references
         RemoveTargetButtonListener();
+        RestoreLockedSelectables();
+        currentTargets.Clear();
         
         currentTarget = null;
         currentTargetButton = null;
@@ -387,8 +665,19 @@ public class TutorialUI : MonoBehaviour
             
             if (highlightTransform != null && highlightTransform.gameObject.activeSelf)
             {
-                // Update position to follow target
-                highlightTransform.position = currentTarget.position;
+                // Safety check: ensure target still exists and is active
+                if (currentTarget.gameObject.activeInHierarchy)
+                {
+                    Vector3 targetWorldPos = currentTarget.position;
+                    Vector3 highlightCurrentPos = highlightTransform.position;
+                    
+                    // Update position if target has moved or highlight is at origin
+                    float distanceSqr = Vector3.SqrMagnitude(targetWorldPos - highlightCurrentPos);
+                    if (distanceSqr > 0.01f)
+                    {
+                        highlightTransform.position = targetWorldPos;
+                    }
+                }
             }
         }
     }

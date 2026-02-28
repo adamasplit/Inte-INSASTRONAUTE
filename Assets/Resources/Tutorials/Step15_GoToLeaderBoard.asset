@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea9f730ed3868c043af3ab77ed37f6c2, type: 3}
+  m_Name: Step15_GoToLeaderBoard
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
+  stepId: Step15_GoToLeaderBoard
+  title: Classement
+  description: Clique sur le menu "Classement" (Je vais pas tout faire pour toi...)
+  highlightType: 2
+  targetTag: LeaderBoardButton
+  parentTag: 
+  allowAnyMatchingTarget: 1
+  allowParentTagClick: 1
+  highlightFirstAvailable: 1
+  targetTransform: {fileID: 0}
+  overlayAlpha: 0.317
+  highlightPadding: {x: 10, y: 10}
+  highlightScaleFactor: 1.2
+  pulseHighlight: 1
+  advanceType: 1
+  buttonText: Suivant
+  waitForTargetClick: 1
+  lockInputToTarget: 1
+  autoAdvanceDelay: 0
+  isInMainScene: 1
+  openTopMenu: 1
+  navigateToScreen: -1
+  delayBeforeShow: 0
+  delayAfterSuccess: 0
+  successOverlayAlpha: 0.08
+  successOverlayFadeTime: 0.15
+  icon: {fileID: 21300000, guid: 317464c67fc105b44b8052b028203958, type: 3}

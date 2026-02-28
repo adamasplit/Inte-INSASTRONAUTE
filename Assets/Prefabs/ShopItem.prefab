@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6682407723366974881}
   m_Layer: 5
   m_Name: ShopItem
-  m_TagString: Untagged
+  m_TagString: BoosterButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
