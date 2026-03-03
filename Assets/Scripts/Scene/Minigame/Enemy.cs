@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
     public GameObject targetIndicator;
     public bool dead = false;
     private Vector3 lastPosition;
+    public Column column;
     void Update()
     {
         
@@ -31,8 +32,10 @@ public class Enemy : MonoBehaviour
         }
         lastPosition = transform.position;
     }
-    public void Initialize(float health, float moveSpeed)
+    public void Initialize(float health, float moveSpeed, Column column)
     {
+        this.column = column;
+        column.firstEnemy = this;
         if (this == null) return;
         GetComponent<RectTransform>().position = new Vector3(transform.position.x, 3.5f, 0);
         if (Random.Range(0, 20) == 0)

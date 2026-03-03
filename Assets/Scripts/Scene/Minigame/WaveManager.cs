@@ -44,6 +44,10 @@ public class WaveManager : MonoBehaviour
         {
             if (enemy == null||enemy.dead) continue;
             enemy.transform.position += Vector3.down * descentStep;
+            if (enemy.column.hasAnEnemyInFirstPosition && enemy.column.firstEnemy == enemy)
+            {
+                enemy.column.firstEnemy = null;
+            }
             if (enemy.transform.position.y < loseY)
             {
                 Debug.Log("[WaveManager] Enemy reached " + enemy.transform.position.y + ". Game Over.");

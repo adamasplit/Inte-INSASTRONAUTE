@@ -39,16 +39,7 @@ public class EnemySpawner : MonoBehaviour
             List<int> availableColumns = new List<int>();
             for (int i = 0; i < grid.columns.Count; i++)
             {
-                bool enemyPresent = false;
-                foreach (var enemy in grid.columns[i].enemies)
-                {
-                    if (Vector3.Distance(enemy.transform.position, grid.columns[i].position) < 0.1f)
-                    {
-                        // Enemy already at spawn position
-                        enemyPresent = true;
-                    }
-                }
-                if (!enemyPresent)
+                if (!grid.columns[i].hasAnEnemyInFirstPosition)
                     availableColumns.Add(i);
                 
             }
@@ -62,7 +53,7 @@ public class EnemySpawner : MonoBehaviour
             int column = availableColumns[Random.Range(0, availableColumns.Count)];
             Column selectedColumn = grid.columns[column];
             Enemy e = Instantiate(enemyPrefab, selectedColumn.enemyContainer);
-            e.Initialize(100f, 0.5f+(GameManager.Instance.score*0.01f));
+            e.Initialize(100f, 0.5f+(GameManager.Instance.score*0.01f), selectedColumn);
             selectedColumn.enemies.Add(e);
         }
 }

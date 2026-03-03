@@ -15,7 +15,7 @@ MonoBehaviour:
   packId: test1
   packName: Packs bars boites
   cardCount: 6
-  packSprite: {fileID: -6815612461161445448, guid: 32d83bbf3f2a9244b9e4afe748fe1eba, type: 3}
+  packSprite: {fileID: 21300000, guid: c10af179be12b114fa38175f69a3ca2b, type: 3}
   possibleCards:
   - cardId: stadium
     weight: 0.5

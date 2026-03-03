@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: INSAMOURAI
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: insamourai
-  sprite: {fileID: 21300000, guid: 60978fa733e4ccb4a8b69699484702e6, type: 3}
+  sprite: {fileID: 21300000, guid: a8550f4e2e7a141479fffa4fe81a2a93, type: 3}
   rarity: 0
   FirstTimeValue: 3
   SubsequentValue: 1
