@@ -10,22 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea9f730ed3868c043af3ab77ed37f6c2, type: 3}
-  m_Name: Step4_Shop
+  m_Name: Step5_Shop
   m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
-  stepId: Step4_Shop
+  stepId: Step5_Shop
   title: La Boutique
-  description: Achetez des packs de cartes pour agrandir votre collection.
+  description: Achetez un pack commun avec vos TOKENs
   highlightType: 2
-  targetTag: ShopButton
+  targetTag: BoosterButton
+  allowAnyMatchingTarget: 1
+  allowParentTagClick: 1
+  highlightFirstAvailable: 1
   targetTransform: {fileID: 0}
   overlayAlpha: 0.7
   highlightPadding: {x: 10, y: 10}
   pulseHighlight: 1
-  advanceType: 0
+  advanceType: 1
   buttonText: Suivant
-  waitForTargetClick: 0
+  waitForTargetClick: 1
+  lockInputToTarget: 1
   autoAdvanceDelay: 0
-  openTopMenu: 1
-  navigateToScreen: 1
-  delayBeforeShow: 0
+  openTopMenu: 0
+  navigateToScreen: -1
+  delayBeforeShow: 0.5
+  delayAfterSuccess: 0
+  successOverlayAlpha: 0.08
+  successOverlayFadeTime: 0.15
   icon: {fileID: 0}

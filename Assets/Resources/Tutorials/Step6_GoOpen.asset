@@ -10,22 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea9f730ed3868c043af3ab77ed37f6c2, type: 3}
-  m_Name: Step3_Collection
+  m_Name: Step6_GoOpen
   m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
-  stepId: Step3_Collection
-  title: Votre Collection
-  description: Ici vous pouvez voir toutes vos cartes. Collectionnez-les toutes !
-  highlightType: 2
-  targetTag: CollectionButton
+  stepId: Step5_GoOpen
+  title: C'est parti !
+  description: "Prions la belle \xE9toile ! C'est l'heure d'ouvrir notre booster
+    !"
+  highlightType: 0
+  targetTag: 
+  allowAnyMatchingTarget: 1
+  allowParentTagClick: 1
+  highlightFirstAvailable: 1
   targetTransform: {fileID: 0}
   overlayAlpha: 0.7
   highlightPadding: {x: 10, y: 10}
-  pulseHighlight: 1
+  pulseHighlight: 0
   advanceType: 0
-  buttonText: Suivant
+  buttonText: Go !
   waitForTargetClick: 0
+  lockInputToTarget: 1
   autoAdvanceDelay: 0
-  openTopMenu: 1
-  navigateToScreen: 0
+  openTopMenu: 0
+  navigateToScreen: -1
   delayBeforeShow: 0
+  delayAfterSuccess: 0
+  successOverlayAlpha: 0.08
+  successOverlayFadeTime: 0.15
   icon: {fileID: 0}

@@ -10,22 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea9f730ed3868c043af3ab77ed37f6c2, type: 3}
-  m_Name: Step2_Menu
+  m_Name: Step10_GoToCollection
   m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
-  stepId: Step2_Menu
-  title: Menu Principal
-  description: Cliquez sur ce bouton pour ouvrir le menu principal.
-  highlightType: 1
-  targetTag: MenuButton
+  stepId: Step10_GoToCollection
+  title: Collection
+  description: "On peux maintenant aller jeter un oeil \xE0 ces cartes !"
+  highlightType: 0
+  targetTag: StarButton
+  parentTag: 
+  allowAnyMatchingTarget: 1
+  allowParentTagClick: 1
+  highlightFirstAvailable: 1
   targetTransform: {fileID: 0}
-  overlayAlpha: 0.7
+  overlayAlpha: 0.212
   highlightPadding: {x: 10, y: 10}
+  highlightScaleFactor: 1.2
   pulseHighlight: 1
-  advanceType: 1
-  buttonText: Suivant
-  waitForTargetClick: 0
+  advanceType: 0
+  buttonText: Go !
+  waitForTargetClick: 1
+  lockInputToTarget: 1
   autoAdvanceDelay: 0
+  isInMainScene: 1
   openTopMenu: 0
   navigateToScreen: -1
-  delayBeforeShow: 0
+  delayBeforeShow: 0.5
+  delayAfterSuccess: 0
+  successOverlayAlpha: 0.08
+  successOverlayFadeTime: 0.15
   icon: {fileID: 0}

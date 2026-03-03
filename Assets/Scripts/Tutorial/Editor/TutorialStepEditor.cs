@@ -13,17 +13,27 @@ public class TutorialStepEditor : Editor
     private SerializedProperty descriptionProp;
     private SerializedProperty highlightTypeProp;
     private SerializedProperty targetTagProp;
+    private SerializedProperty parentTagProp;
     private SerializedProperty targetTransformProp;
+    private SerializedProperty allowAnyMatchingTargetProp;
+    private SerializedProperty allowParentTagClickProp;
+    private SerializedProperty highlightFirstAvailableProp;
     private SerializedProperty overlayAlphaProp;
     private SerializedProperty highlightPaddingProp;
+    private SerializedProperty highlightScaleFactorProp;
     private SerializedProperty pulseHighlightProp;
     private SerializedProperty advanceTypeProp;
     private SerializedProperty buttonTextProp;
     private SerializedProperty waitForTargetClickProp;
+    private SerializedProperty lockInputToTargetProp;
     private SerializedProperty autoAdvanceDelayProp;
+    private SerializedProperty isInMainSceneProp;
     private SerializedProperty openTopMenuProp;
     private SerializedProperty navigateToScreenProp;
     private SerializedProperty delayBeforeShowProp;
+    private SerializedProperty delayAfterSuccessProp;
+    private SerializedProperty successOverlayAlphaProp;
+    private SerializedProperty successOverlayFadeTimeProp;
     private SerializedProperty iconProp;
     
     private void OnEnable()
@@ -33,17 +43,27 @@ public class TutorialStepEditor : Editor
         descriptionProp = serializedObject.FindProperty("description");
         highlightTypeProp = serializedObject.FindProperty("highlightType");
         targetTagProp = serializedObject.FindProperty("targetTag");
+        parentTagProp = serializedObject.FindProperty("parentTag");
         targetTransformProp = serializedObject.FindProperty("targetTransform");
+        allowAnyMatchingTargetProp = serializedObject.FindProperty("allowAnyMatchingTarget");
+        allowParentTagClickProp = serializedObject.FindProperty("allowParentTagClick");
+        highlightFirstAvailableProp = serializedObject.FindProperty("highlightFirstAvailable");
         overlayAlphaProp = serializedObject.FindProperty("overlayAlpha");
         highlightPaddingProp = serializedObject.FindProperty("highlightPadding");
+        highlightScaleFactorProp = serializedObject.FindProperty("highlightScaleFactor");
         pulseHighlightProp = serializedObject.FindProperty("pulseHighlight");
         advanceTypeProp = serializedObject.FindProperty("advanceType");
         buttonTextProp = serializedObject.FindProperty("buttonText");
         waitForTargetClickProp = serializedObject.FindProperty("waitForTargetClick");
+        lockInputToTargetProp = serializedObject.FindProperty("lockInputToTarget");
         autoAdvanceDelayProp = serializedObject.FindProperty("autoAdvanceDelay");
+        isInMainSceneProp = serializedObject.FindProperty("isInMainScene");
         openTopMenuProp = serializedObject.FindProperty("openTopMenu");
         navigateToScreenProp = serializedObject.FindProperty("navigateToScreen");
         delayBeforeShowProp = serializedObject.FindProperty("delayBeforeShow");
+        delayAfterSuccessProp = serializedObject.FindProperty("delayAfterSuccess");
+        successOverlayAlphaProp = serializedObject.FindProperty("successOverlayAlpha");
+        successOverlayFadeTimeProp = serializedObject.FindProperty("successOverlayFadeTime");
         iconProp = serializedObject.FindProperty("icon");
     }
     
@@ -74,10 +94,21 @@ public class TutorialStepEditor : Editor
             {
                 EditorGUILayout.HelpBox("If no direct reference, the system will search by Tag/Name below.", MessageType.Info);
                 EditorGUILayout.PropertyField(targetTagProp, new GUIContent("Target Tag/Name"));
+                EditorGUILayout.PropertyField(parentTagProp, new GUIContent("Parent Tag Filter (Optional)"));
+                
+                if (!string.IsNullOrEmpty(parentTagProp.stringValue))
+                {
+                    EditorGUILayout.HelpBox($"Only targets with a parent tagged '{parentTagProp.stringValue}' will be matched.", MessageType.Info);
+                }
             }
+
+            EditorGUILayout.PropertyField(allowAnyMatchingTargetProp);
+            EditorGUILayout.PropertyField(allowParentTagClickProp);
+            EditorGUILayout.PropertyField(highlightFirstAvailableProp);
             
             EditorGUILayout.PropertyField(overlayAlphaProp);
             EditorGUILayout.PropertyField(highlightPaddingProp);
+            EditorGUILayout.PropertyField(highlightScaleFactorProp);
             EditorGUILayout.PropertyField(pulseHighlightProp);
             EditorGUI.indentLevel--;
         }
@@ -95,6 +126,7 @@ public class TutorialStepEditor : Editor
         {
             case AdvanceType.Button:
                 EditorGUILayout.PropertyField(buttonTextProp);
+                EditorGUILayout.PropertyField(waitForTargetClickProp);
                 break;
                 
             case AdvanceType.TargetClick:
@@ -110,6 +142,8 @@ public class TutorialStepEditor : Editor
                 }
                 break;
         }
+
+        EditorGUILayout.PropertyField(lockInputToTargetProp);
         
         EditorGUI.indentLevel--;
         
@@ -117,7 +151,15 @@ public class TutorialStepEditor : Editor
         
         // Actions
         EditorGUILayout.LabelField("Actions", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(isInMainSceneProp);
+        if (isInMainSceneProp.boolValue)
+        {
+            EditorGUILayout.HelpBox("This step will wait until the player is in the Main scene (Main - Copie) before executing.", MessageType.Info);
+        }
         EditorGUILayout.PropertyField(delayBeforeShowProp);
+        EditorGUILayout.PropertyField(delayAfterSuccessProp);
+        EditorGUILayout.PropertyField(successOverlayAlphaProp);
+        EditorGUILayout.PropertyField(successOverlayFadeTimeProp);
         EditorGUILayout.PropertyField(openTopMenuProp);
         EditorGUILayout.PropertyField(navigateToScreenProp);
         
@@ -212,7 +254,16 @@ public class TutorialMenuItems
         step.navigateToScreen = screenIndex;
         step.buttonText = buttonText;
         step.pulseHighlight = highlightType != HighlightType.None;
+        step.allowAnyMatchingTarget = true;
+        step.allowParentTagClick = true;
+        step.highlightFirstAvailable = true;
+        step.lockInputToTarget = true;
         step.overlayAlpha = 0.7f;
+        step.highlightScaleFactor = 1.2f;
+        step.successOverlayAlpha = 0.08f;
+        step.successOverlayFadeTime = 0.15f;
+        step.delayAfterSuccess = 0f;
+        step.isInMainScene = false;
         
         string path = $"{folder}/{fileName}.asset";
         AssetDatabase.CreateAsset(step, path);
@@ -234,6 +285,9 @@ public class TutorialMenuItems
             {
                 PlayerPrefs.DeleteKey("Tutorial_Completed_" + id);
             }
+
+            PlayerPrefs.DeleteKey("Tutorial_Active_Sequence");
+            PlayerPrefs.DeleteKey("Tutorial_Active_Step");
             
             PlayerPrefs.Save();
             Debug.Log("✅ All tutorial progress reset!");

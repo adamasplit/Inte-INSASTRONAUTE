@@ -8,6 +8,17 @@ TagManager:
   - MenuButton
   - CollectionButton
   - ShopButton
+  - PackButton
+  - BigPackButton
+  - TokenPanel
+  - BoosterButton
+  - PackPanel
+  - StarButton
+  - CardButton
+  - CollectionPanel
+  - labelFS
+  - labelSS
+  - LeaderBoardButton
   layers:
   - Default
   - TransparentFX

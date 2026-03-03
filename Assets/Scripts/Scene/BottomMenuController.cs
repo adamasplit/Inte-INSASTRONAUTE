@@ -37,6 +37,7 @@ public class BottomMenuController : MonoBehaviour
         var cardCollection = screens[index].GetComponentInChildren<CardCollectionController>(true);
         if (cardCollection != null)
         {
+            // Only refresh without changing the mode (preserves current mode)
             cardCollection.RefreshCollection();
         }
         var leaderboardController = screens[index].GetComponentInChildren<LeaderboardController>(true);
