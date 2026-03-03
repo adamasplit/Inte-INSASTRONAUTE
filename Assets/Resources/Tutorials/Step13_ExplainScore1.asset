@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
   stepId: Step13_ExplainScore1
   title: PCs
-  description: "Chaque carte obtenue pour la premi\xE8re fois donne beacoup de Point
+  description: "Chaque carte obtenue pour la premi\xE8re fois donne beaucoup de Points
     de Collection (PC)."
   highlightType: 2
   targetTag: labelFS
