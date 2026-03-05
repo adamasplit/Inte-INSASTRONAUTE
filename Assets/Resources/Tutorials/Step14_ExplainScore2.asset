@@ -17,7 +17,7 @@ MonoBehaviour:
   description: 'Les autres cartes obtenues en doublons rapportent moins de PCs.
 
     A
-    quoi servent les PCs tu me demandes ?'
+    quoi donc servent les PCs, tu te demandes ?'
   highlightType: 2
   targetTag: labelSS
   parentTag: 

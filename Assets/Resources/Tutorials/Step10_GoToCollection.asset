@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
   stepId: Step10_GoToCollection
   title: Collection
-  description: "On peux maintenant aller jeter un oeil \xE0 ces cartes !"
+  description: "On peut maintenant aller jeter un oeil \xE0 ces cartes !"
   highlightType: 0
   targetTag: StarButton
   parentTag: 

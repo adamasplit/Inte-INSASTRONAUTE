@@ -36,8 +36,7 @@ public class ProjectileArc : MonoBehaviour
         // si jamais dir ~ forward (sécurité)
         if (arcUp.sqrMagnitude < 0.001f)
             arcUp = Vector3.up;
-        if (UnityEngine.Random.value < 0.5f)
-        arcUp = -arcUp;
+        arcUp *=UnityEngine.Random.Range(-0.8f, 0.8f); // variation aléatoire de la hauteur
 
         control =
             start

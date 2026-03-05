@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
   stepId: Step17_Fin
   title: Fin !
-  description: "Tu as les bases d'un astaunote ag\xE9ri ! Va r\xE9colter des tokens
+  description: "Tu as les bases d'un astronaute aguerri ! Va r\xE9colter des tokens
     via des paris d'\xE9v\xE8nement, le mini-jeu ou bien tes r\xE9compenses quotidiennes
     ! Bonne chance !"
   highlightType: 0

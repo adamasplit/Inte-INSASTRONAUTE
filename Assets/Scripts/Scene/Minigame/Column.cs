@@ -6,7 +6,8 @@ public class Column : MonoBehaviour
     public Transform enemyContainer;
     public List<Enemy> enemies = new List<Enemy>();
     public Vector3 position => enemyContainer.position;
-
+    public Enemy firstEnemy;
+    public bool hasAnEnemyInFirstPosition=>firstEnemy!=null;
     public void DamageEnemies(CardData card, float damageMultiplier = 1f)
     {
         foreach (var enemy in enemies)
