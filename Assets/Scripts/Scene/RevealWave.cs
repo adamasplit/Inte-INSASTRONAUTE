@@ -23,13 +23,15 @@ public class RevealWave : MonoBehaviour
     {
         float t = 0f;
 
-        while (t < 1f)
+        int maxIterations = 5000; // Safety counter for WebGL
+        int iterations = 0;
+        while (t < 1f && iterations < maxIterations)
         {
-            t += Time.deltaTime / duration;
+            float deltaTime = Mathf.Max(Time.deltaTime, 0.001f); // Ensure non-zero for WebGL
+            t += deltaTime / duration;
             float eased = EaseOutCubic(t);  
             float size=maxRadius*400f* eased;
             ((RectTransform)transform).sizeDelta = new Vector2(size, size);
-            t += Time.deltaTime;
             float currentRadius = Mathf.Lerp(0f, maxRadius, eased);
             maskMaterial.SetFloat("_Radius", currentRadius);
 
@@ -52,6 +54,7 @@ public class RevealWave : MonoBehaviour
             SpawnParticlesOnCircle(currentRadius, 2); // 2 particules par frame
 
             await Task.Yield();
+            iterations++;
         }
 
         // sécurité : toutes les étoiles visibles

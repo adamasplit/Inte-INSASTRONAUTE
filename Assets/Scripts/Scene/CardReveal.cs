@@ -97,13 +97,17 @@ public class CardReveal:MonoBehaviour
         float duration = 0.25f*(0.3f+0.3f*rarity);
         float elapsed = 0f;
 
-        while (elapsed < duration)
+        int maxIterations = 500; // Safety counter for WebGL
+        int iterations = 0;
+        while (elapsed < duration && iterations < maxIterations)
         {
-            elapsed += Time.deltaTime;
+            float deltaTime = Mathf.Max(Time.deltaTime, 0.001f); // Ensure non-zero for WebGL
+            elapsed += deltaTime;
             float t = elapsed / duration;
             float angle = Mathf.Lerp(0f, 90f, t);
             cardRoot.localRotation = Quaternion.Euler(0f, angle, 0f);
             await Task.Yield();
+            iterations++;
         }
 
         backImage.gameObject.SetActive(false);
@@ -112,13 +116,16 @@ public class CardReveal:MonoBehaviour
         effectImage.gameObject.SetActive(true);
 
         elapsed = 0f;
-        while (elapsed < duration)
+        iterations = 0;
+        while (elapsed < duration && iterations < maxIterations)
         {
-            elapsed += Time.deltaTime;
+            float deltaTime = Mathf.Max(Time.deltaTime, 0.001f); // Ensure non-zero for WebGL
+            elapsed += deltaTime;
             float t = elapsed / duration;
             float angle = Mathf.Lerp(90f, 0f, t);
             cardRoot.localRotation = Quaternion.Euler(0f, angle, 0f);
             await Task.Yield();
+            iterations++;
             if (endFlip)
             {
                 cardRoot.localRotation = Quaternion.identity;

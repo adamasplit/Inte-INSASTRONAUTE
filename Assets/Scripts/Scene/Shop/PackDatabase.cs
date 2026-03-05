@@ -4,18 +4,41 @@ using System.Collections.Generic;
 public class PackDatabase : MonoBehaviour
 {
     public List<PackData> packs;
-    public static PackDatabase Instance;
+    
+    public static PackDatabase Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<PackDatabase>();
+                if (_instance == null)
+                {
+                    Debug.Log("[PackDatabase] Creating PackDatabase instance programmatically");
+                    GameObject go = new GameObject("PackDatabase");
+                    _instance = go.AddComponent<PackDatabase>();
+                    DontDestroyOnLoad(go);
+                    _instance.Init();
+                }
+            }
+            return _instance;
+        }
+    }
+    
+    private static PackDatabase _instance;
+    
     void Awake()
     {
-        if (Instance != null)
+        if (_instance != null && _instance != this)
         {
             Destroy(gameObject);
             return;
         }
-        Instance = this;
+        _instance = this;
         DontDestroyOnLoad(gameObject);
         Init();
     }
+    
     private Dictionary<string, PackData> _byId;
 
     public void Init()

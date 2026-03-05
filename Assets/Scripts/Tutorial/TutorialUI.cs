@@ -522,12 +522,16 @@ public class TutorialUI : MonoBehaviour
         }
 
         float elapsed = 0f;
-        while (elapsed < duration)
+        int maxIterations = 1000; // Safety counter for WebGL
+        int iterations = 0;
+        while (elapsed < duration && iterations < maxIterations)
         {
-            elapsed += Time.deltaTime;
+            float deltaTime = Mathf.Max(Time.deltaTime, 0.001f); // Ensure non-zero for WebGL
+            elapsed += deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
             overlayImage.color = Color.Lerp(startColor, endColor, t);
             await Task.Yield();
+            iterations++;
         }
 
         overlayImage.color = endColor;

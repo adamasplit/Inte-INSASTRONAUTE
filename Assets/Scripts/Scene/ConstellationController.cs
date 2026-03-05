@@ -55,12 +55,16 @@ public async Task UnmaskStars()
     );
     float duration = 2f;
     float t = 0f;
-    while (t < duration)
+    int maxIterations = 2000; // Safety counter for WebGL
+    int iterations = 0;
+    while (t < duration && iterations < maxIterations)
     {
         float size = EaseOutCubic(t / duration) * maxRadius * 2f;
         revealMask.sizeDelta = new Vector2(size, size);
         await Task.Yield();
-        t += Time.deltaTime;
+        float deltaTime = Mathf.Max(Time.deltaTime, 0.001f); // Ensure non-zero for WebGL
+        t += deltaTime;
+        iterations++;
     }
 }
 
@@ -199,12 +203,29 @@ Vector2 GetValidStarPosition(
             star.OnOtherStarSelected();
 
         var selectedStar = GetSelectedStar();
-        await selectedStar.PlayRarityAnimation();
+        if (selectedStar == null)
+        {
+            Debug.LogError("[ConstellationController] No selected star found when trying to play rarity reveal.");
+            return;
+        }
+
+        try
+        {
+            await selectedStar.PlayRarityAnimation();
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"[ConstellationController] PlayRarityReveal exception: {ex}");
+            throw;
+        }
     }
 
     public void OnStarSelected(StarController star)
     {
-        if (selectionLocked) return;
+        if (selectionLocked)
+        {
+            return;
+        }
 
         selectionLocked = true;
 
@@ -242,9 +263,12 @@ Vector2 GetValidStarPosition(
         // Lance le fade-in en parallèle
         var fadeTask = to.FadeIn(duration * 0.7f);
 
-        while (t < 1f)
+        int maxIterations = 1000; // Safety counter for WebGL
+        int iterations = 0;
+        while (t < 1f && iterations < maxIterations)
         {
-            t += Time.deltaTime / duration;
+            float deltaTime = Mathf.Max(Time.deltaTime, 0.001f); // Ensure non-zero for WebGL
+            t += deltaTime / duration;
             float eased = EaseOutCubic(t);
 
             Vector3 current = Vector3.Lerp(
@@ -255,6 +279,7 @@ Vector2 GetValidStarPosition(
 
             lineRenderer.SetPosition(index, current);
             await Task.Yield();
+            iterations++;
         }
 
         lineRenderer.SetPosition(index, to.transform.localPosition);

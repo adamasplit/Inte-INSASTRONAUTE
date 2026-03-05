@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System;
+using System.Collections;
 using System.Threading.Tasks;
 
 public class StarController : MonoBehaviour, IPointerClickHandler
@@ -31,9 +33,12 @@ public class StarController : MonoBehaviour, IPointerClickHandler
         visualRoot.localScale = Vector3.one * 0.5f;
 
         float t = 0f;
-        while (t < 1f)
+        int maxIterations = 1000; // Safety counter for WebGL
+        int iterations = 0;
+        while (t < 1f && iterations < maxIterations)
         {
-            t += Time.deltaTime / duration;
+            float deltaTime = Mathf.Max(Time.deltaTime, 0.001f); // Ensure non-zero for WebGL
+            t += deltaTime / duration;
             float eased = EaseOutCubic(t);
 
             canvasGroup.alpha = eased;
@@ -44,6 +49,7 @@ public class StarController : MonoBehaviour, IPointerClickHandler
             );
 
             await Task.Yield();
+            iterations++;
         }
     }
 
@@ -58,14 +64,18 @@ public class StarController : MonoBehaviour, IPointerClickHandler
         Vector3 baseScale = Vector3.one;
         Vector3 pulseScale = Vector3.one * 1.3f;
         var main = slightSparklePS.main;
-        while (t < 1f)
+        int maxIterations = 500; // Safety counter for WebGL
+        int iterations = 0;
+        while (t < 1f && iterations < maxIterations)
         {
-            t += Time.deltaTime / duration;
+            float deltaTime = Mathf.Max(Time.deltaTime, 0.001f); // Ensure non-zero for WebGL
+            t += deltaTime / duration;
             float s = Mathf.Sin(t * Mathf.PI);
 
             visualRoot.localScale = Vector3.Lerp(baseScale, pulseScale, s);
             main.startColor = new Color(1f, 1f, 1f, t);
             await Task.Yield();
+            iterations++;
         }
 
         visualRoot.localScale = baseScale;
@@ -76,7 +86,7 @@ public class StarController : MonoBehaviour, IPointerClickHandler
     {
         controller = c;
         var emission = slightSparklePS.emission;
-        emission.rateOverTime = Random.Range(10, 40)/8f;
+        emission.rateOverTime = UnityEngine.Random.Range(10, 40)/8f;
         slightSparklePS.gameObject.SetActive(false);
     }
     private int getHighestRarity()
@@ -98,23 +108,23 @@ float EaseOutCubic(float t)
 {
     return 1f - Mathf.Pow(1f - t, 3f);
 }
-async Task PlayExplosion(Color color)
+private IEnumerator PlayExplosionRoutine(Color color, Image glow)
 {
-    // Flash rapide
     float flashDuration = 0.1f;
     float t = 0f;
 
-    Image glow = transform.Find("Glow").GetComponent<Image>();
-
-    while (t < flashDuration)
+    int maxIterations = 500;
+    int iterations = 0;
+    while (t < flashDuration && iterations < maxIterations)
     {
-        t += Time.deltaTime;
+        float deltaTime = Mathf.Max(Time.deltaTime, 0.001f);
+        t += deltaTime;
         float v = Mathf.Lerp(2f, 0f, t / flashDuration);
         SetGlow(glow, color, v);
-        await Task.Yield();
+        yield return null;
+        iterations++;
     }
 
-    // Particules
     if (explosionPS != null)
     {
         var main = explosionPS.main;
@@ -122,13 +132,38 @@ async Task PlayExplosion(Color color)
         explosionPS.gameObject.SetActive(true);
         explosionPS.Play();
     }
-    await Task.Delay(100);
+    else
+    {
+        Debug.LogError("[StarController] explosionPS is null during PlayExplosionRoutine.");
+    }
+
+    float waitBeforeHide = 0.1f;
+    t = 0f;
+    iterations = 0;
+    while (t < waitBeforeHide && iterations < 500)
+    {
+        float deltaTime = Mathf.Max(Time.deltaTime, 0.001f);
+        t += deltaTime;
+        yield return null;
+        iterations++;
+    }
+
     raysPS.gameObject.SetActive(false);
     controller.GetComponent<Image>().enabled = false;
     controller.HideStars();
     image.enabled = false;
     glowImage.enabled = false;
-    await Task.Delay((int)(explosionPS.main.duration * 1000)-100);
+
+    float extraWait = explosionPS != null ? Mathf.Max(0f, explosionPS.main.duration - waitBeforeHide) : 0f;
+    t = 0f;
+    iterations = 0;
+    while (t < extraWait && iterations < 3000)
+    {
+        float deltaTime = Mathf.Max(Time.deltaTime, 0.001f);
+        t += deltaTime;
+        yield return null;
+        iterations++;
+    }
 }
 
 public void SetPreviewPull(CardData[] pull)
@@ -197,86 +232,126 @@ public void SetPreviewPull(CardData[] pull)
         }
     }
 
-    public async Task PlayRarityAnimation()
+    public Task PlayRarityAnimation()
+    {
+        var tcs = new TaskCompletionSource<bool>();
+        StartCoroutine(PlayRarityAnimationRoutine(tcs));
+        return tcs.Task;
+    }
+
+    private IEnumerator PlayRarityAnimationRoutine(TaskCompletionSource<bool> tcs)
     {
         Vector3 startPos = transform.localPosition;
-    Vector3 targetPos = Vector3.zero; // centre de la constellation
+        Vector3 targetPos = Vector3.zero;
 
-    Image core = GetComponentInChildren<Image>();
-    Image glow = transform.Find("Glow").GetComponent<Image>();
-
-    int rarity = getHighestRarity();
-    Color baseColor = CardDatabase.Instance.GetRarityColor(rarity);
-    core.color = baseColor;
-
-    float moveDuration = getMoveTimeByRarity(rarity);
-    float pulseDuration = getPulseTimeByRarity(rarity);
-    pulsePower = getPulsePowerByRarity(rarity); 
-    slightSparklePS.gameObject.SetActive(false);
-    sparklePS.gameObject.SetActive(true);
-    var sparkleMain = sparklePS.main;
-    sparkleMain.startSize = 0.5f + rarity * 0.2f;
-    var col = sparklePS.colorOverLifetime;
-    col.enabled = true;
-    Gradient grad = new Gradient();
-    grad.SetKeys(
-        new GradientColorKey[] { new GradientColorKey(baseColor, 0.0f), new GradientColorKey(Color.white, 1.0f) },
-        new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(0.0f, 1.0f) }
-    );
-    col.color = new ParticleSystem.MinMaxGradient(grad);
-    float t = 0f;
-    while (t < moveDuration)
-    {
-        t += Time.deltaTime;
-        float eased = EaseOutCubic(t / moveDuration);
-
-        transform.localPosition = Vector3.Lerp(startPos, targetPos, eased);
-
-        // Brillance qui augmente pendant le move
-        float glowStrength = Mathf.Lerp(0.3f, 1.2f, eased);
-        SetGlow(glow, baseColor, glowStrength);
-
-        await Task.Yield();
-    }
-
-    transform.localPosition = targetPos;
-
-    t = 0f;
-    bool peakReached = false;
-    int peakCount = 0;
-    raysPS.gameObject.SetActive(true);
-    while (t < pulseDuration)
-    {
-        var emission = raysPS.emission;
-        float maxRayRate = rarity switch
+        Image core = GetComponentInChildren<Image>();
+        Transform glowTransform = transform.Find("Glow");
+        if (glowTransform == null)
         {
-            0 => 0f,
-            1 => 20f,
-            2 => 40f,
-            3 => 80f,
-            4 => 150f,
-            _ => 50f
-        };
-        float rayRate = Mathf.Lerp(0f, maxRayRate, t / pulseDuration);
-        emission.rateOverTime = rayRate;
-        
-        t += Time.deltaTime;
-        float pulse = Mathf.Sin(t * 10f) * 0.5f + 0.5f;
-        float intensity = Mathf.Lerp(1.2f, pulsePower*(t/pulseDuration+1), pulse);
-
-        SetGlow(glow, baseColor, intensity);
-        transform.localScale = Vector3.one * (1f + pulse * 0.15f);
-        if (!peakReached && pulse>0.9f)
-        {
-            peakReached = true;
-            peakCount++;
-            
+            Debug.LogError("[StarController] Glow child not found.");
+            tcs.TrySetException(new InvalidOperationException("Glow child not found."));
+            yield break;
         }
-        await Task.Yield();
-    }
-    sparklePS.gameObject.SetActive(false);
-    await PlayExplosion(baseColor);
 
-    gameObject.SetActive(false);
+        Image glow = glowTransform.GetComponent<Image>();
+        if (glow == null)
+        {
+            Debug.LogError("[StarController] Glow image component missing.");
+            tcs.TrySetException(new InvalidOperationException("Glow image component missing."));
+            yield break;
+        }
+
+            int rarity = getHighestRarity();
+            Color baseColor = CardDatabase.Instance.GetRarityColor(rarity);
+            core.color = baseColor;
+
+            float moveDuration = getMoveTimeByRarity(rarity);
+            float pulseDuration = getPulseTimeByRarity(rarity);
+            pulsePower = getPulsePowerByRarity(rarity);
+            slightSparklePS.gameObject.SetActive(false);
+            sparklePS.gameObject.SetActive(true);
+
+            var sparkleMain = sparklePS.main;
+            sparkleMain.startSize = 0.5f + rarity * 0.2f;
+
+            var col = sparklePS.colorOverLifetime;
+            col.enabled = true;
+            Gradient grad = new Gradient();
+            grad.SetKeys(
+                new GradientColorKey[] { new GradientColorKey(baseColor, 0.0f), new GradientColorKey(Color.white, 1.0f) },
+                new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(0.0f, 1.0f) }
+            );
+            col.color = new ParticleSystem.MinMaxGradient(grad);
+
+            float t = 0f;
+            int maxIterations = 2000;
+            int iterations = 0;
+            while (t < moveDuration && iterations < maxIterations)
+            {
+                float deltaTime = Mathf.Max(Time.deltaTime, 0.001f);
+                t += deltaTime;
+                float eased = EaseOutCubic(t / moveDuration);
+
+                transform.localPosition = Vector3.Lerp(startPos, targetPos, eased);
+                float glowStrength = Mathf.Lerp(0.3f, 1.2f, eased);
+                SetGlow(glow, baseColor, glowStrength);
+
+                yield return null;
+                iterations++;
+            }
+
+            if (iterations >= maxIterations)
+            {
+                Debug.LogError($"[StarController] Move loop reached safety limit. moveDuration={moveDuration}, elapsed={t}, rarity={rarity}");
+            }
+
+            transform.localPosition = targetPos;
+
+            t = 0f;
+            bool peakReached = false;
+            raysPS.gameObject.SetActive(true);
+            maxIterations = 3000;
+            iterations = 0;
+            while (t < pulseDuration && iterations < maxIterations)
+            {
+                var emission = raysPS.emission;
+                float maxRayRate = rarity switch
+                {
+                    0 => 0f,
+                    1 => 20f,
+                    2 => 40f,
+                    3 => 80f,
+                    4 => 150f,
+                    _ => 50f
+                };
+                float rayRate = Mathf.Lerp(0f, maxRayRate, t / pulseDuration);
+                emission.rateOverTime = rayRate;
+
+                float deltaTime = Mathf.Max(Time.deltaTime, 0.001f);
+                t += deltaTime;
+                float pulse = Mathf.Sin(t * 10f) * 0.5f + 0.5f;
+                float intensity = Mathf.Lerp(1.2f, pulsePower * (t / pulseDuration + 1), pulse);
+
+                SetGlow(glow, baseColor, intensity);
+                transform.localScale = Vector3.one * (1f + pulse * 0.15f);
+                if (!peakReached && pulse > 0.9f)
+                {
+                    peakReached = true;
+                }
+
+                yield return null;
+                iterations++;
+            }
+
+            if (iterations >= maxIterations)
+            {
+                Debug.LogError($"[StarController] Pulse loop reached safety limit. pulseDuration={pulseDuration}, elapsed={t}, rarity={rarity}");
+            }
+
+            sparklePS.gameObject.SetActive(false);
+            yield return PlayExplosionRoutine(baseColor, glow);
+            gameObject.SetActive(false);
+            tcs.TrySetResult(true);
     }
 }
+
