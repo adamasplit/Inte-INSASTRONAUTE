@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: GALA
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: gala
-  sprite: {fileID: 21300000, guid: 7d4a756837b087d43a3f0e454307ed9d, type: 3}
+  sprite: {fileID: 21300000, guid: ad863176070469841bed407b50baea1b, type: 3}
   rarity: 0
   FirstTimeValue: 2
   SubsequentValue: 1
   cardName: GALA
-  description: 
+  description: "Lingala, Mengala, Bengala - 20 \\n\\n \xC7a va manger du riz ce soir
+    - 90"
   element: 2
   baseDamage: 80
   duration: 1
   targetingType: 0
   attackType: 0
+  projectileCount: 1

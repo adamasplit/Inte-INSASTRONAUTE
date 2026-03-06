@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: La_suite
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: la_suite
-  sprite: {fileID: 21300000, guid: 3414f64294307d5438b76a6f216ef4b1, type: 3}
+  sprite: {fileID: 21300000, guid: 5a0a44d636090bb4dbb975888e82e66e, type: 3}
   rarity: 1
   FirstTimeValue: 5
   SubsequentValue: 2
   cardName: La Suite
-  description: 
+  description: "Danser dans la cage - 60 \\n\\n Passer sa soir\xE9e devant l'entr\xE9e
+    - 160"
   element: 3
   baseDamage: 100
   duration: 5
   targetingType: 0
   attackType: 3
+  projectileCount: 1

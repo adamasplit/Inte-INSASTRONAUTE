@@ -54,6 +54,7 @@ MonoBehaviour:
   tower: {fileID: 1784148727948129155}
   enemyContainer: {fileID: 8825736297900973637}
   enemies: []
+  firstEnemy: {fileID: 0}
 --- !u!222 &4463885857739929024
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5078,6 +5079,7 @@ MonoBehaviour:
   launchDistance: 20
   launchTime: 0
   returnTime: 1
+  isAttacking: 0
 --- !u!222 &5931863602075614848
 CanvasRenderer:
   m_ObjectHideFlags: 0

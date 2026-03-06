@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: Ins_aristocrate
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: insaristo
-  sprite: {fileID: 21300000, guid: 23ce55eb73b9e93449b729961e1dc6f1, type: 3}
+  sprite: {fileID: 21300000, guid: fadeff4d209f94440b7898575cb10ecb, type: 3}
   rarity: 1
   FirstTimeValue: 5
   SubsequentValue: 2
   cardName: INSARISTOCRATE
-  description: 
+  description: "Louis Croix V B\xE2ton - 50 \\n\\n C'est quoi ce nom d'int\xE9??
+    Pourquoi pas Insa Camping tant qu'on y est??? - 130"
   element: 4
   baseDamage: 100
   duration: 1
   targetingType: 1
   attackType: 1
+  projectileCount: 1

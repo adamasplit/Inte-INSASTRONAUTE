@@ -13,14 +13,17 @@ MonoBehaviour:
   m_Name: "Caf\xE9"
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: cafe
-  sprite: {fileID: 21300000, guid: d7574e7e712acf449b1ceaa88472cfc5, type: 3}
+  sprite: {fileID: 21300000, guid: 146c8f6920f0da14393d099d2a46d610, type: 3}
   rarity: 2
   FirstTimeValue: 5
   SubsequentValue: 2
-  cardName: "Caf\xE9"
-  description: 
+  cardName: "Caf\xE9 court"
+  description: "Monsieur et Madame Decaf\xE9 ont un fils, comment s'appelle-t-il
+    ? Mathias (Ma tasse de caf\xE9) (pouhahahahaha elle est bonne celle-l\xE0 philou)
+    - 140"
   element: 0
-  baseDamage: 40
+  baseDamage: 140
   duration: 1
   targetingType: 0
   attackType: 0
+  projectileCount: 1
