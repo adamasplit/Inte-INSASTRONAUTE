@@ -18,11 +18,15 @@ public class GameOverController : MonoBehaviour
         float duration = 1f; // Duration of the fade
         float elapsedTime = 0f;
 
-        while (elapsedTime < duration)
+        int maxIterations = 1000; // Safety counter for WebGL
+        int iterations = 0;
+        while (elapsedTime < duration && iterations < maxIterations)
         {
-            elapsedTime += Time.deltaTime;
+            float deltaTime = Mathf.Max(Time.deltaTime, 0.001f); // Ensure non-zero for WebGL
+            elapsedTime += deltaTime;
             canvasGroup.alpha = Mathf.Clamp01(elapsedTime / duration);
             await Task.Yield();
+            iterations++;
         }
         canvasGroup.alpha = 1;
     }
@@ -36,11 +40,15 @@ public class GameOverController : MonoBehaviour
         float duration = 1f; // Duration of the fade
         float elapsedTime = 0f;
 
-        while (elapsedTime < duration)
+        int maxIterations = 1000; // Safety counter for WebGL
+        int iterations = 0;
+        while (elapsedTime < duration && iterations < maxIterations)
         {
-            elapsedTime += Time.deltaTime;
+            float deltaTime = Mathf.Max(Time.deltaTime, 0.001f); // Ensure non-zero for WebGL
+            elapsedTime += deltaTime;
             canvasGroup.alpha = Mathf.Clamp01(1 - (elapsedTime / duration));
             await Task.Yield();
+            iterations++;
         }
         canvasGroup.alpha = 0;
         gameObject.SetActive(false);

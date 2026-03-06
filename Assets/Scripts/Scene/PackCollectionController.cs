@@ -31,11 +31,18 @@ public class PackCollectionController : MonoBehaviour
     }
     private void InitializeAllPacks()
     {
-
         Debug.Log("Initializing all packs from Resources...");
+        
         // Load all PackData assets from Resources/Packs and assign to allPacks
         allPacks = Resources.LoadAll<PackData>("Packs");
-
+        
+        Debug.Log($"[PackCollectionController] Loaded {(allPacks != null ? allPacks.Length : 0)} packs from Resources");
+        
+        if (allPacks == null || allPacks.Length == 0)
+        {
+            Debug.LogError("[PackCollectionController] CRITICAL: No packs loaded! This is likely a WebGL build issue. " +
+                "Ensure Assets/Resources/Packs/ contains PackData assets and they are included in the build.");
+        }
     }
     private void OnEnable()
     {
@@ -53,6 +60,13 @@ public class PackCollectionController : MonoBehaviour
     public void RefreshCollection()
     {
         Debug.Log("Updating pack collection UI...");
+        
+        if (allPacks == null || allPacks.Length == 0)
+        {
+            Debug.LogError("[PackCollectionController] Cannot refresh packs - allPacks is empty! No packs were loaded.");
+            return;
+        }
+        
         foreach (Transform child in packContainer)
             Destroy(child.gameObject);
         selectedPackDisplay.gameObject.SetActive(false);

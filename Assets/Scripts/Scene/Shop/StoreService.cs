@@ -7,7 +7,22 @@ public static class StoreService
 {
     public static async Task BuyAsync(string purchaseId)
     {
-        if (PlayerProfileStore.TOKEN < ShopDatabase.Instance.GetOffer(purchaseId).price)
+        // Null check for ShopDatabase - can happen on WebGL due to scene loading order
+        if (ShopDatabase.Instance == null)
+        {
+            Debug.LogError("[StoreService] CRITICAL: ShopDatabase.Instance is null! Cannot process purchase. " +
+                "Ensure ShopDatabase exists in the scene and is initialized before attempting a purchase.");
+            return;
+        }
+        
+        var offer = ShopDatabase.Instance.GetOffer(purchaseId);
+        if (offer == null)
+        {
+            Debug.LogError($"[StoreService] Offer not found: {purchaseId}");
+            return;
+        }
+        
+        if (PlayerProfileStore.TOKEN < offer.price)
         {
             Debug.LogWarning("[StoreService] Not enough TOKEN to make purchase: " + purchaseId);
             return;
@@ -40,6 +55,12 @@ public static class StoreService
 
     static async Task ApplyRewardAsync(string purchaseId)
     {
+        if (ShopDatabase.Instance == null)
+        {
+            Debug.LogError("[StoreService] CRITICAL: ShopDatabase.Instance is null in ApplyRewardAsync!");
+            return;
+        }
+        
         var offer = ShopDatabase.Instance.GetOffer(purchaseId);
         Debug.Log("[StoreService] Applying reward for offer: " + purchaseId);
 

@@ -3,18 +3,37 @@ using System.Collections.Generic;
 
 public class ShopDatabase : MonoBehaviour
 {
-    public static ShopDatabase Instance;
+    public static ShopDatabase Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<ShopDatabase>();
+                if (_instance == null)
+                {
+                    Debug.Log("[ShopDatabase] Creating ShopDatabase instance programmatically");
+                    GameObject go = new GameObject("ShopDatabase");
+                    _instance = go.AddComponent<ShopDatabase>();
+                    DontDestroyOnLoad(go);
+                }
+            }
+            return _instance;
+        }
+    }
+    
+    private static ShopDatabase _instance;
 
     public List<ShopOffer> Offers { get; private set; } = new();
 
     void Awake()
     {
-        if (Instance != null)
+        if (_instance != null && _instance != this)
         {
             Destroy(gameObject);
             return;
         }
-        Instance = this;
+        _instance = this;
         DontDestroyOnLoad(gameObject);
     }
 

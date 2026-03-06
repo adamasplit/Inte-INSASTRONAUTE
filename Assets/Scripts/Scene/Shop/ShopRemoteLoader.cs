@@ -16,7 +16,15 @@ public class ShopRemoteLoader : MonoBehaviour
         );
         GetComponent<ShopController>().offers = CurrentOffers;
         GetComponent<ShopController>().RefreshShop();
-        ShopDatabase.Instance.SetOffers(CurrentOffers);
+        
+        if (ShopDatabase.Instance != null)
+        {
+            ShopDatabase.Instance.SetOffers(CurrentOffers);
+        }
+        else
+        {
+            Debug.LogError("[ShopRemoteLoader] ShopDatabase.Instance is null! Cannot set offers for shop database.");
+        }
     }
 
     public async Task UpdateShopFromRemoteTask()
@@ -40,6 +48,15 @@ public class ShopRemoteLoader : MonoBehaviour
 
         GetComponent<ShopController>().offers = CurrentOffers;
         GetComponent<ShopController>().RefreshShop();
+        
+        if (ShopDatabase.Instance != null)
+        {
+            ShopDatabase.Instance.SetOffers(CurrentOffers);
+        }
+        else
+        {
+            Debug.LogError("[ShopRemoteLoader] ShopDatabase.Instance is null in UpdateShopFromRemoteTask! Cannot set offers.");
+        }
     }
 
     void ApplyShopConfig(ConfigResponse response)
