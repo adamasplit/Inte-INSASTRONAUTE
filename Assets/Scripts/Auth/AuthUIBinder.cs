@@ -102,6 +102,7 @@ public class AuthUIBinder : MonoBehaviour
             var p = signInPassword ? signInPassword.text : "";
 
             ValidateNotEmpty(u, "Veuillez entrer votre nom d'utilisateur");
+            ValidateUsernameNoSpaces(u, "Le nom d'utilisateur ne doit pas contenir d'espaces");
             ValidateNotEmpty(p, "Veuillez entrer votre mot de passe");
 
             await AuthController.Instance.SignIn(u, p);
@@ -119,6 +120,7 @@ public class AuthUIBinder : MonoBehaviour
             var c = signUpPasswordConfirm ? signUpPasswordConfirm.text : "";
 
             ValidateNotEmpty(u, "Veuillez choisir un nom d'utilisateur");
+            ValidateUsernameNoSpaces(u, "Le nom d'utilisateur ne doit pas contenir d'espaces");
             ValidateNotEmpty(p, "Veuillez choisir un mot de passe");
 
             if (p.Length < 8)
@@ -143,6 +145,7 @@ public class AuthUIBinder : MonoBehaviour
             var p = signUpPassword ? signUpPassword.text : "";
 
             ValidateNotEmpty(u, "Veuillez choisir un nom d'utilisateur");
+            ValidateUsernameNoSpaces(u, "Le nom d'utilisateur ne doit pas contenir d'espaces");
             ValidateNotEmpty(p, "Veuillez choisir un mot de passe");
 
             if (p.Length < 8)
@@ -221,6 +224,21 @@ public class AuthUIBinder : MonoBehaviour
     private static void ValidateNotEmpty(string v, string msg)
     {
         if (string.IsNullOrWhiteSpace(v)) throw new Exception(msg);
+    }
+
+    private static void ValidateUsernameNoSpaces(string username, string msg)
+    {
+        if (!IsUsernameWithoutSpaces(username)) throw new Exception(msg);
+    }
+
+    private static bool IsUsernameWithoutSpaces(string username)
+    {
+        foreach (char c in username)
+        {
+            if (char.IsWhiteSpace(c)) return false;
+        }
+
+        return true;
     }
 
     private static string MapAuthError(AuthenticationException ae)
@@ -310,6 +328,11 @@ public class AuthUIBinder : MonoBehaviour
                 SetFieldColor(signInUsername, neutralColor);
                 SetHint(signInUsernameHint, "");
             }
+            else if (!IsUsernameWithoutSpaces(username))
+            {
+                SetFieldColor(signInUsername, invalidColor);
+                SetHint(signInUsernameHint, "Pas d'espaces autorisés", warningTextColor);
+            }
             else if (username.Length >= 3 && username.Length <= 20)
             {
                 SetFieldColor(signInUsername, validColor);
@@ -357,6 +380,11 @@ public class AuthUIBinder : MonoBehaviour
             {
                 SetFieldColor(signUpUsername, neutralColor);
                 SetHint(signUpUsernameHint, "");
+            }
+            else if (!IsUsernameWithoutSpaces(username))
+            {
+                SetFieldColor(signUpUsername, invalidColor);
+                SetHint(signUpUsernameHint, "Pas d'espaces autorisés", warningTextColor);
             }
             else if (username.Length >= 3 && username.Length <= 20)
             {

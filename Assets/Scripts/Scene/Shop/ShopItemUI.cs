@@ -51,7 +51,25 @@ public class ShopItemUI : MonoBehaviour
         buyButton.onClick.AddListener(OnBuyClicked);
     }
 
-    async void OnBuyClicked()
+    void OnBuyClicked()
+    {
+        var ui = FindFirstObjectByType<MainUIBinder>();
+        if (ui == null)
+        {
+            Debug.LogWarning("[ShopItemUI] MainUIBinder not found, skipping confirmation popup.");
+            _ = ExecutePurchaseAsync();
+            return;
+        }
+
+        ui.ShowConfirmation(
+            "Confirmer l'achat",
+            $"Acheter {offer.title} pour {offer.price} TOKEN ?",
+            async () => await ExecutePurchaseAsync(),
+            () => Debug.Log("[ShopItemUI] Purchase cancelled by user.")
+        );
+    }
+
+    async System.Threading.Tasks.Task ExecutePurchaseAsync()
     {
         ShopController shopController = FindFirstObjectByType<ShopController>();
         if (shopController == null)
@@ -68,7 +86,18 @@ public class ShopItemUI : MonoBehaviour
 
         FindFirstObjectByType<ShopController>().loadingScreen.Initialize(1);
         Debug.Log("[ShopItemUI]Buying offer: " + offer.purchaseId.ToUpper());
-        await StoreService.BuyAsync(offer.purchaseId);
+        var purchaseResult = await StoreService.BuyAsync(offer.purchaseId);
+
+        var mainUi = FindFirstObjectByType<MainUIBinder>();
+        if (mainUi != null)
+        {
+            mainUi.ShowNotification(purchaseResult.Message);
+        }
+        else
+        {
+            Debug.LogWarning("[ShopItemUI] MainUIBinder not found, cannot display purchase notification.");
+        }
+
         FindFirstObjectByType<ShopController>().loadingScreen.CompleteLoading();
         FindFirstObjectByType<ShopController>().loadingScreen.HideWithFade();
     }

@@ -75,6 +75,7 @@ public class TutorialManager : MonoBehaviour
         BindTutorialUI();
 
         TryResumeTutorialState();
+        _ = EnsureAutoStartFirstTimeTutorial();
     }
 
     private void OnDisable()
@@ -597,6 +598,41 @@ public class TutorialManager : MonoBehaviour
 
         Debug.Log($"[TutorialManager] Resuming from saved state: {savedSequenceId} at step {savedStep}");
         await ResumeTutorialSequence(sequence, savedStep);
+    }
+
+    private async Task EnsureAutoStartFirstTimeTutorial()
+    {
+        if (!autoStartOnFirstLogin)
+            return;
+
+        await Task.Delay(1500);
+
+        if (isTutorialActive)
+            return;
+
+        var savedSequenceId = PlayerPrefs.GetString(PREF_ACTIVE_SEQUENCE, string.Empty);
+        var savedStep = PlayerPrefs.GetInt(PREF_ACTIVE_STEP, -1);
+        if (!string.IsNullOrEmpty(savedSequenceId) && savedStep >= 0)
+            return;
+
+        if (!IsFirstTime() && !resetTutorialOnStart)
+            return;
+
+        ResolveSceneDependencies();
+        BindTutorialUI();
+
+        if (tutorialUI == null)
+        {
+            await Task.Delay(500);
+            ResolveSceneDependencies();
+            BindTutorialUI();
+        }
+
+        if (isTutorialActive)
+            return;
+
+        Debug.Log("[TutorialManager] Auto-starting first-time tutorial fallback");
+        StartFirstTimeTutorial();
     }
 }
 

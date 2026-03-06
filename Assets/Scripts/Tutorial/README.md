@@ -131,6 +131,10 @@ Canvas
     ├── Overlay (Image - full screen, black, alpha 0.7)
     ├── HighlightCircle (Image - circular sprite)
     ├── HighlightRect (Image - rounded rectangle)
+   ├── SkipConfirmPanel (GameObject - hidden by default)
+   │   ├── MessageText (TextMeshPro - "Passer le tutoriel ?")
+   │   ├── ConfirmButton
+   │   └── CancelButton
     └── ContentPanel
         ├── Icon (Image)
         ├── TitleText (TextMeshPro)
@@ -144,6 +148,7 @@ Canvas
 
 5. Assign references in TutorialUI component:
    - Drag UI elements to their respective fields
+   - Assign skip popup fields: `Skip Confirm Panel`, `Skip Confirm Message Text`, `Skip Confirm Yes Button`, `Skip Confirm No Button`
    - Configure colors and animation settings
 
 **Recommended Settings:**
