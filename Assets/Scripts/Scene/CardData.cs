@@ -15,7 +15,8 @@ public enum AttackType
     Projectile,
     ContinuousBeam,
     ProjectileFlurry,
-    MultiProjectiles
+    MultiProjectiles,
+    HaltEnemy
 }
 [CreateAssetMenu(menuName = "Cards/Card Data")]
 public class CardData : ScriptableObject
@@ -37,4 +38,5 @@ public class CardData : ScriptableObject
     public TargetingType targetingType;
     public AttackType attackType;
     public int projectileCount = 1; // for projectile attacks
+    public float vfxDuration = 1f; // Duration for VFX, if applicable
 }

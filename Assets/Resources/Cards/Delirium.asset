@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: Delirium
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: delirium
-  sprite: {fileID: 21300000, guid: 8bb128b4f7ebe694d8a1f4fa06004c87, type: 3}
+  sprite: {fileID: 21300000, guid: f6bb0dbdbb0ab594bb078f8af1be35e8, type: 3}
   rarity: 1
   FirstTimeValue: 4
   SubsequentValue: 2
   cardName: "D\xE9lirium"
-  description: 
+  description: "Tester toutes les pressions - 30 \\n\\n S\xE9curit\xE9 ascendant
+    Berger - 90"
   element: 3
   baseDamage: 50
   duration: 1
   targetingType: 0
   attackType: 0
+  projectileCount: 1

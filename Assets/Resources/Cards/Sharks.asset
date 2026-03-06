@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: Sharks
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: sharks
-  sprite: {fileID: 21300000, guid: 30bf013f75588a149870cbeb783ef7ca, type: 3}
+  sprite: {fileID: 21300000, guid: 4da9c507a70bc374087cf38a85611fdb, type: 3}
   rarity: 1
   FirstTimeValue: 5
   SubsequentValue: 2
   cardName: Sharks
-  description: 
+  description: Blup Blup Blup Blublup - 30 \n\n Blublup - 110
   element: 1
   baseDamage: 50
   duration: 1
-  targetingType: 0
+  targetingType: 1
   attackType: 0
+  projectileCount: 1
+  vfxDuration: 1.5

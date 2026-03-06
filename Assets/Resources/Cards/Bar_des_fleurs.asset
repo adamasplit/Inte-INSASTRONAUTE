@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: Bar_des_fleurs
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: bar_des_fleurs
-  sprite: {fileID: 21300000, guid: 5af6c32a5c97b0941b4183b846aeb490, type: 3}
+  sprite: {fileID: 21300000, guid: 41fd6b7ee908fd642a7557fbf0a7d480, type: 3}
   rarity: 0
   FirstTimeValue: 2
   SubsequentValue: 1
   cardName: Bar des fleurs
-  description: 
+  description: "Happy Hour 20h P\xE9tante - 40 \\n\\n Glaucidium palmatum var. macrocarpum
+    subsp. shikokianum - 110"
   element: 3
   baseDamage: 60
   duration: 1
   targetingType: 0
   attackType: 0
+  projectileCount: 1

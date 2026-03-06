@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Degats_des_eaux
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: degats_des_eaux
-  sprite: {fileID: 21300000, guid: fea85c0ed5f2b4d4788c9281fc1cdd28, type: 3}
+  sprite: {fileID: 21300000, guid: 32b1eba14ec462744a5c212a99bda726, type: 3}
   rarity: 2
   FirstTimeValue: 5
   SubsequentValue: 1
   cardName: "D\xE9g\xE2ts des eaux"
-  description: 
+  description: "Seau mal plac\xE9 - 60 \\n\\n Temp\xEAte Boretti - 100"
   element: 6
   baseDamage: 40
   duration: 1
