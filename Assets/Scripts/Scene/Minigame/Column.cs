@@ -20,9 +20,21 @@ public class Column : MonoBehaviour
     }
     public Enemy GetFirstEnemy()
     {
-        if (enemies.Count > 0)
-            return enemies[0];
-        return null;
+        if (enemies == null || enemies.Count == 0)
+            return null;
+        Enemy lowestEnemy = null;
+        float lowestY = float.MaxValue;
+        foreach (var enemy in enemies)
+        {
+            if (enemy == null) continue;
+            float y = enemy.transform.position.y;
+            if (y < lowestY)
+            {
+                lowestY = y;
+                lowestEnemy = enemy;
+            }
+        }
+        return lowestEnemy;
     }
     public List<Enemy> GetEnemies()
     {

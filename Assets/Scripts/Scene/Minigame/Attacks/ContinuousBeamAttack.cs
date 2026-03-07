@@ -14,17 +14,23 @@ public class ContinuousBeamAttack : MonoBehaviour, IAttackBehaviour
             main.startLifetime = card.duration;
         }
         StartCoroutine(BeamAttackCoroutine(tower, column, targets, card));
+        GameObject vfx=Resources.Load<GameObject>("VFX/"+card.cardId);
+        if (vfx != null)
+        {
+            GameObject instance = Instantiate(vfx, tower.transform);
+            IVFX ivfx=instance.GetComponent<IVFX>();
+            ivfx?.Fire(tower.transform.position, targets, card);
+        }
         
     }
     public IEnumerator BeamAttackCoroutine(Tower tower, Column column, List<Enemy> targets, CardData card)
     {
-        float beamDuration = 1.0f; // Durée du faisceau actif
         float elapsed = 0f;
-        while (elapsed < beamDuration)
+        while (elapsed < card.duration)
         {
             elapsed += Time.deltaTime;
-            column.DamageEnemies(card,1f/(10f*card.duration)); 
-            yield return new WaitForSeconds(0.1f); 
+            column.DamageEnemies(card,Time.deltaTime); // Adjust damage based on time to ensure consistent damage over duration
+            yield return null; // Wait for the next frame
         }
     }
 }

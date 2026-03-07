@@ -24,6 +24,9 @@ MonoBehaviour:
   element: 4
   baseDamage: 75
   duration: 1
-  targetingType: 2
+  targetingType: 6
   attackType: 0
   projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 1
+  damagingVfx: 0

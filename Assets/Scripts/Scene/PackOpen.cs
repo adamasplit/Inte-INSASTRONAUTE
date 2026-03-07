@@ -20,7 +20,8 @@ public class PackOpen : MonoBehaviour
 {
     // State for skipping
 
-    
+    private long initialPC = 0;
+    private long targetPC = 0;
     private bool skipAll = false;
     private bool queuedSkip = false;
     private TaskCompletionSource<bool> skipSignal;
@@ -268,28 +269,17 @@ public class PackOpen : MonoBehaviour
                 await WaitForSecondsSafe(0.02f);
             }
         }
-
-
-        // If skipping all, reveal all remaining cards instantly
-        /*if (skipAll)
-        {
-            for (int i = 0; i < pulledCards.Length; i++)
-            {
-                var cardData = pulledCards[i];
-                var cardUI = Instantiate(cardRevealPrefab, summaryGrid);
-                cardUI.SetCardData(1, cardData.sprite, cardData.borderColor);
-                CardReveal cardReveal = cardUI.GetComponent<CardReveal>();
-                cardReveal.RevealCard();
-                await Task.Delay(50);
-            }
-            skipSignal = new TaskCompletionSource<bool>();
-            await Task.WhenAny(skipSignal.Task);
-            skipSignal = null;
-        }*/
         await WaitForSkipSignal("pack closing", 10f);
+        initialPC = PlayerProfileStore.PC;
+        targetPC = PlayerProfileStore.PC+PlayerProfileStore.GetPCReward(pulledCards);
+        await FindFirstObjectByType<RollingCounter>().AnimateFromTo(initialPC, targetPC);
+        
         loadingScreen.SetActive(true);
         await PlayerProfileStore.RemovePackAsync(packData.packId, 1);
+        
         await PlayerProfileStore.AddCards(pulledCards);
+        
+        
         loadingScreen.SetActive(false);
         panel.SetActive(false);
         SetPhase(PackOpenPhase.None);

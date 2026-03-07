@@ -23,5 +23,8 @@ MonoBehaviour:
   baseDamage: 50
   duration: 1
   targetingType: 2
-  attackType: 2
+  attackType: 0
   projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 1
+  damagingVfx: 0

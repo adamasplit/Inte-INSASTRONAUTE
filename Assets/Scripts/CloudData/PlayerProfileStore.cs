@@ -108,6 +108,24 @@ public static class PlayerProfileStore
         OnCardCollectionChanged?.Invoke();
     }
 
+    public static long GetPCReward(CardData[] cards)
+    {
+        long pcReward = 0;
+        foreach (var card in cards)
+        {
+            if (card != null)
+            {
+                int owned = GetCardQuantity(card.cardId);
+                if (owned == 0)
+                    pcReward += card.FirstTimeValue;
+                else
+                    pcReward += card.SubsequentValue;
+            }
+        }
+        Debug.Log($"[GetPCReward] Calculated PC reward for given cards: {pcReward}");
+        return pcReward;
+    }
+
     public static async Task ComputePC()
     {
         int totalPC = 0;
