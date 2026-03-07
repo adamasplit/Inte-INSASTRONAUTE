@@ -62,16 +62,47 @@ public class PlayerStatusController : MonoBehaviour
         
         // Start tutorial for first-time users after loading is complete
         await Task.Delay(1000); // Wait for loading screen to fade
-        StartTutorialIfNeeded();
+        _ = StartTutorialIfNeededAsync();
     }
     
-    private void StartTutorialIfNeeded()
+    private async Task StartTutorialIfNeededAsync()
     {
-        var tutorialManager = FindFirstObjectByType<TutorialManager>();
-        if (tutorialManager != null && tutorialManager.IsFirstTime())
+        TutorialManager tutorialManager = null;
+
+        for (int i = 0; i < 20; i++)
+        {
+            tutorialManager = TutorialManager.Instance;
+            if (tutorialManager == null)
+            {
+                tutorialManager = FindFirstObjectByType<TutorialManager>();
+            }
+
+            if (tutorialManager != null)
+                break;
+
+            await Task.Delay(100);
+        }
+
+        if (tutorialManager == null)
+        {
+            Debug.LogWarning("[PlayerStatusController] TutorialManager not found, skipping auto-start trigger");
+            return;
+        }
+
+        if (!tutorialManager.autoStartOnFirstLogin)
+        {
+            Debug.Log("[PlayerStatusController] autoStartOnFirstLogin disabled");
+            return;
+        }
+
+        if (tutorialManager.IsFirstTime())
         {
             Debug.Log("[PlayerStatusController] Starting first-time tutorial");
             tutorialManager.StartFirstTimeTutorial();
+        }
+        else
+        {
+            Debug.Log("[PlayerStatusController] Not first-time user, tutorial auto-start skipped");
         }
     }
 

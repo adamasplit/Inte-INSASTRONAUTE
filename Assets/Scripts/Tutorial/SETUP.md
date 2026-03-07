@@ -17,6 +17,10 @@
      ├── Overlay (Image - Black, Alpha 0.7, Stretch to fill)
      ├── HighlightCircle (Image - White circle sprite)
      ├── HighlightRect (Image - White rounded rect)
+    ├── SkipConfirmPanel (GameObject - hidden by default)
+    │   ├── MessageText (TextMeshPro - "Passer le tutoriel ?")
+    │   ├── ConfirmButton
+    │   └── CancelButton
      └── ContentPanel (Vertical Layout Group)
          ├── Icon (Image - Optional)
          ├── TitleText (TextMeshPro - Bold, 32pt)
@@ -26,6 +30,7 @@
          └── SkipButton > ButtonText ("Passer")
      ```
    - Drag references in TutorialUI component
+   - Assign `Skip Confirm Panel`, `Skip Confirm Message Text`, `Skip Confirm Yes Button`, `Skip Confirm No Button`
    - Position ContentPanel at bottom of screen
 
 3. **Setup TutorialManager**

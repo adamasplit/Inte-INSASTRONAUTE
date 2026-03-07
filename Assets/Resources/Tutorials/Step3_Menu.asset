@@ -14,21 +14,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
   stepId: Step3_Menu
   title: Menu Principal
-  description: 'Il est temps d''acheter votre premier booster !
-
-    Cliquez sur
-    ce bouton pour ouvrir le menu principal.'
+  description: "Il est temps d'acheter votre premier booster !\nCliquez sur le bouton
+    en haut \xE0 gauche pour ouvrir le menu principal."
   highlightType: 1
   targetTag: MenuButton
+  parentTag: 
+  allowAnyMatchingTarget: 1
+  allowParentTagClick: 1
+  highlightFirstAvailable: 1
   targetTransform: {fileID: 0}
   overlayAlpha: 0.317
   highlightPadding: {x: 10, y: 10}
+  highlightScaleFactor: 1.2
   pulseHighlight: 1
   advanceType: 1
   buttonText: Suivant
   waitForTargetClick: 1
+  lockInputToTarget: 1
   autoAdvanceDelay: 0
+  isInMainScene: 0
   openTopMenu: 0
   navigateToScreen: -1
   delayBeforeShow: 0
+  delayAfterSuccess: 0
+  successOverlayAlpha: 0.08
+  successOverlayFadeTime: 0.15
   icon: {fileID: 0}

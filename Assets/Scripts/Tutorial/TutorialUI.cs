@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using TMPro;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,14 @@ public class TutorialUI : MonoBehaviour
     [SerializeField] private TMP_Text nextButtonText;
     [SerializeField] private Button skipButton;
     [SerializeField] private Image iconImage;
+    [SerializeField] private MainUIBinder mainUIBinder;
+
+    [Header("Skip Confirmation")]
+    [SerializeField] private GameObject skipConfirmPanel;
+    [SerializeField] private TMP_Text skipConfirmMessageText;
+    [SerializeField] private string skipConfirmMessage = "Passer le tutoriel ?";
+    [SerializeField] private Button skipConfirmYesButton;
+    [SerializeField] private Button skipConfirmNoButton;
     
     [Header("Highlight")]
     [SerializeField] private RectTransform highlightCircle;
@@ -91,7 +100,22 @@ public class TutorialUI : MonoBehaviour
         
         if (skipButton != null)
         {
-            skipButton.onClick.AddListener(() => OnSkipRequested?.Invoke());
+            skipButton.onClick.AddListener(OnSkipButtonClicked);
+        }
+
+        if (skipConfirmYesButton != null)
+        {
+            skipConfirmYesButton.onClick.AddListener(OnSkipConfirmed);
+        }
+
+        if (skipConfirmNoButton != null)
+        {
+            skipConfirmNoButton.onClick.AddListener(HideSkipConfirmation);
+        }
+
+        if (skipConfirmPanel != null)
+        {
+            skipConfirmPanel.SetActive(false);
         }
         
         // Start hidden
@@ -145,6 +169,9 @@ public class TutorialUI : MonoBehaviour
         {
             nextButton.gameObject.SetActive(step.advanceType == AdvanceType.Button);
         }
+
+        UpdateSkipButtonVisibility();
+        HideSkipConfirmation();
         
         // Setup target click detection
         waitingForTargetClick = (step.advanceType == AdvanceType.TargetClick || step.waitForTargetClick);
@@ -544,6 +571,74 @@ public class TutorialUI : MonoBehaviour
             contentPanel.SetActive(visible);
         }
     }
+
+    private bool IsInMainScene()
+    {
+        return SceneManager.GetActiveScene().name == "Main - Copie";
+    }
+
+    private MainUIBinder ResolveMainUIBinder()
+    {
+        if (mainUIBinder == null)
+        {
+            mainUIBinder = FindFirstObjectByType<MainUIBinder>();
+        }
+
+        return mainUIBinder;
+    }
+
+    private void UpdateSkipButtonVisibility()
+    {
+        if (skipButton != null)
+        {
+            skipButton.gameObject.SetActive(IsInMainScene());
+        }
+    }
+
+    private void OnSkipButtonClicked()
+    {
+        if (!IsInMainScene())
+            return;
+
+        var binder = ResolveMainUIBinder();
+        if (binder != null)
+        {
+            binder.ShowConfirmation(
+                "Passer le tutoriel",
+                skipConfirmMessage,
+                OnSkipConfirmed,
+                null
+            );
+            return;
+        }
+
+        if (skipConfirmPanel == null)
+        {
+            OnSkipRequested?.Invoke();
+            return;
+        }
+
+        if (skipConfirmMessageText != null)
+        {
+            skipConfirmMessageText.text = skipConfirmMessage;
+        }
+
+        skipConfirmPanel.SetActive(true);
+    }
+
+    private void OnSkipConfirmed()
+    {
+        HideSkipConfirmation();
+        OnSkipRequested?.Invoke();
+    }
+
+    private void HideSkipConfirmation()
+    {
+        if (skipConfirmPanel != null)
+        {
+            skipConfirmPanel.SetActive(false);
+        }
+    }
     
     private void StartPulseAnimation(RectTransform target)
     {
@@ -621,6 +716,7 @@ public class TutorialUI : MonoBehaviour
         
         isVisible = false;
         waitingForTargetClick = false;
+        HideSkipConfirmation();
         
         // Remove button listener before clearing references
         RemoveTargetButtonListener();
