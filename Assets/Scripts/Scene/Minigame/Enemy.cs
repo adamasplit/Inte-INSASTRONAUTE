@@ -47,16 +47,12 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            Element elem = Random.Range(0, 7) switch
+            Element elem = Random.Range(0, 3) switch
             {
-                0 => Element.Rite,
-                1 => Element.Asso,
-                2 => Element.Event,
-            3 => Element.Bar_boite,
-            4 => Element.Liste,
-            5 => Element.Personne,
-            6 => Element.Galere_spam,
-            _ => Element.Fire
+                0 => Element.Planet,
+                1 => Element.Rocket,
+                2 => Element.Star,
+                _ => Element.Planet
             };
             element = elem;
         }

@@ -13,14 +13,19 @@ MonoBehaviour:
   m_Name: Stadium
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: stadium
-  sprite: {fileID: 21300000, guid: 9ee1fb60e383ce344b9c817e15576ced, type: 3}
+  sprite: {fileID: 21300000, guid: e981ddfbc2b1d644f9d25732878cc675, type: 3}
   rarity: 2
   FirstTimeValue: 8
   SubsequentValue: 2
   cardName: Stadium
-  description: 
+  description: Octogone avec le DJ - 50 \n\n Regarder Marseille perdre au milieu
+    du POGO - 120
   element: 3
   baseDamage: 75
   duration: 1
   targetingType: 0
   attackType: 0
+  projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

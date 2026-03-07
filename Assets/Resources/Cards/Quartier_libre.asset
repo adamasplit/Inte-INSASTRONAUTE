@@ -13,14 +13,18 @@ MonoBehaviour:
   m_Name: Quartier_libre
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: quartier_libre
-  sprite: {fileID: 21300000, guid: d83ef4e63f56b3345b3a2b2e8f574d13, type: 3}
+  sprite: {fileID: 21300000, guid: 523c03b00b7756448852ce22bc98d0f9, type: 3}
   rarity: 3
   FirstTimeValue: 15
   SubsequentValue: 8
   cardName: Quartier libre
-  description: 
+  description: "Partie de p\xE9tanque - 50 \\n\\n Cacartier libre - 150"
   element: 3
   baseDamage: 10
   duration: 1
   targetingType: 0
   attackType: 0
+  projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

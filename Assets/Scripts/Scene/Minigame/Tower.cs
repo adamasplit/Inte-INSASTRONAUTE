@@ -8,6 +8,7 @@ public class Tower : MonoBehaviour
     public Transform rocket;
     public ParticleSystem takeoffParticles;
     public ParticleSystem trailParticles;
+    public ParticleSystem overdriveParticles;
     public SpriteRenderer overlayRenderer; 
 
     public float recoilDistance = 50f;   // en unités locales visibles à l'écran
@@ -22,7 +23,7 @@ public class Tower : MonoBehaviour
     private ITargetingBehaviour targeting;
     private IAttackBehaviour attack;
     public bool isAttacking = false;
-    private bool overloaded = false;
+    private bool overdrive = false;
 
     void Awake()
     {
@@ -30,11 +31,12 @@ public class Tower : MonoBehaviour
         startLocalPos = rocket.localPosition;
         if (takeoffParticles) takeoffParticles.Stop();
         if (trailParticles) trailParticles.Stop();
+        if (overdriveParticles) overdriveParticles.Stop();
     }
 
     void Update()
     {
-        if (overloaded)
+        if (overdrive)
         {
             float flicker = Mathf.Sin(Time.time * 5f) * 0.5f + 0.5f; // Flicker between 0 and 1
             Color c = overlayRenderer.color;
@@ -56,23 +58,42 @@ public class Tower : MonoBehaviour
     {
         isAttacking = true;
         // --- Phase 1 : recul vers le bas ---
-        if (takeoffParticles) takeoffParticles.Play();
+        if (takeoffParticles) {
+            takeoffParticles.gameObject.SetActive(true);
+            takeoffParticles.Play();
+        }
+        if (overdriveParticles&&overdrive) {
+            overdriveParticles.gameObject.SetActive(true);
+            overdriveParticles.Play();
+        }
         Vector3 recoilPos = startLocalPos - Vector3.up * recoilDistance;
         float t = 0f;
         while (t < 1f)
         {
             t += Time.deltaTime / recoilTime;
+            if (overdrive)
+            {
+                float scaleMultiplier = 1f + 0.5f * Mathf.Sin(Time.time * 10f); // Pulsation de l'overdrive
+                transform.localScale = originalScale * scaleMultiplier;
+            }
             rocket.localPosition = Vector3.Lerp(startLocalPos, recoilPos, Mathf.SmoothStep(0f, 1f, t));
             yield return null;
         }
+        transform.localScale = originalScale;
 
         // --- Phase 2 : décollage instantané ---
 
-
+        takeoffParticles.gameObject.SetActive(false);
+        overdriveParticles.gameObject.SetActive(false);
         // Appliquer dégâts / effets
         if (attack != null)        
         {
             List<Enemy> targets = targeting.GetTargets(column);
+            if (overdrive)
+            {
+                // En overdrive, cible tous les ennemis
+                targets = GetComponent<AllEnemiesAllColumnsTargeting>().GetTargets(column);
+            }
             attack.ExecuteAttack(this, column, targets, card);
         }
 
@@ -107,10 +128,10 @@ public class Tower : MonoBehaviour
         }
 
         rocket.localPosition = startLocalPos;
-        overloaded = false;
+        overdrive = false;
         if (Random.Range(0, 100) < 20) 
         {
-            overloaded = true;
+            overdrive = true;
             overlayRenderer.gameObject.SetActive(true);
         }
         // Stop particules
@@ -124,6 +145,11 @@ public class Tower : MonoBehaviour
         ConfigureFromCard(card);
         if (targeting == null) return;
         List<Enemy> targets = targeting.GetTargets(column);
+        if (overdrive)
+        {
+            // En overdrive, cible tous les ennemis
+            targets = GetComponent<AllEnemiesAllColumnsTargeting>().GetTargets(column);
+        }
         foreach (Enemy e in targets)
         {
             if (e != null)
@@ -134,7 +160,7 @@ public class Tower : MonoBehaviour
     {
         ConfigureFromCard(card);
         if (targeting == null) return;
-        List<Enemy> targets = targeting.GetTargets(column);
+        List<Enemy> targets = GetComponent<AllEnemiesAllColumnsTargeting>().GetTargets(column);
         foreach (Enemy e in targets)
         {
             if (e != null)
