@@ -1,16 +1,9 @@
 using UnityEngine;
 public class AutoDestroyVFX : MonoBehaviour
 {
-    private float duration;
-
-    public void SetDuration(float duration)
+    public float duration = 1f;
+    void Awake()
     {
-        this.duration = duration;
-        Invoke(nameof(DestroyVFX), duration);
-    }
-
-    private void DestroyVFX()
-    {
-        Destroy(gameObject);
+        Destroy(gameObject, duration);
     }
 }

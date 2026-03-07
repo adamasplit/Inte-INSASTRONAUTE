@@ -20,7 +20,11 @@ MonoBehaviour:
   cardName: "Ing\xE9nieur humaniste!!!"
   description: 
   element: 5
-  baseDamage: 1000
+  baseDamage: 20
   duration: 1
-  targetingType: 1
-  attackType: 0
+  targetingType: 2
+  attackType: 4
+  projectileCount: 40
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

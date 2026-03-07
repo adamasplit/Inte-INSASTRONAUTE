@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Column : MonoBehaviour
 {
+    public int columnIndex;
     public Tower tower;
     public Transform enemyContainer;
     public List<Enemy> enemies = new List<Enemy>();

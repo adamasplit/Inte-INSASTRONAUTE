@@ -18,6 +18,10 @@ public class DeckManager : MonoBehaviour
         LoadDeck();
     }
 
+    public void Activate()
+    {
+    }
+
     public void TryAddCard(CardData card)
     {
         Debug.Log($"[DeckManager] Trying to add card {card.cardId} to deck...");

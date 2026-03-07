@@ -21,7 +21,12 @@ public class ProjectileFlurryAttack : MonoBehaviour, IAttackBehaviour
                 loopCount++;
             } while ((randomIndex >= targets.Count || targets[randomIndex] == null||targets.Count == 0)&&loopCount<100);
             Enemy target = targets[randomIndex];
-            GameObject projObj = Instantiate(projectilePrefab, tower.transform.position, Quaternion.identity);
+            GameObject usedPrefab=projectilePrefab;
+            if (Resources.Load<GameObject>("Projectiles/" + card.cardId) is GameObject customProj)
+            {
+                usedPrefab = customProj;
+            }
+            GameObject projObj=Instantiate(usedPrefab, tower.transform.position, Quaternion.identity);
             ProjectileArc proj = projObj.GetComponent<ProjectileArc>();
             proj.Init(target, enemy =>
             {

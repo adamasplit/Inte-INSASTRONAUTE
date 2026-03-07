@@ -27,11 +27,17 @@ public class DeckBuilderUI : MonoBehaviour
     void OnEnable()
     {
         Refresh();
+        GetComponent<CanvasGroup>().alpha = 1f; // Assurer que le CanvasGroup est visible
+        GetComponent<CanvasGroup>().blocksRaycasts = true; // Permettre les interactions
+        GetComponent<CanvasGroup>().interactable = true; // Permettre les interactions
     }
 
     void OnDisable()
     {
         DeckManager.Instance.SaveDeck();
+        GetComponent<CanvasGroup>().alpha = 0f; // Rendre le CanvasGroup invisible
+        GetComponent<CanvasGroup>().blocksRaycasts = false; // Empêcher les interactions
+        GetComponent<CanvasGroup>().interactable = false; // Empêcher les interactions
     }
 
     public void Refresh()

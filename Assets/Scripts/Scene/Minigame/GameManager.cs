@@ -60,6 +60,8 @@ public class GameManager : MonoBehaviour
 
     public async Task GameOver()
     {
+        gridManager.SetActive(false);
+        GameCardManager.SetActive(false);
         if (currentState == GameState.GameOver) return; // Prevent multiple game over triggers
         currentState = GameState.GameOver;
         int best = PlayerPrefs.GetInt("BestScore", 0);
@@ -67,9 +69,9 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("BestScore", score);
         await gameOverPanel.ShowWithFade();
         //bottomMenu.SetActive(true);
-        gridManager.SetActive(false);
+        
         startPanel.SetActive(true);
-        GameCardManager.SetActive(false);
+        
         leanDrag.gameObject.GetComponent<LeanConstrainAnchoredPosition>().HorizontalRectMax=0;
         
         await GrantTokensOnGameOver();
