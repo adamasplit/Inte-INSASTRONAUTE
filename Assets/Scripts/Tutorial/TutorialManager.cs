@@ -1,6 +1,6 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +11,29 @@ using UnityEngine.SceneManagement;
 public class TutorialManager : MonoBehaviour
 {
     public static TutorialManager Instance { get; private set; }
+    private static bool diagnosticLoggingConfigured;
+
+    private static void ConfigureDiagnosticLogging()
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        if (diagnosticLoggingConfigured)
+            return;
+
+        // WebGL warnings can include very large stacktraces that hide useful startup diagnostics.
+        Application.SetStackTraceLogType(LogType.Warning, StackTraceLogType.None);
+        diagnosticLoggingConfigured = true;
+#endif
+    }
+
+    // In WebGL builds, emit diagnostics as warnings so they stay visible with stricter console filters.
+    private static void LogDiag(string message)
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        Debug.LogWarning(message);
+#else
+        Debug.Log(message);
+#endif
+    }
     
     [Header("Tutorial Configuration")]
     [Tooltip("List of tutorial sequences available")]
@@ -49,6 +72,8 @@ public class TutorialManager : MonoBehaviour
     
     private void Awake()
     {
+        ConfigureDiagnosticLogging();
+
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -58,8 +83,11 @@ public class TutorialManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
         
+        LogTutorialState("Awake");
+        
         if (resetTutorialOnStart)
         {
+            Debug.LogWarning("[TutorialManager] resetTutorialOnStart is TRUE - tutorial will restart every session! Disable this for production.");
             ResetAllTutorials();
         }
     }
@@ -74,8 +102,8 @@ public class TutorialManager : MonoBehaviour
         ResolveSceneDependencies();
         BindTutorialUI();
 
-        TryResumeTutorialState();
-        _ = EnsureAutoStartFirstTimeTutorial();
+        StartCoroutine(TryResumeTutorialState());
+        StartCoroutine(EnsureAutoStartFirstTimeTutorial());
     }
 
     private void OnDisable()
@@ -109,7 +137,7 @@ public class TutorialManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log($"[TutorialManager] Scene loaded: {scene.name}, Tutorial active: {isTutorialActive}");
+        LogDiag($"[TutorialManager] Scene loaded: {scene.name}, Tutorial active: {isTutorialActive}");
         ResolveSceneDependencies();
         BindTutorialUI();
         
@@ -117,31 +145,50 @@ public class TutorialManager : MonoBehaviour
         // This ensures highlights are repositioned correctly after scene transitions
         if (isTutorialActive && tutorialUI != null)
         {
-            _ = RefreshHighlightsAfterSceneLoad();
+            StartCoroutine(RefreshHighlightsAfterSceneLoad());
         }
     }
 
-    private async Task RefreshHighlightsAfterSceneLoad()
+    private IEnumerator RefreshHighlightsAfterSceneLoad()
     {
         // Wait a frame for scene to fully initialize
-        await Task.Yield();
+        yield return null;
         
         // Wait for canvas to calculate layout
         Canvas.ForceUpdateCanvases();
-        await Task.Delay(50);
+        yield return new WaitForSecondsRealtime(0.05f);
         
         // Refresh highlight targets
         if (tutorialUI != null)
         {
-            Debug.Log("[TutorialManager] Refreshing highlight targets after scene load");
-            await tutorialUI.RefreshTargets();
+            LogDiag("[TutorialManager] Refreshing highlight targets after scene load");
+            yield return StartCoroutine(tutorialUI.RefreshTargets());
         }
+    }
+
+    private TutorialUI FindTutorialUIIncludingInactive()
+    {
+        if (tutorialUI != null)
+            return tutorialUI;
+
+        tutorialUI = FindFirstObjectByType<TutorialUI>();
+        if (tutorialUI != null)
+            return tutorialUI;
+
+        var allTutorialUIs = FindObjectsByType<TutorialUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        if (allTutorialUIs != null && allTutorialUIs.Length > 0)
+        {
+            tutorialUI = allTutorialUIs[0];
+            LogDiag($"[TutorialManager] Found TutorialUI via inactive search: '{tutorialUI.name}' (activeSelf={tutorialUI.gameObject.activeSelf})");
+        }
+
+        return tutorialUI;
     }
 
     private void ResolveSceneDependencies()
     {
         if (tutorialUI == null)
-            tutorialUI = FindFirstObjectByType<TutorialUI>();
+            tutorialUI = FindTutorialUIIncludingInactive();
 
         if (topMenuController == null)
             topMenuController = FindFirstObjectByType<TopMenuController>();
@@ -153,10 +200,13 @@ public class TutorialManager : MonoBehaviour
     private void BindTutorialUI()
     {
         if (tutorialUI == null)
-            tutorialUI = FindFirstObjectByType<TutorialUI>();
+            tutorialUI = FindTutorialUIIncludingInactive();
 
         if (tutorialUI == null)
+        {
+            LogDiag("[TutorialManager] BindTutorialUI: no TutorialUI found yet.");
             return;
+        }
 
         if (subscribedTutorialUI == tutorialUI)
             return;
@@ -167,6 +217,8 @@ public class TutorialManager : MonoBehaviour
         tutorialUI.OnSkipRequested += SkipTutorial;
         tutorialUI.OnTargetClicked += OnTargetClicked;
         subscribedTutorialUI = tutorialUI;
+
+        LogDiag($"[TutorialManager] Bound TutorialUI: '{tutorialUI.name}' (activeSelf={tutorialUI.gameObject.activeSelf})");
     }
 
     private void UnbindTutorialUI()
@@ -182,7 +234,7 @@ public class TutorialManager : MonoBehaviour
     
     private void OnTargetClicked()
     {
-        Debug.Log("[TutorialManager] Target element was clicked!");
+        LogDiag("[TutorialManager] Target element was clicked!");
         // You can add additional logic here if needed
         // The advancement is already handled in TutorialUI for TargetClick type
     }
@@ -200,65 +252,115 @@ public class TutorialManager : MonoBehaviour
     /// </summary>
     public bool IsFirstTime()
     {
-        return PlayerPrefs.GetInt(PREF_HAS_SEEN_ANY_TUTORIAL, 0) == 0;
+        int hasSeenTutorial = PlayerPrefs.GetInt(PREF_HAS_SEEN_ANY_TUTORIAL, 0);
+        bool isFirstTime = hasSeenTutorial == 0;
+        LogDiag($"[TutorialManager] IsFirstTime check: {isFirstTime} (HasSeenAnyTutorial={hasSeenTutorial})");
+        return isFirstTime;
     }
     
     /// <summary>
     /// Start a specific tutorial sequence by ID
     /// </summary>
-    public async void StartTutorial(string sequenceId)
+    public void StartTutorial(string sequenceId)
+    {
+        StartCoroutine(StartTutorialCoroutine(sequenceId));
+    }
+    
+    private IEnumerator StartTutorialCoroutine(string sequenceId)
     {
         if (isTutorialActive)
         {
             Debug.LogWarning($"[TutorialManager] Cannot start tutorial '{sequenceId}' - tutorial already active");
-            return;
+            yield break;
         }
         
         var sequence = Array.Find(tutorialSequences, s => s.sequenceId == sequenceId);
         if (sequence == null)
         {
             Debug.LogError($"[TutorialManager] Tutorial sequence '{sequenceId}' not found!");
-            return;
+            yield break;
         }
         
         if (HasCompletedTutorial(sequenceId) && !resetTutorialOnStart)
         {
-            Debug.Log($"[TutorialManager] Tutorial '{sequenceId}' already completed.");
-            return;
+            LogDiag($"[TutorialManager] Tutorial '{sequenceId}' already completed.");
+            yield break;
         }
         
-        await StartTutorialSequence(sequence);
+        yield return StartCoroutine(StartTutorialSequenceCoroutine(sequence));
     }
     
     /// <summary>
     /// Start the first-time user tutorial
     /// </summary>
-    public async void StartFirstTimeTutorial()
+    public void StartFirstTimeTutorial()
     {
+        StartCoroutine(StartFirstTimeTutorialCoroutine());
+    }
+    
+    private IEnumerator StartFirstTimeTutorialCoroutine()
+    {
+        LogTutorialState("StartFirstTimeTutorial called");
+        
         if (!IsFirstTime() && !resetTutorialOnStart)
         {
-            Debug.Log("[TutorialManager] Not first time, skipping tutorial");
-            return;
+            LogDiag("[TutorialManager] Not first time, skipping tutorial");
+            yield break;
         }
         
         // Find the first-time tutorial
         var firstTimeSequence = Array.Find(tutorialSequences, s => s.isFirstTimeTutorial);
         if (firstTimeSequence != null)
         {
-            await StartTutorialSequence(firstTimeSequence);
+            LogDiag($"[TutorialManager] First-time sequence selected: id='{firstTimeSequence.sequenceId}', steps={(firstTimeSequence.steps == null ? 0 : firstTimeSequence.steps.Length)}");
+
+            if (firstTimeSequence.steps == null || firstTimeSequence.steps.Length == 0)
+            {
+                Debug.LogWarning($"[TutorialManager] First-time sequence '{firstTimeSequence.sequenceId}' has no steps. Tutorial cannot start.");
+                yield break;
+            }
+
+            LogDiag($"[TutorialManager] Starting first-time tutorial: {firstTimeSequence.sequenceId}");
+            yield return StartCoroutine(StartTutorialSequenceCoroutine(firstTimeSequence));
         }
         else
         {
+            LogDiag("[TutorialManager] No sequence marked as first-time. Available sequences:");
+            if (tutorialSequences != null)
+            {
+                foreach (var seq in tutorialSequences)
+                {
+                    if (seq != null)
+                        LogDiag($"  sequenceId='{seq.sequenceId}', isFirstTimeTutorial={seq.isFirstTimeTutorial}, steps={(seq.steps == null ? 0 : seq.steps.Length)}");
+                }
+            }
             Debug.LogWarning("[TutorialManager] No first-time tutorial configured!");
         }
     }
     
-    private async Task StartTutorialSequence(TutorialSequence sequence)
+    private IEnumerator StartTutorialSequenceCoroutine(TutorialSequence sequence)
     {
         if (isTutorialActive)
         {
             Debug.LogWarning($"[TutorialManager] Cannot start tutorial '{sequence.sequenceId}' - tutorial already active");
-            return;
+            yield break;
+        }
+
+        ResolveSceneDependencies();
+        BindTutorialUI();
+
+        if (tutorialUI == null)
+        {
+            LogDiag("[TutorialManager] TutorialUI not found before start, waiting briefly...");
+            yield return new WaitForSecondsRealtime(0.5f);
+            ResolveSceneDependencies();
+            BindTutorialUI();
+        }
+
+        if (tutorialUI == null)
+        {
+            Debug.LogWarning("[TutorialManager] Cannot start tutorial: TutorialUI still missing after retry.");
+            yield break;
         }
 
         currentSequence = sequence;
@@ -266,7 +368,7 @@ public class TutorialManager : MonoBehaviour
         isTutorialActive = true;
         hasAttemptedResume = true; // Prevent resume from interfering
         
-        Debug.Log($"[TutorialManager] Starting tutorial: {sequence.sequenceId}");
+        LogDiag($"[TutorialManager] Starting tutorial: {sequence.sequenceId}");
         
         if (tutorialUI != null)
         {
@@ -275,10 +377,10 @@ public class TutorialManager : MonoBehaviour
 
         SaveTutorialState();
         
-        await ShowCurrentStep();
+        yield return StartCoroutine(ShowCurrentStep());
     }
 
-    private async Task ResumeTutorialSequence(TutorialSequence sequence, int stepIndex)
+    private IEnumerator ResumeTutorialSequence(TutorialSequence sequence, int stepIndex)
     {
         currentSequence = sequence;
         currentStepIndex = Mathf.Clamp(stepIndex, 0, Mathf.Max(0, sequence.steps.Length - 1));
@@ -286,7 +388,7 @@ public class TutorialManager : MonoBehaviour
         isStepInProgress = false;
         hasAttemptedResume = true; // Mark as resumed to prevent re-resuming
 
-        Debug.Log($"[TutorialManager] Resuming tutorial: {sequence.sequenceId} at step {currentStepIndex + 1}");
+        LogDiag($"[TutorialManager] Resuming tutorial: {sequence.sequenceId} at step {currentStepIndex + 1}");
 
         if (tutorialUI != null)
         {
@@ -294,10 +396,10 @@ public class TutorialManager : MonoBehaviour
         }
 
         SaveTutorialState();
-        await ShowCurrentStep();
+        yield return StartCoroutine(ShowCurrentStep());
     }
     
-    private async Task ShowCurrentStep()
+    private IEnumerator ShowCurrentStep()
     {
         ResolveSceneDependencies();
         BindTutorialUI();
@@ -305,7 +407,7 @@ public class TutorialManager : MonoBehaviour
         if (currentSequence == null || currentStepIndex >= currentSequence.steps.Length)
         {
             CompleteTutorial();
-            return;
+            yield break;
         }
         
         isStepInProgress = true;
@@ -317,19 +419,19 @@ public class TutorialManager : MonoBehaviour
             var currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
             if (currentScene.name != "Main - Copie")
             {
-                Debug.Log($"[TutorialManager] Step '{step.title}' requires Main scene. Waiting for scene change...");
+                LogDiag($"[TutorialManager] Step '{step.title}' requires Main scene. Waiting for scene change...");
                 
                 // Wait until we're in the main scene
                 while (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Main - Copie")
                 {
-                    await Task.Delay(100); // Check every 100ms
+                    yield return new WaitForSecondsRealtime(0.1f);
                     
                     // Safety check: if tutorial was cancelled, exit
                     if (!isTutorialActive)
-                        return;
+                        yield break;
                 }
                 
-                Debug.Log($"[TutorialManager] Now in Main scene, continuing step '{step.title}'");
+                LogDiag($"[TutorialManager] Now in Main scene, continuing step '{step.title}'");
                 
                 // Re-resolve dependencies after scene change
                 ResolveSceneDependencies();
@@ -339,7 +441,7 @@ public class TutorialManager : MonoBehaviour
 
         SaveTutorialState();
         
-        Debug.Log($"[TutorialManager] Showing step {currentStepIndex + 1}/{currentSequence.steps.Length}: {step.title}");
+        LogDiag($"[TutorialManager] Showing step {currentStepIndex + 1}/{currentSequence.steps.Length}: {step.title}");
         
         OnStepStarted?.Invoke(step);
         
@@ -347,30 +449,30 @@ public class TutorialManager : MonoBehaviour
         bool hasDelay = step.delayBeforeShow > 0;
         if (hasDelay)
         {
-            await Task.Delay((int)(step.delayBeforeShow * 1000));
+            yield return new WaitForSecondsRealtime(step.delayBeforeShow);
         }
         
         // Perform step actions
-        await PerformStepActions(step);
+        yield return StartCoroutine(PerformStepActions(step));
         
         // Show the step UI (defer target search if we had a delay/actions that might spawn targets)
         bool deferTargets = hasDelay || step.openTopMenu || step.navigateToScreen >= 0;
         if (tutorialUI != null)
         {
-            await tutorialUI.ShowStep(step, currentStepIndex + 1, currentSequence.steps.Length, deferTargets);
+            yield return StartCoroutine(tutorialUI.ShowStep(step, currentStepIndex + 1, currentSequence.steps.Length, deferTargets));
             
             // If we deferred target search, do it now after delay/actions completed
             if (deferTargets)
             {
-                await Task.Delay(100); // Small additional delay for layout to settle
-                await tutorialUI.RefreshTargets();
+                yield return new WaitForSecondsRealtime(0.1f);
+                yield return StartCoroutine(tutorialUI.RefreshTargets());
             }
         }
         
         // Handle automatic advance
         if (step.advanceType == AdvanceType.Automatic && step.autoAdvanceDelay > 0)
         {
-            await Task.Delay((int)(step.autoAdvanceDelay * 1000));
+            yield return new WaitForSecondsRealtime(step.autoAdvanceDelay);
             if (isTutorialActive && isStepInProgress) // Check still active
             {
                 AdvanceToNextStep();
@@ -378,7 +480,7 @@ public class TutorialManager : MonoBehaviour
         }
     }
     
-    private async Task PerformStepActions(TutorialStep step)
+    private IEnumerator PerformStepActions(TutorialStep step)
     {
         if (topMenuController == null)
         {
@@ -389,14 +491,14 @@ public class TutorialManager : MonoBehaviour
         if (step.openTopMenu && topMenuController != null)
         {
             topMenuController.ToggleMenu();
-            await Task.Delay(400); // Wait for animation
+            yield return new WaitForSecondsRealtime(0.4f);
         }
         
         // Navigate to screen if specified
         if (step.navigateToScreen >= 0 && topMenuController != null)
         {
             topMenuController.GoToScreen(step.navigateToScreen);
-            await Task.Delay(500); // Wait for screen transition
+            yield return new WaitForSecondsRealtime(0.5f);
         }
     }
     
@@ -404,12 +506,12 @@ public class TutorialManager : MonoBehaviour
     {
         if (!isTutorialActive || !isStepInProgress) return;
         
-        _ = AdvanceToNextStepAsync();
+        StartCoroutine(AdvanceToNextStepAsync());
     }
 
-    private async Task AdvanceToNextStepAsync()
+    private IEnumerator AdvanceToNextStepAsync()
     {
-        if (!isTutorialActive || !isStepInProgress) return;
+        if (!isTutorialActive || !isStepInProgress) yield break;
 
         var completedStep = currentSequence.steps[currentStepIndex];
         OnStepCompleted?.Invoke(completedStep);
@@ -417,7 +519,7 @@ public class TutorialManager : MonoBehaviour
         if (tutorialUI != null)
         {
             tutorialUI.SetStepContentVisible(false);
-            await tutorialUI.FadeOverlayTo(completedStep.successOverlayAlpha, completedStep.successOverlayFadeTime);
+            yield return StartCoroutine(tutorialUI.FadeOverlayTo(completedStep.successOverlayAlpha, completedStep.successOverlayFadeTime));
         }
         
         isStepInProgress = false;
@@ -427,17 +529,17 @@ public class TutorialManager : MonoBehaviour
 
         if (completedStep.delayAfterSuccess > 0f)
         {
-            await Task.Delay((int)(completedStep.delayAfterSuccess * 1000f));
+            yield return new WaitForSecondsRealtime(completedStep.delayAfterSuccess);
         }
         
-        _ = ShowCurrentStep();
+        yield return StartCoroutine(ShowCurrentStep());
     }
     
     public void SkipTutorial()
     {
         if (!isTutorialActive) return;
         
-        Debug.Log($"[TutorialManager] Skipping tutorial: {currentSequence.sequenceId}");
+        LogDiag($"[TutorialManager] Skipping tutorial: {currentSequence.sequenceId}");
         
         // Mark as completed even if skipped
         MarkTutorialComplete(currentSequence.sequenceId);
@@ -451,15 +553,18 @@ public class TutorialManager : MonoBehaviour
     {
         if (currentSequence == null) return;
         
-        Debug.Log($"[TutorialManager] Completed tutorial: {currentSequence.sequenceId}");
+        LogDiag($"[TutorialManager] Completed tutorial: {currentSequence.sequenceId}");
         
         MarkTutorialComplete(currentSequence.sequenceId);
         
         OnSequenceCompleted?.Invoke(currentSequence.sequenceId);
         
         // Mark that user has seen a tutorial
+        LogDiag("[TutorialManager] Setting HasSeenAnyTutorial = 1 and saving PlayerPrefs");
         PlayerPrefs.SetInt(PREF_HAS_SEEN_ANY_TUTORIAL, 1);
         PlayerPrefs.Save();
+        
+        LogTutorialState("After completing tutorial");
         
         // Show completion message if configured
         if (mainUIBinder == null)
@@ -518,6 +623,8 @@ public class TutorialManager : MonoBehaviour
     /// </summary>
     public void ResetAllTutorials()
     {
+        LogDiag("[TutorialManager] Resetting all tutorial progress...");
+        
         foreach (var seq in tutorialSequences)
         {
             PlayerPrefs.DeleteKey(PREF_TUTORIAL_COMPLETED + seq.sequenceId);
@@ -528,7 +635,73 @@ public class TutorialManager : MonoBehaviour
         
         hasAttemptedResume = false; // Allow resume after reset
         
-        Debug.Log("[TutorialManager] All tutorials reset");
+        LogDiag("[TutorialManager] All tutorials reset");
+        LogTutorialState("After reset");
+    }
+    
+    /// <summary>
+    /// Log current tutorial state from PlayerPrefs (for debugging)
+    /// </summary>
+    public void LogTutorialState(string context = "")
+    {
+        if (!string.IsNullOrEmpty(context))
+            LogDiag($"[TutorialManager] === Tutorial State ({context}) ===");
+        else
+            LogDiag("[TutorialManager] === Tutorial State ===");
+        
+        LogDiag($"  resetTutorialOnStart: {resetTutorialOnStart}");
+        LogDiag($"  autoStartOnFirstLogin: {autoStartOnFirstLogin}");
+        LogDiag($"  isTutorialActive: {isTutorialActive}");
+        LogDiag($"  HasSeenAnyTutorial: {PlayerPrefs.GetInt(PREF_HAS_SEEN_ANY_TUTORIAL, 0)}");
+        LogDiag($"  ActiveSequence: {PlayerPrefs.GetString(PREF_ACTIVE_SEQUENCE, "none")}");
+        LogDiag($"  ActiveStep: {PlayerPrefs.GetInt(PREF_ACTIVE_STEP, -1)}");
+        
+        foreach (var seq in tutorialSequences)
+        {
+            bool completed = PlayerPrefs.GetInt(PREF_TUTORIAL_COMPLETED + seq.sequenceId, 0) == 1;
+            LogDiag($"  Tutorial '{seq.sequenceId}': {(completed ? "COMPLETED" : "NOT COMPLETED")}");
+        }
+        
+        LogDiag("[TutorialManager] ================================");
+    }
+    
+    /// <summary>
+    /// Get all tutorial PlayerPrefs as a formatted string (for WebGL debugging via console)
+    /// </summary>
+    public string GetTutorialStateString()
+    {
+        string state = "Tutorial State:\n";
+        state += $"  resetTutorialOnStart: {resetTutorialOnStart}\n";
+        state += $"  HasSeenAnyTutorial: {PlayerPrefs.GetInt(PREF_HAS_SEEN_ANY_TUTORIAL, 0)}\n";
+        state += $"  ActiveSequence: {PlayerPrefs.GetString(PREF_ACTIVE_SEQUENCE, "none")}\n";
+        state += $"  ActiveStep: {PlayerPrefs.GetInt(PREF_ACTIVE_STEP, -1)}\n";
+        
+        foreach (var seq in tutorialSequences)
+        {
+            bool completed = PlayerPrefs.GetInt(PREF_TUTORIAL_COMPLETED + seq.sequenceId, 0) == 1;
+            state += $"  {seq.sequenceId}: {(completed ? "COMPLETED" : "NOT COMPLETED")}\n";
+        }
+        
+        return state;
+    }
+    
+    /// <summary>
+    /// Call from browser console to check tutorial state in WebGL builds.
+    /// Usage in browser console: unityInstance.SendMessage('TutorialManager', 'DebugLogState');
+    /// </summary>
+    public void DebugLogState()
+    {
+        LogTutorialState("Browser Console Request");
+    }
+    
+    /// <summary>
+    /// Call from browser console to reset tutorial in WebGL builds.
+    /// Usage: unityInstance.SendMessage('TutorialManager', 'DebugResetTutorial');
+    /// </summary>
+    public void DebugResetTutorial()
+    {
+        Debug.LogWarning("[TutorialManager] Reset requested from browser console!");
+        ResetAllTutorials();
     }
     
     /// <summary>
@@ -563,18 +736,18 @@ public class TutorialManager : MonoBehaviour
         PlayerPrefs.DeleteKey(PREF_ACTIVE_STEP);
     }
 
-    private async void TryResumeTutorialState()
+    private IEnumerator TryResumeTutorialState()
     {
         if (isTutorialActive)
         {
-            Debug.Log("[TutorialManager] Tutorial already active, not resuming from saved state");
-            return;
+            LogDiag("[TutorialManager] Tutorial already active, not resuming from saved state");
+            yield break;
         }
 
         if (hasAttemptedResume)
         {
-            Debug.Log("[TutorialManager] Already attempted resume, skipping");
-            return;
+            LogDiag("[TutorialManager] Already attempted resume, skipping");
+            yield break;
         }
 
         hasAttemptedResume = true;
@@ -584,8 +757,8 @@ public class TutorialManager : MonoBehaviour
 
         if (string.IsNullOrEmpty(savedSequenceId) || savedStep < 0)
         {
-            Debug.Log("[TutorialManager] No saved tutorial state found");
-            return;
+            LogDiag("[TutorialManager] No saved tutorial state found");
+            yield break;
         }
 
         var sequence = Array.Find(tutorialSequences, s => s.sequenceId == savedSequenceId);
@@ -593,45 +766,66 @@ public class TutorialManager : MonoBehaviour
         {
             Debug.LogWarning($"[TutorialManager] Saved sequence '{savedSequenceId}' not found, clearing state");
             ClearSavedTutorialState();
-            return;
+            yield break;
         }
 
-        Debug.Log($"[TutorialManager] Resuming from saved state: {savedSequenceId} at step {savedStep}");
-        await ResumeTutorialSequence(sequence, savedStep);
+        LogDiag($"[TutorialManager] Resuming from saved state: {savedSequenceId} at step {savedStep}");
+        yield return StartCoroutine(ResumeTutorialSequence(sequence, savedStep));
     }
 
-    private async Task EnsureAutoStartFirstTimeTutorial()
+    private IEnumerator EnsureAutoStartFirstTimeTutorial()
     {
+        LogDiag("[TutorialManager] EnsureAutoStartFirstTimeTutorial - Fallback check starting");
+        
         if (!autoStartOnFirstLogin)
-            return;
+        {
+            LogDiag("[TutorialManager] autoStartOnFirstLogin is FALSE, skipping fallback");
+            yield break;
+        }
 
-        await Task.Delay(1500);
+        yield return new WaitForSecondsRealtime(1.5f);
+        LogDiag("[TutorialManager] Fallback delay elapsed, evaluating first-time autostart");
 
         if (isTutorialActive)
-            return;
+        {
+            LogDiag("[TutorialManager] Tutorial already active, fallback not needed");
+            yield break;
+        }
 
         var savedSequenceId = PlayerPrefs.GetString(PREF_ACTIVE_SEQUENCE, string.Empty);
         var savedStep = PlayerPrefs.GetInt(PREF_ACTIVE_STEP, -1);
         if (!string.IsNullOrEmpty(savedSequenceId) && savedStep >= 0)
-            return;
+        {
+            LogDiag($"[TutorialManager] Found saved tutorial state ({savedSequenceId}, step {savedStep}), fallback not needed");
+            yield break;
+        }
+
+        LogTutorialState("Before fallback auto-start check");
 
         if (!IsFirstTime() && !resetTutorialOnStart)
-            return;
+        {
+            LogDiag("[TutorialManager] Not first time, fallback skipped");
+            yield break;
+        }
 
         ResolveSceneDependencies();
         BindTutorialUI();
 
         if (tutorialUI == null)
         {
-            await Task.Delay(500);
+            Debug.LogWarning("[TutorialManager] TutorialUI not found, waiting...");
+            yield return new WaitForSecondsRealtime(0.5f);
             ResolveSceneDependencies();
             BindTutorialUI();
         }
 
         if (isTutorialActive)
-            return;
+        {
+            LogDiag("[TutorialManager] Tutorial became active while waiting, fallback not needed");
+            yield break;
+        }
 
-        Debug.Log("[TutorialManager] Auto-starting first-time tutorial fallback");
+        LogDiag("[TutorialManager] Fallback: Auto-starting first-time tutorial");
         StartFirstTimeTutorial();
     }
 }
@@ -657,3 +851,4 @@ public class TutorialSequence
     [Tooltip("Message to show when tutorial is completed")]
     public string completionMessage = "Tutoriel terminé !";
 }
+
