@@ -22543,7 +22543,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 87.900024, y: 49.092}
+  m_AnchoredPosition: {x: 87.900024, y: 49.09201}
   m_SizeDelta: {x: -452.2, y: 387.72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1246601226
@@ -24456,6 +24456,8 @@ MonoBehaviour:
   fadeInDuration: 0.2
   fadeOutDuration: 0.15
   offset: {x: 150, y: 0}
+  zoomScale: 2
+  zoomDuration: 0.2
 --- !u!1 &1488902480
 GameObject:
   m_ObjectHideFlags: 0
