@@ -20,9 +20,12 @@ MonoBehaviour:
   cardName: "D\xE9lirium"
   description: "Tester toutes les pressions - 30 \\n\\n S\xE9curit\xE9 ascendant
     Berger - 90"
-  element: 3
+  element: 2
   baseDamage: 50
   duration: 1
   targetingType: 0
   attackType: 0
   projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

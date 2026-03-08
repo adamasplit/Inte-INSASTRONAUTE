@@ -31,3 +31,5 @@ MonoBehaviour:
     weight: 2
   - cardId: greensa
     weight: 0.25
+  - cardId: toss
+    weight: 1

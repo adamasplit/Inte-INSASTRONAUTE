@@ -42,8 +42,21 @@ public class WaveManager : MonoBehaviour
         }
         foreach (var enemy in enemies)
         {
-            if (enemy == null||enemy.dead) continue;
-            enemy.transform.position += Vector3.down * descentStep;
+            if (enemy == null||enemy.dead||enemy.halted) continue;
+            bool targetPositionOccupied =false;
+            foreach (var otherEnemy in enemy.column.enemies)
+            {
+                if (otherEnemy == null || otherEnemy == enemy||otherEnemy.dead) continue;
+                if (Mathf.Abs(otherEnemy.transform.position.y - (enemy.transform.position.y - descentStep)) < 0.1f)
+                {
+                    targetPositionOccupied = true;
+                    break;
+                }
+            }
+            if (!targetPositionOccupied)
+            {
+                enemy.transform.position += Vector3.down * descentStep;
+            }
             if (enemy.column.hasAnEnemyInFirstPosition && enemy.column.firstEnemy == enemy)
             {
                 enemy.column.firstEnemy = null;

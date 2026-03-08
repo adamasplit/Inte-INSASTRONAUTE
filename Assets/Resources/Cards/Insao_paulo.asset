@@ -20,9 +20,12 @@ MonoBehaviour:
   cardName: INSAOPAULO
   description: 'DO BRAZIIIL - 30 \n\n Sors Les Sabat Tal Heja, En P3 J''Capte Taheja
     - 100 '
-  element: 4
+  element: 2
   baseDamage: 50
   duration: 1
   targetingType: 0
   attackType: 1
   projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

@@ -21,7 +21,10 @@ MonoBehaviour:
   description: "Danse R\xE9gionale - 20 \\n\\n Le lancer pour soi - 140"
   element: 0
   baseDamage: 50
-  duration: 10
+  duration: 2
   targetingType: 0
   attackType: 3
   projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

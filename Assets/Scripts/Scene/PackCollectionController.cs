@@ -124,8 +124,8 @@ public class PackCollectionController : MonoBehaviour
             // Le pack rétrécit
             selectedPackDisplay.localScale = Vector3.Lerp(startScale, endScale, p);
 
-            // Le fond devient noir
-            background.color = new Color(0, 0, 0, p);
+            // Le fond devient couleur 15192B
+            background.color = new Color(0x15 / 255f, 0x19 / 255f, 0x2B / 255f, p);
 
             // Les étoiles apparaissent
             starFieldGroup.alpha = p;

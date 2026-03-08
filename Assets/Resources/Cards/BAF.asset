@@ -13,14 +13,19 @@ MonoBehaviour:
   m_Name: BAF
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: baf
-  sprite: {fileID: 21300000, guid: a506948a217786f42a24d197c6c33d31, type: 3}
+  sprite: {fileID: 21300000, guid: 0c390dd26bc78fd4893b58a52cbc221f, type: 3}
   rarity: 1
   FirstTimeValue: 5
   SubsequentValue: 2
   cardName: BAF
-  description: 
+  description: "PAF go\xFBt BAF ou BAF go\xFBt PAF - 100 \\n\\n TERRRE BRULEEEE,
+    AU VENNNNT, DES LAAAANDES DE PIERRRES.... - 130"
   element: 2
   baseDamage: 60
   duration: 1
   targetingType: 0
   attackType: 2
+  projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

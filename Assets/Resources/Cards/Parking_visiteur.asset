@@ -13,14 +13,18 @@ MonoBehaviour:
   m_Name: Parking_visiteur
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: parking_visiteur
-  sprite: {fileID: 21300000, guid: bb29aee64c7d77441ad6ff6d53d051de, type: 3}
+  sprite: {fileID: 21300000, guid: aefc86dadf31d4f4b808aaf28d61735d, type: 3}
   rarity: 1
   FirstTimeValue: 0
   SubsequentValue: 0
   cardName: Parking visiteurs
   description: 
-  element: 6
+  element: 2
   baseDamage: 10
   duration: 1
   targetingType: 0
   attackType: 0
+  projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

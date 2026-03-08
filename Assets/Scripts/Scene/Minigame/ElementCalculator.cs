@@ -1,17 +1,9 @@
 using UnityEngine;
 public enum Element
 {
-    Rite,
-    Asso,
-    Event,
-    Bar_boite,
-    Liste,
-    Personne,
-    Galere_spam,
-    Fire,
-    Water,
-    Earth,
-    Air,
+    Planet,
+    Rocket,
+    Star,
     Prismatic
 }
 public enum Effectiveness
@@ -54,55 +46,31 @@ public static class ElementCalculator
     {
         var color = elem switch
         {
-            Element.Fire => Color.red,
-            Element.Water => Color.blue,
-            Element.Earth => Color.green,
-            Element.Air => (enemy? Color.cyan : new Color(0.2f, 0.6f, 1f)),
-            Element.Rite => Color.blue,
-            Element.Asso => Color.orange,
-            Element.Event => Color.red,
-            Element.Bar_boite => Color.yellow,
-            Element.Liste => Color.cyan,
-            Element.Personne => Color.magenta,
-            Element.Galere_spam => Color.grey,
+            Element.Planet => Color.blue,
+            Element.Rocket => Color.red,
+            Element.Star => Color.yellow,
+            Element.Prismatic => Color.white,
             _ => Color.white,
         };
         return color;
     }
     public static Element GetFirstWeakElement(Element elem)
     {
-        return elem switch
-        {
-            Element.Fire => Element.Water,
-            Element.Water => Element.Earth,
-            Element.Earth => Element.Air,
-            Element.Air => Element.Fire,
-            Element.Rite => Element.Asso,
-            Element.Asso => Element.Event,
-            Element.Event => Element.Bar_boite,
-            Element.Bar_boite => Element.Liste,
-            Element.Liste => Element.Personne,
-            Element.Personne => Element.Galere_spam,
-            Element.Galere_spam => Element.Rite,
+            return elem switch
+        {            Element.Planet => Element.Rocket,
+            Element.Rocket => Element.Star,
+            Element.Star => Element.Planet,
             Element.Prismatic => Element.Prismatic,
-            _ => Element.Fire,
+            _ => Element.Planet,
         };
     }
 
     static bool IsStrong(Element a, Element b)
     {
-        return (a == Element.Fire && b == Element.Earth)
-            || (a == Element.Water && b == Element.Fire)
-            || (a == Element.Earth && b == Element.Air)
-            || (a == Element.Air && b == Element.Water)
-            || (a == Element.Galere_spam && b == Element.Personne)
-            || (a == Element.Personne && b == Element.Liste)
-            || (a == Element.Liste && b == Element.Bar_boite)
-            || (a == Element.Bar_boite && b == Element.Event)
-            || (a == Element.Event && b == Element.Asso)
-            || (a == Element.Asso && b == Element.Rite)
-            || (a == Element.Rite && b == Element.Galere_spam)
-            || (a == Element.Prismatic && b != Element.Prismatic);
+        return (a == Element.Planet && b == Element.Rocket) ||
+               (a == Element.Rocket && b == Element.Star) ||
+               (a == Element.Star && b == Element.Planet)||
+               (a == Element.Prismatic && b != Element.Prismatic);
     }
 
     static bool IsWeak(Element a, Element b) => IsStrong(b, a);

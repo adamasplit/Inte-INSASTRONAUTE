@@ -21,9 +21,12 @@ MonoBehaviour:
   description: "Monsieur et Madame Decaf\xE9 ont un fils, comment s'appelle-t-il
     ? Mathias (Ma tasse de caf\xE9) (pouhahahahaha elle est bonne celle-l\xE0 philou)
     - 140"
-  element: 0
+  element: 2
   baseDamage: 140
   duration: 1
-  targetingType: 0
-  attackType: 0
+  targetingType: 6
+  attackType: 6
   projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

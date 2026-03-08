@@ -19,9 +19,12 @@ MonoBehaviour:
   SubsequentValue: 5
   cardName: Paix-Dieu
   description: Record de BAF - 40 \n\n Pet Dieu (par rapport au prout) - 150
-  element: 0
+  element: 3
   baseDamage: 5000
   duration: 1
   targetingType: 0
   attackType: 0
   projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

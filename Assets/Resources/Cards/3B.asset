@@ -19,9 +19,12 @@ MonoBehaviour:
   SubsequentValue: 10
   cardName: La 3B
   description: BB BieLle-Manivelle - 70\n\n Three Four Five SIX SEEEEVEN - 120
-  element: 2
+  element: 0
   baseDamage: 60
   duration: 1
   targetingType: 0
-  attackType: 2
-  projectileCount: 1
+  attackType: 4
+  projectileCount: 3
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

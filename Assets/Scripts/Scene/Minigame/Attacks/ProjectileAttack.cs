@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class ProjectileAttack : MonoBehaviour, IAttackBehaviour
 {
-    public GameObject projectilePrefab;
+    public GameObject baseProjectilePrefab;
     public Transform firePoint;
 
     public void ExecuteAttack(Tower tower, Column column, List<Enemy> targets, CardData card)
@@ -11,7 +11,11 @@ public class ProjectileAttack : MonoBehaviour, IAttackBehaviour
         foreach (Enemy target in targets)
         {
             if (target == null) continue;
-            Debug.Log($"[ProjectileAttack] Firing projectile from {firePoint.position} to {target.transform.position} with damage {card.baseDamage} and element {card.element}");
+            GameObject projectilePrefab = baseProjectilePrefab;
+            if (Resources.Load<GameObject>("Projectiles/" + card.cardId) is GameObject customProj)
+            {
+                projectilePrefab = customProj;
+            }
             GameObject proj = Instantiate(
                 projectilePrefab,
                 firePoint.position,

@@ -34,6 +34,7 @@ public class GridManager : MonoBehaviour
         {
             GameObject colObj = Instantiate(columnPrefab, transform);
             Column col = colObj.GetComponent<Column>();
+            col.columnIndex = i;
             columns.Add(col);
 
             RectTransform colRect = colObj.GetComponent<RectTransform>();

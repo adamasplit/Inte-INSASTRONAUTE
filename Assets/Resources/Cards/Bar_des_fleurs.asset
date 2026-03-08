@@ -20,9 +20,12 @@ MonoBehaviour:
   cardName: Bar des fleurs
   description: "Happy Hour 20h P\xE9tante - 40 \\n\\n Glaucidium palmatum var. macrocarpum
     subsp. shikokianum - 110"
-  element: 3
+  element: 2
   baseDamage: 60
   duration: 1
   targetingType: 0
   attackType: 0
   projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

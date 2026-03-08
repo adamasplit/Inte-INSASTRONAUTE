@@ -13,10 +13,12 @@ public class Enemy : MonoBehaviour
     private bool prismatic;
     public SpriteRenderer spriteRenderer;
     public SpriteRenderer prismaticOverlay;
+    public SpriteRenderer freezeOverlay;
     public GameObject targetIndicator;
     public bool dead = false;
     private Vector3 lastPosition;
     public Column column;
+    public bool halted = false;
     void Update()
     {
         
@@ -45,16 +47,12 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            Element elem = Random.Range(0, 7) switch
+            Element elem = Random.Range(0, 3) switch
             {
-                0 => Element.Rite,
-                1 => Element.Asso,
-                2 => Element.Event,
-            3 => Element.Bar_boite,
-            4 => Element.Liste,
-            5 => Element.Personne,
-            6 => Element.Galere_spam,
-            _ => Element.Fire
+                0 => Element.Planet,
+                1 => Element.Rocket,
+                2 => Element.Star,
+                _ => Element.Planet
             };
             element = elem;
         }
@@ -112,7 +110,7 @@ public class Enemy : MonoBehaviour
         {
             FindFirstObjectByType<EnemySpawner>().spawnedEnemies++;
         }
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.8f);
         Destroy(gameObject);
     }
     public void ShowTargetIndicator()
@@ -128,5 +126,19 @@ public class Enemy : MonoBehaviour
         {
             targetIndicator.SetActive(false);
         }
+    }
+
+    public void Halt()
+    {
+        Debug.Log("Halting enemy " + name);
+        halted = true;
+        freezeOverlay.gameObject.SetActive(true);
+    }
+
+    public void Resume()
+    {
+        Debug.Log("Resuming enemy " + name);
+        halted = false;
+        freezeOverlay.gameObject.SetActive(false);
     }
 }

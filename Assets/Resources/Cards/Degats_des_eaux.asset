@@ -19,9 +19,12 @@ MonoBehaviour:
   SubsequentValue: 1
   cardName: "D\xE9g\xE2ts des eaux"
   description: "Seau mal plac\xE9 - 60 \\n\\n Temp\xEAte Boretti - 100"
-  element: 6
+  element: 1
   baseDamage: 40
   duration: 1
   targetingType: 0
   attackType: 1
   projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

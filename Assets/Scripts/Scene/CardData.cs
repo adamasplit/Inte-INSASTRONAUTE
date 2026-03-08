@@ -5,7 +5,9 @@ public enum TargetingType
     AllEnemies,
     AllEnemiesAllColumns,
     AllFirstEnemies,
-    RandomEnemy
+    RandomEnemy,
+    AllEnemiesNearColumn,
+    FirstEnemiesNearColumn
 }
 
 public enum AttackType
@@ -39,4 +41,6 @@ public class CardData : ScriptableObject
     public AttackType attackType;
     public int projectileCount = 1; // for projectile attacks
     public float vfxDuration = 1f; // Duration for VFX, if applicable
+    public bool singleTargetVfx=false;
+    public bool damagingVfx=false;
 }
