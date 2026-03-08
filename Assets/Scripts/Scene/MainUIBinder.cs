@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Lean.Transition;
 
 /// <summary>
@@ -14,6 +15,7 @@ public class MainUIBinder : MonoBehaviour
     #region Bottom Bar
     [Header("=== Bottom Bar ===")]
     [SerializeField] private Button dailyRewardButton;
+    [SerializeField] private GameObject dailyRewardRedDot;
     #endregion
 
     #region Settings
@@ -49,6 +51,10 @@ public class MainUIBinder : MonoBehaviour
     [SerializeField] private TMP_Text dailyRewardDescriptionText;
     [SerializeField] private Transform dailyRewardItemsContainer;
     
+    [Header("Daily Reward — CollectableItem Prefab")]
+    [Tooltip("Prefab avec CollectableItemDisplay, instancié pour chaque récompense.")]
+    [SerializeField] private GameObject collectableItemPrefab;
+
     [Header("Daily Reward Transitions")]
     [SerializeField] private LeanPlayer dailyRewardShowTransition;
     [SerializeField] private LeanPlayer dailyRewardHideTransition;
@@ -91,6 +97,7 @@ public class MainUIBinder : MonoBehaviour
         InitializeButtons();
         InitializeToggles();
         userController = FindFirstObjectByType<PlayerStatusController>();
+        _ = RefreshDailyRewardIndicatorAsync();
     }
 
     private void OnDestroy()
@@ -341,16 +348,64 @@ public class MainUIBinder : MonoBehaviour
     #endregion
 
     #region Daily Reward Callbacks
+
     private void OnClick_OpenDailyReward()
+    {
+        _ = OpenDailyRewardAsync();
+    }
+
+    private async Task OpenDailyRewardAsync()
     {
         Debug.Log("[MainUI] Opening daily reward");
         if (dailyRewardPanel)
         {
             dailyRewardPanel.SetActive(true);
             if (dailyRewardShowTransition != null && dailyRewardShowTransition.IsUsed)
-            {
                 dailyRewardShowTransition.Begin();
-            }
+        }
+        await PopulateDailyRewardItemsAsync();
+        await RefreshDailyRewardIndicatorAsync();
+    }
+
+    private async Task RefreshDailyRewardIndicatorAsync()
+    {
+        try
+        {
+            var status = await DailyRewardClient.GetStatusAsync();
+            if (dailyRewardRedDot != null)
+                dailyRewardRedDot.SetActive(status.CanClaim);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[MainUI] Impossible de récupérer le statut Daily Reward: {ex.Message}");
+            if (dailyRewardRedDot != null)
+                dailyRewardRedDot.SetActive(false);
+        }
+    }
+
+    private async Task PopulateDailyRewardItemsAsync()
+    {
+        if (dailyRewardItemsContainer == null || collectableItemPrefab == null)
+        {
+            Debug.LogWarning("[MainUI] dailyRewardItemsContainer ou collectableItemPrefab non assigné.");
+            return;
+        }
+
+        // Vider les items précédents
+        foreach (Transform child in dailyRewardItemsContainer)
+            Destroy(child.gameObject);
+
+        var config = await DailyRewardRemoteConfig.GetConfigAsync();
+        if (config == null || config.rewards == null || config.rewards.Length == 0)
+        {
+            Debug.LogWarning("[MainUI] Aucune config de récompenses journalières trouvée.");
+            return;
+        }
+
+        foreach (var reward in config.rewards)
+        {
+            var go = Instantiate(collectableItemPrefab, dailyRewardItemsContainer);
+            go.GetComponent<CollectableItemDisplay>()?.SetItem(reward);
         }
     }
 
@@ -378,22 +433,111 @@ public class MainUIBinder : MonoBehaviour
 
     private void OnClick_ClaimDailyReward()
     {
-        Debug.Log("[MainUI] Claiming daily reward");
-        
-        // Play claim transition
-        if (dailyRewardClaimTransition != null && dailyRewardClaimTransition.IsUsed)
-        {
-            dailyRewardClaimTransition.Begin();
-        }
-        
-        DailyRewardClient.ClaimAsync();
-        ShowNotification("Récompense quotidienne récupérée !");
-
-        _ = userController.RefreshStatusAsync();
-        
-        // Auto-close after a delay
-        Invoke(nameof(OnClick_CloseDailyReward), 1.5f);
+        _ = ClaimDailyRewardAsync();
     }
+
+    private async Task ClaimDailyRewardAsync()
+    {
+        Debug.Log("[MainUI] Claiming daily reward");
+
+        if (claimDailyRewardButton != null)
+            claimDailyRewardButton.interactable = false;
+
+        if (dailyRewardClaimTransition != null && dailyRewardClaimTransition.IsUsed)
+            dailyRewardClaimTransition.Begin();
+
+        DailyRewardResult result;
+        try
+        {
+            result = await DailyRewardClient.ClaimAsync();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[MainUI] Erreur réseau lors du claim : {ex.Message}");
+            ShowNotification("Erreur réseau. Impossible de réclamer la récompense.");
+            if (claimDailyRewardButton != null) claimDailyRewardButton.interactable = true;
+            return;
+        }
+
+        if (result.ok)
+        {
+            ShowNotification(BuildSuccessMessage(result));
+
+            // Recharger les données (tokens + packs accordés côté serveur)
+            await userController.RefreshStatusAsync();
+            await PlayerProfileStore.LoadPackCollectionAsync();
+            PlayerProfileStore.OnPackCollectionChanged?.Invoke();
+            await RefreshDailyRewardIndicatorAsync();
+
+            Invoke(nameof(OnClick_CloseDailyReward), 2f);
+        }
+        else
+        {
+            ShowNotification(BuildErrorMessage(result));
+            await RefreshDailyRewardIndicatorAsync();
+        }
+
+        // Toujours réactiver le bouton
+        if (claimDailyRewardButton != null) claimDailyRewardButton.interactable = true;
+    }
+
+    private string BuildSuccessMessage(DailyRewardResult result)
+    {
+        if (result.grantedRewards == null || result.grantedRewards.Length == 0)
+            return "Récompenses du jour réclamées !";
+
+        var parts = new List<string>();
+        foreach (var r in result.grantedRewards)
+        {
+            parts.Add(FormatGrantedReward(r));
+        }
+        return $"Récompenses reçues : {string.Join(", ", parts)} !"; 
+    }
+
+    private static string FormatGrantedReward(GrantedReward reward)
+    {
+        var amount = Mathf.Max(0, reward.amount);
+
+        switch (reward.type)
+        {
+            case "TOKEN":
+                return $"{amount} TOKEN";
+            case "PC":
+                return $"{amount} PC";
+            case "PACK":
+                return string.IsNullOrEmpty(reward.packId)
+                    ? $"{amount} pack{(amount > 1 ? "s" : "")}"
+                    : $"{amount} pack{(amount > 1 ? "s" : "")} ({reward.packId})";
+            default:
+                return $"{amount} {reward.type}";
+        }
+    }
+
+    private string BuildErrorMessage(DailyRewardResult result)
+    {
+        switch (result.errorCode)
+        {
+            case "ALREADY_CLAIMED":
+                int h = result.cooldownSecondsRemaining / 3600;
+                int m = (result.cooldownSecondsRemaining % 3600) / 60;
+                if (h > 0)
+                    return $"Récompense déjà réclamée. Reviens dans {h}h{m:D2}min !";
+                return $"Récompense déjà réclamée. Reviens dans {m} minute{(m > 1 ? "s" : "")} !";
+
+            case "CONFIG_NOT_FOUND":
+            case "CONFIG_ERROR":
+                return "Configuration des récompenses introuvable. Réessaie plus tard.";
+
+            case "GRANT_FAILED":
+                return result.message;
+
+            default:
+                return string.IsNullOrEmpty(result.message)
+                    ? "Impossible de réclamer la récompense. Réessaie plus tard."
+                    : result.message;
+        }
+    }
+
     #endregion
 
     #region Notifications Callbacks

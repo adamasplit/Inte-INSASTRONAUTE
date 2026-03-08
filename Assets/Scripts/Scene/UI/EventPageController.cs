@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -12,30 +13,30 @@ public class EventPageController : MonoBehaviour
     [Header("Common UI")]
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private TMP_Text bodyText;
-    [SerializeField] private TMP_Text metaText; // dates/status
+    [SerializeField] private TMP_Text metaText;
     [SerializeField] private GameObject infoRoot;
     [SerializeField] private GameObject betRoot;
 
-    [Header("Bet UI")]
-    [SerializeField] private TMP_Text oddsText;
+    [Header("Bet – Commun")]
     [SerializeField] private TMP_InputField amountInput;
-    [SerializeField] private Button betYesButton;
-    [SerializeField] private Button betNoButton;
+    [SerializeField] private Button betConfirmButton; // bouton unique pour les deux modes
+
+    [Header("Bet – Liste")]
+    [SerializeField] private GameObject listRoot;
+    [SerializeField] private TMP_Dropdown optionsDropdown;
+
+    [Header("Bet – Réponse libre")]
+    [SerializeField] private GameObject freeRoot;
+    [SerializeField] private TMP_InputField answerInput;
 
     private EventDto _current;
 
     private void Awake()
     {
-        if (betYesButton)
+        if (betConfirmButton)
         {
-            betYesButton.onClick.RemoveAllListeners();
-            betYesButton.onClick.AddListener(() => _ = OnClickPlaceBetAsync(true));
-        }
-
-        if (betNoButton)
-        {
-            betNoButton.onClick.RemoveAllListeners();
-            betNoButton.onClick.AddListener(() => _ = OnClickPlaceBetAsync(false));
+            betConfirmButton.onClick.RemoveAllListeners();
+            betConfirmButton.onClick.AddListener(() => _ = OnClickConfirmAsync());
         }
     }
 
@@ -44,59 +45,116 @@ public class EventPageController : MonoBehaviour
         _current = e;
 
         if (titleText) titleText.text = e.title ?? "";
-        if (bodyText) bodyText.text = e.body ?? "";
+        if (bodyText)  bodyText.text  = e.body  ?? "";
 
-        // Meta: petit résumé V1
         if (metaText)
         {
             var status = e.type == "PARI" ? (string.IsNullOrWhiteSpace(e.status) ? "OPEN" : e.status) : "";
-            metaText.text = e.type == "PARI"
-                ? $"Coef: {e.odds:0.##} | Status: {status}"
-                : "";
+            metaText.text = e.type == "PARI" ? $"Status: {status}" : "";
         }
 
         var isBet = e.type == "PARI";
         if (infoRoot) infoRoot.SetActive(!isBet);
-        if (betRoot) betRoot.SetActive(isBet);
+        if (betRoot)  betRoot.SetActive(isBet);
 
-        if (isBet && oddsText) oddsText.text = $"Coef: {e.odds:0.##}";
+        if (!isBet) return;
 
-        if (isBet && amountInput) amountInput.text = "10"; // défaut
+        if (amountInput) amountInput.text = "10";
+
+        var isList = e.answerType == "list";
+        if (listRoot) listRoot.SetActive(isList);
+        if (freeRoot) freeRoot.SetActive(!isList);
+
+        if (isList && optionsDropdown != null)
+        {
+            optionsDropdown.ClearOptions();
+            if (e.options != null)
+            {
+                var entries = new List<string>();
+                foreach (var opt in e.options)
+                    entries.Add($"{opt.label}  (×{opt.odds:0.##})");
+                optionsDropdown.AddOptions(entries);
+            }
+            optionsDropdown.value = 0;
+            optionsDropdown.RefreshShownValue();
+        }
+
+        if (answerInput) answerInput.text = "";
     }
 
-    private async Task OnClickPlaceBetAsync(bool sideYes)
+    // ── Dispatch selon le mode ────────────────────────────────────────────────
+
+    private async Task OnClickConfirmAsync()
     {
-        if (_current == null || _current.type != "PARI")
-            return;
+        if (_current == null) return;
 
         if (!int.TryParse(amountInput.text, out var amount) || amount <= 0)
         {
             ui.ShowNotification("Mise invalide.");
             return;
         }
-
-        // Vérif OPEN côté client (le serveur recheck aussi)
         if (!string.Equals(_current.status, "OPEN", StringComparison.OrdinalIgnoreCase))
         {
             ui.ShowNotification("Les paris sont fermés.");
             return;
         }
 
-        var sideName = sideYes ? "YES" : "NO";
-        ui.ShowConfirmation(
-            title: "Confirmer le pari",
-            message: $"Parier {amount} TOKEN sur {sideName}\n{_current.title}\nCoef: {_current.odds:0.##}\n\nConfirmer ?",
-            onYes: () => _ = PlaceBetConfirmedAsync(amount, sideYes),
-            onNo: null
-        );
+        if (_current.answerType == "list")
+            await ConfirmListBetAsync(amount);
+        else
+            await ConfirmFreeBetAsync(amount);
     }
 
-    private async Task PlaceBetConfirmedAsync(int amount, bool sideYes)
+    private Task ConfirmListBetAsync(int amount)
+    {
+        if (_current.options == null || _current.options.Length == 0 || optionsDropdown == null)
+        {
+            ui.ShowNotification("Aucune option disponible.");
+            return Task.CompletedTask;
+        }
+
+        var idx = optionsDropdown.value;
+        if (idx < 0 || idx >= _current.options.Length)
+        {
+            ui.ShowNotification("Sélection invalide.");
+            return Task.CompletedTask;
+        }
+
+        var option = _current.options[idx];
+        ui.ShowConfirmation(
+            title: "Confirmer le pari",
+            message: $"Parier {amount} TOKEN sur \"{option.label}\" (×{option.odds:0.##})\n{_current.title}\n\nConfirmer ?",
+            onYes: () => _ = PlaceBetConfirmedAsync(amount, option.label, option.odds),
+            onNo: null
+        );
+        return Task.CompletedTask;
+    }
+
+    private Task ConfirmFreeBetAsync(int amount)
+    {
+        var answer = answerInput != null ? answerInput.text.Trim() : "";
+        if (string.IsNullOrEmpty(answer))
+        {
+            ui.ShowNotification("Réponse invalide.");
+            return Task.CompletedTask;
+        }
+
+        ui.ShowConfirmation(
+            title: "Confirmer le pari",
+            message: $"Parier {amount} TOKEN sur \"{answer}\"\n{_current.title}\n\nConfirmer ?",
+            onYes: () => _ = PlaceBetConfirmedAsync(amount, answer, 0f),
+            onNo: null
+        );
+        return Task.CompletedTask;
+    }
+
+    // ── Appel Cloud Code ──────────────────────────────────────────────────────
+
+    private async Task PlaceBetConfirmedAsync(int amount, string choice, float odds)
     {
         try
         {
-            // Appel Cloud Code
-            var res = await BetsClient.PlaceBetAsync(_current, amount, sideYes);
+            var res = await BetsClient.PlaceBetAsync(_current, amount, choice, odds);
 
             if (!res.ok)
             {
@@ -106,12 +164,9 @@ public class EventPageController : MonoBehaviour
 
             ui.ShowNotification("Pari enregistré.");
 
-            // Refresh player status to update tokens
             var statusController = FindFirstObjectByType<PlayerStatusController>();
             if (statusController != null)
-            {
                 await statusController.RefreshStatusAsync();
-            }
         }
         catch (Exception ex)
         {

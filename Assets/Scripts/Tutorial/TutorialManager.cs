@@ -152,11 +152,11 @@ public class TutorialManager : MonoBehaviour
     private IEnumerator RefreshHighlightsAfterSceneLoad()
     {
         // Wait a frame for scene to fully initialize
+        // Wait multiple frames so the new scene's canvas layout has fully run
         yield return null;
-        
-        // Wait for canvas to calculate layout
+        yield return new WaitForEndOfFrame();
         Canvas.ForceUpdateCanvases();
-        yield return new WaitForSecondsRealtime(0.05f);
+        yield return new WaitForEndOfFrame();
         
         // Refresh highlight targets
         if (tutorialUI != null)

@@ -272,54 +272,43 @@ public class TutorialUI : MonoBehaviour
         {
             case HighlightType.Circle:
                 if (highlightCircle != null)
-                {
-                    highlightCircle.gameObject.SetActive(true);
                     highlightTransform = highlightCircle;
-                }
                 break;
                 
             case HighlightType.Rectangle:
                 if (highlightRect != null)
-                {
-                    highlightRect.gameObject.SetActive(true);
                     highlightTransform = highlightRect;
-                }
                 break;
         }
         
         if (highlightTransform != null)
         {
-            // Wait a frame to ensure layout is updated
-            yield return null;
-            
-            // Force canvas rebuild to ensure world positions are calculated
+            // Keep hidden while we compute position/size to avoid a one-frame visual glitch
+            highlightTransform.gameObject.SetActive(false);
+
+            // Wait for end of frame — guarantees the target canvas has completed its layout pass
+            // This also fixes the bottom-left position bug after scene transitions
+            yield return new WaitForEndOfFrame();
             Canvas.ForceUpdateCanvases();
-            
-            // Wait additional frames for layout to fully settle
-            yield return new WaitForSecondsRealtime(0.05f);
-            
+            yield return new WaitForEndOfFrame();
+
             // Position highlight at target
             Vector3 targetWorldPos = currentTarget.position;
             highlightTransform.position = targetWorldPos;
-            
-            // Verify position was set correctly (if still at origin, try again)
-            if (highlightTransform.position.sqrMagnitude < 0.01f && targetWorldPos.sqrMagnitude > 0.01f)
-            {
-                yield return null;
-                Canvas.ForceUpdateCanvases();
-                highlightTransform.position = targetWorldPos;
-            }
             
             // Size highlight to match target (with padding)
             var targetSize = currentTarget.rect.size;
             var scaleFactor = Mathf.Max(0.01f, step.highlightScaleFactor);
             highlightTransform.sizeDelta = (targetSize + step.highlightPadding) * scaleFactor;
-            
+
             // Apply color
             if (highlightImage != null)
             {
                 highlightImage.color = highlightColor;
             }
+
+            // Show only after position and size are correct
+            highlightTransform.gameObject.SetActive(true);
             
             // Start pulse animation if enabled
             if (step.pulseHighlight)

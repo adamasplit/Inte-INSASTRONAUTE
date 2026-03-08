@@ -17,8 +17,9 @@ public class BetDto
 {
     public string eventId;
     public int amount;
-    public float odds;
-    public bool side;          // true = YES, false = NO
+    public string answerType;  // "list" | "free"
+    public string choice;      // label choisi (list) ou réponse saisie (free)
+    public float odds;         // côte au moment du pari (list) ; 0 pour free
     public string placedIso;
     public bool resolved;
 }
@@ -35,23 +36,26 @@ public class ResolveBetsResponse
 public class ResolvedBet
 {
     public string eventId;
-    public bool win;           // true if player won, false if lost
-    public int refund;         // TOKEN amount credited (already done by Cloud Code)
+    public bool win;
+    public int refund;   // montant TOKEN déjà crédité par le Cloud Code
 }
 
 public static class BetsClient
 {
-    // Appelé quand l'utilisateur confirme un pari
-    public static Task<PlaceBetResponse> PlaceBetAsync(EventDto e, int amount, bool sideYes)
+    /// <summary>Enregistre un pari sur un événement.</summary>
+    /// <param name="choice">Label de l'option (list) ou réponse libre (free).</param>
+    /// <param name="odds">Côte de l'option choisie (list) ; passer 0 pour free.</param>
+    public static Task<PlaceBetResponse> PlaceBetAsync(EventDto e, int amount, string choice, float odds)
     {
         var args = new Dictionary<string, object>
         {
-            { "eventId", e.id },
-            { "amount", amount },
-            { "side", sideYes },
-            { "odds", e.odds },
+            { "eventId",     e.id },
+            { "amount",      amount },
+            { "choice",      choice },
+            { "odds",        odds },
+            { "answerType",  e.answerType },
             { "deadlineIso", e.deadlineIso },
-            { "status", e.status }
+            { "status",      e.status }
         };
 
         return CloudCodeService.Instance.CallEndpointAsync<PlaceBetResponse>(
@@ -60,37 +64,53 @@ public static class BetsClient
         );
     }
 
-    // Appelé à la connexion / refresh pour résoudre les paris clôturés
+    /// <summary>Résout les paris des événements clôturés. À appeler à la connexion/refresh.</summary>
     public static async Task<ResolveBetsResponse> ResolveBetsAsync(EventDto[] allEvents)
     {
         var list = new List<Dictionary<string, object>>();
 
         foreach (var e in allEvents)
         {
-            // Only send PARI events that are CLOSED and have an outcome
-            if (e.type == "PARI" && e.status == "CLOSED" && e.HasOutcome)
+            if (e.type != "PARI" || e.status != "CLOSED" || !e.HasOutcome)
+                continue;
+
+            var entry = new Dictionary<string, object>
             {
-                list.Add(new Dictionary<string, object>
-                {
-                    { "id", e.id },
-                    { "status", e.status },
-                    { "outcome", e.OutcomeValue }
-                });
+                { "id",         e.id },
+                { "status",     e.status },
+                { "answerType", e.answerType }
+            };
+
+            if (e.answerType == "free")
+            {
+                // Envoie la liste des bonnes réponses avec leurs côtes
+                var outcomesList = new List<Dictionary<string, object>>();
+                if (e.outcomes != null)
+                    foreach (var o in e.outcomes)
+                        outcomesList.Add(new Dictionary<string, object>
+                        {
+                            { "answer", o.answer },
+                            { "odds",   o.odds }
+                        });
+                entry["outcomes"] = outcomesList;
             }
+            else
+            {
+                // Envoie le label du choix gagnant
+                entry["outcome"] = e.outcome;
+            }
+
+            list.Add(entry);
         }
 
-        var args = new Dictionary<string, object>
-        {
-            { "events", list }
-        };
+        var args = new Dictionary<string, object> { { "events", list } };
 
         try
         {
-            var response = await CloudCodeService.Instance.CallEndpointAsync<ResolveBetsResponse>(
+            return await CloudCodeService.Instance.CallEndpointAsync<ResolveBetsResponse>(
                 "ResolveBets",
                 args
             );
-            return response;
         }
         catch (Exception ex)
         {
