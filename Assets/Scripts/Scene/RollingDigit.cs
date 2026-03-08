@@ -12,7 +12,7 @@ public class RollingDigit : MonoBehaviour
     public void SetDigitInstant(long value)
     {
         currentDigit = value;
-        numbers.anchoredPosition = new Vector2(0, -value * digitHeight);
+        numbers.anchoredPosition = new Vector2(0, value * digitHeight);
     }
 
     public IEnumerator RollTo(long target,float speedMultiplier = 1f)

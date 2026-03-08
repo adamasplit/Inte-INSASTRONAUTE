@@ -15,8 +15,8 @@ MonoBehaviour:
   cardId: insatourne
   sprite: {fileID: 21300000, guid: f0446a1d79b9cd549bbcbc212fd4cd91, type: 3}
   rarity: 0
-  FirstTimeValue: 3
-  SubsequentValue: 1
+  FirstTimeValue: 7
+  SubsequentValue: 2
   cardName: INSATOURNE
   description: "Tourne tourne dans ma t\xEAte, Les images du long m\xE9trageeee -
     20 \\n\\n Gaumont, Pat\xE9, Chui \xE0 l'entr\xE9e, J'd\xE9chire les tickets -

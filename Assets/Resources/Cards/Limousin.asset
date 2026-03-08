@@ -15,8 +15,8 @@ MonoBehaviour:
   cardId: limousin
   sprite: {fileID: 21300000, guid: 4da5903cb66c53042bd314d5451bd88e, type: 3}
   rarity: 3
-  FirstTimeValue: 15
-  SubsequentValue: 7
+  FirstTimeValue: 87
+  SubsequentValue: 19
   cardName: Limousin
   description: "Danse R\xE9gionale - 20 \\n\\n Le lancer pour soi - 140"
   element: 0

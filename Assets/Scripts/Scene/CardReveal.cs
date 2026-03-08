@@ -15,6 +15,11 @@ public class CardReveal:MonoBehaviour
     public ParticleSystem shineParticles;
     public ParticleSystem revealParticles;
     private int rarity  = 0;
+    private long pcValue = 0;
+    public void SetPCValue(long value)
+    {
+        pcValue = value;
+    }
     public void SetRarity(int rarity)
     {
         this.rarity = rarity;
@@ -162,5 +167,7 @@ public class CardReveal:MonoBehaviour
                 yield return null;
             }
         }
+        RollingCounter rc = FindFirstObjectByType<RollingCounter>();
+        var a=rc?.AnimateFromTo(rc.currentValue, rc.currentValue+pcValue, false,true);
     }
 }

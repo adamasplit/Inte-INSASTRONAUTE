@@ -29,7 +29,7 @@ public class ContinuousBeamAttack : MonoBehaviour, IAttackBehaviour
         while (elapsed < card.duration)
         {
             if (tower.overdrive){
-                elapsed += Time.deltaTime/2; // In overdrive, the beam lasts twice as long
+                elapsed += Time.deltaTime/4; // In overdrive, the beam lasts twice as long
             } else {
                 elapsed += Time.deltaTime;
             }

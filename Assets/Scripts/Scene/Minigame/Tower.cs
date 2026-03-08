@@ -92,7 +92,10 @@ public class Tower : MonoBehaviour
             if (overdrive)
             {
                 // En overdrive, cible tous les ennemis
-                targets = GetComponent<AllEnemiesAllColumnsTargeting>().GetTargets(column);
+                if (targeting is AllEnemiesAllColumnsTargeting)
+                    attack.ExecuteAttack(this, column, targets, card);
+                else
+                    targets = GetComponent<AllEnemiesAllColumnsTargeting>().GetTargets(column);
             }
             attack.ExecuteAttack(this, column, targets, card);
         }

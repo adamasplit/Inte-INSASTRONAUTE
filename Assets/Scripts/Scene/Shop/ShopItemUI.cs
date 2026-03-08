@@ -18,6 +18,8 @@ public class ShopItemUI : MonoBehaviour
         {
             if (data.type == ShopOfferType.Card)
             {
+                RectTransform rectTransform = GetComponent<RectTransform>();
+                rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x / 2, rectTransform.sizeDelta.y);
                 icon.sprite = CardDatabase.Instance.Get(data.rewardId).sprite;
             }
             else // Pack

@@ -15,15 +15,17 @@ MonoBehaviour:
   cardId: parking_visiteur
   sprite: {fileID: 21300000, guid: aefc86dadf31d4f4b808aaf28d61735d, type: 3}
   rarity: 1
-  FirstTimeValue: 0
-  SubsequentValue: 0
+  FirstTimeValue: 3
+  SubsequentValue: 1
   cardName: Parking visiteurs
-  description: 
+  description: "Bonjour, le ou la propri\xE9taire du v\xE9hicule MINI COOPER gris
+    immatricul\xE9 CM 219 PB est pri\xE9 de le d\xE9placer au plus vite car il g\xEAne
+    la fermeture du parking visiteur. Merci. -120"
   element: 2
-  baseDamage: 10
+  baseDamage: 45
   duration: 1
-  targetingType: 0
-  attackType: 0
+  targetingType: 5
+  attackType: 5
   projectileCount: 1
   vfxDuration: 1
   singleTargetVfx: 0

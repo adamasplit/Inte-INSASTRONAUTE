@@ -15,7 +15,7 @@ MonoBehaviour:
   cardId: insaopaulo
   sprite: {fileID: 21300000, guid: 0c592f780a313e94a93408bed3182812, type: 3}
   rarity: 1
-  FirstTimeValue: 4
+  FirstTimeValue: 12
   SubsequentValue: 2
   cardName: INSAOPAULO
   description: 'DO BRAZIIIL - 30 \n\n Sors Les Sabat Tal Heja, En P3 J''Capte Taheja

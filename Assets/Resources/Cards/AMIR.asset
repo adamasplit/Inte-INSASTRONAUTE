@@ -15,8 +15,8 @@ MonoBehaviour:
   cardId: amir
   sprite: {fileID: 21300000, guid: b9b87fb832bf4d04ba55558c6cb443db, type: 3}
   rarity: 0
-  FirstTimeValue: 2
-  SubsequentValue: 1
+  FirstTimeValue: 7
+  SubsequentValue: 2
   cardName: AMIR
   description: YouHouHouHouHouu - 40 \n\n Boule Quies 50 dB - 100
   element: 2

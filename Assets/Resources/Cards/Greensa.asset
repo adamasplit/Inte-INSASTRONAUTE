@@ -15,8 +15,8 @@ MonoBehaviour:
   cardId: greensa
   sprite: {fileID: 21300000, guid: b9dc40ac85b360f47811ddfc2c5f4697, type: 3}
   rarity: 2
-  FirstTimeValue: 10
-  SubsequentValue: 4
+  FirstTimeValue: 16
+  SubsequentValue: 8
   cardName: Greensa
   description: Salade, Tomates, Oignons - 70 \n\n Luke Cleanwalker - 110
   element: 1

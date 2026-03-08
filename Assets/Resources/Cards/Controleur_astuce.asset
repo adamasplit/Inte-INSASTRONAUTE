@@ -15,8 +15,8 @@ MonoBehaviour:
   cardId: controleur_astuce
   sprite: {fileID: 21300000, guid: 2ab6869f28e005549956b1bd0966ef78, type: 3}
   rarity: 3
-  FirstTimeValue: 10
-  SubsequentValue: 5
+  FirstTimeValue: 70
+  SubsequentValue: 12
   cardName: "Contr\xF4leurs Astuce"
   description: "Contr\xF4leur \xE0 Technop\xF4le - 60 \\n\\n Comment le contr\xF4leur
     me regarde quand je lui dis que je m'appelle Sam Gratlecu et que je viens de

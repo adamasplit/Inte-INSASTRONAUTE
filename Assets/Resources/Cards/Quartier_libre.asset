@@ -15,15 +15,15 @@ MonoBehaviour:
   cardId: quartier_libre
   sprite: {fileID: 21300000, guid: 523c03b00b7756448852ce22bc98d0f9, type: 3}
   rarity: 3
-  FirstTimeValue: 15
-  SubsequentValue: 8
+  FirstTimeValue: 65
+  SubsequentValue: 11
   cardName: Quartier libre
   description: "Partie de p\xE9tanque - 50 \\n\\n Cacartier libre - 150"
   element: 0
-  baseDamage: 10
-  duration: 1
+  baseDamage: 80
+  duration: 2
   targetingType: 0
-  attackType: 0
+  attackType: 3
   projectileCount: 1
   vfxDuration: 1
   singleTargetVfx: 0

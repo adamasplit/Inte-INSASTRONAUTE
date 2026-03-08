@@ -15,7 +15,7 @@ MonoBehaviour:
   cardId: barouf
   sprite: {fileID: 21300000, guid: 66f04523f7168bc4db91ad9724ef804e, type: 3}
   rarity: 1
-  FirstTimeValue: 4
+  FirstTimeValue: 11
   SubsequentValue: 2
   cardName: Bar'ouf
   description: After Bar'ouf - 50 \n\n After Pas'ouf - 130

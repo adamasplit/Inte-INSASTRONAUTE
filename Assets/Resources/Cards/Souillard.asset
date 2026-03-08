@@ -21,9 +21,9 @@ MonoBehaviour:
   description: 
   element: 2
   baseDamage: 10
-  duration: 1
-  targetingType: 0
-  attackType: 0
+  duration: 10
+  targetingType: 1
+  attackType: 6
   projectileCount: 1
   vfxDuration: 1
   singleTargetVfx: 0

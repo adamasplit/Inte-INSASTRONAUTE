@@ -18,16 +18,16 @@ MonoBehaviour:
   packSprite: {fileID: 21300000, guid: c10af179be12b114fa38175f69a3ca2b, type: 3}
   possibleCards:
   - cardId: stadium
-    weight: 0.5
+    weight: 1
   - cardId: delirium
-    weight: 1
+    weight: 3
   - cardId: okallaghan
-    weight: 2
+    weight: 9
   - cardId: quartier_libre
-    weight: 0.25
+    weight: 0.4
   - cardId: bar_des_fleurs
-    weight: 2
+    weight: 9
   - cardId: barouf
-    weight: 1
+    weight: 3
   - cardId: la_suite
     weight: 1

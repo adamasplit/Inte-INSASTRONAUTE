@@ -15,14 +15,14 @@ MonoBehaviour:
   cardId: insamourai
   sprite: {fileID: 21300000, guid: afb2e20d73b9d964a8d43b57d66a8435, type: 3}
   rarity: 0
-  FirstTimeValue: 3
-  SubsequentValue: 1
+  FirstTimeValue: 6
+  SubsequentValue: 2
   cardName: INSAMOURAI
   description: jparle pas japonais mdrrr - 40 \n\n toujours pas - 110
   element: 2
-  baseDamage: 50
+  baseDamage: 30
   duration: 1
-  targetingType: 2
+  targetingType: 5
   attackType: 0
   projectileCount: 1
   vfxDuration: 1

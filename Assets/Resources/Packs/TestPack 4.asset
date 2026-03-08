@@ -18,12 +18,12 @@ MonoBehaviour:
   packSprite: {fileID: 21300000, guid: 6a96818bfd2d01e4880e7e8f44a71f7c, type: 3}
   possibleCards:
   - cardId: parking_visiteur
-    weight: 2
+    weight: 9
   - cardId: rattrapages
-    weight: 0.5
+    weight: 1
   - cardId: souillard
-    weight: 2
+    weight: 9
   - cardId: controleur_astuce
     weight: 0.25
   - cardId: degats_des_eaux
-    weight: 0.5
+    weight: 1

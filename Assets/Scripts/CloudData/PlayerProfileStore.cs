@@ -108,7 +108,7 @@ public static class PlayerProfileStore
         OnCardCollectionChanged?.Invoke();
     }
 
-    public static long GetPCReward(CardData[] cards)
+    public static long GetPCReward(CardData[] cards,bool forceSubsequent = false)
     {
         long pcReward = 0;
         foreach (var card in cards)
@@ -117,12 +117,12 @@ public static class PlayerProfileStore
             {
                 int owned = GetCardQuantity(card.cardId);
                 if (owned == 0)
-                    pcReward += card.FirstTimeValue;
+                    pcReward += forceSubsequent ? card.SubsequentValue:card.FirstTimeValue;
                 else
                     pcReward += card.SubsequentValue;
             }
         }
-        Debug.Log($"[GetPCReward] Calculated PC reward for given cards: {pcReward}");
+        //Debug.Log($"[GetPCReward] Calculated PC reward for given cards: {pcReward}");
         return pcReward;
     }
 

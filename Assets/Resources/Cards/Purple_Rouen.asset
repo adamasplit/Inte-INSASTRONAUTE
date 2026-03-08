@@ -15,8 +15,8 @@ MonoBehaviour:
   cardId: purple_rouen
   sprite: {fileID: 21300000, guid: 6d9bd2b80b6bce94ebb9fa12609cb894, type: 3}
   rarity: 1
-  FirstTimeValue: 5
-  SubsequentValue: 2
+  FirstTimeValue: 20
+  SubsequentValue: 3
   cardName: Purple Rouen
   description: "D\xE9part en Sprint (jsuis une p*te si j'marrete) - 40 \\n\\n Run
     en EF avec les copains (caca dans les bois) - 110"

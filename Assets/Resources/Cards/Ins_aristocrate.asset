@@ -15,8 +15,8 @@ MonoBehaviour:
   cardId: insaristo
   sprite: {fileID: 21300000, guid: fadeff4d209f94440b7898575cb10ecb, type: 3}
   rarity: 1
-  FirstTimeValue: 5
-  SubsequentValue: 2
+  FirstTimeValue: 13
+  SubsequentValue: 3
   cardName: INSARISTOCRATE
   description: "Louis Croix V B\xE2ton - 50 \\n\\n C'est quoi ce nom d'int\xE9??
     Pourquoi pas Insa Camping tant qu'on y est??? - 130"

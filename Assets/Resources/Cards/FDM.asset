@@ -15,8 +15,8 @@ MonoBehaviour:
   cardId: fdm
   sprite: {fileID: 21300000, guid: f18043da2106e02459de3c9b4801ae3d, type: 3}
   rarity: 4
-  FirstTimeValue: 40
-  SubsequentValue: 20
+  FirstTimeValue: 250
+  SubsequentValue: 100
   cardName: La FDM
   description: 
   element: 2
@@ -24,3 +24,7 @@ MonoBehaviour:
   duration: 1
   targetingType: 0
   attackType: 0
+  projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

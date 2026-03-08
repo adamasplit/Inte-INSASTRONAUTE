@@ -18,10 +18,10 @@ MonoBehaviour:
   packSprite: {fileID: 21300000, guid: b629fe0c83ec88945a6ea760917aec42, type: 3}
   possibleCards:
   - cardId: insamourai
-    weight: 1
+    weight: 3
   - cardId: insaristo
-    weight: 0.5
-  - cardId: insatourne
-    weight: 0.5
-  - cardId: insaopaulo
     weight: 1
+  - cardId: insatourne
+    weight: 1
+  - cardId: insaopaulo
+    weight: 3

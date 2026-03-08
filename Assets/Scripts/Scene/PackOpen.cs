@@ -199,7 +199,7 @@ public class PackOpen : MonoBehaviour
 
         // Position centrale (UI)
         Vector2 explosionPos = Vector2.zero;
-
+        Dictionary<string, bool> revealedCards = new Dictionary<string, bool>();
         // Spawn de toutes les cartes face cachée
         for (int i = 0; i < pulledCards.Length; i++)
         {
@@ -211,7 +211,9 @@ public class PackOpen : MonoBehaviour
 
             var reveal = cardUI.GetComponent<CardReveal>();
             reveal.SetRarity(cardData.rarity);
+            reveal.SetPCValue(PlayerProfileStore.GetPCReward(new CardData[] { cardData },revealedCards.ContainsKey(cardData.cardId)));
             reveal.SetFaceDown();
+            revealedCards[cardData.cardId] = true;
 
             RectTransform rt = cardUI.GetComponent<RectTransform>();
             rt.anchoredPosition = explosionPos;
@@ -250,6 +252,7 @@ public class PackOpen : MonoBehaviour
             spawnedCards[i].gameObject.SetActive(false);
         }
 
+        
         // Révélation une par une
         for (int i = 0; i < spawnedCards.Count; i++)
         {
@@ -263,7 +266,7 @@ public class PackOpen : MonoBehaviour
             await WaitForSkipSignal($"card reveal continue (index={i})", 10f);
             spawnedCards[i].HideCard();
         }
-
+        FindFirstObjectByType<RollingCounter>().currentValue = 0;
         // Skip all → tout révéler
         {
             foreach (var card in spawnedCards)
@@ -275,9 +278,6 @@ public class PackOpen : MonoBehaviour
         }
         await WaitForSkipSignal("pack closing", 10f);
         SetPhase(PackOpenPhase.Summary);
-        initialPC = PlayerProfileStore.PC;
-        targetPC = PlayerProfileStore.PC+PlayerProfileStore.GetPCReward(pulledCards);
-        await FindFirstObjectByType<RollingCounter>().AnimateFromTo(initialPC, targetPC);
         
         loadingScreen.SetActive(true);
         await PlayerProfileStore.RemovePackAsync(packData.packId, 1);

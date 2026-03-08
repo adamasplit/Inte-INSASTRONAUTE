@@ -15,7 +15,7 @@ MonoBehaviour:
   cardId: gala
   sprite: {fileID: 21300000, guid: ad863176070469841bed407b50baea1b, type: 3}
   rarity: 0
-  FirstTimeValue: 2
+  FirstTimeValue: 6
   SubsequentValue: 1
   cardName: GALA
   description: "Lingala, Mengala, Bengala - 20 \\n\\n \xC7a va manger du riz ce soir
@@ -26,3 +26,6 @@ MonoBehaviour:
   targetingType: 0
   attackType: 0
   projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

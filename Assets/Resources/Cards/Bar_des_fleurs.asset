@@ -15,7 +15,7 @@ MonoBehaviour:
   cardId: bar_des_fleurs
   sprite: {fileID: 21300000, guid: 41fd6b7ee908fd642a7557fbf0a7d480, type: 3}
   rarity: 0
-  FirstTimeValue: 2
+  FirstTimeValue: 5
   SubsequentValue: 1
   cardName: Bar des fleurs
   description: "Happy Hour 20h P\xE9tante - 40 \\n\\n Glaucidium palmatum var. macrocarpum

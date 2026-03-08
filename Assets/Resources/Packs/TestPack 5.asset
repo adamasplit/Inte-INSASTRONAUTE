@@ -20,12 +20,12 @@ MonoBehaviour:
   - cardId: limousin
     weight: 0.25
   - cardId: paix_dieu
-    weight: 2
+    weight: 9
   - cardId: cafe
-    weight: 2
+    weight: 9
   - cardId: baf
-    weight: 1
+    weight: 3
   - cardId: chacharlatan
-    weight: 0.5
+    weight: 1
   - cardId: ingenieur_humaniste
-    weight: 0.125
+    weight: 0.1
