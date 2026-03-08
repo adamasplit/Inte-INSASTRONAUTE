@@ -28,7 +28,11 @@ public class ContinuousBeamAttack : MonoBehaviour, IAttackBehaviour
         float elapsed = 0f;
         while (elapsed < card.duration)
         {
-            elapsed += Time.deltaTime;
+            if (tower.overdrive){
+                elapsed += Time.deltaTime/2; // In overdrive, the beam lasts twice as long
+            } else {
+                elapsed += Time.deltaTime;
+            }
             column.DamageEnemies(card,Time.deltaTime); // Adjust damage based on time to ensure consistent damage over duration
             yield return null; // Wait for the next frame
         }

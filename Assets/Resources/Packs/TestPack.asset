@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PackData
   packId: test
   packName: Pack listes
-  cardCount: 5
+  cardCount: 8
   packSprite: {fileID: 21300000, guid: b629fe0c83ec88945a6ea760917aec42, type: 3}
   possibleCards:
   - cardId: insamourai

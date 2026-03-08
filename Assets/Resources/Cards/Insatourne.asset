@@ -21,7 +21,7 @@ MonoBehaviour:
   description: "Tourne tourne dans ma t\xEAte, Les images du long m\xE9trageeee -
     20 \\n\\n Gaumont, Pat\xE9, Chui \xE0 l'entr\xE9e, J'd\xE9chire les tickets -
     80"
-  element: 4
+  element: 2
   baseDamage: 75
   duration: 1
   targetingType: 6

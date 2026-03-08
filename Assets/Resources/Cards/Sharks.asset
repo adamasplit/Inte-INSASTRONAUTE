@@ -19,10 +19,12 @@ MonoBehaviour:
   SubsequentValue: 2
   cardName: Sharks
   description: Blup Blup Blup Blublup - 30 \n\n Blublup - 110
-  element: 1
+  element: 2
   baseDamage: 50
   duration: 1
   targetingType: 1
   attackType: 0
   projectileCount: 1
   vfxDuration: 1.5
+  singleTargetVfx: 0
+  damagingVfx: 0

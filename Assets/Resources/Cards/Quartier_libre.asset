@@ -19,7 +19,7 @@ MonoBehaviour:
   SubsequentValue: 8
   cardName: Quartier libre
   description: "Partie de p\xE9tanque - 50 \\n\\n Cacartier libre - 150"
-  element: 3
+  element: 0
   baseDamage: 10
   duration: 1
   targetingType: 0

@@ -19,9 +19,12 @@ MonoBehaviour:
   SubsequentValue: 1
   cardName: AMIR
   description: YouHouHouHouHouu - 40 \n\n Boule Quies 50 dB - 100
-  element: 1
+  element: 2
   baseDamage: 60
   duration: 1
   targetingType: 2
   attackType: 2
   projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

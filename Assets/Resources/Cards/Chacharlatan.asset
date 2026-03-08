@@ -19,7 +19,7 @@ MonoBehaviour:
   SubsequentValue: 4
   cardName: Chacharlatan
   description: 
-  element: 5
+  element: 1
   baseDamage: 50
   duration: 1
   targetingType: 2

@@ -20,7 +20,7 @@ MonoBehaviour:
   cardName: TOSS
   description: "Le sac \xE0 dos c'est dans le dos - 50 \\n\\n Troisi\xE8me mi-temps
     - 120"
-  element: 0
+  element: 1
   baseDamage: 30
   duration: 1
   targetingType: 5

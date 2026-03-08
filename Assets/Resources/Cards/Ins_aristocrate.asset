@@ -20,9 +20,12 @@ MonoBehaviour:
   cardName: INSARISTOCRATE
   description: "Louis Croix V B\xE2ton - 50 \\n\\n C'est quoi ce nom d'int\xE9??
     Pourquoi pas Insa Camping tant qu'on y est??? - 130"
-  element: 4
+  element: 2
   baseDamage: 100
   duration: 1
   targetingType: 1
   attackType: 1
   projectileCount: 1
+  vfxDuration: 1
+  singleTargetVfx: 0
+  damagingVfx: 0

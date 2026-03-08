@@ -23,7 +23,7 @@ public class Tower : MonoBehaviour
     private ITargetingBehaviour targeting;
     private IAttackBehaviour attack;
     public bool isAttacking = false;
-    private bool overdrive = false;
+    public bool overdrive = false;
 
     void Awake()
     {
@@ -145,7 +145,7 @@ public class Tower : MonoBehaviour
         ConfigureFromCard(card);
         if (targeting == null) return;
         List<Enemy> targets = targeting.GetTargets(column);
-        if (overdrive)
+        if (overdrive&&!(attack is ContinuousBeamAttack))
         {
             // En overdrive, cible tous les ennemis
             targets = GetComponent<AllEnemiesAllColumnsTargeting>().GetTargets(column);

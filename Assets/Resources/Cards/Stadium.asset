@@ -20,7 +20,7 @@ MonoBehaviour:
   cardName: Stadium
   description: Octogone avec le DJ - 50 \n\n Regarder Marseille perdre au milieu
     du POGO - 120
-  element: 3
+  element: 1
   baseDamage: 75
   duration: 1
   targetingType: 0

@@ -21,7 +21,7 @@ MonoBehaviour:
   description: "Contr\xF4leur \xE0 Technop\xF4le - 60 \\n\\n Comment le contr\xF4leur
     me regarde quand je lui dis que je m'appelle Sam Gratlecu et que je viens de
     Tilted Tower"
-  element: 6
+  element: 1
   baseDamage: 100
   duration: 1
   targetingType: 1

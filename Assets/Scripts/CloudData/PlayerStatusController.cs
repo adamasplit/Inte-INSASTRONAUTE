@@ -10,6 +10,8 @@ public class PlayerStatusController : MonoBehaviour
 
     [Header("Refs")]
     [SerializeField] private MainUIBinder ui;
+    public CardCollectionController cardCollectionController;
+    public PackCollectionController packCollectionController;
     public LoadingScreen loadingScreen;
 
     private async void Start()
@@ -49,7 +51,8 @@ public class PlayerStatusController : MonoBehaviour
         await ResolveBetsOnLoginAsync();
         loadingScreen?.IncrementStep();
 
-        FindFirstObjectByType<CardCollectionController>().RefreshCollection(false,false,true);
+        cardCollectionController.RefreshCollection(false,false,true);
+        packCollectionController.RefreshCollection();
         loadingScreen?.IncrementStep();
         
         await FindFirstObjectByType<EventsMenuController>().RefreshEventsAsync();

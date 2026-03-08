@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PackData
   packId: test5
   packName: Pack rites personnes
-  cardCount: 15
+  cardCount: 9
   packSprite: {fileID: 21300000, guid: c8866dca73e1a0d4484a0d09c54830a7, type: 3}
   possibleCards:
   - cardId: limousin

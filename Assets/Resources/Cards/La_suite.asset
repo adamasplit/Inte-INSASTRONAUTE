@@ -20,7 +20,7 @@ MonoBehaviour:
   cardName: La Suite
   description: "Danser dans la cage - 60 \\n\\n Passer sa soir\xE9e devant l'entr\xE9e
     - 160"
-  element: 3
+  element: 0
   baseDamage: 100
   duration: 5
   targetingType: 3

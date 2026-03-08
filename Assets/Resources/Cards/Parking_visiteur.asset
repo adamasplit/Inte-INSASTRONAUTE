@@ -19,7 +19,7 @@ MonoBehaviour:
   SubsequentValue: 0
   cardName: Parking visiteurs
   description: 
-  element: 6
+  element: 2
   baseDamage: 10
   duration: 1
   targetingType: 0

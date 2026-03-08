@@ -13427,6 +13427,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatusController
   uIElements: []
   ui: {fileID: 914386688}
+  cardCollectionController: {fileID: 8536838679613061618}
+  packCollectionController: {fileID: 1431412998357981581}
   loadingScreen: {fileID: 4165141374986114966}
 --- !u!4 &544990155
 Transform:

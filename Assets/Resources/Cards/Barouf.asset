@@ -19,7 +19,7 @@ MonoBehaviour:
   SubsequentValue: 2
   cardName: Bar'ouf
   description: After Bar'ouf - 50 \n\n After Pas'ouf - 130
-  element: 3
+  element: 2
   baseDamage: 60
   duration: 1
   targetingType: 0
