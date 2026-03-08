@@ -14,9 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
   stepId: Step4_Explication
   title: INS'PACE INVADERS
-  description: "Vous pouvez fa\xE7onner votre deck en fonctions des cartes. Chaque
-    carte \xE0 des effets uniques, \xE0 vous de les tester pour avoir le meilleur
-    score."
+  description: "Vous pouvez fa\xE7onner votre deck en fonction des cartes. Chaque
+    carte a des effets uniques, \xE0 vous de les tester pour avoir le meilleur score."
   highlightType: 0
   targetTag: TokenPanel
   parentTag: 

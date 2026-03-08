@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: FDM
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: fdm
-  sprite: {fileID: 21300000, guid: f18043da2106e02459de3c9b4801ae3d, type: 3}
+  sprite: {fileID: 21300000, guid: d1c4c7d59a539a5469c099692f2e1daa, type: 3}
   rarity: 4
   FirstTimeValue: 250
   SubsequentValue: 100
   cardName: La FDM
-  description: 
-  element: 2
+  description: "F\xEAte des M\xE9chants - 60 \\n\\n 31 mai 2026 (JTM Maman) - 230"
+  element: 3
   baseDamage: 600
   duration: 1
-  targetingType: 0
+  targetingType: 5
   attackType: 0
   projectileCount: 1
   vfxDuration: 1
-  singleTargetVfx: 0
+  singleTargetVfx: 1
   damagingVfx: 0

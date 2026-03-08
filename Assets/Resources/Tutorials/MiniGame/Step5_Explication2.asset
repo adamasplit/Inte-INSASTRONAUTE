@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
   stepId: Step5_Explication2
   title: INS'PACE INVADERS
-  description: "En jeu, glissez d\xE9posez vos cartes sur les fus\xE9es pour attaquer
+  description: "En jeu, glissez-d\xE9posez vos cartes sur les fus\xE9es pour attaquer
     les ennemis. Certaines fus\xE9es charg\xE9es permettent de lancer des capacit\xE9s
     charg\xE9es."
   highlightType: 0

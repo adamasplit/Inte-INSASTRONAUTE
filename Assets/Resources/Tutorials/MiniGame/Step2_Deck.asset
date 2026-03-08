@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
   stepId: Step2_Deck
   title: INS'PACE INVADERS
-  description: Pour y jouer tu va avoir besoin d'un deck. Il faut t'assurer d'avoir
-    au mois 8 cartes, je te propose d'aller ouvrir un booster si tu n'en a pas assez.
+  description: Pour y jouer tu vas avoir besoin d'un deck. Il faut t'assurer d'avoir
+    au moins 8 cartes, je te propose d'aller ouvrir un booster si tu n'en as pas
+    assez.
   highlightType: 0
   targetTag: TokenPanel
   parentTag: 

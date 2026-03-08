@@ -18,7 +18,7 @@ MonoBehaviour:
   FirstTimeValue: 0
   SubsequentValue: 0
   cardName: Souillard
-  description: 
+  description: 'Model Text - 20 \n\n Liste de vocab - 30 \n\n SIB - 140 '
   element: 2
   baseDamage: 10
   duration: 10

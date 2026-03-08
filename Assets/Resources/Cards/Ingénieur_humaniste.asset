@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: "Ing\xE9nieur_humaniste"
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: ingenieur_humaniste
-  sprite: {fileID: 21300000, guid: 13bf0121f97ad6f44932c433deba082c, type: 3}
+  sprite: {fileID: 21300000, guid: a1457fee4f4bdde4eabcc6c5a503cfaf, type: 3}
   rarity: 4
   FirstTimeValue: 250
   SubsequentValue: 100
   cardName: "Ing\xE9nieur humaniste"
-  description: 
+  description: "Post LinkedIn engag\xE9 - 60 \\n\\n Complexification n\xE9cessaire
+    du d\xE9bat - 90 \\n\\n We Celebrate Our Differences"
   element: 3
   baseDamage: 20
   duration: 1

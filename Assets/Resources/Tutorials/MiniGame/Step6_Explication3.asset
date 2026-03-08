@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
   stepId: Step6_Explication3
   title: INS'PACE INVADERS
-  description: "Tr\xE8ve de bavardages ! le meilleur moyen d'apprendre est d'essayer
+  description: "Tr\xEAve de bavardages ! Le meilleur moyen d'apprendre est d'essayer
     !"
   highlightType: 0
   targetTag: TokenPanel

@@ -16,7 +16,7 @@ MonoBehaviour:
   title: Bienvenue !
   description: 'Bienvenue dans INSA''STRAL,
 
-    l''appli de INSA''STONAUTE !'
+    l''appli de INSA''STRONAUTE !'
   highlightType: 0
   targetTag: TokenPanel
   parentTag: 
