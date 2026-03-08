@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class CardInfoBox : MonoBehaviour
 {
@@ -21,10 +22,16 @@ public class CardInfoBox : MonoBehaviour
     [SerializeField] private float fadeOutDuration = 0.15f;
     [SerializeField] private Vector2 offset = new Vector2(150, 0); // Offset from card position
 
+    [Header("Card Image Zoom")]
+    [SerializeField] private float zoomScale = 1.5f;
+    [SerializeField] private float zoomDuration = 0.2f;
+
     private static CardInfoBox instance;
     private CanvasGroup canvasGroup;
     private bool isBoxVisible = false;
     private CardData currentCardData = null;
+    private bool isImageZoomed = false;
+    private Vector3 originalImageScale;
 
     private void Awake()
     {
@@ -37,6 +44,18 @@ public class CardInfoBox : MonoBehaviour
             Destroy(gameObject);
         }
         
+        // Store original scale and add click-to-zoom on the card image
+        if (cardImage != null)
+        {
+            originalImageScale = cardImage.transform.localScale;
+            EventTrigger trigger = cardImage.gameObject.GetComponent<EventTrigger>();
+            if (trigger == null) trigger = cardImage.gameObject.AddComponent<EventTrigger>();
+            EventTrigger.Entry entry = new EventTrigger.Entry();
+            entry.eventID = EventTriggerType.PointerClick;
+            entry.callback.AddListener((data) => ToggleImageZoom());
+            trigger.triggers.Add(entry);
+        }
+
         // Get or add CanvasGroup for animations
         if (infoPanel != null)
         {
@@ -111,6 +130,14 @@ public class CardInfoBox : MonoBehaviour
         // Store the current card
         currentCardData = cardData;
 
+        // Reset zoom when switching to a new card
+        if (isImageZoomed)
+        {
+            isImageZoomed = false;
+            if (cardImage != null)
+                LeanTween.scale(cardImage.gameObject, originalImageScale, zoomDuration * 0.5f);
+        }
+
         // Update card information
         if (cardImage != null)
             cardImage.sprite = cardData.sprite;
@@ -178,6 +205,14 @@ public class CardInfoBox : MonoBehaviour
         }
     }
 
+    private void ToggleImageZoom()
+    {
+        if (cardImage == null) return;
+        isImageZoomed = !isImageZoomed;
+        Vector3 targetScale = isImageZoomed ? originalImageScale * zoomScale : originalImageScale;
+        LeanTween.scale(cardImage.gameObject, targetScale, zoomDuration).setEaseOutBack();
+    }
+
     public void HideInfoBox()
     {
         if (infoPanel != null)
@@ -186,6 +221,13 @@ public class CardInfoBox : MonoBehaviour
             {
                 isBoxVisible = false;
                 currentCardData = null;
+
+                // Reset zoom
+                if (isImageZoomed && cardImage != null)
+                {
+                    isImageZoomed = false;
+                    LeanTween.scale(cardImage.gameObject, originalImageScale, zoomDuration * 0.5f);
+                }
                 
                 if (useAnimation && canvasGroup != null)
                 {
@@ -202,6 +244,11 @@ public class CardInfoBox : MonoBehaviour
             {
                 // Force disable even if not marked as visible
                 currentCardData = null;
+                if (isImageZoomed && cardImage != null)
+                {
+                    isImageZoomed = false;
+                    cardImage.transform.localScale = originalImageScale;
+                }
                 infoPanel.SetActive(false);
             }
         }
