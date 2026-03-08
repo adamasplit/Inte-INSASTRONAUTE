@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
   stepId: Step15_GoToLeaderBoard
   title: Classement
-  description: Clique sur le menu "Classement" (Je vais pas tout faire pour toi...)
+  description: Clique sur le menu "Classement" en haut de l'ecran
   highlightType: 2
   targetTag: LeaderBoardButton
   parentTag: 

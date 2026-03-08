@@ -4,9 +4,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 /// <summary>
 /// UI presentation layer for the tutorial system.
@@ -130,7 +130,7 @@ public class TutorialUI : MonoBehaviour
         }
     }
     
-    public async Task ShowStep(TutorialStep step, int currentStepNumber, int totalSteps, bool deferTargetSearch = false)
+    public IEnumerator ShowStep(TutorialStep step, int currentStepNumber, int totalSteps, bool deferTargetSearch = false)
     {
         currentStep = step;
         gameObject.SetActive(true);
@@ -189,22 +189,22 @@ public class TutorialUI : MonoBehaviour
         // Find and setup target (defer if requested to allow animations/spawning)
         if (!deferTargetSearch)
         {
-            await SetupHighlight(step);
+            yield return StartCoroutine(SetupHighlightCoroutine(step));
         }
         
         // Animate in
-        await AnimateIn();
+        yield return StartCoroutine(AnimateInCoroutine());
     }
 
-    public async Task RefreshTargets()
+    public IEnumerator RefreshTargets()
     {
         if (currentStep != null)
         {
-            await SetupHighlight(currentStep);
+            yield return StartCoroutine(SetupHighlightCoroutine(currentStep));
         }
     }
     
-    private async Task SetupHighlight(TutorialStep step)
+    private IEnumerator SetupHighlightCoroutine(TutorialStep step)
     {
         // Remove previous button listener if any
         RemoveTargetButtonListener();
@@ -221,7 +221,7 @@ public class TutorialUI : MonoBehaviour
         {
             currentTarget = null;
             currentTargetButton = null;
-            return;
+            yield break;
         }
         
         currentTargets.AddRange(FindTargets(step));
@@ -229,7 +229,7 @@ public class TutorialUI : MonoBehaviour
         if (currentTargets.Count == 0)
         {
             Debug.LogWarning($"[TutorialUI] Target not found for step: {step.title}");
-            return;
+            yield break;
         }
 
         currentTarget = currentTargets[0];
@@ -290,13 +290,13 @@ public class TutorialUI : MonoBehaviour
         if (highlightTransform != null)
         {
             // Wait a frame to ensure layout is updated
-            await Task.Yield();
+            yield return null;
             
             // Force canvas rebuild to ensure world positions are calculated
             Canvas.ForceUpdateCanvases();
             
             // Wait additional frames for layout to fully settle
-            await Task.Delay(50);
+            yield return new WaitForSecondsRealtime(0.05f);
             
             // Position highlight at target
             Vector3 targetWorldPos = currentTarget.position;
@@ -305,7 +305,7 @@ public class TutorialUI : MonoBehaviour
             // Verify position was set correctly (if still at origin, try again)
             if (highlightTransform.position.sqrMagnitude < 0.01f && targetWorldPos.sqrMagnitude > 0.01f)
             {
-                await Task.Yield();
+                yield return null;
                 Canvas.ForceUpdateCanvases();
                 highlightTransform.position = targetWorldPos;
             }
@@ -533,10 +533,10 @@ public class TutorialUI : MonoBehaviour
         lockedSelectables.Clear();
     }
 
-    public async Task FadeOverlayTo(float targetAlpha, float duration)
+    public IEnumerator FadeOverlayTo(float targetAlpha, float duration)
     {
         if (overlayImage == null)
-            return;
+            yield break;
 
         var startColor = overlayImage.color;
         var endColor = startColor;
@@ -545,20 +545,16 @@ public class TutorialUI : MonoBehaviour
         if (duration <= 0f)
         {
             overlayImage.color = endColor;
-            return;
+            yield break;
         }
 
         float elapsed = 0f;
-        int maxIterations = 1000; // Safety counter for WebGL
-        int iterations = 0;
-        while (elapsed < duration && iterations < maxIterations)
+        while (elapsed < duration)
         {
-            float deltaTime = Mathf.Max(Time.deltaTime, 0.001f); // Ensure non-zero for WebGL
-            elapsed += deltaTime;
+            elapsed += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
             overlayImage.color = Color.Lerp(startColor, endColor, t);
-            await Task.Yield();
-            iterations++;
+            yield return null;
         }
 
         overlayImage.color = endColor;
@@ -669,9 +665,9 @@ public class TutorialUI : MonoBehaviour
         }
     }
     
-    private async Task AnimateIn()
+    private IEnumerator AnimateInCoroutine()
     {
-        if (canvasGroup == null) return;
+        if (canvasGroup == null) yield break;
         
         canvasGroup.alpha = 0f;
         isVisible = true;
@@ -689,7 +685,7 @@ public class TutorialUI : MonoBehaviour
         }
         
         // Wait a bit for overlay
-        await Task.Delay((int)(fadeInDuration * 0.5f * 1000));
+        yield return new WaitForSecondsRealtime(fadeInDuration * 0.5f);
         
         // Fade in content
         LeanTween.alphaCanvas(canvasGroup, 1f, fadeInDuration)
@@ -710,7 +706,7 @@ public class TutorialUI : MonoBehaviour
         }
     }
     
-    public async void Hide()
+    public void Hide()
     {
         if (!isVisible) return;
         
@@ -745,8 +741,6 @@ public class TutorialUI : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
-        
-        await Task.Delay((int)(fadeOutDuration * 1000));
     }
     
     /// <summary>
