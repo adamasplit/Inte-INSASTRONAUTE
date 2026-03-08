@@ -29,6 +29,7 @@ public class RollingCounter : MonoBehaviour
     public void endAnimationInstant()
     {       
         finishedAnimating = true;
+        Debug.Log("Animation ended instantly");
     }
 
     public async Task AnimateFromTo(long startValue, long endValue)
@@ -59,7 +60,8 @@ public class RollingCounter : MonoBehaviour
             // No else: don't set instant here, will do after animation
             await Task.Delay(100);
         }
-        await Task.Delay(1500);
+        if (!finishedAnimating)
+            await Task.Delay(1500);
         // Ensure all digits are set to their final value and visible
         for(int i = 0; i < digits.Count; i++)
         {

@@ -38,6 +38,10 @@ public class PackOpen : MonoBehaviour
         {
             queuedSkip = true;
             Debug.LogWarning($"[PackOpen] SkipToNextCard queued (no active wait yet). phase={currentPhase}");
+            if (currentPhase == PackOpenPhase.Summary)
+            {
+                FindFirstObjectByType<RollingCounter>().endAnimationInstant();
+            }
             return;
         }
 
@@ -270,6 +274,7 @@ public class PackOpen : MonoBehaviour
             }
         }
         await WaitForSkipSignal("pack closing", 10f);
+        SetPhase(PackOpenPhase.Summary);
         initialPC = PlayerProfileStore.PC;
         targetPC = PlayerProfileStore.PC+PlayerProfileStore.GetPCReward(pulledCards);
         await FindFirstObjectByType<RollingCounter>().AnimateFromTo(initialPC, targetPC);
