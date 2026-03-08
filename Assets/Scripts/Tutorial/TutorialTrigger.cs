@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Simple component to trigger a specific tutorial when clicked.
@@ -21,6 +22,15 @@ public class TutorialTrigger : MonoBehaviour
     
     private bool hasTriggered = false;
     
+    private void Awake()
+    {
+        var btn = GetComponent<Button>();
+        if (btn != null)
+        {
+            btn.onClick.AddListener(TriggerTutorial);
+        }
+    }
+
     private void Start()
     {
         if (triggerOnStart)

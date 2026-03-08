@@ -1,118 +1,75 @@
-// PlaceBet Cloud Code Script
-// Permet à un joueur de placer un pari YES/NO sur un événement
+const { DataApi } = require("@unity-services/cloud-save-1.4");
+const { CurrenciesApi } = require("@unity-services/economy-2.4");
 
-const { DataApi } = require("@unity-services/cloud-save-1.2");
-const { EconomyService } = require("@unity-services/economy-2.3");
+const CURRENCY_ID = "TOKEN";
+const betKey = (eventId) => `bet_${eventId}`;
 
 module.exports = async ({ params, context, logger }) => {
-  const { eventId, amount, side, odds, deadlineIso, status } = params;
-  const playerId = context.playerId;
+  const { projectId, playerId, accessToken } = context;
+  const { eventId, amount, choice, odds, answerType, deadlineIso, status } = params;
 
-  try {
-    // Validation des paramètres
-    if (!eventId || typeof amount !== 'number' || amount <= 0) {
-      return {
-        ok: false,
-        message: "Paramètres invalides"
-      };
-    }
-
-    if (typeof side !== 'boolean') {
-      return {
-        ok: false,
-        message: "Le choix YES/NO est requis"
-      };
-    }
-
-    // Vérifier que l'événement est ouvert
-    if (status !== "OPEN") {
-      return {
-        ok: false,
-        message: "Les paris sont fermés pour cet événement"
-      };
-    }
-
-    // Vérifier la deadline (optionnel)
-    if (deadlineIso) {
-      const deadline = new Date(deadlineIso);
-      if (new Date() > deadline) {
-        return {
-          ok: false,
-          message: "La deadline est dépassée"
-        };
-      }
-    }
-
-    // Clé du pari dans Cloud Save
-    const betKey = `bet_${eventId}`;
-
-    // Vérifier si un pari existe déjà pour cet événement
-    const dataApi = new DataApi(context);
-    let existingBets;
-    
-    try {
-      existingBets = await dataApi.getItems(playerId, [betKey]);
-      
-      if (existingBets.data.results && existingBets.data.results.length > 0) {
-        const existingBet = existingBets.data.results[0];
-        if (existingBet && !existingBet.value.resolved) {
-          return {
-            ok: false,
-            message: "Vous avez déjà parié sur cet événement"
-          };
-        }
-      }
-    } catch (err) {
-      // Si la clé n'existe pas, c'est OK, on continue
-      logger.info("No existing bet found, continuing...");
-    }
-
-    // Débiter les TOKEN du joueur
-    try {
-      await EconomyService.incrementPlayerCurrencyBalance(context, {
-        playerId: playerId,
-        currencyId: "TOKEN",
-        amount: -amount
-      });
-    } catch (err) {
-      logger.error("Failed to debit tokens:", err);
-      return {
-        ok: false,
-        message: `Solde TOKEN insuffisant (${err.message || err})`
-      };
-    }
-
-    // Créer le pari
-    const bet = {
-      eventId,
-      amount,
-      odds: odds || 1.0,
-      side,                      // true = YES, false = NO
-      placedIso: new Date().toISOString(),
-      resolved: false
-    };
-
-    // Sauvegarder le pari dans Cloud Save
-    await dataApi.setItem(
-      playerId,
-      betKey,
-      { value: bet }
-    );
-
-    logger.info(`Bet placed: ${playerId} bet ${amount} TOKEN on ${eventId}, side=${side}`);
-
-    return {
-      ok: true,
-      message: "Pari enregistré",
-      bet,
-      eventId
-    };
-
-  } catch (error) {
-    logger.error("PlaceBet error:", error);
-    return {
-      ok: false,
-      message: "Erreur serveur lors du placement du pari"
-    };
+  if (!eventId || typeof amount !== "number" || amount <= 0) {
+    return { ok: false, message: "Paramètres invalides" };
   }
+  if (typeof choice !== "string" || choice.trim() === "") {
+    return { ok: false, message: "Le choix est requis" };
+  }
+  if (answerType !== "list" && answerType !== "free") {
+    return { ok: false, message: "answerType invalide (list | free)" };
+  }
+  if (status !== "OPEN") {
+    return { ok: false, message: "Les paris sont fermés pour cet événement" };
+  }
+
+  // Normalisation pour les réponses libres : lowercase, sans espaces
+  const normalizedChoice = answerType === "free"
+    ? choice.toLowerCase().replace(/\s+/g, "")
+    : choice.trim();
+
+  if (deadlineIso) {
+    const deadline = new Date(deadlineIso);
+    if (Number.isNaN(deadline.getTime())) return { ok: false, message: "deadlineIso invalide" };
+    if (Date.now() > deadline.getTime()) return { ok: false, message: "La deadline est dépassée" };
+  }
+
+  const cloudSave = new DataApi({ accessToken });
+  const key = betKey(eventId);
+
+  // Lock : refus si pari non résolu existant
+  try {
+    const existing = await cloudSave.getItems(projectId, playerId, [key]);
+    const val = existing?.data?.results?.[0]?.value;
+    if (val && val.resolved === false) {
+      return { ok: false, message: "Vous avez déjà parié sur cet événement" };
+    }
+  } catch (_) {}
+
+  // Débit TOKEN
+  const currencies = new CurrenciesApi({ accessToken });
+  try {
+    await currencies.decrementPlayerCurrencyBalance({
+      projectId,
+      playerId,
+      currencyId: CURRENCY_ID,
+      currencyModifyBalanceRequest: { currencyId: CURRENCY_ID, amount: Math.floor(amount) }
+    });
+  } catch (err) {
+    logger.error("Debit failed:", err);
+    return { ok: false, message: "Solde TOKEN insuffisant" };
+  }
+
+  const bet = {
+    eventId,
+    amount: Math.floor(amount),
+    answerType,
+    choice: normalizedChoice,
+    // Pour list : côte connue maintenant. Pour free : 0, déterminée à la résolution.
+    odds: answerType === "list" ? Math.max(0, Number(odds) || 0) : 0,
+    placedIso: new Date().toISOString(),
+    resolved: false
+  };
+
+  await cloudSave.setItem(projectId, playerId, { key, value: bet });
+
+  return { ok: true, message: "Pari enregistré", bet, eventId };
 };

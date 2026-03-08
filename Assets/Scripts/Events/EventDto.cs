@@ -1,11 +1,25 @@
 using System;
 
 [Serializable]
+public class OptionDto
+{
+    public string label;
+    public float odds;
+}
+
+[Serializable]
+public class OutcomeDto
+{
+    public string answer;
+    public float odds;
+}
+
+[Serializable]
 public class EventDto
 {
     public string id;
-    public string type;        // "INFO" / "PARI"
-    
+    public string type;         // "INFO" / "PARI"
+
     public bool enabled;
     public int priority;
 
@@ -14,12 +28,18 @@ public class EventDto
     public string bannerUrl;
 
     // PARI
-    public float odds;
+    public string answerType;   // "list" | "free"
+    public OptionDto[] options; // list : options disponibles avec leurs côtes
     public string deadlineIso;
-    public string status;      // "OPEN" / "CLOSED"
-    public string outcome;     // "", "true", "false" (string for JsonUtility compatibility)
+    public string status;       // "OPEN" / "CLOSED"
 
-    // Helper properties for outcome handling
-    public bool HasOutcome => !string.IsNullOrEmpty(outcome);
-    public bool OutcomeValue => outcome == "true";
+    // État CLOSED
+    public string outcome;       // list : label gagnant ; free : vide
+    public OutcomeDto[] outcomes; // free : bonnes réponses avec leurs côtes
+
+    // Vrai si l'outcome est disponible (utilisé pour filtrer les événements à résoudre)
+    public bool HasOutcome =>
+        answerType == "free"
+            ? outcomes != null && outcomes.Length > 0
+            : !string.IsNullOrEmpty(outcome);
 }

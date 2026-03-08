@@ -4,25 +4,24 @@ using UnityEngine.UI;
 public class AudioButtonUI : MonoBehaviour
 {
     private Button button;
-    [SerializeField ] private AudioSource audioSource;
-    [SerializeField ] private AudioClip audioClip;
+    [SerializeField] private AudioClip audioClip;
 
     private void Start()
     {
         if (button == null)
             button = GetComponent<Button>();
-         if (audioSource == null)
-            audioSource = GetComponent<AudioSource>();
 
         button.onClick.AddListener(PlayAudio);
     }
 
     private void PlayAudio()
     {
-        if (audioSource != null && audioClip != null)
-        {
-            audioSource.pitch = Random.Range(0.9f, 1.1f);
-            audioSource.PlayOneShot(audioClip, 0.5f);
-        }
+        if (audioClip == null) return;
+
+        GameObject go = new GameObject("OneShotAudio");
+        AudioSource src = go.AddComponent<AudioSource>();
+        src.pitch = Random.Range(0.9f, 1.1f);
+        src.PlayOneShot(audioClip, 0.5f);
+        Destroy(go, audioClip.length / src.pitch);
     }
 }

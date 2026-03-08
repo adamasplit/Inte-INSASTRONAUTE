@@ -191,9 +191,17 @@ public class PlayerStatusController : MonoBehaviour
             {
                 foreach (var r in res.resolved)
                 {
-                    var resultText = r.win ? "Gagné" : "Perdu";
-                    var sign = r.win ? "+" : "-";
-                    ui.ShowNotification($"Pari résolu ({r.eventId}) : {resultText} | {sign}{r.refund} TOKEN");
+                    // Retrouver le titre de l'event si disponible
+                    var ev = System.Array.Find(events, e => e.id == r.eventId);
+                    var eventLabel = !string.IsNullOrEmpty(ev?.title) ? ev.title : r.eventId;
+
+                    string msg;
+                    if (r.win)
+                        msg = $"🎉 Pari gagné !\n\"{eventLabel}\"\n+{r.refund} TOKEN crédités";
+                    else
+                        msg = $"Pari perdu.\n\"{eventLabel}\"\n{r.refund} TOKEN remboursés (50%)";
+
+                    ui.ShowNotification(msg);
                 }
 
                 // Refresh status after resolving bets to show updated TOKEN balance
