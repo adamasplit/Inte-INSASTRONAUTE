@@ -49,8 +49,16 @@ public class EventPageController : MonoBehaviour
 
         if (metaText)
         {
-            var status = e.type == "PARI" ? (string.IsNullOrWhiteSpace(e.status) ? "OPEN" : e.status) : "";
-            metaText.text = e.type == "PARI" ? $"Status: {status}" : "";
+            if (e.type == "PARI")
+            {
+                var status = string.IsNullOrWhiteSpace(e.status) ? "OPEN" : e.status;
+                var deadline = string.IsNullOrWhiteSpace(e.deadlineIso) ? "" : $"  |  Deadline: {e.deadlineIso}";
+                metaText.text = $"Status: {status}{deadline}";
+            }
+            else
+            {
+                metaText.text = "";
+            }
         }
 
         var isBet = e.type == "PARI";
