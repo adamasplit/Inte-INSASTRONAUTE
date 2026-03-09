@@ -26,7 +26,7 @@ public class DeckManager : MonoBehaviour
         int owned = PlayerProfileStore.GetCardQuantity(card.cardId);
         int alreadyInDeck = CountInDeck(card);
 
-        if (alreadyInDeck >= owned)
+        if (alreadyInDeck >= owned|| alreadyInDeck >= 2)
             return;
 
         deck.Add(card);

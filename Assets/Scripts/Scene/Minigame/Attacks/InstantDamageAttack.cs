@@ -14,7 +14,6 @@ public class InstantDamageAttack : MonoBehaviour, IAttackBehaviour
                 }
                 if (card.singleTargetVfx)
                 {
-                    Debug.Log("Playing single target VFX for " + target.name);
                     PlayVFX(tower, column, new List<Enemy> { target }, card);
                 }
             }
@@ -27,6 +26,11 @@ public class InstantDamageAttack : MonoBehaviour, IAttackBehaviour
 
     void PlayVFX(Tower tower, Column column, List<Enemy> targets, CardData card)
     {
+        if (!card.damagingVfx && !GameSettings.VFXEnabled)
+        {
+            Debug.Log("VFX not necessary and VFX disabled, skipping VFX instantiation.");
+            return;
+        }
         GameObject vfx=Resources.Load<GameObject>("VFX/"+card.cardId);
         if (vfx != null)
         {

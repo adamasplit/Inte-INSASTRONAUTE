@@ -30,6 +30,6 @@ MonoBehaviour:
   - cardId: amir
     weight: 9
   - cardId: greensa
-    weight: 0.5
+    weight: 1
   - cardId: toss
     weight: 1

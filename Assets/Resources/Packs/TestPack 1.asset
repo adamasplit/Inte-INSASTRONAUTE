@@ -28,6 +28,6 @@ MonoBehaviour:
   - cardId: bar_des_fleurs
     weight: 9
   - cardId: barouf
-    weight: 3
+    weight: 9
   - cardId: la_suite
-    weight: 1
+    weight: 0.4
