@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using Lean.Gui;
+using System.Collections;
 
 public class CardUI : MonoBehaviour
 {
@@ -21,6 +22,14 @@ public class CardUI : MonoBehaviour
         this.inCollection = inCollection;
         this.inDeck = inDeck;        
         this.GetInfos = GetInfos;    
+        if (number==0)
+        {
+            cardImage.sprite=Resources.Load<Sprite>("Sprites/Cartes/DosCarte");
+            if (cardImage.sprite == null)
+            {
+                Debug.LogError("Failed to load card back sprite for GetInfos mode.");
+            }
+        }
     }
     public void InterpretClick()
     {
@@ -36,10 +45,28 @@ public class CardUI : MonoBehaviour
         else if (inCollection)
         {
             DeckManager.Instance.TryAddCard(cardData);
+            if (DeckManager.Instance.CountInDeck(cardData)>=2)
+            {
+                StartCoroutine(BlackFlash());
+            }
         }
         else if (inDeck)
         {
             DeckManager.Instance.RemoveCard(cardData);
+        }
+    }
+
+    public IEnumerator BlackFlash()
+    {
+        float duration = 0.5f;
+        float elapsed = 0f;
+        Color originalColor = cardImage.color;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = elapsed / duration;
+            cardImage.color = new Color(alpha, alpha, alpha, 1f);
+            yield return null;
         }
     }
 }

@@ -6,7 +6,12 @@ public class DelayedWholeAttackVFX : MonoBehaviour, IVFX
     public ParticleSystem hitEffect;
     public void Fire(Vector3 startPos, List<Enemy> targetPos, CardData card)
     {
-        GetComponent<ParticleSystem>().Play();
+        bool vfxEnabled = GameSettings.VFXEnabled;
+        foreach (ParticleSystem particleSystem in GetComponentsInChildren<ParticleSystem>(true))
+        {
+            var emission = particleSystem.emission;
+            emission.enabled = vfxEnabled;
+        }
         foreach (Enemy enemy in targetPos)
         {
             if (enemy == null) continue;

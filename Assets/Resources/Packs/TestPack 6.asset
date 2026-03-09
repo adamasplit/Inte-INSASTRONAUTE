@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49d8835540711a8429af7a37f77f9928, type: 3}
+  m_Name: TestPack 6
+  m_EditorClassIdentifier: Assembly-CSharp::PackData
+  packId: mega_pack
+  packName: Pack mixte
+  cardCount: 20
+  packSprite: {fileID: 21300000, guid: 857edede22647e3459e1271e2c38782e, type: 3}
+  possibleCards:
+  - cardId: 3b
+    weight: 2
+  - cardId: stadium
+    weight: 5
+  - cardId: quartier_libre
+    weight: 2
+  - cardId: barouf
+    weight: 25
+  - cardId: la_suite
+    weight: 2
+  - cardId: fdm
+    weight: 0.8
+  - cardId: toss
+    weight: 5
+  - cardId: parking_visiteur
+    weight: 25
+  - cardId: rattrapages
+    weight: 5
+  - cardId: souillard
+    weight: 26
+  - cardId: baf
+    weight: 12.3
+  - cardId: chacharlatan
+    weight: 5
+  - cardId: ingenieur_humaniste
+    weight: 0.8
+  - cardId: amir
+    weight: 20
+  - cardId: bar_des_fleurs
+    weight: 23
+  - cardId: cafe
+    weight: 27
+  - cardId: controleur_astuce
+    weight: 4
+  - cardId: degats_des_eaux
+    weight: 5
+  - cardId: delirium
+    weight: 14
+  - cardId: gala
+    weight: 26
+  - cardId: greensa
+    weight: 6
+  - cardId: insaristocrate
+    weight: 10
+  - cardId: insatourne
+    weight: 20
+  - cardId: insamourai
+    weight: 20
+  - cardId: insaopaulo
+    weight: 20
+  - cardId: okallaghan
+    weight: 20
+  - cardId: limousin
+    weight: 2.5
+  - cardId: paix_dieu
+    weight: 20
+  - cardId: purple_rouen
+    weight: 12
+  - cardId: sharks
+    weight: 10

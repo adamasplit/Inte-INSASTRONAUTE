@@ -47,7 +47,7 @@ public class CardCollectionController : MonoBehaviour
         foreach (var card in CardDatabase.Instance.cards)
         {
             //Debug.Log($"[CardCollectionController] Checking card: {card.cardId}");
-            if (PlayerProfileStore.CARD_COLLECTION.TryGetValue(card.cardId, out int qty))
+            if ((PlayerProfileStore.CARD_COLLECTION.TryGetValue(card.cardId, out int qty)) || this.GetInfos)
             {
                 //Debug.Log($"[CardCollectionController] Adding card to UI: {card.cardId} with quantity {qty}");
                 var item = Instantiate(cardPrefab, cardContainer);

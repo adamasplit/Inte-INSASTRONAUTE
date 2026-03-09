@@ -138,15 +138,31 @@ public class CardInfoBox : MonoBehaviour
                 LeanTween.scale(cardImage.gameObject, originalImageScale, zoomDuration * 0.5f);
         }
 
+        // Get quantity owned and calculate total PC earned
+        int quantityOwned = 0;
+        if (PlayerProfileStore.CARD_COLLECTION.TryGetValue(cardData.cardId, out int qty))
+        {
+            quantityOwned = qty;
+        }
+
         // Update card information
         if (cardImage != null)
-            cardImage.sprite = cardData.sprite;
+            if (quantityOwned == 0)
+                cardImage.sprite = Resources.Load<Sprite>("Sprites/Cartes/DosCarte");
+            else
+                cardImage.sprite = cardData.sprite;
         
         if (cardNameText != null)
-            cardNameText.text = cardData.cardName;
+            if (quantityOwned == 0)
+                cardNameText.text = "???";
+            else
+                cardNameText.text = cardData.cardName;
         
         if (descriptionText != null)
-            descriptionText.text = cardData.description;
+            if (quantityOwned == 0)
+                descriptionText.text = "Obtenez cette carte pour révéler sa description.";
+            else
+                descriptionText.text = cardData.description;
         
         if (firstTimeValueText != null)
             firstTimeValueText.text = $"{cardData.FirstTimeValue} PC";
@@ -154,12 +170,7 @@ public class CardInfoBox : MonoBehaviour
         if (subsequentValueText != null)
             subsequentValueText.text = $"{cardData.SubsequentValue} PC";
 
-        // Get quantity owned and calculate total PC earned
-        int quantityOwned = 0;
-        if (PlayerProfileStore.CARD_COLLECTION.TryGetValue(cardData.cardId, out int qty))
-        {
-            quantityOwned = qty;
-        }
+        
 
         int totalPCEarned = 0;
         if (quantityOwned > 0)
