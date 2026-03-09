@@ -1,5 +1,7 @@
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Unity.Services.Authentication;
 using Unity.Services.Economy;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
@@ -41,6 +43,18 @@ public class PlayerStatusController : MonoBehaviour
     {
         ConfigureDiagnosticLogging();
         bool tutorialTriggerRequested = false;
+        bool collectionsRefreshed = false;
+
+        // Guard: if the auth session is missing or expired, send the player back to the
+        // login screen instead of letting Economy / CloudSave calls fail with cryptic errors
+        // ("Unprocessable Transaction", items not loading, etc.).
+        if (!AuthenticationService.Instance.IsSignedIn || AuthenticationService.Instance.IsExpired)
+        {
+            Debug.LogWarning("[PlayerStatusController] Auth session invalid or expired. Redirecting to login.");
+            AuthenticationService.Instance.SignOut();
+            SceneManager.LoadScene("LoginScreen");
+            return;
+        }
 
         try
         {
@@ -79,10 +93,10 @@ public class PlayerStatusController : MonoBehaviour
             await ResolveBetsOnLoginAsync();
             loadingScreen?.IncrementStep();
 
-        cardCollectionController.RefreshCollection(false,false,true);
-        packCollectionController.RefreshCollection();
-        loadingScreen?.IncrementStep();
-        
+            cardCollectionController.RefreshCollection(false, false, true);
+            packCollectionController.RefreshCollection();
+            collectionsRefreshed = true;
+
             await FindFirstObjectByType<EventsMenuController>().RefreshEventsAsync();
         
             if (loadingScreen != null)
@@ -103,6 +117,23 @@ public class PlayerStatusController : MonoBehaviour
         }
         finally
         {
+            // Always refresh collections — if the pipeline threw before reaching this point
+            // (e.g. Leaderboard or ResolveBets failed), PACK_COLLECTION and CARD_COLLECTION
+            // are already loaded from CloudSave. Without this the UI stays empty.
+            if (!collectionsRefreshed)
+            {
+                try
+                {
+                    cardCollectionController.RefreshCollection(false, false, true);
+                    packCollectionController.RefreshCollection();
+                    LogDiag("[PlayerStatusController] Collections refreshed from finally (pipeline was interrupted).");
+                }
+                catch (System.Exception refEx)
+                {
+                    Debug.LogWarning($"[PlayerStatusController] Collection refresh in finally failed: {refEx.Message}");
+                }
+            }
+
             if (!tutorialTriggerRequested)
             {
                 LogDiag("[PlayerStatusController] Triggering tutorial check from fallback path.");
