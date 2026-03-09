@@ -67,7 +67,7 @@ public class WaveManager : MonoBehaviour
                 await GameManager.Instance.GameOver();
             }
         }
-        descentInterval2 = Mathf.Max(0.5f, descentInterval - (meanMoveSpeed / enemies.Length) * 0.1f);
+        descentInterval2 = Mathf.Max(0.25f, descentInterval - (meanMoveSpeed / enemies.Length) * 0.1f);
         Debug.Log("[WaveManager] New descent interval: " + descentInterval2);
     }
 }
