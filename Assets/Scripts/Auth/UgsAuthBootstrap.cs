@@ -16,7 +16,14 @@ public class UgsAuthBootstrap : MonoBehaviour
         try
         {
             await UnityServices.InitializeAsync();
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+
+            // On WebGL, Unity Auth restores a cached session from IndexedDB on page reload.
+            // Calling SignInAnonymouslyAsync when already signed in throws an exception that
+            // can corrupt the auth state and cause Economy/CloudSave to fail downstream.
+            if (!AuthenticationService.Instance.IsSignedIn)
+            {
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            }
 
             Debug.Log($" Signed in! PlayerId = {AuthenticationService.Instance.PlayerId}");
         }

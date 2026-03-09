@@ -9,33 +9,47 @@ public class ShopRemoteLoader : MonoBehaviour
 
     public void UpdateShopFromRemote()
     {
-        RemoteConfigService.Instance.FetchCompleted += ApplyShopConfig;
-        RemoteConfigService.Instance.FetchConfigs(
-            new UserAttributes(),
-            new AppAttributes()
-        );
-        GetComponent<ShopController>().offers = CurrentOffers;
-        GetComponent<ShopController>().RefreshShop();
-        
-        if (ShopDatabase.Instance != null)
+        // NOTE: the fetch is async; ApplyShopConfig will update the UI once the response
+        // arrives. Do NOT read CurrentOffers synchronously here — it is still empty.
+        void OnFetched(ConfigResponse response)
         {
-            ShopDatabase.Instance.SetOffers(CurrentOffers);
+            RemoteConfigService.Instance.FetchCompleted -= OnFetched;
+            ApplyShopConfig(response);
+            GetComponent<ShopController>().offers = CurrentOffers;
+            GetComponent<ShopController>().RefreshShop();
+
+            if (ShopDatabase.Instance != null)
+                ShopDatabase.Instance.SetOffers(CurrentOffers);
+            else
+                Debug.LogError("[ShopRemoteLoader] ShopDatabase.Instance is null!");
         }
-        else
-        {
-            Debug.LogError("[ShopRemoteLoader] ShopDatabase.Instance is null! Cannot set offers for shop database.");
-        }
+
+        RemoteConfigService.Instance.FetchCompleted += OnFetched;
+        RemoteConfigService.Instance.FetchConfigs(new UserAttributes(), new AppAttributes());
     }
 
     public async Task UpdateShopFromRemoteTask()
     {
         var tcs = new TaskCompletionSource<bool>();
 
+        // On WebGL, Unity Remote Config may fire FetchCompleted twice: once immediately
+        // from the browser HTTP cache (which can return a stale/empty response) and then
+        // again with the live network result. We only resolve the TCS when we receive a
+        // response that actually contains valid offers, so the pipeline is never unblocked
+        // with an empty shop. A 10-second timeout guards against a permanently absent key.
         void Handler(ConfigResponse response)
         {
             ApplyShopConfig(response);
-            tcs.SetResult(true);
-            RemoteConfigService.Instance.FetchCompleted -= Handler;
+            if (CurrentOffers.Count > 0)
+            {
+                RemoteConfigService.Instance.FetchCompleted -= Handler;
+                tcs.TrySetResult(true);
+            }
+            else
+            {
+                Debug.LogWarning("[ShopRemoteLoader] FetchCompleted but no offers parsed; " +
+                    "waiting for next response (possible stale cache response).");
+            }
         }
 
         RemoteConfigService.Instance.FetchCompleted += Handler;
@@ -44,19 +58,23 @@ public class ShopRemoteLoader : MonoBehaviour
             new AppAttributes()
         );
 
-        await tcs.Task;
+        // Wait up to 10 s for a valid config; if it never arrives keep going with empty shop.
+        var timeout = Task.Delay(10_000);
+        await Task.WhenAny(tcs.Task, timeout);
+
+        if (!tcs.Task.IsCompleted)
+        {
+            RemoteConfigService.Instance.FetchCompleted -= Handler;
+            Debug.LogWarning("[ShopRemoteLoader] Timed out waiting for Remote Config with valid offers.");
+        }
 
         GetComponent<ShopController>().offers = CurrentOffers;
         GetComponent<ShopController>().RefreshShop();
-        
+
         if (ShopDatabase.Instance != null)
-        {
             ShopDatabase.Instance.SetOffers(CurrentOffers);
-        }
         else
-        {
-            Debug.LogError("[ShopRemoteLoader] ShopDatabase.Instance is null in UpdateShopFromRemoteTask! Cannot set offers.");
-        }
+            Debug.LogError("[ShopRemoteLoader] ShopDatabase.Instance is null in UpdateShopFromRemoteTask!");
     }
 
     void ApplyShopConfig(ConfigResponse response)

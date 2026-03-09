@@ -46,6 +46,20 @@ public class AuthController : MonoBehaviour
 
     private async Task TryAutoLogin()
     {
+        // On WebGL, Unity Auth SDK restores the cached session token from IndexedDB on
+        // page reload (via SignInAnonymouslyAsync in UgsAuthBootstrap). If the session is
+        // already active, calling SignInWithUsernamePasswordAsync again throws "Player already
+        // signed in", which is caught here and causes credentials to be wiped — breaking the
+        // session for Economy and CloudSave. Detect this case and navigate directly to Main.
+        if (AuthenticationService.Instance.IsSignedIn)
+        {
+            Debug.Log("[AuthController] Session already active (restored from cache). Navigating to Main.");
+            if (PlayerPrefs.HasKey(PREF_USERNAME))
+                PlayerProfileStore.DISPLAY_NAME = PlayerPrefs.GetString(PREF_USERNAME);
+            SceneManager.LoadScene("Main - Copie");
+            return;
+        }
+
         if (PlayerPrefs.HasKey(PREF_USERNAME) && PlayerPrefs.HasKey(PREF_PASSWORD))
         {
             string savedUsername = PlayerPrefs.GetString(PREF_USERNAME);

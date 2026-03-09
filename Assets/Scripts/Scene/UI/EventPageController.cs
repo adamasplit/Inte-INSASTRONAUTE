@@ -51,9 +51,20 @@ public class EventPageController : MonoBehaviour
         {
             if (e.type == "PARI")
             {
-                var status = string.IsNullOrWhiteSpace(e.status) ? "OPEN" : e.status;
-                var deadline = string.IsNullOrWhiteSpace(e.deadlineIso) ? "" : $"  |  Deadline: {e.deadlineIso}";
-                metaText.text = $"Status: {status}{deadline}";
+                var isOpen = !string.Equals(e.status, "CLOSED", StringComparison.OrdinalIgnoreCase);
+                var statusLabel = isOpen
+                    ? "<color=#4CAF50>Paris ouverts</color>"
+                    : "<color=#F44336>Paris fermés</color>";
+
+                string deadlineLabel = "";
+                if (!string.IsNullOrWhiteSpace(e.deadlineIso) &&
+                    DateTime.TryParse(e.deadlineIso, null, System.Globalization.DateTimeStyles.RoundtripKind, out var deadline))
+                {
+                    var local = deadline.ToLocalTime();
+                    deadlineLabel = $"\nFermeture le {local:dd/MM/yyyy} à {local:HH:mm}";
+                }
+
+                metaText.text = statusLabel + deadlineLabel;
             }
             else
             {
