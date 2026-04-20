@@ -56,7 +56,7 @@ public class AuthController : MonoBehaviour
             Debug.Log("[AuthController] Session already active (restored from cache). Navigating to Main.");
             if (PlayerPrefs.HasKey(PREF_USERNAME))
                 PlayerProfileStore.DISPLAY_NAME = PlayerPrefs.GetString(PREF_USERNAME);
-            SceneManager.LoadScene("Main - Copie");
+            SceneManager.LoadScene("HubScene");
             return;
         }
 
@@ -97,7 +97,7 @@ public class AuthController : MonoBehaviour
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
         Debug.Log($"Guest signed in: {AuthenticationService.Instance.PlayerId}");
         PlayerProfileStore.DISPLAY_NAME = "Guest";
-        SceneManager.LoadScene("Main - Copie");
+        SceneManager.LoadScene("HubScene");
     }
 
     public async Task SignUp(string username, string password)
@@ -115,7 +115,7 @@ public class AuthController : MonoBehaviour
         // Save credentials for auto-login
         SaveCredentials(username, password);
 
-        SceneManager.LoadScene("Main - Copie");
+        SceneManager.LoadScene("HubScene");
     }
 
     public async Task SignIn(string username, string password)
@@ -132,7 +132,7 @@ public class AuthController : MonoBehaviour
         // Save credentials for auto-login
         SaveCredentials(username, password);
 
-        SceneManager.LoadScene("Main - Copie");
+        SceneManager.LoadScene("HubScene");
     }
 
     public void SignOut()

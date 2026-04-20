@@ -72,7 +72,7 @@ public class TutorialStep : ScriptableObject
     public float autoAdvanceDelay = 0f;
     
     [Header("Actions")]
-    [Tooltip("Only execute this step if in the Main scene (Main - Copie)")]
+    [Tooltip("Only execute this step if in the Main scene (HubScene)")]
     public bool isInMainScene = false;
     
     [Tooltip("Should we open the top menu before this step?")]

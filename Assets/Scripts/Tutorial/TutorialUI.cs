@@ -559,7 +559,7 @@ public class TutorialUI : MonoBehaviour
 
     private bool IsInMainScene()
     {
-        return SceneManager.GetActiveScene().name == "Main - Copie";
+        return SceneManager.GetActiveScene().name == "HubScene";
     }
 
     private MainUIBinder ResolveMainUIBinder()

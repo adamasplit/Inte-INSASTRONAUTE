@@ -288,7 +288,7 @@ public class PackOpen : MonoBehaviour
         loadingScreen.SetActive(false);
         panel.SetActive(false);
         SetPhase(PackOpenPhase.None);
-        SceneManager.LoadScene("Main - Copie");
+        SceneManager.LoadScene("PackScene");
     }
 
     async void AnimateCardMove(RectTransform rt, Vector2 target)

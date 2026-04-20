@@ -154,7 +154,7 @@ public class TutorialStepEditor : Editor
         EditorGUILayout.PropertyField(isInMainSceneProp);
         if (isInMainSceneProp.boolValue)
         {
-            EditorGUILayout.HelpBox("This step will wait until the player is in the Main scene (Main - Copie) before executing.", MessageType.Info);
+            EditorGUILayout.HelpBox("This step will wait until the player is in the Main scene (HubScene) before executing.", MessageType.Info);
         }
         EditorGUILayout.PropertyField(delayBeforeShowProp);
         EditorGUILayout.PropertyField(delayAfterSuccessProp);
