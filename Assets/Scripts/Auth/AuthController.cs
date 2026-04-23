@@ -11,7 +11,6 @@ public class AuthController : MonoBehaviour
     public bool IsReady { get; private set; }
 
     private const string PREF_USERNAME = "SavedUsername";
-    private const string PREF_PASSWORD = "SavedPassword";
 
     private async void Awake()
     {
@@ -28,18 +27,15 @@ public class AuthController : MonoBehaviour
         await TryAutoLogin();
     }
 
-        private void SaveCredentials(string username, string password)
+        private void SaveUsername(string username)
     {
         PlayerPrefs.SetString(PREF_USERNAME, username);
-        PlayerPrefs.SetString(PREF_PASSWORD, password);
         PlayerPrefs.Save();
-        Debug.Log("Credentials saved for auto-login");
     }
 
     private void ClearSavedCredentials()
     {
         PlayerPrefs.DeleteKey(PREF_USERNAME);
-        PlayerPrefs.DeleteKey(PREF_PASSWORD);
         PlayerPrefs.Save();
         Debug.Log("Saved credentials cleared");
     }
@@ -47,10 +43,7 @@ public class AuthController : MonoBehaviour
     private async Task TryAutoLogin()
     {
         // On WebGL, Unity Auth SDK restores the cached session token from IndexedDB on
-        // page reload (via SignInAnonymouslyAsync in UgsAuthBootstrap). If the session is
-        // already active, calling SignInWithUsernamePasswordAsync again throws "Player already
-        // signed in", which is caught here and causes credentials to be wiped — breaking the
-        // session for Economy and CloudSave. Detect this case and navigate directly to Main.
+        // page reload. If the session is already active, navigate directly to Main.
         if (AuthenticationService.Instance.IsSignedIn)
         {
             Debug.Log("[AuthController] Session already active (restored from cache). Navigating to Main.");
@@ -60,24 +53,22 @@ public class AuthController : MonoBehaviour
             return;
         }
 
-        if (PlayerPrefs.HasKey(PREF_USERNAME) && PlayerPrefs.HasKey(PREF_PASSWORD))
+        // UGS stores its own encrypted session token — no need to store the password locally.
+        // SignInAnonymouslyAsync restores the existing session when SessionTokenExists is true.
+        if (AuthenticationService.Instance.SessionTokenExists)
         {
-            string savedUsername = PlayerPrefs.GetString(PREF_USERNAME);
-            string savedPassword = PlayerPrefs.GetString(PREF_PASSWORD);
-
-            if (!string.IsNullOrEmpty(savedUsername) && !string.IsNullOrEmpty(savedPassword))
+            try
             {
-                try
-                {
-                    Debug.Log("Attempting auto-login with saved credentials...");
-                    await SignIn(savedUsername, savedPassword);
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogWarning($"Auto-login failed: {ex.Message}");
-                    // Clear invalid credentials
-                    ClearSavedCredentials();
-                }
+                Debug.Log("[AuthController] Session token found. Restoring session...");
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+                if (PlayerPrefs.HasKey(PREF_USERNAME))
+                    PlayerProfileStore.DISPLAY_NAME = PlayerPrefs.GetString(PREF_USERNAME);
+                SceneManager.LoadScene("Main - Copie");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"[AuthController] Session restore failed: {ex.Message}");
+                ClearSavedCredentials();
             }
         }
     }
@@ -112,8 +103,8 @@ public class AuthController : MonoBehaviour
         Debug.Log("displayName saved.");
         PlayerProfileStore.DISPLAY_NAME = username;
 
-        // Save credentials for auto-login
-        SaveCredentials(username, password);
+        // Save username only (session token is managed securely by UGS SDK)
+        SaveUsername(username);
 
         SceneManager.LoadScene("Main - Copie");
     }
@@ -125,12 +116,10 @@ public class AuthController : MonoBehaviour
         await AuthenticationService.Instance.SignInWithUsernamePasswordAsync(username, password);
         Debug.Log($"Signed in OK. PlayerId={AuthenticationService.Instance.PlayerId}");
 
-        // Lire pseudo (si tu veux l'afficher dans Main ou ailleurs)
-        // Tu peux le faire ici ou dans Main, mais évite les appels cloud lourds au chargement de Main.
         PlayerProfileStore.DISPLAY_NAME = username;
 
-        // Save credentials for auto-login
-        SaveCredentials(username, password);
+        // Save username only (session token is managed securely by UGS SDK)
+        SaveUsername(username);
 
         SceneManager.LoadScene("Main - Copie");
     }
@@ -151,9 +140,7 @@ public class AuthController : MonoBehaviour
     }
 
     /// <summary>
-    /// Supprime le compte utilisateur et toutes les données associées
-    /// Note: Unity Authentication ne permet pas de supprimer directement un compte.
-    /// Cette méthode efface toutes les données locales et cloud, puis déconnecte l'utilisateur.
+    /// Supprime définitivement le compte utilisateur et toutes ses données (RGPD Art. 17).
     /// </summary>
     public async Task DeleteAccount()
     {
@@ -177,9 +164,9 @@ public class AuthController : MonoBehaviour
             PlayerPrefs.Save();
             Debug.Log("[AuthController] Données locales supprimées");
 
-            // 3. Déconnexion
-            AuthenticationService.Instance.SignOut();
-            Debug.Log("[AuthController] Compte supprimé et déconnecté");
+            // 3. Suppression définitive du compte UGS (RGPD Art. 17)
+            await AuthenticationService.Instance.DeleteAccountAsync();
+            Debug.Log("[AuthController] Compte UGS supprimé définitivement");
 
             // 4. Retour à l'écran de connexion
             SceneManager.LoadScene("LoginScreen");
@@ -191,9 +178,5 @@ public class AuthController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// URL pour demander la suppression définitive du compte Unity Gaming Services
-    /// </summary>
-    public const string ACCOUNT_DELETION_REQUEST_URL = "https://forms.gle/XHAcg1pbsvjDoK6D6";
 }
 

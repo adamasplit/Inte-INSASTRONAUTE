@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
@@ -20,6 +21,9 @@ public class AuthUIBinder : MonoBehaviour
     [SerializeField] private TMP_InputField signUpPasswordConfirm;
     [SerializeField] private TMP_Text signUpUsernameHint;
     [SerializeField] private TMP_Text signUpPasswordHint;
+
+    [Header("RGPD")]
+    [SerializeField] private Toggle gdprConsentToggle;
 
     [Header("Feedback")]
     [SerializeField] private TMP_Text statusText;
@@ -115,6 +119,9 @@ public class AuthUIBinder : MonoBehaviour
         TriggerHaptic();
         await Run(async () =>
         {
+            if (gdprConsentToggle != null && !gdprConsentToggle.isOn)
+                throw new Exception("Veuillez accepter la politique de confidentialité pour créer un compte");
+
             var u = (signUpUsername ? signUpUsername.text : "").Trim();
             var p = signUpPassword ? signUpPassword.text : "";
             var c = signUpPasswordConfirm ? signUpPasswordConfirm.text : "";
