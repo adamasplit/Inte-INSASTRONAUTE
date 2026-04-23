@@ -70,77 +70,14 @@ public class PlayerStatusController : MonoBehaviour
         
             await PlayerProfileStore.LoadCardCollectionAsync();
             loadingScreen?.IncrementStep();
-
-            uIElements = FindObjectsByType<UpdateDataUI>(
-                FindObjectsInactive.Include,
-                FindObjectsSortMode.None
-            );
-            loadingScreen?.IncrementStep();
-        
-            //await Task.Delay(500); // Attendre un peu pour s'assurer que tout est prêt
-            await AllNecessaryComponentsPresentAsync();
-            loadingScreen?.IncrementStep();
-        
-            await RefreshStatusAsync();
-            loadingScreen?.IncrementStep();
-        
-            await FindFirstObjectByType<LeaderboardController>().RefreshLeaderboardAsync();
-            loadingScreen?.IncrementStep();
-        
-            await FindFirstObjectByType<ShopRemoteLoader>().UpdateShopFromRemoteTask();
-            loadingScreen?.IncrementStep();
-        
-            await ResolveBetsOnLoginAsync();
-            loadingScreen?.IncrementStep();
-
-            cardCollectionController.RefreshCollection(false, false, true);
-            packCollectionController.RefreshCollection();
-            collectionsRefreshed = true;
-
-            await FindFirstObjectByType<EventsMenuController>().RefreshEventsAsync();
-        
-            if (loadingScreen != null)
-            {
-                loadingScreen.CompleteLoading();
-                loadingScreen.HideWithFade();
-            }
-
-            // Start tutorial for first-time users after loading is complete
-            await Task.Delay(1000); // Wait for loading screen to fade
-            tutorialTriggerRequested = true;
-            _ = StartTutorialIfNeededAsync();
         }
         catch (System.Exception ex)
         {
             Debug.LogWarning($"[PlayerStatusController] Startup pipeline failed: {ex.Message}");
             Debug.LogException(ex);
         }
-        finally
-        {
-            // Always refresh collections — if the pipeline threw before reaching this point
-            // (e.g. Leaderboard or ResolveBets failed), PACK_COLLECTION and CARD_COLLECTION
-            // are already loaded from CloudSave. Without this the UI stays empty.
-            if (!collectionsRefreshed)
-            {
-                try
-                {
-                    cardCollectionController.RefreshCollection(false, false, true);
-                    packCollectionController.RefreshCollection();
-                    LogDiag("[PlayerStatusController] Collections refreshed from finally (pipeline was interrupted).");
-                }
-                catch (System.Exception refEx)
-                {
-                    Debug.LogWarning($"[PlayerStatusController] Collection refresh in finally failed: {refEx.Message}");
-                }
-            }
-
-            if (!tutorialTriggerRequested)
-            {
-                LogDiag("[PlayerStatusController] Triggering tutorial check from fallback path.");
-                _ = StartTutorialIfNeededAsync();
-            }
-        }
     }
+
     
     private async Task StartTutorialIfNeededAsync()
     {
