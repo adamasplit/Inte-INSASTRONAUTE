@@ -291,7 +291,7 @@ public class TopMenuController : MonoBehaviour
         var cardCollection = screens[index].GetComponentInChildren<CardCollectionController>(true);
         if (cardCollection != null)
         {
-            cardCollection.SetMode(inCollection: false, inDeck: false, GetInfos: true);
+            cardCollection.SetMode(inCollection: false, GetInfos: true);
             cardCollection.RefreshCollection();
         }
         

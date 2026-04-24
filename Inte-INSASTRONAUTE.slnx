@@ -1,9 +1,11 @@
 ﻿<Solution>
-  <Project Path="LeanCommon.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="LeanCommon.csproj" />
   <Project Path="LeanTransition.csproj" />
+  <Project Path="MackySoft.SerializeReferenceExtensions.Editor.csproj" />
   <Project Path="LeanGUI.csproj" />
   <Project Path="CW.Common.csproj" />
+  <Project Path="MackySoft.SerializeReferenceExtensions.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="LeanTransition.Editor.csproj" />
 </Solution>
