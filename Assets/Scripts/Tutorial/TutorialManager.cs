@@ -45,7 +45,6 @@ public class TutorialManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private TutorialUI tutorialUI;
     [SerializeField] private TopMenuController topMenuController;
-    [SerializeField] private MainUIBinder mainUIBinder;
     
     [Header("Debug")]
     [SerializeField] private bool resetTutorialOnStart = false;
@@ -192,9 +191,6 @@ public class TutorialManager : MonoBehaviour
 
         if (topMenuController == null)
             topMenuController = FindFirstObjectByType<TopMenuController>();
-
-        if (mainUIBinder == null)
-            mainUIBinder = FindFirstObjectByType<MainUIBinder>();
     }
 
     private void BindTutorialUI()
@@ -567,15 +563,8 @@ public class TutorialManager : MonoBehaviour
         LogTutorialState("After completing tutorial");
         
         // Show completion message if configured
-        if (mainUIBinder == null)
-        {
-            mainUIBinder = FindFirstObjectByType<MainUIBinder>();
-        }
-
-        if (!string.IsNullOrEmpty(currentSequence.completionMessage) && mainUIBinder != null)
-        {
-            mainUIBinder.ShowNotification(currentSequence.completionMessage);
-        }
+        if (!string.IsNullOrEmpty(currentSequence.completionMessage))
+            NotificationSystem.Instance?.ShowNotification(currentSequence.completionMessage);
         
         // Check if all tutorials are complete
         bool allComplete = true;

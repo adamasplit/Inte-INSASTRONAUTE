@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 090d96e012dc68841aafe0d9f5dcec8f
+timeCreated: 1449480902
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 146177
+  packageName: 3D Game Card
+  packageVersion: 1.1
+  assetPath: Assets/Card3D/materials/StencilMask.mat
+  uploadId: 747083

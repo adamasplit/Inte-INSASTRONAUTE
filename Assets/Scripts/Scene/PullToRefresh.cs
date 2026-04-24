@@ -11,7 +11,7 @@ public class PullToRefresh : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public Image refreshIcon;
 
     [Header("Leaderboard")]
-    public MonoBehaviour leaderboardScript;
+    public LeaderboardBinder leaderboardBinder;
 
     private ScrollRect scrollRect;
     private Vector2 startDragPosition;
@@ -85,16 +85,10 @@ public class PullToRefresh : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
 
         Debug.Log("[PullToRefresh] Pull-to-refresh triggered.");
-        var method = leaderboardScript.GetType().GetMethod("RefreshLeaderboardAsync");
-        if (method != null)
-        {
-            Task task = (Task)method.Invoke(leaderboardScript, null);
-            await task;
-        }
+        if (leaderboardBinder != null)
+            await leaderboardBinder.RefreshLeaderboardAsync();
         else
-        {
-            Debug.LogError("[PullToRefresh] RefreshLeaderboard method not found on leaderboardScript.");
-        }
+            Debug.LogError("[PullToRefresh] leaderboardBinder non assigné.");
 
         isRefreshing = false;
         ResetIcon();

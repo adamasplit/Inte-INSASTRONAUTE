@@ -5,10 +5,7 @@ public class ShopController : MonoBehaviour
 {
     public Transform packContainer;
     public Transform cardContainer;
-    public LoadingScreen loadingScreen;
-
     public ShopItemUI itemPrefab;
-
     public List<ShopOffer> offers;
 
     void OnEnable()
@@ -18,11 +15,6 @@ public class ShopController : MonoBehaviour
 
     public void RefreshShop()
     {
-        if (loadingScreen ==null)
-        {
-            Debug.LogError("ShopController: loadingScreen is null");
-            loadingScreen = FindFirstObjectByType<PlayerStatusController>()?.loadingScreen;
-        }
         Clear(packContainer);
         Clear(cardContainer);
 

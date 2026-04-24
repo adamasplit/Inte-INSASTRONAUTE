@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1e2635784cb6fe9408d63f91bb37a5a1
+timeCreated: 1449480162
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 146177
+  packageName: 3D Game Card
+  packageVersion: 1.1
+  assetPath: Assets/Card3D/Card3D.unity
+  uploadId: 747083

@@ -22,25 +22,19 @@ public class LeaderboardController : MonoBehaviour
 
     private string currentPlayerId;
 
-    void Start()
+    void Awake()
+    {
+        currentPlayerId = AuthenticationService.Instance.PlayerId;
+    }
+
+    public async Task RefreshLeaderboardAsync()
     {
         if (useDummyData)
         {
-            Debug.Log("Populating leaderboard with dummy data.");
             DummyPopulate();
             return;
         }
 
-        currentPlayerId = AuthenticationService.Instance.PlayerId;
-        
-        
-    }
-
-    /// <summary>
-    /// Rafraîchit le leaderboard : soumet le score puis récupère les données
-    /// </summary>
-    public async Task RefreshLeaderboardAsync()
-    {
         ClearLeaderboard();
 
         try

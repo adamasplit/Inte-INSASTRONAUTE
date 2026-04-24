@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Unity.Services.CloudSave;
 using Unity.VisualScripting;
@@ -6,20 +7,47 @@ using UnityEngine;
 
 public static class PlayerProfileStore
 {
-    //Static Data
-    public static long TOKEN = 0;
-    public static long PC = 0;
-    public static string DISPLAY_NAME = "Guest";
-    //Key for the display name in Cloud Save
-    public const string DisplayNameKey = "displayName";
-    // 👉 Collection de cartes
-    public static Dictionary<string, int> CARD_COLLECTION = new();
-
+    public const string DisplayNameKey   = "displayName";
     public const string CardCollectionKey = "cardCollection";
-    public static Dictionary<string, int> PACK_COLLECTION = new();
+    public const string PhysicalCardCollectionKey = "physicalCardCollection";
     public const string PackCollectionKey = "packCollection";
-    public static System.Action OnPackCollectionChanged;
-    public static System.Action OnCardCollectionChanged;
+    public const string DeckSelectionKey = "deckSelection";
+
+    // Events — toute UI dans n'importe quelle scène peut s'abonner
+    public static event System.Action<long>   OnTokenChanged;
+    public static event System.Action<long>   OnPCChanged;
+    public static event System.Action<string> OnDisplayNameChanged;
+    public static event System.Action         OnCardCollectionChanged;
+    public static event System.Action         OnPhysicalCardCollectionChanged;
+    public static event System.Action         OnPackCollectionChanged;
+    public static event System.Action         OnDeckSelectionChanged;
+
+    // Propriétés — le setter notifie automatiquement les abonnés
+    private static long _token;
+    public static long TOKEN
+    {
+        get => _token;
+        set { _token = value; OnTokenChanged?.Invoke(value); }
+    }
+
+    private static long _pc;
+    public static long PC
+    {
+        get => _pc;
+        set { _pc = value; OnPCChanged?.Invoke(value); }
+    }
+
+    private static string _displayName = "Guest";
+    public static string DISPLAY_NAME
+    {
+        get => _displayName;
+        set { _displayName = value; OnDisplayNameChanged?.Invoke(value); }
+    }
+
+    public static Dictionary<string, int> CARD_COLLECTION = new();
+    public static Dictionary<string, int> PHYSICAL_CARD_COLLECTION = new();
+    public static Dictionary<string, int> PACK_COLLECTION = new();
+    public static List<string> DECK_SELECTION = new();
 
     public static async Task SaveDisplayNameAsync(string displayName)
     {
@@ -53,6 +81,28 @@ public static class PlayerProfileStore
         {
             CARD_COLLECTION = new Dictionary<string, int>();
         }
+    }
+
+    public static async Task SavePhysicalCardCollectionAsync()
+    {
+        var data = new Dictionary<string, object>
+        {
+            { PhysicalCardCollectionKey, PHYSICAL_CARD_COLLECTION }
+        };
+
+        await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+    }
+
+    public static async Task LoadPhysicalCardCollectionAsync()
+    {
+        var keys = new HashSet<string> { PhysicalCardCollectionKey };
+        var result = await CloudSaveService.Instance.Data.Player.LoadAsync(keys);
+
+        PHYSICAL_CARD_COLLECTION = result.TryGetValue(PhysicalCardCollectionKey, out var item)
+            ? item.Value.GetAs<Dictionary<string, int>>()
+            : new Dictionary<string, int>();
+
+        OnPhysicalCardCollectionChanged?.Invoke();
     }
 
     public static async Task UpdatePC()
@@ -90,6 +140,23 @@ public static class PlayerProfileStore
         await SaveCardCollectionAsync();
         await ComputePC();
         OnCardCollectionChanged?.Invoke();
+    }
+
+    public static async Task AddPhysicalCardAsync(string cardId, int amount = 1)
+    {
+        if (string.IsNullOrEmpty(cardId))
+        {
+            Debug.LogError("Physical CardId invalide");
+            return;
+        }
+
+        if (!PHYSICAL_CARD_COLLECTION.ContainsKey(cardId))
+            PHYSICAL_CARD_COLLECTION[cardId] = 0;
+
+        PHYSICAL_CARD_COLLECTION[cardId] += amount;
+
+        await SavePhysicalCardCollectionAsync();
+        OnPhysicalCardCollectionChanged?.Invoke();
     }
 
     public static async Task AddCards(CardData[] cards)
@@ -178,14 +245,11 @@ public static class PlayerProfileStore
         var keys = new HashSet<string> { PackCollectionKey };
         var result = await CloudSaveService.Instance.Data.Player.LoadAsync(keys);
 
-        if (result.TryGetValue(PackCollectionKey, out var item))
-        {
-            PACK_COLLECTION = item.Value.GetAs<Dictionary<string, int>>();
-        }
-        else
-        {
-            PACK_COLLECTION = new Dictionary<string, int>();
-        }
+        PACK_COLLECTION = result.TryGetValue(PackCollectionKey, out var item)
+            ? item.Value.GetAs<Dictionary<string, int>>()
+            : new Dictionary<string, int>();
+
+        OnPackCollectionChanged?.Invoke();
     }
 
     public static async Task RemovePackAsync(string packId, int amount = 1)
@@ -216,6 +280,89 @@ public static class PlayerProfileStore
         return 0;
     }
 
+    public static int GetPhysicalCardQuantity(string cardId)
+    {
+        if (PHYSICAL_CARD_COLLECTION.TryGetValue(cardId, out int qty))
+            return qty;
+        return 0;
+    }
+
+    public static bool HasCardForCollection(CardData card)
+    {
+        if (card == null || string.IsNullOrEmpty(card.cardId)) return false;
+        return GetPhysicalCardQuantity(card.cardId) > 0 || GetCardQuantity(card.cardId) > 0;
+    }
+
+    public static async Task SaveDeckSelectionAsync()
+    {
+        var data = new Dictionary<string, object>
+        {
+            { DeckSelectionKey, DECK_SELECTION }
+        };
+
+        await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+    }
+
+    public static async Task LoadDeckSelectionAsync()
+    {
+        var keys = new HashSet<string> { DeckSelectionKey };
+        var result = await CloudSaveService.Instance.Data.Player.LoadAsync(keys);
+
+        DECK_SELECTION = result.TryGetValue(DeckSelectionKey, out var item)
+            ? item.Value.GetAs<List<string>>()
+            : new List<string>();
+
+        OnDeckSelectionChanged?.Invoke();
+    }
+
+    public static int GetDeckCopies(string cardId)
+    {
+        return DECK_SELECTION.Count(id => id == cardId);
+    }
+
+    public static bool TryAddCardToDeck(string cardId, out string reason)
+    {
+        reason = string.Empty;
+
+        if (string.IsNullOrEmpty(cardId))
+        {
+            reason = "Carte invalide.";
+            return false;
+        }
+
+        if (DECK_SELECTION.Count >= GameConstants.MaxDeckSize)
+        {
+            reason = $"Deck plein ({GameConstants.MaxDeckSize} cartes).";
+            return false;
+        }
+
+        if (GetDeckCopies(cardId) >= GameConstants.MaxCopiesPerCard)
+        {
+            reason = $"Maximum {GameConstants.MaxCopiesPerCard} exemplaires par carte.";
+            return false;
+        }
+
+        if (GetCardQuantity(cardId) <= GetDeckCopies(cardId))
+        {
+            reason = "Pas assez d'exemplaires possedes.";
+            return false;
+        }
+
+        DECK_SELECTION.Add(cardId);
+        OnDeckSelectionChanged?.Invoke();
+        return true;
+    }
+
+    public static bool TryRemoveCardFromDeck(string cardId)
+    {
+        var index = DECK_SELECTION.FindIndex(id => id == cardId);
+        if (index < 0) return false;
+
+        DECK_SELECTION.RemoveAt(index);
+        OnDeckSelectionChanged?.Invoke();
+        return true;
+    }
+
     /// <summary>
     /// Efface toutes les données du joueur stockées dans Cloud Save
     /// </summary>
@@ -227,7 +374,9 @@ public static class PlayerProfileStore
             
             // Effacer les données locales
             CARD_COLLECTION.Clear();
+            PHYSICAL_CARD_COLLECTION.Clear();
             PACK_COLLECTION.Clear();
+            DECK_SELECTION.Clear();
             TOKEN = 0;
             PC = 0;
             DISPLAY_NAME = "Guest";
@@ -237,6 +386,8 @@ public static class PlayerProfileStore
             {
                 DisplayNameKey,
                 CardCollectionKey,
+                PhysicalCardCollectionKey,
+                DeckSelectionKey,
                 PackCollectionKey
             };
 
@@ -256,7 +407,9 @@ public static class PlayerProfileStore
 
             // Notifier les listeners
             OnCardCollectionChanged?.Invoke();
+            OnPhysicalCardCollectionChanged?.Invoke();
             OnPackCollectionChanged?.Invoke();
+            OnDeckSelectionChanged?.Invoke();
         }
         catch (System.Exception e)
         {

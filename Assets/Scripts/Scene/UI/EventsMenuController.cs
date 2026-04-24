@@ -7,8 +7,7 @@ using UnityEngine.UIElements;
 
 public class EventsMenuController : MonoBehaviour
 {
-    // MainUIBinder réside dans HubScene (toujours chargée) — accès via singleton
-    private static MainUIBinder UI => MainUIBinder.Instance;
+    private static NotificationSystem Notif => NotificationSystem.Instance;
     [SerializeField] private Transform buttonsParent;
     [SerializeField] private GameObject eventButtonPrefab;
 
@@ -37,7 +36,7 @@ public class EventsMenuController : MonoBehaviour
             var events = await EventsRemoteConfig.GetEventsAsync();
             if (events.Length == 0)
             {
-                UI?.ShowNotification("Aucun événement pour le moment.");
+                Notif?.ShowNotification("Aucun événement pour le moment.");
                 return;
             }
 
@@ -70,7 +69,7 @@ public class EventsMenuController : MonoBehaviour
         catch (Exception ex)
         {
             Debug.LogException(ex);
-            UI?.ShowNotification("Erreur lors du chargement des événements.");
+            Notif?.ShowNotification("Erreur lors du chargement des événements.");
         }
     }
 

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6b0ac0215e42c3448b4a7e444c5612b2
+timeCreated: 1449480927
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 146177
+  packageName: 3D Game Card
+  packageVersion: 1.1
+  assetPath: Assets/Card3D/materials/StencilMatBrown.mat
+  uploadId: 747083

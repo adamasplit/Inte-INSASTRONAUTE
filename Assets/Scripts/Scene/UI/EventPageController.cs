@@ -7,8 +7,7 @@ using UnityEngine.UI;
 
 public class EventPageController : MonoBehaviour
 {
-    [Header("Refs")]
-    [SerializeField] private MainUIBinder ui;
+    private static NotificationSystem Notif => NotificationSystem.Instance;
 
     [Header("Common UI")]
     [SerializeField] private TMP_Text titleText;
@@ -109,12 +108,12 @@ public class EventPageController : MonoBehaviour
 
         if (!int.TryParse(amountInput.text, out var amount) || amount <= 0)
         {
-            ui.ShowNotification("Mise invalide.");
+            Notif?.ShowNotification("Mise invalide.");
             return;
         }
         if (!string.Equals(_current.status, "OPEN", StringComparison.OrdinalIgnoreCase))
         {
-            ui.ShowNotification("Les paris sont fermés.");
+            Notif?.ShowNotification("Les paris sont fermés.");
             return;
         }
 
@@ -128,19 +127,19 @@ public class EventPageController : MonoBehaviour
     {
         if (_current.options == null || _current.options.Length == 0 || optionsDropdown == null)
         {
-            ui.ShowNotification("Aucune option disponible.");
+            Notif?.ShowNotification("Aucune option disponible.");
             return Task.CompletedTask;
         }
 
         var idx = optionsDropdown.value;
         if (idx < 0 || idx >= _current.options.Length)
         {
-            ui.ShowNotification("Sélection invalide.");
+            Notif?.ShowNotification("Sélection invalide.");
             return Task.CompletedTask;
         }
 
         var option = _current.options[idx];
-        ui.ShowConfirmation(
+        Notif?.ShowConfirmation(
             title: "Confirmer le pari",
             message: $"Parier {amount} TOKEN sur \"{option.label}\" (×{option.odds:0.##})\n{_current.title}\n\nConfirmer ?",
             onYes: () => _ = PlaceBetConfirmedAsync(amount, option.label, option.odds),
@@ -154,11 +153,11 @@ public class EventPageController : MonoBehaviour
         var answer = answerInput != null ? answerInput.text.Trim() : "";
         if (string.IsNullOrEmpty(answer))
         {
-            ui.ShowNotification("Réponse invalide.");
+            Notif?.ShowNotification("Réponse invalide.");
             return Task.CompletedTask;
         }
 
-        ui.ShowConfirmation(
+        Notif?.ShowConfirmation(
             title: "Confirmer le pari",
             message: $"Parier {amount} TOKEN sur \"{answer}\"\n{_current.title}\n\nConfirmer ?",
             onYes: () => _ = PlaceBetConfirmedAsync(amount, answer, 0f),
@@ -177,11 +176,11 @@ public class EventPageController : MonoBehaviour
 
             if (!res.ok)
             {
-                ui.ShowNotification(res.message ?? "Pari refusé.");
+                Notif?.ShowNotification(res.message ?? "Pari refusé.");
                 return;
             }
 
-            ui.ShowNotification("Pari enregistré.");
+            Notif?.ShowNotification("Pari enregistré.");
 
             var statusController = FindFirstObjectByType<PlayerStatusController>();
             if (statusController != null)
@@ -190,7 +189,7 @@ public class EventPageController : MonoBehaviour
         catch (Exception ex)
         {
             Debug.LogException(ex);
-            ui.ShowNotification("Erreur lors du pari.");
+            Notif?.ShowNotification("Erreur lors du pari.");
         }
     }
 }

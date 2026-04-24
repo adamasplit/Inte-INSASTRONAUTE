@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: b86b22b7d4621b34d9dc64cdee0e9272
+timeCreated: 1449480741
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 146177
+  packageName: 3D Game Card
+  packageVersion: 1.1
+  assetPath: Assets/Card3D/StencilSprite.shader
+  uploadId: 747083

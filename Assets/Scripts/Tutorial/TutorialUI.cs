@@ -27,8 +27,6 @@ public class TutorialUI : MonoBehaviour
     [SerializeField] private TMP_Text nextButtonText;
     [SerializeField] private Button skipButton;
     [SerializeField] private Image iconImage;
-    [SerializeField] private MainUIBinder mainUIBinder;
-
     [Header("Skip Confirmation")]
     [SerializeField] private GameObject skipConfirmPanel;
     [SerializeField] private TMP_Text skipConfirmMessageText;
@@ -562,16 +560,6 @@ public class TutorialUI : MonoBehaviour
         return SceneManager.GetActiveScene().name == "HubScene";
     }
 
-    private MainUIBinder ResolveMainUIBinder()
-    {
-        if (mainUIBinder == null)
-        {
-            mainUIBinder = FindFirstObjectByType<MainUIBinder>();
-        }
-
-        return mainUIBinder;
-    }
-
     private void UpdateSkipButtonVisibility()
     {
         if (skipButton != null)
@@ -585,10 +573,9 @@ public class TutorialUI : MonoBehaviour
         if (!IsInMainScene())
             return;
 
-        var binder = ResolveMainUIBinder();
-        if (binder != null)
+        if (NotificationSystem.Instance != null)
         {
-            binder.ShowConfirmation(
+            NotificationSystem.Instance.ShowConfirmation(
                 "Passer le tutoriel",
                 skipConfirmMessage,
                 OnSkipConfirmed,

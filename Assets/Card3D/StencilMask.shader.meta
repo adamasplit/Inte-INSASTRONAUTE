@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: d45ee8675be901e4eba10d2ebc303bfd
+timeCreated: 1449480595
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 146177
+  packageName: 3D Game Card
+  packageVersion: 1.1
+  assetPath: Assets/Card3D/StencilMask.shader
+  uploadId: 747083

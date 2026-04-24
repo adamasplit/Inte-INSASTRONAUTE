@@ -99,9 +99,9 @@ public class BottomMenuController : MonoBehaviour
         }
         else if (sceneName == SceneNames.Leaderboard)
         {
-            var l = FindFirstObjectByType<LeaderboardController>();
+            var l = FindFirstObjectByType<LeaderboardBinder>();
             if (l != null) _ = l.RefreshLeaderboardAsync();
-            else Debug.LogError($"[BottomMenu] LeaderboardController introuvable dans {sceneName}.");
+            else Debug.LogError($"[BottomMenu] LeaderboardBinder introuvable dans {sceneName}.");
         }
         else if (sceneName == SceneNames.Events)
         {

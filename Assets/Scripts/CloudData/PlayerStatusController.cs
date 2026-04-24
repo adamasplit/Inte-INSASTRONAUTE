@@ -8,18 +8,17 @@ using System.Collections.ObjectModel;
 
 public class PlayerStatusController : MonoBehaviour
 {
-    private static bool diagnosticLoggingConfigured;
-
     private static void ConfigureDiagnosticLogging()
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
-        if (diagnosticLoggingConfigured)
-            return;
-
+        if (_diagnosticLoggingConfigured) return;
         Application.SetStackTraceLogType(LogType.Warning, StackTraceLogType.None);
-        diagnosticLoggingConfigured = true;
-#endif
+        _diagnosticLoggingConfigured = true;
     }
+    private static bool _diagnosticLoggingConfigured;
+#else
+    }
+#endif
 
     // In WebGL builds, emit diagnostics as warnings so they stay visible with stricter console filters.
     private static void LogDiag(string message)
@@ -31,13 +30,7 @@ public class PlayerStatusController : MonoBehaviour
 #endif
     }
 
-    public UpdateDataUI[] uIElements;
-
-    [Header("Refs")]
-    [SerializeField] private MainUIBinder ui;
-    public CardCollectionController cardCollectionController;
-    public PackCollectionController packCollectionController;
-    public LoadingScreen loadingScreen;
+    private static NotificationSystem Notif => NotificationSystem.Instance;
 
     private async void Start()
     {
@@ -53,27 +46,32 @@ public class PlayerStatusController : MonoBehaviour
 
         try
         {
-            loadingScreen?.gameObject.SetActive(true);
-            loadingScreen?.Initialize(6);
+            Notif?.ShowLoading(8);
 
             await PlayerProfileStore.LoadPackCollectionAsync();
-            loadingScreen?.IncrementStep(); // 1/6
+            Notif?.IncrementLoadingStep(); // 1/6
 
             await PlayerProfileStore.LoadCardCollectionAsync();
-            loadingScreen?.IncrementStep(); // 2/6
+            Notif?.IncrementLoadingStep(); // 2/8
+
+            await PlayerProfileStore.LoadPhysicalCardCollectionAsync();
+            Notif?.IncrementLoadingStep(); // 3/8
+
+            await PlayerProfileStore.LoadDeckSelectionAsync();
+            Notif?.IncrementLoadingStep(); // 4/8
 
             var displayName = await PlayerProfileStore.LoadDisplayNameAsync();
             if (displayName != null) PlayerProfileStore.DISPLAY_NAME = displayName;
-            loadingScreen?.IncrementStep(); // 3/6
+            Notif?.IncrementLoadingStep(); // 5/8
 
             await RefreshStatusAsync();
-            loadingScreen?.IncrementStep(); // 4/6
+            Notif?.IncrementLoadingStep(); // 6/8
 
             _ = ResolveBetsOnLoginAsync(); // non-bloquant
-            loadingScreen?.IncrementStep(); // 5/6
+            Notif?.IncrementLoadingStep(); // 7/8
 
-            loadingScreen?.IncrementStep(); // 6/6
-            loadingScreen?.gameObject.SetActive(false);
+            Notif?.IncrementLoadingStep(); // 8/8
+            Notif?.HideLoading();
 
             await StartTutorialIfNeededAsync();
         }
@@ -126,21 +124,6 @@ public class PlayerStatusController : MonoBehaviour
         }
     }
 
-    private async Task AllNecessaryComponentsPresentAsync()
-    {
-        const int maxAttempts = 50; // 5s timeout
-        for (int i = 0; i < maxAttempts; i++)
-        {
-            bool leaderboardReady = FindFirstObjectByType<LeaderboardController>() != null;
-            bool shopReady = FindFirstObjectByType<ShopRemoteLoader>() != null;
-            bool eventsReady = FindFirstObjectByType<EventsMenuController>() != null;
-
-            if (leaderboardReady && shopReady && eventsReady) return;
-
-            await Task.Delay(100);
-        }
-        Debug.LogWarning("[PlayerStatusController] AllNecessaryComponentsPresentAsync timed out after 5s.");
-    }
 
     private async Task ResolveBetsOnLoginAsync()
     {
@@ -174,7 +157,7 @@ public class PlayerStatusController : MonoBehaviour
                     else
                         msg = $"Pari perdu.\n\"{eventLabel}\"\n{r.refund} TOKEN remboursés (50%)";
 
-                    ui.ShowNotification(msg);
+                    Notif?.ShowNotification(msg);
                 }
 
                 // Refresh status after resolving bets to show updated TOKEN balance
@@ -192,7 +175,7 @@ public class PlayerStatusController : MonoBehaviour
         catch (System.Exception ex)
         {
             Debug.LogException(ex);
-            ui.ShowNotification("Impossible de résoudre les paris pour le moment.");
+            Notif?.ShowNotification("Impossible de résoudre les paris pour le moment.");
         }
     }
 
@@ -205,13 +188,9 @@ public class PlayerStatusController : MonoBehaviour
         var collectionPointsBal = currencies.Balances.FirstOrDefault(b => b.CurrencyId == "PC");
         var collectionPoints = collectionPointsBal?.Balance ?? 0;
 
+        // Les setters de PlayerProfileStore notifient automatiquement tous les UpdateDataUI abonnés
         PlayerProfileStore.TOKEN = tokens;
         await PlayerProfileStore.ComputePC();
-
-        foreach (var ui in uIElements)
-        {
-            ui.RefreshDataUI();
-        }
     }
 }
 

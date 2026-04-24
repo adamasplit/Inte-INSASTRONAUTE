@@ -53,54 +53,31 @@ public class ShopItemUI : MonoBehaviour
         buyButton.onClick.AddListener(OnBuyClicked);
     }
 
+    private static NotificationSystem Notif => NotificationSystem.Instance;
+
     void OnBuyClicked()
     {
-        var ui = FindFirstObjectByType<MainUIBinder>();
-        if (ui == null)
+        if (Notif != null)
         {
-            Debug.LogWarning("[ShopItemUI] MainUIBinder not found, skipping confirmation popup.");
-            _ = ExecutePurchaseAsync();
-            return;
+            Notif.ShowConfirmation(
+                "Confirmer l'achat",
+                $"Acheter {offer.title} pour {offer.price} TOKEN ?",
+                async () => await ExecutePurchaseAsync(),
+                () => Debug.Log("[ShopItemUI] Purchase cancelled by user.")
+            );
         }
-
-        ui.ShowConfirmation(
-            "Confirmer l'achat",
-            $"Acheter {offer.title} pour {offer.price} TOKEN ?",
-            async () => await ExecutePurchaseAsync(),
-            () => Debug.Log("[ShopItemUI] Purchase cancelled by user.")
-        );
+        else
+        {
+            _ = ExecutePurchaseAsync();
+        }
     }
 
     async System.Threading.Tasks.Task ExecutePurchaseAsync()
     {
-        ShopController shopController = FindFirstObjectByType<ShopController>();
-        if (shopController == null)
-        {
-            Debug.LogError("ShopController is null");
-            return;
-        }
-        if (shopController.loadingScreen == null)
-        {
-            Debug.LogError("ShopController's loadingScreen is null");
-            shopController.loadingScreen = FindFirstObjectByType<PlayerStatusController>()?.loadingScreen;
-        }
-        shopController.loadingScreen.gameObject.SetActive(true);
-
-        FindFirstObjectByType<ShopController>().loadingScreen.Initialize(1);
-        Debug.Log("[ShopItemUI]Buying offer: " + offer.purchaseId.ToUpper());
+        Notif?.ShowLoading(1);
+        Debug.Log("[ShopItemUI] Buying offer: " + offer.purchaseId.ToUpper());
         var purchaseResult = await StoreService.BuyAsync(offer.purchaseId);
-
-        var mainUi = FindFirstObjectByType<MainUIBinder>();
-        if (mainUi != null)
-        {
-            mainUi.ShowNotification(purchaseResult.Message);
-        }
-        else
-        {
-            Debug.LogWarning("[ShopItemUI] MainUIBinder not found, cannot display purchase notification.");
-        }
-
-        FindFirstObjectByType<ShopController>().loadingScreen.CompleteLoading();
-        FindFirstObjectByType<ShopController>().loadingScreen.HideWithFade();
+        Notif?.ShowNotification(purchaseResult.Message);
+        Notif?.HideLoading();
     }
 }

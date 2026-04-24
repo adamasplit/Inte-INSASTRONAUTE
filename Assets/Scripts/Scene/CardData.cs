@@ -1,11 +1,15 @@
 using UnityEngine;
+
 [CreateAssetMenu(menuName = "Cards/Card Data")]
 public class CardData : ScriptableObject
 {
     public string cardId;
+    public string categoryTag;
+    public string elementTag;
 
     [Header("UI")]
     public Sprite sprite;
+    public GameObject card3DPrefab;
 
     [Header("Gameplay")]
     public int rarity;
@@ -13,6 +17,7 @@ public class CardData : ScriptableObject
     public int SubsequentValue;
     public string cardName;
     public string description;
+    public string miniGameEffectDescription;
     public float baseDamage;
     public float duration=1f; // for beam attacks
     public int projectileCount = 1; // for projectile attacks

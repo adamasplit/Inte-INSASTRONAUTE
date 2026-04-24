@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 225ee81cd574ba440acf71c5095bb4fa
+timeCreated: 1557774390
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 146177
+  packageName: 3D Game Card
+  packageVersion: 1.1
+  assetPath: Assets/Card3D/readme.txt
+  uploadId: 747083

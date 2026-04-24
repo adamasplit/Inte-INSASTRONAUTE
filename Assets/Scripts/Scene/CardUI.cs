@@ -12,14 +12,26 @@ public class CardUI : MonoBehaviour
     private CardData cardData;
     private bool inCollection = false;
     private bool GetInfos = false;
-    public void SetCardData(int number, Sprite sprite,CardData cardData = null,bool inCollection = false, bool GetInfos = false)
+    private bool canAddToDeck;
+    private CollectionDisplayMode displayMode = CollectionDisplayMode.Digital;
+
+    public void SetCardData(
+        int number,
+        Sprite sprite,
+        CardData cardData = null,
+        bool inCollection = false,
+        bool GetInfos = false,
+        bool canAddToDeck = false,
+        CollectionDisplayMode displayMode = CollectionDisplayMode.Digital)
     {
         if (numberText!=null)
             numberText.text = number.ToString();
         cardImage.sprite = sprite;
         this.cardData = cardData;
         this.inCollection = inCollection;      
-        this.GetInfos = GetInfos;    
+        this.GetInfos = GetInfos;
+        this.canAddToDeck = canAddToDeck;
+        this.displayMode = displayMode;
         if (number==0)
         {
             cardImage.sprite=Resources.Load<Sprite>("Sprites/Cartes/DosCarte");
@@ -37,7 +49,7 @@ public class CardUI : MonoBehaviour
             {
                 Debug.Log($"[CardUI] Showing info for card: {cardData.cardId}");
                 RectTransform rectTransform = GetComponent<RectTransform>();
-                CardInfoBox.Instance.ShowCardInfo(cardData, rectTransform);
+                CardInfoBox.Instance.ShowCardInfo(cardData, rectTransform, displayMode, canAddToDeck);
             }
         }
     }
