@@ -417,12 +417,12 @@ public class TutorialManager : MonoBehaviour
         if (step.isInMainScene)
         {
             var currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-            if (currentScene.name != "Main - Copie")
+            if (currentScene.name != SceneNames.Hub)
             {
                 LogDiag($"[TutorialManager] Step '{step.title}' requires Main scene. Waiting for scene change...");
                 
                 // Wait until we're in the main scene
-                while (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Main - Copie")
+                while (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != SceneNames.Hub)
                 {
                     yield return new WaitForSecondsRealtime(0.1f);
                     

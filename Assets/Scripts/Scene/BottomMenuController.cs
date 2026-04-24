@@ -1,59 +1,130 @@
+using System;
+using System.Threading.Tasks;
 using UnityEngine;
-using System.Collections.Generic;
-using Lean.Gui;
+using UnityEngine.SceneManagement;
 
 public class BottomMenuController : MonoBehaviour
 {
-    [Header("Screens container")]
-    public RectTransform screensContainer;
-
-    [Header("Screens (ordre du menu)")]
-    public List<RectTransform> screens;
-
-    // Optionally, reference a LeanDrag if present on the screensContainer
-    private Lean.Gui.LeanDrag leanDrag;
-
-    void Awake()
+    [Serializable]
+    public struct TabDefinition
     {
-        // Try to get LeanDrag if it exists on the screensContainer
-        if (screensContainer != null)
+        public string sceneName;
+    }
+
+    [Header("Tabs (ordre des boutons du menu)")]
+    public TabDefinition[] tabs;
+
+    private string _activeScene;
+    private bool _isTransitioning;
+
+    /// <summary>
+    /// Appelé par les boutons du menu via OnClick(int index).
+    /// Charge la scène de l'onglet en mode Additive et décharge la précédente.
+    /// </summary>
+    public void GoToScreen(int index)
+    {
+        if (_isTransitioning)
         {
-            leanDrag = screensContainer.GetComponent<Lean.Gui.LeanDrag>();
+            Debug.LogWarning("[BottomMenu] Transition déjà en cours, ignore.");
+            return;
+        }
+        if (index < 0 || index >= tabs.Length)
+        {
+            Debug.LogError($"[BottomMenu] Index onglet invalide : {index}");
+            return;
+        }
+        var target = tabs[index].sceneName;
+        if (target == _activeScene) return;
+        _ = TransitionAsync(target);
+    }
+
+    private async Task TransitionAsync(string target)
+    {
+        _isTransitioning = true;
+        try
+        {
+            // Décharger la scène active
+            if (!string.IsNullOrEmpty(_activeScene))
+            {
+                var unload = SceneManager.UnloadSceneAsync(_activeScene);
+                if (unload != null)
+                    await WaitAsync(unload);
+            }
+
+            // Charger la nouvelle scène en Additive
+            if (!IsSceneValid(target))
+            {
+                Debug.LogError($"[BottomMenu] Scène inconnue : '{target}'. " +
+                               "Vérifiez que la scène est ajoutée dans Build Settings.");
+                return;
+            }
+
+            var load = SceneManager.LoadSceneAsync(target, LoadSceneMode.Additive);
+            load.allowSceneActivation = true;
+            await WaitAsync(load);
+
+            _activeScene = target;
+            NotifySceneLoaded(target);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[BottomMenu] Échec du chargement de '{target}' : {ex.Message}");
+        }
+        finally
+        {
+            _isTransitioning = false;
         }
     }
 
-    public void GoToScreen(int index)
+    /// <summary>
+    /// Déclenche le rafraîchissement du contrôleur de la scène qui vient d'être chargée.
+    /// </summary>
+    private void NotifySceneLoaded(string sceneName)
     {
-        if (index < 0 || index >= screens.Count)
+        if (sceneName == SceneNames.Collection)
         {
-            Debug.LogError("Index écran invalide");
-            return;
+            var c = FindFirstObjectByType<CardCollectionController>();
+            if (c != null) c.RefreshCollection();
+            else Debug.LogError($"[BottomMenu] CardCollectionController introuvable dans {sceneName}.");
         }
-        Debug.Log("Changement vers l'écran : " + index);
-        // Simulate LeanDrag transitions/events if LeanDrag is present
-        screensContainer.anchoredPosition = new Vector2(-screensContainer.rect.width * (screens[index].anchorMin.x), screensContainer.anchoredPosition.y);
+        else if (sceneName == SceneNames.Store)
+        {
+            var s = FindFirstObjectByType<ShopRemoteLoader>();
+            if (s != null) s.UpdateShopFromRemote();
+            else Debug.LogError($"[BottomMenu] ShopRemoteLoader introuvable dans {sceneName}.");
+        }
+        else if (sceneName == SceneNames.Packs)
+        {
+            // PackCollectionController se rafraîchit via OnEnable + PlayerProfileStore.OnPackCollectionChanged
+        }
+        else if (sceneName == SceneNames.Leaderboard)
+        {
+            var l = FindFirstObjectByType<LeaderboardController>();
+            if (l != null) _ = l.RefreshLeaderboardAsync();
+            else Debug.LogError($"[BottomMenu] LeaderboardController introuvable dans {sceneName}.");
+        }
+        else if (sceneName == SceneNames.Events)
+        {
+            var e = FindFirstObjectByType<EventsMenuController>();
+            if (e != null) _ = e.RefreshEventsAsync();
+            else Debug.LogError($"[BottomMenu] EventsMenuController introuvable dans {sceneName}.");
+        }
+    }
 
-        // If the selected screen or its children have a CardCollectionController, call RefreshCollection
-        var cardCollection = screens[index].GetComponentInChildren<CardCollectionController>(true);
-        if (cardCollection != null)
+    private static bool IsSceneValid(string sceneName)
+    {
+        for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
         {
-            // Only refresh without changing the mode (preserves current mode)
-            cardCollection.RefreshCollection();
+            var path = SceneUtility.GetScenePathByBuildIndex(i);
+            if (path.Contains(sceneName)) return true;
         }
-        var leaderboardController = screens[index].GetComponentInChildren<LeaderboardController>(true);
-        if (leaderboardController != null)
-        {
-            //leaderboardController.RefreshLeaderboard();
-        }
-        var packCollection = screens[index].GetComponentInChildren<PackCollectionController>(true);
-        if (packCollection != null)
-        {
-            packCollection.RefreshCollection();
-        }
-        var shopController = screens[index].GetComponentInChildren<ShopRemoteLoader>(true);
-        if (shopController != null)
-        {
-            shopController.UpdateShopFromRemote();
-        }
+        return false;
+    }
+
+    private static Task WaitAsync(AsyncOperation op)
+    {
+        var tcs = new TaskCompletionSource<bool>();
+        op.completed += _ => tcs.TrySetResult(true);
+        return tcs.Task;
     }
 }

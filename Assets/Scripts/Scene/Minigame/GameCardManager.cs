@@ -29,26 +29,16 @@ public class GameCardManager : MonoBehaviour
     {
         if (GameManager.Instance.currentState != GameManager.GameState.Playing)
             return;
+
+        playerHand.RemoveAll(c => c == null);
+
         if (playerHand.Count < GameManager.Instance.maxCardsInHand)
         {
-            Debug.Log("Adding a new card to hand");
             CardData newCard = GetRandomCard();
-
             GameObject cardObject = Instantiate(cardPrefab, transform);
             GameCardUI cardUI = cardObject.GetComponent<GameCardUI>();
             cardUI.Initialize(newCard);
             playerHand.Add(cardObject);
-        }
-        else
-        {
-            foreach (var cardObj in playerHand)
-            {
-                if (cardObj == null)
-                {
-                    playerHand.Remove(cardObj);
-                    break;
-                }
-            }
         }
     }
 }

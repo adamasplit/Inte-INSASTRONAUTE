@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:unity.com)",
+      "WebFetch(domain:support.unity.com)"
+    ]
+  }
+}

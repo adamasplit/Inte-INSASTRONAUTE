@@ -178,7 +178,7 @@ public class PackCollectionController : MonoBehaviour
     }
 
     flashImage.gameObject.SetActive(false);
-    SceneManager.LoadScene("PullScene");
+    SceneManager.LoadScene(SceneNames.Pull);
 }
 
 

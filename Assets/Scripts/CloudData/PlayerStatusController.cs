@@ -42,38 +42,44 @@ public class PlayerStatusController : MonoBehaviour
     private async void Start()
     {
         ConfigureDiagnosticLogging();
-        bool tutorialTriggerRequested = false;
-        bool collectionsRefreshed = false;
 
-        // Guard: if the auth session is missing or expired, send the player back to the
-        // login screen instead of letting Economy / CloudSave calls fail with cryptic errors
-        // ("Unprocessable Transaction", items not loading, etc.).
         if (!AuthenticationService.Instance.IsSignedIn || AuthenticationService.Instance.IsExpired)
         {
-            Debug.LogWarning("[PlayerStatusController] Auth session invalid or expired. Redirecting to login.");
+            Debug.LogWarning("[PlayerStatusController] Session invalide ou expirée. Redirection vers login.");
             AuthenticationService.Instance.SignOut();
-            SceneManager.LoadScene("LoginScreen");
+            SceneManager.LoadScene(SceneNames.Login);
             return;
         }
 
         try
         {
-            // Initialize loading screen with total steps
-            if (loadingScreen != null)
-            {
-                loadingScreen.gameObject.SetActive(true);
-                loadingScreen.Initialize(8); // Total number of loading steps
-            }
+            loadingScreen?.gameObject.SetActive(true);
+            loadingScreen?.Initialize(6);
 
             await PlayerProfileStore.LoadPackCollectionAsync();
-            loadingScreen?.IncrementStep();
-        
+            loadingScreen?.IncrementStep(); // 1/6
+
             await PlayerProfileStore.LoadCardCollectionAsync();
-            loadingScreen?.IncrementStep();
+            loadingScreen?.IncrementStep(); // 2/6
+
+            var displayName = await PlayerProfileStore.LoadDisplayNameAsync();
+            if (displayName != null) PlayerProfileStore.DISPLAY_NAME = displayName;
+            loadingScreen?.IncrementStep(); // 3/6
+
+            await RefreshStatusAsync();
+            loadingScreen?.IncrementStep(); // 4/6
+
+            _ = ResolveBetsOnLoginAsync(); // non-bloquant
+            loadingScreen?.IncrementStep(); // 5/6
+
+            loadingScreen?.IncrementStep(); // 6/6
+            loadingScreen?.gameObject.SetActive(false);
+
+            await StartTutorialIfNeededAsync();
         }
         catch (System.Exception ex)
         {
-            Debug.LogWarning($"[PlayerStatusController] Startup pipeline failed: {ex.Message}");
+            Debug.LogError($"[PlayerStatusController] Erreur dans le pipeline de démarrage : {ex.Message}");
             Debug.LogException(ex);
         }
     }
@@ -122,19 +128,18 @@ public class PlayerStatusController : MonoBehaviour
 
     private async Task AllNecessaryComponentsPresentAsync()
     {
-        while (FindFirstObjectByType<LeaderboardController>() == null ||
-               FindFirstObjectByType<ShopRemoteLoader>() == null ||
-               FindFirstObjectByType<EventsMenuController>() == null)
+        const int maxAttempts = 50; // 5s timeout
+        for (int i = 0; i < maxAttempts; i++)
         {
+            bool leaderboardReady = FindFirstObjectByType<LeaderboardController>() != null;
+            bool shopReady = FindFirstObjectByType<ShopRemoteLoader>() != null;
+            bool eventsReady = FindFirstObjectByType<EventsMenuController>() != null;
+
+            if (leaderboardReady && shopReady && eventsReady) return;
+
             await Task.Delay(100);
-            LogDiag("[PlayerStatusController] Null components");
-            if (FindFirstObjectByType<LeaderboardController>() == null)
-                LogDiag("[PlayerStatusController] LeaderboardController not found");
-            if (FindFirstObjectByType<ShopRemoteLoader>() == null)
-                LogDiag("[PlayerStatusController] ShopRemoteLoader not found");
-            if (FindFirstObjectByType<EventsMenuController>() == null)
-                LogDiag("[PlayerStatusController] EventsMenuController not found");
         }
+        Debug.LogWarning("[PlayerStatusController] AllNecessaryComponentsPresentAsync timed out after 5s.");
     }
 
     private async Task ResolveBetsOnLoginAsync()

@@ -12,7 +12,7 @@ public class SceneLoader : MonoBehaviour
     private IEnumerator LoadMainCoroutine()
     {
         Debug.Log("Loading Main async...");
-        var op = SceneManager.LoadSceneAsync("Main - Copie", LoadSceneMode.Single);
+        var op = SceneManager.LoadSceneAsync(SceneNames.Hub, LoadSceneMode.Single);
 
         // optionnel : empêcher l’activation immédiate si tu veux afficher un %,
         // sinon tu peux laisser true direct

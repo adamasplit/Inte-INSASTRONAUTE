@@ -12,6 +12,14 @@ using Lean.Transition;
 /// </summary>
 public class MainUIBinder : MonoBehaviour
 {
+    public static MainUIBinder Instance { get; private set; }
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
+    }
+
     #region Bottom Bar
     [Header("=== Bottom Bar ===")]
     [SerializeField] private Button dailyRewardButton;

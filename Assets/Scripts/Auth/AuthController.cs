@@ -11,6 +11,7 @@ public class AuthController : MonoBehaviour
     public bool IsReady { get; private set; }
 
     private const string PREF_USERNAME = "SavedUsername";
+    public const string ACCOUNT_DELETION_REQUEST_URL = "";
 
     private async void Awake()
     {
@@ -63,7 +64,7 @@ public class AuthController : MonoBehaviour
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
                 if (PlayerPrefs.HasKey(PREF_USERNAME))
                     PlayerProfileStore.DISPLAY_NAME = PlayerPrefs.GetString(PREF_USERNAME);
-                SceneManager.LoadScene("Main - Copie");
+                SceneManager.LoadScene(SceneNames.Hub);
             }
             catch (Exception ex)
             {
