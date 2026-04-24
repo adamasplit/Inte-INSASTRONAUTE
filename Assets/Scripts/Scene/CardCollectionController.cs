@@ -13,7 +13,6 @@ public class CardCollectionController : MonoBehaviour
     
     // Current mode settings
     private bool inCollection = false;
-    private bool inDeck = false;
     private bool GetInfos = false;
     
     private void OnEnable()
@@ -23,23 +22,21 @@ public class CardCollectionController : MonoBehaviour
     }
 
     // Set the mode before calling RefreshCollection
-    public void SetMode(bool inCollection = false, bool inDeck = false, bool GetInfos = false)
+    public void SetMode(bool inCollection = false, bool GetInfos = false)
     {
         this.inCollection = inCollection;
-        this.inDeck = inDeck;
         this.GetInfos = GetInfos;
-        Debug.Log($"[CardCollectionController] Mode set - inCollection: {inCollection}, inDeck: {inDeck}, GetInfos: {GetInfos}");
+        Debug.Log($"[CardCollectionController] Mode set - inCollection: {inCollection}, GetInfos: {GetInfos}");
     }
 
     // Refresh using current mode (backward compatible with optional parameters)
-    public void RefreshCollection(bool? inCollection = null, bool? inDeck = null, bool? GetInfos = null)
+    public void RefreshCollection(bool? inCollection = null, bool? GetInfos = null)
     {
         // Update mode if parameters are provided
         if (inCollection.HasValue) this.inCollection = inCollection.Value;
-        if (inDeck.HasValue) this.inDeck = inDeck.Value;
         if (GetInfos.HasValue) this.GetInfos = GetInfos.Value;
         
-        Debug.Log($"[CardCollectionController] Refreshing - inCollection: {this.inCollection}, inDeck: {this.inDeck}, GetInfos: {this.GetInfos}");
+        Debug.Log($"[CardCollectionController] Refreshing - inCollection: {this.inCollection}, GetInfos: {this.GetInfos}");
         
         foreach (Transform child in cardContainer)
             Destroy(child.gameObject);
@@ -57,7 +54,6 @@ public class CardCollectionController : MonoBehaviour
                     card.sprite,
                     card,
                     this.inCollection,
-                    this.inDeck,
                     this.GetInfos
                 );
             }
