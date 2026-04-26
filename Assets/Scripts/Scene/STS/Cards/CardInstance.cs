@@ -24,6 +24,10 @@ public class CardInstance
         {
             text += EffectDescription.Get(e,ctx) + "\n";
         }
+        foreach (var mod in GetModifiers(StatType.Damage))
+        {
+            text += $"<color=red>{mod.Describe()}</color>\n";
+        }
         if (data.exhaust)
             text += "<color=orange>[Épuisement]</color>\n";
         return text.TrimEnd();

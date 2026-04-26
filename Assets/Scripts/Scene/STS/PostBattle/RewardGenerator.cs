@@ -1,9 +1,21 @@
 using System.Collections.Generic;
+using UnityEngine;
 public class RewardGenerator
 {
+    public class CardEntry
+    {
+        public STSCardData card;
+        public int weight;
+
+        public CardEntry(STSCardData card, int weight)
+        {
+            this.card = card;
+            this.weight = weight;
+        }
+    }
     public List<STSCardData> GenerateCardChoices(CombatResult result)
     {
-        List<STSCardData> pool = BuildCardPool(result);
+        List<CardEntry> pool = BuildCardPool(result);
 
         List<STSCardData> choices = new List<STSCardData>();
 
@@ -14,31 +26,64 @@ public class RewardGenerator
 
         return choices;
     }
-    List<STSCardData> BuildCardPool(CombatResult result)
+    List<CardEntry> BuildCardPool(CombatResult result)
     {
-        List<STSCardData> pool = new List<STSCardData>();
+        List<CardEntry> pool = new List<CardEntry>();
 
         if (result.enemies != null&&RunManager.Instance.relics.Exists(r => r is ITIRelic))
         {
+            Debug.Log("Adding enemy reward cards to pool");
             foreach (var enemy in result.enemies)
-        {
-            pool.AddRange(enemy.rewardCards);
-        }
+            {
+                foreach (var card in enemy.rewardCards)
+                {
+                    pool.Add(new CardEntry(card, 100));
+                }
+            }
         }
 
-        pool.AddRange(GetFloorCards(result.floor));
+        pool.AddRange(GetFloorCards(RunManager.Instance.currentFloor));
 
         return pool;
     }
-    public STSCardData GetRandomCard(List<STSCardData> pool)
+    public STSCardData GetRandomCard(List<CardEntry> pool)
     {
-        if (pool.Count == 0) return null;
-        int index = UnityEngine.Random.Range(0, pool.Count);
-        return pool[index];
+        int totalWeight = 0;
+        foreach (var entry in pool)
+        {
+            totalWeight += entry.weight;
+        }
+
+        int randomValue = UnityEngine.Random.Range(0, totalWeight);
+        int cumulativeWeight = 0;
+
+        foreach (var entry in pool)
+        {
+            cumulativeWeight += entry.weight;
+            if (randomValue < cumulativeWeight)
+            {
+                return entry.card;
+            }
+        }
+
+        return null; // Should never reach here if pool is not empty
     }
-    List<STSCardData> GetFloorCards(int floor)
+    List<CardEntry> GetFloorCards(int floor)
     {
-        // Implementation for getting floor-specific cards
-        return STSCardDatabase.allCards;
+        List<CardEntry> floorCards = new List<CardEntry>();
+        foreach (var card in STSCardDatabase.allCards)
+        {
+            int weight = card.rarity switch
+            {
+                CardRarity.Common => 100,
+                CardRarity.Uncommon => 50,
+                CardRarity.Rare => 25,
+                CardRarity.Epic => 10,
+                CardRarity.Legendary => 5,
+                _ => 100
+            };
+            floorCards.Add(new CardEntry(card, weight));
+        }
+        return floorCards;
     }
 }

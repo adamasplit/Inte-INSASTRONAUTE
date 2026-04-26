@@ -3,6 +3,7 @@ using System.Collections.Generic;
 [System.Serializable]
 public class EncounterEntry
 {
+    public string displayName;
     public List<EnemyData> enemies;
     public int minFloor;
     public int maxFloor;

@@ -55,6 +55,7 @@ public class Character
     }
     public void StartTurn()
     {
+        armor=0;
         foreach (var status in statusEffects)
         {
             status.OnTurnStart(this);

@@ -76,12 +76,15 @@ public class CombatManager : MonoBehaviour
             }
         }
 
-        deck.hand.Remove(card);
+        if (source!=null&&source.isPlayer)
+        {
+            deck.hand.Remove(card);
 
-        if (card.data.exhaust)
-            deck.exhaustPile.Add(card);
-        else
-            deck.discardPile.Add(card);
+            if (card.data.exhaust)
+                deck.exhaustPile.Add(card);
+            else
+                deck.discardPile.Add(card);
+        }
 
         bool combatOver = TryEndCombatIfNeeded();
 

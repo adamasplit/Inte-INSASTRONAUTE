@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: EnemyPool
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPool
   enemies:
-  - enemies:
+  - displayName: Test encounter
+    enemies:
     - {fileID: 11400000, guid: cd6d3998007ee2a4fa40288240d496fc, type: 2}
     - {fileID: 11400000, guid: 030305c5255494040b1aa2598d91e63d, type: 2}
     - {fileID: 11400000, guid: 931c0fae846614e41adfb2bda056c8c7, type: 2}
@@ -22,10 +23,28 @@ MonoBehaviour:
     weight: 1
     elite: 0
     boss: 0
-  - enemies:
+  - displayName: Elite
+    enemies:
     - {fileID: 11400000, guid: ad7696afb4d04fa44b2adf8360baaffd, type: 2}
     minFloor: 0
     maxFloor: 10
     weight: 1
     elite: 1
+    boss: 0
+  - displayName: Easier test
+    enemies:
+    - {fileID: 11400000, guid: cd6d3998007ee2a4fa40288240d496fc, type: 2}
+    - {fileID: 11400000, guid: cd6d3998007ee2a4fa40288240d496fc, type: 2}
+    minFloor: 0
+    maxFloor: 10
+    weight: 1
+    elite: 0
+    boss: 0
+  - displayName: Even easier
+    enemies:
+    - {fileID: 11400000, guid: 931c0fae846614e41adfb2bda056c8c7, type: 2}
+    minFloor: 0
+    maxFloor: 10
+    weight: 1
+    elite: 0
     boss: 0
