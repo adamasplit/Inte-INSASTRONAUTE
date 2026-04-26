@@ -19,6 +19,7 @@ public class AuthUIBinder : MonoBehaviour
     [SerializeField] private TMP_InputField signUpUsername;
     [SerializeField] private TMP_InputField signUpPassword;
     [SerializeField] private TMP_InputField signUpPasswordConfirm;
+    [SerializeField] private TMP_Dropdown signUpDepartmentDropdown;
     [SerializeField] private TMP_Text signUpUsernameHint;
     [SerializeField] private TMP_Text signUpPasswordHint;
 
@@ -136,7 +137,14 @@ public class AuthUIBinder : MonoBehaviour
             if (signUpPasswordConfirm != null && p != c)
                 throw new Exception("Les mots de passe ne correspondent pas");
 
-            await AuthController.Instance.SignUp(u, p);
+            string department = "ITI";
+            if (signUpDepartmentDropdown != null && signUpDepartmentDropdown.options.Count > 0)
+            {
+                int index = Mathf.Clamp(signUpDepartmentDropdown.value, 0, signUpDepartmentDropdown.options.Count - 1);
+                department = signUpDepartmentDropdown.options[index].text;
+            }
+
+            await AuthController.Instance.SignUp(u, p, department);
             SetStatus("Compte créé avec succès !");
         });
     }

@@ -1,30 +1,77 @@
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Unity.Services.Authentication;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class LeaderboardController : MonoBehaviour
 {
     [Header("UI References")]
-    public GameObject leaderboardElementPrefab;
-    public Transform contentParent;
-    
-    [Header("Current Player Section (optional)")]
-    [Tooltip("Séparateur affiché avant le rang du joueur courant si hors top 10")]
-    public GameObject separatorPrefab;
-    
-    [Header("Settings")]
-    [SerializeField] private bool submitScoreOnStart = true;
-    [SerializeField] private bool useDummyData = false;
+    [SerializeField] private GameObject leaderboardElementPrefab;
+    [SerializeField] private Transform contentParent;
+
+    [Header("Optional Blocks")]
+    [SerializeField] private GameObject separatorPrefab;
+    [SerializeField] private GameObject loadMoreRowPrefab;
+
+    [Header("Data")]
+    [SerializeField] private string defaultLeaderboardId = "PTD";
+    [SerializeField] private int pageSize = 20;
+    [SerializeField] private bool submitScoreOnRefresh = true;
+    [SerializeField] private bool useDummyData;
+
+    [Header("Highlight Colors")]
+    [SerializeField] private Color currentPlayerColor = new Color(0.2f, 0.6f, 1f, 1f);
+    [SerializeField] private Color friendColor = new Color(0.95f, 0.8f, 0.25f, 1f);
 
     private string currentPlayerId;
+    private string currentLeaderboardId;
+    private bool friendsOnly;
+    private string departmentFilter = string.Empty;
+    private string themeFilter = string.Empty;
+    private int nextOffset;
+    private bool hasMore;
+    private bool isLoadingMore;
+    private GameObject loadMoreRowInstance;
+    private Button loadMoreRowButton;
+    private readonly HashSet<string> displayedPlayerIds = new HashSet<string>();
+    private readonly HashSet<string> mainDisplayedPlayerIds = new HashSet<string>();
+    private readonly HashSet<string> supplementalDisplayedPlayerIds = new HashSet<string>();
+    private readonly List<GameObject> supplementalObjects = new List<GameObject>();
+    private LeaderboardEntry cachedCurrentPlayer;
+    private List<LeaderboardEntry> cachedFriendRows = new List<LeaderboardEntry>();
 
-    void Awake()
+    public bool HasMore => hasMore;
+
+    private void Awake()
     {
         currentPlayerId = AuthenticationService.Instance.PlayerId;
+        currentLeaderboardId = string.IsNullOrWhiteSpace(defaultLeaderboardId)
+            ? LeaderboardClient.DefaultLeaderboardId
+            : defaultLeaderboardId;
+    }
+
+    public void SetLeaderboardId(string leaderboardId)
+    {
+        currentLeaderboardId = string.IsNullOrWhiteSpace(leaderboardId)
+            ? LeaderboardClient.DefaultLeaderboardId
+            : leaderboardId.Trim().ToUpperInvariant();
+    }
+
+    public void SetFriendsOnly(bool value)
+    {
+        friendsOnly = value;
+    }
+
+    public void SetDepartmentFilter(string value)
+    {
+        departmentFilter = NormalizeFilter(value);
+    }
+
+    public void SetThemeFilter(string value)
+    {
+        themeFilter = NormalizeFilter(value);
     }
 
     public async Task RefreshLeaderboardAsync()
@@ -36,136 +83,270 @@ public class LeaderboardController : MonoBehaviour
         }
 
         ClearLeaderboard();
+        nextOffset = 0;
+        isLoadingMore = false;
+
+        if (submitScoreOnRefresh)
+        {
+            await TrySubmitCurrentScoreAsync();
+        }
+
+        await LoadPageAsync(includeCurrentAndFriends: true);
+        RefreshLoadMoreRow();
+    }
+
+    public async Task LoadMoreAsync()
+    {
+        if (useDummyData || !hasMore || isLoadingMore)
+            return;
+
+        isLoadingMore = true;
+        RefreshLoadMoreRow();
 
         try
         {
-            // 1. Soumettre le score PC du joueur (depuis Economy)
-            if (submitScoreOnStart)
-            {
-                Debug.Log($"[Leaderboard] Submitting score with displayName: {PlayerProfileStore.DISPLAY_NAME}");
-                
-                // Récupérer le score PC depuis PlayerProfileStore
-                bool submitted = await LeaderboardClient.SubmitScoreAsync(PlayerProfileStore.PC);
-                if (!submitted)
-                {
-                    Debug.LogWarning("[Leaderboard] Submit failed");
-                }
-            }
-
-            // 2. Récupérer le leaderboard
-            Debug.Log("[Leaderboard] Fetching leaderboard...");
-            var result = await LeaderboardClient.GetLeaderboardAsync();
-
-            if (!result.ok)
-            {
-                Debug.LogError($"[Leaderboard] Failed to get leaderboard: {result.message}");
-                return;
-            }
-
-            // 3. Afficher le top 10
-            bool currentPlayerInTop = false;
-            foreach (var entry in result.topPlayers)
-            {
-                Color? bgColor = GetRankColor(entry.rank);
-                bool isCurrentPlayer = entry.playerId == currentPlayerId;
-                
-                if (isCurrentPlayer)
-                {
-                    currentPlayerInTop = true;
-                    bgColor = new Color(0.2f, 0.6f, 1f, 1f); // Bleu pour le joueur courant
-                }
-
-                AddLeaderboardEntry(entry.rank, entry.displayName, (int)entry.score, null, bgColor);
-            }
-
-            // 4. Si le joueur courant n'est pas dans le top 10, l'afficher en bas
-            if (!currentPlayerInTop && result.currentPlayer != null)
-            {
-                // Ajouter un séparateur visuel
-                if (separatorPrefab != null)
-                {
-                    Instantiate(separatorPrefab, contentParent);
-                }
-                else
-                {
-                    // Créer un séparateur simple si pas de prefab
-                    AddSeparator();
-                }
-
-                // Afficher le joueur courant avec une couleur distincte
-                AddLeaderboardEntry(
-                    result.currentPlayer.rank,
-                    result.currentPlayer.displayName,
-                    (int)result.currentPlayer.score,
-                    null,
-                    new Color(0.2f, 0.6f, 1f, 1f) // Bleu
-                );
-            }
-
-            Debug.Log($"[Leaderboard] Displayed {result.topPlayers.Count} entries");
+            await LoadPageAsync(includeCurrentAndFriends: false);
         }
-        catch (System.Exception e)
+        finally
         {
-            Debug.LogError($"[Leaderboard] Error: {e.Message}");
+            isLoadingMore = false;
+            RefreshLoadMoreRow();
         }
     }
 
-    /// <summary>
-    /// Retourne une couleur selon le rang (or, argent, bronze)
-    /// </summary>
+    private async Task LoadPageAsync(bool includeCurrentAndFriends)
+    {
+        var result = await LeaderboardClient.GetLeaderboardPageAsync(
+            currentLeaderboardId,
+            nextOffset,
+            Mathf.Clamp(pageSize, 1, 50),
+            friendsOnly,
+            departmentFilter,
+            themeFilter,
+            includeCurrentPlayer: includeCurrentAndFriends,
+            includeFriends: includeCurrentAndFriends
+        );
+
+        if (!result.ok)
+        {
+            Debug.LogError($"[Leaderboard] Failed to load leaderboard: {result.message}");
+            hasMore = false;
+            return;
+        }
+
+        ClearSupplementalSection();
+
+        if (result.entries != null)
+        {
+            foreach (var entry in result.entries)
+            {
+                AddMainEntryIfNotDisplayed(entry);
+            }
+        }
+
+        nextOffset = result.nextOffset;
+        hasMore = result.hasMore;
+        if (includeCurrentAndFriends)
+        {
+            cachedCurrentPlayer = result.currentPlayer;
+            cachedFriendRows = result.friends ?? new List<LeaderboardEntry>();
+        }
+
+        RebuildSupplementalSection();
+        RefreshLoadMoreRow();
+    }
+
+    private void RebuildSupplementalSection()
+    {
+        ClearSupplementalSection();
+
+        var rowsToAppend = new List<LeaderboardEntry>();
+
+        if (cachedCurrentPlayer != null &&
+            !string.IsNullOrWhiteSpace(cachedCurrentPlayer.playerId) &&
+            !mainDisplayedPlayerIds.Contains(cachedCurrentPlayer.playerId))
+        {
+            rowsToAppend.Add(cachedCurrentPlayer);
+        }
+
+        if (cachedFriendRows != null && cachedFriendRows.Count > 0)
+        {
+            var filteredFriends = cachedFriendRows
+                .Where(f => f != null &&
+                            !string.IsNullOrWhiteSpace(f.playerId) &&
+                            !mainDisplayedPlayerIds.Contains(f.playerId))
+                .GroupBy(f => f.playerId)
+                .Select(g => g.OrderBy(x => x.rank).First())
+                .OrderBy(f => f.rank)
+                .ToList();
+
+            rowsToAppend.AddRange(filteredFriends);
+        }
+
+        if (rowsToAppend.Count <= 0)
+            return;
+
+        supplementalObjects.Add(InstantiateSeparator());
+
+        foreach (var row in rowsToAppend)
+        {
+            Color? bgColor = row.playerId == currentPlayerId ? currentPlayerColor : friendColor;
+            var obj = AddEntry(row, bgColor);
+            if (obj != null)
+            {
+                supplementalObjects.Add(obj);
+                if (!string.IsNullOrWhiteSpace(row.playerId))
+                    supplementalDisplayedPlayerIds.Add(row.playerId);
+            }
+        }
+    }
+
+    private void ClearSupplementalSection()
+    {
+        foreach (var playerId in supplementalDisplayedPlayerIds)
+        {
+            displayedPlayerIds.Remove(playerId);
+        }
+
+        supplementalDisplayedPlayerIds.Clear();
+
+        foreach (var obj in supplementalObjects)
+        {
+            if (obj != null)
+                Destroy(obj);
+        }
+
+        supplementalObjects.Clear();
+    }
+
+    private async Task TrySubmitCurrentScoreAsync()
+    {
+        if (!TryGetLocalScoreForLeaderboard(currentLeaderboardId, out long score))
+            return;
+
+        var submit = await LeaderboardClient.SubmitScoreAsync(currentLeaderboardId, score);
+        if (!submit.ok)
+        {
+            Debug.LogWarning($"[Leaderboard] Submit failed: {submit.message}");
+        }
+    }
+
+    private static bool TryGetLocalScoreForLeaderboard(string leaderboardId, out long score)
+    {
+        score = 0;
+
+        switch ((leaderboardId ?? string.Empty).Trim().ToUpperInvariant())
+        {
+            case "PC":
+                score = PlayerProfileStore.PC;
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private static string NormalizeFilter(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        var trimmed = value.Trim();
+        if (trimmed.Equals("ALL", System.StringComparison.OrdinalIgnoreCase) ||
+            trimmed.Equals("TOUS", System.StringComparison.OrdinalIgnoreCase))
+            return string.Empty;
+
+        return trimmed;
+    }
+
+    private void AddMainEntryIfNotDisplayed(LeaderboardEntry entry)
+    {
+        if (entry == null || string.IsNullOrWhiteSpace(entry.playerId))
+            return;
+
+        if (displayedPlayerIds.Contains(entry.playerId))
+            return;
+
+        Color? bgColor = GetRankColor(entry.rank);
+
+        if (entry.playerId == currentPlayerId)
+        {
+            bgColor = currentPlayerColor;
+        }
+        else if (entry.isFriend)
+        {
+            bgColor ??= friendColor;
+        }
+
+        AddEntry(entry, bgColor);
+        mainDisplayedPlayerIds.Add(entry.playerId);
+    }
+
+    private GameObject AddEntry(LeaderboardEntry entry, Color? backgroundColor)
+    {
+        var obj = AddLeaderboardEntry(entry.rank, entry.displayName, (int)entry.score, null, backgroundColor);
+        displayedPlayerIds.Add(entry.playerId);
+        return obj;
+    }
+
     private Color? GetRankColor(int rank)
     {
         return rank switch
         {
-            1 => new Color(1f, 0.84f, 0f, 1f),      // Or
-            2 => new Color(0.75f, 0.75f, 0.75f, 1f), // Argent
-            3 => new Color(0.8f, 0.5f, 0.2f, 1f),   // Bronze
+            1 => new Color(1f, 0.84f, 0f, 1f),
+            2 => new Color(0.75f, 0.75f, 0.75f, 1f),
+            3 => new Color(0.8f, 0.5f, 0.2f, 1f),
             _ => null
         };
     }
 
-    /// <summary>
-    /// Ajoute un séparateur visuel "..."
-    /// </summary>
-    private void AddSeparator()
+    private GameObject InstantiateSeparator()
     {
-        GameObject separator = new GameObject("Separator");
+        if (separatorPrefab != null)
+        {
+            return Instantiate(separatorPrefab, contentParent);
+        }
+
+        var separator = new GameObject("Separator");
         separator.transform.SetParent(contentParent, false);
-        
-        var text = separator.AddComponent<TextMeshProUGUI>();
+
+        var text = separator.AddComponent<TMPro.TextMeshProUGUI>();
         text.text = "• • •";
         text.fontSize = 24;
-        text.alignment = TextAlignmentOptions.Center;
+        text.alignment = TMPro.TextAlignmentOptions.Center;
         text.color = Color.gray;
-        
-        var layout = separator.AddComponent<LayoutElement>();
+
+        var layout = separator.AddComponent<UnityEngine.UI.LayoutElement>();
         layout.preferredHeight = 40;
+
+        return separator;
     }
 
-    /// <summary>
-    /// Supprime toutes les entrées du leaderboard
-    /// </summary>
     public void ClearLeaderboard()
     {
+        displayedPlayerIds.Clear();
+        mainDisplayedPlayerIds.Clear();
+        supplementalDisplayedPlayerIds.Clear();
+        supplementalObjects.Clear();
+        cachedCurrentPlayer = null;
+        cachedFriendRows = new List<LeaderboardEntry>();
+
         foreach (Transform child in contentParent)
         {
             Destroy(child.gameObject);
         }
+
+        loadMoreRowInstance = null;
+        loadMoreRowButton = null;
     }
 
-    /// <summary>
-    /// Ajoute une entrée au leaderboard
-    /// </summary>
-    public void AddLeaderboardEntry(int rank, string playerName, int score, Sprite userIcon = null, Color? backgroundColor = null)
+    public GameObject AddLeaderboardEntry(int rank, string playerName, int score, Sprite userIcon = null, Color? backgroundColor = null)
     {
-        GameObject newEntry = Instantiate(leaderboardElementPrefab, contentParent);
-        LeaderboardElement element = newEntry.GetComponent<LeaderboardElement>();
+        var newEntry = Instantiate(leaderboardElementPrefab, contentParent);
+        var element = newEntry.GetComponent<LeaderboardElement>();
         element.SetData(rank, playerName, score, userIcon, backgroundColor);
+        return newEntry;
     }
 
-    /// <summary>
-    /// Données de test
-    /// </summary>
     public void DummyPopulate()
     {
         ClearLeaderboard();
@@ -174,14 +355,52 @@ public class LeaderboardController : MonoBehaviour
         AddLeaderboardEntry(3, "Loris", 1000, null, GetRankColor(3));
         AddLeaderboardEntry(4, "Fhystel", 800);
         AddLeaderboardEntry(5, "Maitr", 600);
-        AddLeaderboardEntry(6, "Tim", 400);
-        AddLeaderboardEntry(7, "Elisa", 300);
-        AddLeaderboardEntry(8, "πrkiroul", 200);
-        AddLeaderboardEntry(9, "Yamatinou", 100);
-        AddLeaderboardEntry(10, "RJ", 50);
-        
-        // Simulation joueur courant hors top 10
-        AddSeparator();
-        AddLeaderboardEntry(42, "Vous", 15, null, new Color(0.2f, 0.6f, 1f, 1f));
+        InstantiateSeparator();
+        AddLeaderboardEntry(9, "Ami_1", 220, null, friendColor);
+        AddLeaderboardEntry(42, "Vous", 15, null, currentPlayerColor);
+        hasMore = true;
+        RefreshLoadMoreRow();
+    }
+
+    private void RefreshLoadMoreRow()
+    {
+        if (contentParent == null || loadMoreRowPrefab == null)
+            return;
+
+        if (!hasMore)
+        {
+            if (loadMoreRowInstance != null)
+            {
+                Destroy(loadMoreRowInstance);
+                loadMoreRowInstance = null;
+                loadMoreRowButton = null;
+            }
+            return;
+        }
+
+        if (loadMoreRowInstance == null)
+        {
+            loadMoreRowInstance = Instantiate(loadMoreRowPrefab, contentParent);
+            loadMoreRowButton = loadMoreRowInstance.GetComponentInChildren<Button>(true);
+
+            if (loadMoreRowButton != null)
+            {
+                loadMoreRowButton.onClick.RemoveAllListeners();
+                loadMoreRowButton.onClick.AddListener(OnLoadMoreRowClicked);
+            }
+            else
+            {
+                Debug.LogWarning("[Leaderboard] loadMoreRowPrefab ne contient pas de Button.");
+            }
+        }
+
+        loadMoreRowInstance.transform.SetAsLastSibling();
+        if (loadMoreRowButton != null)
+            loadMoreRowButton.interactable = !isLoadingMore;
+    }
+
+    private async void OnLoadMoreRowClicked()
+    {
+        await LoadMoreAsync();
     }
 }

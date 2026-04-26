@@ -62,6 +62,8 @@ public class PlayerStatusController : MonoBehaviour
 
             var displayName = await PlayerProfileStore.LoadDisplayNameAsync();
             if (displayName != null) PlayerProfileStore.DISPLAY_NAME = displayName;
+            await PlayerProfileStore.LoadDepartmentAsync();
+            await PlayerProfileStore.LoadFriendsAsync();
             Notif?.IncrementLoadingStep(); // 5/8
 
             await RefreshStatusAsync();

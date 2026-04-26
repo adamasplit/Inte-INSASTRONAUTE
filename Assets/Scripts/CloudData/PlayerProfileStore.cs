@@ -8,6 +8,8 @@ using UnityEngine;
 public static class PlayerProfileStore
 {
     public const string DisplayNameKey   = "displayName";
+    public const string DepartmentKey = "department";
+    public const string FriendsKey = "friends";
     public const string CardCollectionKey = "cardCollection";
     public const string PhysicalCardCollectionKey = "physicalCardCollection";
     public const string PackCollectionKey = "packCollection";
@@ -17,6 +19,8 @@ public static class PlayerProfileStore
     public static event System.Action<long>   OnTokenChanged;
     public static event System.Action<long>   OnPCChanged;
     public static event System.Action<string> OnDisplayNameChanged;
+    public static event System.Action<string> OnDepartmentChanged;
+    public static event System.Action         OnFriendsChanged;
     public static event System.Action         OnCardCollectionChanged;
     public static event System.Action         OnPhysicalCardCollectionChanged;
     public static event System.Action         OnPackCollectionChanged;
@@ -44,10 +48,23 @@ public static class PlayerProfileStore
         set { _displayName = value; OnDisplayNameChanged?.Invoke(value); }
     }
 
+    private static string _department = "ITI";
+    public static string DEPARTMENT
+    {
+        get => _department;
+        set
+        {
+            var sanitized = string.IsNullOrWhiteSpace(value) ? "ITI" : value.Trim().ToUpperInvariant();
+            _department = sanitized;
+            OnDepartmentChanged?.Invoke(sanitized);
+        }
+    }
+
     public static Dictionary<string, int> CARD_COLLECTION = new();
     public static Dictionary<string, int> PHYSICAL_CARD_COLLECTION = new();
     public static Dictionary<string, int> PACK_COLLECTION = new();
     public static List<string> DECK_SELECTION = new();
+    public static List<string> FRIENDS = new();
 
     public static async Task SaveDisplayNameAsync(string displayName)
     {
@@ -57,6 +74,99 @@ public static class PlayerProfileStore
         };
 
         await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+    }
+
+    public static async Task SaveDepartmentAsync(string department)
+    {
+        DEPARTMENT = department;
+
+        var data = new Dictionary<string, object>
+        {
+            { DepartmentKey, DEPARTMENT }
+        };
+
+        await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+    }
+
+    public static async Task<string> LoadDepartmentAsync()
+    {
+        var keys = new HashSet<string> { DepartmentKey };
+        var result = await CloudSaveService.Instance.Data.Player.LoadAsync(keys);
+
+        if (result.TryGetValue(DepartmentKey, out var item))
+        {
+            var value = item.Value.GetAs<string>();
+            DEPARTMENT = string.IsNullOrWhiteSpace(value) ? "ITI" : value;
+        }
+        else
+        {
+            DEPARTMENT = "ITI";
+        }
+
+        return DEPARTMENT;
+    }
+
+    public static async Task SaveFriendsAsync()
+    {
+        FRIENDS = FRIENDS
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .Select(id => id.Trim())
+            .Distinct()
+            .ToList();
+
+        var data = new Dictionary<string, object>
+        {
+            { FriendsKey, FRIENDS }
+        };
+
+        await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+    }
+
+    public static async Task LoadFriendsAsync()
+    {
+        var keys = new HashSet<string> { FriendsKey };
+        var result = await CloudSaveService.Instance.Data.Player.LoadAsync(keys);
+
+        FRIENDS = result.TryGetValue(FriendsKey, out var item)
+            ? item.Value.GetAs<List<string>>() ?? new List<string>()
+            : new List<string>();
+
+        FRIENDS = FRIENDS
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .Select(id => id.Trim())
+            .Distinct()
+            .ToList();
+
+        OnFriendsChanged?.Invoke();
+    }
+
+    public static async Task<bool> AddFriendAsync(string friendPlayerId)
+    {
+        if (string.IsNullOrWhiteSpace(friendPlayerId))
+            return false;
+
+        friendPlayerId = friendPlayerId.Trim();
+        if (FRIENDS.Contains(friendPlayerId))
+            return false;
+
+        FRIENDS.Add(friendPlayerId);
+        await SaveFriendsAsync();
+        OnFriendsChanged?.Invoke();
+        return true;
+    }
+
+    public static async Task<bool> RemoveFriendAsync(string friendPlayerId)
+    {
+        if (string.IsNullOrWhiteSpace(friendPlayerId))
+            return false;
+
+        bool removed = FRIENDS.Remove(friendPlayerId.Trim());
+        if (!removed)
+            return false;
+
+        await SaveFriendsAsync();
+        OnFriendsChanged?.Invoke();
+        return true;
     }
     public static async Task SaveCardCollectionAsync()
     {
@@ -380,11 +490,15 @@ public static class PlayerProfileStore
             TOKEN = 0;
             PC = 0;
             DISPLAY_NAME = "Guest";
+            DEPARTMENT = "ITI";
+            FRIENDS.Clear();
 
             // Effacer toutes les clés dans Cloud Save (une par une)
             var keysToDelete = new List<string>
             {
                 DisplayNameKey,
+                DepartmentKey,
+                FriendsKey,
                 CardCollectionKey,
                 PhysicalCardCollectionKey,
                 DeckSelectionKey,
@@ -410,6 +524,8 @@ public static class PlayerProfileStore
             OnPhysicalCardCollectionChanged?.Invoke();
             OnPackCollectionChanged?.Invoke();
             OnDeckSelectionChanged?.Invoke();
+            OnDepartmentChanged?.Invoke(DEPARTMENT);
+            OnFriendsChanged?.Invoke();
         }
         catch (System.Exception e)
         {

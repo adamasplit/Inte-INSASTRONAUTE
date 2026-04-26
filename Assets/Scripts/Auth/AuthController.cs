@@ -92,7 +92,7 @@ public class AuthController : MonoBehaviour
         SceneManager.LoadScene("HubScene");
     }
 
-    public async Task SignUp(string username, string password)
+    public async Task SignUp(string username, string password, string department = "ITI")
     {
         await Init();
 
@@ -101,6 +101,7 @@ public class AuthController : MonoBehaviour
 
         // Persist pseudo côté cloud (optionnel mais tu le veux)
         await PlayerProfileStore.SaveDisplayNameAsync(username);
+        await PlayerProfileStore.SaveDepartmentAsync(department);
         Debug.Log("displayName saved.");
         PlayerProfileStore.DISPLAY_NAME = username;
 

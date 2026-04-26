@@ -47,6 +47,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/STS_Reward.unity
     guid: ef081234e549e90428acc0b54eeb30fd
+  - enabled: 1
+    path: Assets/Scenes/FriendsScene.unity
+    guid: 7dd5f84b2a854be7bab0cc6dc7c67ca7
   m_configObjects:
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 7ac0d2020611eb44486612eb24ce9a3f, type: 2}
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}

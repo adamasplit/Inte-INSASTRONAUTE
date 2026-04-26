@@ -109,6 +109,12 @@ public class BottomMenuController : MonoBehaviour
             if (e != null) _ = e.RefreshEventsAsync();
             else Debug.LogError($"[BottomMenu] EventsMenuController introuvable dans {sceneName}.");
         }
+        else if (sceneName == SceneNames.Friends)
+        {
+            var f = FindFirstObjectByType<FriendsBinder>();
+            if (f != null) _ = f.RefreshFriendsAsync();
+            else Debug.LogError($"[BottomMenu] FriendsBinder introuvable dans {sceneName}.");
+        }
     }
 
     private static bool IsSceneValid(string sceneName)

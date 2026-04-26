@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Text.RegularExpressions;
-using Unity.Services.Leaderboards;
-using Unity.Services.Leaderboards.Models;
+using Unity.Services.CloudCode;
 using UnityEngine;
 
 [System.Serializable]
@@ -12,166 +10,135 @@ public class LeaderboardEntry
     public string playerId;
     public string displayName;
     public long score;
+    public string department;
+    public string scoreTheme;
+    public bool isFriend;
+    public bool isCurrentPlayer;
 }
 
 [System.Serializable]
 public class LeaderboardResult
 {
     public bool ok;
-    public List<LeaderboardEntry> topPlayers;
+    public string leaderboardId;
+    public List<LeaderboardEntry> entries;
     public LeaderboardEntry currentPlayer;
+    public List<LeaderboardEntry> friends;
+    public int nextOffset;
+    public bool hasMore;
     public string message;
 }
 
 [System.Serializable]
-public class MetadataWrapper
+public class SubmitLeaderboardResult
 {
-    public string displayName;
+    public bool ok;
+    public string leaderboardId;
+    public long score;
+    public string message;
 }
 
 public static class LeaderboardClient
 {
-    private const string LeaderboardId = "PC";
+    public const string DefaultLeaderboardId = "PTD";
 
-    /// <summary>
-    /// Extrait le displayName depuis le metadata JSON
-    /// </summary>
-    private static string ParseDisplayName(string metadata, string fallback = "Player")
+    public static string NormalizeLeaderboardId(string leaderboardId)
     {
-        if (string.IsNullOrEmpty(metadata))
-            return fallback;
-
-        // Essayer JsonUtility d'abord
-        try
-        {
-            var meta = JsonUtility.FromJson<MetadataWrapper>(metadata);
-            if (meta != null && !string.IsNullOrEmpty(meta.displayName))
-            {
-                return meta.displayName;
-            }
-        }
-        catch { }
-
-        // Fallback: parsing manuel avec regex
-        try
-        {
-            var match = Regex.Match(metadata, @"""displayName""\s*:\s*""([^""]+)""");
-            if (match.Success && match.Groups.Count > 1)
-            {
-                return match.Groups[1].Value;
-            }
-        }
-        catch { }
-
-        return fallback;
+        var normalized = (leaderboardId ?? string.Empty).Trim().ToUpperInvariant();
+        return string.IsNullOrWhiteSpace(normalized) ? DefaultLeaderboardId : normalized;
     }
 
-    /// <summary>
-    /// Soumet le score PC du joueur courant au leaderboard
-    /// </summary>
-    public static async Task<bool> SubmitScoreAsync(long score)
+    public static async Task<SubmitLeaderboardResult> SubmitScoreAsync(string leaderboardId, long score, string scoreTheme = "")
     {
         try
         {
-            Debug.Log($"[LeaderboardClient] Submitting score {score} to leaderboard {LeaderboardId}");
-            
-            // Metadata doit être un Dictionary<string, object>
-            var options = new AddPlayerScoreOptions
-            {
-                Metadata = new Dictionary<string, object>
+            var requestLeaderboardId = NormalizeLeaderboardId(leaderboardId);
+            Debug.Log($"[LeaderboardClient] Submitting score {score} to leaderboard {requestLeaderboardId}");
+
+            var result = await CloudCodeService.Instance.CallEndpointAsync<SubmitLeaderboardResult>(
+                "SubmitLeaderboardScore",
+                new Dictionary<string, object>
                 {
-                    { "displayName", PlayerProfileStore.DISPLAY_NAME }
+                    { "leaderboardId", requestLeaderboardId },
+                    { "score", score },
+                    { "scoreTheme", scoreTheme ?? string.Empty },
+                    { "department", PlayerProfileStore.DEPARTMENT ?? string.Empty },
+                    { "displayName", PlayerProfileStore.DISPLAY_NAME ?? string.Empty }
                 }
+            );
+
+            return result ?? new SubmitLeaderboardResult
+            {
+                ok = false,
+                leaderboardId = requestLeaderboardId,
+                score = 0,
+                message = "No response from Cloud Code"
             };
-            
-            await LeaderboardsService.Instance.AddPlayerScoreAsync(LeaderboardId, score, options);
-            Debug.Log("[LeaderboardClient] Score submitted successfully");
-            return true;
         }
         catch (System.Exception e)
         {
             Debug.LogError($"[LeaderboardClient] Submit failed: {e.Message}");
-            return false;
+            return new SubmitLeaderboardResult
+            {
+                ok = false,
+                leaderboardId = NormalizeLeaderboardId(leaderboardId),
+                score = 0,
+                message = e.Message
+            };
         }
     }
 
-    /// <summary>
-    /// Récupère le top 10 + le rang du joueur courant si pas dans le top 10
-    /// </summary>
-    public static async Task<LeaderboardResult> GetLeaderboardAsync()
+    public static async Task<LeaderboardResult> GetLeaderboardPageAsync(
+        string leaderboardId,
+        int offset,
+        int limit,
+        bool friendsOnly,
+        string department,
+        string theme,
+        bool includeCurrentPlayer = true,
+        bool includeFriends = true)
     {
+        var requestLeaderboardId = NormalizeLeaderboardId(leaderboardId);
+
         var result = new LeaderboardResult
         {
             ok = false,
-            topPlayers = new List<LeaderboardEntry>(),
+            leaderboardId = requestLeaderboardId,
+            entries = new List<LeaderboardEntry>(),
             currentPlayer = null,
+            friends = new List<LeaderboardEntry>(),
+            nextOffset = offset,
+            hasMore = false,
             message = ""
         };
 
         try
         {
-            Debug.Log("[LeaderboardClient] Fetching leaderboard...");
+            Debug.Log($"[LeaderboardClient] Fetching leaderboard {requestLeaderboardId} page offset={offset} limit={limit}");
 
-            // 1. Récupérer le top 10 avec metadata
-            var scoresResponse = await LeaderboardsService.Instance.GetScoresAsync(
-                LeaderboardId,
-                new GetScoresOptions 
-                { 
-                    Offset = 0, 
-                    Limit = 10,
-                    IncludeMetadata = true  // Important: inclure le metadata!
+            var response = await CloudCodeService.Instance.CallEndpointAsync<LeaderboardResult>(
+                "GetLeaderboard",
+                new Dictionary<string, object>
+                {
+                    { "leaderboardId", requestLeaderboardId },
+                    { "offset", Mathf.Max(0, offset) },
+                    { "limit", Mathf.Clamp(limit, 1, 50) },
+                    { "friendsOnly", friendsOnly },
+                    { "department", department ?? string.Empty },
+                    { "theme", theme ?? string.Empty },
+                    { "includeCurrentPlayer", includeCurrentPlayer },
+                    { "includeFriends", includeFriends }
                 }
             );
 
-            var topPlayerIds = new HashSet<string>();
-
-            foreach (var entry in scoresResponse.Results)
+            if (response != null)
             {
-                topPlayerIds.Add(entry.PlayerId);
-                
-                Debug.Log($"[LeaderboardClient] Raw metadata for {entry.PlayerId}: '{entry.Metadata}'");
-                string displayName = ParseDisplayName(entry.Metadata, "Player");
-                Debug.Log($"[LeaderboardClient] Parsed displayName: '{displayName}'");
-
-                result.topPlayers.Add(new LeaderboardEntry
-                {
-                    rank = entry.Rank + 1,
-                    playerId = entry.PlayerId,
-                    displayName = displayName,
-                    score = (long)entry.Score
-                });
+                if (response.entries == null) response.entries = new List<LeaderboardEntry>();
+                if (response.friends == null) response.friends = new List<LeaderboardEntry>();
+                return response;
             }
 
-            // 2. Récupérer le score du joueur courant
-            try
-            {
-                var playerScore = await LeaderboardsService.Instance.GetPlayerScoreAsync(
-                    LeaderboardId,
-                    new GetPlayerScoreOptions { IncludeMetadata = true }
-                );
-                
-                // Si le joueur n'est pas dans le top 10, l'ajouter
-                if (!topPlayerIds.Contains(playerScore.PlayerId))
-                {
-                    string displayName = ParseDisplayName(playerScore.Metadata, PlayerProfileStore.DISPLAY_NAME);
-
-                    result.currentPlayer = new LeaderboardEntry
-                    {
-                        rank = playerScore.Rank + 1,
-                        playerId = playerScore.PlayerId,
-                        displayName = displayName,
-                        score = (long)playerScore.Score
-                    };
-                }
-            }
-            catch (System.Exception e)
-            {
-                Debug.Log($"[LeaderboardClient] Player has no score yet: {e.Message}");
-            }
-
-            result.ok = true;
-            result.message = "OK";
-            Debug.Log($"[LeaderboardClient] Got {result.topPlayers.Count} entries");
+            result.message = "No response from Cloud Code";
         }
         catch (System.Exception e)
         {
