@@ -13,6 +13,7 @@ public class AuthController : MonoBehaviour
     private const string PREF_USERNAME = "SavedUsername";
     public const string ACCOUNT_DELETION_REQUEST_URL = "";
 
+    public bool enableAutoLogin = true;
     private async void Awake()
     {
         if (Instance != null && Instance != this)
@@ -25,7 +26,8 @@ public class AuthController : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         await Init();
-        await TryAutoLogin();
+        if (enableAutoLogin)
+            await TryAutoLogin();
     }
 
         private void SaveUsername(string username)
