@@ -12,7 +12,7 @@ public static class EffectDescription
 
             case EffectType.Armor:
             {
-                string armor = BattleCalculator.GetModifiedDescription(effect.value, StatType.Block, ctx);
+                string armor = BattleCalculator.GetModifiedDescription(effect.value, StatType.Armor, ctx);
                 return $"Donne {armor} d'Armure";
             }
 
@@ -21,30 +21,26 @@ public static class EffectDescription
                 string heal = BattleCalculator.GetModifiedDescription(effect.value, StatType.Heal, ctx);
                 return $"Soigne {heal} PV";
             }
-
-            case EffectType.Strength:
+            case EffectType.Status:
             {
-                string str = BattleCalculator.GetModifiedDescription(effect.value, StatType.StatusPotency, ctx);
-                string dur = BattleCalculator.GetModifiedDescription(effect.duration, StatType.StatusDuration, ctx);
-                return $"Donne {str} de Force";
-            }
-
-            case EffectType.Vulnerability:
-            {
-                int vuln = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
+                int val = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
                 int dur = BattleCalculator.GetModifiedValue(effect.duration, StatType.StatusDuration, ctx);
-                if (dur > 0)
-                    return $"Inflige {vuln} de Vulnérabilité pendant {dur} tours";
-                return $"Inflige {vuln} de Vulnérabilité";
-            }
-
-            case EffectType.Weakness:
-            {
-                int weak = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
-                int dur = BattleCalculator.GetModifiedValue(effect.duration, StatType.StatusDuration, ctx);
-                if (dur > 0)
-                    return $"Inflige {weak} d'Affaiblissement pendant {dur} tours";
-                return $"Inflige {weak} d'Affaiblissement";
+                StatusEffect stat=StatusEffect.Factory(effect.statusType,effect.value,effect.duration);
+                if (stat.Duration>0)
+                {
+                    if (effect.targetSelf)
+                    {
+                        return $"Reçoit {stat.Name} ({stat.Duration})";
+                    }
+                    else
+                    {
+                        return $"Applique {stat.Name} ({stat.Duration})";
+                    }
+                }
+                else
+                    {
+                        return $"Donne {stat.Value} de {stat.Name}";
+                    }
             }
 
             case EffectType.DeleteNextTurn:
@@ -57,7 +53,7 @@ public static class EffectDescription
                 if (effect.targetSelf)
                     return $"Avance votre prochain tour ({effect.value})";
                 int turns = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
-                return $"Avance le prochain tour de la cible({turns})";
+                return $"Avance le prochain tour de la cible ({turns})";
             }
 
             case EffectType.DelayTurn:
@@ -65,7 +61,7 @@ public static class EffectDescription
                 if (effect.targetSelf)
                     return $"Retarde votre prochain tour ({effect.value})";
                 int turns = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
-                return $"Retarde le prochain tour de la cible({turns})";
+                return $"Retarde le prochain tour de la cible ({turns})";
             }
 
             default:

@@ -1,7 +1,7 @@
 public enum StatType
 {
     Damage,
-    Block,
+    Armor,
     Heal,
     Cost,
     StatusPotency,

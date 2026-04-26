@@ -3,7 +3,7 @@ public class VulnStatus : StatusEffect
 {
     public VulnStatus(int duration)
     {
-        this.Name="Vulnérabilité";
+        this.Name="Vulnérable";
         this.Duration = duration;
         this.modifierType = ModifierType.Multiplicative;
     }

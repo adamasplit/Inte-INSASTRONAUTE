@@ -4,7 +4,7 @@ public class WeaknessStatus : StatusEffect
     public WeaknessStatus(int duration)
     {
         Duration = duration;
-        Name = "Affaiblissement";
+        Name = "Affaibli";
         modifierType = ModifierType.Multiplicative;
     }
 

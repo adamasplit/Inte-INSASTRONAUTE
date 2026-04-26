@@ -3,9 +3,7 @@ public enum EffectType
     Damage,
     Armor,
     Heal,
-    Strength,
-    Vulnerability,
-    Weakness,
+    Status,
     DeleteNextTurn,
     AdvanceTurn,
     DelayTurn

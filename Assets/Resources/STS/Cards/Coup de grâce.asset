@@ -19,15 +19,16 @@ MonoBehaviour:
   effects:
   - type: 0
     value: 1
-    duration: 0
     targetSelf: 0
+    statusType: 0
+    duration: 0
   targetingMode: 1
   modifiers:
   - type: 0
     kind: 0
-    value: 15
+    value: 0
   - type: 0
     kind: 2
-    value: 15
+    value: 6
   exhaust: 0
   retain: 0

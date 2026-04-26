@@ -19,4 +19,17 @@ public abstract class StatusEffect : StatModifier
             res += $" ({Duration})";
         return res;
     }
+    public static StatusEffect Factory(StatusType type, int value, int duration)
+    {
+        StatusEffect stat = type switch
+        {
+            StatusType.Regen => new RegenStatus(value, duration),
+            StatusType.Strength => new StrengthStatus(value,duration),
+            StatusType.Weakness => new WeaknessStatus(duration),
+            StatusType.Vuln => new VulnStatus(duration),
+            StatusType.Dexterity => new DexterityStatus(value, duration),
+            _ => null
+        };
+        return stat;
+    }
 }

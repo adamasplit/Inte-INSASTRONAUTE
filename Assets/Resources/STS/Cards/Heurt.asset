@@ -15,15 +15,19 @@ MonoBehaviour:
   cardName: Heurt
   cost: 2
   type: 0
+  rarity: 0
   effects:
   - type: 0
     value: 8
-    duration: 0
     targetSelf: 0
-  - type: 4
+    statusType: 0
+    duration: 0
+  - type: 3
     value: 3
-    duration: 0
     targetSelf: 0
+    statusType: 1
+    duration: 3
   targetingMode: 1
+  modifiers: []
   exhaust: 0
   retain: 0

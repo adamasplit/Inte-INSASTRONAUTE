@@ -17,10 +17,11 @@ MonoBehaviour:
   type: 1
   rarity: 2
   effects:
-  - type: 8
+  - type: 6
     value: 5
-    duration: 0
     targetSelf: 0
+    statusType: 0
+    duration: 0
   targetingMode: 1
   modifiers: []
   exhaust: 0

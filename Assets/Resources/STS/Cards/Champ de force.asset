@@ -17,14 +17,16 @@ MonoBehaviour:
   type: 1
   rarity: 1
   effects:
-  - type: 4
+  - type: 3
     value: 6
-    duration: 0
     targetSelf: 0
-  - type: 5
+    statusType: 1
+    duration: 6
+  - type: 3
     value: 6
-    duration: 0
     targetSelf: 0
+    statusType: 2
+    duration: 6
   targetingMode: 2
   modifiers: []
   exhaust: 0

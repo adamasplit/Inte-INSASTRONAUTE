@@ -15,15 +15,6 @@ public static class EffectResolver
                 ctx.target.TakeDamage(dmg);
                 break;
             }
-            case EffectType.Strength:
-            {
-                if (ctx.isPreview)
-                    break; // Skip actual status application during preview
-                int str = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
-                int dur = BattleCalculator.GetModifiedValue(effect.duration, StatType.StatusDuration, ctx);
-                ctx.target.AddStatus(new StrengthStatus(str,dur));
-                break;
-            }
             case EffectType.Armor:
             {
                 if (ctx.isPreview)
@@ -38,18 +29,14 @@ public static class EffectResolver
                 ctx.target.Heal(effect.value);
                 break;
             }
-            case EffectType.Vulnerability:
+            case EffectType.Status:
             {
                 if (ctx.isPreview)
-                    break; // Skip actual status application during preview
-                ctx.target.AddStatus(new VulnStatus(effect.value));
-                break;
-            }
-            case EffectType.Weakness:
-            {
-                if (ctx.isPreview)
-                    break; // Skip actual status application during preview
-                ctx.target.AddStatus(new WeaknessStatus(effect.value));
+                    break;
+                int val = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
+                int dur = BattleCalculator.GetModifiedValue(effect.duration, StatType.StatusDuration, ctx);
+                StatusEffect stat=StatusEffect.Factory(effect.statusType,val,dur);
+                ctx.target.statusEffects.Add(stat);
                 break;
             }
             case EffectType.DeleteNextTurn:
