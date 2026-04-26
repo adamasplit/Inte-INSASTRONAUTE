@@ -7,10 +7,10 @@ public class TimelineUI : MonoBehaviour
     public GameObject iconPrefab;
     public TurnSystem turnSystem;
     List<GameObject> currentIcons = new();
-    public void Display(List<TurnEntry> timeline)
+    public List<TurnEntry> displayedTimeline = new();
+    public void Display(List<TurnEntry> timeline, bool preview = false)
     {
         Clear();
-        Debug.Log("Contains Advanced: " + timeline.Any(t => t.visualType == TurnVisualType.Advanced));
         for (int i = 0; i < timeline.Count; i++)
         {
             var entry = timeline[i];
@@ -19,7 +19,7 @@ public class TimelineUI : MonoBehaviour
             var icon = obj.GetComponent<TurnIcon>();
 
             icon.Set(entry.character);
-
+            icon.SetPreview(preview&&displayedTimeline!=timeline);
             switch (entry.visualType)
             {
                 case TurnVisualType.Removed:
@@ -37,6 +37,7 @@ public class TimelineUI : MonoBehaviour
 
             currentIcons.Add(obj);
         }
+        displayedTimeline = timeline;
     }
 
     void Clear()

@@ -15,11 +15,13 @@ MonoBehaviour:
   cardName: Lenteur
   cost: 0
   type: 1
+  rarity: 2
   effects:
   - type: 8
     value: 5
     duration: 0
     targetSelf: 0
   targetingMode: 1
+  modifiers: []
   exhaust: 0
   retain: 0

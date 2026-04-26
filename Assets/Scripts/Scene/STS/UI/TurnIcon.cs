@@ -7,6 +7,7 @@ public class TurnIcon : MonoBehaviour
     public Image portrait;
     public Image background;
     public GameObject strikeThrough;
+    public CanvasGroup canvasGroup;
     public void Set(Character character)
     {
         portrait.sprite = character.portrait; // ou placeholder
@@ -21,18 +22,15 @@ public class TurnIcon : MonoBehaviour
     {
         if (preview)
         {
-            background.color = new Color(background.color.r, background.color.g, background.color.b, 0.5f);
-            portrait.color = new Color(portrait.color.r, portrait.color.g, portrait.color.b, 0.5f);
+            canvasGroup.alpha = 0.5f;
         }
         else
         {             
-            portrait.color = new Color(portrait.color.r, portrait.color.g, portrait.color.b, 1f);
-            background.color = new Color(background.color.r, background.color.g, background.color.b, 1f);
+            canvasGroup.alpha = 1f;
         }
     }
     public void SetRemoved()
     {
-        Debug.Log("Setting turn icon as removed");
         background.color = Color.gray;
         outline.color = Color.gray;
         strikeThrough.SetActive(true);

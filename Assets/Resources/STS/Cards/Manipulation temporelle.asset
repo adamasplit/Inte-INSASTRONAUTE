@@ -15,6 +15,7 @@ MonoBehaviour:
   cardName: Manipulation temporelle
   cost: 0
   type: 1
+  rarity: 4
   effects:
   - type: 8
     value: 10
@@ -25,5 +26,6 @@ MonoBehaviour:
     duration: 0
     targetSelf: 1
   targetingMode: 1
+  modifiers: []
   exhaust: 0
   retain: 0

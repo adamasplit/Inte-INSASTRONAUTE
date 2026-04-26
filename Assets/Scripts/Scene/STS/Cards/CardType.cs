@@ -1,6 +1,6 @@
 public enum CardType
 {
-    Attack,
-    Skill,
-    Power
+    Attaque,
+    Compétence,
+    Pouvoir
 }

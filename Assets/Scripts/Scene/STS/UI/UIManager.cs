@@ -31,19 +31,23 @@ public class UIManager : MonoBehaviour
     public void InitCharacters()
     {
         characterUIs.Clear();
+        allZones.Clear();
         foreach(Transform child in playerRoot)
             Destroy(child.gameObject);
         foreach(Transform child in enemyRoot)
             Destroy(child.gameObject);
         // PLAYER
-        var playerZone = Instantiate(playerPrefab, playerRoot);
-        var pUI = playerZone.GetComponent<CharacterUI>();
-        pUI.SetCharacter(combat.player);
+        if (combat.player != null)
+        {
+            var playerZone = Instantiate(playerPrefab, playerRoot);
+            var pUI = playerZone.GetComponent<CharacterUI>();
+            pUI.SetCharacter(combat.player);
 
-        var dz = playerZone.GetComponent<DropZone>();
-        dz.Init(combat, combat.player, false);
-        allZones.Add(dz);
-        characterUIs.Add(pUI);
+            var dz = playerZone.GetComponent<DropZone>();
+            dz.Init(combat, combat.player, false);
+            allZones.Add(dz);
+            characterUIs.Add(pUI);
+        }
         // ENEMIES
         foreach (var enemy in combat.enemies)
         {
@@ -63,7 +67,7 @@ public class UIManager : MonoBehaviour
         {
             ui.Refresh();
         }
-        energyText.text = "Energy: " + combat.player.resources.energy;
+        energyText.text = combat.player != null ? "Energy: " + combat.player.resources.energy : "Energy: 0";
     
         RefreshHand();
     }
@@ -84,7 +88,8 @@ public class UIManager : MonoBehaviour
 
             obj.GetComponentInChildren<TMPro.TextMeshProUGUI>().text =
                 card.data.cardName;
-            obj.GetComponent<CardView>().SetCard(card);
+            obj.GetComponentInChildren<CardView>().SetCard(card);
+            obj.GetComponentInChildren<CardView>().RefreshDescription();
             cards.Add(rt);
         }
 
@@ -104,7 +109,7 @@ public class UIManager : MonoBehaviour
                     break;
 
                 case TargetingMode.AllEnemies:
-                    shouldHighlight = zone.target != combat.player;
+                    shouldHighlight = zone.target != combat.player&& hovered != null;
                     break;
 
                 case TargetingMode.Player:

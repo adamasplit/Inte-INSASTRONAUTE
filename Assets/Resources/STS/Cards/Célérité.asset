@@ -15,11 +15,13 @@ MonoBehaviour:
   cardName: "C\xE9l\xE9rit\xE9"
   cost: 0
   type: 1
+  rarity: 2
   effects:
   - type: 7
     value: 4
     duration: 0
     targetSelf: 1
   targetingMode: 0
+  modifiers: []
   exhaust: 0
   retain: 0

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b623d6635d7056498e1a2326d9249eb, type: 3}
+  m_Name: EnemyPool
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyPool
+  enemies:
+  - enemies:
+    - {fileID: 11400000, guid: cd6d3998007ee2a4fa40288240d496fc, type: 2}
+    - {fileID: 11400000, guid: 030305c5255494040b1aa2598d91e63d, type: 2}
+    - {fileID: 11400000, guid: 931c0fae846614e41adfb2bda056c8c7, type: 2}
+    minFloor: 0
+    maxFloor: 10
+    weight: 1
+    elite: 0
+    boss: 0
+  - enemies:
+    - {fileID: 11400000, guid: ad7696afb4d04fa44b2adf8360baaffd, type: 2}
+    minFloor: 0
+    maxFloor: 10
+    weight: 1
+    elite: 1
+    boss: 0

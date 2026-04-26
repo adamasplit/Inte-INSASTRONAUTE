@@ -58,7 +58,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         isHovered = false;
 
         var drag = eventData.pointerDrag?.GetComponentInParent<CardDrag>();
-        var cardView = drag?.GetComponent<CardView>();
+        var cardView = drag?.GetComponentInChildren<CardView>();
 
         if (cardView?.cardInstance == null)
         {
@@ -73,7 +73,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         if (targets.Count == 0)
             return;
 
-        combat.PlayCard(cardView.cardInstance, targets);
+        combat.PlayCard(combat.player, cardView.cardInstance, targets);
     }
 
     bool IsValidTarget(PointerEventData eventData)
@@ -83,7 +83,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
         var cardView = eventData.pointerDrag
             .GetComponent<CardDrag>()?
-            .GetComponent<CardView>();
+            .GetComponentInChildren<CardView>();
 
         if (cardView?.cardInstance?.data == null)
             return false;

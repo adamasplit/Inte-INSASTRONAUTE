@@ -20,7 +20,7 @@ public class StatusUI : MonoBehaviour
     {
         icon.sprite = Resources.Load<Sprite>($"STS/Icons/{status.Name}");
         nameText.text = status.Name;
-        valueText.text = $"{status.Duration}";
+        valueText.text = $"{(status.Duration>0? status.Duration : status.Value)}";
         descriptionText.text = status.Describe();
     }
 }

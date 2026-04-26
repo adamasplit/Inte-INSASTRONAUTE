@@ -7,6 +7,7 @@ public class Character
     public int maxHP;
     public int currentHP;
     public int armor;
+    public bool IsAlive => currentHP > 0;
     public ResourceSet resources = new ResourceSet();
     public bool isPlayer;
     public List<StatusEffect> statusEffects = new List<StatusEffect>();
@@ -22,7 +23,7 @@ public class Character
     {
         int damageAfterArmor = Mathf.Max(0, amount - armor);
         armor = Mathf.Max(0, armor - amount);
-        currentHP -= damageAfterArmor;
+        currentHP = Mathf.Max(0, currentHP - damageAfterArmor);
     }
 
     public void AddArmor(int amount)
@@ -70,6 +71,13 @@ public class Character
             }
         }
         statusEffects.RemoveAll(s => s.Duration == 0);
+        if (isPlayer)
+        {
+            foreach (var relic in RunManager.Instance.relics)
+            {
+                relic.OnTurnEnd(this);
+            }
+        }
     }
     public void SpendEnergy(int amount)
     {

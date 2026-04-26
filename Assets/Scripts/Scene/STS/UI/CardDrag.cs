@@ -29,21 +29,23 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
     public void OnBeginDrag(PointerEventData eventData)
     {
         startPos = rect.anchoredPosition;
+        transform.localScale = Vector3.one * 1.1f;
         group.blocksRaycasts = false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         rect.position = eventData.position;
-        var cardView = GetComponent<CardView>();
-        if (cardView?.cardInstance == null)
+        if (cardView.cardInstance == null)
+        {
+            Debug.LogError("CardView has no card instance");
             return;
+        }
         var future = turnSystem.GetFuture(10);
         var target = GetHoveredTarget();
         var sim = turnSystem.SimulateCard(future, cardView.cardInstance, target);
-        Debug.Log("[OnDrag] SIM CONTAINS ADVANCED: " + sim.Any(t => t.visualType == TurnVisualType.Advanced));
         ui.HighlightTargets(cardView.cardInstance.data.targetingMode, target);
-        timelineUI.Display(sim);
+        timelineUI.Display(sim,true);
         cardView.RefreshDescription(target);
     }
 
@@ -57,6 +59,7 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
         {
             cardView.RefreshDescription(null);
         }
+        transform.localScale = Vector3.one;
     }
     Character GetHoveredTarget()
     {

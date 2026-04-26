@@ -14,7 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: "D\xE9fense"
   cost: 1
+  type: 0
   effects:
   - type: 1
     value: 5
-  targetEnemy: 0
+    duration: 0
+    targetSelf: 1
+  targetingMode: 0
+  modifiers: []
+  exhaust: 0
+  retain: 0

@@ -15,11 +15,13 @@ MonoBehaviour:
   cardName: Enflammer
   cost: 1
   type: 2
+  rarity: 2
   effects:
   - type: 3
     value: 2
     duration: -1
     targetSelf: 1
-  targetEnemy: 0
+  targetingMode: 0
+  modifiers: []
   exhaust: 0
   retain: 0

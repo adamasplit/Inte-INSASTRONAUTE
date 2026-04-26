@@ -15,11 +15,13 @@ MonoBehaviour:
   cardName: "D\xE9sint\xE9gration"
   cost: 3
   type: 1
+  rarity: 3
   effects:
   - type: 6
     value: 0
     duration: 0
     targetSelf: 0
   targetingMode: 1
+  modifiers: []
   exhaust: 0
   retain: 0

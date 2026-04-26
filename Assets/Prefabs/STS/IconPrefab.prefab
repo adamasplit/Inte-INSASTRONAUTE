@@ -177,6 +177,7 @@ GameObject:
   - component: {fileID: 7529580237193771196}
   - component: {fileID: 3645399437688329238}
   - component: {fileID: 5110492570024422582}
+  - component: {fileID: 7118419398528912817}
   m_Layer: 5
   m_Name: IconPrefab
   m_TagString: Untagged
@@ -229,6 +230,19 @@ MonoBehaviour:
   portrait: {fileID: 7592251663564176646}
   background: {fileID: 5996511767510210174}
   strikeThrough: {fileID: 5630401461365836185}
+  canvasGroup: {fileID: 7118419398528912817}
+--- !u!225 &7118419398528912817
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2855428465820920308}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &3184151838634618221
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,9 +1,17 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine.SceneManagement;
+public enum TeamOutcome
+{
+    None,
+    Victory,
+    Defeat
+}
 
 public class CombatManager : MonoBehaviour
 {
-    public Player player => allies[0];
+    public Player player => allies.FirstOrDefault();
 
     public List<Player> allies = new();
     public List<Character> enemies = new();
@@ -14,24 +22,32 @@ public class CombatManager : MonoBehaviour
     public TurnSystem turnSystem;
 
     public CombatState state = new CombatState();
-
-    void Init()
+    public bool combatEnded { get; private set; }
+    public TeamOutcome outcome { get; private set; } = TeamOutcome.None;
+    public RewardGenerator rewardGenerator= new RewardGenerator();
+    public List<EnemyData> currentEnemiesData = new();
+    public void Init()
     {
         ui.Init(this);          // inject
         ui.InitCharacters();    // spawn UI
         ui.RefreshUI();
+        currentEnemiesData = new();
+        foreach (var enemy in enemies)
+        {
+            Enemy enn=enemy as Enemy;
+            currentEnemiesData.Add(enn.data);
+        }
     }
 
-    public void PlayCard(CardInstance card, List<Character> targets)
+    public void PlayCard(Character source, CardInstance card, List<Character> targets)
     {
-        if (player.resources.energy < card.data.cost)
+        Debug.Log($"Playing card {card.data.cardName} from {source.name} targeting {string.Join(", ", targets.Select(t => t.name))}");
+        if (source.resources.energy < card.data.cost&&source.isPlayer)
             return;
-
-        player.SpendEnergy(card.data.cost);
-
+        source.SpendEnergy(card.data.cost);
         EffectContext ctxTarget = new EffectContext
         {
-            source = player,
+            source = source,
             target = null,
             combat = this,
             state = state,
@@ -41,8 +57,8 @@ public class CombatManager : MonoBehaviour
 
         EffectContext ctxSelf = new EffectContext
         {
-            source = player,
-            target = player,
+            source = source,
+            target = source,
             combat = this,
             state = state,
             card = card,
@@ -66,51 +82,52 @@ public class CombatManager : MonoBehaviour
             deck.exhaustPile.Add(card);
         else
             deck.discardPile.Add(card);
+
+        bool combatOver = TryEndCombatIfNeeded();
+
         ui.HighlightTargets(TargetingMode.None, null);
         ui.RefreshUI();
-        turnSystem.timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
+        if (!combatOver)
+            turnSystem.timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
+        state.cardsPlayedThisTurn++;
     }
 
-    public int GetModifiedValue(int baseValue, StatType type, EffectContext ctx)
+    public void ResetCombatStatus()
     {
-        int value = baseValue;
-
-        foreach (var mod in GetAllModifiers(type))
-            value = mod.Modify(value, ctx);
-
-        foreach (var effect in ctx.source.statusEffects)
-        {
-            if (effect.AppliesTo(type, ctx))
-                value = effect.Modify(value, ctx);
-        }
-
-        if (ctx.target != null)
-        {
-            foreach (var effect in ctx.target.statusEffects)
-            {
-                if (effect.AppliesTo(type, ctx))
-                    value = effect.Modify(value, ctx);
-            }
-        }
-
-        return value;
-    }
-    public string GetModifiedDescription(int baseValue, StatType type, EffectContext ctx)
-    {
-        int modifiedValue = GetModifiedValue(baseValue, type, ctx);
-        if (modifiedValue <= 0)
-            return $"<color=gray>{modifiedValue}</color>";
-        else if (modifiedValue < baseValue)
-            return $"<color=red>{modifiedValue}</color>";
-        else if (modifiedValue > baseValue)
-            return $"<color=green>{modifiedValue}</color>";
-        else
-            return modifiedValue.ToString();
+        combatEnded = false;
+        outcome = TeamOutcome.None;
     }
 
-    private List<StatModifier> GetAllModifiers(StatType type)
+    public void CleanupSlainCharacters()
     {
-        return state.GetModifiers(type);
+        int alliesBefore = allies.Count;
+        int enemiesBefore = enemies.Count;
+
+        allies.RemoveAll(a => a == null || !a.IsAlive);
+        enemies.RemoveAll(e => e == null || !e.IsAlive);
+
+        if ((alliesBefore != allies.Count || enemiesBefore != enemies.Count) && ui != null)
+            ui.InitCharacters();
+    }
+
+    public bool TryEndCombatIfNeeded()
+    {
+        if (combatEnded)
+            return true;
+
+        CleanupSlainCharacters();
+
+        bool alliesSlain = allies.Count == 0;
+        bool enemiesSlain = enemies.Count == 0;
+
+        if (!alliesSlain && !enemiesSlain)
+            return false;
+
+        combatEnded = true;
+        outcome = enemiesSlain ? TeamOutcome.Victory : TeamOutcome.Defeat;
+
+        EndCombat();
+        return true;
     }
 
     public List<Character> GetTargets(TargetingMode mode, Character hovered)
@@ -118,18 +135,19 @@ public class CombatManager : MonoBehaviour
         switch (mode)
         {
             case TargetingMode.Enemy:
-                return hovered != null ? new List<Character> { hovered } : new();
+                return hovered != null && hovered.IsAlive ? new List<Character> { hovered } : new();
 
             case TargetingMode.Player:
-                return new List<Character> { player };
+                return player != null && player.IsAlive ? new List<Character> { player } : new();
 
             case TargetingMode.AllEnemies:
-                return new List<Character>(enemies);
+                return enemies.Where(e => e != null && e.IsAlive).ToList();
 
             case TargetingMode.AllCharacters:
             {
-                var list = new List<Character>(enemies);
-                list.Add(player);
+                var list = enemies.Where(e => e != null && e.IsAlive).Cast<Character>().ToList();
+                if (player != null && player.IsAlive)
+                    list.Add(player);
                 return list;
             }
 
@@ -139,8 +157,22 @@ public class CombatManager : MonoBehaviour
     }
     public List<Character> GetAllCharacters()
     {
-        var list = new List<Character>(enemies);
-        list.Add(player);
+        var list = enemies.Where(e => e != null && e.IsAlive).Cast<Character>().ToList();
+        if (player != null && player.IsAlive)
+            list.Add(player);
         return list;
+    }
+
+    void EndCombat()
+    {
+        var result = new CombatResult
+        {
+            enemies = currentEnemiesData,
+            floor = RunManager.Instance.currentFloor
+        };
+        var rewards = rewardGenerator.GenerateCardChoices(result);
+        RunManager.Instance.pendingReward = new Reward();
+        RunManager.Instance.pendingReward.cardChoices = rewards;
+        SceneManager.LoadScene("STS_Reward");
     }
 }
