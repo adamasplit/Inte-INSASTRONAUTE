@@ -1,9 +1,8 @@
 using UnityEngine;
 public class RegenStatus : StatusEffect
 {
-    public RegenStatus(int value, int duration)
+    public RegenStatus(int duration)
     {
-        Value = value;
         Duration = duration;
         Name = "Régénération";
         modifierType = ModifierType.Additive;
@@ -17,8 +16,8 @@ public class RegenStatus : StatusEffect
     {
         return damage;
     }
-    public override void OnTurnEnd(Character target)
+    public override void OnTurnStart(Character target)
     {
-        target.Heal(Value);
+        target.Heal(Duration);
     }
 }

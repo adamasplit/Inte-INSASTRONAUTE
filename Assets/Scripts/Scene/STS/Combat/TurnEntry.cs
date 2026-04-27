@@ -1,11 +1,3 @@
-public enum TurnVisualType
-{
-    Normal,
-    Removed,
-    Added,
-    Delayed,
-    Advanced
-}
 public class TurnEntry
 {
     public Character character;

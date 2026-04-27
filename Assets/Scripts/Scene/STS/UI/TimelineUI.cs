@@ -1,50 +1,96 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
+
 public class TimelineUI : MonoBehaviour
 {
     public Transform container;
     public GameObject iconPrefab;
-    public TurnSystem turnSystem;
-    List<GameObject> currentIcons = new();
-    public List<TurnEntry> displayedTimeline = new();
+
+    public float spacing = 100f;
+
+    List<TurnIcon> icons = new();
+    List<TurnEntry> previousTimeline = null;
+
     public void Display(List<TurnEntry> timeline, bool preview = false)
     {
-        Clear();
+        EnsureIconCount(timeline.Count);
+
         for (int i = 0; i < timeline.Count; i++)
         {
             var entry = timeline[i];
+            var icon = icons[i];
 
-            var obj = Instantiate(iconPrefab, container);
-            var icon = obj.GetComponent<TurnIcon>();
+            icon.gameObject.SetActive(true);
 
             icon.Set(entry.character);
-            icon.SetPreview(preview&&displayedTimeline!=timeline);
-            switch (entry.visualType)
+            icon.SetPreview(preview);
+
+            //   POSITION CIBLE (nouvelle)
+            Vector3 targetPos = new Vector3((i - timeline.Count / 2f) * spacing, 0, 0);
+
+            //   POSITION DE DÉPART (ancienne)
+            if (previousTimeline != null)
             {
-                case TurnVisualType.Removed:
-                    icon.SetRemoved();
-                    break;
+                int oldIndex = FindMatchingIndex(previousTimeline, entry);
 
-                case TurnVisualType.Delayed:
-                    icon.SetDelayed();
-                    break;
+                if (oldIndex != -1)
+                {
+                    Vector3 oldPos = new Vector3(
+                        (oldIndex - previousTimeline.Count / 2f) * spacing,
+                        0,
+                        0
+                    );
 
-                case TurnVisualType.Advanced:
-                    icon.SetAdvanced();
-                    break;
+                    // IMPORTANT : on place l'icône à son ancienne position AVANT de lui donner une target
+                    icon.transform.localPosition = oldPos;
+                }
             }
 
-            currentIcons.Add(obj);
+            icon.SetTargetPosition(targetPos);
+
+            icon.SetType(entry.visualType);
         }
-        displayedTimeline = timeline;
+
+        // désactiver les icônes en trop
+        for (int i = timeline.Count; i < icons.Count; i++)
+        {
+            icons[i].gameObject.SetActive(false);
+        }
+
+        //   on sauvegarde pour le prochain frame
+        if (!preview) previousTimeline = CloneTimeline(timeline);
     }
 
-    void Clear()
+    int FindMatchingIndex(List<TurnEntry> list, TurnEntry entry)
     {
-        foreach (var obj in currentIcons)
-            Destroy(obj);
+        for (int i = 0; i < list.Count; i++)
+        {
+            var e = list[i];
 
-        currentIcons.Clear();
+            // match simple (suffisant pour l'instant)
+            if (e.character == entry.character && Mathf.Approximately(e.time, entry.time))
+                return i;
+        }
+
+        return -1;
+    }
+
+    List<TurnEntry> CloneTimeline(List<TurnEntry> source)
+    {
+        var clone = new List<TurnEntry>();
+
+        foreach (var t in source)
+            clone.Add(t.Clone());
+
+        return clone;
+    }
+
+    void EnsureIconCount(int count)
+    {
+        while (icons.Count < count)
+        {
+            var obj = Instantiate(iconPrefab, container);
+            icons.Add(obj.GetComponent<TurnIcon>());
+        }
     }
 }

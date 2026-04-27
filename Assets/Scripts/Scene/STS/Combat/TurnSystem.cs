@@ -31,7 +31,7 @@ public class TurnSystem : MonoBehaviour
             timeline.Add(new TurnEntry
             {
                 character = c,
-                time = Random.Range(0f, 5f)
+                time = c != null && c.isPlayer ? -1f : Random.Range(0f, 5f)
             });
         }
 
@@ -140,7 +140,7 @@ public class TurnSystem : MonoBehaviour
 
         yield return new WaitForSeconds(0.3f);
 
-        EndTurn(baseDelay);
+        EndTurn(enemyChar.turnDelay(baseDelay));
     }
 
     // -------------------------
@@ -151,7 +151,7 @@ public class TurnSystem : MonoBehaviour
         if (combat.combatEnded || CurrentCharacter == null || !CurrentCharacter.isPlayer)
             return;
 
-        EndTurn(baseDelay);
+        EndTurn(CurrentCharacter.turnDelay(baseDelay));
     }
 
     // -------------------------
@@ -273,7 +273,7 @@ public class TurnSystem : MonoBehaviour
         sim.Add(new TurnEntry
         {
             character = c,
-            time = current.time + baseDelay,
+            time = current.time + c.turnDelay(baseDelay),
             visualType = TurnVisualType.Normal // IMPORTANT
         });
     }
@@ -310,7 +310,7 @@ public class TurnSystem : MonoBehaviour
             sim.Add(new TurnEntry
             {
                 character = next.character,
-                time = next.time + baseDelay,
+                time = next.time + next.character.turnDelay(baseDelay),
                 visualType = TurnVisualType.Normal
             });
         }

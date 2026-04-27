@@ -18,4 +18,8 @@ public class StrengthStatus : StatusEffect
     {
         return damage + Value;
     }
+    public override string Describe()
+    {
+        return $"{Value} dégâts supplémentaires";
+    }
 }

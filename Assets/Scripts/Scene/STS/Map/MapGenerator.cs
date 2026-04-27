@@ -4,20 +4,20 @@ using System.Linq;
 public class MapGenerator
 {
     public int width = 5;
-    public int height = 15;
+    public int height = 10;
     public int pathCount = 4;
 
     public MapNode startNode;
     private List<MapNode> allNodes = new();
     HashSet<Vector2Int> occupied = new();
 
-    public List<MapNode> Generate()
+    public List<MapNode> Generate(int startingFloor = 0)
     {
         allNodes = new List<MapNode>();
         startNode = new MapNode
         {
             id = 0,
-            floor = 0,
+            floor = startingFloor,
             x = width / 2,
             type = NodeType.Start,
             next = new List<MapNode>(),
@@ -26,7 +26,7 @@ public class MapGenerator
         List<MapNode> previousFloorNodes = new List<MapNode> { startNode };
         allNodes.Add(startNode);
         this.startNode = startNode;
-        for (int y = 1; y < height; y++)
+        for (int y = startingFloor + 1; y < height+RunManager.Instance.lastActEndFloor; y++)
         {
             int nodeCount = GetNodeCountForFloor(y);
 
@@ -59,10 +59,6 @@ public class MapGenerator
             ConnectToPreviousFloor(previousFloorNodes, floorNodes);
             previousFloorNodes = floorNodes;
         }
-
-        Debug.Log($"Generated nodes: {allNodes.Count}");
-        Debug.Log($"Start node: id={startNode.id}, floor={startNode.floor}, x={startNode.x}, type={startNode.type}");
-        Debug.Log($"Smallest floor: {allNodes.Min(n => n.floor)}, largest floor: {allNodes.Max(n => n.floor)}");
 
         return allNodes;
     }

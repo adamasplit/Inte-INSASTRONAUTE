@@ -10,19 +10,21 @@ public class MapManager : MonoBehaviour
 
     private System.Collections.Generic.List<MapNode> allNodes;
 
-    void Start()
+    void Awake()
     {
-        if (RunManager.Instance!=null && RunManager.Instance.map != null)
+        if (RunManager.Instance!=null && RunManager.Instance.map != null&&!RunManager.Instance.RegenerateMap)
         {
             allNodes = RunManager.Instance.map;
             currentNode = RunManager.Instance.currentNode;
             view.GenerateView(allNodes);
             return;
         }
-        var map = generator.Generate();
+        var map = generator.Generate(RunManager.Instance != null&&RunManager.Instance.RegenerateMap ? RunManager.Instance.currentFloor : 0);
+        RunManager.Instance.currentNode = generator.startNode;
+        RunManager.Instance.RegenerateMap = false;
         RunManager.Instance.map = map;
         allNodes = map;
-
+        Debug.Log($"Generated map with {allNodes.Count} nodes");
         currentNode = generator.startNode;
 
         view.GenerateView(allNodes);
@@ -57,6 +59,7 @@ public class MapManager : MonoBehaviour
 
     void ResolveNode(MapNode node)
     {
+        node.visited = true;
         switch (node.type)
         {
             case NodeType.Combat:

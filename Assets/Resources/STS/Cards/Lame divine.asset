@@ -13,18 +13,21 @@ MonoBehaviour:
   m_Name: Lame divine
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: Lame divine
+  collectionCard: {fileID: 0}
   cost: 2
   type: 0
-  rarity: 4
+  rarity: 5
   effects:
   - type: 0
     value: 25
-    duration: 0
     targetSelf: 0
+    statusType: 0
+    duration: 0
   - type: 2
     value: 25
-    duration: 0
     targetSelf: 1
+    statusType: 0
+    duration: 0
   targetingMode: 1
   modifiers: []
   exhaust: 1

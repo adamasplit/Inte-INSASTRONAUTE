@@ -10,19 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: "D\xE9sint\xE9gration"
+  m_Name: Soutien du BDE
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  cardName: "D\xE9sint\xE9gration"
-  cost: 3
-  type: 1
-  rarity: 3
+  cardName: Enflammer
+  collectionCard: {fileID: 11400000, guid: 550250c1f7fa6a14988bc0a5e1ad5cc6, type: 2}
+  cost: 1
+  type: 2
+  rarity: 2
   effects:
-  - type: 4
-    value: 0
-    targetSelf: 0
+  - type: 3
+    value: 2
+    targetSelf: 1
     statusType: 0
-    duration: 0
-  targetingMode: 1
+    duration: -1
+  targetingMode: 0
   modifiers: []
   exhaust: 0
   retain: 0

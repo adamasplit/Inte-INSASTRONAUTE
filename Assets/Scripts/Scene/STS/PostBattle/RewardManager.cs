@@ -25,6 +25,30 @@ public class RewardManager : MonoBehaviour
 
         RunManager.Instance.pendingReward = null;
 
-        SceneManager.LoadScene("STS_Map");
+    }
+
+    public void OnRelicSelected(Relic relic)
+    {
+        RunManager.Instance.AddRelic(relic);
+
+        RunManager.Instance.pendingReward = null;
+
+    }
+
+    public void EndReward()
+    {
+        RunManager.Instance.pendingReward = null;
+        bool elite = RunManager.Instance.eliteEncounter;
+        bool boss = RunManager.Instance.bossEncounter;
+        RunManager.Instance.eliteEncounter = false;
+        RunManager.Instance.bossEncounter = false;
+        if (boss)
+        {
+            SceneManager.LoadScene("STS_Retreat");
+        }
+        else
+        {
+            SceneManager.LoadScene("STS_Map");
+        }
     }
 }

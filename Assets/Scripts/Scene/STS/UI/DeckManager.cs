@@ -7,6 +7,11 @@ public class DeckManager
     public List<CardInstance> discardPile = new();
     public List<CardInstance> exhaustPile = new();
 
+    public void AddToHand(CardInstance card)
+    {
+        hand.Add(card);
+    }
+
     public void Draw(int amount)
     {
         for (int i = 0; i < amount; i++)

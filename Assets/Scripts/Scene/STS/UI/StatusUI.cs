@@ -8,13 +8,11 @@ public class StatusUI : MonoBehaviour
     public Transform tooltipPanel;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI descriptionText;
-    public void OnHover()
+    private bool tooltipVisible = false;
+    public void ToggleTooltip()
     {
-        tooltipPanel.gameObject.SetActive(true);
-    }
-    public void OnExit()
-    {
-        tooltipPanel.gameObject.SetActive(false);
+        tooltipVisible = !tooltipVisible;
+        tooltipPanel.gameObject.SetActive(tooltipVisible);
     }
     public void SetStatus(StatusEffect status)
     {

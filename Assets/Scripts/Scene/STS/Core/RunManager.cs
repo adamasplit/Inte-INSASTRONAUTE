@@ -14,6 +14,8 @@ public class RunManager : MonoBehaviour
     public bool bossEncounter;
     public List<MapNode> map=null;
     public MapNode currentNode;
+    public bool RegenerateMap = false;
+    public int lastActEndFloor = 0;
     void Awake()
     {
         if (Instance != null)
@@ -30,7 +32,7 @@ public class RunManager : MonoBehaviour
         relics.Add(relic);
         relic.OnAcquire(player);
     }
-    public void StartRun(string character,int maxHP, List<Relic> startingRelics)
+    public void StartRun(string character,int maxHP, List<Relic> startingRelics,bool startOnMap=true)
     {
         STSCardDatabase.Load();
         var run = RunManager.Instance;
@@ -40,13 +42,21 @@ public class RunManager : MonoBehaviour
         run.currentFloor = 1;
 
         run.deck.Clear();
-        STSCardData attackCard = STSCardDatabase.Get("Attaque");
-        STSCardData blockCard = STSCardDatabase.Get("Défense");
+        STSCardData attackCard = STSCardDatabase.Get("Katana");
+        STSCardData blockCard = STSCardDatabase.Get("Révision Model Text");
+        if (attackCard == null || blockCard == null)
+        {
+            Debug.LogError("Cards not found in database!");
+            return;
+        }
         for(int i = 0; i < 5; i++)
         {
             run.deck.Add(attackCard);
             run.deck.Add(blockCard);
         }
-        SceneManager.LoadScene("STS_Map");
+        if (startOnMap)
+        {
+            SceneManager.LoadScene("STS_Map");
+        }
     }
 }

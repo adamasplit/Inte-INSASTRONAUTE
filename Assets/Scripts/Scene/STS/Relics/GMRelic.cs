@@ -1,3 +1,4 @@
 public class GMRelic:Relic
 {
+
 }

@@ -63,7 +63,7 @@ public static class EffectResolver
                         timeline.Add(new TurnEntry
                         {
                             character = ctx.target,
-                            time = targetEntry.time + turnSystem.baseDelay
+                            time = targetEntry.time + ctx.target.turnDelay(turnSystem.baseDelay), // Schedule for the next turn
                         });
                     }
                 }

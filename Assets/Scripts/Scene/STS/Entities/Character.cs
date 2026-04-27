@@ -11,6 +11,7 @@ public class Character
     public ResourceSet resources = new ResourceSet();
     public bool isPlayer;
     public List<StatusEffect> statusEffects = new List<StatusEffect>();
+    public CombatManager combat;
     public Character(string name, int maxHP)
     {
         this.name = name;
@@ -83,5 +84,17 @@ public class Character
     public void SpendEnergy(int amount)
     {
         resources.energy -= amount;
+    }
+    public CombatManager GetCombatManager()
+    {
+        if (combat==null)
+        {
+            return GameObject.FindFirstObjectByType<CombatManager>();
+        }
+        return combat;
+    }
+    public int turnDelay(int baseDelay)
+    {
+        return BattleCalculator.GetModifiedValue(baseDelay, StatType.TurnDelay, new EffectContext { source = this, target = this });
     }
 }

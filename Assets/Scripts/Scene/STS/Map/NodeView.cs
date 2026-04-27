@@ -31,7 +31,6 @@ public class NodeView : MonoBehaviour
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() =>
         {
-            Debug.Log($"Node clicked: nodeId={node.id}, floor={node.floor}, type={node.type}.", this);
             manager.MoveToNode(node);
             onClick?.Invoke();
         });

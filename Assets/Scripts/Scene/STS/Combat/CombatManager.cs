@@ -37,11 +37,14 @@ public class CombatManager : MonoBehaviour
             Enemy enn=enemy as Enemy;
             currentEnemiesData.Add(enn.data);
         }
+        foreach (var ally in allies)
+        {
+            ally.combat = this;
+        }
     }
 
     public void PlayCard(Character source, CardInstance card, List<Character> targets)
     {
-        Debug.Log($"Playing card {card.data.cardName} from {source.name} targeting {string.Join(", ", targets.Select(t => t.name))}");
         if (source.resources.energy < card.data.cost&&source.isPlayer)
             return;
         source.SpendEnergy(card.data.cost);

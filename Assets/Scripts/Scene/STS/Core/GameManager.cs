@@ -48,14 +48,17 @@ public class GameManager : MonoBehaviour
             List<EnemyData> enemies = EnemySelector.GetRandomEncounter(RunManager.Instance.currentFloor, RunManager.Instance.eliteEncounter, RunManager.Instance.bossEncounter);
             combat.enemies = enemies.Select(e => (Character)new Enemy(e.enemyName) { data = e }).ToList();
             Debug.Log($"Selected enemies: {string.Join(", ", combat.enemies.Select(e => e.name))}");
-            RunManager.Instance.eliteEncounter = false;
-            RunManager.Instance.bossEncounter = false;
             combat.deck = new DeckManager();
             foreach (var cardData in RunManager.Instance.deck)
             {
                 combat.deck.drawPile.Add(new CardInstance(cardData));
             }
             combat.deck.Shuffle(combat.deck.drawPile);
+            combat.allies[0].statusEffects.Clear();
+            foreach (Relic relic in RunManager.Instance.relics)
+            {
+                relic.OnCombatStart(combat.allies[0]);
+            }
         }
     }
 }

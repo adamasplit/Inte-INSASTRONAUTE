@@ -10,19 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: "C\xE9l\xE9rit\xE9"
+  m_Name: Rattrapages
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  cardName: "C\xE9l\xE9rit\xE9"
+  cardName: Lenteur
+  collectionCard: {fileID: 11400000, guid: 3ea0a0a61a928f840ba75e2b69b3e644, type: 2}
   cost: 0
   type: 1
   rarity: 2
   effects:
-  - type: 5
-    value: 4
-    targetSelf: 1
+  - type: 6
+    value: 5
+    targetSelf: 0
     statusType: 0
     duration: 0
-  targetingMode: 0
+  targetingMode: 1
   modifiers: []
   exhaust: 0
   retain: 0

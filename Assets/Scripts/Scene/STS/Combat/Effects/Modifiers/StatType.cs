@@ -5,5 +5,6 @@ public enum StatType
     Heal,
     Cost,
     StatusPotency,
-    StatusDuration
+    StatusDuration,
+    TurnDelay
 }

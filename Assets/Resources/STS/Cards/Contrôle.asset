@@ -10,21 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: Manipulation temporelle
+  m_Name: "Contr\xF4le"
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  cardName: Manipulation temporelle
-  cost: 0
+  cardName: "D\xE9sint\xE9gration"
+  collectionCard: {fileID: 11400000, guid: c79f3636970e2c64195f13350f3cffbc, type: 2}
+  cost: 3
   type: 1
-  rarity: 4
+  rarity: 3
   effects:
-  - type: 6
-    value: 10
+  - type: 4
+    value: 0
     targetSelf: 0
-    statusType: 0
-    duration: 0
-  - type: 5
-    value: 10
-    targetSelf: 1
     statusType: 0
     duration: 0
   targetingMode: 1

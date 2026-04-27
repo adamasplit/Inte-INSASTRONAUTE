@@ -48,3 +48,11 @@ MonoBehaviour:
     weight: 1
     elite: 0
     boss: 0
+  - displayName: TestBoss
+    enemies:
+    - {fileID: 11400000, guid: b9089d6d4d15dea4887c882b4866b068, type: 2}
+    minFloor: 0
+    maxFloor: 50
+    weight: 1
+    elite: 0
+    boss: 1

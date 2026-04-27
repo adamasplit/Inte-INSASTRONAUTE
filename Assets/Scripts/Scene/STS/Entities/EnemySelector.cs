@@ -10,16 +10,10 @@ public static class EnemySelector
         bool elite = false,
         bool boss = false)
     {
-        Debug.Log($"Selecting enemy for floor {floor} (elite={elite}, boss={boss})");
         if (pool == null)
         {
             pool=Resources.Load<EnemyPool>("STS/Enemies/EnemyPool");
         }
-        Debug.Log($"Loaded enemy pool with {pool.enemies.Count} entries");
-        Debug.Log($"Filtering enemies for floor {floor}...");
-        Debug.Log($"Enemies with correct floor: {pool.enemies.Count(e => e.minFloor <= floor && e.maxFloor >= floor)}");
-        Debug.Log($"Enemies with correct elite flag: {pool.enemies.Count(e => e.elite == elite)}");
-        Debug.Log($"Enemies with correct boss flag: {pool.enemies.Count(e => e.boss == boss)}");
         var candidates = pool.enemies
             .Where(e =>
                 e.minFloor <= floor &&

@@ -151,7 +151,7 @@ GameObject:
   - component: {fileID: 7769463498481241009}
   - component: {fileID: 5558289674583379265}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -390,6 +390,8 @@ MonoBehaviour:
   costText: {fileID: 7136742688372630950}
   descriptionText: {fileID: 2938206181620115397}
   rarityBorder: {fileID: 4067321004170145804}
+  rarityBorder2: {fileID: 5558289674583379265}
+  cardImage: {fileID: 8259274326436792304}
   cardTypeText: {fileID: 6729957512673056278}
 --- !u!1 &4265543050717520445
 GameObject:
@@ -426,8 +428,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 73.45, y: -20.11}
-  m_SizeDelta: {x: 146.9, y: 40.22}
+  m_AnchoredPosition: {x: 36.725, y: -10.055}
+  m_SizeDelta: {x: 73.45, y: 20.11}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2075607530017109283
 CanvasRenderer:
@@ -484,8 +486,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

@@ -23,7 +23,8 @@ public abstract class StatusEffect : StatModifier
     {
         StatusEffect stat = type switch
         {
-            StatusType.Regen => new RegenStatus(value, duration),
+            StatusType.Poison => new PoisonStatus(duration),
+            StatusType.Regen => new RegenStatus(duration),
             StatusType.Strength => new StrengthStatus(value,duration),
             StatusType.Weakness => new WeaknessStatus(duration),
             StatusType.Vuln => new VulnStatus(duration),

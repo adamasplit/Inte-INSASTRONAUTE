@@ -5,7 +5,6 @@ public class RewardCardController : MonoBehaviour
     STSCardData data;
     CardInstance instance;
     RewardManager rewardManager;
-
     void Awake()
     {
         view = GetComponentInChildren<CardView>();

@@ -294,7 +294,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TimelineUI
   container: {fileID: 1789815845}
   iconPrefab: {fileID: 2855428465820920308, guid: ac7a6387bc13c2c41898840dd2897216, type: 3}
-  turnSystem: {fileID: 976502729}
+  spacing: 120
 --- !u!1 &168042402
 GameObject:
   m_ObjectHideFlags: 0
@@ -1149,8 +1149,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 75}
-  m_SizeDelta: {x: 0, y: 150}
+  m_AnchoredPosition: {x: 75, y: 75}
+  m_SizeDelta: {x: -150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1789815846
 MonoBehaviour:

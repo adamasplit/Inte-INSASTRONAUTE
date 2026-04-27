@@ -10,17 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: Enflammer
+  m_Name: Rush du matin
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  cardName: Enflammer
-  cost: 1
-  type: 2
+  cardName: Rush du matin
+  collectionCard: {fileID: 11400000, guid: 9e4a9221cea9cba4787c4e936fdbdc5f, type: 2}
+  cost: 0
+  type: 1
   rarity: 2
   effects:
-  - type: 3
-    value: 2
-    duration: -1
+  - type: 5
+    value: 4
     targetSelf: 1
+    statusType: 0
+    duration: 0
   targetingMode: 0
   modifiers: []
   exhaust: 0

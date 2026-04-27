@@ -7,7 +7,7 @@ public static class TestDatabase
 
     public static void Init()
     {
-        attackCard=Resources.Load<STSCardData>("STS/Cards/Attaque");
-        blockCard=Resources.Load<STSCardData>("STS/Cards/Défense");
+        attackCard=Resources.Load<STSCardData>("STS/Cards/Katana");
+        blockCard=Resources.Load<STSCardData>("STS/Cards/Révision Model Text");
     }
 }

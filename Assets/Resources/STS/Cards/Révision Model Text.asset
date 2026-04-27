@@ -10,16 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: "D\xE9fense"
+  m_Name: "R\xE9vision Model Text"
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: "D\xE9fense"
+  collectionCard: {fileID: 11400000, guid: f4aa7a24b7e4116488e45d3ac1275e04, type: 2}
   cost: 1
-  type: 0
+  type: 1
+  rarity: 0
   effects:
   - type: 1
     value: 5
-    duration: 0
     targetSelf: 1
+    statusType: 0
+    duration: 0
   targetingMode: 0
   modifiers: []
   exhaust: 0

@@ -80,7 +80,7 @@ public class RewardGenerator
                 CardRarity.Rare => 25,
                 CardRarity.Epic => 10,
                 CardRarity.Legendary => 5,
-                _ => 100
+                _ => 0
             };
             floorCards.Add(new CardEntry(card, weight));
         }

@@ -10,20 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: Vague de fer
+  m_Name: Danse du limousin
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  cardName: Vague de fer
-  cost: 1
-  type: 0
+  cardName: Danse du limousin
+  collectionCard: {fileID: 11400000, guid: 4c8c124f3131af642b58a8a8c3b7c494, type: 2}
+  cost: 3
+  type: 1
+  rarity: 3
   effects:
-  - type: 0
+  - type: 2
     value: 5
-    duration: 0
     targetSelf: 0
-  - type: 1
-    value: 5
+    statusType: 0
     duration: 0
-    targetSelf: 1
-  targetingMode: 1
+  - type: 3
+    value: 2
+    targetSelf: 0
+    statusType: 3
+    duration: 10
+  targetingMode: 0
+  modifiers: []
   exhaust: 0
   retain: 0

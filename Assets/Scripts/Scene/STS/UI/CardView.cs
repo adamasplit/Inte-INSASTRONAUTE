@@ -8,6 +8,8 @@ public class CardView : MonoBehaviour
     public TextMeshProUGUI costText;
     public TextMeshProUGUI descriptionText;
     public Image rarityBorder;
+    public Image rarityBorder2;
+    public Image cardImage;
     public TextMeshProUGUI cardTypeText;
     CombatManager combat;
     Character currentTarget;
@@ -15,6 +17,10 @@ public class CardView : MonoBehaviour
     void Start()
     {
         combat = FindFirstObjectByType<CombatManager>();
+    }
+    public void Set(STSCardData card)
+    {
+        SetCard(card != null ? new CardInstance(card) : null);
     }
     public void SetCard(CardInstance card)
     {
@@ -34,22 +40,33 @@ public class CardView : MonoBehaviour
             SetName(card.data.cardName);
             SetCost(card.data.cost);
             cardTypeText.text = card.data.type.ToString();
+            nameText.text+= "\n<i><color=grey>" + (card.data.collectionCard != null && card.data.collectionCard.cardName != card.data.cardName ? card.data.collectionCard.cardName : "")+ "</color></i>";
+            cardImage.sprite = card.data.collectionCard != null ? card.data.collectionCard.sprite : null;
             switch (card.data.rarity)
             {
                 case CardRarity.Common:
                     rarityBorder.color = Color.white;
+                    rarityBorder2.color = Color.white;
                     break;
                 case CardRarity.Uncommon:
                     rarityBorder.color = Color.green;
+                    rarityBorder2.color = Color.green;
                     break;
                 case CardRarity.Rare:
                     rarityBorder.color = Color.blue;
+                    rarityBorder2.color = Color.blue;
                     break;
                 case CardRarity.Epic:
                     rarityBorder.color = Color.magenta;
+                    rarityBorder2.color = Color.magenta;
                     break;
                 case CardRarity.Legendary:
                     rarityBorder.color = Color.yellow;
+                    rarityBorder2.color = Color.yellow;
+                    break;
+                case CardRarity.Special:
+                    rarityBorder.color = Color.red;
+                    rarityBorder2.color = Color.red;
                     break;
             }
             RefreshDescription();
@@ -97,4 +114,6 @@ public class CardView : MonoBehaviour
             SetDescription(cardInstance.GetDescription(ctx));
         }
     }
+
+
 }

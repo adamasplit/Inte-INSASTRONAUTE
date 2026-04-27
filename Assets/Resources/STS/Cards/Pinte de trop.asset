@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: "Coup de gr\xE2ce"
+  m_Name: Pinte de trop
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  cardName: "Coup de gr\xE2ce"
+  cardName: Tout ou rien
+  collectionCard: {fileID: 11400000, guid: 224b9c058364e3d4891b658a5d034c85, type: 2}
   cost: 0
-  type: 0
-  rarity: 3
+  type: 1
+  rarity: 2
   effects:
-  - type: 0
-    value: 1
+  - type: 3
+    value: 3
+    targetSelf: 1
+    statusType: 1
+    duration: 3
+  - type: 3
+    value: 5
     targetSelf: 0
     statusType: 0
     duration: 0
-  targetingMode: 1
-  modifiers:
-  - type: 0
-    kind: 0
-    value: 0
-  - type: 0
-    kind: 2
-    value: 6
+  targetingMode: 0
+  modifiers: []
   exhaust: 0
   retain: 0

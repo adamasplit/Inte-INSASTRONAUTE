@@ -2,11 +2,11 @@ public enum SelectableCharacter
 {
     EP,
     MECA,
-    CFI,
     GM,
     ITI,
+    CFI,
+    MRIE,
     GC,
     ARCHI,
-    PERF,
-    MRIE
+    PERF
 }

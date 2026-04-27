@@ -4,5 +4,6 @@ public enum StatusType
     Vuln,
     Weakness,
     Regen,
-    Dexterity
+    Dexterity,
+    Poison
 }

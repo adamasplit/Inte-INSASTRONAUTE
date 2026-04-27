@@ -23,6 +23,7 @@ public class CharacterSelectUI : MonoBehaviour
             btn.Init(character, OnCharacterSelected);
         }
         OnCharacterSelected(SelectableCharacter.EP);
+        characterListContainer.position= new Vector3(2000, characterListContainer.position.y, 0);
         Hide();
     }
     public void Show()
@@ -81,7 +82,20 @@ public class CharacterSelectUI : MonoBehaviour
             Debug.LogError($"No relic assigned for character {character}. Cannot start run.");
             return;
         }
-        RunManager.Instance.StartRun(character.ToString(), 50, new List<Relic>() {relic});
+        int hp = character switch
+        {
+            SelectableCharacter.EP => 80,
+            SelectableCharacter.MECA => 70,
+            SelectableCharacter.CFI => 90,
+            SelectableCharacter.GM => 75,
+            SelectableCharacter.ITI => 85,
+            SelectableCharacter.GC => 65,
+            SelectableCharacter.ARCHI => 100,
+            SelectableCharacter.PERF => 60,
+            SelectableCharacter.MRIE => 95,
+            _ => 80
+        };
+        RunManager.Instance.StartRun(character.ToString(), hp, new List<Relic>() {relic});
     }
 
     public string CharacterDescription(SelectableCharacter character)
@@ -89,6 +103,11 @@ public class CharacterSelectUI : MonoBehaviour
         string result = character switch
         {
             SelectableCharacter.EP => "L'EP est un vaisseau puissant avec une conservation énergétique optimale.",
+            SelectableCharacter.MECA => "Une machine conçue pour l'exploration, avec une durabilité et une résilience hors du commun.",
+            SelectableCharacter.GM=> "Un influent politique qui sait user de sa position.",
+            SelectableCharacter.CFI => "Un chercheur dédié à l'exploration et à la découverte.",
+            SelectableCharacter.MRIE => "Une force de la nature destructrice, déclenchant des phénomènes cosmiques sur son passage.",
+            SelectableCharacter.ITI => "Une entité capable de s'adapter et d'évoluer en absorbant les pouvoirs de ses adversaires.",
             _ => "Description inconnue."
         };
         return result;
@@ -99,13 +118,13 @@ public class CharacterSelectUI : MonoBehaviour
         {
             SelectableCharacter.EP => "Espadon de Prime",
             SelectableCharacter.MECA => "MECA",
-            SelectableCharacter.CFI => "Croiseur de la Fédération Interstellaire",
-            SelectableCharacter.GM => "Galactus Type-M",
-            SelectableCharacter.ITI => "Imitateur Transcendant d'Intelligence",
-            SelectableCharacter.GC => "GC",
+            SelectableCharacter.CFI => "Chercheur de la Fédération Interstellaire",
+            SelectableCharacter.GM => "Grand Magistrat",
+            SelectableCharacter.ITI => "Imitatrice Transcendante d'Intelligence",
+            SelectableCharacter.GC => "Gardienne du Cosmos",
             SelectableCharacter.ARCHI => "ARCHI",
             SelectableCharacter.PERF => "PERF",
-            SelectableCharacter.MRIE => "MRIE",
+            SelectableCharacter.MRIE => "Messager du Rêve et de l'Insondable Éternel",
             _ => "Unknown"
         };
         return $"<color=yellow>{result}</color>\n";

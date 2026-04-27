@@ -10,24 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: Champ de force
+  m_Name: Katana
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  cardName: Champ de force
+  cardName: Frappe au katana
+  collectionCard: {fileID: 11400000, guid: 786841ea8e858bc4d9e21fff30db7161, type: 2}
   cost: 1
-  type: 1
-  rarity: 1
+  type: 0
+  rarity: 0
   effects:
-  - type: 3
+  - type: 0
     value: 6
     targetSelf: 0
-    statusType: 1
-    duration: 6
-  - type: 3
-    value: 6
-    targetSelf: 0
-    statusType: 2
-    duration: 6
-  targetingMode: 2
+    statusType: 0
+    duration: 0
+  targetingMode: 1
   modifiers: []
   exhaust: 0
   retain: 0
