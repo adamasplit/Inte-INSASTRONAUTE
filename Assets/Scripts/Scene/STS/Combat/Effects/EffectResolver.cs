@@ -12,7 +12,32 @@ public static class EffectResolver
                 if (ctx.isPreview)
                     break; // Skip actual damage application during preview
                 int dmg = BattleCalculator.GetModifiedValue(effect.value, StatType.Damage, ctx);
-                ctx.target.TakeDamage(dmg);
+                if (ctx!=null&&ctx.card!=null&&ctx.card.enchantments.Exists(e=>e.data.name=="Humanisme"))
+                {
+                    dmg=ctx.target.TakeDamage(dmg,true);
+                }
+                else
+                {
+                    dmg=ctx.target.TakeDamage(dmg);
+                }
+                break;
+            }
+            case EffectType.Multihit:
+            {
+                if (ctx.isPreview)
+                    break; // Skip actual damage application during preview
+                int dmg = BattleCalculator.GetModifiedValue(effect.value, StatType.Damage, ctx);
+                for (int i = 0; i < effect.duration; i++)
+                {
+                    if (ctx!=null&&ctx.card!=null&&ctx.card.enchantments.Exists(e=>e.data.name=="Humanisme"))
+                    {
+                        dmg=ctx.target.TakeDamage(dmg,true);
+                    }
+                    else
+                    {
+                        dmg=ctx.target.TakeDamage(dmg);
+                    }
+                }
                 break;
             }
             case EffectType.Armor:
@@ -36,7 +61,7 @@ public static class EffectResolver
                 int val = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
                 int dur = BattleCalculator.GetModifiedValue(effect.duration, StatType.StatusDuration, ctx);
                 StatusEffect stat=StatusEffect.Factory(effect.statusType,val,dur);
-                ctx.target.statusEffects.Add(stat);
+                ctx.target.AddStatus(stat);
                 break;
             }
             case EffectType.DeleteNextTurn:

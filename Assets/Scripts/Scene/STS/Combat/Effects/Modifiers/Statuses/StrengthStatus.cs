@@ -1,10 +1,10 @@
 using UnityEngine;
 public class StrengthStatus : StatusEffect
 {
-    public StrengthStatus(int value, int duration)
+    public StrengthStatus(int value)
     {
         Value = value;
-        Duration = duration;
+        Duration = -1;
         Name = "Force";
         modifierType = ModifierType.Additive;
     }

@@ -6,28 +6,31 @@ public class CharacterUI : MonoBehaviour
     public Transform statusContainer;
     public GameObject statusUIPrefab;
     [Header("HP")]
-    public Image hpFill;
-    public TextMeshProUGUI hpText;
+    public HealthBar hp;
 
     [Header("Armor")]
+    public Image armorImage;
     public TextMeshProUGUI armorText;
     Character character;
     [Header("Intent")]
     public TextMeshProUGUI intentText;
+    public Transform intentContainer;
+    public GameObject intentUIPrefab;
 
     public void SetCharacter(Character c)
     {
         character = c;
+        hp=GetComponentInChildren<HealthBar>();
         Refresh();
     }
 
     public void Refresh()
     {
         if (character == null) return;
-        hpText.text = $"{character.currentHP}/{character.maxHP}";
-        float hpRatio = (float)character.currentHP / character.maxHP;
-        hpFill.fillAmount = hpRatio;
-        armorText.text = character.armor > 0 ? $"Armor: {character.armor}" : "";
+        hp.SetHealth(character.currentHP, character.maxHP);
+        armorText.text = character.armor > 0 ? $"{character.armor}" : "";
+        hp.fill.color=character.armor > 0 ? Color.blue : Color.red;
+        armorImage.enabled = character.armor > 0;
         foreach (Transform child in statusContainer)
             Destroy(child.gameObject);
         foreach (var status in character.statusEffects)
@@ -51,10 +54,13 @@ public class CharacterUI : MonoBehaviour
             intentText.text = "";
             return;
         }
-
+        foreach (Transform child in intentContainer)
+            Destroy(child.gameObject);
         intentText.text = next.name; 
         foreach (EffectEntry effect in next.effects)
         {
+            IntentUI effectUIObj = Instantiate(intentUIPrefab, intentContainer).GetComponent<IntentUI>();
+                effectUIObj.SetEffect(effect);
             if (effect.type == EffectType.Damage)
             {
                 CombatManager cm = FindObjectOfType<CombatManager>();

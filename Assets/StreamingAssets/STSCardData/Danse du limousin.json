@@ -1,0 +1,29 @@
+{
+  "id": "Danse du limousin",
+  "collectionCardId": "limousin",
+  "cost": 3,
+  "type": "Compétence",
+  "rarity": "Epic",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Heal",
+      "value": 5,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    },
+    {
+      "type": "Status",
+      "value": 2,
+      "targetSelf": false,
+      "statusType": "Regen",
+      "duration": 10,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

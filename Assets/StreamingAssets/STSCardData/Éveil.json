@@ -1,0 +1,21 @@
+{
+  "id": "Éveil",
+  "collectionCardId": "",
+  "cost": 1,
+  "type": "Pouvoir",
+  "rarity": "Rare",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Status",
+      "value": 1,
+      "targetSelf": false,
+      "statusType": "Awakening",
+      "duration": 0,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

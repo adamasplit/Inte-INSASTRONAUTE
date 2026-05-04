@@ -1,3 +1,4 @@
+using System;
 [System.Serializable]
 public class ModifierData
 {
@@ -17,5 +18,24 @@ public class ModifierData
             default:
                 throw new System.Exception("Unknown modifier kind: " + kind);
         }
+    }
+
+    public ModifierDTO ToDTO()
+    {
+        return new ModifierDTO
+        {
+            type = type.ToString(),
+            kind = kind.ToString(),
+            value = value
+        };
+    }
+    public static ModifierData FromDTO(ModifierDTO dto)
+    {
+        return new ModifierData
+        {
+            type = Enum.Parse<StatType>(dto.type),
+            kind = Enum.Parse<ModifierKind>(dto.kind),
+            value = dto.value
+        };
     }
 }

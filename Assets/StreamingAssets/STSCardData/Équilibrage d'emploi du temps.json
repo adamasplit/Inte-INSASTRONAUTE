@@ -1,0 +1,29 @@
+{
+  "id": "Équilibrage d'emploi du temps",
+  "collectionCardId": "ingenieur_humaniste",
+  "cost": 0,
+  "type": "Compétence",
+  "rarity": "Legendary",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "DelayTurn",
+      "value": 10,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    },
+    {
+      "type": "AdvanceTurn",
+      "value": 10,
+      "targetSelf": true,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

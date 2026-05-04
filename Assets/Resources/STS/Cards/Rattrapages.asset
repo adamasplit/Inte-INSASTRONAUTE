@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: Rattrapages
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  cardName: Lenteur
+  cardName: Rattrapages
   collectionCard: {fileID: 11400000, guid: 3ea0a0a61a928f840ba75e2b69b3e644, type: 2}
   cost: 0
   type: 1

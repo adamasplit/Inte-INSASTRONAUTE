@@ -55,6 +55,7 @@ MonoBehaviour:
   turnSystem: {fileID: 0}
   timelineUI: {fileID: 0}
   combat: {fileID: 0}
+  arrowPrefab: {fileID: 911862629861018862, guid: 91454005a4405694295077f764cfa7bc, type: 3}
 --- !u!225 &7610708309455401199
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -85,19 +86,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1701437177655920713, guid: 8d76d685c546397418739f6ed1850405, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 73.45
+      value: 80.12
       objectReference: {fileID: 0}
     - target: {fileID: 1701437177655920713, guid: 8d76d685c546397418739f6ed1850405, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 20.11
+      value: 18.01
       objectReference: {fileID: 0}
     - target: {fileID: 1701437177655920713, guid: 8d76d685c546397418739f6ed1850405, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 36.725
+      value: 40.06
       objectReference: {fileID: 0}
     - target: {fileID: 1701437177655920713, guid: 8d76d685c546397418739f6ed1850405, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -10.055
+      value: -9.005
       objectReference: {fileID: 0}
     - target: {fileID: 3577838548751180402, guid: 8d76d685c546397418739f6ed1850405, type: 3}
       propertyPath: m_Name
@@ -105,7 +106,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4473456256982787686, guid: 8d76d685c546397418739f6ed1850405, type: 3}
       propertyPath: m_fontSize
-      value: 44.75
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 6976626212900196905, guid: 8d76d685c546397418739f6ed1850405, type: 3}
       propertyPath: m_Pivot.x

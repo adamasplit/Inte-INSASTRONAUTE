@@ -5,4 +5,8 @@ public abstract class StatModifier
     public abstract bool AppliesTo(StatType stat,EffectContext ctx);
     public abstract int Modify(int value, EffectContext ctx);
     public abstract string Describe();
+    public StatModifier Clone()
+    {
+        return (StatModifier)this.MemberwiseClone();
+    }
 }

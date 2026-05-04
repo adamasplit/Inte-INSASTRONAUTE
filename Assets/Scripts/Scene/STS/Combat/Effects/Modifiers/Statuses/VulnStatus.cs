@@ -18,4 +18,8 @@ public class VulnStatus : StatusEffect
     {
         return Mathf.CeilToInt(damage * 1.5f);
     }
+    public override string Desc()
+    {
+        return "\nReçoit 50% de dégâts en plus";
+    }
 }

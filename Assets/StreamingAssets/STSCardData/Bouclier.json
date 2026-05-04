@@ -1,0 +1,29 @@
+{
+  "id": "Bouclier",
+  "collectionCardId": "",
+  "cost": 2,
+  "type": "Compétence",
+  "rarity": "Special",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Armor",
+      "value": 13,
+      "targetSelf": true,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    },
+    {
+      "type": "Status",
+      "value": 3,
+      "targetSelf": true,
+      "statusType": "Dexterity",
+      "duration": 0,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

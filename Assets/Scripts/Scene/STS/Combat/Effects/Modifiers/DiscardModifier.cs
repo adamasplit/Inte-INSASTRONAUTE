@@ -17,6 +17,6 @@ public class DiscardModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+{perDiscard} {type} per discarded card";
+        return $"+{perDiscard} {type} par carte défaussée ce combat";
     }
 }

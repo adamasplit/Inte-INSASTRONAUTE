@@ -1,0 +1,21 @@
+{
+  "id": "Rush du matin",
+  "collectionCardId": "cafe",
+  "cost": 0,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "AdvanceTurn",
+      "value": 4,
+      "targetSelf": true,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

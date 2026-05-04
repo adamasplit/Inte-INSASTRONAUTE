@@ -1,0 +1,29 @@
+{
+  "id": "Pinte de trop",
+  "collectionCardId": "paix_dieu",
+  "cost": 0,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Status",
+      "value": 3,
+      "targetSelf": true,
+      "statusType": "Vuln",
+      "duration": 3,
+      "description": ""
+    },
+    {
+      "type": "Status",
+      "value": 5,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

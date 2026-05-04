@@ -7,6 +7,6 @@ public enum SelectableCharacter
     CFI,
     MRIE,
     GC,
-    ARCHI,
+    AI,
     PERF
 }

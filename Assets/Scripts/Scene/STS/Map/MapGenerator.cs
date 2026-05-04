@@ -26,7 +26,7 @@ public class MapGenerator
         List<MapNode> previousFloorNodes = new List<MapNode> { startNode };
         allNodes.Add(startNode);
         this.startNode = startNode;
-        for (int y = startingFloor + 1; y < height+RunManager.Instance.lastActEndFloor; y++)
+        for (int y = 1; y < height; y++)
         {
             int nodeCount = GetNodeCountForFloor(y);
 

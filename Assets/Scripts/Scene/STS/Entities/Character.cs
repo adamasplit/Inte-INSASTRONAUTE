@@ -20,11 +20,20 @@ public class Character
         this.currentHP = maxHP;
         this.armor = 0;
     }
-    public void TakeDamage(int amount)
+    public int TakeDamage(int amount, bool ignoreArmor=false)
     {
-        int damageAfterArmor = Mathf.Max(0, amount - armor);
-        armor = Mathf.Max(0, armor - amount);
-        currentHP = Mathf.Max(0, currentHP - damageAfterArmor);
+        if (ignoreArmor)
+        {
+            currentHP = Mathf.Max(0, currentHP - amount);
+            return amount;
+        }
+        else
+        {
+            int damageAfterArmor = Mathf.Max(0, amount - armor);
+            armor = Mathf.Max(0, armor - amount);
+            currentHP = Mathf.Max(0, currentHP - damageAfterArmor);
+            return damageAfterArmor;
+        }
     }
 
     public void AddArmor(int amount)
@@ -37,10 +46,16 @@ public class Character
     }
     public void AddStatus(StatusEffect status)
     {
+        Debug.Log($"Adding status {status.Name} to {name} with potency {status.Value} and duration {status.Duration}");
         if (statusEffects.Exists(s => s.Name == status.Name))
         {
+            Debug.Log($"Status {status.Name} already exists on {name}, refreshing duration and updating potency if needed.");
             var existing = statusEffects.Find(s => s.Name == status.Name);
-            existing.Duration += status.Duration;
+            existing=existing.Merge(status);
+            if (existing == null)
+            {
+                Debug.LogError($"Failed to merge status {status.Name} on {name}. This should not happen.");
+            }
             return;
         }
         else
@@ -48,6 +63,7 @@ public class Character
             statusEffects.Add(status);
         }
         status.OnApply(this);
+        Debug.Log($"{name} status effects: {string.Join(", ", statusEffects.ConvertAll(s => s.Name + "(" + s.Duration + ")"))}");
     }
     public void RemoveStatus(StatusEffect status)
     {
@@ -96,5 +112,17 @@ public class Character
     public int turnDelay(int baseDelay)
     {
         return BattleCalculator.GetModifiedValue(baseDelay, StatType.TurnDelay, new EffectContext { source = this, target = this });
+    }
+
+    public void DrawCard()
+    {
+        if (isPlayer)
+        {
+            var cm = GetCombatManager();
+            if (cm != null)
+            {
+                cm.deck.Draw();
+            }
+        }
     }
 }

@@ -32,6 +32,7 @@ public class CombatManager : MonoBehaviour
         ui.InitCharacters();    // spawn UI
         ui.RefreshUI();
         currentEnemiesData = new();
+        deck.combatManager = this; // inject
         foreach (var enemy in enemies)
         {
             Enemy enn=enemy as Enemy;
@@ -47,6 +48,10 @@ public class CombatManager : MonoBehaviour
     {
         if (source.resources.energy < card.data.cost&&source.isPlayer)
             return;
+        foreach (StatusEffect status in source.statusEffects)
+        {
+            status.BeforeAction(source);
+        }
         source.SpendEnergy(card.data.cost);
         EffectContext ctxTarget = new EffectContext
         {
@@ -89,13 +94,22 @@ public class CombatManager : MonoBehaviour
                 deck.discardPile.Add(card);
         }
 
-        bool combatOver = TryEndCombatIfNeeded();
+        
+        state.cardsPlayedThisTurn++;
+        foreach (StatusEffect status in source.statusEffects)
+        {
+            status.AfterAction(source);
+        }
 
+
+        // Check for end of combat
+        bool combatOver = TryEndCombatIfNeeded();
         ui.HighlightTargets(TargetingMode.None, null);
         ui.RefreshUI();
         if (!combatOver)
             turnSystem.timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
-        state.cardsPlayedThisTurn++;
+        
+
     }
 
     public void ResetCombatStatus()
@@ -171,14 +185,21 @@ public class CombatManager : MonoBehaviour
 
     void EndCombat()
     {
-        var result = new CombatResult
+        if (outcome == TeamOutcome.Victory)
         {
-            enemies = currentEnemiesData,
-            floor = RunManager.Instance.currentFloor
-        };
-        var rewards = rewardGenerator.GenerateCardChoices(result);
-        RunManager.Instance.pendingReward = new Reward();
-        RunManager.Instance.pendingReward.cardChoices = rewards;
-        SceneManager.LoadScene("STS_Reward");
+            var result = new CombatResult
+            {
+                enemies = currentEnemiesData,
+                floor = RunManager.Instance.currentFloor
+            };
+            var rewards = rewardGenerator.GenerateCardChoices(result);
+            RunManager.Instance.pendingReward = new Reward();
+            RunManager.Instance.pendingReward.cardChoices = rewards;
+            SceneManager.LoadScene("STS_Reward");
+        }
+        else if (outcome == TeamOutcome.Defeat)
+        {
+            ui.ShowGameOver(enemies.FirstOrDefault());
+        }
     }
 }

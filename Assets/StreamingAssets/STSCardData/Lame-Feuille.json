@@ -1,0 +1,29 @@
+{
+  "id": "Lame-Feuille",
+  "collectionCardId": "greensa",
+  "cost": 1,
+  "type": "Attaque",
+  "rarity": "Common",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 5,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    },
+    {
+      "type": "Armor",
+      "value": 5,
+      "targetSelf": true,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

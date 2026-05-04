@@ -6,8 +6,11 @@ public static class BattleCalculator
     {
         int value = baseValue;
 
-        foreach (var mod in GetAllModifiers(type, ctx.card, ctx.state))
+        List<StatModifier> modifiers = GetAllModifiers(type, ctx.card, ctx.state);
+        foreach (var mod in modifiers)
+        {
             value = mod.Modify(value, ctx);
+        }
         if (ctx.source != null)
         {
             foreach (var effect in ctx.source.statusEffects)
@@ -25,6 +28,15 @@ public static class BattleCalculator
             }
         }
 
+
+        // Effets spéciaux non résumables à des modificateurs, comme la télékinésie
+        if (ctx.card!=null)
+        {
+            if (ctx.card.enchantments.Exists(e=>e.data.name=="Télékinésie"))
+            {
+                value = Mathf.Max(value, baseValue);
+            }
+        }
         return value;
     }
     public static string GetModifiedDescription(int baseValue, StatType type, EffectContext ctx)

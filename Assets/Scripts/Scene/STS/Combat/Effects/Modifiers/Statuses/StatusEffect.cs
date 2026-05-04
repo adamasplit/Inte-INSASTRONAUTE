@@ -1,8 +1,16 @@
+using UnityEngine;
 public abstract class StatusEffect : StatModifier
 {
     public string Name;
     public int Value;
     public int Duration;
+    public virtual StatusEffect Merge(StatusEffect other)
+    {
+        if (other.GetType() != this.GetType()) return null;
+        this.Duration = (this.Duration + other.Duration);
+        this.Value = Mathf.Max(this.Value, other.Value);
+        return this;
+    }
 
     public virtual void OnApply(Character target) { }
     public virtual void OnExpire(Character target) { }
@@ -10,13 +18,23 @@ public abstract class StatusEffect : StatModifier
     public virtual void OnTurnEnd(Character target) { }
     public virtual void OnDamageTaken(Character target, ref int damage) { }
     public virtual void OnHeal(Character target, ref int healAmount) { }
-    public virtual void OnAction(Character target) { }
-    public virtual string Desc(){return $"{Value}";}
+    public virtual void BeforeAction(Character target) { }
+    public virtual void AfterAction(Character target) { }
+    public virtual string Desc(){return $"\n{Value} (Description inconnue)";}
+    public override bool AppliesTo(StatType stat, EffectContext ctx)
+    {
+        return false;
+    }
+    public override int Modify(int value, EffectContext ctx)
+    {
+        return value;
+    }
     public override string Describe()
     {
-        string res = $"{Name} {Desc()}";
+        string res = "";
         if (Duration > 0)
             res += $" ({Duration})";
+        res += Desc();
         return res;
     }
     public static StatusEffect Factory(StatusType type, int value, int duration)
@@ -25,10 +43,12 @@ public abstract class StatusEffect : StatModifier
         {
             StatusType.Poison => new PoisonStatus(duration),
             StatusType.Regen => new RegenStatus(duration),
-            StatusType.Strength => new StrengthStatus(value,duration),
+            StatusType.Strength => new StrengthStatus(value),
             StatusType.Weakness => new WeaknessStatus(duration),
             StatusType.Vuln => new VulnStatus(duration),
-            StatusType.Dexterity => new DexterityStatus(value, duration),
+            StatusType.Dexterity => new DexterityStatus(value),
+                StatusType.Awakening => new AwakeningStatus(value,duration),
+                StatusType.FullMoon => new FullMoonStatus(),
             _ => null
         };
         return stat;

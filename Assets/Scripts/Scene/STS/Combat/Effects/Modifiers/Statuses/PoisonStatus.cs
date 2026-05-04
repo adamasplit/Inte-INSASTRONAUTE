@@ -7,17 +7,12 @@ public class PoisonStatus : StatusEffect
         Name = "Poison";
         modifierType = ModifierType.Additive;
     }
-
-    public override bool AppliesTo(StatType stat, EffectContext ctx)
-    {
-        return false;
-    }
-    public override int Modify(int damage, EffectContext ctx)
-    {
-        return damage;
-    }
     public override void OnTurnStart(Character target)
     {
         target.TakeDamage(Duration);
+    }
+    public override string Desc()
+    {
+        return $"\nInflige {Duration} dégâts au début de chaque tour";
     }
 }

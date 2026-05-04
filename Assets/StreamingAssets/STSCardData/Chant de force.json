@@ -1,0 +1,29 @@
+{
+  "id": "Chant de force",
+  "collectionCardId": "amir",
+  "cost": 1,
+  "type": "Compétence",
+  "rarity": "Uncommon",
+  "targetingMode": "AllEnemies",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Status",
+      "value": 2,
+      "targetSelf": false,
+      "statusType": "Vuln",
+      "duration": 2,
+      "description": ""
+    },
+    {
+      "type": "Status",
+      "value": 2,
+      "targetSelf": false,
+      "statusType": "Weakness",
+      "duration": 2,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

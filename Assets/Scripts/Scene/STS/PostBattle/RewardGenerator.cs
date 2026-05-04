@@ -30,7 +30,7 @@ public class RewardGenerator
     {
         List<CardEntry> pool = new List<CardEntry>();
 
-        if (result.enemies != null&&RunManager.Instance.relics.Exists(r => r is ITIRelic))
+        if (result.enemies != null&&RunManager.Instance!=null && RunManager.Instance.relics.Exists(r => r is ITIRelic))
         {
             Debug.Log("Adding enemy reward cards to pool");
             foreach (var enemy in result.enemies)
@@ -42,7 +42,7 @@ public class RewardGenerator
             }
         }
 
-        pool.AddRange(GetFloorCards(RunManager.Instance.currentFloor));
+        pool.AddRange(GetFloorCards(RunManager.Instance!=null ? RunManager.Instance.currentFloor : 1));
 
         return pool;
     }
@@ -71,6 +71,10 @@ public class RewardGenerator
     List<CardEntry> GetFloorCards(int floor)
     {
         List<CardEntry> floorCards = new List<CardEntry>();
+        if (STSCardDatabase.allCards==null)
+        {
+            STSCardDatabase.Load();
+        }
         foreach (var card in STSCardDatabase.allCards)
         {
             int weight = card.rarity switch

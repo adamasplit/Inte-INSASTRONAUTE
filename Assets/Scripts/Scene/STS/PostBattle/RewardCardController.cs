@@ -5,6 +5,7 @@ public class RewardCardController : MonoBehaviour
     STSCardData data;
     CardInstance instance;
     RewardManager rewardManager;
+    private bool chosen = false;
     void Awake()
     {
         view = GetComponentInChildren<CardView>();
@@ -16,10 +17,15 @@ public class RewardCardController : MonoBehaviour
         rewardManager = manager;
         instance = new CardInstance(data);
         view.SetCard(instance);
+        view.enabled=false;
     }
 
     public void OnClick()
     {
-        rewardManager.OnCardSelected(data);
+        if (!chosen)
+        {
+            chosen = true;
+            rewardManager.OnCardSelected(data,this);
+        }
     }
 }

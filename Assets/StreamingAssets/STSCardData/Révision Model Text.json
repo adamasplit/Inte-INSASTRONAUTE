@@ -1,0 +1,21 @@
+{
+  "id": "Révision Model Text",
+  "collectionCardId": "souillard",
+  "cost": 1,
+  "type": "Compétence",
+  "rarity": "Common",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Armor",
+      "value": 5,
+      "targetSelf": true,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

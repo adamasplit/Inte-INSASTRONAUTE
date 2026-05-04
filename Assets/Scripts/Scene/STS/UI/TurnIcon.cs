@@ -96,4 +96,19 @@ public class TurnIcon : MonoBehaviour
         outline.color = Color.black;
         strikeThrough.SetActive(false);
     }
+    public void SetDepth(float t)
+    {
+        float scale = Mathf.Lerp(1f, 0.65f, t);
+        float alpha = Mathf.Lerp(1f, 0.3f, t);
+
+        transform.localScale = Vector3.one * scale;
+        canvasGroup.alpha = alpha;
+    }
+    public bool initialized = false;
+    public void SnapTo(Vector3 pos)
+    {
+        transform.localPosition = pos;
+        targetPosition = pos;
+        initialized = true;
+    }
 }

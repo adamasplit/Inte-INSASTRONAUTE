@@ -1,0 +1,27 @@
+{
+  "id": "Dernière ligne droite",
+  "collectionCardId": "purple_rouen",
+  "cost": 0,
+  "type": "Attaque",
+  "rarity": "Epic",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 1,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    }
+  ],
+  "modifiers": [
+    {
+      "type": "Damage",
+      "kind": "Played",
+      "value": 6
+    }
+  ]
+}

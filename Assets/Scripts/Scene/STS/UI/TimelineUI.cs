@@ -14,7 +14,7 @@ public class TimelineUI : MonoBehaviour
     public void Display(List<TurnEntry> timeline, bool preview = false)
     {
         EnsureIconCount(timeline.Count);
-
+        int currentIndex=0;
         for (int i = 0; i < timeline.Count; i++)
         {
             var entry = timeline[i];
@@ -26,7 +26,8 @@ public class TimelineUI : MonoBehaviour
             icon.SetPreview(preview);
 
             //   POSITION CIBLE (nouvelle)
-            Vector3 targetPos = new Vector3((i - timeline.Count / 2f) * spacing, 0, 0);
+            float x = GetTimelineX(i - currentIndex);
+            Vector3 targetPos = new Vector3(x, 0, 0);
 
             //   POSITION DE DÉPART (ancienne)
             if (previousTimeline != null)
@@ -36,7 +37,7 @@ public class TimelineUI : MonoBehaviour
                 if (oldIndex != -1)
                 {
                     Vector3 oldPos = new Vector3(
-                        (oldIndex - previousTimeline.Count / 2f) * spacing,
+                        GetTimelineX(oldIndex - currentIndex),
                         0,
                         0
                     );
@@ -49,6 +50,9 @@ public class TimelineUI : MonoBehaviour
             icon.SetTargetPosition(targetPos);
 
             icon.SetType(entry.visualType);
+            float depth = Mathf.Clamp01(i / (float)timeline.Count);
+            icon.SetDepth(depth);
+            icon.transform.SetSiblingIndex(timeline.Count-i);
         }
 
         // désactiver les icônes en trop
@@ -73,6 +77,17 @@ public class TimelineUI : MonoBehaviour
         }
 
         return -1;
+    }
+
+    float GetTimelineX(int relativeIndex)
+    {
+        float direction = Mathf.Sign(relativeIndex);
+        float distance = Mathf.Abs(relativeIndex);
+
+        // compression progressive
+        float compressed = Mathf.Pow(distance,0.9f) * spacing-container.GetComponent<RectTransform>().rect.width*0.5f;
+
+        return compressed * direction;
     }
 
     List<TurnEntry> CloneTimeline(List<TurnEntry> source)

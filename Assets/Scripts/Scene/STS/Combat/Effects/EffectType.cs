@@ -6,5 +6,6 @@ public enum EffectType
     Status,
     DeleteNextTurn,
     AdvanceTurn,
-    DelayTurn
+    DelayTurn,
+    Multihit
 }

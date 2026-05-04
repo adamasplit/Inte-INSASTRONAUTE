@@ -1,10 +1,10 @@
 using UnityEngine;
 public class DexterityStatus : StatusEffect
 {
-    public DexterityStatus(int value, int duration)
+    public DexterityStatus(int value)
     {
         Value = value;
-        Duration = duration;
+        Duration = -1;
         Name = "Dextérité";
         modifierType = ModifierType.Additive;
     }
@@ -17,5 +17,9 @@ public class DexterityStatus : StatusEffect
     public override int Modify(int armor, EffectContext ctx)
     {
         return armor + Value;
+    }
+    public override string Desc()
+    {
+        return $"+{Value} d'Armure obtenue";
     }
 }

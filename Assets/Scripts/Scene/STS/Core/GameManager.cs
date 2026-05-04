@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
         if (RunManager.Instance == null)
         {
             new GameObject("RunManager").AddComponent<RunManager>();
-            combat.allies.Add(new Player("Player", 50));
+            combat.allies.Add(new Player("Player", 10));
             var enemies = new List<Character>
             {
                 new Enemy("Enemy 1"),
@@ -39,6 +39,9 @@ public class GameManager : MonoBehaviour
                 combat.deck.drawPile.Add(new CardInstance(TestDatabase.attackCard));
                 combat.deck.drawPile.Add(new CardInstance(TestDatabase.blockCard));
             }
+            CardInstance enchantedCard = new CardInstance(TestDatabase.attackCard);
+            enchantedCard.enchantments.Add(new CardEnchantment { data = new SharpnessEnchantment(), level = 10 });
+            combat.deck.drawPile.Add(enchantedCard);
             combat.deck.drawPile.AddRange(STSCardDatabase.allCards.Select(data => new CardInstance(data)));
             combat.deck.Shuffle(combat.deck.drawPile);
         }
@@ -47,11 +50,10 @@ public class GameManager : MonoBehaviour
             combat.allies.Add(RunManager.Instance.player);
             List<EnemyData> enemies = EnemySelector.GetRandomEncounter(RunManager.Instance.currentFloor, RunManager.Instance.eliteEncounter, RunManager.Instance.bossEncounter);
             combat.enemies = enemies.Select(e => (Character)new Enemy(e.enemyName) { data = e }).ToList();
-            Debug.Log($"Selected enemies: {string.Join(", ", combat.enemies.Select(e => e.name))}");
             combat.deck = new DeckManager();
-            foreach (var cardData in RunManager.Instance.deck)
+            foreach (CardInstance card in RunManager.Instance.deck)
             {
-                combat.deck.drawPile.Add(new CardInstance(cardData));
+                combat.deck.drawPile.Add(card.Clone());
             }
             combat.deck.Shuffle(combat.deck.drawPile);
             combat.allies[0].statusEffects.Clear();

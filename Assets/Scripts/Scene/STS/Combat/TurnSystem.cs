@@ -45,6 +45,7 @@ public class TurnSystem : MonoBehaviour
         }
 
         SortTimeline();
+        timelineUI.Display(GetDisplayTimeline(timeline));
     }
 
     void SortTimeline()

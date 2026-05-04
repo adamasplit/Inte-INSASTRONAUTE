@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
@@ -38,7 +39,11 @@ public class RetreatManager : MonoBehaviour
     IEnumerator RevealRoutine()
     {
         int i = 0;
-        List<STSCardData> cardsData = RunManager.Instance.deck;
+        List<STSCardData> cardsData = RunManager.Instance.deck
+            .Select(ci => ci.data)
+            .OrderBy(_ => Random.value)
+            .Take(3)
+            .ToList();
         foreach (var card in cardsData)
         {
             i++;
@@ -78,7 +83,7 @@ public class RetreatManager : MonoBehaviour
     public void OnContinuePressed()
     {
         RunManager.Instance.RegenerateMap = true;
-        RunManager.Instance.lastActEndFloor= RunManager.Instance.currentFloor;
+        RunManager.Instance.act++;
         SceneManager.LoadScene("STS_Map");
     }
     public void OnRetreatPressed()
@@ -86,9 +91,12 @@ public class RetreatManager : MonoBehaviour
         Begin();
         choicePanel.SetActive(false);
     }
-    public async void GoToMenu()
+    private bool goingToMenu = false;
+    public void GoToMenu()
     {
-        await AddObtainedCardsToCollection();
+        if (goingToMenu) return;
+        goingToMenu = true;
+        AddObtainedCardsToCollection();
         SceneManager.LoadScene("STS_Boot");
     }
 

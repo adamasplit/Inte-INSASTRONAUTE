@@ -18,6 +18,6 @@ public class FlatModifier : StatModifier
 
     public override string Describe()
     {
-        return $"Flat {type}: {flatAmount}";
+        return $"+ {flatAmount} {type}";
     }
 }

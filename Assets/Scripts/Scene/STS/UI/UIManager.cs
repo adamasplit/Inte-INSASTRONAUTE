@@ -22,7 +22,25 @@ public class UIManager : MonoBehaviour
     public GameObject cardButtonPrefab;
     public HandLayoutController handLayout;
     public List<DropZone> allZones = new();
+    public CardView selectedCard;
+    public GameOverController gameOverController;
+    public void SelectCard(CardView card)
+    {
+        if (selectedCard == card)
+        {
+            Deselect();
+            return;
+        }
 
+        selectedCard = card;
+        RefreshHandLayout();
+    }
+
+    public void Deselect()
+    {
+        selectedCard = null;
+        RefreshHandLayout();
+    }
     public void Init(CombatManager cm)
     {
         combat = cm;
@@ -61,22 +79,27 @@ public class UIManager : MonoBehaviour
             allZones.Add(dz2);
         }
     }
-    public void RefreshUI()
+    public void RefreshUI(bool refreshHand = true)
     {
+        selectedCard = null;
         foreach (var ui in characterUIs)
         {
             ui.Refresh();
         }
-        energyText.text = combat.player != null ? "Energy: " + combat.player.resources.energy : "Energy: 0";
+        energyText.text = combat.player != null ? $"{combat.player.resources.energy}" : "-";
     
-        RefreshHand();
+
+        if (refreshHand)
+            RefreshHand();
+        else
+            RefreshHandLayout();
     }
 
     
 
     void RefreshHand()
     {
-        List<RectTransform> cards = new();
+        List<CardView> cards = new();
 
         foreach (Transform child in handPanel)
             Destroy(child.gameObject);
@@ -84,15 +107,27 @@ public class UIManager : MonoBehaviour
         foreach (var card in combat.deck.hand)
         {
             GameObject obj = Instantiate(cardButtonPrefab, handPanel);
-            RectTransform rt = obj.GetComponent<RectTransform>();
-
             obj.GetComponentInChildren<TMPro.TextMeshProUGUI>().text =
                 card.data.cardName;
             obj.GetComponentInChildren<CardView>().SetCard(card);
             obj.GetComponentInChildren<CardView>().RefreshDescription();
-            cards.Add(rt);
+            cards.Add(obj.GetComponentInChildren<CardView>());
+        }
+        handLayout.selectedCard = selectedCard;
+        handLayout.Arrange(cards);
+    }
+    public void RefreshHandLayout()
+    {
+        List<CardView> cards = new();
+
+        foreach (Transform child in handPanel)
+        {
+            var cv = child.GetComponentInChildren<CardView>();
+            if (cv != null)
+                cards.Add(cv);
         }
 
+        handLayout.selectedCard = selectedCard;
         handLayout.Arrange(cards);
     }
 
@@ -126,5 +161,10 @@ public class UIManager : MonoBehaviour
 
             zone.SetHighlight(shouldHighlight);
         }
+    }
+
+    public void ShowGameOver(Character enemy)
+    {
+        gameOverController.Show(enemy);
     }
 }

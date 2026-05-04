@@ -1,0 +1,29 @@
+{
+  "id": "Météorite",
+  "collectionCardId": "",
+  "cost": 2,
+  "type": "Attaque",
+  "rarity": "Special",
+  "targetingMode": "Enemy",
+  "exhaust": true,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 20,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    },
+    {
+      "type": "Status",
+      "value": 1,
+      "targetSelf": true,
+      "statusType": "Weakness",
+      "duration": 1,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

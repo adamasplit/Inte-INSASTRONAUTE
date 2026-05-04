@@ -56,3 +56,19 @@ MonoBehaviour:
     weight: 1
     elite: 0
     boss: 1
+  - displayName: Leo
+    enemies:
+    - {fileID: 11400000, guid: d016aeed86060b343a1748f46c58f50b, type: 2}
+    minFloor: 0
+    maxFloor: 50
+    weight: 1
+    elite: 1
+    boss: 0
+  - displayName: Ophiucus
+    enemies:
+    - {fileID: 11400000, guid: 209b8bd4547d5ad42826840f6c73a3e3, type: 2}
+    minFloor: 0
+    maxFloor: 50
+    weight: 1
+    elite: 1
+    boss: 0

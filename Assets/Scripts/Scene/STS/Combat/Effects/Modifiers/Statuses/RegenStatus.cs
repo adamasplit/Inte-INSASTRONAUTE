@@ -7,17 +7,12 @@ public class RegenStatus : StatusEffect
         Name = "Régénération";
         modifierType = ModifierType.Additive;
     }
-
-    public override bool AppliesTo(StatType stat, EffectContext ctx)
-    {
-        return false;
-    }
-    public override int Modify(int damage, EffectContext ctx)
-    {
-        return damage;
-    }
     public override void OnTurnStart(Character target)
     {
         target.Heal(Duration);
+    }
+    public override string Desc()
+    {
+        return $"\nSoigne {Duration} PV au début de chaque tour";
     }
 }

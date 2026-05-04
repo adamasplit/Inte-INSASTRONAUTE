@@ -1,7 +1,8 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-public class CardView : MonoBehaviour
+using UnityEngine.EventSystems;
+public class CardView : MonoBehaviour,IPointerClickHandler
 {
     public CardInstance cardInstance;
     public TextMeshProUGUI nameText;
@@ -9,14 +10,28 @@ public class CardView : MonoBehaviour
     public TextMeshProUGUI descriptionText;
     public Image rarityBorder;
     public Image rarityBorder2;
+    public Image rarityBorder3;
     public Image cardImage;
+    public RawImage glowOverlay;
     public TextMeshProUGUI cardTypeText;
     CombatManager combat;
+    UIManager ui;
     Character currentTarget;
     bool isInitialized = false;
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (ui!=null)
+            ui.SelectCard(this);
+        RestCardController restCard = GetComponentInParent<RestCardController>();
+        if (restCard != null)
+        {
+            restCard.OnClick();
+        }
+    }
     void Start()
     {
         combat = FindFirstObjectByType<CombatManager>();
+        ui=FindFirstObjectByType<UIManager>();
     }
     public void Set(STSCardData card)
     {
@@ -42,34 +57,40 @@ public class CardView : MonoBehaviour
             cardTypeText.text = card.data.type.ToString();
             nameText.text+= "\n<i><color=grey>" + (card.data.collectionCard != null && card.data.collectionCard.cardName != card.data.cardName ? card.data.collectionCard.cardName : "")+ "</color></i>";
             cardImage.sprite = card.data.collectionCard != null ? card.data.collectionCard.sprite : null;
+            Color rarityColor = Color.white;
             switch (card.data.rarity)
             {
                 case CardRarity.Common:
-                    rarityBorder.color = Color.white;
-                    rarityBorder2.color = Color.white;
+                    rarityColor = Color.white;
                     break;
                 case CardRarity.Uncommon:
-                    rarityBorder.color = Color.green;
-                    rarityBorder2.color = Color.green;
+                    rarityColor = Color.green;
                     break;
                 case CardRarity.Rare:
-                    rarityBorder.color = Color.blue;
-                    rarityBorder2.color = Color.blue;
+                    rarityColor = Color.blue;
                     break;
                 case CardRarity.Epic:
-                    rarityBorder.color = Color.magenta;
-                    rarityBorder2.color = Color.magenta;
+                    rarityColor = Color.magenta;
                     break;
                 case CardRarity.Legendary:
-                    rarityBorder.color = Color.yellow;
-                    rarityBorder2.color = Color.yellow;
+                    rarityColor = Color.yellow;
                     break;
                 case CardRarity.Special:
-                    rarityBorder.color = Color.red;
-                    rarityBorder2.color = Color.red;
+                    rarityColor = Color.red;
                     break;
             }
+            rarityBorder.color = rarityColor;
+            rarityBorder2.color = rarityColor;
+            
             RefreshDescription();
+            if (card.enchantments.Count > 0)
+            {
+                glowOverlay.gameObject.SetActive(true);
+            }
+            else
+            {
+                glowOverlay.gameObject.SetActive(false);
+            }
         }
         else
         {

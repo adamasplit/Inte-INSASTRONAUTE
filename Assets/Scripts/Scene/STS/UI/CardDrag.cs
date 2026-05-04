@@ -14,7 +14,8 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
     public TurnSystem turnSystem;
     public TimelineUI timelineUI;
     public CombatManager combat;
-
+    public GameObject arrowPrefab;
+    private ArrowUI arrow;
     void Awake()
     {
         rect = GetComponent<RectTransform>();
@@ -28,14 +29,43 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        cardView.OnPointerClick(eventData); // Ensure the card is selected 
         startPos = rect.anchoredPosition;
         transform.localScale = Vector3.one * 1.1f;
         group.blocksRaycasts = false;
+        Canvas canvas =  GameObject.Find("ArrowCanvas").GetComponent<Canvas>();
+        if (canvas == null)
+        {
+            Debug.LogError("No canvas found for arrow");
+            return;
+        }
+        GameObject arrowObject = Instantiate(arrowPrefab, canvas.transform);
+        if (arrowObject == null)
+        {
+            Debug.LogError("Arrow prefab not found!");
+            return;
+        }
+        arrow = arrowObject.GetComponent<ArrowUI>();
+        if (arrow == null)
+        {
+            Debug.LogError("ArrowUI component not found on arrow prefab!");
+            return;
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        rect.position = eventData.position;
+        Vector2 start = RectTransformUtility.WorldToScreenPoint(
+            eventData.pressEventCamera,
+            cardView.GetComponent<RectTransform>().TransformPoint(cardView.GetComponent<RectTransform>().rect.center)
+        );
+        Vector2 end = eventData.position;
+        if (arrow == null)
+        {
+            Debug.LogError("ArrowUI component not found!");
+            return;
+        }
+        arrow.UpdateArrow(start, end);
         if (cardView.cardInstance == null)
         {
             Debug.LogError("CardView has no card instance");
@@ -60,6 +90,13 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
             cardView.RefreshDescription(null);
         }
         transform.localScale = Vector3.one;
+        if (arrow != null) Destroy(arrow.gameObject);
+        ui.Deselect();
+    }
+
+    public void Destroy()
+    {
+        if (arrow != null) Destroy(arrow.gameObject);
     }
     Character GetHoveredTarget()
     {

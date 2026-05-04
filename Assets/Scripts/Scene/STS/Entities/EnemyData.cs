@@ -10,4 +10,10 @@ public class EnemyData : ScriptableObject
 
     public List<STSCardData> pattern;
     public List<STSCardData> rewardCards;
+    #if UNITY_EDITOR
+    private void OnValidate()
+    {
+        enemyName = name;
+    }
+    #endif
 }

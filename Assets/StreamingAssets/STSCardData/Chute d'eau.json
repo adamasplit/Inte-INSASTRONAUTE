@@ -1,0 +1,29 @@
+{
+  "id": "Chute d'eau",
+  "collectionCardId": "degats_des_eaux",
+  "cost": 2,
+  "type": "Attaque",
+  "rarity": "Common",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 8,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    },
+    {
+      "type": "Status",
+      "value": 3,
+      "targetSelf": false,
+      "statusType": "Vuln",
+      "duration": 3,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

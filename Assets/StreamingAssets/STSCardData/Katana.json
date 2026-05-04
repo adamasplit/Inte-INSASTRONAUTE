@@ -1,0 +1,21 @@
+{
+  "id": "Katana",
+  "collectionCardId": "insamourai",
+  "cost": 1,
+  "type": "Attaque",
+  "rarity": "Common",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 6,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

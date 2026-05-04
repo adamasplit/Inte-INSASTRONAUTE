@@ -53,6 +53,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/STS_Retreat.unity
     guid: 2bde87950a535e54fb088d89fb85fdc9
+  - enabled: 1
+    path: Assets/Scenes/STS_Rest.unity
+    guid: 29071925e333e164a9088395378e5524
   m_configObjects:
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 7ac0d2020611eb44486612eb24ce9a3f, type: 2}
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}

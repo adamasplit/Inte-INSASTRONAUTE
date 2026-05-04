@@ -8,6 +8,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     public Character target;
 
     public Image highlight;
+    public Image image;
 
     public bool isHovered = false;
 
@@ -18,13 +19,24 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     {
         combat = cm;
         target = t;
+        Sprite sprite=Resources.Load<Sprite>("STS/Characters/" + target.name);
+        if (sprite != null)
+        {
+            image.sprite = sprite;
+        }
+        else
+            image.gameObject.SetActive(false);
         acceptsEnemyCards = acceptsEnemy;
 
         highlight.color = acceptsEnemy ? 
-            new Color(1, 0, 0, 0.1f) : 
-            new Color(0, 1, 0, 0.1f);
+            new Color(1, 0, 0, 0f) : 
+            new Color(0, 1, 0, 0f);
 
         isHovered = false;
+    }
+    void Update()
+    {
+        image.GetComponent<RectTransform>().sizeDelta = new Vector2(GetComponent<RectTransform>().sizeDelta.x, GetComponent<RectTransform>().sizeDelta.x);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -48,7 +60,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     {
         this.highlight.color = highlight ? 
             (acceptsEnemyCards ? new Color(1, 0, 0, 0.3f) : new Color(0, 1, 0, 0.3f)) :
-            (acceptsEnemyCards ? new Color(1, 0, 0, 0.1f) : new Color(0, 1, 0, 0.1f));
+            (acceptsEnemyCards ? new Color(1, 0, 0, 0f) : new Color(0, 1, 0, 0f));
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -58,6 +70,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         isHovered = false;
 
         var drag = eventData.pointerDrag?.GetComponentInParent<CardDrag>();
+        drag.Destroy(); // Clean up the drag visuals
         var cardView = drag?.GetComponentInChildren<CardView>();
 
         if (cardView?.cardInstance == null)

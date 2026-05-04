@@ -5,5 +5,7 @@ public enum StatusType
     Weakness,
     Regen,
     Dexterity,
-    Poison
+    Poison,
+    Awakening,
+    FullMoon
 }

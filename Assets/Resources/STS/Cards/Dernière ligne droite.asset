@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: "Derni\xE8re ligne droite"
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  cardName: "Coup de gr\xE2ce"
+  cardName: "Derni\xE8re ligne droite"
   collectionCard: {fileID: 11400000, guid: 95bbccd27b1617f48b5a6eb0bfa4c174, type: 2}
   cost: 0
   type: 0
@@ -25,9 +25,6 @@ MonoBehaviour:
     duration: 0
   targetingMode: 1
   modifiers:
-  - type: 0
-    kind: 0
-    value: 0
   - type: 0
     kind: 2
     value: 6

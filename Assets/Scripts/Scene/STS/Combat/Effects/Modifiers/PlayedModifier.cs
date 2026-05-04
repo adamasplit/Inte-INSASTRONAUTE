@@ -19,6 +19,6 @@ public class PlayedModifier : StatModifier
     }
     public override string Describe()
     {
-        return $"+{perCard} {type} per card played this turn";
+        return $"+{perCard} {type} par carte jouée ce tour";
     }
 }

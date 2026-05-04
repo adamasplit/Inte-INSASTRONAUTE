@@ -14,6 +14,7 @@ public class EffectEntryDrawer : PropertyDrawer
 
         var typeProp = property.FindPropertyRelative("type");
         var valueProp = property.FindPropertyRelative("value");
+        var descriptionProp = property.FindPropertyRelative("description");
         var targetSelfProp = property.FindPropertyRelative("targetSelf");
         var statusTypeProp = property.FindPropertyRelative("statusType");
         var durationProp = property.FindPropertyRelative("duration");
@@ -30,11 +31,25 @@ public class EffectEntryDrawer : PropertyDrawer
             valueProp);
         y += lineHeight + spacing;
 
+        // DESCRIPTION
+        EditorGUI.PropertyField(
+            new Rect(position.x, y, position.width, lineHeight),
+            descriptionProp);
+        y += lineHeight + spacing;
+
         // TARGET SELF
         EditorGUI.PropertyField(
             new Rect(position.x, y, position.width, lineHeight),
             targetSelfProp);
         y += lineHeight + spacing;
+
+        if ((EffectType)typeProp.enumValueIndex==EffectType.Multihit)
+        {
+            EditorGUI.PropertyField(
+                new Rect(position.x, y, position.width, lineHeight),
+                durationProp);
+            y += lineHeight + spacing;
+        }
 
         // 👉 CONDITION
         if ((EffectType)typeProp.enumValueIndex == EffectType.Status)
@@ -55,7 +70,6 @@ public class EffectEntryDrawer : PropertyDrawer
                 durationProp);
             y += lineHeight + spacing;
         }
-
         EditorGUI.EndProperty();
     }
 
@@ -66,11 +80,15 @@ public class EffectEntryDrawer : PropertyDrawer
 
         var typeProp = property.FindPropertyRelative("type");
 
-        int lines = 3; // type + value + targetSelf
+        int lines = 4; // type + value + targetSelf + description
 
         if ((EffectType)typeProp.enumValueIndex == EffectType.Status)
         {
             lines += 3; // header + statusType + duration
+        }
+        if ((EffectType)typeProp.enumValueIndex == EffectType.Multihit)
+        {
+            lines += 1; // duration for multihit
         }
 
         return lines * (lineHeight + spacing);

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
+  m_Name: Leo
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Leo
+  maxHP: 150
+  pattern:
+  - {fileID: 11400000, guid: fb7533c4c667aee489673aafd3f5973f, type: 2}
+  - {fileID: 11400000, guid: 80fee52911caea44594322980fe523fc, type: 2}
+  - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
+  - {fileID: 11400000, guid: 7892582cdf213a442946b196d5c3b38f, type: 2}
+  - {fileID: 11400000, guid: e7b8e19fba3483b419503d79f3957277, type: 2}
+  - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
+  - {fileID: 11400000, guid: f616076eed1cf1c46afe77ec11937d99, type: 2}
+  - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
+  - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
+  - {fileID: 11400000, guid: f616076eed1cf1c46afe77ec11937d99, type: 2}
+  - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
+  - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
+  rewardCards:
+  - {fileID: 11400000, guid: fb7533c4c667aee489673aafd3f5973f, type: 2}

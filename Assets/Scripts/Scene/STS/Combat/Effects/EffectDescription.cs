@@ -2,12 +2,19 @@ public static class EffectDescription
 {
     public static string Get(EffectEntry effect, EffectContext ctx)
     {
+        if (effect.description != null&& effect.description != "")
+            return effect.description;
         switch (effect.type)
         {
             case EffectType.Damage:
             {
                 string dmg = BattleCalculator.GetModifiedDescription(effect.value, StatType.Damage, ctx);
                 return $"Inflige {dmg} dégâts";
+            }
+            case EffectType.Multihit:
+            {
+                string dmg = BattleCalculator.GetModifiedDescription(effect.value, StatType.Damage, ctx);
+                return $"Inflige {dmg} dégâts {effect.duration} fois";
             }
 
             case EffectType.Armor:

@@ -8,4 +8,39 @@ public class EffectEntry
     public bool targetSelf=false;
     public StatusType statusType;
     public int duration;
+    public string description; // Optional custom description for the effect
+    public EffectEntryDTO ToDTO()
+    {
+        return new EffectEntryDTO
+        {
+            type = type.ToString(),
+
+            value = value,
+
+            targetSelf = targetSelf,
+
+            statusType = statusType.ToString(),
+
+            duration = duration,
+
+            description = description
+        };
+    }
+    public static EffectEntry FromDTO(EffectEntryDTO dto)
+    {
+        return new EffectEntry
+        {
+            type = Enum.Parse<EffectType>(dto.type),
+
+            value = dto.value,
+
+            targetSelf = dto.targetSelf,
+
+            statusType = Enum.Parse<StatusType>(dto.statusType),
+
+            duration = dto.duration,
+
+            description = dto.description
+        };
+    }
 }

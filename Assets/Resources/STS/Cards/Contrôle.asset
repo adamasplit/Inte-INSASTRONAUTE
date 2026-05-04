@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: "Contr\xF4le"
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  cardName: "D\xE9sint\xE9gration"
+  cardName: "Contr\xF4le"
   collectionCard: {fileID: 11400000, guid: c79f3636970e2c64195f13350f3cffbc, type: 2}
-  cost: 3
+  cost: 2
   type: 1
   rarity: 3
   effects:

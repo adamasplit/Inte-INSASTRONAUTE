@@ -1,0 +1,21 @@
+{
+  "id": "Rattrapages",
+  "collectionCardId": "rattrapages",
+  "cost": 0,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "DelayTurn",
+      "value": 5,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}
