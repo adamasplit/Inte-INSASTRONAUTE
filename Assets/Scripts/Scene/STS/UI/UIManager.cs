@@ -104,6 +104,15 @@ public class UIManager : MonoBehaviour
             allZones.Add(dz2);
         }
     }
+    public Transform GetView(Character character)
+    {
+        foreach (var ui in characterUIs)
+        {
+            if (ui.character == character)
+                return ui.transform;
+        }
+        return null;
+    }
     public void RefreshUI(bool refreshHand = true)
     {
         selectedCard = null;

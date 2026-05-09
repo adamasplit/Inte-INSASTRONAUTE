@@ -11,7 +11,7 @@ public class CharacterUI : MonoBehaviour
     [Header("Armor")]
     public Image armorImage;
     public TextMeshProUGUI armorText;
-    Character character;
+    public Character character;
     [Header("Intent")]
     public TextMeshProUGUI intentText;
     public Transform intentContainer;

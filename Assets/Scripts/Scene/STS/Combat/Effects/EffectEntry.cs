@@ -43,4 +43,23 @@ public class EffectEntry
             description = dto.description
         };
     }
+
+    public GameObject GetVFXPrefab()
+    {
+        // Map effect types to VFX prefabs
+        string prefabName = type switch
+        {
+            EffectType.Damage => "Damage",
+            EffectType.Heal => "Heal",
+            EffectType.Armor => "Armor",
+            EffectType.Status=>StatusEffect.Factory(statusType,0,0).buff?"Buff":"Debuff",
+            _ => null
+        };
+
+        if (prefabName != null)
+        {
+            return Resources.Load<GameObject>($"STS/VFX/{prefabName}");
+        }
+        return null;
+    }
 }

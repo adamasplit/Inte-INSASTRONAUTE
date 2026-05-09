@@ -104,10 +104,17 @@ public class CombatManager : MonoBehaviour
             ctxTarget.target = target;
             
                 if (effect.targetSelf)
+                {
+                    VFXManager.Instance.PlayEffect(effect, ui.GetView(source).transform.position);
                     EffectResolver.Apply(effect, ctxSelf);
+                }
                 else
+                {
+                    VFXManager.Instance.PlayEffect(effect, ui.GetView(target).transform.position);
                     EffectResolver.Apply(effect, ctxTarget);
+                }
             }
+            ui.RefreshUI();
             yield return new WaitForSeconds(0.3f); // Small delay between effects for better readability
         }
         if (source != null && source.isPlayer)

@@ -4,6 +4,7 @@
   <Project Path="LeanTransition.csproj" />
   <Project Path="MackySoft.SerializeReferenceExtensions.Editor.csproj" />
   <Project Path="LeanGUI.csproj" />
+  <Project Path="com.ben-w.erp.csproj" />
   <Project Path="CW.Common.csproj" />
   <Project Path="MackySoft.SerializeReferenceExtensions.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
