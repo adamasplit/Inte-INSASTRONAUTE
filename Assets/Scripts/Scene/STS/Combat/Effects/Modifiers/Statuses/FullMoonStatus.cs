@@ -4,7 +4,8 @@ public class FullMoonStatus : StatusEffect
     {
         Value = 0;
         Duration = -1;
-        Name = "Pleine Lune";
+        Name = "Pleine lune";
+        buff=true;
     }
     public override string Describe()
     {

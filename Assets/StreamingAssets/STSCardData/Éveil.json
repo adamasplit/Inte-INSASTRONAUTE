@@ -13,8 +13,8 @@
       "value": 1,
       "targetSelf": false,
       "statusType": "Awakening",
-      "duration": 0,
-      "description": ""
+      "duration": 3,
+      "description": "Rend des PV après 3 tours."
     }
   ],
   "modifiers": []

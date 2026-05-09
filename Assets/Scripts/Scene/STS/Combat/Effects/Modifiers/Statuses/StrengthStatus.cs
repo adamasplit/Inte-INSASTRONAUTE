@@ -7,6 +7,7 @@ public class StrengthStatus : StatusEffect
         Duration = -1;
         Name = "Force";
         modifierType = ModifierType.Additive;
+        buff=true;
     }
 
     public override bool AppliesTo(StatType stat, EffectContext ctx)

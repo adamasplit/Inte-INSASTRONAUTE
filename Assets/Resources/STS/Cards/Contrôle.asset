@@ -15,14 +15,15 @@ MonoBehaviour:
   cardName: "Contr\xF4le"
   collectionCard: {fileID: 11400000, guid: c79f3636970e2c64195f13350f3cffbc, type: 2}
   cost: 2
-  type: 1
+  type: 2
   rarity: 3
   effects:
-  - type: 4
-    value: 0
+  - type: 3
+    value: 6
     targetSelf: 0
     statusType: 0
     duration: 0
+    description: 
   targetingMode: 1
   modifiers: []
   exhaust: 0

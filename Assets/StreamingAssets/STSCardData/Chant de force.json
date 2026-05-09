@@ -14,7 +14,7 @@
       "targetSelf": false,
       "statusType": "Vuln",
       "duration": 2,
-      "description": ""
+      "description": null
     },
     {
       "type": "Status",
@@ -22,7 +22,7 @@
       "targetSelf": false,
       "statusType": "Weakness",
       "duration": 2,
-      "description": ""
+      "description": null
     }
   ],
   "modifiers": []

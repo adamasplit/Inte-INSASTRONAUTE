@@ -1,0 +1,21 @@
+{
+  "id": "Tournée générale",
+  "collectionCardId": "quartier_libre",
+  "cost": 0,
+  "type": "Compétence",
+  "rarity": "Uncommon",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Draw",
+      "value": 3,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

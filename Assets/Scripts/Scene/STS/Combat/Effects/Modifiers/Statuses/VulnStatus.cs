@@ -6,6 +6,7 @@ public class VulnStatus : StatusEffect
         this.Name="Vulnérable";
         this.Duration = duration;
         this.modifierType = ModifierType.Multiplicative;
+        debuff=true;
     }
 
     public override bool AppliesTo(StatType stat, EffectContext ctx)

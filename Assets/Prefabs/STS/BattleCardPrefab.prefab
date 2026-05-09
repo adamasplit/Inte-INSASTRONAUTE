@@ -100,14 +100,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -9.005
       objectReference: {fileID: 0}
+    - target: {fileID: 2938206181620115397, guid: 8d76d685c546397418739f6ed1850405, type: 3}
+      propertyPath: m_fontSize
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 3577838548751180402, guid: 8d76d685c546397418739f6ed1850405, type: 3}
       propertyPath: m_Name
       value: CardPrefab
       objectReference: {fileID: 0}
     - target: {fileID: 4473456256982787686, guid: 8d76d685c546397418739f6ed1850405, type: 3}
       propertyPath: m_fontSize
-      value: 50
+      value: 72
       objectReference: {fileID: 0}
+    - target: {fileID: 6888260047435752382, guid: 8d76d685c546397418739f6ed1850405, type: 3}
+      propertyPath: rootRect
+      value: 
+      objectReference: {fileID: 6976626212900196905}
     - target: {fileID: 6976626212900196905, guid: 8d76d685c546397418739f6ed1850405, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -139,6 +147,18 @@ PrefabInstance:
     - target: {fileID: 6976626212900196905, guid: 8d76d685c546397418739f6ed1850405, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6976626212900196905, guid: 8d76d685c546397418739f6ed1850405, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6976626212900196905, guid: 8d76d685c546397418739f6ed1850405, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6976626212900196905, guid: 8d76d685c546397418739f6ed1850405, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6976626212900196905, guid: 8d76d685c546397418739f6ed1850405, type: 3}
       propertyPath: m_LocalPosition.x

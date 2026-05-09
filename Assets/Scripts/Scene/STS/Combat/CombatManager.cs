@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using System.Collections;
 public enum TeamOutcome
 {
     None,
@@ -26,6 +27,7 @@ public class CombatManager : MonoBehaviour
     public TeamOutcome outcome { get; private set; } = TeamOutcome.None;
     public RewardGenerator rewardGenerator= new RewardGenerator();
     public List<EnemyData> currentEnemiesData = new();
+    public CardAnimator animator;
     public void Init()
     {
         ui.Init(this);          // inject
@@ -46,8 +48,31 @@ public class CombatManager : MonoBehaviour
 
     public void PlayCard(Character source, CardInstance card, List<Character> targets)
     {
+        StartCoroutine(PlayCardRoutine(source, card, targets));
+    }
+
+    IEnumerator PlayCardRoutine(Character source, CardInstance card, List<Character> targets)
+    {
+        
         if (source.resources.energy < card.data.cost&&source.isPlayer)
-            return;
+        {
+            yield break;
+        }
+        CardView playedView = null;
+
+        if (source != null && source.isPlayer)
+        {
+            playedView = ui.GetView(card);
+
+            deck.RemoveFromHand(card);
+
+            if (playedView != null)
+            {
+                ui.RemoveView(playedView);
+
+                yield return ui.AnimateCardToCenter(playedView);
+            }
+        }
         foreach (StatusEffect status in source.statusEffects)
         {
             status.BeforeAction(source);
@@ -72,45 +97,48 @@ public class CombatManager : MonoBehaviour
             card = card,
             timeline = turnSystem.timeline
         };
-        foreach (var target in targets)
+        foreach (var effect in card.data.effects)
         {
-            ctxTarget.target = target;
-            foreach (var effect in card.data.effects)
+            foreach(var target in targets)
             {
+            ctxTarget.target = target;
+            
                 if (effect.targetSelf)
                     EffectResolver.Apply(effect, ctxSelf);
                 else
                     EffectResolver.Apply(effect, ctxTarget);
             }
+            yield return new WaitForSeconds(0.3f); // Small delay between effects for better readability
         }
-
-        if (source!=null&&source.isPlayer)
+        if (source != null && source.isPlayer)
         {
-            deck.hand.Remove(card);
-
             if (card.data.exhaust)
-                deck.exhaustPile.Add(card);
+                deck.Exhaust(card);
             else
-                deck.discardPile.Add(card);
-        }
+                deck.SendToDiscard(card);
 
-        
+            if (playedView != null)
+            {
+                yield return ui.AnimateCardToDiscard(
+                    playedView,
+                    card.data.exhaust
+                );
+            }
+        }
         state.cardsPlayedThisTurn++;
         foreach (StatusEffect status in source.statusEffects)
         {
             status.AfterAction(source);
         }
 
-
         // Check for end of combat
         bool combatOver = TryEndCombatIfNeeded();
         ui.HighlightTargets(TargetingMode.None, null);
-        ui.RefreshUI();
+        ui.RefreshUI(false);
         if (!combatOver)
             turnSystem.timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
-        
-
     }
+    
 
     public void ResetCombatStatus()
     {

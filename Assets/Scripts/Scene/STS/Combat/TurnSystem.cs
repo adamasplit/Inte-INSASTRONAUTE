@@ -100,7 +100,10 @@ public class TurnSystem : MonoBehaviour
     void StartPlayerTurn(Character player)
     {
         player.resources.energy = 3;
-        combat.deck.Draw(5);
+        for (int i=0;i<5;i++)
+        {
+            player.DrawCard();
+        }
         combat.state.cardsPlayedThisTurn = 0;
         foreach (var relic in RunManager.Instance.relics)
         {
@@ -180,8 +183,9 @@ public class TurnSystem : MonoBehaviour
         }
 
         if (character.isPlayer)
+        {
             combat.deck.DiscardHand();
-
+        }
         if (combat.TryEndCombatIfNeeded())
             return;
 

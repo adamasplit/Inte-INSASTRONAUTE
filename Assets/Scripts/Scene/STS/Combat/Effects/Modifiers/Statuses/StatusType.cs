@@ -7,5 +7,8 @@ public enum StatusType
     Dexterity,
     Poison,
     Awakening,
-    FullMoon
+    FullMoon,
+    Slow,
+    Haste,
+    Divination
 }

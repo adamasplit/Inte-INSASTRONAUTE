@@ -32,7 +32,8 @@ public class HandLayoutController : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             var cardView = cards[i];
-            RectTransform card = cardView.GetComponent<RectTransform>();
+            RectTransform card = cardView.rootRect;
+            if (cardView.isAnimating) continue;
 
             if (!states.ContainsKey(cardView))
                 states[cardView] = new CardLayoutState();
@@ -73,9 +74,9 @@ public class HandLayoutController : MonoBehaviour
             var card = kvp.Key;
             var state = kvp.Value;
 
-            if (card == null) continue;
+            if (card == null || card.isAnimating) continue;
 
-            RectTransform rt = card.GetComponent<RectTransform>();
+            RectTransform rt = card.rootRect;
 
             rt.anchoredPosition = Vector2.Lerp(
                 rt.anchoredPosition,
@@ -91,11 +92,18 @@ public class HandLayoutController : MonoBehaviour
 
             Vector3 targetScale = Vector3.one * state.targetScale;
 
-            rt.localScale = Vector3.Lerp(
-                rt.localScale,
+            card.gameObject.transform.localScale = Vector3.Lerp(
+                card.gameObject.transform.localScale,
                 targetScale,
                 Time.deltaTime * smooth
             );
         }
+    }
+    public Vector2 GetTargetPosition(CardView card)
+    {
+        if (states.TryGetValue(card, out var state))
+            return state.targetPos;
+
+        return Vector2.zero;
     }
 }

@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: Lame de fond
   collectionCard: {fileID: 11400000, guid: a30c34c86bb133446827dc763f43c350, type: 2}
-  cost: 0
+  cost: 1
   type: 0
   rarity: 1
   effects:
   - type: 7
-    value: 4
+    value: 2
     targetSelf: 0
     statusType: 0
     duration: 4

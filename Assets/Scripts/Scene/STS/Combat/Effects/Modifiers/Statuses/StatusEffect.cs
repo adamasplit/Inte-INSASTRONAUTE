@@ -1,15 +1,24 @@
 using UnityEngine;
+using System.Collections.Generic;
 public abstract class StatusEffect : StatModifier
 {
     public string Name;
     public int Value;
     public int Duration;
-    public virtual StatusEffect Merge(StatusEffect other)
+    public bool buff=false;
+    public bool debuff=false;
+    public virtual void InsertInto(List<StatusEffect> list)
     {
-        if (other.GetType() != this.GetType()) return null;
-        this.Duration = (this.Duration + other.Duration);
-        this.Value = Mathf.Max(this.Value, other.Value);
-        return this;
+        StatusEffect other = list.Find(s => s.GetType() == this.GetType());
+        if (other != null)
+        {
+            other.Duration += this.Duration;
+            other.Value += this.Value;
+        }
+        else
+        {
+            list.Add(this);
+        }
     }
 
     public virtual void OnApply(Character target) { }
@@ -47,8 +56,11 @@ public abstract class StatusEffect : StatModifier
             StatusType.Weakness => new WeaknessStatus(duration),
             StatusType.Vuln => new VulnStatus(duration),
             StatusType.Dexterity => new DexterityStatus(value),
-                StatusType.Awakening => new AwakeningStatus(value,duration),
-                StatusType.FullMoon => new FullMoonStatus(),
+            StatusType.Awakening => new AwakeningStatus(value,duration),
+            StatusType.FullMoon => new FullMoonStatus(),
+            StatusType.Slow => new SlowStatus(duration),
+            StatusType.Haste => new HasteStatus(duration),
+            StatusType.Divination => new DivinationStatus(),
             _ => null
         };
         return stat;

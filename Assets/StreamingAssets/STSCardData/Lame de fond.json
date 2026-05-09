@@ -1,0 +1,21 @@
+{
+  "id": "Lame de fond",
+  "collectionCardId": "sharks",
+  "cost": 1,
+  "type": "Attaque",
+  "rarity": "Uncommon",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Multihit",
+      "value": 2,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 4,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

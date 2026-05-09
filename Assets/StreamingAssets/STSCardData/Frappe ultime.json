@@ -1,0 +1,29 @@
+{
+  "id": "Frappe ultime",
+  "collectionCardId": "",
+  "cost": 2,
+  "type": "Attaque",
+  "rarity": "Special",
+  "targetingMode": "Enemy",
+  "exhaust": true,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 25,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    },
+    {
+      "type": "Heal",
+      "value": 10,
+      "targetSelf": true,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

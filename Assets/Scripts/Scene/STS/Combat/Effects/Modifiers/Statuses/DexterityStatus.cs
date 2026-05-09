@@ -7,6 +7,7 @@ public class DexterityStatus : StatusEffect
         Duration = -1;
         Name = "Dextérité";
         modifierType = ModifierType.Additive;
+        buff=true;
     }
 
     public override bool AppliesTo(StatType stat, EffectContext ctx)

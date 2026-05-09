@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
+  m_Name: Floraison
+  m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  cardName: Floraison
+  collectionCard: {fileID: 11400000, guid: 9e69766a85c515e4aa113a2ea35178b0, type: 2}
+  cost: 1
+  type: 1
+  rarity: 2
+  effects:
+  - type: 2
+    value: 3
+    targetSelf: 0
+    statusType: 0
+    duration: 0
+    description: 
+  - type: 1
+    value: 3
+    targetSelf: 0
+    statusType: 0
+    duration: 0
+    description: 
+  - type: 3
+    value: 1
+    targetSelf: 0
+    statusType: 9
+    duration: 2
+    description: 
+  targetingMode: 0
+  modifiers: []
+  exhaust: 0
+  retain: 0

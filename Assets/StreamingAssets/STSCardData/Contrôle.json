@@ -2,15 +2,15 @@
   "id": "Contrôle",
   "collectionCardId": "controleur_astuce",
   "cost": 2,
-  "type": "Compétence",
+  "type": "Pouvoir",
   "rarity": "Epic",
   "targetingMode": "Enemy",
   "exhaust": false,
   "retain": false,
   "effects": [
     {
-      "type": "DeleteNextTurn",
-      "value": 0,
+      "type": "Status",
+      "value": 6,
       "targetSelf": false,
       "statusType": "Strength",
       "duration": 0,

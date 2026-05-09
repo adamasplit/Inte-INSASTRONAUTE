@@ -44,7 +44,8 @@ public static class EffectResolver
             {
                 if (ctx.isPreview)
                     break; // Skip actual armor application during preview
-                ctx.target.AddArmor(effect.value);
+                int armor = BattleCalculator.GetModifiedValue(effect.value, StatType.Armor, ctx);
+                ctx.target.AddArmor(armor);
                 break;
             }
             case EffectType.Heal:
@@ -129,6 +130,16 @@ public static class EffectResolver
                         ctx.target,
                         effect.value
                     );
+                }
+                break;
+            }
+            case EffectType.Draw:
+            {
+                if (ctx.isPreview)
+                    break;
+                for (int i = 0; i < effect.value; i++)
+                {
+                    ctx.source.DrawCard();
                 }
                 break;
             }

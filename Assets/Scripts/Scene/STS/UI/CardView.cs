@@ -18,6 +18,8 @@ public class CardView : MonoBehaviour,IPointerClickHandler
     UIManager ui;
     Character currentTarget;
     bool isInitialized = false;
+    public bool isAnimating;
+    public RectTransform rootRect;
     public void OnPointerClick(PointerEventData eventData)
     {
         if (ui!=null)

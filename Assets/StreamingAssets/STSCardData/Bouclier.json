@@ -23,6 +23,14 @@
       "statusType": "Dexterity",
       "duration": 0,
       "description": ""
+    },
+    {
+      "type": "Draw",
+      "value": 1,
+      "targetSelf": true,
+      "statusType": "Dexterity",
+      "duration": 0,
+      "description": ""
     }
   ],
   "modifiers": []

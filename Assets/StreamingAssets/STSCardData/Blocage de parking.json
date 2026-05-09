@@ -1,0 +1,21 @@
+{
+  "id": "Blocage de parking",
+  "collectionCardId": "parking_visiteur",
+  "cost": 2,
+  "type": "Compétence",
+  "rarity": "Uncommon",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "DeleteNextTurn",
+      "value": 0,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

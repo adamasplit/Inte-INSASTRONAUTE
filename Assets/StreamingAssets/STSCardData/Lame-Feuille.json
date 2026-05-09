@@ -14,7 +14,7 @@
       "targetSelf": false,
       "statusType": "Strength",
       "duration": 0,
-      "description": ""
+      "description": null
     },
     {
       "type": "Armor",
@@ -22,7 +22,7 @@
       "targetSelf": true,
       "statusType": "Strength",
       "duration": 0,
-      "description": ""
+      "description": null
     }
   ],
   "modifiers": []

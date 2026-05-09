@@ -1,0 +1,21 @@
+{
+  "id": "Divination",
+  "collectionCardId": "chacharlatan",
+  "cost": 3,
+  "type": "Pouvoir",
+  "rarity": "Legendary",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Status",
+      "value": 1,
+      "targetSelf": false,
+      "statusType": "Divination",
+      "duration": 0,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

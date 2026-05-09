@@ -86,6 +86,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         if (targets.Count == 0)
             return;
 
+        Vector2 discardPos = combat.animator.animationLayer.InverseTransformPoint(combat.ui.discardAnchor.position);
         combat.PlayCard(combat.player, cardView.cardInstance, targets);
     }
 

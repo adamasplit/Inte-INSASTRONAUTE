@@ -7,5 +7,8 @@ public enum EffectType
     DeleteNextTurn,
     AdvanceTurn,
     DelayTurn,
-    Multihit
+    Multihit,
+    Draw,
+    Discard,
+    Exhaust
 }

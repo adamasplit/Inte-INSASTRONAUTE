@@ -70,6 +70,18 @@ public static class EffectDescription
                 int turns = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
                 return $"Retarde le prochain tour de la cible ({turns})";
             }
+            case EffectType.Draw:
+            {
+                return $"Pioche {effect.value} carte"+(effect.value>1?"s":"")+".";
+            }
+            case EffectType.Discard:
+            {
+                return $"Défausse {effect.value} carte"+(effect.value>1?"s":"")+".";
+            }
+            case EffectType.Exhaust:
+            {
+                return $"Epuise {effect.value} carte"+(effect.value>1?"s":"")+" de votre main";
+            }
 
             default:
                 return "Effet inconnu...";

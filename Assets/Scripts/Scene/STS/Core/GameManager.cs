@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
         if (RunManager.Instance == null)
         {
             new GameObject("RunManager").AddComponent<RunManager>();
-            combat.allies.Add(new Player("Player", 10));
+            combat.allies.Add(new Player("Player", 1500));
             var enemies = new List<Character>
             {
                 new Enemy("Enemy 1"),

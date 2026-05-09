@@ -1,27 +1,35 @@
 {
-  "id": "Lame divine",
-  "collectionCardId": "",
+  "id": "Brisure, Bond et Baston",
+  "collectionCardId": "3b",
   "cost": 2,
   "type": "Attaque",
-  "rarity": "Special",
+  "rarity": "Epic",
   "targetingMode": "Enemy",
-  "exhaust": true,
+  "exhaust": false,
   "retain": false,
   "effects": [
     {
       "type": "Damage",
-      "value": 25,
+      "value": 5,
       "targetSelf": false,
       "statusType": "Strength",
       "duration": 0,
       "description": ""
     },
     {
-      "type": "Heal",
-      "value": 25,
+      "type": "AdvanceTurn",
+      "value": 4,
       "targetSelf": true,
       "statusType": "Strength",
       "duration": 0,
+      "description": ""
+    },
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": false,
+      "statusType": "Vuln",
+      "duration": 3,
       "description": ""
     }
   ],

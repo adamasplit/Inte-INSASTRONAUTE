@@ -6,6 +6,7 @@ public class PoisonStatus : StatusEffect
         Duration = duration;
         Name = "Poison";
         modifierType = ModifierType.Additive;
+        debuff=true;
     }
     public override void OnTurnStart(Character target)
     {

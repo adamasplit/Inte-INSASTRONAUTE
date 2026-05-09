@@ -6,6 +6,7 @@ public class RegenStatus : StatusEffect
         Duration = duration;
         Name = "Régénération";
         modifierType = ModifierType.Additive;
+        buff=true;
     }
     public override void OnTurnStart(Character target)
     {

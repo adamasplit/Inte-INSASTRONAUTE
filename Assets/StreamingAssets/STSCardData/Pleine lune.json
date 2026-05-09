@@ -14,7 +14,7 @@
       "targetSelf": false,
       "statusType": "FullMoon",
       "duration": 0,
-      "description": ""
+      "description": null
     }
   ],
   "modifiers": []

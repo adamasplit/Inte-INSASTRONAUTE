@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class UIManager : MonoBehaviour
     public GameObject playerPrefab;
 
     List<CharacterUI> characterUIs = new();
+    private List<CardView> currentHandViews = new();
 
     public Transform handPanel;
     public GameObject cardButtonPrefab;
@@ -24,6 +26,9 @@ public class UIManager : MonoBehaviour
     public List<DropZone> allZones = new();
     public CardView selectedCard;
     public GameOverController gameOverController;
+    public RectTransform discardAnchor;
+    public RectTransform deckAnchor;
+    public CardAnimator animator;
     public void SelectCard(CardView card)
     {
         if (selectedCard == card)
@@ -36,6 +41,17 @@ public class UIManager : MonoBehaviour
         RefreshHandLayout();
     }
 
+    public CardView GetView(CardInstance card)
+    {
+        foreach (var view in currentHandViews)
+        {
+            if (view.cardInstance == card)
+                return view;
+        }
+
+        return null;
+    }
+
     public void Deselect()
     {
         selectedCard = null;
@@ -45,7 +61,16 @@ public class UIManager : MonoBehaviour
     {
         combat = cm;
         InitCharacters();
+        combat.deck.OnCardDrawn -= DrawCardAnimated;
+        combat.deck.OnCardDiscarded -= DiscardCardAnimated;
+        combat.deck.OnCardExhausted -= ExhaustCardAnimated;
+
+        combat.deck.OnCardDrawn += DrawCardAnimated;
+        combat.deck.OnCardDiscarded += DiscardCardAnimated;
+        combat.deck.OnCardExhausted += ExhaustCardAnimated;
+        //CreateInitialHand();
     }
+
     public void InitCharacters()
     {
         characterUIs.Clear();
@@ -89,46 +114,26 @@ public class UIManager : MonoBehaviour
         energyText.text = combat.player != null ? $"{combat.player.resources.energy}" : "-";
     
 
-        if (refreshHand)
-            RefreshHand();
-        else
-            RefreshHandLayout();
+        RefreshHandLayout();
     }
-
-    
-
-    void RefreshHand()
+    void CreateInitialHand()
     {
-        List<CardView> cards = new();
-
-        foreach (Transform child in handPanel)
-            Destroy(child.gameObject);
+        currentHandViews.Clear();
 
         foreach (var card in combat.deck.hand)
         {
-            GameObject obj = Instantiate(cardButtonPrefab, handPanel);
-            obj.GetComponentInChildren<TMPro.TextMeshProUGUI>().text =
-                card.data.cardName;
-            obj.GetComponentInChildren<CardView>().SetCard(card);
-            obj.GetComponentInChildren<CardView>().RefreshDescription();
-            cards.Add(obj.GetComponentInChildren<CardView>());
+            CreateHandCard(card);
         }
-        handLayout.selectedCard = selectedCard;
-        handLayout.Arrange(cards);
+
+        RefreshHandLayout();
     }
     public void RefreshHandLayout()
     {
-        List<CardView> cards = new();
-
-        foreach (Transform child in handPanel)
-        {
-            var cv = child.GetComponentInChildren<CardView>();
-            if (cv != null)
-                cards.Add(cv);
-        }
+        currentHandViews.RemoveAll(v => v == null);
 
         handLayout.selectedCard = selectedCard;
-        handLayout.Arrange(cards);
+
+        handLayout.Arrange(currentHandViews);
     }
 
     public void HighlightTargets(TargetingMode mode, Character hovered)
@@ -163,8 +168,215 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public CardView CreateHandCard(CardInstance card)
+    {
+        GameObject obj = Instantiate(cardButtonPrefab, handPanel);
+
+        CardView view = obj.GetComponentInChildren<CardView>();
+
+        view.SetCard(card);
+
+        currentHandViews.Add(view);
+
+        return view;
+    }
+
+    public void DrawCardAnimated(CardInstance card)
+    {
+        CardView view = CreateHandCard(card);
+
+        RectTransform rect =
+            view.rootRect;
+
+        rect.SetParent(animator.animationLayer, false);
+
+        rect.position = deckAnchor.position;
+
+        view.isAnimating = true;
+
+        StartCoroutine(
+            AnimateDraw(view)
+        );
+    }
+
+    IEnumerator AnimateDraw(CardView view)
+    {
+        RectTransform rect =
+            view.rootRect;
+
+        yield return null;
+
+        rect.SetParent(handPanel, true);
+
+        RefreshHandLayout();
+
+        Vector2 targetLocal =
+            handLayout.GetTargetPosition(view);
+
+        Vector3 target =
+            handPanel.TransformPoint(targetLocal);
+
+        rect.SetParent(animator.animationLayer, true);
+
+        rect.position = deckAnchor.position;
+
+        yield return animator.MoveCard(
+            rect,
+            rect.position,
+            target
+        );
+
+        rect.SetParent(handPanel, true);
+
+        rect.position = target;
+
+        view.isAnimating = false;
+
+        RefreshHandLayout();
+    }
+
+    public void DiscardCardAnimated(CardInstance card)
+    {
+        CardView view = GetView(card);
+
+        if (view == null)
+            return;
+
+        currentHandViews.Remove(view);
+
+        StartCoroutine(
+            AnimateDiscard(view)
+        );
+
+        RefreshHandLayout();
+    }
+    public void ExhaustCardAnimated(CardInstance card)
+    {
+        CardView view = GetView(card);
+
+        if (view == null)
+            return;
+
+        currentHandViews.Remove(view);
+
+        StartCoroutine(
+            AnimateExhaust(view)
+        );
+
+        RefreshHandLayout();
+    }
+    IEnumerator AnimateDiscard(CardView view)
+    {
+        RectTransform rect =
+            view.rootRect;
+
+        view.isAnimating = true;
+
+        rect.SetParent(animator.animationLayer, true);
+
+        yield return animator.MoveCard(
+            rect,
+            rect.position,
+            discardAnchor.position
+        );
+
+        Destroy(view.gameObject);
+    }
+    IEnumerator AnimateExhaust(CardView view)
+    {
+        RectTransform rect =
+            view.rootRect;
+
+        view.isAnimating = true;
+
+        rect.SetParent(animator.animationLayer, true);
+
+        Vector3 center = Vector3.zero;
+
+        yield return animator.MoveCard(
+            rect,
+            rect.position,
+            center
+        );
+
+        yield return new WaitForSeconds(0.15f);
+
+        Destroy(view.gameObject);
+    }
+
+
+
     public void ShowGameOver(Character enemy)
     {
         gameOverController.Show(enemy);
+    }
+    Vector2 ScreenToHandLocal(Vector3 screenPos)
+    {
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            handPanel as RectTransform,
+            screenPos,
+            null,
+            out Vector2 local
+        );
+
+        return local;
+    }
+    Vector3 HandLocalToScreen(Vector2 local)
+    {
+        return (handPanel as RectTransform).TransformPoint(local);
+    }
+
+    public IEnumerator AnimateCardToCenter(CardView view)
+    {
+        view.isAnimating = true;
+
+        RectTransform rect = view.rootRect;
+
+        rect.SetParent(
+            animator.animationLayer,
+            true
+        );
+
+        Vector2 center = Vector2.zero;
+
+        yield return animator.MoveCard(
+            rect,
+            rect.position,
+            center,
+            3f,
+            false,
+            true
+        );
+    }
+    public IEnumerator AnimateCardToDiscard(
+        CardView view,
+        bool exhaust
+    )
+    {
+        if (exhaust)
+        {
+            Destroy(view.rootRect.gameObject);
+            yield break;
+        }
+
+        yield return animator.MoveCard(
+            view.rootRect,
+            view.rootRect.position,
+            discardAnchor.position,
+            1f,
+            true,
+            true
+        );
+
+        Destroy(view.rootRect.gameObject);
+    }
+    public void RemoveView(CardView view)
+    {
+        currentHandViews.Remove(view);
+
+        if (selectedCard == view)
+            selectedCard = null;
+
+        RefreshHandLayout();
     }
 }

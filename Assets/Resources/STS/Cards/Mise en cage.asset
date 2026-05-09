@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
+  m_Name: Mise en cage
+  m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  cardName: Mise en cage
+  collectionCard: {fileID: 11400000, guid: 39dc671fbed4cc440870eece0b34b201, type: 2}
+  cost: 1
+  type: 0
+  rarity: 3
+  effects:
+  - type: 0
+    value: 4
+    targetSelf: 0
+    statusType: 8
+    duration: 2
+    description: 
+  - type: 3
+    value: 0
+    targetSelf: 0
+    statusType: 8
+    duration: 2
+    description: 
+  targetingMode: 1
+  modifiers: []
+  exhaust: 0
+  retain: 0

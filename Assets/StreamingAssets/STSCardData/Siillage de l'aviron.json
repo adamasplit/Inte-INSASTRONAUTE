@@ -1,0 +1,12 @@
+{
+  "id": "Siillage de l'aviron",
+  "collectionCardId": "baf",
+  "cost": 0,
+  "type": "Attaque",
+  "rarity": "Common",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [],
+  "modifiers": []
+}

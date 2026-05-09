@@ -1,0 +1,37 @@
+{
+  "id": "Floraison",
+  "collectionCardId": "bar_des_fleurs",
+  "cost": 1,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Heal",
+      "value": 3,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    },
+    {
+      "type": "Armor",
+      "value": 3,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    },
+    {
+      "type": "Status",
+      "value": 1,
+      "targetSelf": false,
+      "statusType": "Haste",
+      "duration": 2,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

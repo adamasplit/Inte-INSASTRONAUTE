@@ -47,21 +47,7 @@ public class Character
     public void AddStatus(StatusEffect status)
     {
         Debug.Log($"Adding status {status.Name} to {name} with potency {status.Value} and duration {status.Duration}");
-        if (statusEffects.Exists(s => s.Name == status.Name))
-        {
-            Debug.Log($"Status {status.Name} already exists on {name}, refreshing duration and updating potency if needed.");
-            var existing = statusEffects.Find(s => s.Name == status.Name);
-            existing=existing.Merge(status);
-            if (existing == null)
-            {
-                Debug.LogError($"Failed to merge status {status.Name} on {name}. This should not happen.");
-            }
-            return;
-        }
-        else
-        {
-            statusEffects.Add(status);
-        }
+        status.InsertInto(statusEffects);
         status.OnApply(this);
         Debug.Log($"{name} status effects: {string.Join(", ", statusEffects.ConvertAll(s => s.Name + "(" + s.Duration + ")"))}");
     }
@@ -116,13 +102,14 @@ public class Character
 
     public void DrawCard()
     {
-        if (isPlayer)
-        {
-            var cm = GetCombatManager();
-            if (cm != null)
-            {
-                cm.deck.Draw();
-            }
-        }
+        if (!isPlayer)
+            return;
+
+        var cm = GetCombatManager();
+
+        if (cm == null)
+            return;
+
+        cm.deck.Draw();
     }
 }

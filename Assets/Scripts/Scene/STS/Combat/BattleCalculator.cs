@@ -19,7 +19,7 @@ public static class BattleCalculator
                     value = effect.Modify(value, ctx);
             }
         }
-        if (ctx.target != null)
+        if (ctx.target != null&&ctx.target!=ctx.source)
         {
             foreach (var effect in ctx.target.statusEffects)
             {
