@@ -14,7 +14,7 @@ public class SharpnessEnchantment : EnchantmentData
     {
         return new List<StatModifier>
         {
-            new DamagePercentModifier(StatType.Damage, level * damagePerLevel)
+            new PercentModifier(StatType.Damage, level * damagePerLevel)
         };
     }
 }

@@ -17,6 +17,10 @@ public class RestManager : MonoBehaviour
             newRunManager.AddComponent<RunManager>();
             RunManager.Instance.StartRun("",50,new List<Relic>{},false);
         }
+        foreach (var relic in RunManager.Instance.relics)
+        {
+            relic.OnEnterRestSite(RunManager.Instance.player);
+        }
         BuildDeck();
         UpdateChargesDisplay();
     }

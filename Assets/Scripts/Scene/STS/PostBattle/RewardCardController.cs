@@ -2,7 +2,6 @@ using UnityEngine;
 public class RewardCardController : MonoBehaviour
 {
     CardView view;
-    STSCardData data;
     CardInstance instance;
     RewardManager rewardManager;
     private bool chosen = false;
@@ -11,11 +10,10 @@ public class RewardCardController : MonoBehaviour
         view = GetComponentInChildren<CardView>();
     }
 
-    public void Init(STSCardData card, RewardManager manager)
+    public void Init(CardInstance card, RewardManager manager)
     {
-        data = card;
         rewardManager = manager;
-        instance = new CardInstance(data);
+        instance = card;
         view.SetCard(instance);
         view.enabled=false;
     }
@@ -25,7 +23,7 @@ public class RewardCardController : MonoBehaviour
         if (!chosen)
         {
             chosen = true;
-            rewardManager.OnCardSelected(data,this);
+            rewardManager.OnCardSelected(instance,this);
         }
     }
 }

@@ -4,5 +4,6 @@ public class GMRelic:Relic
     {
         name = "Insigne dorée";
         description="Donne 50% de récompenses supplémentaires à la fin d'une partie.";
+        rarity=RelicRarity.Base;
     }
 }

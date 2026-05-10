@@ -20,24 +20,27 @@ public static class EffectResolver
                 {
                     dmg=ctx.target.TakeDamage(dmg);
                 }
+                if (ctx.card!=null&&ctx.card.enchantments.Exists(e=>e.data.name=="Lifesteal"))
+                {
+                    CardEnchantment e=ctx.card.enchantments.Find(en=>en.data.name=="Lifesteal");
+                    int healAmount=dmg*((LifestealEnchantment)e.data).healPercent(e.level)/100;
+                    ctx.source.Heal(healAmount);
+                }
                 break;
             }
             case EffectType.Multihit:
             {
-                if (ctx.isPreview)
-                    break; // Skip actual damage application during preview
-                int dmg = BattleCalculator.GetModifiedValue(effect.value, StatType.Damage, ctx);
-                for (int i = 0; i < effect.duration; i++)
-                {
-                    if (ctx!=null&&ctx.card!=null&&ctx.card.enchantments.Exists(e=>e.data.name=="Humanisme"))
+                for(int i=0;i<effect.duration;i++)
                     {
-                        dmg=ctx.target.TakeDamage(dmg,true);
+                        Apply(new EffectEntry
+                        {
+                            type = EffectType.Damage,
+                            value = effect.value,
+                            statusType=effect.statusType,
+                            duration=effect.duration,
+                            targetSelf=effect.targetSelf
+                        }, ctx);
                     }
-                    else
-                    {
-                        dmg=ctx.target.TakeDamage(dmg);
-                    }
-                }
                 break;
             }
             case EffectType.Armor:

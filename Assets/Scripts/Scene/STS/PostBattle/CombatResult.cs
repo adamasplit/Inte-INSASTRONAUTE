@@ -3,4 +3,6 @@ public class CombatResult
 {
     public List<EnemyData> enemies;
     public int floor;
+    public bool elite;
+    public bool boss;
 }

@@ -1,8 +1,8 @@
-public class DamagePercentModifier : StatModifier
+public class PercentModifier : StatModifier
 {
     public int addedPercent;
 
-    public DamagePercentModifier(StatType type, int amount)
+    public PercentModifier(StatType type, int amount)
     {
         this.type = type;
         addedPercent = amount;

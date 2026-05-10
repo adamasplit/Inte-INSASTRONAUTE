@@ -93,7 +93,7 @@ bool snapping;
                 + rotationOffset;
 
             float x = Mathf.Cos(angle) * radius;
-            float y = Mathf.Sin(angle) * radius * verticalScale;
+            float y = -Mathf.Sin(angle) * radius * verticalScale;
 
             Vector2 targetPos = new Vector2(x, y);
 
@@ -105,7 +105,7 @@ bool snapping;
                 );
 
             // profondeur simulée
-            float depth = (y / radius + 1f) * 0.5f;
+            float depth = (-y / radius + 1f) * 0.5f;
 
             // scale
             float scale = Mathf.Lerp(minScale, maxScale, depth);
@@ -147,7 +147,7 @@ bool snapping;
     void ComputeSnapTarget()
     {
         int closestIndex = 0;
-        float bestDepth = -999f;
+        float bestDepth = 999f;
 
         int count = items.Count;
 
@@ -159,7 +159,7 @@ bool snapping;
 
             float y = Mathf.Sin(angle);
 
-            if (y > bestDepth)
+            if (y < bestDepth)
             {
                 bestDepth = y;
                 closestIndex = i;
@@ -169,7 +169,7 @@ bool snapping;
         targetRotation =
             -((float)closestIndex / count)
             * Mathf.PI * 2f
-            + Mathf.PI / 2f;
+            - Mathf.PI / 2f;
 
         snapping = true;
     }

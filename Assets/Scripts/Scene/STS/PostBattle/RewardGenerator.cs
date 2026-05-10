@@ -13,15 +13,15 @@ public class RewardGenerator
             this.weight = weight;
         }
     }
-    public List<STSCardData> GenerateCardChoices(CombatResult result)
+    public List<CardInstance> GenerateCardChoices(CombatResult result)
     {
         List<CardEntry> pool = BuildCardPool(result);
 
-        List<STSCardData> choices = new List<STSCardData>();
+        List<CardInstance> choices = new List<CardInstance>();
 
         for (int i = 0; i < 3; i++)
         {
-            choices.Add(GetRandomCard(pool));
+            choices.Add(GetRandomCard(pool,result));
         }
 
         return choices;
@@ -42,11 +42,11 @@ public class RewardGenerator
             }
         }
 
-        pool.AddRange(GetFloorCards(RunManager.Instance!=null ? RunManager.Instance.currentFloor : 1));
+        pool.AddRange(GetFloorCards(RunManager.Instance!=null ? RunManager.Instance.currentFloor : 1,result));
 
         return pool;
     }
-    public STSCardData GetRandomCard(List<CardEntry> pool)
+    public CardInstance GetRandomCard(List<CardEntry> pool,CombatResult result=null)
     {
         int totalWeight = 0;
         foreach (var entry in pool)
@@ -62,13 +62,19 @@ public class RewardGenerator
             cumulativeWeight += entry.weight;
             if (randomValue < cumulativeWeight)
             {
-                return entry.card;
+                CardInstance cardInstance = new CardInstance(entry.card);
+                if (result != null&&result.elite)
+                {
+                    Debug.Log("Enchanting card for elite reward");
+                    EnchantManager.ApplyEnchant(cardInstance,Random.Range(1, 4));
+                }
+                return cardInstance;
             }
         }
 
         return null; // Should never reach here if pool is not empty
     }
-    List<CardEntry> GetFloorCards(int floor)
+    List<CardEntry> GetFloorCards(int floor,CombatResult result=null)
     {
         List<CardEntry> floorCards = new List<CardEntry>();
         if (STSCardDatabase.allCards==null)

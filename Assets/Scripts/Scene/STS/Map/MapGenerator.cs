@@ -68,8 +68,8 @@ public class MapGenerator
 
         int roll = Random.Range(0, 100);
 
-        if (roll < 50) return NodeType.Combat;
-        if (roll < 70) return NodeType.Elite;
+        if (roll < 70) return NodeType.Combat;
+        if (roll < 75) return NodeType.Elite;
         if (roll < 85) return NodeType.Rest;
         return NodeType.Event;
     }

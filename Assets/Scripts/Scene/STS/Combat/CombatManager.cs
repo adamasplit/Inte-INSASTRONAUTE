@@ -226,11 +226,18 @@ public class CombatManager : MonoBehaviour
     {
         if (outcome == TeamOutcome.Victory)
         {
+            foreach (var relic in RunManager.Instance.relics)
+            {
+                relic.OnCombatEnd(player);
+            }
             var result = new CombatResult
             {
                 enemies = currentEnemiesData,
-                floor = RunManager.Instance.currentFloor
+                floor = RunManager.Instance.currentFloor,
+                elite = RunManager.Instance.eliteEncounter,
+                boss = RunManager.Instance.bossEncounter
             };
+            Debug.Log("Generating rewards for combat result: floor " + result.floor + ", elite: " + result.elite + ", boss: " + result.boss);
             var rewards = rewardGenerator.GenerateCardChoices(result);
             RunManager.Instance.pendingReward = new Reward();
             RunManager.Instance.pendingReward.cardChoices = rewards;

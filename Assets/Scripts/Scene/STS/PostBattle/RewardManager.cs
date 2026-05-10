@@ -26,7 +26,7 @@ public class RewardManager : MonoBehaviour
         StartCoroutine(SpawnCardsAnimated(reward.cardChoices));
     }
 
-    IEnumerator SpawnCardsAnimated(List<STSCardData> cards)
+    IEnumerator SpawnCardsAnimated(List<CardInstance> cards)
     {
         foreach (var card in cards)
         {
@@ -71,13 +71,13 @@ public class RewardManager : MonoBehaviour
         cg.alpha = 1;
     }
 
-    public void OnCardSelected(STSCardData card, RewardCardController selected)
+    public void OnCardSelected(CardInstance card, RewardCardController selected)
     {
         
         StartCoroutine(HandleSelection(selected));
         if (RunManager.Instance != null)
         {
-            RunManager.Instance.deck.Add(new CardInstance(card));
+            RunManager.Instance.deck.Add(card);
             RunManager.Instance.pendingReward = null;
         }
     }

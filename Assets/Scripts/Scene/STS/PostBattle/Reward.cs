@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 public class Reward
 {
-    public List<STSCardData> cardChoices = new();
+    public List<CardInstance> cardChoices = new();
     public int gold;
     public Relic relic;
 }

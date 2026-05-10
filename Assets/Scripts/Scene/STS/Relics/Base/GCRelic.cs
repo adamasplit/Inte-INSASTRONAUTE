@@ -3,7 +3,8 @@ public class GCRelic:Relic
     public GCRelic()
     {
         name="Fondation solide";
-        description="À la fin de chaque tour, donne 2 d'Armure par énergie, et 1 d'Armure par carte en main et par ennemi présent.";
+        description="À la fin de chaque tour, donne 2 d'Armure par énergie, par carte en main et par ennemi présent.";
+        rarity=RelicRarity.Base;
     }
     public override void OnTurnEnd(Character character)
     {
