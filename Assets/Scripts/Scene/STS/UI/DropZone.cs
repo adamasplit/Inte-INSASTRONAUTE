@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
+using System.Collections;
 public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public CombatManager combat;
@@ -109,5 +109,32 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         else
             return cardView.cardInstance.data.targetingMode == TargetingMode.Player ||
                    cardView.cardInstance.data.targetingMode == TargetingMode.AllCharacters;
+    }
+
+    public IEnumerator FlashRed()
+    {
+        Color originalColor = image.color;
+        image.color = Color.red;
+        float elapsed = 0f;
+        while (elapsed < 0.2f)
+        {
+            elapsed += Time.deltaTime;
+            image.color = Color.Lerp(Color.red, originalColor, elapsed / 0.2f);
+            yield return null;
+        }
+        image.color = originalColor;
+    }
+    public IEnumerator FlashWhite()
+    {
+        Color originalColor = image.color;
+        image.color = Color.white;
+        float elapsed = 0f;
+        while (elapsed < 0.2f)
+        {
+            elapsed += Time.deltaTime;
+            image.color = Color.Lerp(Color.white, originalColor, elapsed / 0.2f);
+            yield return null;
+        }
+        image.color = originalColor;
     }
 }

@@ -10,5 +10,7 @@ public enum EffectType
     Multihit,
     Draw,
     Discard,
-    Exhaust
+    Exhaust,
+    LoseHP,
+    GainEnergy
 }

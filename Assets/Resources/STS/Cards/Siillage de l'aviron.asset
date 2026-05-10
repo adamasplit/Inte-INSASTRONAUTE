@@ -12,12 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: Siillage de l'aviron
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  cardName: BAF
+  cardName: Siillage de l'aviron
   collectionCard: {fileID: 11400000, guid: 9dc988728499cc4478d3c92e5b00155c, type: 2}
-  cost: 0
+  cost: 1
   type: 0
-  rarity: 0
-  effects: []
+  rarity: 3
+  effects:
+  - type: 0
+    value: 4
+    targetSelf: 0
+    statusType: 0
+    duration: 0
+    description: 
+  - type: 8
+    value: 1
+    targetSelf: 0
+    statusType: 0
+    duration: 0
+    description: 
+  - type: 12
+    value: 1
+    targetSelf: 0
+    statusType: 0
+    duration: 0
+    description: 
   targetingMode: 0
   modifiers: []
   exhaust: 0

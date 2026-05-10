@@ -36,6 +36,11 @@ public class Character
         }
     }
 
+    public void GainEnergy(int amount)
+    {
+        resources.energy += amount;
+    }
+
     public void AddArmor(int amount)
     {
         armor += amount;

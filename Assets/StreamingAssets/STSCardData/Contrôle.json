@@ -4,14 +4,14 @@
   "cost": 2,
   "type": "Pouvoir",
   "rarity": "Epic",
-  "targetingMode": "Enemy",
+  "targetingMode": "Player",
   "exhaust": false,
   "retain": false,
   "effects": [
     {
       "type": "Status",
       "value": 6,
-      "targetSelf": false,
+      "targetSelf": true,
       "statusType": "Strength",
       "duration": 0,
       "description": ""

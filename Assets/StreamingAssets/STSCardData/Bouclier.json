@@ -18,7 +18,7 @@
     },
     {
       "type": "Status",
-      "value": 3,
+      "value": 1,
       "targetSelf": true,
       "statusType": "Dexterity",
       "duration": 0,

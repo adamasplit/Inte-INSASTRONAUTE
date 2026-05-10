@@ -1,0 +1,29 @@
+{
+  "id": "Dans le ring",
+  "collectionCardId": "stadium",
+  "cost": 0,
+  "type": "Compétence",
+  "rarity": "Common",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Armor",
+      "value": 6,
+      "targetSelf": true,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": ""
+    },
+    {
+      "type": "Status",
+      "value": 1,
+      "targetSelf": false,
+      "statusType": "Weakness",
+      "duration": 1,
+      "description": ""
+    }
+  ],
+  "modifiers": []
+}

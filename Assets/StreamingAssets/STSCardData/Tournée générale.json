@@ -1,7 +1,7 @@
 {
   "id": "Tournée générale",
   "collectionCardId": "quartier_libre",
-  "cost": 0,
+  "cost": 1,
   "type": "Compétence",
   "rarity": "Uncommon",
   "targetingMode": "Player",

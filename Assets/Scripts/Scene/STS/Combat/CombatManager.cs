@@ -72,6 +72,7 @@ public class CombatManager : MonoBehaviour
 
                 yield return ui.AnimateCardToCenter(playedView);
             }
+            StartCoroutine(ui.GetView(source).GetComponent<DropZone>().FlashRed());
         }
         foreach (StatusEffect status in source.statusEffects)
         {
@@ -119,10 +120,13 @@ public class CombatManager : MonoBehaviour
         }
         if (source != null && source.isPlayer)
         {
-            if (card.data.exhaust)
-                deck.Exhaust(card);
-            else
-                deck.SendToDiscard(card);
+            if (card.data.type!=CardType.Pouvoir)
+            {
+                if (card.data.exhaust)
+                    deck.Exhaust(card);
+                else
+                    deck.SendToDiscard(card);
+            }
 
             if (playedView != null)
             {

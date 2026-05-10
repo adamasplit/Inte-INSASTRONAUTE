@@ -82,6 +82,14 @@ public static class EffectDescription
             {
                 return $"Epuise {effect.value} carte"+(effect.value>1?"s":"")+" de votre main";
             }
+            case EffectType.LoseHP:
+            {
+                return $"Perdez {effect.value} PV";
+            }
+            case EffectType.GainEnergy:
+            {
+                return $"Gagnez {effect.value} énergie"+(effect.value>1?"s":"")+".";
+            }
 
             default:
                 return "Effet inconnu...";

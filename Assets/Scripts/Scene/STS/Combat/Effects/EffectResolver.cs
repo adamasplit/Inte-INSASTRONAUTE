@@ -143,6 +143,20 @@ public static class EffectResolver
                 }
                 break;
             }
+            case EffectType.LoseHP:
+            {
+                if (ctx.isPreview)
+                    break;
+                ctx.source.TakeDamage(effect.value);
+                break;
+            }
+            case EffectType.GainEnergy:
+            {
+                if (ctx.isPreview)
+                    break;
+                ctx.source.GainEnergy(effect.value);
+                break;
+            }
             default:
                 break;
         }

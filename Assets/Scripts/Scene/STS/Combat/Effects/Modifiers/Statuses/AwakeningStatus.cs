@@ -5,6 +5,7 @@ public class AwakeningStatus : StatusEffect
         Value = value;
         Duration = duration;
         Name = "Éveil";
+        buff=true;
     }
     public override void OnExpire(Character target)
     {

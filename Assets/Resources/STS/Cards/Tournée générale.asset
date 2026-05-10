@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: "Tourn\xE9e g\xE9n\xE9rale"
   collectionCard: {fileID: 11400000, guid: 1a3915f44d98bbc49a119e6b85f3094a, type: 2}
-  cost: 0
+  cost: 1
   type: 1
   rarity: 1
   effects:

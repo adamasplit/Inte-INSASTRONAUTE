@@ -16,7 +16,13 @@ public class VFXManager : MonoBehaviour
     {
         GameObject prefab= entry.GetVFXPrefab();
         if (prefab != null)        {
-            Instantiate(prefab, position, Quaternion.identity, vfxCanvas.transform);
+            GameObject vfxInstance = Instantiate(prefab, position, Quaternion.identity, vfxCanvas.transform);
+            StartCoroutine(DestroyAfterDuration(vfxInstance, 2f)); // Adjust duration as needed
         }
+    }
+    private System.Collections.IEnumerator DestroyAfterDuration(GameObject obj, float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        Destroy(obj);
     }
 }
