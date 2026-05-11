@@ -18,4 +18,8 @@ public class IntentUI : MonoBehaviour
             valueText.text = effect.value > 0 ? $"{effect.value}" : "";
         }
     }
+    public void SetValue(int val)
+    {
+        valueText.text = val > 0 ? $"{val}" : "";
+    }
 }

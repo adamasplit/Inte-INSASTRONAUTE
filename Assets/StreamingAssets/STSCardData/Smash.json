@@ -1,25 +1,17 @@
 {
-  "id": "Lame-Feuille",
-  "collectionCardId": "greensa",
-  "cost": 1,
+  "id": "Smash",
+  "collectionCardId": "toss",
+  "cost": 3,
   "type": "Attaque",
-  "rarity": "Common",
+  "rarity": "Rare",
   "targetingMode": "Enemy",
   "exhaust": false,
   "retain": false,
   "effects": [
     {
       "type": "Damage",
-      "value": 5,
+      "value": 27,
       "targetSelf": false,
-      "statusType": "Strength",
-      "duration": 0,
-      "description": ""
-    },
-    {
-      "type": "Armor",
-      "value": 5,
-      "targetSelf": true,
       "statusType": "Strength",
       "duration": 0,
       "description": ""

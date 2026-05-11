@@ -23,6 +23,10 @@ public class RewardManager : MonoBehaviour
                 cardChoices = new RewardGenerator().GenerateCardChoices(new CombatResult())
             };
         }
+        if (reward.relic!=null)
+        {
+            RunManager.Instance.AddRelic(reward.relic);
+        }
         StartCoroutine(SpawnCardsAnimated(reward.cardChoices));
     }
 

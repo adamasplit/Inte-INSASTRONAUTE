@@ -23,6 +23,10 @@ public class GameManager : MonoBehaviour
         if (RunManager.Instance == null)
         {
             new GameObject("RunManager").AddComponent<RunManager>();
+            for (int i=0;i<10;i++)
+            {
+                RunManager.Instance.AddRelic(RelicDrop.GetRandomRelic(new CombatResult()));
+            }
             combat.allies.Add(new Player("Player", 1500));
             var enemies = new List<Character>
             {

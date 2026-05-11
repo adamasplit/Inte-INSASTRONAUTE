@@ -2,6 +2,7 @@ using System.Collections.Generic;
 public static class RelicDatabase
 {
     private static List<Relic> relics;
+    public static bool initialized => relics != null;
     public static void Load()
     {
         relics = new List<Relic>
@@ -16,7 +17,10 @@ public static class RelicDatabase
             new PERFRelic(),
             new CFIRelic(),
             new RestChargesRelic(),
-            new RestHealRelic()
+            new RestHealRelic(),
+            new UltimateStrengthRelic(),
+            new UltimateDexterityRelic(),
+            new MoraleRelic()
         };
     }
     public static List<Relic> GetRelicsByRarity(RelicRarity rarity)

@@ -2,8 +2,12 @@ using System.Collections.Generic;
 using UnityEngine;
 public static class RelicDrop
 {
-    public static Relic GetRandomRelic()
+    public static Relic GetRandomRelic(CombatResult result)
     {
+        if (!RelicDatabase.initialized)
+        {
+            RelicDatabase.Load();
+        }
         int roll = Random.Range(0, 100);
         if (roll < 50)
         {

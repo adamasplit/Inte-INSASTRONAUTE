@@ -17,10 +17,11 @@ public static class EnchantManager
             if (!card.HasEnchantment("Humanisme"))
                 possibleEnchants.Add((EnchantType.Humanism, 0.5f));
         }   
-        if (card.data.type == CardType.Compétence&&card.data.effects.Exists(e=>e.type==EffectType.Armor))
+        if (card.data.effects.Exists(e=>e.type==EffectType.Armor))
         {
             possibleEnchants.Add((EnchantType.Protection, 2.0f));
         }
+        if (possibleEnchants.Count == 0) return;
 
         EnchantType type= GetWeightedRandomEnchant(possibleEnchants);
         EnchantmentData edata=GetEnchantByType(type, charges).data;

@@ -47,6 +47,7 @@ public class CharacterUI : MonoBehaviour
     }
     public void RefreshIntent(Enemy enemy)
     {
+        Debug.Log($"Refreshing intent for {enemy.name}");
         var next = enemy.PeekNextAction();
 
         if (next == null)
@@ -72,7 +73,8 @@ public class CharacterUI : MonoBehaviour
                     state = cm.state,
                     card = new CardInstance(next)
                 });
-                intentText.text += $"({val})";
+                Debug.Log($"Calculated damage: {val}");
+                effectUIObj.SetValue(val);
             }
         }
     }

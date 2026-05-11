@@ -72,7 +72,7 @@ public class CombatManager : MonoBehaviour
 
                 yield return ui.AnimateCardToCenter(playedView);
             }
-            StartCoroutine(ui.GetView(source).GetComponent<DropZone>().FlashRed());
+            StartCoroutine(ui.GetView(source).GetComponent<DropZone>().FlashWhite());
         }
         foreach (StatusEffect status in source.statusEffects)
         {
@@ -241,6 +241,11 @@ public class CombatManager : MonoBehaviour
             var rewards = rewardGenerator.GenerateCardChoices(result);
             RunManager.Instance.pendingReward = new Reward();
             RunManager.Instance.pendingReward.cardChoices = rewards;
+            if (result.elite)
+            {
+                Relic relic=RelicDrop.GetRandomRelic(result);
+                RunManager.Instance.pendingReward.relic = relic;
+            }
             SceneManager.LoadScene("STS_Reward");
         }
         else if (outcome == TeamOutcome.Defeat)
