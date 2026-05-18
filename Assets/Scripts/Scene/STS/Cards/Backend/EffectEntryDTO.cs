@@ -14,4 +14,5 @@ public class EffectEntryDTO
     public int duration;
 
     public string description;
+    public string cardID;
 }

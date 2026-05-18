@@ -8,5 +8,7 @@ public enum SelectableCharacter
     MRIE,
     GC,
     AI,
-    PERF
+    PERF,
+    Aucun,
+    Impossible // Used for cards that can't be obtained in normal ways, like the starter deck cards
 }

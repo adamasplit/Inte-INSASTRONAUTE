@@ -1,0 +1,42 @@
+{
+    "events": [
+        {
+            "title": "!!!",
+            "description": "ça dégage!!!",
+            "imageName": "",
+            "options": [
+                {
+                    "text": "Retire 5 cartes",
+                    "iconName": "",
+                    "type": "RemoveCard",
+                    "value": 5
+                },
+                {
+                    "text": "Perds 10 PV",
+                    "iconName": "",
+                    "type": "Damage",
+                    "value": 10
+                }
+            ]
+        },
+        {
+            "title": "???",
+            "description": "La nuit tombe...",
+            "imageName": "",
+            "options": [
+                {
+                    "text": "Améliorer 3 cartes",
+                    "iconName": "",
+                    "type": "UpgradeCard",
+                    "value": 3
+                },
+                {
+                    "text": "Se soigner de 10 PV",
+                    "iconName": "",
+                    "type": "Heal",
+                    "value": 10
+                }
+            ]
+        }
+    ]
+}

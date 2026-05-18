@@ -81,9 +81,7 @@ public class MapManager : MonoBehaviour
                 break;
 
             case NodeType.Event:
-                //SceneManager.LoadScene("STS_Event");
-                StopAllCoroutines();
-                yield return StartCoroutine(FadeFromBlack(0.5f));
+                SceneManager.LoadScene("STS_Event");
                 break;
             case NodeType.Elite:
                 RunManager.Instance.eliteEncounter = true;

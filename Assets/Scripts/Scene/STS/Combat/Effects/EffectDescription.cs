@@ -88,9 +88,32 @@ public static class EffectDescription
             }
             case EffectType.GainEnergy:
             {
-                return $"Gagnez {effect.value} énergie"+(effect.value>1?"s":"")+".";
+                return $"Gagnez {effect.value} d'énergie.";
             }
-
+            case EffectType.AddCardToHand:
+            {
+                return $"Ajoute {effect.value} <color=green>{effect.cardID}</color> à votre main.";
+            }
+            case EffectType.StealBuff:
+            {
+                return $"Vole {effect.value} buff"+(effect.value>1?"s":"")+" de la cible.";
+            }
+            case EffectType.TransferDebuff:
+            {
+                return $"Transfère {effect.value} debuff"+(effect.value>1?"s":"")+" de vous à la cible.";
+            }
+            case EffectType.DispelBuff:
+            {
+                return $"Dissipe {effect.value} buff"+(effect.value>1?"s":"");
+            }
+            case EffectType.DispelDebuff:
+            {
+                return $"Dissipe {effect.value} debuff"+(effect.value>1?"s":"");
+            }
+            case EffectType.EndTurn:
+            {
+                return $"Termine votre tour.";
+            }
             default:
                 return "Effet inconnu...";
         }

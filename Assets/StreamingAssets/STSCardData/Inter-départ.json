@@ -1,0 +1,69 @@
+{
+  "id": "Inter-départ",
+  "collectionCardId": "quartier_libre",
+  "cost": 0,
+  "type": "Attaque",
+  "rarity": "Common",
+  "targetingMode": "Enemy",
+  "exhaust": true,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 1,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": ""
+    },
+    {
+      "type": "Armor",
+      "value": 1,
+      "targetSelf": true,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": ""
+    },
+    {
+      "type": "Heal",
+      "value": 1,
+      "targetSelf": true,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": ""
+    },
+    {
+      "type": "Status",
+      "value": 1,
+      "targetSelf": false,
+      "statusType": "Weakness",
+      "duration": 1,
+      "description": "",
+      "cardID": ""
+    },
+    {
+      "type": "AdvanceTurn",
+      "value": 1,
+      "targetSelf": true,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": ""
+    },
+    {
+      "type": "DelayTurn",
+      "value": 1,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": ""
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0
+}

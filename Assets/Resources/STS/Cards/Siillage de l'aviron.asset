@@ -24,19 +24,22 @@ MonoBehaviour:
     statusType: 0
     duration: 0
     description: 
+    cardID: 
   - type: 8
     value: 1
     targetSelf: 0
     statusType: 0
     duration: 0
     description: 
+    cardID: 
   - type: 12
     value: 1
     targetSelf: 0
     statusType: 0
     duration: 0
     description: 
-  targetingMode: 0
+    cardID: 
+  targetingMode: 1
   modifiers: []
   exhaust: 0
   retain: 0

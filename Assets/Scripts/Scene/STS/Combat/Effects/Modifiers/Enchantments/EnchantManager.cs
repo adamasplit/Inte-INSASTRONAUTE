@@ -21,19 +21,22 @@ public static class EnchantManager
         {
             possibleEnchants.Add((EnchantType.Protection, 2.0f));
         }
+        if (card.data.exhaust)
+        {
+            possibleEnchants.Add((EnchantType.Mending, 1.0f));
+            possibleEnchants.Add((EnchantType.Unbreaking, 1.0f));
+        }
         if (possibleEnchants.Count == 0) return;
 
         EnchantType type= GetWeightedRandomEnchant(possibleEnchants);
         EnchantmentData edata=GetEnchantByType(type, charges).data;
 
-        int usedCharges = Mathf.Min(charges, edata.maxLevel);
+        int usedCharges = Mathf.Min(charges, edata.maxLevel,Random.Range(1,4));
         card.AddEnchantment(GetEnchantByType(type, usedCharges));
         if (usedCharges < charges)
         {
             ApplyEnchant(card, charges - usedCharges);
         }
-        
-
     }
 
     public static EnchantType GetWeightedRandomEnchant(List<(EnchantType, float)> enchants)
@@ -69,6 +72,8 @@ public static class EnchantManager
             EnchantType.Mechanical => new MechanicalEnchantment(),
             EnchantType.Protection => new ProtectionEnchantment(),
             EnchantType.Lifesteal => new LifestealEnchantment(),
+            EnchantType.Mending => new MendingEnchantment(),
+            EnchantType.Unbreaking => new UnbreakingEnchantment(),
             _ => null
         };
         if (edata == null) return null;

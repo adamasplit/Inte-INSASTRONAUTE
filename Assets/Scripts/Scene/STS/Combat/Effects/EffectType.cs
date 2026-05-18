@@ -12,5 +12,11 @@ public enum EffectType
     Discard,
     Exhaust,
     LoseHP,
-    GainEnergy
+    GainEnergy,
+    AddCardToHand,
+    StealBuff,
+    TransferDebuff,
+    DispelBuff,
+    DispelDebuff,
+    EndTurn
 }

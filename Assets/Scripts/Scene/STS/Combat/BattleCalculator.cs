@@ -59,6 +59,10 @@ public static class BattleCalculator
         modifiers.AddRange(state.GetModifiers(type));
         if (card != null)
         modifiers.AddRange(card.GetModifiers(type));
+
+        // Ensure ordering: Additive first, then Multiplicative, then Override
+        modifiers.Sort((a, b) => a.modifierType.CompareTo(b.modifierType));
+
         return modifiers;
     }
 }

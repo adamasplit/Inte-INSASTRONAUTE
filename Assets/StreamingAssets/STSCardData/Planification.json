@@ -1,0 +1,33 @@
+{
+  "id": "Planification",
+  "collectionCardId": "GC",
+  "cost": 0,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "GainEnergy",
+      "value": 1,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": ""
+    },
+    {
+      "type": "DelayTurn",
+      "value": 20,
+      "targetSelf": true,
+      "statusType": "Slow",
+      "duration": 2,
+      "description": "",
+      "cardID": ""
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "GC",
+  "animationSpeed": 1.0
+}

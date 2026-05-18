@@ -9,6 +9,7 @@ public class EffectEntry
     public StatusType statusType;
     public int duration;
     public string description; // Optional custom description for the effect
+    public string cardID; // Optional: ID of the card this effect will create (for AddCardToHand or similar effects)
     public EffectEntryDTO ToDTO()
     {
         return new EffectEntryDTO
@@ -23,7 +24,8 @@ public class EffectEntry
 
             duration = duration,
 
-            description = description
+            description = description,
+            cardID = cardID
         };
     }
     public static EffectEntry FromDTO(EffectEntryDTO dto)
@@ -40,7 +42,8 @@ public class EffectEntry
 
             duration = dto.duration,
 
-            description = dto.description
+            description = dto.description,
+            cardID = dto.cardID
         };
     }
 
@@ -56,6 +59,8 @@ public class EffectEntry
             EffectType.AdvanceTurn=>"TurnAdvance",
             EffectType.DelayTurn=>"TurnDelay",
             EffectType.DeleteNextTurn=>"TurnDelete",
+            EffectType.GainEnergy=>"EnergyGain",
+            EffectType.AddCardToHand=>"CardAdd",
             _ => null
         };
 

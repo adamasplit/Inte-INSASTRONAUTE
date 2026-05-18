@@ -10,5 +10,7 @@ public enum StatusType
     FullMoon,
     Slow,
     Haste,
-    Divination
+    Divination,
+    Targeting,
+    Jump
 }

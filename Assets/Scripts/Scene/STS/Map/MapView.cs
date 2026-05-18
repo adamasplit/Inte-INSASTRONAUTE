@@ -43,7 +43,7 @@ public class MapView : MonoBehaviour
 
             nodeView.Init(node, mapManager, RefreshView);
         }
-        mapPanel.parent.GetComponent<RectTransform>().sizeDelta = new Vector2(mapPanel.parent.GetComponent<RectTransform>().sizeDelta.x, (maxFloor + 1) * spacingY + 100f);
+        mapPanel.parent.GetComponent<RectTransform>().sizeDelta = new Vector2(mapPanel.parent.GetComponent<RectTransform>().sizeDelta.x, (maxFloor + 1) * spacingY + 400f);
         // 2. Draw connections
         DrawConnections(allNodes);
 

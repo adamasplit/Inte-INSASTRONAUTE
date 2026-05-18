@@ -7,19 +7,34 @@ public class IntentUI : MonoBehaviour
     public Image icon;
     public void SetEffect(EffectEntry effect)
     {
-        if (effect.type == EffectType.Status)
+        switch (effect.type)
         {
-            StatusEffect status = StatusEffect.Factory(effect.statusType,effect.value, effect.duration);
-            icon.sprite=status.buff?Resources.Load<Sprite>($"STS/Icons/Buff"):Resources.Load<Sprite>($"STS/Icons/Debuff");
-        }
-        else
-        {
-            icon.sprite = Resources.Load<Sprite>($"STS/Icons/{effect.type}");
-            valueText.text = effect.value > 0 ? $"{effect.value}" : "";
+            case EffectType.Status:
+            {
+                StatusEffect status = StatusEffect.Factory(effect.statusType,effect.value, effect.duration);
+                icon.sprite=status.buff?Resources.Load<Sprite>($"STS/Icons/Buff"):Resources.Load<Sprite>($"STS/Icons/Debuff");
+                break;
+            }
+            case EffectType.Multihit:
+            {
+                icon.sprite = Resources.Load<Sprite>($"STS/Icons/Damage");
+                valueText.text = effect.value > 0 ? $"{effect.value}x{effect.duration}" : "";
+                break;
+            }
+            default:
+            {
+                icon.sprite = Resources.Load<Sprite>($"STS/Icons/{effect.type}");
+                valueText.text = effect.value > 0 ? $"{effect.value}" : "";
+                break;
+            }
         }
     }
     public void SetValue(int val)
     {
         valueText.text = val > 0 ? $"{val}" : "";
+    }
+    public void SetText(string text)
+    {
+        valueText.text = text;
     }
 }

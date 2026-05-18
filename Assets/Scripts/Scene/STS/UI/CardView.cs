@@ -22,6 +22,11 @@ public class CardView : MonoBehaviour,IPointerClickHandler
     public RectTransform rootRect;
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (GlobalUIManager.Instance != null && GlobalUIManager.Instance.selectionMode)
+        {
+            SelectionManager.Instance.OnCardClicked(cardInstance.data);
+            return;
+        }
         if (ui!=null)
             ui.SelectCard(this);
         RestCardController restCard = GetComponentInParent<RestCardController>();
@@ -131,7 +136,8 @@ public class CardView : MonoBehaviour,IPointerClickHandler
                 target = target,
                 combat = combat,
                 state = combat==null?null:combat.state,
-                card = cardInstance
+                card = cardInstance,
+                isPreview = true
             };
 
             SetDescription(cardInstance.GetDescription(ctx));

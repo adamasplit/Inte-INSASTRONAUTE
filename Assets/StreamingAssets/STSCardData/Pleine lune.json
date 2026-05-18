@@ -14,8 +14,11 @@
       "targetSelf": false,
       "statusType": "FullMoon",
       "duration": 0,
-      "description": null
+      "description": null,
+      "cardID": null
     }
   ],
-  "modifiers": []
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0
 }

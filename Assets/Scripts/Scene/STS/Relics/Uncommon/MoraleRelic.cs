@@ -3,7 +3,7 @@ public class MoraleRelic:Relic
     public MoraleRelic()
     {
         name = "Moral en hausse";
-        description = "Rend 1 PV à chaque début de tour si vous avez moins de 50% de votre santé.";
+        description = "Rend 1 PV à chaque début de tour si vous avez moins de la moitié de vos PV.";
         rarity=RelicRarity.Uncommon;
     }
     public override void OnTurnStart(Character player)

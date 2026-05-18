@@ -27,6 +27,8 @@ public static class RelicDrop
     {
         List<Relic> relics = RelicDatabase.GetRelicsByRarity(rarity);
         if (relics.Count == 0) return null;
-        return relics[Random.Range(0, relics.Count)];
+        Relic relic=relics[Random.Range(0, relics.Count)];
+        Debug.Log($"Selected relic: {relic.name} of rarity {relic.rarity}");
+        return relic;
     }
 }

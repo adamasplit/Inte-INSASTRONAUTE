@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.SceneManagement;
@@ -12,6 +13,10 @@ public enum TeamOutcome
 
 public class CombatManager : MonoBehaviour
 {
+    // Tracks the number of active PlayCard coroutines
+    private int activeCardPlays = 0;
+    public bool CardPlaysRunning => activeCardPlays > 0;
+
     public Player player => allies.FirstOrDefault();
 
     public List<Player> allies = new();
@@ -39,6 +44,7 @@ public class CombatManager : MonoBehaviour
         {
             Enemy enn=enemy as Enemy;
             currentEnemiesData.Add(enn.data);
+            enn.combat = this;
         }
         foreach (var ally in allies)
         {
@@ -46,15 +52,23 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    public void PlayCard(Character source, CardInstance card, List<Character> targets)
+
+    public void PlayCard(Character source, CardInstance card, List<Character> targets, bool ignoreEnergy = false, bool createView = false)
     {
-        StartCoroutine(PlayCardRoutine(source, card, targets));
+        StartCoroutine(TrackPlayCardRoutine(source, card, targets, ignoreEnergy, createView));
     }
 
-    IEnumerator PlayCardRoutine(Character source, CardInstance card, List<Character> targets)
+    private IEnumerator TrackPlayCardRoutine(Character source, CardInstance card, List<Character> targets, bool ignoreEnergy = false, bool createView = false)
+    {
+        activeCardPlays++;
+        yield return StartCoroutine(PlayCardRoutine(source, card, targets, ignoreEnergy, createView));
+        activeCardPlays--;
+    }
+
+    IEnumerator PlayCardRoutine(Character source, CardInstance card, List<Character> targets, bool ignoreEnergy = false, bool createView = false)
     {
         
-        if (source.resources.energy < card.data.cost&&source.isPlayer)
+        if (source==null||source.resources.energy < card.data.cost&&source.isPlayer&&!ignoreEnergy)
         {
             yield break;
         }
@@ -62,8 +76,14 @@ public class CombatManager : MonoBehaviour
 
         if (source != null && source.isPlayer)
         {
-            playedView = ui.GetView(card);
-
+            if (createView)
+            {
+                playedView=ui.CreateCardView(card);
+            }
+            else
+            {
+                playedView = ui.GetView(card);
+            }
             deck.RemoveFromHand(card);
 
             if (playedView != null)
@@ -78,7 +98,10 @@ public class CombatManager : MonoBehaviour
         {
             status.BeforeAction(source);
         }
-        source.SpendEnergy(card.data.cost);
+        if (!ignoreEnergy)
+        {
+            source.SpendEnergy(card.data.cost);
+        }
         EffectContext ctxTarget = new EffectContext
         {
             source = source,
@@ -98,7 +121,28 @@ public class CombatManager : MonoBehaviour
             card = card,
             timeline = turnSystem.timeline
         };
+        List<EffectEntry> usedEffectsList= new List<EffectEntry>();
+        yield return new WaitForSeconds(0.1f*card.data.animationSpeed); // Delay before effects for better readability
         foreach (var effect in card.data.effects)
+        {
+            if (effect.type == EffectType.Multihit)
+            {
+                for(int i=0;i<effect.duration;i++)
+                    {
+                        usedEffectsList.Add(new EffectEntry
+                        {
+                            type = EffectType.Damage,
+                            value = effect.value,
+                            targetSelf=effect.targetSelf
+                        });
+                    }
+            }
+            else
+            {
+                usedEffectsList.Add(effect);
+            }
+        }
+        foreach (var effect in usedEffectsList)
         {
             foreach(var target in targets)
             {
@@ -111,12 +155,15 @@ public class CombatManager : MonoBehaviour
                 }
                 else
                 {
-                    VFXManager.Instance.PlayEffect(effect, ui.GetView(target).transform.position);
+                    if (ui.GetView(target) != null)
+                    {
+                        VFXManager.Instance.PlayEffect(effect, ui.GetView(target).transform.position);
+                    }
                     EffectResolver.Apply(effect, ctxTarget);
                 }
             }
             ui.RefreshUI();
-            yield return new WaitForSeconds(0.3f); // Small delay between effects for better readability
+            yield return new WaitForSeconds((effect.type == EffectType.Damage ? 0.1f : 0.3f)*card.data.animationSpeed); // Small delay between effects for better readability
         }
         if (source != null && source.isPlayer)
         {
@@ -141,6 +188,11 @@ public class CombatManager : MonoBehaviour
         {
             status.AfterAction(source);
         }
+        foreach (Character character in GetAllCharacters())
+        {
+            character.AfterAction();
+        }
+        yield return new WaitForSeconds(0.2f*card.data.animationSpeed); // Delay after effects for better readability
 
         // Check for end of combat
         bool combatOver = TryEndCombatIfNeeded();

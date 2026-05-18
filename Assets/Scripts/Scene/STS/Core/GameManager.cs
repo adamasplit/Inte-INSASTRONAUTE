@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
             }
             CardInstance enchantedCard = new CardInstance(TestDatabase.attackCard);
             enchantedCard.enchantments.Add(new CardEnchantment { data = new SharpnessEnchantment(), level = 10 });
+            enchantedCard.enchantments.Add(new CardEnchantment { data = new MechanicalEnchantment(), level = 1 });
             combat.deck.drawPile.Add(enchantedCard);
             combat.deck.drawPile.AddRange(STSCardDatabase.allCards.Select(data => new CardInstance(data)));
             combat.deck.Shuffle(combat.deck.drawPile);

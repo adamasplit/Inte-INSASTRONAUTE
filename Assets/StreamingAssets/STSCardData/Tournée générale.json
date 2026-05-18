@@ -11,11 +11,14 @@
     {
       "type": "Draw",
       "value": 3,
-      "targetSelf": false,
+      "targetSelf": true,
       "statusType": "Strength",
       "duration": 0,
-      "description": ""
+      "description": "",
+      "cardID": ""
     }
   ],
-  "modifiers": []
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0
 }

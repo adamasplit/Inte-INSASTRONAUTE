@@ -1,6 +1,6 @@
 {
   "id": "Frappe ultime",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "cost": 2,
   "type": "Attaque",
   "rarity": "Special",
@@ -14,7 +14,8 @@
       "targetSelf": false,
       "statusType": "Strength",
       "duration": 0,
-      "description": ""
+      "description": "",
+      "cardID": ""
     },
     {
       "type": "Heal",
@@ -22,8 +23,11 @@
       "targetSelf": true,
       "statusType": "Strength",
       "duration": 0,
-      "description": ""
+      "description": "",
+      "cardID": ""
     }
   ],
-  "modifiers": []
+  "modifiers": [],
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 1.0
 }

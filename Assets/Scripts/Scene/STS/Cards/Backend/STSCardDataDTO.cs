@@ -22,4 +22,6 @@ public class STSCardDataDTO
     public List<EffectEntryDTO> effects = new();
 
     public List<ModifierDTO> modifiers = new();
+    public string favoredCharacter;
+    public float animationSpeed;
 }

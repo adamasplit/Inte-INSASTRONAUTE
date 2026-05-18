@@ -11,4 +11,5 @@ public class CombatState
     public int cardsDiscardedThisCombat;
     public int cardsPlayedThisTurn;
     public int energySpentThisTurn;
+    public bool playerLastTurn;
 }

@@ -8,5 +8,7 @@
   "exhaust": false,
   "retain": false,
   "effects": [],
-  "modifiers": []
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0
 }

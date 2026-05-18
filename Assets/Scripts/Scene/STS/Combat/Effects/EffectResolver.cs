@@ -1,5 +1,6 @@
 using System.Linq;
 using UnityEngine;
+using System.Collections.Generic;
 public static class EffectResolver
 {
     public static void Apply(EffectEntry effect, EffectContext ctx)
@@ -12,14 +13,25 @@ public static class EffectResolver
                 if (ctx.isPreview)
                     break; // Skip actual damage application during preview
                 int dmg = BattleCalculator.GetModifiedValue(effect.value, StatType.Damage, ctx);
+                DamageInfo info=new DamageInfo();
                 if (ctx!=null&&ctx.card!=null&&ctx.card.enchantments.Exists(e=>e.data.name=="Humanisme"))
                 {
-                    dmg=ctx.target.TakeDamage(dmg,true);
+                    info=ctx.target.TakeDamage(dmg,true);
                 }
                 else
                 {
-                    dmg=ctx.target.TakeDamage(dmg);
+                    info=ctx.target.TakeDamage(dmg);
                 }
+                if (ctx.source != null)
+                    {
+                        ctx.source.OnDamageDealt(ctx.target, dmg,info.unblocked);
+                        ctx.target.OnDamageTaken(ctx.source, dmg,info.unblocked);
+                    }
+                if (info.armorBroken && ctx.source != null)
+                    {
+                        ctx.source.OnTargetArmorBroken(ctx.target);
+                        ctx.target.OnOwnArmorBroken(ctx.source);
+                    }
                 if (ctx.card!=null&&ctx.card.enchantments.Exists(e=>e.data.name=="Lifesteal"))
                 {
                     CardEnchantment e=ctx.card.enchantments.Find(en=>en.data.name=="Lifesteal");
@@ -76,7 +88,7 @@ public static class EffectResolver
                     break;
                 }
                 var targetEntry = timeline
-                    .Where(t => t.character.name == ctx.target.name)
+                    .Where(t => t.character.name == ctx.target.name&& t.time > 0)
                     .OrderBy(t => t.time)
                     .FirstOrDefault();
                 if (targetEntry != null)
@@ -93,6 +105,7 @@ public static class EffectResolver
                         {
                             character = ctx.target,
                             time = targetEntry.time + ctx.target.turnDelay(turnSystem.baseDelay), // Schedule for the next turn
+                            uid = TurnEntry.nextUID++
                         });
                     }
                 }
@@ -158,6 +171,81 @@ public static class EffectResolver
                 if (ctx.isPreview)
                     break;
                 ctx.source.GainEnergy(effect.value);
+                break;
+            }
+            case EffectType.AddCardToHand:
+            {
+                if (ctx.isPreview)
+                    break;
+                STSCardData cardToAdd = STSCardDatabase.Get(effect.cardID);
+                if (cardToAdd != null)
+                {
+                    ctx.source.GetCombatManager().deck.hand.Add(new CardInstance(cardToAdd));
+                }
+                break;
+            }
+            case EffectType.StealBuff:
+            {
+                if (ctx.isPreview)
+                    break;
+                List<StatusEffect> buffsToSteal = ctx.target.statusEffects.Where(s => s.buff).ToList();
+                for (int i = 0; i < effect.value && buffsToSteal.Count > 0; i++)
+                {
+                    StatusEffect buff = buffsToSteal[0];
+                    buffsToSteal.RemoveAt(0);
+                    ctx.target.RemoveStatus(buff);
+                    ctx.source.AddStatus(buff);
+                }
+                break;
+            }
+            case EffectType.TransferDebuff:
+            {
+                if (ctx.isPreview)
+                    break;
+                List<StatusEffect> debuffsToTransfer = ctx.source.statusEffects.Where(s => !s.buff).ToList();
+                for (int i = 0; i < effect.value && debuffsToTransfer.Count > 0; i++)
+                {
+                    StatusEffect debuff = debuffsToTransfer[0];
+                    debuffsToTransfer.RemoveAt(0);
+                    ctx.source.RemoveStatus(debuff);
+                    ctx.target.AddStatus(debuff);
+                }
+                break;
+            }
+            case EffectType.DispelBuff:
+            {
+                if (ctx.isPreview)
+                    break;
+                List<StatusEffect> buffsToDispel = ctx.target.statusEffects.Where(s => s.buff).ToList();
+                for (int i = 0; i < effect.value && buffsToDispel.Count > 0; i++)
+                {
+                    StatusEffect buff = buffsToDispel[0];
+                    buffsToDispel.RemoveAt(0);
+                    ctx.target.RemoveStatus(buff);
+                }
+                break;
+            }
+            case EffectType.DispelDebuff:
+            {
+                if (ctx.isPreview)
+                    break;
+                List<StatusEffect> debuffsToDispel = ctx.target.statusEffects.Where(s => !s.buff).ToList();
+                for (int i = 0; i < effect.value && debuffsToDispel.Count > 0; i++)
+                {
+                    StatusEffect debuff = debuffsToDispel[0];
+                    debuffsToDispel.RemoveAt(0);
+                    ctx.target.RemoveStatus(debuff);
+                }
+                break;
+            }
+            case EffectType.EndTurn:
+            {
+                if (ctx.isPreview)
+                    break;
+                if (ctx.source != null && ctx.source.isPlayer)
+                {
+                    ctx.combat.turnSystem.PlayerEndTurn();
+                }
                 break;
             }
             default:

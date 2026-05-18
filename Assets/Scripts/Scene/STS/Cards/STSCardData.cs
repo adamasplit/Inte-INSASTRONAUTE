@@ -5,6 +5,7 @@ using System;
 public class STSCardData : ScriptableObject
 {
     public string cardName;
+    public string collectionCardId;
     public CardData collectionCard;
     public int cost;
     public CardType type;
@@ -14,6 +15,8 @@ public class STSCardData : ScriptableObject
     public List<ModifierData> modifiers = new();
     public bool exhaust=false;
     public bool retain=false;
+    public SelectableCharacter favoredCharacter=SelectableCharacter.Aucun;
+    public float animationSpeed=1f;
     #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -25,7 +28,7 @@ public class STSCardData : ScriptableObject
         STSCardDataDTO dto = new();
 
         dto.id = cardName;
-        dto.collectionCardId = collectionCard != null ? collectionCard.cardId : "";
+        dto.collectionCardId = collectionCard != null ? collectionCard.cardId : collectionCardId;
         dto.cost = cost;
 
         dto.type = type.ToString();
@@ -38,6 +41,8 @@ public class STSCardData : ScriptableObject
 
         dto.retain = retain;
 
+        dto.favoredCharacter = favoredCharacter.ToString();
+        dto.animationSpeed = animationSpeed;
         foreach (var effect in effects)
         {
             dto.effects.Add(effect.ToDTO());
@@ -55,7 +60,8 @@ public class STSCardData : ScriptableObject
         STSCardData card = new();
 
         card.cardName = dto.id;
-        card.collectionCard = dto.collectionCardId=="" ? null : CardDatabase.Instance.Get(dto.collectionCardId);
+        card.collectionCardId = dto.collectionCardId;
+        card.collectionCard = (dto.collectionCardId==null||dto.collectionCardId=="") ? null : CardDatabase.Instance.Get(dto.collectionCardId);
 
         card.cost = dto.cost;
 
@@ -69,6 +75,7 @@ public class STSCardData : ScriptableObject
             Enum.Parse<TargetingMode>(dto.targetingMode);
 
         card.exhaust = dto.exhaust;
+        card.animationSpeed = dto.animationSpeed;
 
         card.retain = dto.retain;
         card.effects = new List<EffectEntry>();
@@ -81,6 +88,8 @@ public class STSCardData : ScriptableObject
         {
             card.modifiers.Add(ModifierData.FromDTO(modDto));
         }
+
+        card.favoredCharacter = Enum.Parse<SelectableCharacter>(dto.favoredCharacter)==null?SelectableCharacter.Aucun: Enum.Parse<SelectableCharacter>(dto.favoredCharacter);
 
         return card;
     }

@@ -23,12 +23,17 @@ MonoBehaviour:
     targetSelf: 1
     statusType: 0
     duration: 0
+    description: 
+    cardID: 
   - type: 3
     value: 10
     targetSelf: 1
     statusType: 4
     duration: -1
+    description: 
+    cardID: 
   targetingMode: 0
   modifiers: []
   exhaust: 0
   retain: 0
+  favoredCharacter: 10

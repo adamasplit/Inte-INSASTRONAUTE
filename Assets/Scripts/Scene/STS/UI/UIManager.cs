@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 
 public class UIManager : MonoBehaviour
 {
@@ -50,6 +51,18 @@ public class UIManager : MonoBehaviour
         }
 
         return null;
+    }
+    public CardView CreateCardView(CardInstance card)
+    {
+        GameObject obj = Instantiate(cardButtonPrefab, handPanel);
+
+        CardView view = obj.GetComponentInChildren<CardView>();
+
+        view.SetCard(card);
+
+        currentHandViews.Add(view);
+
+        return view;
     }
 
     public void Deselect()
@@ -143,6 +156,10 @@ public class UIManager : MonoBehaviour
         handLayout.selectedCard = selectedCard;
 
         handLayout.Arrange(currentHandViews);
+        foreach (var view in currentHandViews)
+        {
+            view.RefreshDescription();
+        }
     }
 
     public void HighlightTargets(TargetingMode mode, Character hovered)
@@ -189,7 +206,22 @@ public class UIManager : MonoBehaviour
 
         return view;
     }
+    public static void ReparentKeepScreenPosition(
+    RectTransform rect,
+    Transform newParent
+    )
+    {
+        Vector3 pos = rect.position;
+        Quaternion rot = rect.rotation;
+        Vector3 scale = rect.lossyScale;
 
+        rect.SetParent(newParent, true);
+
+        rect.position = pos;
+        rect.rotation = rot;
+
+        rect.localScale = Vector3.one;
+    }
     public void DrawCardAnimated(CardInstance card)
     {
         CardView view = CreateHandCard(card);
@@ -198,6 +230,7 @@ public class UIManager : MonoBehaviour
             view.rootRect;
 
         rect.SetParent(animator.animationLayer, false);
+        ReparentKeepScreenPosition(rect, animator.animationLayer);
 
         rect.position = deckAnchor.position;
 
@@ -216,6 +249,7 @@ public class UIManager : MonoBehaviour
         yield return null;
 
         rect.SetParent(handPanel, true);
+        ReparentKeepScreenPosition(rect, handPanel);
 
         RefreshHandLayout();
 
@@ -226,6 +260,7 @@ public class UIManager : MonoBehaviour
             handPanel.TransformPoint(targetLocal);
 
         rect.SetParent(animator.animationLayer, true);
+        ReparentKeepScreenPosition(rect, animator.animationLayer);
 
         rect.position = deckAnchor.position;
 
@@ -236,6 +271,7 @@ public class UIManager : MonoBehaviour
         );
 
         rect.SetParent(handPanel, true);
+        ReparentKeepScreenPosition(rect, handPanel);
 
         rect.position = target;
 
@@ -282,6 +318,7 @@ public class UIManager : MonoBehaviour
         view.isAnimating = true;
 
         rect.SetParent(animator.animationLayer, true);
+        ReparentKeepScreenPosition(rect, animator.animationLayer);
 
         yield return animator.MoveCard(
             rect,
@@ -299,6 +336,7 @@ public class UIManager : MonoBehaviour
         view.isAnimating = true;
 
         rect.SetParent(animator.animationLayer, true);
+        ReparentKeepScreenPosition(rect, animator.animationLayer);
 
         Vector3 center = Vector3.zero;
 

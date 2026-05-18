@@ -3,17 +3,22 @@ public class GCRelic:Relic
     public GCRelic()
     {
         name="Fondation solide";
-        description="À la fin de chaque tour, donne 2 d'Armure par énergie, par carte en main et par ennemi présent.";
+        description="À la fin de chaque tour (ennemi ou allié), donne 2 d'Armure. L'Armure n'est pas perdue en cas de tours consécutifs.";
         rarity=RelicRarity.Base;
     }
-    public override void OnTurnEnd(Character character)
+    public override void OnAnyTurnEnd(Character character)
     {
-        base.OnTurnEnd(character);
-        if (character is Player player)
+        RunManager.Instance.player.AddArmor(2);
+    }
+    public override int ArmorOnTurnStart(int previousArmor,Character character)
+    {
+        if (character.GetCombatManager().state.playerLastTurn)
         {
-            int armorGain = (player.resources.energy*2 + player.GetCombatManager().deck.hand.Count + player.GetCombatManager().enemies.Count);
-            player.AddArmor(armorGain);
+            return previousArmor;
+        }
+        else
+        {
+            return 0;
         }
     }
-
 }

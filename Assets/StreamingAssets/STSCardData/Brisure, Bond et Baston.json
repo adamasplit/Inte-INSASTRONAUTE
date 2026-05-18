@@ -14,7 +14,8 @@
       "targetSelf": false,
       "statusType": "Strength",
       "duration": 0,
-      "description": ""
+      "description": "",
+      "cardID": null
     },
     {
       "type": "AdvanceTurn",
@@ -22,7 +23,8 @@
       "targetSelf": true,
       "statusType": "Strength",
       "duration": 0,
-      "description": ""
+      "description": "",
+      "cardID": null
     },
     {
       "type": "Status",
@@ -30,8 +32,11 @@
       "targetSelf": false,
       "statusType": "Vuln",
       "duration": 3,
-      "description": ""
+      "description": "",
+      "cardID": null
     }
   ],
-  "modifiers": []
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0
 }

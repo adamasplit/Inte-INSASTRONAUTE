@@ -87,8 +87,9 @@ public class RestManager : MonoBehaviour
             return;
 
         RunManager.Instance.restCharges -= charges;
-
-        EnchantManager.ApplyEnchant(selectedCard, charges);
+        int enchantLevel = Random.Range(charges, charges*4+1);
+        Debug.Log($"Enchanting card with level {enchantLevel} using {charges} charges.");
+        EnchantManager.ApplyEnchant(selectedCard, enchantLevel);
         BuildDeck();
         UpdateChargesDisplay();
     }

@@ -9,10 +9,13 @@ public class TimelineUI : MonoBehaviour
     public float spacing = 100f;
 
     List<TurnIcon> icons = new();
-    List<TurnEntry> previousTimeline = null;
+    List<TurnEntry> previousDisplayTimeline = null;
+
+    public bool IsAnimating { get; private set; }
 
     public void Display(List<TurnEntry> timeline, bool preview = false)
     {
+        bool anyIconMoving = false;
         EnsureIconCount(timeline.Count);
         int currentIndex=0;
         for (int i = 0; i < timeline.Count; i++)
@@ -30,9 +33,9 @@ public class TimelineUI : MonoBehaviour
             Vector3 targetPos = new Vector3(x, 0, 0);
 
             //   POSITION DE DÉPART (ancienne)
-            if (previousTimeline != null)
+            if (previousDisplayTimeline != null)
             {
-                int oldIndex = FindMatchingIndex(previousTimeline, entry);
+                int oldIndex = FindMatchingIndex(previousDisplayTimeline, entry);
 
                 if (oldIndex != -1)
                 {
@@ -49,6 +52,9 @@ public class TimelineUI : MonoBehaviour
 
             icon.SetTargetPosition(targetPos);
 
+            if (!preview && icon.IsMoving())
+                anyIconMoving = true;
+
             icon.SetType(entry.visualType);
             float depth = Mathf.Clamp01(i / (float)timeline.Count);
             icon.SetDepth(depth);
@@ -61,21 +67,45 @@ public class TimelineUI : MonoBehaviour
             icons[i].gameObject.SetActive(false);
         }
 
+        if (!preview)
+            IsAnimating = anyIconMoving;
+
         //   on sauvegarde pour le prochain frame
-        if (!preview) previousTimeline = CloneTimeline(timeline);
+        if (!preview) previousDisplayTimeline = CloneTimeline(timeline);
+    }
+
+    void LateUpdate()
+    {
+        if (!IsAnimating)
+            return;
+
+        for (int i = 0; i < icons.Count; i++)
+        {
+            var icon = icons[i];
+            if (icon != null && icon.gameObject.activeSelf && icon.IsMoving())
+                return;
+        }
+
+        IsAnimating = false;
     }
 
     int FindMatchingIndex(List<TurnEntry> list, TurnEntry entry)
     {
+        // Try to match by UID first
         for (int i = 0; i < list.Count; i++)
         {
             var e = list[i];
-
-            // match simple (suffisant pour l'instant)
+            if (e.uid == entry.uid)
+                return i;
+        }
+        // If no UID match, try to match by character AND time
+        for (int i = 0; i < list.Count; i++)
+        {
+            var e = list[i];
             if (e.character == entry.character && Mathf.Approximately(e.time, entry.time))
                 return i;
         }
-
+        // No match found
         return -1;
     }
 

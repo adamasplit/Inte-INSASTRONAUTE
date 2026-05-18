@@ -14,7 +14,8 @@
       "targetSelf": false,
       "statusType": "Vuln",
       "duration": 2,
-      "description": ""
+      "description": null,
+      "cardID": null
     },
     {
       "type": "Status",
@@ -22,8 +23,11 @@
       "targetSelf": false,
       "statusType": "Weakness",
       "duration": 2,
-      "description": ""
+      "description": null,
+      "cardID": null
     }
   ],
-  "modifiers": []
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0
 }

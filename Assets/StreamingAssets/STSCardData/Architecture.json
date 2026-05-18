@@ -1,0 +1,33 @@
+{
+  "id": "Architecture",
+  "collectionCardId": "AI",
+  "cost": 0,
+  "type": "Compétence",
+  "rarity": "Uncommon",
+  "targetingMode": "Enemy",
+  "exhaust": true,
+  "retain": false,
+  "effects": [
+    {
+      "type": "StealBuff",
+      "value": 1,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": ""
+    },
+    {
+      "type": "TransferDebuff",
+      "value": 1,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": ""
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "AI",
+  "animationSpeed": 1.0
+}

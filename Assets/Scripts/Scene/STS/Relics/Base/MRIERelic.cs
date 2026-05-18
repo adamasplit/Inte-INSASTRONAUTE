@@ -3,7 +3,7 @@ public class MRIERelic:Relic
     public MRIERelic()
     {
         name="Coeur galactique";
-        description="Au début de chaque combat, ajoute 1 Météorite à votre main.";
+        description="Au début de chaque combat, ajoute 1 Météorite à votre défausse.";
         rarity=RelicRarity.Base;
     }
     public override void OnCombatStart(Character character)

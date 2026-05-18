@@ -40,7 +40,11 @@ public class CardInstance
         }
         foreach (var e in data.effects)
         {
-            text += EffectDescription.Get(e,ctx) + "\n";
+            string desc=EffectDescription.Get(e,ctx);
+            if (desc!=" ")
+            {
+                text += desc + "\n";
+            }
         }
         foreach (var mod in GetModifiers(StatType.Damage,false))
         {

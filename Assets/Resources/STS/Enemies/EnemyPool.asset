@@ -40,9 +40,9 @@ MonoBehaviour:
     weight: 1
     elite: 0
     boss: 0
-  - displayName: Even easier
+  - displayName: Difficult
     enemies:
-    - {fileID: 11400000, guid: 931c0fae846614e41adfb2bda056c8c7, type: 2}
+    - {fileID: 11400000, guid: 32beb350830d4ea4080266b5e66083b2, type: 2}
     minFloor: 0
     maxFloor: 10
     weight: 1

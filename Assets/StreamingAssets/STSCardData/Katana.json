@@ -14,8 +14,11 @@
       "targetSelf": false,
       "statusType": "Strength",
       "duration": 0,
-      "description": ""
+      "description": "",
+      "cardID": ""
     }
   ],
-  "modifiers": []
+  "modifiers": [],
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 1.0
 }

@@ -1,0 +1,51 @@
+{
+  "id": "Saut",
+  "collectionCardId": "EP",
+  "cost": 0,
+  "type": "Compétence",
+  "rarity": "Epic",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "EndTurn",
+      "value": 0,
+      "targetSelf": true,
+      "statusType": "Targeting",
+      "duration": 0,
+      "description": "",
+      "cardID": ""
+    },
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": true,
+      "statusType": "Jump",
+      "duration": 0,
+      "description": "Déclenchez une puissante attaque au tour suivant.",
+      "cardID": ""
+    },
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": false,
+      "statusType": "Targeting",
+      "duration": 0,
+      "description": " ",
+      "cardID": ""
+    },
+    {
+      "type": "DelayTurn",
+      "value": 24,
+      "targetSelf": true,
+      "statusType": "Targeting",
+      "duration": 0,
+      "description": "",
+      "cardID": ""
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "EP",
+  "animationSpeed": 1.0
+}

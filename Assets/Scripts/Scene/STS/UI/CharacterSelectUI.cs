@@ -20,13 +20,14 @@ public class CharacterSelectUI : MonoBehaviour
     {
         foreach (SelectableCharacter character in System.Enum.GetValues(typeof(SelectableCharacter)))
         {
+            if (character == SelectableCharacter.Aucun|| character == SelectableCharacter.Impossible) continue;
             GameObject btnObj = Instantiate(characterButtonPrefab, characterListContainer);
             CharacterSelectButton btn = btnObj.GetComponent<CharacterSelectButton>();
             btn.Init(character, OnCharacterSelected);
         }
         PlayersDatabase.Load();
         OnCharacterSelected(SelectableCharacter.EP);
-        characterListContainer.position= new Vector3(2000, characterListContainer.position.y, 0);
+        characterListContainer.position= new Vector3(500, characterListContainer.position.y, 0);
         Hide();
     }
     public void Show()

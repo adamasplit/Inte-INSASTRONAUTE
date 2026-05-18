@@ -46,4 +46,18 @@ public static class STSCardDatabase
 
         return null;
     }
+    public static List<STSCardData> CardForCollectionCard(string collectionCardId)
+    {
+        List<STSCardData> cards = new List<STSCardData>();
+
+        foreach (var card in allCards)
+        {
+            if (card.collectionCardId == collectionCardId)
+            {
+                cards.Add(card);
+            }
+        }
+
+        return cards;
+    }
 }

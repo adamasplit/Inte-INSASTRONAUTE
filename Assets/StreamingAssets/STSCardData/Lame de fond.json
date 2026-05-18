@@ -14,8 +14,11 @@
       "targetSelf": false,
       "statusType": "Strength",
       "duration": 4,
-      "description": ""
+      "description": "",
+      "cardID": null
     }
   ],
-  "modifiers": []
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0
 }

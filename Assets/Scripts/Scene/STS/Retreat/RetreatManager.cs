@@ -97,6 +97,7 @@ public class RetreatManager : MonoBehaviour
         if (goingToMenu) return;
         goingToMenu = true;
         AddObtainedCardsToCollection();
+        RunManager.Instance.OnRunEnd();
         SceneManager.LoadScene("STS_Boot");
     }
 

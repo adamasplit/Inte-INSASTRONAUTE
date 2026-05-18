@@ -1,6 +1,6 @@
 {
   "id": "Lionheart",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "cost": 3,
   "type": "Pouvoir",
   "rarity": "Special",
@@ -14,7 +14,8 @@
       "targetSelf": true,
       "statusType": "Strength",
       "duration": 0,
-      "description": ""
+      "description": "",
+      "cardID": ""
     },
     {
       "type": "Status",
@@ -22,8 +23,11 @@
       "targetSelf": true,
       "statusType": "Dexterity",
       "duration": -1,
-      "description": ""
+      "description": "",
+      "cardID": ""
     }
   ],
-  "modifiers": []
+  "modifiers": [],
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 1.0
 }

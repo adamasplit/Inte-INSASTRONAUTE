@@ -11,7 +11,7 @@ public class TurnIcon : MonoBehaviour
 
     Vector3 targetPosition;
 
-    public float moveSpeed = 10f;
+    public float moveSpeed = 100f;
     public bool preview = false;
 
     public void Set(Character character)
@@ -25,10 +25,10 @@ public class TurnIcon : MonoBehaviour
 
     void Update()
     {
-        transform.localPosition = Vector3.Lerp(
+        transform.localPosition = Vector3.MoveTowards(
             transform.localPosition,
             new Vector3(targetPosition.x, transform.localPosition.y, targetPosition.z),
-            Time.deltaTime * moveSpeed
+            moveSpeed * Time.deltaTime
         );
         if (preview)
         {
@@ -39,6 +39,17 @@ public class TurnIcon : MonoBehaviour
     public void SetTargetPosition(Vector3 pos)
     {
         targetPosition = pos;
+    }
+
+    public bool IsMoving(float epsilon = 0.1f)
+    {
+        if (preview)
+            return false;
+
+        Vector3 current = transform.localPosition;
+        float dx = current.x - targetPosition.x;
+        float dz = current.z - targetPosition.z;
+        return (dx * dx + dz * dz) > (epsilon * epsilon);
     }
 
     public void SetPreview(bool preview)

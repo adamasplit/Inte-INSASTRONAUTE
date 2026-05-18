@@ -1,6 +1,6 @@
 {
   "id": "Bouclier",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "cost": 2,
   "type": "Compétence",
   "rarity": "Special",
@@ -14,7 +14,8 @@
       "targetSelf": true,
       "statusType": "Strength",
       "duration": 0,
-      "description": ""
+      "description": "",
+      "cardID": null
     },
     {
       "type": "Status",
@@ -22,7 +23,8 @@
       "targetSelf": true,
       "statusType": "Dexterity",
       "duration": 0,
-      "description": ""
+      "description": "",
+      "cardID": null
     },
     {
       "type": "Draw",
@@ -30,8 +32,11 @@
       "targetSelf": true,
       "statusType": "Dexterity",
       "duration": 0,
-      "description": ""
+      "description": "",
+      "cardID": null
     }
   ],
-  "modifiers": []
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0
 }

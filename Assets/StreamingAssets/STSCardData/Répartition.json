@@ -1,0 +1,33 @@
+{
+  "id": "Répartition",
+  "collectionCardId": "GM",
+  "cost": 1,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Armor",
+      "value": 5,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": ""
+    },
+    {
+      "type": "Armor",
+      "value": 12,
+      "targetSelf": true,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": ""
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "GM",
+  "animationSpeed": 1.0
+}

@@ -4,7 +4,7 @@
   "cost": 1,
   "type": "Attaque",
   "rarity": "Epic",
-  "targetingMode": "Player",
+  "targetingMode": "Enemy",
   "exhaust": false,
   "retain": false,
   "effects": [
@@ -14,7 +14,8 @@
       "targetSelf": false,
       "statusType": "Strength",
       "duration": 0,
-      "description": ""
+      "description": "",
+      "cardID": ""
     },
     {
       "type": "Draw",
@@ -22,7 +23,8 @@
       "targetSelf": false,
       "statusType": "Strength",
       "duration": 0,
-      "description": ""
+      "description": "",
+      "cardID": ""
     },
     {
       "type": "GainEnergy",
@@ -30,8 +32,11 @@
       "targetSelf": false,
       "statusType": "Strength",
       "duration": 0,
-      "description": ""
+      "description": "",
+      "cardID": ""
     }
   ],
-  "modifiers": []
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0
 }

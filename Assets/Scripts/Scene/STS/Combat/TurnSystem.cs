@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Linq;
-
+using System.Collections;
 public class TurnSystem : MonoBehaviour
 {
     public CombatManager combat;
@@ -11,6 +12,11 @@ public class TurnSystem : MonoBehaviour
     public List<TurnEntry> timeline = new();
 
     public int baseDelay = 10;
+    public Button endTurnButton;
+    public TurnEntry currentTurnEntry;
+
+    bool startTurnRoutineRunning;
+    bool endTurnRoutineRunning;
 
     public void Begin()
     {
@@ -31,7 +37,8 @@ public class TurnSystem : MonoBehaviour
             timeline.Add(new TurnEntry
             {
                 character = c,
-                time = c != null && c.isPlayer ? -1f : Random.Range(0f, 5f)
+                time = c != null && c.isPlayer ? -1f : Random.Range(0f, 5f),
+                uid = TurnEntry.nextUID++
             });
         }
 
@@ -40,7 +47,8 @@ public class TurnSystem : MonoBehaviour
             timeline.Add(new TurnEntry
             {
                 character = e,
-                time = Random.Range(0f, 5f)
+                time = Random.Range(0f, 5f),
+                uid = TurnEntry.nextUID++
             });
         }
 
@@ -66,25 +74,59 @@ public class TurnSystem : MonoBehaviour
     // -------------------------
     public void StartNextTurn()
     {
-        if (combat.TryEndCombatIfNeeded())
+        if (startTurnRoutineRunning)
             return;
+        StartCoroutine(StartNextTurnRoutine());
+    }
+
+    private IEnumerator StartNextTurnRoutine()
+    {
+        startTurnRoutineRunning = true;
+
+        // Wait for all card plays to finish before starting the next turn
+        while (combat.CardPlaysRunning)
+            yield return null;
+
+        yield return WaitForTimelineAnimation();
+
+        if (combat.TryEndCombatIfNeeded())
+        {
+            startTurnRoutineRunning = false;
+            yield break;
+        }
 
         SyncTimelineWithLivingCharacters();
 
         if (timeline.Count == 0)
-            return;
+        {
+            startTurnRoutineRunning = false;
+            yield break;
+        }
 
         SortTimeline();
 
+        while (timeline.Count > 0)
+        {
+            var nextEntry = timeline[0];
+            if (nextEntry.character != null && nextEntry.character.IsAlive)
+                break;
+
+            timeline.RemoveAt(0);
+        }
+
+        if (timeline.Count == 0)
+        {
+            startTurnRoutineRunning = false;
+            yield break;
+        }
+
         var entry = timeline[0];
+        currentTurnEntry = entry;
         var character = entry.character;
 
-        if (character == null || !character.IsAlive)
-        {
-            timeline.RemoveAt(0);
-            StartNextTurn();
-            return;
-        }
+        // Animate the timeline into the new state before the turn actually starts.
+        timelineUI.Display(GetDisplayTimeline(timeline));
+        yield return WaitForTimelineAnimation();
 
         character.StartTurn();
 
@@ -94,12 +136,12 @@ public class TurnSystem : MonoBehaviour
             StartCoroutine(EnemyTurn(character));
 
         ui.RefreshUI();
-        timelineUI.Display(GetDisplayTimeline(timeline));
+
+        startTurnRoutineRunning = false;
     }
 
     void StartPlayerTurn(Character player)
     {
-        player.resources.energy = 3;
         for (int i=0;i<5;i++)
         {
             player.DrawCard();
@@ -114,6 +156,7 @@ public class TurnSystem : MonoBehaviour
             }
             relic.OnTurnStart(player);
         }
+        endTurnButton.interactable = true;
     }
 
     public System.Collections.IEnumerator EnemyTurn(Character enemyChar)
@@ -152,9 +195,8 @@ public class TurnSystem : MonoBehaviour
     // -------------------------
     public void PlayerEndTurn()
     {
-        if (combat.combatEnded || CurrentCharacter == null || !CurrentCharacter.isPlayer)
-            return;
-
+        endTurnButton.interactable = false;
+        combat.deck.DiscardHand();
         EndTurn(CurrentCharacter.turnDelay(baseDelay));
     }
 
@@ -163,8 +205,23 @@ public class TurnSystem : MonoBehaviour
     // -------------------------
     public void EndTurn(int delay)
     {
-        if (combat.combatEnded || timeline.Count == 0)
+        if (combat.combatEnded || timeline.Count == 0 || endTurnRoutineRunning)
             return;
+
+        StartCoroutine(EndTurnRoutine(delay));
+    }
+
+    IEnumerator EndTurnRoutine(int delay)
+    {
+        endTurnRoutineRunning = true;
+
+        yield return WaitForTimelineAnimation();
+
+        if (combat.combatEnded || timeline.Count == 0)
+        {
+            endTurnRoutineRunning = false;
+            yield break;
+        }
 
         var entry = timeline[0];
         var character = entry.character;
@@ -178,25 +235,35 @@ public class TurnSystem : MonoBehaviour
             timeline.Add(new TurnEntry
             {
                 character = character,
-                time = entry.time + delay
+                time = entry.time + delay,
+                uid = TurnEntry.nextUID++
             });
         }
-
-        if (character.isPlayer)
-        {
-            combat.deck.DiscardHand();
-        }
         if (combat.TryEndCombatIfNeeded())
-            return;
+        {
+            endTurnRoutineRunning = false;
+            yield break;
+        }
 
         SyncTimelineWithLivingCharacters();
 
         if (timeline.Count == 0)
-            return;
+        {
+            endTurnRoutineRunning = false;
+            yield break;
+        }
 
         SortTimeline();
+        timelineUI.Display(GetDisplayTimeline(timeline));
 
+        endTurnRoutineRunning = false;
         StartNextTurn();
+    }
+
+    IEnumerator WaitForTimelineAnimation()
+    {
+        while (timelineUI != null && timelineUI.IsAnimating)
+            yield return null;
     }
 
     // =========================================================
@@ -255,7 +322,8 @@ public class TurnSystem : MonoBehaviour
             {
                 character = t.character,
                 time = t.time,
-                visualType = t.visualType
+                visualType = t.visualType,
+                uid = t.uid
             })
             .ToList();
     }
@@ -279,7 +347,8 @@ public class TurnSystem : MonoBehaviour
         {
             character = c,
             time = current.time + c.turnDelay(baseDelay),
-            visualType = TurnVisualType.Normal // IMPORTANT
+            visualType = TurnVisualType.Normal, // IMPORTANT
+            uid = current.uid // IMPORTANT pour le matching dans le UI
         });
     }
 
@@ -307,7 +376,8 @@ public class TurnSystem : MonoBehaviour
             {
                 character = next.character,
                 time = next.time,
-                visualType = next.visualType
+                visualType = next.visualType,
+                uid = next.uid
             });
 
             sim.RemoveAt(0);
@@ -316,7 +386,8 @@ public class TurnSystem : MonoBehaviour
             {
                 character = next.character,
                 time = next.time + next.character.turnDelay(baseDelay),
-                visualType = TurnVisualType.Normal
+                visualType = TurnVisualType.Normal,
+                uid = TurnEntry.nextUID++
             });
         }
 
@@ -333,9 +404,9 @@ public class TurnSystem : MonoBehaviour
 
         foreach (var entry in sim)
         {
-            if (entry.character == target)
+            if (entry.character == target&& entry.time>0)
             {
-                entry.time -= amount;
+                entry.time = Mathf.Max(currentTurnEntry.time, entry.time - amount); // ne pas avancer avant le tour actuel
                 entry.visualType = TurnVisualType.Advanced;
             }
         }
@@ -362,9 +433,9 @@ public class TurnSystem : MonoBehaviour
     {
         foreach (var entry in timeline)
         {
-            if (entry.character == target)
+            if (entry.character == target&& entry.uid!=currentTurnEntry.uid&& entry.time>0)
             {
-                entry.time -= amount;
+                entry.time = Mathf.Max(currentTurnEntry.time, entry.time - amount);
             }
         }
 
@@ -377,7 +448,7 @@ public class TurnSystem : MonoBehaviour
         {
             if (entry.character == target)
             {
-                entry.time += amount;
+                entry.time = Mathf.Max(currentTurnEntry.time, entry.time + amount);
             }
         }
 
@@ -391,7 +462,8 @@ public class TurnSystem : MonoBehaviour
             {
                 character = t.character,
                 time = t.time,
-                visualType = t.visualType
+                visualType = t.visualType,
+                uid = t.uid
             })
             .ToList();
     }

@@ -11,11 +11,14 @@
     {
       "type": "Status",
       "value": 1,
-      "targetSelf": false,
+      "targetSelf": true,
       "statusType": "Awakening",
       "duration": 3,
-      "description": "Rend des PV après 3 tours."
+      "description": "Rend des PV après 3 tours.",
+      "cardID": ""
     }
   ],
-  "modifiers": []
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0
 }

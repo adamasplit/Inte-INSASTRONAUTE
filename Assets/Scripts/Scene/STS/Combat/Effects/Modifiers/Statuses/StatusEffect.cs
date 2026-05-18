@@ -7,6 +7,7 @@ public abstract class StatusEffect : StatModifier
     public int Duration;
     public bool buff=false;
     public bool debuff=false;
+    public bool mustExpire=false;
     public virtual void InsertInto(List<StatusEffect> list)
     {
         StatusEffect other = list.Find(s => s.GetType() == this.GetType());
@@ -24,11 +25,21 @@ public abstract class StatusEffect : StatModifier
     public virtual void OnApply(Character target) { }
     public virtual void OnExpire(Character target) { }
     public virtual void OnTurnStart(Character target) { }
-    public virtual void OnTurnEnd(Character target) { }
-    public virtual void OnDamageTaken(Character target, ref int damage) { }
+    public virtual void OnTurnEnd(Character target)
+    {
+        Duration--;
+    }
+    public virtual void OnDamageDealt(Character source,Character target, ref int damage) { }
+    public virtual void OnDamageTaken(Character source,Character target, ref int damage) { }
+    public virtual void OnArmorGained(Character target, ref int armor) { }
+    public virtual void OnArmorLost(Character target, ref int armor) { }
+    public virtual void OnOwnArmorBroken(Character source,Character target) { }
+    public virtual void OnTargetArmorBroken(Character source,Character target) { }
     public virtual void OnHeal(Character target, ref int healAmount) { }
     public virtual void BeforeAction(Character target) { }
     public virtual void AfterAction(Character target) { }
+    public virtual void OnCardPlayed(Character target, CardInstance card) { }
+    public virtual void OnCardDrawn(Character target, CardInstance card) { }
     public virtual string Desc(){return $"\n{Value} (Description inconnue)";}
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {
@@ -61,6 +72,8 @@ public abstract class StatusEffect : StatModifier
             StatusType.Slow => new SlowStatus(duration),
             StatusType.Haste => new HasteStatus(duration),
             StatusType.Divination => new DivinationStatus(),
+            StatusType.Targeting => new TargetingStatus(),
+            StatusType.Jump => new JumpStatus(value),
             _ => null
         };
         return stat;

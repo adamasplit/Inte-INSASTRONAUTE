@@ -66,7 +66,7 @@ public class RewardGenerator
                 if (result != null&&result.elite)
                 {
                     Debug.Log("Enchanting card for elite reward");
-                    EnchantManager.ApplyEnchant(cardInstance,Random.Range(1, 4));
+                    EnchantManager.ApplyEnchant(cardInstance,Random.Range(1, 15));
                 }
                 return cardInstance;
             }
@@ -83,13 +83,17 @@ public class RewardGenerator
         }
         foreach (var card in STSCardDatabase.allCards)
         {
+            if (card.favoredCharacter != SelectableCharacter.Aucun && RunManager.Instance != null && card.favoredCharacter != RunManager.Instance.selectedCharacter)
+            {
+                continue; // Skip cards that are favored for a different character
+            }
             int weight = card.rarity switch
             {
                 CardRarity.Common => 100,
                 CardRarity.Uncommon => 50,
                 CardRarity.Rare => 25,
                 CardRarity.Epic => 10,
-                CardRarity.Legendary => 5,
+                CardRarity.Legendary => result!=null && result.boss?100: 5,
                 _ => 0
             };
             floorCards.Add(new CardEntry(card, weight));

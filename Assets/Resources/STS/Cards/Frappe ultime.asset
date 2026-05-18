@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: Frappe ultime
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  cardName: Lame divine
+  cardName: Frappe ultime
   collectionCard: {fileID: 0}
   cost: 2
   type: 0
@@ -24,13 +24,16 @@ MonoBehaviour:
     statusType: 0
     duration: 0
     description: 
+    cardID: 
   - type: 2
     value: 10
     targetSelf: 1
     statusType: 0
     duration: 0
     description: 
+    cardID: 
   targetingMode: 1
   modifiers: []
   exhaust: 1
   retain: 0
+  favoredCharacter: 10

@@ -16,5 +16,7 @@ MonoBehaviour:
   maxHP: 18
   pattern:
   - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
+  - {fileID: 11400000, guid: 8e1062bfc7bd5e048973f58e9e568f4f, type: 2}
   - {fileID: 11400000, guid: d8ffafdfb06c29744a6dadf200def953, type: 2}
-  rewardCards: []
+  rewardCards:
+  - {fileID: 11400000, guid: 8e1062bfc7bd5e048973f58e9e568f4f, type: 2}

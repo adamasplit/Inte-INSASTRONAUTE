@@ -70,6 +70,14 @@ public class EffectEntryDrawer : PropertyDrawer
                 durationProp);
             y += lineHeight + spacing;
         }
+        if ((EffectType)typeProp.enumValueIndex == EffectType.AddCardToHand)
+        {
+            var cardIDProp = property.FindPropertyRelative("cardID");
+            EditorGUI.PropertyField(
+                new Rect(position.x, y, position.width, lineHeight),
+                cardIDProp);
+            y += lineHeight + spacing;
+        }
         EditorGUI.EndProperty();
     }
 
@@ -90,7 +98,10 @@ public class EffectEntryDrawer : PropertyDrawer
         {
             lines += 1; // duration for multihit
         }
-
+        if ((EffectType)typeProp.enumValueIndex == EffectType.AddCardToHand)
+        {
+            lines += 1; // cardID for AddCardToHand
+        }
         return lines * (lineHeight + spacing);
     }
 }

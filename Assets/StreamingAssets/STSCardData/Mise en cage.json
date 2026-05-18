@@ -14,7 +14,8 @@
       "targetSelf": false,
       "statusType": "Slow",
       "duration": 2,
-      "description": ""
+      "description": "",
+      "cardID": null
     },
     {
       "type": "Status",
@@ -22,8 +23,11 @@
       "targetSelf": false,
       "statusType": "Slow",
       "duration": 2,
-      "description": ""
+      "description": "",
+      "cardID": null
     }
   ],
-  "modifiers": []
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0
 }

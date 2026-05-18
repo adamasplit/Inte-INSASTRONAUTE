@@ -58,6 +58,12 @@ public class DeckManager
         {
             CardInstance card = hand[i];
 
+            if (card.HasEnchantment("Mécanique"))
+            {
+                Debug.Log("Card has Mécanique enchantment, playing instead of discarding.");
+                combatManager.PlayCard(combatManager.player, card, new List<Character> { combatManager.enemies[UnityEngine.Random.Range(0, combatManager.enemies.Count)] },true);
+                continue;
+            }
             if (card.data.retain)
                 continue;
 
@@ -67,6 +73,18 @@ public class DeckManager
 
             OnCardDiscarded?.Invoke(card);
         }
+    }
+    public CardInstance GetAndRemoveTopCard()
+    {
+        if (drawPile.Count == 0)
+            Reshuffle();
+
+        if (drawPile.Count == 0)
+            return null;
+
+        CardInstance card = drawPile[0];
+        drawPile.RemoveAt(0);
+        return card;
     }
 
     void Reshuffle()

@@ -1,0 +1,24 @@
+{
+  "id": "Atterrissage",
+  "collectionCardId": "",
+  "cost": 0,
+  "type": "Attaque",
+  "rarity": "Special",
+  "targetingMode": "Enemy",
+  "exhaust": true,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 15,
+      "targetSelf": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": ""
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 2.0
+}
