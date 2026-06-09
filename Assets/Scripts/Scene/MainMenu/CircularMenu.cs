@@ -32,8 +32,13 @@ public class CircularMenu : MonoBehaviour,
     float targetRotation;
 bool snapping;
 
+    public void Init()
+    {
+        Start();
+    }
     void Start()
     {
+        items.Clear();
         foreach (Transform child in transform)
         {
             if (child is RectTransform rt)
@@ -55,13 +60,8 @@ bool snapping;
                 Time.deltaTime * inertiaDamping
             );
 
-            if (snapToClosest && Mathf.Abs(velocity) < 0.001f)
+            if (snapping)
             {
-                if (!snapping)
-                {
-                    ComputeSnapTarget();
-                }
-
                 rotationOffset = Mathf.Lerp(
                     rotationOffset,
                     targetRotation,
@@ -172,5 +172,11 @@ bool snapping;
             - Mathf.PI / 2f;
 
         snapping = true;
+    }
+    public void ForceToFront(RectTransform item)
+    {
+        item.SetSiblingIndex(items.Count - 1);
+        snapping = false;
+        targetRotation = -Mathf.Atan2(item.anchoredPosition.y, item.anchoredPosition.x) + Mathf.PI / 2f;
     }
 }

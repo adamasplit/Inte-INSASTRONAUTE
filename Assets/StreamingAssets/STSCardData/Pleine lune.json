@@ -2,6 +2,7 @@
   "id": "Pleine lune",
   "collectionCardId": "",
   "cost": 2,
+  "xCost": false,
   "type": "Pouvoir",
   "rarity": "Legendary",
   "targetingMode": "Player",
@@ -11,14 +12,21 @@
     {
       "type": "Status",
       "value": 1,
-      "targetSelf": false,
+      "targetSelf": true,
+      "targetOthers": false,
       "statusType": "FullMoon",
       "duration": 0,
-      "description": null,
-      "cardID": null
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
     }
   ],
   "modifiers": [],
   "favoredCharacter": "Aucun",
-  "animationSpeed": 1.0
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
 }

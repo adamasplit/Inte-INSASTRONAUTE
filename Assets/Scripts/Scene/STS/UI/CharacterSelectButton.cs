@@ -15,7 +15,7 @@ public class CharacterSelectButton : MonoBehaviour
     }
     public void Switch(bool selected)
     {
-        backgroundImage.color = selected ? Color.black : Color.white;
-        nameText.color = selected ? Color.white : Color.black;
+        backgroundImage.color = selected ? Color.gray : Color.white;
+        nameText.color = selected ? Color.white : Color.gray;
     }
 }

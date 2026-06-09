@@ -524,6 +524,7 @@ MonoBehaviour:
   description: {fileID: 534991021}
   image: {fileID: 1603807484}
   deckSelectionPanel: {fileID: 513923053}
+  eventJsonPath: Assets/StreamingAssets/Events/EventData.json
 --- !u!1 &268147440
 GameObject:
   m_ObjectHideFlags: 0
@@ -1080,8 +1081,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2f6278bca8316ac428b36a059cd5f7a4, type: 2}
-  m_sharedMaterial: {fileID: -7481209980691822337, guid: 2f6278bca8316ac428b36a059cd5f7a4, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: db6e6c6a59b97144c90322d02730d751, type: 2}
+  m_sharedMaterial: {fileID: -3726976100977417776, guid: db6e6c6a59b97144c90322d02730d751, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1578,6 +1579,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6976739340811818018, guid: 84e384f637ff72943877e98b4fd8a90d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7141482486329388806, guid: 84e384f637ff72943877e98b4fd8a90d, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: db6e6c6a59b97144c90322d02730d751, type: 2}
+    - target: {fileID: 7141482486329388806, guid: 84e384f637ff72943877e98b4fd8a90d, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -3726976100977417776, guid: db6e6c6a59b97144c90322d02730d751, type: 2}
+    - target: {fileID: 7141482486329388806, guid: 84e384f637ff72943877e98b4fd8a90d, type: 3}
+      propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8546582603226148902, guid: 84e384f637ff72943877e98b4fd8a90d, type: 3}

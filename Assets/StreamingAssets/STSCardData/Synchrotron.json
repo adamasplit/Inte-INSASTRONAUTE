@@ -1,0 +1,60 @@
+{
+  "id": "Synchrotron",
+  "collectionCardId": "",
+  "cost": 2,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Legendary",
+  "targetingMode": "AllEnemies",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 32,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    },
+    {
+      "type": "GainEnergy",
+      "value": 3,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    },
+    {
+      "type": "LoseHP",
+      "value": 6,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "EP",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
+}

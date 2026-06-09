@@ -2,5 +2,14 @@ public enum ModifierKind
 {
     Flat,
     Discard,
-    Played
+    Played,
+    DebuffOnSelf,
+    BuffOnSelf,
+    ArmorScaling,
+    TargetNumber,
+    DebuffOnTarget,
+    BuffOnTarget,
+    ArmorOnSelf,
+    LostHP,
+    TargetLostHP
 }

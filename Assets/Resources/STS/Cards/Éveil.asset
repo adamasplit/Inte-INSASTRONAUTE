@@ -13,20 +13,24 @@ MonoBehaviour:
   m_Name: "\xC9veil"
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: "\xC9veil"
+  collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 1c41e6b79bdb7314cbb94849e3925078, type: 2}
   cost: 1
+  xCost: 0
   type: 2
   rarity: 2
   effects:
   - type: 3
-    value: 1
+    value: 10
     targetSelf: 1
     statusType: 6
     duration: 3
-    description: "Rend des PV apr\xE8s 3 tours."
+    description: 
     cardID: 
   targetingMode: 0
   modifiers: []
   exhaust: 0
   retain: 0
+  innate: 0
   favoredCharacter: 9
+  animationSpeed: 1

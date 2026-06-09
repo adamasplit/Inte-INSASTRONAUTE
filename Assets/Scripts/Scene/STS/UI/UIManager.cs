@@ -30,6 +30,8 @@ public class UIManager : MonoBehaviour
     public RectTransform discardAnchor;
     public RectTransform deckAnchor;
     public CardAnimator animator;
+    public TextMeshProUGUI discardCountText;
+    public TextMeshProUGUI deckCountText;
     public void SelectCard(CardView card)
     {
         if (selectedCard == card)
@@ -37,8 +39,9 @@ public class UIManager : MonoBehaviour
             Deselect();
             return;
         }
-
+        if (selectedCard != null) selectedCard.Deselect();
         selectedCard = card;
+        card.Select(handLayout.cardSide(card));
         RefreshHandLayout();
     }
 
@@ -67,8 +70,12 @@ public class UIManager : MonoBehaviour
 
     public void Deselect()
     {
-        selectedCard = null;
-        RefreshHandLayout();
+        if (selectedCard != null)
+        {
+            selectedCard.Deselect();
+            selectedCard = null;
+            RefreshHandLayout();
+        }
     }
     public void Init(CombatManager cm)
     {
@@ -77,10 +84,12 @@ public class UIManager : MonoBehaviour
         combat.deck.OnCardDrawn -= DrawCardAnimated;
         combat.deck.OnCardDiscarded -= DiscardCardAnimated;
         combat.deck.OnCardExhausted -= ExhaustCardAnimated;
+        combat.deck.OnCardAddedToHand -= DrawCardAnimated;
 
         combat.deck.OnCardDrawn += DrawCardAnimated;
         combat.deck.OnCardDiscarded += DiscardCardAnimated;
         combat.deck.OnCardExhausted += ExhaustCardAnimated;
+        combat.deck.OnCardAddedToHand += DrawCardAnimated;
         //CreateInitialHand();
     }
 
@@ -88,34 +97,55 @@ public class UIManager : MonoBehaviour
     {
         characterUIs.Clear();
         allZones.Clear();
-        foreach(Transform child in playerRoot)
-            Destroy(child.gameObject);
-        foreach(Transform child in enemyRoot)
-            Destroy(child.gameObject);
+
+        var playerZones = new List<GameObject>();
+        foreach (Transform child in playerRoot)
+            playerZones.Add(child.gameObject);
+
+        var enemyZones = new List<GameObject>();
+        foreach (Transform child in enemyRoot)
+            enemyZones.Add(child.gameObject);
+
+        int playerIndex = 0;
+        int enemyIndex = 0;
+
         // PLAYER
         if (combat.player != null)
         {
-            var playerZone = Instantiate(playerPrefab, playerRoot);
+            GameObject playerZone = playerIndex < playerZones.Count ? playerZones[playerIndex] : Instantiate(playerPrefab, playerRoot);
+            playerZone.SetActive(true);
             var pUI = playerZone.GetComponent<CharacterUI>();
-            pUI.SetCharacter(combat.player);
+            pUI.SetCharacter(combat.player, this);
 
             var dz = playerZone.GetComponent<DropZone>();
             dz.Init(combat, combat.player, false);
             allZones.Add(dz);
             characterUIs.Add(pUI);
+            playerIndex++;
         }
         // ENEMIES
         foreach (var enemy in combat.enemies)
         {
-            var zone = Instantiate(enemyPrefab, enemyRoot);
+            GameObject zone = enemyIndex < enemyZones.Count ? enemyZones[enemyIndex] : Instantiate(enemyPrefab, enemyRoot);
+            zone.SetActive(true);
 
             var dz2 = zone.GetComponent<DropZone>();
             dz2.Init(combat, enemy, true);
             var eUI = zone.GetComponent<CharacterUI>();
-            eUI.SetCharacter(enemy);
+            eUI.SetCharacter(enemy, this);
             characterUIs.Add(eUI);
             allZones.Add(dz2);
+            enemyIndex++;
         }
+
+        for (int i = playerIndex; i < playerZones.Count; i++)
+            playerZones[i].SetActive(false);
+
+        for (int i = enemyIndex; i < enemyZones.Count; i++)
+            enemyZones[i].SetActive(false);
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(playerRoot as RectTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(enemyRoot as RectTransform);
     }
     public Transform GetView(Character character)
     {
@@ -126,15 +156,37 @@ public class UIManager : MonoBehaviour
         }
         return null;
     }
+
+    public DropZone GetDropZone(Character character)
+    {
+        foreach (var zone in allZones)
+        {
+            if (zone != null && zone.target == character)
+                return zone;
+        }
+
+        return null;
+    }
+
+    public IEnumerator AnimateCharacterDeath(Character character)
+    {
+        DropZone zone = GetDropZone(character);
+        if (zone == null)
+            yield break;
+
+        yield return zone.PlayDeathAnimation();
+    }
     public void RefreshUI(bool refreshHand = true)
     {
+        Debug.Log("Refreshing UI");
         selectedCard = null;
         foreach (var ui in characterUIs)
         {
             ui.Refresh();
         }
         energyText.text = combat.player != null ? $"{combat.player.resources.energy}" : "-";
-    
+        deckCountText.text = $"{combat.deck.drawPile.Count}";
+        discardCountText.text = $"{combat.deck.discardPile.Count}";
 
         RefreshHandLayout();
     }
@@ -158,7 +210,9 @@ public class UIManager : MonoBehaviour
         handLayout.Arrange(currentHandViews);
         foreach (var view in currentHandViews)
         {
-            view.RefreshDescription();
+            view.SetCard(view.cardInstance);
+            // Force refresh description to ensure context is up-to-date after any state change
+            view.RefreshDescription(null, true);
         }
     }
 
@@ -187,6 +241,9 @@ public class UIManager : MonoBehaviour
                     break;
                 case TargetingMode.None:
                     shouldHighlight = false;
+                    break;
+                case TargetingMode.RandomEnemy:
+                    shouldHighlight = zone.target != combat.player&& hovered != null;
                     break;
             }
 
@@ -373,28 +430,35 @@ public class UIManager : MonoBehaviour
         return (handPanel as RectTransform).TransformPoint(local);
     }
 
-    public IEnumerator AnimateCardToCenter(CardView view)
-    {
-        view.isAnimating = true;
+public IEnumerator AnimateCardToCenter(CardView view)
+{
+    view.isAnimating = true;
 
-        RectTransform rect = view.rootRect;
+    RectTransform rect = view.rootRect;
 
-        rect.SetParent(
-            animator.animationLayer,
-            true
-        );
+    Vector3 startPos = rect.position;
 
-        Vector2 center = Vector2.zero;
+    rect.SetParent(
+        animator.animationLayer,
+        true
+    );
 
-        yield return animator.MoveCard(
-            rect,
-            rect.position,
-            center,
-            3f,
-            false,
-            true
-        );
-    }
+    rect.position = startPos;
+
+    Canvas.ForceUpdateCanvases();
+
+    Vector3 center =
+        animator.animationLayer.TransformPoint(Vector3.zero);
+
+    yield return animator.MoveCard(
+        rect,
+        startPos,
+        center,
+        3f,
+        false,
+        true
+    );
+}
     public IEnumerator AnimateCardToDiscard(
         CardView view,
         bool exhaust
@@ -425,5 +489,28 @@ public class UIManager : MonoBehaviour
             selectedCard = null;
 
         RefreshHandLayout();
+    }
+    public void ShowCardsInDiscard()
+    {
+        List<CardInstance> discardCards = combat.deck.discardPile;
+        RunManager.Instance.ui.deckGridPanel.Show(discardCards,"Défausse");
+    }
+    public void ShowCardsInDeck()
+    {
+        List<CardInstance> deckCards = combat.deck.drawPile;
+        RunManager.Instance.ui.deckGridPanel.Show(deckCards,"Pioche");
+    }
+    public IEnumerator EnergyTextGlowRed()
+    {
+        Color original = Color.white;
+        energyText.color = Color.red;
+        float elapsed = 0f;
+        float duration = 0.5f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            energyText.color = Color.Lerp(Color.red, original, elapsed / duration);
+            yield return null;
+        }
     }
 }

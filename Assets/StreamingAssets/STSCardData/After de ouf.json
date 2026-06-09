@@ -1,0 +1,32 @@
+{
+  "id": "After de ouf",
+  "collectionCardId": "barouf",
+  "cost": 2,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Epic",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Status",
+      "value": 20,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "After",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
+}

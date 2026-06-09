@@ -8,8 +8,9 @@ public class FullMoonStatus : StatusEffect
         Duration = -1;
         Name = "Pleine lune";
         buff=true;
+        framed=true;
     }
-    public override string Describe()
+    public override string Desc()
     {
         return $"Donne {Value} de Force en infligeant des dégâts à un ennemi";
     }

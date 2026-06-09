@@ -2,6 +2,7 @@
   "id": "Tournée générale",
   "collectionCardId": "quartier_libre",
   "cost": 1,
+  "xCost": false,
   "type": "Compétence",
   "rarity": "Uncommon",
   "targetingMode": "Player",
@@ -12,13 +13,20 @@
       "type": "Draw",
       "value": 3,
       "targetSelf": true,
+      "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
       "description": "",
-      "cardID": ""
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
     }
   ],
   "modifiers": [],
   "favoredCharacter": "Aucun",
-  "animationSpeed": 1.0
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
 }

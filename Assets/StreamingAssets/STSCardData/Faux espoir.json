@@ -1,0 +1,46 @@
+{
+  "id": "Faux espoir",
+  "collectionCardId": "GM",
+  "cost": 1,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Common",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Armor",
+      "value": 1,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
+    },
+    {
+      "type": "Damage",
+      "value": 2,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "GM",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 1
+}

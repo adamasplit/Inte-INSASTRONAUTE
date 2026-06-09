@@ -1,6 +1,9 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 public class CharacterUI : MonoBehaviour
 {   [Header("Status")]
     public Transform statusContainer;
@@ -16,9 +19,24 @@ public class CharacterUI : MonoBehaviour
     public TextMeshProUGUI intentText;
     public Transform intentContainer;
     public GameObject intentUIPrefab;
+    public UIManager uiManager;
+    CanvasGroup canvasGroup;
+    bool deathAnimationPlayed;
+    int lastArmorValue = -1;
+    Coroutine armorAnimation;
 
-    public void SetCharacter(Character c)
+    void Awake()
     {
+        canvasGroup = GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+        {
+            canvasGroup = gameObject.AddComponent<CanvasGroup>();
+        }
+    }
+
+    public void SetCharacter(Character c, UIManager uiManager)
+    {
+        this.uiManager = uiManager;
         character = c;
         hp=GetComponentInChildren<HealthBar>();
         Refresh();
@@ -28,22 +46,143 @@ public class CharacterUI : MonoBehaviour
     {
         if (character == null) return;
         hp.SetHealth(character.currentHP, character.maxHP);
-        armorText.text = character.armor > 0 ? $"{character.armor}" : "";
-        hp.fill.color=character.armor > 0 ? Color.blue : Color.red;
-        armorImage.enabled = character.armor > 0;
-        foreach (Transform child in statusContainer)
-            Destroy(child.gameObject);
-        foreach (var status in character.statusEffects)
+        hp.fillImage.color=character.armor > 0 ? Color.blue : Color.red;
+        foreach (var status in character.statusEffects.ToList())
         {
-            var statusUIObj = Instantiate(statusUIPrefab, statusContainer);
-            var statusUI = statusUIObj.GetComponent<StatusUI>();
-            statusUI.SetStatus(status);
+            status.Update(character);
+        }
+        character.ExpireStatuses();
+        int currentArmor = character.armor;
+        armorText.text = currentArmor > 0 ? $"{currentArmor}" : "";
+        UpdateArmorImage(currentArmor);
+        lastArmorValue = currentArmor;
+
+        Dictionary<StatusEffect, StatusUI> activeStatusUIs = new Dictionary<StatusEffect, StatusUI>();
+        foreach (Transform child in statusContainer)
+        {
+            StatusUI statusUI = child.GetComponent<StatusUI>();
+            if (statusUI != null && statusUI.BoundStatus != null)
+            {
+                activeStatusUIs[statusUI.BoundStatus] = statusUI;
+            }
+            else
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        
+
+        HashSet<StatusEffect> visibleStatuses = new HashSet<StatusEffect>();
+        for (int i = 0; i < character.statusEffects.Count; i++)
+        {
+            var status = character.statusEffects[i];
+            visibleStatuses.Add(status);
+
+            if (activeStatusUIs.TryGetValue(status, out var statusUI))
+            {
+                statusUI.SetStatus(status, uiManager, false);
+                statusUI.transform.SetSiblingIndex(i);
+            }
+            else
+            {
+                var statusUIObj = Instantiate(statusUIPrefab, statusContainer);
+                statusUI = statusUIObj.GetComponent<StatusUI>();
+                statusUI.SetStatus(status, uiManager);
+                statusUI.transform.SetSiblingIndex(i);
+            }
+        }
+
+        foreach (var kvp in activeStatusUIs)
+        {
+            if (!visibleStatuses.Contains(kvp.Key))
+            {
+                kvp.Value.PlayRemoveAnimationAndDestroy();
+            }
         }
         if (!character.isPlayer)
         {
             // Refresh the enemy's intent
             RefreshIntent(character as Enemy);
         }
+    }
+
+    void UpdateArmorImage(int currentArmor)
+    {
+        if (armorImage == null)
+        {
+            return;
+        }
+
+        bool hadArmor = lastArmorValue > 0;
+        bool hasArmor = currentArmor > 0;
+
+        if (!hadArmor && !hasArmor)
+        {
+            armorImage.enabled = false;
+            SetArmorVisual(0f, 0.85f);
+            return;
+        }
+
+        if (armorAnimation != null)
+        {
+            StopCoroutine(armorAnimation);
+            armorAnimation = null;
+        }
+
+        if (!hadArmor && hasArmor)
+        {
+            armorImage.enabled = true;
+            armorAnimation = StartCoroutine(AnimateArmorImage(0f, 1f, 0.85f, 1f, false));
+            return;
+        }
+
+        if (hadArmor && !hasArmor)
+        {
+            armorAnimation = StartCoroutine(AnimateArmorImage(1f, 0f, 1f, 0.85f, true));
+            return;
+        }
+
+        armorImage.enabled = true;
+        SetArmorVisual(1f, 1f);
+    }
+
+    IEnumerator AnimateArmorImage(float startAlpha, float endAlpha, float startScale, float endScale, bool disableOnComplete)
+    {
+        RectTransform armorRect = armorImage.rectTransform;
+        Color originalColor = armorImage.color;
+        float elapsed = 0f;
+        const float duration = 0.16f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / duration));
+            SetArmorVisual(Mathf.Lerp(startAlpha, endAlpha, t), Mathf.Lerp(startScale, endScale, t));
+            yield return null;
+        }
+
+        SetArmorVisual(endAlpha, endScale);
+        armorImage.color = new Color(originalColor.r, originalColor.g, originalColor.b, armorImage.color.a);
+        if (disableOnComplete && endAlpha <= 0f)
+        {
+            armorImage.enabled = false;
+        }
+        armorAnimation = null;
+    }
+
+    void SetArmorVisual(float alpha, float scale)
+    {
+        if (armorImage == null)
+        {
+            return;
+        }
+
+        RectTransform armorRect = armorImage.rectTransform;
+        Color color = armorImage.color;
+        color.a = alpha;
+        armorImage.color = color;
+        armorRect.localScale = Vector3.one * scale;
     }
     public void RefreshIntent(Enemy enemy)
     {
@@ -60,11 +199,24 @@ public class CharacterUI : MonoBehaviour
         foreach (EffectEntry effect in next.effects)
         {
             IntentUI effectUIObj = Instantiate(intentUIPrefab, intentContainer).GetComponent<IntentUI>();
-                effectUIObj.SetEffect(effect);
+                effectUIObj.SetEffect(effect, uiManager);
             if (effect.type == EffectType.Damage)
             {
                 CombatManager cm = FindObjectOfType<CombatManager>();
                 int val = BattleCalculator.GetModifiedValue(effect.value, StatType.Damage, new EffectContext
+                {
+                    source = enemy,
+                    target = RunManager.Instance.player,
+                    combat = cm,
+                    state = cm.state,
+                    card = new CardInstance(next)
+                });
+                effectUIObj.SetValue(val);
+            }
+            else if (effect.type==EffectType.Armor)
+            {
+                CombatManager cm = FindObjectOfType<CombatManager>();
+                int val = BattleCalculator.GetModifiedValue(effect.value, StatType.Armor, new EffectContext
                 {
                     source = enemy,
                     target = RunManager.Instance.player,
@@ -88,5 +240,72 @@ public class CharacterUI : MonoBehaviour
                 effectUIObj.SetText($"{val}x{effect.duration}");
             }
         }
+    }
+
+    public IEnumerator PlayDeathAnimation(float duration = 0.65f)
+    {
+        if (deathAnimationPlayed)
+            yield break;
+
+        deathAnimationPlayed = true;
+
+        if (canvasGroup == null)
+        {
+            canvasGroup = GetComponent<CanvasGroup>();
+            if (canvasGroup == null)
+            {
+                canvasGroup = gameObject.AddComponent<CanvasGroup>();
+            }
+        }
+
+        RectTransform rect = transform as RectTransform;
+        Vector3 startScale = rect.localScale;
+        Vector2 startPosition = rect.anchoredPosition;
+        Quaternion startRotation = rect.localRotation;
+        Graphic[] graphics = GetComponentsInChildren<Graphic>(true);
+        Color[] originalColors = new Color[graphics.Length];
+
+        for (int i = 0; i < graphics.Length; i++)
+        {
+            originalColors[i] = graphics[i].color;
+        }
+
+        canvasGroup.alpha = 1f;
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+
+        float elapsed = 0f;
+        float flashDuration = Mathf.Min(0.18f, duration * 0.35f);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float fadeT = Mathf.SmoothStep(0f, 1f, t);
+            float flashT = flashDuration <= 0f ? 1f : Mathf.Clamp01(elapsed / flashDuration);
+            float flash = flashT < 0.5f ? flashT * 2f : (1f - flashT) * 2f;
+
+            rect.localScale = Vector3.Lerp(startScale, startScale * 0.12f, t);
+            rect.anchoredPosition = startPosition + new Vector2(0f, -24f * fadeT);
+            rect.localRotation = startRotation * Quaternion.Euler(0f, 0f, Mathf.Lerp(0f, 8f, t));
+            canvasGroup.alpha = 1f - fadeT;
+
+            for (int i = 0; i < graphics.Length; i++)
+            {
+                if (graphics[i] == null)
+                    continue;
+
+                Color tinted = Color.Lerp(originalColors[i], Color.white, flash * 0.75f);
+                tinted.a = originalColors[i].a * (1f - fadeT);
+                graphics[i].color = tinted;
+            }
+
+            yield return null;
+        }
+
+        rect.localScale = startScale * 0.12f;
+        rect.anchoredPosition = startPosition + new Vector2(0f, -24f);
+        rect.localRotation = startRotation;
+        canvasGroup.alpha = 0f;
     }
 }

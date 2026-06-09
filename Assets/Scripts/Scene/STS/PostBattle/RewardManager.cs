@@ -1,177 +1,97 @@
 using UnityEngine;
-using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using System.Collections;
-using UnityEngine.UI;
+using System.Collections.Generic;
 public class RewardManager : MonoBehaviour
 {
-    public Transform cardsContainer;
-    public GameObject cardPrefab;
-    public List<RewardCardController> cards = new();
+    public Transform rewardList;
+
+    public GameObject cardRewardPrefab;
+    public GameObject relicRewardPrefab;
+    public GameObject goldRewardPrefab;
+    public GameObject baseRelicUpgradeRewardPrefab;
+
+    public GameObject continueButton;
+
+    List<RewardEntryView> activeEntries = new();
+    bool goingToMap = true;
     void Start()
     {
         Reward reward;
-        if (RunManager.Instance!=null && RunManager.Instance.pendingReward != null)
+        if (RunManager.Instance!=null &&RunManager.Instance.pendingReward != null)
         {
             reward = RunManager.Instance.pendingReward;
+            goingToMap = !RunManager.Instance.bossEncounter;
         }
         else
         {
-            Debug.LogWarning("No pending reward found, generating default reward.");
-            reward = new Reward
+            
+            CombatResult result = new CombatResult
             {
-                cardChoices = new RewardGenerator().GenerateCardChoices(new CombatResult())
+                floor = 1,
+                elite = true,
+                boss = true
             };
+            reward = RewardGenerator.GenerateReward(result);
         }
-        if (reward.relic!=null)
-        {
-            RunManager.Instance.AddRelic(reward.relic);
-        }
-        StartCoroutine(SpawnCardsAnimated(reward.cardChoices));
-    }
-
-    IEnumerator SpawnCardsAnimated(List<CardInstance> cards)
-    {
-        foreach (var card in cards)
-        {
-            var obj = Instantiate(cardPrefab, cardsContainer);
-
-            var ctrl = obj.GetComponent<RewardCardController>();
-            ctrl.Init(card, this);
-            this.cards.Add(ctrl);
-            StartCoroutine(AnimateCardIn(obj));
-
-            yield return new WaitForSeconds(0.15f);
-        }
-        LayoutRebuilder.ForceRebuildLayoutImmediate(cardsContainer as RectTransform);
-    }
-
-    IEnumerator AnimateCardIn(GameObject obj)
-    {
-        float t = 0;
-        float duration = 1f;
-
-        var rect = obj.transform.GetChild(0).GetComponent<RectTransform>();
-        var cg = obj.GetComponent<CanvasGroup>();
-
-        Vector3 startPos = rect.anchoredPosition + Vector2.up * 100;
-
-        rect.localScale = Vector3.one * 0.8f;
-        cg.alpha = 0;
-
-        while (t < duration)
-        {
-            t += Time.deltaTime;
-            float k = t / duration;
-
-            rect.localScale = Vector3.Lerp(Vector3.one * 0.8f, Vector3.one, k);
-            rect.anchoredPosition = Vector2.Lerp(startPos, rect.anchoredPosition, k);
-            cg.alpha = k;
-
-            yield return null;
-        }
-
-        rect.localScale = Vector3.one;
-        cg.alpha = 1;
-    }
-
-    public void OnCardSelected(CardInstance card, RewardCardController selected)
-    {
         
-        StartCoroutine(HandleSelection(selected));
-        if (RunManager.Instance != null)
+        foreach (var item in reward.items)
         {
-            RunManager.Instance.deck.Add(card);
-            RunManager.Instance.pendingReward = null;
+            SpawnReward(item);
         }
     }
 
-    IEnumerator HandleSelection(RewardCardController selected)
+    void SpawnReward(RewardItem item)
     {
-        foreach (var card in cards)
+        GameObject prefab = null;
+
+        if (item is CardReward)
         {
-            if (card != selected)
-                StartCoroutine(FadeOut(card.gameObject));
+            prefab = cardRewardPrefab;
         }
-        RectTransform rt = selected.gameObject.transform as RectTransform;
-        yield return StartCoroutine(ZoomToCenter(selected.gameObject));
+        else if (item is RelicReward)
+        {   
+            Debug.Log("Spawning relic reward: " + ((RelicReward)item).relic.name);
+            prefab = relicRewardPrefab;
+        }
+        else if (item is GoldReward)
+        {
+            prefab = goldRewardPrefab;
+        }
+        else if (item is BaseRelicUpgradeReward)
+        {
+            prefab = baseRelicUpgradeRewardPrefab;
+        }
+        if (prefab == null)
+            return;
+
+        var obj = Instantiate(prefab, rewardList);
+
+        var view = obj.GetComponent<RewardEntryView>();
+        view.Init(item, this);
+
+        activeEntries.Add(view);
     }
 
-    public void OnRelicSelected(Relic relic)
+    public void NotifyClaimed(RewardEntryView entry)
     {
-        RunManager.Instance.AddRelic(relic);
+        activeEntries.Remove(entry);
 
+        if (activeEntries.Count == 0)
+        {
+            continueButton.SetActive(true);
+        }
+    }
+
+    public void Continue()
+    {
         RunManager.Instance.pendingReward = null;
-
-    }
-
-    public void EndReward()
-    {
-        RunManager.Instance.pendingReward = null;
-        bool elite = RunManager.Instance.eliteEncounter;
-        bool boss = RunManager.Instance.bossEncounter;
-        RunManager.Instance.eliteEncounter = false;
-        RunManager.Instance.bossEncounter = false;
-        if (boss)
-        {
-            SceneManager.LoadScene("STS_Retreat");
-        }
-        else
+        if (goingToMap)
         {
             SceneManager.LoadScene("STS_Map");
         }
-    }
-
-    IEnumerator FadeOut(GameObject obj)
-    {
-        float t = 0;
-        float duration = 0.2f;
-
-        var cg = obj.GetComponent<CanvasGroup>();
-
-        while (t < duration)
+        else
         {
-            t += Time.deltaTime;
-            cg.alpha = 1 - (t / duration);
-            yield return null;
-        }
-        cg.alpha = 0;
-    }
-    IEnumerator ZoomToCenter(GameObject obj)
-    {
-        float t = 0;
-        float duration = 0.2f;
-
-        var rect = obj.transform.GetChild(0) as RectTransform;
-        var parentRect = rect.parent as RectTransform;
-        var canvas = rect.GetComponentInParent<Canvas>();
-        var uiCamera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay
-            ? canvas.worldCamera
-            : null;
-
-        Vector3 startScale = rect.localScale;
-        Vector3 endScale = Vector3.one * 1.5f;
-
-        Vector2 startPos = rect.anchoredPosition;
-        Vector2 endPos = Vector2.zero;
-        if (parentRect != null)
-        {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                parentRect,
-                new Vector2(Screen.width * 0.5f, Screen.height * 0.5f),
-                uiCamera,
-                out endPos
-            );
-        }
-        while (t < duration)
-        {
-            t += Time.deltaTime;
-            float k = t / duration;
-
-            rect.localScale = Vector3.Lerp(startScale, endScale, k);
-            rect.anchoredPosition = Vector2.Lerp(startPos, endPos, k);
-
-            yield return null;
+            SceneManager.LoadScene("STS_Retreat");
         }
     }
 }

@@ -2,6 +2,7 @@
   "id": "Frappe ultime",
   "collectionCardId": null,
   "cost": 2,
+  "xCost": false,
   "type": "Attaque",
   "rarity": "Special",
   "targetingMode": "Enemy",
@@ -12,22 +13,34 @@
       "type": "Damage",
       "value": 25,
       "targetSelf": false,
+      "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
       "description": "",
-      "cardID": ""
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
     },
     {
       "type": "Heal",
       "value": 10,
       "targetSelf": true,
+      "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
       "description": "",
-      "cardID": ""
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
     }
   ],
   "modifiers": [],
   "favoredCharacter": "Impossible",
-  "animationSpeed": 1.0
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
 }

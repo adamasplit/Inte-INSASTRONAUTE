@@ -12,21 +12,45 @@ public class DeckManager
     public event Action<CardInstance> OnCardDiscarded;
     public event Action<CardInstance> OnCardExhausted;
     public event Action<CardInstance> OnCardPlayed;
+    public event Action<CardInstance> OnCardAddedToHand;
     public void AddToHand(CardInstance card)
     {
         hand.Add(card);
+        OnCardAddedToHand?.Invoke(card);
     }
 
-    public void Draw(int amount = 1)
+    public void Draw(int amount = 1, bool firstTurn=false)
     {
         for (int i = 0; i < amount; i++)
         {
+            if (hand.Count >= 10)
+            {
+                Debug.Log("Hand is full, cannot draw more cards.");
+                return;
+            }
             if (drawPile.Count == 0)
                 Reshuffle();
 
             if (drawPile.Count == 0)
+            {
+                if (hand.Count<=1)
+                {
+                    AddCardToHand("Désespoir");
+                }
                 return;
-
+            }
+            if (firstTurn)
+            {
+                //Draw innate cards first
+                CardInstance innateCard = drawPile.Find(c => c.data.innate);
+                if (innateCard != null)
+                {
+                    drawPile.Remove(innateCard);
+                    hand.Add(innateCard);
+                    OnCardDrawn?.Invoke(innateCard);
+                    continue;
+                }
+            }
             CardInstance card = drawPile[0];
 
             drawPile.RemoveAt(0);
@@ -35,6 +59,16 @@ public class DeckManager
 
             OnCardDrawn?.Invoke(card);
         }
+    }
+    public void Discard()
+    {
+        if (hand.Count == 0)
+            return;
+        int index = UnityEngine.Random.Range(0, hand.Count);
+        CardInstance card = hand[index];
+        hand.RemoveAt(index);
+        discardPile.Add(card);
+        OnCardDiscarded?.Invoke(card);
     }
 
     public void RemoveFromHand(CardInstance card)
@@ -74,6 +108,16 @@ public class DeckManager
             OnCardDiscarded?.Invoke(card);
         }
     }
+    public void AddCardToHand(string cardID)
+    {
+        STSCardData cardToAdd = STSCardDatabase.Get(cardID);
+        if (cardToAdd != null)
+        {
+            CardInstance instance = new CardInstance(cardToAdd);
+            hand.Add(instance);
+            OnCardDrawn?.Invoke(instance);
+        }
+    }
     public CardInstance GetAndRemoveTopCard()
     {
         if (drawPile.Count == 0)
@@ -90,6 +134,13 @@ public class DeckManager
     void Reshuffle()
     {
         drawPile.AddRange(discardPile);
+        //Also add cards with Mending enchantment from exhaust pile back to draw pile
+        List<CardInstance> mendingCards = exhaustPile.FindAll(c => c.HasEnchantment("Mending"));
+        drawPile.AddRange(mendingCards);
+        foreach (var card in mendingCards)
+        {
+            exhaustPile.Remove(card);
+        }
         discardPile.Clear();
         Shuffle(drawPile);
     }

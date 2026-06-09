@@ -10,6 +10,8 @@ public class JumpStatus:StatusEffect
         Duration = -1;
         Name = "Saut";
         buff=true;
+        framed=true;
+        goldFrame=true;
         modifierType = ModifierType.Override;
     }
     public override string Desc()
@@ -41,6 +43,6 @@ public class JumpStatus:StatusEffect
             target=character.GetCombatManager().enemies[Random.Range(0,character.GetCombatManager().enemies.Count)];
         }
         CardInstance card = new CardInstance(STSCardDatabase.Get("Atterrissage"));
-        character.GetCombatManager().PlayCard(character,card,new List<Character>(){target},false,false);
+        character.GetCombatManager().PlayCard(character,card,new List<Character>(){target},false,true);
     }
 }

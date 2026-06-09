@@ -1,0 +1,46 @@
+{
+  "id": "Fureur du météore",
+  "collectionCardId": "fdm",
+  "cost": 2,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Legendary",
+  "targetingMode": "AllEnemies",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 18,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
+    },
+    {
+      "type": "DelayTurn",
+      "value": 12,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
+}

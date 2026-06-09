@@ -1,8 +1,12 @@
+using UnityEngine;
 public abstract class StatModifier
 {
     public StatType type;
     public ModifierType modifierType;
-    public abstract bool AppliesTo(StatType stat,EffectContext ctx);
+    public virtual bool AppliesTo(StatType stat,EffectContext ctx)
+    {
+        return type == stat || (type == StatType.Any&&stat!=StatType.Cost);
+    }
     public abstract int Modify(int value, EffectContext ctx);
     public abstract string Describe();
     public StatModifier Clone()

@@ -27,6 +27,11 @@ public class HandLayoutController : MonoBehaviour
         int count = cards.Count;
         if (count == 0) return;
 
+        float compactFactor = count > 5 ? 1f / (1f + (count - 5) * 0.18f) : 1f;
+        float layoutSpacing = spacing * compactFactor;
+        float layoutArcHeight = arcHeight * compactFactor;
+        float layoutMaxAngle = maxAngle * compactFactor;
+
         float center = (count - 1) / 2f;
 
         for (int i = 0; i < count; i++)
@@ -40,15 +45,16 @@ public class HandLayoutController : MonoBehaviour
 
             float offset = i - center;
 
-            float x = offset * spacing;
-            float y = -Mathf.Abs(offset) * arcHeight;
-            float angle = -offset * (maxAngle / Mathf.Max(1, center));
+            float x = offset * layoutSpacing;
+            float y = -Mathf.Abs(offset) * layoutArcHeight;
+            float angle = -offset * (layoutMaxAngle / Mathf.Max(1, center));
 
             // sélection
             if (cardView == selectedCard)
             {
                 y += selectedYOffset;
                 states[cardView].targetScale = selectedScale;
+                card.SetAsLastSibling();
             }
             else
             {
@@ -65,6 +71,11 @@ public class HandLayoutController : MonoBehaviour
             states[cardView].targetPos = new Vector2(x, y);
             states[cardView].targetAngle = angle;
         }
+    }
+    public bool cardSide(CardView card)
+    {
+        if (!states.ContainsKey(card)) return true;
+        return states[card].targetPos.x >= 0;
     }
 
     void Update()
@@ -105,5 +116,14 @@ public class HandLayoutController : MonoBehaviour
             return state.targetPos;
 
         return Vector2.zero;
+    }
+    public CardView GetCardWithType(CardType type)
+    {
+        foreach (var kvp in states)
+        {
+            if (kvp.Key.cardInstance.data.type == type)
+                return kvp.Key;
+        }
+        return null;
     }
 }

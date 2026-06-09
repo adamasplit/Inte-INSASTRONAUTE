@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: TestEvent 1
   m_EditorClassIdentifier: Assembly-CSharp::EventDataSO
   title: '!!!'
-  description: "\xE7a d\xE9gage!!!"
+  description: C'est les DS demain...
   image: {fileID: 0}
   options:
   - text: Retire 5 cartes
     icon: {fileID: 0}
-    type: 9
-    value: 5
+    entries:
+    - type: 9
+      value: 5
   - text: Perds 10 PV
     icon: {fileID: 0}
-    type: 7
-    value: 10
+    entries:
+    - type: 7
+      value: 10

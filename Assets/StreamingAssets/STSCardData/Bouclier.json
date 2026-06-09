@@ -1,7 +1,8 @@
 {
   "id": "Bouclier",
-  "collectionCardId": null,
+  "collectionCardId": "",
   "cost": 2,
+  "xCost": false,
   "type": "Compétence",
   "rarity": "Special",
   "targetingMode": "Player",
@@ -12,31 +13,48 @@
       "type": "Armor",
       "value": 13,
       "targetSelf": true,
+      "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
       "description": "",
-      "cardID": null
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
     },
     {
       "type": "Status",
       "value": 1,
       "targetSelf": true,
+      "targetOthers": false,
       "statusType": "Dexterity",
       "duration": 0,
       "description": "",
-      "cardID": null
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
     },
     {
       "type": "Draw",
       "value": 1,
       "targetSelf": true,
+      "targetOthers": false,
       "statusType": "Dexterity",
       "duration": 0,
       "description": "",
-      "cardID": null
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Aucun",
-  "animationSpeed": 1.0
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
 }

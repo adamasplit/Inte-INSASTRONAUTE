@@ -2,6 +2,7 @@
   "id": "Mise en cage",
   "collectionCardId": "la_suite",
   "cost": 1,
+  "xCost": false,
   "type": "Attaque",
   "rarity": "Epic",
   "targetingMode": "Enemy",
@@ -12,22 +13,34 @@
       "type": "Damage",
       "value": 4,
       "targetSelf": false,
+      "targetOthers": false,
       "statusType": "Slow",
       "duration": 2,
       "description": "",
-      "cardID": null
+      "cardID": null,
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
     },
     {
       "type": "Status",
       "value": 0,
       "targetSelf": false,
+      "targetOthers": false,
       "statusType": "Slow",
       "duration": 2,
       "description": "",
-      "cardID": null
+      "cardID": null,
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
     }
   ],
   "modifiers": [],
   "favoredCharacter": "Aucun",
-  "animationSpeed": 1.0
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
 }

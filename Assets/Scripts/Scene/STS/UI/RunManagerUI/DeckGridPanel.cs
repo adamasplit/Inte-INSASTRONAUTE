@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class DeckGridPanel : MonoBehaviour
 {
+    public TextMeshProUGUI titleText;
     public GridLayoutGroup gridLayout;
     public Transform gridContainer;
     public GameObject cardGridItemPrefab;
@@ -29,8 +30,9 @@ public class DeckGridPanel : MonoBehaviour
             closeButton.onClick.AddListener(Hide);
     }
 
-    public void Show(List<CardInstance> deck)
+    public void Show(List<CardInstance> deck,string name)
     {
+        titleText.text = name;
         // Clear existing grid items
         foreach (Transform child in gridContainer)
             Destroy(child.gameObject);

@@ -17,13 +17,15 @@ public class VigorStatus : StatusEffect
     {
         if (!AppliesTo(StatType.Damage, ctx))
             return damage;
-        Debug.Log($"Applying VigorStatus: increasing damage by {Value}");
         int res = damage + Value;
         if (!ctx.isPreview)
         {
             mustExpire = true;
-            Debug.Log("VigorStatus will expire after this attack!");
         }
         return res;
+    }
+    public override string Desc()
+    {
+        return $"\nLe prochain effet de dégâts que vous appliquez est augmenté de {Value}.";
     }
 }

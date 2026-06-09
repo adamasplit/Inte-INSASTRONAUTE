@@ -1,0 +1,46 @@
+{
+  "id": "Désespoir",
+  "collectionCardId": "",
+  "cost": 0,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Special",
+  "targetingMode": "AllEnemies",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 5,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
+    },
+    {
+      "type": "LoseHP",
+      "value": 2,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
+}

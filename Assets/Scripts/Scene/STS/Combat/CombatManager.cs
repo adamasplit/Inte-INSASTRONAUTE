@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,43 @@ public enum TeamOutcome
 
 public class CombatManager : MonoBehaviour
 {
+    // Editor-only cheat: Press Space to win battle by setting all enemy HP to zero
+#if UNITY_EDITOR
+    // Requires Input System package
+    void Update()
+    {
+        #if ENABLE_INPUT_SYSTEM
+        if (!combatEnded && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            Debug.Log("Cheat: Ending combat with victory (Input System).");
+            foreach (var enemy in enemies)
+            {
+                if (enemy != null && enemy.IsAlive)
+                {
+                    enemy.currentHP = 0;
+                }
+            }
+            TryEndCombatIfNeeded();
+        }
+        if (!combatEnded && Keyboard.current != null && Keyboard.current.enterKey.wasPressedThisFrame)
+        {
+            Debug.Log("Cheat: Adding energy to player (Input System).");
+            if (player != null)            
+            {
+                player.resources.energy += 3;
+                ui.RefreshUI();
+            }
+        }
+        #endif
+    }
+#endif
+
     // Tracks the number of active PlayCard coroutines
     private int activeCardPlays = 0;
     public bool CardPlaysRunning => activeCardPlays > 0;
+    private bool resolvingCombatCleanup = false;
 
     public Player player => allies.FirstOrDefault();
-
     public List<Player> allies = new();
     public List<Character> enemies = new();
     public List<Character> characters => GetAllCharacters();
@@ -30,9 +62,13 @@ public class CombatManager : MonoBehaviour
     public CombatState state = new CombatState();
     public bool combatEnded { get; private set; }
     public TeamOutcome outcome { get; private set; } = TeamOutcome.None;
-    public RewardGenerator rewardGenerator= new RewardGenerator();
     public List<EnemyData> currentEnemiesData = new();
     public CardAnimator animator;
+    public string currentCardName; // For animation purposes
+    public STSTutorialManager tutorial;
+    private bool tutorialMode;
+    public bool forceTutorial = false;
+    public bool allowTurn = false; 
     public void Init()
     {
         ui.Init(this);          // inject
@@ -50,29 +86,80 @@ public class CombatManager : MonoBehaviour
         {
             ally.combat = this;
         }
+        if (tutorial != null)
+        {
+            if (RunManager.Instance==null || forceTutorial||RunManager.Instance.forceTutorial)
+            {
+                allowTurn=false;
+                tutorialMode = true;
+            }
+            else
+            {
+                allowTurn = true;
+                tutorialMode = false;
+            }
+            tutorial.Init();
+        }
+    }
+
+    public void FieldTurnEnd()
+    {
+        foreach (var character in GetAllCharacters())
+        {
+            character.FieldTurnEnd();
+        }
     }
 
 
     public void PlayCard(Character source, CardInstance card, List<Character> targets, bool ignoreEnergy = false, bool createView = false)
     {
-        StartCoroutine(TrackPlayCardRoutine(source, card, targets, ignoreEnergy, createView));
-    }
-
-    private IEnumerator TrackPlayCardRoutine(Character source, CardInstance card, List<Character> targets, bool ignoreEnergy = false, bool createView = false)
-    {
-        activeCardPlays++;
-        yield return StartCoroutine(PlayCardRoutine(source, card, targets, ignoreEnergy, createView));
-        activeCardPlays--;
+        StartCoroutine(PlayCardRoutine(source, card, targets, ignoreEnergy, createView));
     }
 
     IEnumerator PlayCardRoutine(Character source, CardInstance card, List<Character> targets, bool ignoreEnergy = false, bool createView = false)
     {
         
-        if (source==null||source.resources.energy < card.data.cost&&source.isPlayer&&!ignoreEnergy)
+        EffectContext ctxSelf=new EffectContext
+            {
+                source = source,
+                target = source,
+                combat = this,
+                state = state,
+                card = card,
+                timeline = turnSystem.timeline
+            };
+        EffectContext ctxTarget = new EffectContext
+            {
+                source = source,
+                target = null,
+                combat = this,
+                state = state,
+                card = card,
+                timeline = turnSystem.timeline,
+                targets = targets
+            };
+
+        if (source==null||source.resources.energy < card.Cost(ctxTarget)&&source.isPlayer&&!ignoreEnergy)
         {
+            ui.StartCoroutine(ui.EnergyTextGlowRed());
             yield break;
         }
         CardView playedView = null;
+
+        int replayCount=1;
+        if (card.HasEnchantment("Écho"))
+        {
+            CardEnchantment e=card.enchantments.Find(en=>en.data.name=="Écho");
+            replayCount+=((ReplayEnchantment)e.data).GetReplayCount(e.level);
+        }
+        if (card.HasEnchantment("Stellaire"))
+        {
+            replayCount+=4;
+        }
+        if (card.data.xCost)
+        {
+            replayCount=replayCount*source.resources.energy;
+        }
 
         if (source != null && source.isPlayer)
         {
@@ -92,87 +179,151 @@ public class CombatManager : MonoBehaviour
 
                 yield return ui.AnimateCardToCenter(playedView);
             }
-            StartCoroutine(ui.GetView(source).GetComponent<DropZone>().FlashWhite());
-        }
-        foreach (StatusEffect status in source.statusEffects)
-        {
-            status.BeforeAction(source);
-        }
-        if (!ignoreEnergy)
-        {
-            source.SpendEnergy(card.data.cost);
-        }
-        EffectContext ctxTarget = new EffectContext
-        {
-            source = source,
-            target = null,
-            combat = this,
-            state = state,
-            card = card,
-            timeline = turnSystem.timeline
-        };
-
-        EffectContext ctxSelf = new EffectContext
-        {
-            source = source,
-            target = source,
-            combat = this,
-            state = state,
-            card = card,
-            timeline = turnSystem.timeline
-        };
-        List<EffectEntry> usedEffectsList= new List<EffectEntry>();
-        yield return new WaitForSeconds(0.1f*card.data.animationSpeed); // Delay before effects for better readability
-        foreach (var effect in card.data.effects)
-        {
-            if (effect.type == EffectType.Multihit)
+            if (!ignoreEnergy)
             {
-                for(int i=0;i<effect.duration;i++)
-                    {
-                        usedEffectsList.Add(new EffectEntry
+                source.SpendEnergy(card.Cost(ctxTarget));
+            }
+        }
+        StartCoroutine(ui.GetView(source).GetComponent<DropZone>().FlashWhite());
+        while (CardPlaysRunning) // Wait for other card plays to finish to avoid overlapping effects and ensure proper sequencing
+        {
+            yield return null;
+        }
+        activeCardPlays++; // Increment active card plays counter
+        currentCardName = card.data.cardName; // Set current card name for animation purposes
+
+        // Actually apply effects
+        for (int j=0;j<replayCount;j++)
+        {
+            if (playedView != null)
+            {
+                playedView.Flash();
+            }
+            if (source != null && source.isPlayer && card.data.targetingMode == TargetingMode.RandomEnemy)
+            {
+                var aliveEnemies = enemies.Where(e => e != null && e.IsAlive).ToList();
+                if (aliveEnemies.Any())
+                {
+                    Character newTarget = aliveEnemies[UnityEngine.Random.Range(0, aliveEnemies.Count)];
+                    ctxTarget.targets = new List<Character> { newTarget };
+                    ctxTarget.target = newTarget;
+                    targets = new List<Character> { newTarget };
+                    Debug.Log($"Randomly re-targeted card effects to {newTarget.name} (current HP: {newTarget.currentHP}) due to targeting mode.");
+                }
+            }
+
+            foreach (StatusEffect status in source.statusEffects)
+            {
+                status.BeforeAction(source);
+            }
+            List<EffectEntry> usedEffectsList= new List<EffectEntry>();
+            yield return new WaitForSeconds(0.1f*card.data.animationSpeed); // Delay before effects for better readability
+            foreach (var effect in card.GetEffects())
+            {
+                if (effect.type == EffectType.Multihit)
+                {
+                    for(int i=0;i<effect.duration;i++)
                         {
-                            type = EffectType.Damage,
-                            value = effect.value,
-                            targetSelf=effect.targetSelf
-                        });
+                            usedEffectsList.Add(new EffectEntry
+                            {
+                                type = EffectType.Damage,
+                                value = effect.value,
+                                targetSelf=effect.targetSelf
+                            });
+                        }
+                }
+                else
+                {
+                    usedEffectsList.Add(effect);
+                }
+            }
+            foreach (var effect in usedEffectsList)
+            {
+                if (effect.conditional)
+                {
+                    if (!EffectResolver.VerifyCondition(effect.conditionType, effect.conditionValue, ctxTarget))
+                    {
+                        continue; // Skip this effect if condition is not met
                     }
+                }
+                foreach(var target in targets)
+                {
+                ctxTarget.target = target;
+                
+                    if (effect.targetSelf)
+                    {
+                        VFXManager.Instance.PlayEffect(effect, ui.GetView(source).transform.position);
+                        EffectResolver.Apply(effect, ctxSelf);
+                    }
+                    else
+                    {
+                        if (ui.GetView(target) != null)
+                        {
+                            VFXManager.Instance.PlayEffect(effect, ui.GetView(target).transform.position);
+                        }
+                        EffectResolver.Apply(effect, ctxTarget);
+                    }
+                }
+                ui.RefreshUI();
+                yield return new WaitForSeconds((effect.type == EffectType.Damage ? 0.1f : 0.3f)*card.data.animationSpeed/replayCount); // Small delay between effects for better readability
+            }
+            state.cardsPlayedThisTurn++;
+            foreach (StatusEffect status in source.statusEffects)
+            {
+                status.AfterAction(source);
+            }
+            foreach (var target in targets)
+            {
+                foreach (StatusEffect status in source.statusEffects)
+                {
+                    status.OnCardPlayed(source,target,card);
+                }
+                foreach (StatusEffect status in target.statusEffects)
+                {
+                    status.OnTargetedByCard(source,target,card);
+                }
+            }
+            if (source.isPlayer)
+            {
+                foreach (var relic in RunManager.Instance.relics)
+                {
+                    relic.OnCardPlayed(source, targets, card);
+                }
+            }
+            foreach (Character character in GetAllCharacters())
+            {
+                character.AfterAction();
+            }
+        }
+
+        if (source != null && source.isPlayer)
+        {
+            if (card.HasEnchantment("Infinity"))
+            {
+                deck.AddToHand(card);
+                card.AddModifier(new FlatModifier(StatType.Cost, 1));
             }
             else
             {
-                usedEffectsList.Add(effect);
-            }
-        }
-        foreach (var effect in usedEffectsList)
-        {
-            foreach(var target in targets)
-            {
-            ctxTarget.target = target;
-            
-                if (effect.targetSelf)
+                if (card.data.type != CardType.Pouvoir)
                 {
-                    VFXManager.Instance.PlayEffect(effect, ui.GetView(source).transform.position);
-                    EffectResolver.Apply(effect, ctxSelf);
-                }
-                else
-                {
-                    if (ui.GetView(target) != null)
+                    if (card.data.exhaust)
                     {
-                        VFXManager.Instance.PlayEffect(effect, ui.GetView(target).transform.position);
+                        float exhaustChance = BattleCalculator.GetModifiedValue(100, StatType.ExhaustChance, ctxSelf) / 100f;
+                        if (UnityEngine.Random.value < exhaustChance)
+                        {
+                            deck.Exhaust(card);
+                        }
+                        else
+                        {
+                            deck.SendToDiscard(card);
+                        }
                     }
-                    EffectResolver.Apply(effect, ctxTarget);
+                    else
+                    {
+                        deck.SendToDiscard(card);
+                    }
                 }
-            }
-            ui.RefreshUI();
-            yield return new WaitForSeconds((effect.type == EffectType.Damage ? 0.1f : 0.3f)*card.data.animationSpeed); // Small delay between effects for better readability
-        }
-        if (source != null && source.isPlayer)
-        {
-            if (card.data.type!=CardType.Pouvoir)
-            {
-                if (card.data.exhaust)
-                    deck.Exhaust(card);
-                else
-                    deck.SendToDiscard(card);
             }
 
             if (playedView != null)
@@ -183,25 +334,22 @@ public class CombatManager : MonoBehaviour
                 );
             }
         }
-        state.cardsPlayedThisTurn++;
-        foreach (StatusEffect status in source.statusEffects)
-        {
-            status.AfterAction(source);
-        }
-        foreach (Character character in GetAllCharacters())
-        {
-            character.AfterAction();
-        }
-        yield return new WaitForSeconds(0.2f*card.data.animationSpeed); // Delay after effects for better readability
 
+        state.ResetActionFlags();
+        yield return new WaitForSeconds(0.2f * card.data.animationSpeed); // Delay after effects for better readability
+        activeCardPlays--; // Decrement active card plays counter
         // Check for end of combat
         bool combatOver = TryEndCombatIfNeeded();
         ui.HighlightTargets(TargetingMode.None, null);
         ui.RefreshUI(false);
         if (!combatOver)
             turnSystem.timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
+        if (tutorialMode)
+        {
+            tutorial.NotifyCardPlayed(card);
+        }
     }
-    
+
 
     public void ResetCombatStatus()
     {
@@ -209,36 +357,91 @@ public class CombatManager : MonoBehaviour
         outcome = TeamOutcome.None;
     }
 
-    public void CleanupSlainCharacters()
+    private IEnumerator CleanupSlainCharactersRoutine()
     {
-        int alliesBefore = allies.Count;
-        int enemiesBefore = enemies.Count;
+        bool rebuiltUI = false;
 
-        allies.RemoveAll(a => a == null || !a.IsAlive);
-        enemies.RemoveAll(e => e == null || !e.IsAlive);
+        foreach (var ally in allies.ToList())
+        {
+            if (ally != null && !ally.IsAlive)
+            {
+                foreach (var relic in RunManager.Instance.relics) // Last chacnce for relics to react to death and revive the character or do something 
+                {
+                    relic.OnDeath(ally);
+                }
+                if (!ally.IsAlive)                
+                {
+                    if (ui != null)
+                    {
+                        yield return ui.AnimateCharacterDeath(ally);
+                    }
+                    allies.Remove(ally);
+                    rebuiltUI = true;
+                }
+            }
+        }
+        foreach (var enemy in enemies.ToList())
+        {
+            if (enemy != null && !enemy.IsAlive)
+            {
+                if (ui != null)
+                {
+                    yield return ui.AnimateCharacterDeath(enemy);
+                }
+                enemies.Remove(enemy);
+                rebuiltUI = true;
+            }
+        }
 
-        if ((alliesBefore != allies.Count || enemiesBefore != enemies.Count) && ui != null)
+        if (rebuiltUI && ui != null)
             ui.InitCharacters();
     }
 
     public bool TryEndCombatIfNeeded()
     {
-        if (combatEnded)
+        if (combatEnded || resolvingCombatCleanup)
             return true;
 
-        CleanupSlainCharacters();
+        bool alliesSlain = allies.All(a => a == null || !a.IsAlive);
+        bool enemiesSlain = enemies.All(e => e == null || !e.IsAlive);
+        bool hasDeadCharacters = allies.Any(a => a != null && !a.IsAlive) || enemies.Any(e => e != null && !e.IsAlive);
 
-        bool alliesSlain = allies.Count == 0;
-        bool enemiesSlain = enemies.Count == 0;
+        if (!alliesSlain && !enemiesSlain && !hasDeadCharacters)
+            return false;
+
+        resolvingCombatCleanup = true;
+        StartCoroutine(ResolveCombatEndRoutine());
+        return true;
+    }
+
+    private IEnumerator ResolveCombatEndRoutine()
+    {
+        yield return CleanupSlainCharactersRoutine();
+
+        bool alliesSlain = allies.All(a => a == null || !a.IsAlive);
+        bool enemiesSlain = enemies.All(e => e == null || !e.IsAlive);
 
         if (!alliesSlain && !enemiesSlain)
-            return false;
+        {
+            if (ui != null)
+            {
+                ui.RefreshUI(false);
+            }
+
+            if (turnSystem != null)
+            {
+                turnSystem.timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
+            }
+
+            resolvingCombatCleanup = false;
+            yield break;
+        }
 
         combatEnded = true;
         outcome = enemiesSlain ? TeamOutcome.Victory : TeamOutcome.Defeat;
 
-        EndCombat();
-        return true;
+        yield return EndCombat();
+        resolvingCombatCleanup = false;
     }
 
     public List<Character> GetTargets(TargetingMode mode, Character hovered)
@@ -255,12 +458,16 @@ public class CombatManager : MonoBehaviour
                 return enemies.Where(e => e != null && e.IsAlive).ToList();
 
             case TargetingMode.AllCharacters:
-            {
                 var list = enemies.Where(e => e != null && e.IsAlive).Cast<Character>().ToList();
                 if (player != null && player.IsAlive)
                     list.Add(player);
                 return list;
-            }
+
+            case TargetingMode.RandomEnemy:
+                var aliveEnemies = enemies.Where(e => e != null && e.IsAlive).ToList();
+                return aliveEnemies.Any()
+                    ? new List<Character> { aliveEnemies[UnityEngine.Random.Range(0, aliveEnemies.Count)] }
+                    : new List<Character>();
 
             default:
                 return new();
@@ -274,8 +481,20 @@ public class CombatManager : MonoBehaviour
         return list;
     }
 
-    void EndCombat()
+    public void NotifyTurnEnded()
     {
+        if (tutorialMode)
+        {
+            tutorial.NotifyTurnEnded();
+        }
+    }
+
+    private System.Collections.IEnumerator EndCombat()
+    {
+        while (CardPlaysRunning||VFXManager.Instance.activeEffects) // Wait for any ongoing card plays to finish before showing end combat results
+        {
+            yield return null;
+        }
         if (outcome == TeamOutcome.Victory)
         {
             foreach (var relic in RunManager.Instance.relics)
@@ -289,15 +508,8 @@ public class CombatManager : MonoBehaviour
                 elite = RunManager.Instance.eliteEncounter,
                 boss = RunManager.Instance.bossEncounter
             };
-            Debug.Log("Generating rewards for combat result: floor " + result.floor + ", elite: " + result.elite + ", boss: " + result.boss);
-            var rewards = rewardGenerator.GenerateCardChoices(result);
-            RunManager.Instance.pendingReward = new Reward();
-            RunManager.Instance.pendingReward.cardChoices = rewards;
-            if (result.elite)
-            {
-                Relic relic=RelicDrop.GetRandomRelic(result);
-                RunManager.Instance.pendingReward.relic = relic;
-            }
+            //Debug.Log("Generating rewards for combat result: floor " + result.floor + ", elite: " + result.elite + ", boss: " + result.boss);
+            RunManager.Instance.pendingReward = RewardGenerator.GenerateReward(result);
             SceneManager.LoadScene("STS_Reward");
         }
         else if (outcome == TeamOutcome.Defeat)

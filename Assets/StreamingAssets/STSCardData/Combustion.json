@@ -1,0 +1,32 @@
+{
+  "id": "Combustion",
+  "collectionCardId": "",
+  "cost": 0,
+  "xCost": true,
+  "type": "Attaque",
+  "rarity": "Uncommon",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 5,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "EP",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 1
+}

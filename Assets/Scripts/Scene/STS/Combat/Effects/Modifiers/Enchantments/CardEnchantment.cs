@@ -8,4 +8,8 @@ public class CardEnchantment
     {
         return data.GenerateModifiers(level);
     }
+    public List<EffectEntry> GetEffects()
+    {
+        return data.GenerateEffects(level);
+    }
 }

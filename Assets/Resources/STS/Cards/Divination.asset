@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Divination
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: Divination
+  collectionCardId: 
   collectionCard: {fileID: 11400000, guid: b41b90a6059adf940acbe10aabcc998d, type: 2}
   cost: 3
   type: 2
@@ -20,11 +21,15 @@ MonoBehaviour:
   effects:
   - type: 3
     value: 1
-    targetSelf: 0
+    targetSelf: 1
     statusType: 10
     duration: 0
     description: 
+    cardID: 
   targetingMode: 0
   modifiers: []
   exhaust: 0
   retain: 0
+  innate: 0
+  favoredCharacter: 9
+  animationSpeed: 1

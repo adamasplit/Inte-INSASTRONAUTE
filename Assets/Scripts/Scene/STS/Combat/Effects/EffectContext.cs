@@ -8,4 +8,5 @@ public class EffectContext
     public CardInstance card;
     public List<TurnEntry> timeline;
     public bool isPreview = false; 
+    public List<Character> targets = new List<Character>();
 }

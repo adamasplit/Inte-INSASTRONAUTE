@@ -1,10 +1,12 @@
-public class CFIRelic:Relic
+public class CFIRelic:BaseRelic
 {
-    public CFIRelic()
+    public CFIRelic():base()
     {
-        name="Analyseur de combat";
-        description="Lorsqu'un ennemi gagne de l'armure, votre prochaine attaque inflige autant de dégâts supplémentaires.";
-        rarity=RelicRarity.Base;
+        namesByStage[0] = "Analyseur de combat";
+        descriptionsByStage[0] = "Lorsqu'un ennemi gagne de l'armure, votre prochaine attaque inflige autant de dégâts supplémentaires.";
+        namesByStage[1] = "Analyseur de combat - Chaos";
+        descriptionsByStage[1] = "Lorsqu'un ennemi gagne de l'armure, vous gagnez un statut positif au hasard.";
+        Upgrade(0);
     }
     public override void OnAnyArmorGain(Character target, int amount)
     {

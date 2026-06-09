@@ -18,5 +18,7 @@ public enum EffectType
     TransferDebuff,
     DispelBuff,
     DispelDebuff,
-    EndTurn
+    EndTurn,
+    Gravity,
+    Break
 }

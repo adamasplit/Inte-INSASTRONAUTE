@@ -4,7 +4,8 @@ public class TargetingStatus : StatusEffect
     {
         Value = 0;
         Duration = -1;
-        Name = "Visé";
+        Name = "Ciblage";
+        framed=true;
     }
     public override string Describe()
     {

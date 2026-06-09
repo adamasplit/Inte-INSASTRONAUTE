@@ -21,6 +21,8 @@ public class RunManager : MonoBehaviour
     public int restCharges=3;
     public int maxRestCharges=15;
     public RunManagerUI ui;
+    public int gold=0;
+    public bool forceTutorial=false;
     void Awake()
     {
         if (Instance != null)
@@ -50,33 +52,36 @@ public class RunManager : MonoBehaviour
     }
     public void StartRun(string character,int maxHP, List<Relic> startingRelics,bool startOnMap=true)
     {
+        forceTutorial=false;
+        gold=0;
         ui.gameObject.SetActive(true);
         STSCardDatabase.Load();
         var run = RunManager.Instance;
         run.act=0;
-        run.selectedCharacter = Enum.Parse<SelectableCharacter>(character);
+        if (Enum.TryParse(character, out SelectableCharacter parsedCharacter))
+        {
+            run.selectedCharacter = parsedCharacter;
+        }
+        else
+        {
+            Debug.LogError($"Invalid character: {character}. No character selected.");
+            run.selectedCharacter = SelectableCharacter.Aucun;
+        }
         run.player = new Player(character, maxHP);
         run.relics = startingRelics;
         run.currentFloor = 1;
         run.RegenerateMap = true;
 
         run.deck.Clear();
-        STSCardData attackCard = STSCardDatabase.Get("Katana");
-        STSCardData blockCard = STSCardDatabase.Get("Révision Model Text");
-        if (attackCard == null || blockCard == null)
+        foreach (STSCardData card in STSCardDatabase.allCards)
         {
-            Debug.LogError("Cards not found in database!");
-            return;
-        }
-        for(int i = 0; i < 5; i++)
-        {
-            run.deck.Add(new CardInstance(attackCard));
-            run.deck.Add(new CardInstance(blockCard));
-        }
-        List<STSCardData> characterCards = STSCardDatabase.CardForCollectionCard(character);
-        foreach (var card in characterCards)
-        {
-            run.deck.Add(new CardInstance(card));
+            if (card.startingCount > 0 && (card.favoredCharacter == SelectableCharacter.Starting || card.favoredCharacter == run.selectedCharacter))
+            {
+                for (int i = 0; i < card.startingCount; i++)
+                {
+                    run.deck.Add(new CardInstance(card));
+                }
+            }
         }
         if (startOnMap)
         {
@@ -86,6 +91,7 @@ public class RunManager : MonoBehaviour
 
     public void OnRunEnd()
     {
+        gold=0;
         ui.gameObject.SetActive(false);
         player = null;
         deck.Clear();
@@ -93,5 +99,12 @@ public class RunManager : MonoBehaviour
         pendingReward = null;
         currentNode = null;
         map = null;
+    }
+    public void StartTutorialRun(int stage)
+    {
+        StartRun("", 50, new List<Relic>(), false);
+        forceTutorial = true;
+        act = stage;
+        SceneManager.LoadScene("STS_Combat");
     }
 }

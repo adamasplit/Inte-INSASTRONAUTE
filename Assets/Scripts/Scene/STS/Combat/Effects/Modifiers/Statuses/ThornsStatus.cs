@@ -1,0 +1,20 @@
+public class ThornsStatus : StatusEffect
+{
+    public ThornsStatus(int value)
+    {
+        Value = value;
+        Name = "Épines";
+        buff=true;
+        debuff=false;
+        generic=true;
+    }
+    public override void OnDamageTaken(Character source,Character target,ref int damage)
+    {
+        base.OnDamageTaken(source,target,ref damage);
+        if (damage > 0)
+        {
+            source.TakeDamage(Value);
+            VFXManager.Instance.PlayEffect("Thorns", target);
+        }
+    }
+}

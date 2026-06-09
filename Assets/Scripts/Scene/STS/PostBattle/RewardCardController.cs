@@ -1,16 +1,19 @@
 using UnityEngine;
 public class RewardCardController : MonoBehaviour
 {
-    CardView view;
+    public CardView view;
     CardInstance instance;
-    RewardManager rewardManager;
+    CardRewardEntryView rewardManager;
     private bool chosen = false;
     void Awake()
     {
-        view = GetComponentInChildren<CardView>();
+        if (view == null)
+        {
+            view = GetComponentInChildren<CardView>();
+        }
     }
 
-    public void Init(CardInstance card, RewardManager manager)
+    public void Init(CardInstance card, CardRewardEntryView manager)
     {
         rewardManager = manager;
         instance = card;
@@ -23,7 +26,7 @@ public class RewardCardController : MonoBehaviour
         if (!chosen)
         {
             chosen = true;
-            rewardManager.OnCardSelected(instance,this);
+            rewardManager.SelectCard(instance);
         }
     }
 }

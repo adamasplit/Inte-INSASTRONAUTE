@@ -1,0 +1,60 @@
+{
+  "id": "Overdrive",
+  "collectionCardId": "amir",
+  "cost": 1,
+  "xCost": false,
+  "type": "Pouvoir",
+  "rarity": "Epic",
+  "targetingMode": "Player",
+  "exhaust": true,
+  "retain": false,
+  "effects": [
+    {
+      "type": "LoseHP",
+      "value": 5,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    },
+    {
+      "type": "Draw",
+      "value": 6,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    },
+    {
+      "type": "GainEnergy",
+      "value": 3,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
+}

@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
     public UIManager ui;
     public CombatManager combat;
     public TurnSystem turnSystem;
+    public List<STSCardData> cardsOnTest = new List<STSCardData>();
 
     void Start()
     {
@@ -20,34 +21,62 @@ public class GameManager : MonoBehaviour
 
     void SetupGame()
     {
-        if (RunManager.Instance == null)
+        if (RunManager.Instance == null||RunManager.Instance.forceTutorial)
         {
             new GameObject("RunManager").AddComponent<RunManager>();
-            for (int i=0;i<10;i++)
-            {
-                RunManager.Instance.AddRelic(RelicDrop.GetRandomRelic(new CombatResult()));
-            }
-            combat.allies.Add(new Player("Player", 1500));
+            RunManager.Instance.forceTutorial = true;
+            //RunManager.Instance.act = 1;
+            combat.allies.Add(RunManager.Instance.player!=null ? RunManager.Instance.player : new Player("Player", 100));
             var enemies = new List<Character>
             {
-                new Enemy("Enemy 1"),
-                new Enemy("Enemy 2"),
-                new Enemy("Enemy 3")
+                new Enemy("Dummy"),
+                new Enemy("Dummy"),
+                new Enemy("Dummy")
             };
             combat.enemies = enemies;
             combat.deck = new DeckManager();
 
             // Ajout de cartes de test
-            for (int i = 0; i < 1; i++)
+            if (cardsOnTest.Count==0)
             {
-                combat.deck.drawPile.Add(new CardInstance(TestDatabase.attackCard));
-                combat.deck.drawPile.Add(new CardInstance(TestDatabase.blockCard));
+                for (int i = 0; i < 1; i++)
+                {
+                    combat.deck.drawPile.Add(new CardInstance(TestDatabase.attackCard));
+                    combat.deck.drawPile.Add(new CardInstance(TestDatabase.blockCard));
+                }
+                CardInstance enchantedCard = new CardInstance(TestDatabase.attackCard);
+                enchantedCard.enchantments.Add(new CardEnchantment { data = new SharpnessEnchantment(), level = 10 });
+                enchantedCard.enchantments.Add(new CardEnchantment { data = new MechanicalEnchantment(), level = 1 });
+                combat.deck.drawPile.Add(enchantedCard);
+                combat.deck.drawPile.AddRange(STSCardDatabase.allCards.Select(data => new CardInstance(data)));
+                foreach (var card in combat.deck.drawPile)
+                {
+                    EnchantManager.ApplyEnchant(card,5);
+                }
             }
-            CardInstance enchantedCard = new CardInstance(TestDatabase.attackCard);
-            enchantedCard.enchantments.Add(new CardEnchantment { data = new SharpnessEnchantment(), level = 10 });
-            enchantedCard.enchantments.Add(new CardEnchantment { data = new MechanicalEnchantment(), level = 1 });
-            combat.deck.drawPile.Add(enchantedCard);
-            combat.deck.drawPile.AddRange(STSCardDatabase.allCards.Select(data => new CardInstance(data)));
+            else
+            {
+                if (combat.forceTutorial||(RunManager.Instance!= null && RunManager.Instance.forceTutorial))
+                {
+                    STSCardData attackCard = STSCardDatabase.Get("Frappe");
+                    STSCardData blockCard = STSCardDatabase.Get("Défense");
+                    for (int i = 0; i < 5; i++)                    {
+                        combat.deck.drawPile.Add(new CardInstance(attackCard));
+                        combat.deck.drawPile.Add(new CardInstance(blockCard));
+                    }
+                }
+                else
+                {
+                    for (int i=0;i<10;i++)
+                    {
+                        RunManager.Instance.AddRelic(RelicDrop.GetRandomRelic(new CombatResult()));
+                    }
+                    foreach (var cardData in cardsOnTest)
+                    {
+                        combat.deck.drawPile.Add(new CardInstance(STSCardDatabase.Get(cardData.cardName)));
+                    }
+                }
+            }
             combat.deck.Shuffle(combat.deck.drawPile);
         }
         else

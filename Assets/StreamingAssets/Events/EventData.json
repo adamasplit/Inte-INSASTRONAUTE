@@ -2,39 +2,59 @@
     "events": [
         {
             "title": "!!!",
-            "description": "ça dégage!!!",
+            "description": "C'est les DS demain...",
             "imageName": "",
             "options": [
                 {
                     "text": "Retire 5 cartes",
                     "iconName": "",
-                    "type": "RemoveCard",
-                    "value": 5
+                    "entries": [
+                        {
+                            "type": "RemoveCard",
+                            "value": 5
+                        }
+                    ]
                 },
                 {
                     "text": "Perds 10 PV",
                     "iconName": "",
-                    "type": "Damage",
-                    "value": 10
+                    "entries": [
+                        {
+                            "type": "Damage",
+                            "value": 10
+                        }
+                    ]
                 }
             ]
         },
         {
-            "title": "???",
+            "title": "baba",
             "description": "La nuit tombe...",
             "imageName": "",
             "options": [
                 {
-                    "text": "Améliorer 3 cartes",
+                    "text": "Réviser pendant la nuit",
                     "iconName": "",
-                    "type": "UpgradeCard",
-                    "value": 3
+                    "entries": [
+                        {
+                            "type": "Damage",
+                            "value": 10
+                        },
+                        {
+                            "type": "MaxHpGain",
+                            "value": 20
+                        }
+                    ]
                 },
                 {
-                    "text": "Se soigner de 10 PV",
+                    "text": "Se reposer",
                     "iconName": "",
-                    "type": "Heal",
-                    "value": 10
+                    "entries": [
+                        {
+                            "type": "Heal",
+                            "value": 25
+                        }
+                    ]
                 }
             ]
         }

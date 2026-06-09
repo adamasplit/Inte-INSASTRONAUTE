@@ -1,0 +1,38 @@
+{
+  "id": "Mur porteur",
+  "collectionCardId": "",
+  "cost": 2,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Rare",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 6,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    }
+  ],
+  "modifiers": [
+    {
+      "type": "Damage",
+      "kind": "BuffOnSelf",
+      "value": 3
+    }
+  ],
+  "favoredCharacter": "AI",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
+}

@@ -1,0 +1,32 @@
+{
+  "id": "Séisme",
+  "collectionCardId": "",
+  "cost": 1,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Common",
+  "targetingMode": "AllEnemies",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 7,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "GC",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
+}

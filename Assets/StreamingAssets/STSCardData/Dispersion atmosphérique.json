@@ -1,0 +1,46 @@
+{
+  "id": "Dispersion atmosphérique",
+  "collectionCardId": "",
+  "cost": 1,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "AllEnemies",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "TransferDebuff",
+      "value": 1,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    },
+    {
+      "type": "Discard",
+      "value": 2,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "MRIE",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
+}

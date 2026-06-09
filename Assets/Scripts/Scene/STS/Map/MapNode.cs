@@ -4,7 +4,8 @@ public class MapNode
     public int id;
     public int floor;
     public NodeType type;
-    public int x; // for display only
+    public int x; // legacy, not used for display
+    public float posX; // normalized horizontal position (0..1)
     public List<MapNode> next = new();
     public List<MapNode> prev = new(); // important pour debug + affichage
     public bool visited = false; // important pour debug + affichage

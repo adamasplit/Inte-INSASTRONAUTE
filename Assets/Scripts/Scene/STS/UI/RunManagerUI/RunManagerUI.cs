@@ -72,6 +72,7 @@ public class RunManagerUI : MonoBehaviour
     
     void ShowRelics()
     {
+        Debug.Log("ShowRelics called");
         if (relicListPanel != null)
             relicListPanel.Show(RunManager.Instance.relics);
     }
@@ -79,6 +80,6 @@ public class RunManagerUI : MonoBehaviour
     void ShowDeck()
     {
         if (deckGridPanel != null)
-            deckGridPanel.Show(RunManager.Instance.deck);
+            deckGridPanel.Show(RunManager.Instance.deck,"Deck");
     }
 }

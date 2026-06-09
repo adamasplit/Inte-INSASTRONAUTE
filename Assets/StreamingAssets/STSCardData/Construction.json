@@ -1,0 +1,38 @@
+{
+  "id": "Construction",
+  "collectionCardId": "",
+  "cost": 1,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Uncommon",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    }
+  ],
+  "modifiers": [
+    {
+      "type": "Damage",
+      "kind": "ArmorOnSelf",
+      "value": 1
+    }
+  ],
+  "favoredCharacter": "GC",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
+}

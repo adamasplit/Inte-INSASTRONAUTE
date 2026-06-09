@@ -33,8 +33,6 @@ public static class STSCardDatabase
 
             allCards.Add(card);
         }
-
-        Debug.Log($"Loaded {allCards.Count} cards.");
     }
 
     public static STSCardData Get(string id)

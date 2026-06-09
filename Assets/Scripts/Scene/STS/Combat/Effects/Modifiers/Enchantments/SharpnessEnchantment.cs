@@ -1,20 +1,24 @@
 using System.Collections.Generic;
 public class SharpnessEnchantment : EnchantmentData
 {
-    public int damagePerLevel = 10;
+    public int damagePerLevel = 1;
 
     public SharpnessEnchantment()
     {
         name = "Sharpness";
-        description = $"Augmente les dégâts de {damagePerLevel}% par niveau.";
+        description = $"Inflige des dégâts à la cible en fonction du niveau";
         maxLevel=100;
     }
 
-    public override List<StatModifier> GenerateModifiers(int level)
+    public override List<EffectEntry> GenerateEffects(int level)
     {
-        return new List<StatModifier>
+        return new List<EffectEntry>
         {
-            new PercentModifier(StatType.Damage, level * damagePerLevel)
+            new EffectEntry
+            {
+                type = EffectType.Damage,
+                value = level * damagePerLevel
+            }
         };
     }
 }

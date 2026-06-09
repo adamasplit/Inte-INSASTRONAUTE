@@ -15,6 +15,7 @@ MonoBehaviour:
   enemyName: Enemy 4
   maxHP: 42
   pattern:
+  - {fileID: 11400000, guid: 939ba07da08ebcf4694b78e5d2c9659a, type: 2}
   - {fileID: 11400000, guid: 30750bcc4c2971c4c91efb7cbf198b56, type: 2}
   - {fileID: 11400000, guid: 63eef1034cdf61344b92f72fccf35325, type: 2}
   - {fileID: 11400000, guid: 9050fa5b55e517842aa6b728b0c04bc4, type: 2}
@@ -24,4 +25,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7de4cf7e640ce4249af25b7c0c898a3a, type: 2}
   - {fileID: 11400000, guid: e7b8e19fba3483b419503d79f3957277, type: 2}
   - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
-  rewardCards: []
+  rewardCards:
+  - {fileID: 11400000, guid: 939ba07da08ebcf4694b78e5d2c9659a, type: 2}
+  startingStatus: 0
+  startingStatusDuration: 0
+  startingStatusValue: 0

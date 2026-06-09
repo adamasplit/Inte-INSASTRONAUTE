@@ -56,7 +56,7 @@ public class NodeView : MonoBehaviour
 
     void SetIcon()
     {
-        var spritePath = $"STS/Map/Node{((int)node.type) + 1}";
+        var spritePath = $"STS/Map/NodeNeon{((int)node.type) + 1}";
         icon.sprite = Resources.Load<Sprite>(spritePath);
         if (icon.sprite == null)
         {

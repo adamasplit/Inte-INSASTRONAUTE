@@ -2,6 +2,7 @@
   "id": "Éveil",
   "collectionCardId": "",
   "cost": 1,
+  "xCost": false,
   "type": "Pouvoir",
   "rarity": "Rare",
   "targetingMode": "Player",
@@ -10,15 +11,22 @@
   "effects": [
     {
       "type": "Status",
-      "value": 1,
+      "value": 10,
       "targetSelf": true,
+      "targetOthers": false,
       "statusType": "Awakening",
       "duration": 3,
-      "description": "Rend des PV après 3 tours.",
-      "cardID": ""
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
     }
   ],
   "modifiers": [],
   "favoredCharacter": "Aucun",
-  "animationSpeed": 1.0
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
 }

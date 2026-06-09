@@ -31,6 +31,8 @@ public class RestManager : MonoBehaviour
             Destroy(child.gameObject);
         foreach (var card in RunManager.Instance.deck)
         {
+            if (card.isEnchanted())
+                continue; // Skip enchanted cards in the rest site
             var obj = Instantiate(cardPrefab, deckContainer);
 
             var ctrl = obj.GetComponent<RestCardController>();
@@ -87,7 +89,7 @@ public class RestManager : MonoBehaviour
             return;
 
         RunManager.Instance.restCharges -= charges;
-        int enchantLevel = Random.Range(charges, charges*4+1);
+        int enchantLevel = Random.Range(charges, charges*2+1);
         Debug.Log($"Enchanting card with level {enchantLevel} using {charges} charges.");
         EnchantManager.ApplyEnchant(selectedCard, enchantLevel);
         BuildDeck();

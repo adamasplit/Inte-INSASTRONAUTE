@@ -2,6 +2,7 @@
   "id": "Architecture",
   "collectionCardId": "AI",
   "cost": 0,
+  "xCost": false,
   "type": "Compétence",
   "rarity": "Uncommon",
   "targetingMode": "Enemy",
@@ -12,22 +13,34 @@
       "type": "StealBuff",
       "value": 1,
       "targetSelf": false,
+      "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
       "description": "",
-      "cardID": ""
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
     },
     {
       "type": "TransferDebuff",
       "value": 1,
       "targetSelf": false,
+      "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
       "description": "",
-      "cardID": ""
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
     }
   ],
   "modifiers": [],
   "favoredCharacter": "AI",
-  "animationSpeed": 1.0
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 1
 }

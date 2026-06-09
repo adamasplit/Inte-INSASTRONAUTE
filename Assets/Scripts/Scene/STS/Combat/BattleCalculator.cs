@@ -7,16 +7,18 @@ public static class BattleCalculator
         int value = baseValue;
 
         List<StatModifier> modifiers = GetAllModifiers(type, ctx.card, ctx.state);
+        List<StatModifier> applyingModifiers=new List<StatModifier>();
         foreach (var mod in modifiers)
         {
-            value = mod.Modify(value, ctx);
+            if (mod.AppliesTo(type, ctx))
+                applyingModifiers.Add(mod);
         }
         if (ctx.source != null)
         {
             foreach (var effect in ctx.source.statusEffects)
             {
                 if (effect.AppliesTo(type, ctx))
-                    value = effect.Modify(value, ctx);
+                    applyingModifiers.Add(effect);
             }
         }
         if (ctx.target != null&&ctx.target!=ctx.source)
@@ -24,9 +26,19 @@ public static class BattleCalculator
             foreach (var effect in ctx.target.statusEffects)
             {
                 if (effect.AppliesTo(type, ctx))
-                    value = effect.Modify(value, ctx);
+                    applyingModifiers.Add(effect);
             }
         }
+        // Apply modifiers in the correct order: Additive first, then Multiplicative, then Override
+
+        applyingModifiers.Sort((a, b) => a.modifierType.CompareTo(b.modifierType));
+        foreach (var mod in applyingModifiers)
+        {
+            if (mod.AppliesTo(type, ctx))
+                value = mod.Modify(value, ctx);
+        }
+        
+        
 
 
         // Effets spéciaux non résumables à des modificateurs, comme la télékinésie
@@ -42,8 +54,12 @@ public static class BattleCalculator
     public static string GetModifiedDescription(int baseValue, StatType type, EffectContext ctx)
     {
         int modifiedValue = GetModifiedValue(baseValue, type, ctx);
+        return GetColoredValue(baseValue, modifiedValue);
+    }
+    public static string GetColoredValue(int baseValue, int modifiedValue)
+    {
         if (modifiedValue <= 0)
-            return $"<color=gray>{modifiedValue}</color>";
+            return $"<color=grey>{modifiedValue}</color>";
         else if (modifiedValue < baseValue)
             return $"<color=red>{modifiedValue}</color>";
         else if (modifiedValue > baseValue)
@@ -58,11 +74,12 @@ public static class BattleCalculator
         if (state != null)
         modifiers.AddRange(state.GetModifiers(type));
         if (card != null)
-        modifiers.AddRange(card.GetModifiers(type));
+        modifiers.AddRange(card.GetModifiers());
 
         // Ensure ordering: Additive first, then Multiplicative, then Override
         modifiers.Sort((a, b) => a.modifierType.CompareTo(b.modifierType));
 
         return modifiers;
     }
+    
 }

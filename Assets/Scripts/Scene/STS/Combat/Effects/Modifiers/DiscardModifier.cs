@@ -6,10 +6,6 @@ public class DiscardModifier : StatModifier
         this.type = type;
         perDiscard = amount;
     }
-    public override bool AppliesTo(StatType stat, EffectContext ctx)
-    {
-        return stat == type;
-    }
     public override int Modify(int value, EffectContext ctx)
     {
         return value + ctx.state.cardsDiscardedThisCombat * perDiscard;
@@ -17,6 +13,6 @@ public class DiscardModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+{perDiscard} {type} par carte défaussée ce combat";
+        return $"+{perDiscard} {StatTypeString.ToFrench(type)} par carte défaussée ce combat";
     }
 }

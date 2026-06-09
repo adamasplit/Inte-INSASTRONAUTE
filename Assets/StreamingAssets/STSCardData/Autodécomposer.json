@@ -1,0 +1,46 @@
+{
+  "id": "Autodécomposer",
+  "collectionCardId": "",
+  "cost": 1,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Epic",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 20,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    },
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Poison",
+      "duration": 3,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "ITI",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
+}

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
+  m_Name: Dark
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Dark
+  maxHP: 220
+  pattern:
+  - {fileID: 11400000, guid: 40593402db7177c4ebce302746126dcd, type: 2}
+  rewardCards:
+  - {fileID: 11400000, guid: ea5ae116e0bae1c47908728dbae2bea3, type: 2}
+  - {fileID: 11400000, guid: 40593402db7177c4ebce302746126dcd, type: 2}
+  - {fileID: 11400000, guid: 9050fa5b55e517842aa6b728b0c04bc4, type: 2}
+  startingStatus: 0
+  startingStatusDuration: 0
+  startingStatusValue: 0

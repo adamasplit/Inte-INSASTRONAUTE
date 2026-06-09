@@ -6,5 +6,9 @@ public enum StatType
     Cost,
     StatusPotency,
     StatusDuration,
-    TurnDelay
+    TurnDelay,
+    ExhaustChance,
+    Any,
+    TurnManipulationDelay,
+    TurnManipulationAdvance
 }

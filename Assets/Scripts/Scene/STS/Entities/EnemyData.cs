@@ -10,6 +10,9 @@ public class EnemyData : ScriptableObject
 
     public List<STSCardData> pattern;
     public List<STSCardData> rewardCards;
+    public StatusType startingStatus;
+    public int startingStatusDuration;
+    public int startingStatusValue;
     #if UNITY_EDITOR
     private void OnValidate()
     {

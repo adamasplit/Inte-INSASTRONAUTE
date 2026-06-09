@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Linq;
+using System.Collections.Generic;
 public class CardDrag : MonoBehaviour,
 IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -51,6 +52,10 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
             Debug.LogError("ArrowUI component not found on arrow prefab!");
             return;
         }
+        else
+        {
+            arrow.Init(this);
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -71,12 +76,13 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
             Debug.LogError("CardView has no card instance");
             return;
         }
-        var future = turnSystem.GetFuture(10);
+        
         var target = GetHoveredTarget();
-        var sim = turnSystem.SimulateCard(future, cardView.cardInstance, target);
+        var sim = turnSystem.SimulateCard(turnSystem.timeline, cardView.cardInstance, GetTargets(target));
+        var future = turnSystem.GetFuture(sim,10);
         ui.HighlightTargets(cardView.cardInstance.data.targetingMode, target);
-        timelineUI.Display(sim,true);
-        cardView.RefreshDescription(target);
+        timelineUI.Display(future,true,GetTargets(target));
+        cardView.RefreshDescription(target, false, GetTargets(target));
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -84,10 +90,11 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
         group.blocksRaycasts = true;
         rect.anchoredPosition = startPos;
         timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
-        var cardView = GetComponent<CardView>();
         if (cardView != null)
         {
-            cardView.RefreshDescription(null);
+            Debug.Log("Deselecting card and refreshing description");
+            cardView.Deselect();
+            cardView.RefreshDescription(null, false, null);
         }
         transform.localScale = Vector3.one;
         if (arrow != null) Destroy(arrow.gameObject);
@@ -101,6 +108,20 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
     Character GetHoveredTarget()
     {
         return DropZone.hoveredCharacter;
+    }
+    List<Character> GetTargets(Character target)
+    {
+        if (cardView.cardInstance == null)
+        {
+            Debug.LogError("CardView has no card instance");
+            return new List<Character>();
+        }
+        var mode = cardView.cardInstance.data.targetingMode;
+        return combat.GetTargets(mode, target);
+    }
+    void Update()
+    {
+        if (cardView == null) Destroy(gameObject);
     }
 
 }

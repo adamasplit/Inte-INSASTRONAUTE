@@ -23,4 +23,5 @@ public class GlobalUIManager : MonoBehaviour
         selectionMode = false;
         requiredCount = 0;
     }
+    
 }

@@ -15,6 +15,8 @@ public class MapManager : MonoBehaviour
 
     void Awake()
     {
+        RunManager.Instance.eliteEncounter=false;
+        RunManager.Instance.bossEncounter=false;
         StartCoroutine(FadeFromBlack(0.5f));
         if (RunManager.Instance!=null && RunManager.Instance.map != null&&!RunManager.Instance.RegenerateMap)
         {
@@ -29,7 +31,7 @@ public class MapManager : MonoBehaviour
             RunManager.Instance.currentNode = generator.startNode;
             RunManager.Instance.RegenerateMap = false;
             RunManager.Instance.map = map;
-            RunManager.Instance.player.Heal(RunManager.Instance.player.maxHP);
+            RunManager.Instance.player.currentHP = RunManager.Instance.player.maxHP;
         }
         allNodes = map;
         Debug.Log($"Generated map with {allNodes.Count} nodes");
@@ -59,6 +61,7 @@ public class MapManager : MonoBehaviour
 
         currentNode = node;
         RunManager.Instance.currentNode = currentNode;
+        node.visited = true;
 
         StartCoroutine(ResolveNode(node));
 

@@ -29,14 +29,18 @@ public class PanelOptionData
 {
     public string text;
     public string iconName;
-    public string type; // For JSON export, store action name only (if needed)
-    public int value; // Additional field to store any relevant value for the option
+    public List<PanelOptionEntryData> entries = new();
     public PanelOptionData(PanelOption option)
     {
         text = option.text;
         iconName = option.icon != null ? option.icon.name : null;
-        type = option.type.ToString(); // Store the enum type as string for JSON export
-        value = option.value; // Store the value for JSON export
+        if (option.entries != null)
+        {
+            foreach (var entry in option.entries)
+            {
+                entries.Add(new PanelOptionEntryData(entry));
+            }
+        }
     }
 
     public PanelOption ToPanelOption()
@@ -44,8 +48,27 @@ public class PanelOptionData
         PanelOption opt = new PanelOption();
         opt.text = text;
         // icon lookup by iconName if needed
-        opt.type = System.Enum.TryParse<EventOptionType>(type, out var parsedType) ? parsedType : EventOptionType.None;
-        opt.value = value; // Assign the value to the PanelOption
+        opt.entries = new List<PanelOptionEntry>();
+        foreach (var entryData in entries)
+        {
+            var entry = new PanelOptionEntry
+            {
+                type = System.Enum.Parse<EventOptionType>(entryData.type),
+                value = entryData.value
+            };
+            opt.entries.Add(entry);
+        }
         return opt;
+    }
+}
+[System.Serializable]
+public class PanelOptionEntryData
+{
+    public string type;
+    public int value;
+    public PanelOptionEntryData(PanelOptionEntry entry)
+    {
+        type = entry.type.ToString();
+        value = entry.value;
     }
 }

@@ -20,6 +20,20 @@ public class CardInstance
         }
     }
 
+    public int Cost(EffectContext ctx=null)
+    {
+        int cost = data.cost;
+        if (data.xCost)
+        {
+            return -1;
+        }
+        else
+        {
+            cost = BattleCalculator.GetModifiedValue(data.cost, StatType.Cost, ctx);
+        }
+        return cost;
+    }
+
     public string GetDescription(EffectContext ctx)
     {
         string text = "";
@@ -37,48 +51,84 @@ public class CardInstance
             case TargetingMode.AllEnemies:
                 text += "<color=red>(Tous les ennemis)</color> :\n";
                 break;
+            case TargetingMode.RandomEnemy:
+                text += "<color=red>(Ennemi aléatoire)</color> :\n";
+                break;
         }
-        foreach (var e in data.effects)
+        foreach (var e in GetEffects())
         {
             string desc=EffectDescription.Get(e,ctx);
-            if (desc!=" ")
+            if (desc!=" "&&e.description!=" ")
             {
                 text += desc + "\n";
             }
         }
-        foreach (var mod in GetModifiers(StatType.Damage,false))
+        Debug.Log("modifiers count: "+GetModifiers().Count);
+        foreach (var mod in GetModifiers(StatType.Damage,false,false))
         {
             text += $"<color=red>{mod.Describe()}</color>\n";
         }
-        foreach (var mod in GetModifiers(StatType.Armor,false))
+        foreach (var mod in GetModifiers(StatType.Armor,false,false))
         {
             text += $"<color=blue>{mod.Describe()}</color>\n";
         }
         foreach (var ench in enchantments)
         {
-            text += $"\n<size=90%><color=purple>";
-            text += $"{ench.data.name} {ToRoman(ench.level)}";
+            // Affiche les enchantements commençant par "Curse" en rouge, les autres en violet
+            text += $"\n<size=90%>"+(ench.data.name.StartsWith("Curse") ? "<color=red>" : "<color=purple>");
+            string levelText = ench.data.maxLevel > 1 ? ToRoman(ench.level) : "";
+            text += $"{ench.data.name} {levelText}";
             text += "</color></size>";
         }
-
         if (data.exhaust)
             text += "<color=orange>[Épuisement]</color>\n";
+        if (data.retain)
+            text += "<color=orange>[Retenue]</color>\n";
         return text.TrimEnd();
     }
-    public List<StatModifier> GetModifiers(StatType type,bool includeEnchantments=true)
+    public List<StatModifier> GetModifiers(StatType type,bool includeEnchantments=true,bool includeAdded=true)
     {
         List<StatModifier> mods = new();
-        mods.AddRange(baseModifiers.FindAll(m => m.type == type));
-        mods.AddRange(addedModifiers.FindAll(m => m.type == type));
+        if (includeAdded)
+        {
+            mods.AddRange(addedModifiers.Where(m => m.type == type));
+        }
+        mods.AddRange(baseModifiers.Where(m => m.type == type));
         if (includeEnchantments)
         {
             for (int i = enchantments.Count - 1; i >= 0; i--)
             {
-                var enchantmentMods = enchantments[i].GetModifiers().FindAll(m => m.type == type);
+                var enchantmentMods = enchantments[i].GetModifiers();
+                mods.AddRange(enchantmentMods.Where(m => m.type == type));
+            }
+        }
+        return mods;
+    }
+    public List<StatModifier> GetModifiers(bool includeEnchantments=true,bool includeAdded=true)
+    {
+        List<StatModifier> mods = new();
+        mods.AddRange(baseModifiers);
+        mods.AddRange(addedModifiers);
+        if (includeEnchantments)
+        {
+            for (int i = enchantments.Count - 1; i >= 0; i--)
+            {
+                var enchantmentMods = enchantments[i].GetModifiers();
                 mods.AddRange(enchantmentMods);
             }
         }
         return mods;
+    }
+
+    public List<EffectEntry> GetEffects()
+    {
+        List<EffectEntry> effects = new();
+        effects.AddRange(data.effects);
+        foreach (var enchantment in enchantments)
+        {
+            effects.AddRange(enchantment.GetEffects());
+        }
+        return effects;
     }
 
     private string ToRoman(int number)
@@ -90,6 +140,14 @@ public class CardInstance
         if (number >= 4) return "IV" + ToRoman(number - 4);
         if (number >= 1) return "I" + ToRoman(number - 1);
         return "";
+    }
+    public void AddModifier(StatModifier mod)
+    {
+        addedModifiers.Add(mod);
+    }
+    public bool isEnchanted()
+    {
+        return enchantments.Count > 0;
     }
 
     public void AddEnchantment(CardEnchantment enchantment)
@@ -108,6 +166,11 @@ public class CardInstance
     public bool HasEnchantment(string enchantmentName)
     {
         return enchantments.Exists(e => e.data.name == enchantmentName);
+    }
+    public int GetEnchantmentLevel(string enchantmentName)
+    {
+        var enchantment = enchantments.Find(e => e.data.name == enchantmentName);
+        return enchantment != null ? enchantment.level : 0;
     }
 
     public CardInstance Clone()

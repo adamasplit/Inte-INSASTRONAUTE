@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: Chute d'eau
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  cardName: Heurt
+  cardName: Chute d'eau
+  collectionCardId: 
   collectionCard: {fileID: 11400000, guid: bd6cd3543c877004d9f1c8d3f5804ac8, type: 2}
   cost: 2
+  xCost: 0
   type: 0
   rarity: 0
   effects:
@@ -23,12 +25,19 @@ MonoBehaviour:
     targetSelf: 0
     statusType: 0
     duration: 0
+    description: 
+    cardID: 
   - type: 3
-    value: 3
+    value: 0
     targetSelf: 0
     statusType: 1
     duration: 3
+    description: 
+    cardID: 
   targetingMode: 1
   modifiers: []
   exhaust: 0
   retain: 0
+  innate: 0
+  favoredCharacter: 9
+  animationSpeed: 1

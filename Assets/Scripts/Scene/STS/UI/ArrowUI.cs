@@ -4,11 +4,16 @@ public class ArrowUI : MonoBehaviour
 {
     public RectTransform dashPrefab;
     public RectTransform head;
+    public CardDrag cardDrag;
 
     List<RectTransform> dashes = new();
 
     public int dashCount = 20;
     public float curveHeight = 150f;
+    public void Init(CardDrag cardDrag)
+    {
+        this.cardDrag = cardDrag;
+    }
     Vector2 QuadraticBezier(Vector2 a, Vector2 b, Vector2 c, float t)
     {
         return Mathf.Pow(1 - t, 2) * a
@@ -17,6 +22,11 @@ public class ArrowUI : MonoBehaviour
     }
 
     public RectTransform container;
+    void Update()
+    {
+        if (cardDrag==null)
+            Destroy(gameObject);
+    }
 
     public void UpdateArrow(Vector2 screenStart, Vector2 screenEnd)
     {

@@ -14,49 +14,46 @@ public class MapGenerator
     public List<MapNode> Generate(int startingFloor = 0)
     {
         allNodes = new List<MapNode>();
+        // Start node in the center
         startNode = new MapNode
         {
             id = 0,
             floor = startingFloor,
             x = width / 2,
+            posX = 0.5f,
             type = NodeType.Start,
             next = new List<MapNode>(),
-            prev = new List<MapNode>()
+            prev = new List<MapNode>(),
+            visited = true
         };
         List<MapNode> previousFloorNodes = new List<MapNode> { startNode };
         allNodes.Add(startNode);
-        this.startNode = startNode;
         for (int y = 1; y < height; y++)
         {
             int nodeCount = GetNodeCountForFloor(y);
 
-            List<int> slots = new List<int>();
-            for (int i = 0; i < width; i++)
-                slots.Add(i);
-
             List<MapNode> floorNodes = new();
-
+            // Distribute nodes horizontally with some jitter
             for (int i = 0; i < nodeCount; i++)
             {
-                int slotIndex = Random.Range(0, slots.Count);
-                int x = slots[slotIndex];
-                slots.RemoveAt(slotIndex);
-
+                float baseX = (nodeCount == 1) ? 0.5f : (float)i / (nodeCount - 1);
+                float jitter = Random.Range(-0.08f, 0.08f); // small random offset
+                float posX = Mathf.Clamp01(baseX + jitter);
                 var node = new MapNode
                 {
                     id = allNodes.Count,
                     floor = y,
-                    x = x,
+                    x = Mathf.RoundToInt(posX * (width - 1)), // legacy
+                    posX = posX,
                     type = GetRandomNodeType(y),
                     next = new(),
                     prev = new()
                 };
-
                 allNodes.Add(node);
                 floorNodes.Add(node);
             }
 
-            ConnectToPreviousFloor(previousFloorNodes, floorNodes);
+            ConnectToPreviousFloorNatural(previousFloorNodes, floorNodes);
             previousFloorNodes = floorNodes;
         }
 
@@ -68,9 +65,9 @@ public class MapGenerator
 
         int roll = Random.Range(0, 100);
 
-        if (roll < 70) return NodeType.Combat;
+        if (roll < 60) return NodeType.Combat;
         if (roll < 75) return NodeType.Elite;
-        if (roll < 85) return NodeType.Rest;
+        if (roll < 87) return NodeType.Rest;
         return NodeType.Event;
     }
 
@@ -82,49 +79,52 @@ public class MapGenerator
         return Random.Range(1, 4);
     }
 
-    void ConnectToPreviousFloor(List<MapNode> prev, List<MapNode> curr)
+    // Connect nodes so that links only go to nearby nodes horizontally (like Slay the Spire)
+    void ConnectToPreviousFloorNatural(List<MapNode> prev, List<MapNode> curr)
     {
-        // (OPTIONNEL mais recommandé si tu fais des contraintes avancées)
         Dictionary<MapNode, int> prevCount = new();
         Dictionary<MapNode, int> currCount = new();
-
         foreach (var p in prev) prevCount[p] = 0;
         foreach (var c in curr) currCount[c] = 0;
 
-        // =========================
-        // 1. GARANTIE MINIMALE (CRUCIAL)
-        // chaque node prev doit avoir AU MOINS un next
-        // =========================
+        float maxDist = 0.35f; // max allowed horizontal distance for a connection
+
+        // 1. Each prev node must have at least one next
         foreach (var p in prev)
         {
-            var c = curr[Random.Range(0, curr.Count)];
-
+            // Find closest curr node within maxDist
+            var candidates = curr.Where(c => Mathf.Abs(c.posX - p.posX) <= maxDist).ToList();
+            MapNode c;
+            if (candidates.Count > 0)
+                c = candidates[Random.Range(0, candidates.Count)];
+            else
+                c = curr[Random.Range(0, curr.Count)];
             Connect(p, c, prevCount, currCount);
         }
 
-        // =========================
-        // 2. GARANTIE MINIMALE inverse (sécurité)
-        // chaque node curr doit avoir AU MOINS un prev
-        // =========================
+        // 2. Each curr node must have at least one prev
         foreach (var c in curr)
         {
             if (c.prev.Count == 0)
             {
-                var p = prev[Random.Range(0, prev.Count)];
+                var candidates = prev.Where(p => Mathf.Abs(c.posX - p.posX) <= maxDist).ToList();
+                MapNode p;
+                if (candidates.Count > 0)
+                    p = candidates[Random.Range(0, candidates.Count)];
+                else
+                    p = prev[Random.Range(0, prev.Count)];
                 Connect(p, c, prevCount, currCount);
             }
         }
 
-        // =========================
-        // 3. LIENS EXTRA (variété)
-        // =========================
+        // 3. Extra links for variety
         int extraLinks = Random.Range(0, prev.Count / 2);
-
         for (int i = 0; i < extraLinks; i++)
         {
             var p = prev[Random.Range(0, prev.Count)];
-            var c = curr[Random.Range(0, curr.Count)];
-
+            var candidates = curr.Where(c => Mathf.Abs(c.posX - p.posX) <= maxDist).ToList();
+            if (candidates.Count == 0) continue;
+            var c = candidates[Random.Range(0, candidates.Count)];
             Connect(p, c, prevCount, currCount);
         }
     }

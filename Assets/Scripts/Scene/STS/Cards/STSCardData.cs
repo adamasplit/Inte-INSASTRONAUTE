@@ -8,6 +8,7 @@ public class STSCardData : ScriptableObject
     public string collectionCardId;
     public CardData collectionCard;
     public int cost;
+    public bool xCost=false;
     public CardType type;
     public CardRarity rarity;
     public List<EffectEntry> effects;
@@ -15,8 +16,10 @@ public class STSCardData : ScriptableObject
     public List<ModifierData> modifiers = new();
     public bool exhaust=false;
     public bool retain=false;
+    public bool innate=false;
     public SelectableCharacter favoredCharacter=SelectableCharacter.Aucun;
     public float animationSpeed=1f;
+    public int startingCount=0;
     #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -41,8 +44,12 @@ public class STSCardData : ScriptableObject
 
         dto.retain = retain;
 
+        dto.innate = innate;
+        dto.xCost = xCost;
+
         dto.favoredCharacter = favoredCharacter.ToString();
         dto.animationSpeed = animationSpeed;
+        dto.startingCount = startingCount;  
         foreach (var effect in effects)
         {
             dto.effects.Add(effect.ToDTO());
@@ -75,6 +82,8 @@ public class STSCardData : ScriptableObject
             Enum.Parse<TargetingMode>(dto.targetingMode);
 
         card.exhaust = dto.exhaust;
+        card.xCost = dto.xCost;
+        card.innate = dto.innate;
         card.animationSpeed = dto.animationSpeed;
 
         card.retain = dto.retain;
@@ -89,8 +98,8 @@ public class STSCardData : ScriptableObject
             card.modifiers.Add(ModifierData.FromDTO(modDto));
         }
 
-        card.favoredCharacter = Enum.Parse<SelectableCharacter>(dto.favoredCharacter)==null?SelectableCharacter.Aucun: Enum.Parse<SelectableCharacter>(dto.favoredCharacter);
-
+        card.favoredCharacter = Enum.Parse<SelectableCharacter>(dto.favoredCharacter);
+        card.startingCount = dto.startingCount;
         return card;
     }
 }

@@ -7,7 +7,25 @@ public class StrengthStatus : StatusEffect
         Duration = -1;
         Name = "Force";
         modifierType = ModifierType.Additive;
-        buff=true;
+        Update(null);
+        inextendable=true;
+    }
+    public override void Update(Character target)
+    {
+        if (Value < 0)
+        {
+            buff = false;
+            debuff=true;
+        }
+        else if (Value > 0)
+        {
+            buff = true;
+            debuff=false;
+        }
+        else
+        {
+            mustExpire = true;
+        }
     }
 
     public override bool AppliesTo(StatType stat, EffectContext ctx)
@@ -19,8 +37,19 @@ public class StrengthStatus : StatusEffect
     {
         return damage + Value;
     }
-    public override string Describe()
+    public override string Desc()
     {
-        return $"{Value} dégâts supplémentaires";
+        if (Value > 0)
+        {
+            return $"Augmente les dégâts de {Value}.";
+        }
+        else if (Value < 0)
+        {
+            return $"Réduit les dégâts de {-Value}.";
+        }
+        else
+        {
+            return $"Aucun effet.";
+        }
     }
 }

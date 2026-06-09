@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-public class RewardGenerator
+public static class RewardGenerator
 {
     public class CardEntry
     {
@@ -13,7 +13,50 @@ public class RewardGenerator
             this.weight = weight;
         }
     }
-    public List<CardInstance> GenerateCardChoices(CombatResult result)
+    public static Reward GenerateReward(CombatResult result)
+    {
+        Reward reward = new Reward();
+
+        CardReward cardReward = new CardReward
+        {
+            choices = GenerateCardChoices(result)
+        };
+
+        
+
+        Relic relic = RelicDrop.GetRandomRelic(result);
+        if (relic != null&&result.elite)
+        {
+            reward.items.Add(new RelicReward
+            {
+                relic = relic
+            });
+        }
+        reward.items.Add(new GoldReward
+        {
+            amount = GenerateGold(result)
+        });
+        if (result.boss)
+        {
+            BaseRelicUpgradeReward upgradeReward = GenerateRelicUpgradeReward(result);
+            if (upgradeReward != null) reward.items.Add(upgradeReward);
+        }
+        reward.items.Add(cardReward);
+        return reward;
+    }
+    static int GenerateGold(CombatResult result)
+    {
+        int baseGold = Random.Range(15, 26);
+
+        if (result.elite)
+            baseGold += 25;
+
+        if (result.boss)
+            baseGold += 100;
+
+        return baseGold;
+    }
+    static List<CardInstance> GenerateCardChoices(CombatResult result)
     {
         List<CardEntry> pool = BuildCardPool(result);
 
@@ -26,18 +69,19 @@ public class RewardGenerator
 
         return choices;
     }
-    List<CardEntry> BuildCardPool(CombatResult result)
+    static List<CardEntry> BuildCardPool(CombatResult result)
     {
         List<CardEntry> pool = new List<CardEntry>();
 
         if (result.enemies != null&&RunManager.Instance!=null && RunManager.Instance.relics.Exists(r => r is ITIRelic))
         {
+            ITIRelic iRelic = RunManager.Instance.relics.Find(r => r is ITIRelic) as ITIRelic;
             Debug.Log("Adding enemy reward cards to pool");
             foreach (var enemy in result.enemies)
             {
                 foreach (var card in enemy.rewardCards)
                 {
-                    pool.Add(new CardEntry(card, 100));
+                    pool.Add(new CardEntry(card, iRelic.DropRateForEnemyCards()));
                 }
             }
         }
@@ -46,7 +90,7 @@ public class RewardGenerator
 
         return pool;
     }
-    public CardInstance GetRandomCard(List<CardEntry> pool,CombatResult result=null)
+    static CardInstance GetRandomCard(List<CardEntry> pool,CombatResult result=null)
     {
         int totalWeight = 0;
         foreach (var entry in pool)
@@ -74,7 +118,7 @@ public class RewardGenerator
 
         return null; // Should never reach here if pool is not empty
     }
-    List<CardEntry> GetFloorCards(int floor,CombatResult result=null)
+    static List<CardEntry> GetFloorCards(int floor,CombatResult result=null)
     {
         List<CardEntry> floorCards = new List<CardEntry>();
         if (STSCardDatabase.allCards==null)
@@ -87,17 +131,52 @@ public class RewardGenerator
             {
                 continue; // Skip cards that are favored for a different character
             }
-            int weight = card.rarity switch
+            int weight;
+            if (result.boss)
             {
-                CardRarity.Common => 100,
-                CardRarity.Uncommon => 50,
-                CardRarity.Rare => 25,
-                CardRarity.Epic => 10,
-                CardRarity.Legendary => result!=null && result.boss?100: 5,
-                _ => 0
-            };
+                weight=card.rarity switch
+                {
+                    CardRarity.Legendary => 50,
+                    _ => 0
+                };
+            }
+            else
+            {
+                weight=card.rarity switch
+                {
+                    CardRarity.Common => 100,
+                    CardRarity.Uncommon => 50,
+                    CardRarity.Rare => 25,
+                    CardRarity.Epic => 10,
+                    CardRarity.Legendary => 5,
+                    _ => 0
+                };
+            }
             floorCards.Add(new CardEntry(card, weight));
         }
         return floorCards;
+    }
+    static BaseRelicUpgradeReward GenerateRelicUpgradeReward(CombatResult result)
+    {
+        if (RunManager.Instance == null) return null;
+
+        List<BaseRelic> upgradableRelics = RunManager.Instance.relics.FindAll(r => r is BaseRelic).ConvertAll(r => r as BaseRelic);
+
+        if (upgradableRelics.Count == 0) return null;
+
+        BaseRelic relicToUpgrade = upgradableRelics[Random.Range(0, upgradableRelics.Count)];
+
+        int upgradeStage = relicToUpgrade.GetUpgradeStage();
+
+        if (relicToUpgrade.descriptionsByStage[upgradeStage]=="")
+        {
+            return null; // No further upgrade available for this relic
+        }
+
+        return new BaseRelicUpgradeReward
+        {
+            relic = relicToUpgrade,
+            stage = upgradeStage
+        };
     }
 }

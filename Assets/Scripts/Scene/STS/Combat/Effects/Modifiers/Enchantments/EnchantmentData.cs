@@ -10,4 +10,8 @@ public class EnchantmentData
     {
         return new List<StatModifier>();
     }
+    public virtual List<EffectEntry> GenerateEffects(int level)
+    {
+        return new List<EffectEntry>();
+    }
 }

@@ -6,10 +6,15 @@ public class EffectEntry
     public EffectType type;
     public int value;
     public bool targetSelf=false;
+    public bool targetOthers=false; // Effects that target other enemies besides the target
     public StatusType statusType;
     public int duration;
     public string description; // Optional custom description for the effect
     public string cardID; // Optional: ID of the card this effect will create (for AddCardToHand or similar effects)
+    public bool conditional;
+    public ConditionType conditionType;
+    public string conditionValue;
+    public bool trueEffect; // For effects that have a "true" version that ignores dispel (like StealBuff vs TrueStealBuff)
     public EffectEntryDTO ToDTO()
     {
         return new EffectEntryDTO
@@ -23,9 +28,13 @@ public class EffectEntry
             statusType = statusType.ToString(),
 
             duration = duration,
-
+            targetOthers = targetOthers,
             description = description,
-            cardID = cardID
+            cardID = cardID,
+            conditional = conditional,
+            conditionType = conditionType.ToString(),
+            conditionValue = conditionValue,
+            trueEffect = trueEffect
         };
     }
     public static EffectEntry FromDTO(EffectEntryDTO dto)
@@ -39,11 +48,15 @@ public class EffectEntry
             targetSelf = dto.targetSelf,
 
             statusType = Enum.Parse<StatusType>(dto.statusType),
-
+            targetOthers = dto.targetOthers,
             duration = dto.duration,
 
             description = dto.description,
-            cardID = dto.cardID
+            cardID = dto.cardID,
+            conditional = dto.conditional,
+            conditionType = Enum.Parse<ConditionType>(dto.conditionType),
+            conditionValue = dto.conditionValue,
+            trueEffect = dto.trueEffect
         };
     }
 
@@ -61,6 +74,7 @@ public class EffectEntry
             EffectType.DeleteNextTurn=>"TurnDelete",
             EffectType.GainEnergy=>"EnergyGain",
             EffectType.AddCardToHand=>"CardAdd",
+            EffectType.Gravity=>"Gravity",
             _ => null
         };
 

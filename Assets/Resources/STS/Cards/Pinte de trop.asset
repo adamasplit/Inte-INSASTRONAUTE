@@ -16,11 +16,12 @@ MonoBehaviour:
   collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 224b9c058364e3d4891b658a5d034c85, type: 2}
   cost: 0
+  xCost: 0
   type: 1
   rarity: 2
   effects:
   - type: 3
-    value: 3
+    value: 0
     targetSelf: 1
     statusType: 1
     duration: 3
@@ -37,4 +38,6 @@ MonoBehaviour:
   modifiers: []
   exhaust: 0
   retain: 0
+  innate: 0
   favoredCharacter: 9
+  animationSpeed: 1

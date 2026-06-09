@@ -7,7 +7,24 @@ public class DexterityStatus : StatusEffect
         Duration = -1;
         Name = "Dextérité";
         modifierType = ModifierType.Additive;
-        buff=true;
+        Update(null);
+    }
+    public override void Update(Character target)
+    {
+        if (Value < 0)
+        {
+            buff = false;
+            debuff=true;
+        }
+        else if (Value > 0)
+        {
+            buff = true;
+            debuff=false;
+        }
+        else
+        {
+            mustExpire = true;
+        }
     }
 
     public override bool AppliesTo(StatType stat, EffectContext ctx)
@@ -21,6 +38,17 @@ public class DexterityStatus : StatusEffect
     }
     public override string Desc()
     {
-        return $"+{Value} d'Armure obtenue";
+        if (Value > 0)
+        {
+            return $"Augmente l'Armure obtenue de {Value}.";
+        }
+        else if (Value < 0)
+        {
+            return $"Réduit l'Armure obtenue de {-Value}.";
+        }
+        else
+        {
+            return $"Aucun effet.";
+        }
     }
 }

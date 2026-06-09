@@ -7,6 +7,11 @@ public class AwakeningStatus : StatusEffect
         Name = "Éveil";
         buff=true;
     }
+    public override void Merge(StatusEffect other)
+    {
+        other.Duration += this.Duration;
+        other.Value = this.Value+other.Value;
+    }
     public override void OnExpire(Character target)
     {
         base.OnExpire(target);
@@ -14,6 +19,6 @@ public class AwakeningStatus : StatusEffect
     }
     public override string Desc()
     {
-        return $"\nSoigne {Value} PV à l'expiration";
+        return $"\nSoigne {Value} PV au bout de {Duration} tours.";
     }
 }

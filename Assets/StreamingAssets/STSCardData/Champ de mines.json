@@ -1,0 +1,32 @@
+{
+  "id": "Champ de mines",
+  "collectionCardId": "",
+  "cost": 0,
+  "xCost": true,
+  "type": "Compétence",
+  "rarity": "Epic",
+  "targetingMode": "RandomEnemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Status",
+      "value": 5,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Trap",
+      "duration": 3,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "AI",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
+}

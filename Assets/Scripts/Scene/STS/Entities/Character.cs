@@ -67,6 +67,10 @@ public class Character
     public void GainEnergy(int amount)
     {
         resources.energy += amount;
+        if (isPlayer)
+        {
+            VFXManager.Instance.AnimateEnergyGain();
+        }
     }
 
     public void AddArmor(int amount)
@@ -79,6 +83,13 @@ public class Character
     }
     public void Heal(int amount)
     {
+        if (isPlayer)
+        {
+            foreach (var relic in RunManager.Instance.relics)
+            {
+                amount = relic.OnHeal(this, amount);
+            }
+        }
         currentHP = Mathf.Min(maxHP, currentHP + amount);
     }
     public void AddStatus(StatusEffect status)
@@ -92,6 +103,10 @@ public class Character
     {
         statusEffects.Remove(status);
         status.OnExpire(this);
+    }
+    public bool HasStatus(string statusName)
+    {
+        return statusEffects.Any(s => s.Name == statusName);
     }
     public void AfterAction()
     {
@@ -110,10 +125,7 @@ public class Character
         }
         foreach (var status in toRemove)
         {
-            if (!RunManager.Instance.relics.Exists(r => r is AIRelic)||status.mustExpire)
-            {
-                statusEffects.Remove(status);
-            }
+            statusEffects.Remove(status);
         }
     
     }
@@ -153,7 +165,7 @@ public class Character
     public void EndTurn()
     {
         onTurn = false;
-        foreach (var status in statusEffects)
+        foreach (var status in statusEffects.ToList())
         {
             status.OnTurnEnd(this);
         }
@@ -166,17 +178,26 @@ public class Character
                 relic.OnTurnEnd(this);
             }
         }
+        combat.FieldTurnEnd();
+        combat.state.ResetTurnFlags(this);
+    }
+    public void FieldTurnEnd()
+    {
+        foreach (var status in statusEffects.ToList())
+        {
+            status.OnFieldTurnEnd(this);
+        }
         foreach (var relic in RunManager.Instance.relics)
         {
-            relic.OnAnyTurnEnd(this);
-        }
-        if (combat != null)
-        {
-            combat.state.playerLastTurn = isPlayer;
+            relic.OnFieldTurnEnd(this);
         }
     }
     public void SpendEnergy(int amount)
     {
+        if (amount==-1)
+        {
+            amount = resources.energy;
+        }
         resources.energy -= amount;
     }
     public CombatManager GetCombatManager()
@@ -204,6 +225,18 @@ public class Character
 
         cm.deck.Draw();
     }
+    public void DiscardCard()
+    {
+        if (!isPlayer)
+            return;
+
+        var cm = GetCombatManager();
+
+        if (cm == null)
+            return;
+
+        cm.deck.Discard();
+    }
 
     public void OnDamageDealt(Character target, int damage,bool unblocked=false)
     {
@@ -224,6 +257,7 @@ public class Character
         foreach (var status in statusEffects.ToList())
         {
             status.OnDamageTaken(source, this, ref damage);
+            status.OnHPLoss(this, damage);
         }
         if (isPlayer)
         {

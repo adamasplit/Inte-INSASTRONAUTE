@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
-public class PERFRelic:Relic
+public class PERFRelic:BaseRelic
 {
-    public PERFRelic()
+    public PERFRelic():base()
     {
-        name = "Alternateur de performance";
-        description="Gagne 1 énergie en moins par tour. Quand vous subissez des dégâts, jouez la carte du dessus de votre pioche.";
-        rarity = RelicRarity.Base;
+        namesByStage[0] = "Alternateur de performance";
+        descriptionsByStage[0] = "Gagne 1 énergie en moins par tour. Quand vous subissez des dégâts, jouez la carte du dessus de votre pioche.";
+        Upgrade(0);
     }
     public override int EnergyOnTurnStart(int previousEnergy, Character character)
     {
@@ -19,7 +19,6 @@ public class PERFRelic:Relic
         var card = combat.deck.GetAndRemoveTopCard();
         if (card == null)
         {
-            Debug.Log("PERFRelic: No card to play");
             return;
         }
         combat.PlayCard(combat.player, card, new List<Character> {source},true,true);

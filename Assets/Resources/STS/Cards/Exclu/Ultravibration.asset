@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
+  m_Name: Ultravibration
+  m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  cardName: Ultravibration
+  collectionCardId: 
+  collectionCard: {fileID: 11400000, guid: cbc74e4d59119fa47adf459be71db12d, type: 2}
+  cost: 0
+  xCost: 0
+  type: 0
+  rarity: 1
+  effects:
+  - type: 0
+    value: 15
+    targetSelf: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+  - type: 2
+    value: 5
+    targetSelf: 1
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+  targetingMode: 3
+  modifiers: []
+  exhaust: 0
+  retain: 0
+  innate: 0
+  favoredCharacter: 1
+  animationSpeed: 1
+  startingCount: 1

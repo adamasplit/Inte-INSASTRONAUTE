@@ -2,6 +2,7 @@
   "id": "Chant de force",
   "collectionCardId": "amir",
   "cost": 1,
+  "xCost": false,
   "type": "Compétence",
   "rarity": "Uncommon",
   "targetingMode": "AllEnemies",
@@ -10,24 +11,36 @@
   "effects": [
     {
       "type": "Status",
-      "value": 2,
+      "value": 0,
       "targetSelf": false,
+      "targetOthers": false,
       "statusType": "Vuln",
       "duration": 2,
-      "description": null,
-      "cardID": null
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
     },
     {
       "type": "Status",
-      "value": 2,
+      "value": 0,
       "targetSelf": false,
+      "targetOthers": false,
       "statusType": "Weakness",
       "duration": 2,
-      "description": null,
-      "cardID": null
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
     }
   ],
   "modifiers": [],
   "favoredCharacter": "Aucun",
-  "animationSpeed": 1.0
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
 }

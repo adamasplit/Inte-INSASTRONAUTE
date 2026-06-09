@@ -9,6 +9,7 @@ public class CharacterSelectUI : MonoBehaviour
     public List<Sprite> possibleBackgrounds;
     public Transform characterListContainer;
     public GameObject characterButtonPrefab;
+    public CircularMenu circularMenu;
     public Button confirmButton;
     public Image backgroundImage;
     public TextMeshProUGUI titleText;
@@ -20,14 +21,15 @@ public class CharacterSelectUI : MonoBehaviour
     {
         foreach (SelectableCharacter character in System.Enum.GetValues(typeof(SelectableCharacter)))
         {
-            if (character == SelectableCharacter.Aucun|| character == SelectableCharacter.Impossible) continue;
+            if (character == SelectableCharacter.Aucun|| character == SelectableCharacter.Impossible|| character == SelectableCharacter.Starting) continue;
             GameObject btnObj = Instantiate(characterButtonPrefab, characterListContainer);
+            btnObj.name = character.ToString();
             CharacterSelectButton btn = btnObj.GetComponent<CharacterSelectButton>();
             btn.Init(character, OnCharacterSelected);
         }
         PlayersDatabase.Load();
         OnCharacterSelected(SelectableCharacter.EP);
-        characterListContainer.position= new Vector3(500, characterListContainer.position.y, 0);
+        circularMenu.Init();
         Hide();
     }
     public void Show()
@@ -40,6 +42,7 @@ public class CharacterSelectUI : MonoBehaviour
     }
     public void OnCharacterSelected(SelectableCharacter character)
     {
+        circularMenu.ForceToFront(characterListContainer.Find(character.ToString()).GetComponent<RectTransform>());
         background.sprite = possibleBackgrounds[(int)character];
         foreach (Transform child in characterListContainer)
         {
@@ -64,19 +67,7 @@ public class CharacterSelectUI : MonoBehaviour
         };
         relicDescriptionText.text = $"<color=yellow>{relic.name}</color>\n";
         relicDescriptionText.text += relic.Describe();
-        backgroundImage.color= character switch
-        {
-            SelectableCharacter.EP => new Color(0.8f,0.1f,0.1f,backgroundImage.color.a),
-            SelectableCharacter.MECA => new Color(0.1f,0.8f,0.1f,backgroundImage.color.a),
-            SelectableCharacter.CFI => new Color(0.1f,0.1f,0.8f,backgroundImage.color.a),
-            SelectableCharacter.GM => new Color(0.8f,0.8f,0.1f,backgroundImage.color.a),
-            SelectableCharacter.ITI => new Color(0.8f,0.1f,0.8f,backgroundImage.color.a),
-            SelectableCharacter.GC => new Color(0.1f,0.8f,0.8f,backgroundImage.color.a),
-            SelectableCharacter.AI => new Color(0.5f,0.5f,0.5f,backgroundImage.color.a),
-            SelectableCharacter.PERF => new Color(0.9f,0.5f,0.1f,backgroundImage.color.a),
-            SelectableCharacter.MRIE => new Color(0.5f,0.1f,0.9f,backgroundImage.color.a),
-            _ => Color.white
-        };
+        backgroundImage.color= SelectableCharacterUtils.getCharacterColor(character);
         confirmButton.onClick.RemoveAllListeners();
         confirmButton.onClick.AddListener(() => OnCharacterConfirm(character));
     }

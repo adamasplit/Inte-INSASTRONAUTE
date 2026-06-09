@@ -1,0 +1,60 @@
+{
+  "id": "Géotechnique ultime",
+  "collectionCardId": "",
+  "cost": 2,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Legendary",
+  "targetingMode": "AllCharacters",
+  "exhaust": true,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Armor",
+      "value": 30,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    },
+    {
+      "type": "Damage",
+      "value": 40,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    },
+    {
+      "type": "EndTurn",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "GC",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
+}

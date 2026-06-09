@@ -2,11 +2,11 @@ public class SlowStatus : StatusEffect
 {
     public SlowStatus(int duration)
     {
-        Value = 20; // Default slow value
         Duration = duration;
         Name = "Lenteur";
         modifierType = ModifierType.Additive;
         debuff=true;
+        generic=true;
     }
 
     public override bool AppliesTo(StatType stat, EffectContext ctx)
@@ -16,10 +16,10 @@ public class SlowStatus : StatusEffect
 
     public override int Modify(int turnDelay, EffectContext ctx)
     {
-        return (turnDelay * (100 + Value)) / 100;
+        return (turnDelay * (100 + 20)) / 100;
     }
     public override string Desc()
     {
-        return $"-{Value}% de vitesse";
+        return $"-{20}% de vitesse";
     }
 }

@@ -1,77 +1,73 @@
-using System.Collections;
-using System.Collections.Generic;
 public static class EventActionFactory
 {
     public static System.Action GetAction(
         PanelOptionData option,
         EventManager manager)
     {
-        switch (System.Enum.Parse<EventOptionType>(option.type))
+        return () => ExecuteEntry(0, option, manager);
+    }
+
+    private static void ExecuteEntry(int index, PanelOptionData option, EventManager manager)
+    {
+        if (option == null || option.entries == null || index >= option.entries.Count)
+        {
+            manager.ReturnToMap();
+            return;
+        }
+
+        var entry = option.entries[index];
+
+        switch (System.Enum.Parse<EventOptionType>(entry.type))
         {
             case EventOptionType.Heal:
-                return () =>
-                {
-                    RunManager.Instance.player.Heal(option.value);
-
-                    manager.ReturnToMap();
-                };
+                RunManager.Instance.player.Heal(entry.value);
+                ExecuteEntry(index + 1, option, manager);
+                break;
 
             case EventOptionType.UpgradeCard:
-                return () =>
-                {
-                    DeckSelectionPanel.Instance.Open(
-                        "Choose a card to upgrade",
-                        option.value,
-                        cards =>
-                        {
-                            foreach (var card in cards)
-                                EnchantManager.ApplyEnchant(card, UnityEngine.Random.Range(1, 4)); // Example: apply a random enchantment with random level
+                DeckSelectionPanel.Instance.Open(
+                    "Choose a card to upgrade",
+                    entry.value,
+                    cards =>
+                    {
+                        foreach (var card in cards)
+                            EnchantManager.ApplyEnchant(card, UnityEngine.Random.Range(1, 4)); // Example: apply a random enchantment with random level
 
-                            manager.ReturnToMap();
-                        });
-                };
+                        ExecuteEntry(index + 1, option, manager);
+                    });
+                break;
 
             case EventOptionType.RemoveCard:
-                return () =>
-                {
-                    DeckSelectionPanel.Instance.Open(
-                        "Choose a card to remove",
-                        option.value,
-                        cards =>
-                        {
-                            foreach (var card in cards)
-                                RunManager.Instance.deck.Remove(card);
+                DeckSelectionPanel.Instance.Open(
+                    "Choose a card to remove",
+                    entry.value,
+                    cards =>
+                    {
+                        foreach (var card in cards)
+                            RunManager.Instance.deck.Remove(card);
 
-                            manager.ReturnToMap();
-                        });
-                };
+                        ExecuteEntry(index + 1, option, manager);
+                    });
+                break;
+
             case EventOptionType.Damage:
-                return () =>
-                {
-                    RunManager.Instance.player.TakeDamage(option.value);
+                RunManager.Instance.player.TakeDamage(entry.value);
+                ExecuteEntry(index + 1, option, manager);
+                break;
 
-                    manager.ReturnToMap();
-                };
             case EventOptionType.MaxHpGain:
-                return () =>
-                {
-                    RunManager.Instance.player.GainMaxHP(option.value);
+                RunManager.Instance.player.GainMaxHP(entry.value);
+                ExecuteEntry(index + 1, option, manager);
+                break;
 
-                    manager.ReturnToMap();
-                };
             case EventOptionType.MaxHpLoss:
-                return () =>
-                {
-                    RunManager.Instance.player.LoseMaxHP(option.value);
-
-                    manager.ReturnToMap();
-                };
+                RunManager.Instance.player.LoseMaxHP(entry.value);
+                ExecuteEntry(index + 1, option, manager);
+                break;
 
             default:
-                return () =>
-                {
-                    manager.ReturnToMap();
-                };
+                ExecuteEntry(index + 1, option, manager);
+                break;
         }
     }
 }

@@ -2,120 +2,201 @@ public static class EffectDescription
 {
     public static string Get(EffectEntry effect, EffectContext ctx)
     {
-        if (effect.description != null&& effect.description != "")
-            return effect.description;
+        string desc = effect.description;
+        if (effect.description != null&& effect.description != "" && effect.description != "/")
+        {
+        
+        }
+        else
+        {
+            desc=GetConditionDescription(effect, ctx);
+            string effectDesc = GetEffectDescription(effect, ctx);
+            if (desc != "")
+            {
+                desc+=effectDesc[0].ToString().ToLower() + effectDesc.Substring(1);
+            }
+            else
+            {
+                desc=effectDesc;
+            }
+        }
+        if (ctx.card!=null&&ctx.card.data.xCost)
+        {
+            desc +=" X fois";
+        }
+        desc+=".";
+        return desc;
+
+    }
+    public static string GetConditionDescription(EffectEntry effect, EffectContext ctx)
+    {
+        if (!effect.conditional) return "";
+        switch (effect.conditionType)
+        {
+            case ConditionType.KillingBlow:
+                return "Si la cible est tuée, ";
+            case ConditionType.ArmorBreak:
+                return "Si vous brisez l'armure de la cible, ";
+            default:
+                return "";
+        }
+    }
+    public static string GetEffectDescription(EffectEntry effect, EffectContext ctx)
+    {
+        bool allCharacters = ctx.card!=null && ctx.card.data.targetingMode == TargetingMode.AllCharacters;
+        bool allEnemies = ctx.card!=null && ctx.card.data.targetingMode == TargetingMode.AllEnemies;
+        bool multipleTargets=allCharacters || allEnemies;
         switch (effect.type)
         {
             case EffectType.Damage:
             {
                 string dmg = BattleCalculator.GetModifiedDescription(effect.value, StatType.Damage, ctx);
-                return $"Inflige {dmg} dégâts";
+                return $"Infligez {dmg} dégâts";
             }
             case EffectType.Multihit:
             {
                 string dmg = BattleCalculator.GetModifiedDescription(effect.value, StatType.Damage, ctx);
-                return $"Inflige {dmg} dégâts {effect.duration} fois";
+                return $"Infligez {dmg} dégâts {effect.duration} fois";
             }
 
             case EffectType.Armor:
             {
                 string armor = BattleCalculator.GetModifiedDescription(effect.value, StatType.Armor, ctx);
-                return $"Donne {armor} d'Armure";
+                return (effect.targetSelf?"Gagnez ":"Donnez ") + $"{armor} d'Armure" + (effect.targetSelf?"":" à la cible");
             }
 
             case EffectType.Heal:
             {
                 string heal = BattleCalculator.GetModifiedDescription(effect.value, StatType.Heal, ctx);
-                return $"Soigne {heal} PV";
+                return $"Récupérez {heal} PV";
             }
             case EffectType.Status:
             {
                 int val = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
                 int dur = BattleCalculator.GetModifiedValue(effect.duration, StatType.StatusDuration, ctx);
-                StatusEffect stat=StatusEffect.Factory(effect.statusType,effect.value,effect.duration);
-                if (stat.Duration>0)
+                StatusEffect stat=StatusEffect.Factory(effect.statusType,val,dur);
+                if (stat.generic) 
                 {
                     if (effect.targetSelf)
                     {
-                        return $"Reçoit {stat.Name} ({stat.Duration})";
+                        return $"Gagnez {stat.Duration} de {stat.Name}";
                     }
                     else
                     {
-                        return $"Applique {stat.Name} ({stat.Duration})";
+                        return $"Appliquez {stat.Duration} de {stat.Name}";
                     }
                 }
+                else if (effect.statusType==StatusType.Strength||effect.statusType==StatusType.Dexterity||effect.statusType==StatusType.Speed)
+                    {
+                        if (effect.targetSelf)
+                        {
+                            if (stat.Value >= 0)
+                                return $"Gagnez {stat.Value} de {stat.Name}";
+                            else 
+                                return $"Perdez {-stat.Value} de {stat.Name}";
+                        }
+                        else
+                        {
+                            if (stat.Value >= 0)
+                                return (multipleTargets?"Toutes les cibles gagnent":"La cible gagne") + $" {stat.Value} de {stat.Name}";
+                            else
+                                return (multipleTargets?"Toutes les cibles perdent":"La cible perd") + $" {-stat.Value} de {stat.Name}";
+                        }
+                    }
                 else
                     {
-                        return $"Donne {stat.Value} de {stat.Name}";
+                        //Remove last character if it's a dot or a plus sign
+                        string desc= stat.Desc();
+                        if (desc.EndsWith(".") || desc.EndsWith("+"))
+                        {
+                            desc = desc.Substring(0, desc.Length - 1);
+                        }
+                        return desc;
                     }
             }
 
             case EffectType.DeleteNextTurn:
             {
-                return $"Supprime le prochain tour de la cible";
+                return multipleTargets?"Supprimez le prochain tour de toutes les cibles":"Supprimez le prochain tour de la cible";
             }
 
             case EffectType.AdvanceTurn:
             {
+                string turns = BattleCalculator.GetModifiedDescription(effect.value, StatType.TurnManipulationAdvance, ctx);
                 if (effect.targetSelf)
-                    return $"Avance votre prochain tour ({effect.value})";
-                int turns = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
-                return $"Avance le prochain tour de la cible ({turns})";
+                    return $"Avancez votre prochain tour ({turns})";
+                return (multipleTargets?"Avancez les prochains tours de toutes les cibles":"Avancez le prochain tour de la cible") + $" ({turns})";
             }
 
             case EffectType.DelayTurn:
             {
+                string turns = BattleCalculator.GetModifiedDescription(effect.value, StatType.TurnManipulationDelay, ctx);
                 if (effect.targetSelf)
-                    return $"Retarde votre prochain tour ({effect.value})";
-                int turns = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
-                return $"Retarde le prochain tour de la cible ({turns})";
+                    return $"Retardez votre prochain tour ({turns})";
+                return (multipleTargets?"Retardez les prochains tours de toutes les cibles":"Retardez le prochain tour de la cible") + $" ({turns})";
             }
             case EffectType.Draw:
             {
-                return $"Pioche {effect.value} carte"+(effect.value>1?"s":"")+".";
+                return $"Piochez {effect.value} carte"+(effect.value>1?"s":"");
             }
             case EffectType.Discard:
             {
-                return $"Défausse {effect.value} carte"+(effect.value>1?"s":"")+".";
+                return $"Défaussez {effect.value} carte"+(effect.value>1?"s":"");
             }
             case EffectType.Exhaust:
             {
-                return $"Epuise {effect.value} carte"+(effect.value>1?"s":"")+" de votre main";
+                return $"Epuisez {effect.value} carte"+(effect.value>1?"s":"")+" de votre main";
             }
             case EffectType.LoseHP:
             {
-                return $"Perdez {effect.value} PV";
+                return $"Perdez "+transform(effect.value,"tous vos")+" PV";
             }
             case EffectType.GainEnergy:
             {
-                return $"Gagnez {effect.value} d'énergie.";
+                return $"Gagnez {effect.value} d'énergie";
             }
             case EffectType.AddCardToHand:
             {
-                return $"Ajoute {effect.value} <color=green>{effect.cardID}</color> à votre main.";
+                return $"Ajoutez {effect.value} <color=green>{effect.cardID}</color> à votre main";
             }
             case EffectType.StealBuff:
             {
-                return $"Vole {effect.value} buff"+(effect.value>1?"s":"")+" de la cible.";
+                return $"Volez "+transform(effect.value, "tous les")+" buff"+(effect.value!=1?"s":"")+" de la cible"+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
             }
             case EffectType.TransferDebuff:
             {
-                return $"Transfère {effect.value} debuff"+(effect.value>1?"s":"")+" de vous à la cible.";
+                return $"Transférez "+transform(effect.value, "tous vos")+" debuff"+(effect.value!=1?"s":"")+" de vous à la cible"+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
             }
             case EffectType.DispelBuff:
             {
-                return $"Dissipe {effect.value} buff"+(effect.value>1?"s":"");
+                return $"Dissipez "+transform(effect.value, (effect.targetSelf?"tous vos":"tous les"))+" buff"+(effect.value!=1?"s":"")+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
             }
             case EffectType.DispelDebuff:
             {
-                return $"Dissipe {effect.value} debuff"+(effect.value>1?"s":"");
+                return $"Dissipez "+transform(effect.value, (effect.targetSelf?"tous vos":"tous les"))+" debuff"+(effect.value!=1?"s":"")+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
             }
             case EffectType.EndTurn:
             {
-                return $"Termine votre tour.";
+                return $"Terminez votre tour";
+            }
+            case EffectType.Gravity:
+            {
+                return  multipleTargets?$"Les cibles perdent {effect.value}% de leurs PV":$"La cible perd {effect.value}% de ses PV";
+            }
+            case EffectType.Break:
+            {
+                if (effect.targetSelf)
+                {
+                    return $"Perdez votre Armure";
+                }
+                    return $"Brisez l'Armure de la cible";
             }
             default:
-                return "Effet inconnu...";
+                return "Effet inconnu..";
         }
+    }
+    private static string transform(int value, string all)
+    {
+        return (value != -1 ? value.ToString() :all);
     }
 }

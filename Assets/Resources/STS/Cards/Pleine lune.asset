@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Pleine lune
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: Pleine lune
+  collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 30c5ead21ee130e4ea5279b762b957fd, type: 2}
   cost: 2
   type: 2
@@ -20,10 +21,15 @@ MonoBehaviour:
   effects:
   - type: 3
     value: 1
-    targetSelf: 0
+    targetSelf: 1
     statusType: 7
     duration: 0
+    description: 
+    cardID: 
   targetingMode: 0
   modifiers: []
   exhaust: 0
   retain: 0
+  innate: 0
+  favoredCharacter: 9
+  animationSpeed: 1

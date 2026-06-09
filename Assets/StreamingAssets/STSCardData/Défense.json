@@ -1,0 +1,32 @@
+{
+  "id": "Défense",
+  "collectionCardId": "",
+  "cost": 1,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Common",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Armor",
+      "value": 1,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Starting",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
+}

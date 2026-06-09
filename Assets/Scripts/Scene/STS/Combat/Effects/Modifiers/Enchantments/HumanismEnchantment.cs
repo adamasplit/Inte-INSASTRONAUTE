@@ -5,7 +5,7 @@ public class HumanismEnchantment : EnchantmentData
     public HumanismEnchantment()
     {
         name = "Humanisme";
-        description = $"Traverse l'Armure";
+        description = $"Les dégâts de cette carte ignorent l'Armure.";
         maxLevel = 1;
     }
 

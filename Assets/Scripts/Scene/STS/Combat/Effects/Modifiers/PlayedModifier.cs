@@ -9,7 +9,7 @@ public class PlayedModifier : StatModifier
 
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {
-        return stat == type && ctx.state.cardsPlayedThisTurn > 0;
+        return base.AppliesTo(stat, ctx) && (ctx!=null && ctx.state!=null && ctx.state.cardsPlayedThisTurn > 0);
     }
     public override int Modify(int value, EffectContext ctx)
     {
@@ -19,6 +19,6 @@ public class PlayedModifier : StatModifier
     }
     public override string Describe()
     {
-        return $"+{perCard} {type} par carte jouée ce tour";
+        return $"+{perCard} {StatTypeString.ToFrench(type)} par carte jouée ce tour";
     }
 }

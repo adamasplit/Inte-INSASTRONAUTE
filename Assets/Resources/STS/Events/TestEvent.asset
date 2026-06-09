@@ -12,15 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cd8dfbaa6b4ba54bbcfde29ea06fc65, type: 3}
   m_Name: TestEvent
   m_EditorClassIdentifier: Assembly-CSharp::EventDataSO
-  title: ???
+  title: baba
   description: La nuit tombe...
   image: {fileID: 0}
   options:
-  - text: "Am\xE9liorer 3 cartes"
+  - text: "R\xE9viser pendant la nuit"
     icon: {fileID: 0}
-    type: 8
-    value: 3
-  - text: Se soigner de 10 PV
+    entries:
+    - type: 7
+      value: 10
+    - type: 5
+      value: 20
+  - text: Se reposer
     icon: {fileID: 0}
-    type: 4
-    value: 10
+    entries:
+    - type: 4
+      value: 25

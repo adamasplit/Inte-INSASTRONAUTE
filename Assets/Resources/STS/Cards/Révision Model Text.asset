@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: "R\xE9vision Model Text"
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: "R\xE9vision Model Text"
+  collectionCardId: 
   collectionCard: {fileID: 11400000, guid: f4aa7a24b7e4116488e45d3ac1275e04, type: 2}
   cost: 1
+  xCost: 0
   type: 1
   rarity: 0
   effects:
@@ -29,4 +31,7 @@ MonoBehaviour:
   modifiers: []
   exhaust: 0
   retain: 0
-  favoredCharacter: 10
+  innate: 0
+  favoredCharacter: 11
+  animationSpeed: 1
+  startingCount: 5

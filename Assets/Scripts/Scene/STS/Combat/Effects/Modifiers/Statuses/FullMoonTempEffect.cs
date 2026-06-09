@@ -6,8 +6,9 @@ public class FullMoonTempEffect : StatusEffect
     {
         Duration = 1;
         Value = value;
-        Name = "Pleine lune (temporaire)";
-        buff=true;
+        Name = "Perte de Force";
+        buff=false;
+        debuff=false;
     }
     public override void InsertInto(List<StatusEffect> list)
     {

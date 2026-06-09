@@ -7,6 +7,7 @@ public class WeaknessStatus : StatusEffect
         Name = "Affaibli";
         modifierType = ModifierType.Multiplicative;
         debuff=true;
+        generic=true;
     }
 
     public override bool AppliesTo(StatType stat, EffectContext ctx)

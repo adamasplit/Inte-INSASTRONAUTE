@@ -13,20 +13,22 @@ MonoBehaviour:
   m_Name: Planification
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: Planification
+  collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 668413857164f0a4bb942813ad0192fc, type: 2}
   cost: 0
+  xCost: 0
   type: 1
   rarity: 2
   effects:
   - type: 12
-    value: 1
+    value: 3
     targetSelf: 0
     statusType: 0
     duration: 0
     description: 
     cardID: 
   - type: 6
-    value: 20
+    value: 10
     targetSelf: 1
     statusType: 8
     duration: 2
@@ -36,4 +38,7 @@ MonoBehaviour:
   modifiers: []
   exhaust: 0
   retain: 0
+  innate: 0
   favoredCharacter: 6
+  animationSpeed: 1
+  startingCount: 1

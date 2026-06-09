@@ -2,6 +2,7 @@
   "id": "Frappe infinie",
   "collectionCardId": null,
   "cost": 0,
+  "xCost": false,
   "type": "Attaque",
   "rarity": "Special",
   "targetingMode": "Enemy",
@@ -12,13 +13,20 @@
       "type": "Multihit",
       "value": 1,
       "targetSelf": false,
+      "targetOthers": false,
       "statusType": "Strength",
       "duration": 12,
       "description": "",
-      "cardID": ""
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
     }
   ],
   "modifiers": [],
   "favoredCharacter": "Impossible",
-  "animationSpeed": 1.0
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 0
 }

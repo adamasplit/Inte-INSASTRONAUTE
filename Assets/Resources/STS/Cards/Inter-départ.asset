@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: "Inter-d\xE9part"
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: "Inter-d\xE9part"
+  collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 1a3915f44d98bbc49a119e6b85f3094a, type: 2}
   cost: 0
+  xCost: 0
   type: 0
   rarity: 0
   effects:
@@ -40,7 +42,7 @@ MonoBehaviour:
     description: 
     cardID: 
   - type: 3
-    value: 1
+    value: 0
     targetSelf: 0
     statusType: 2
     duration: 1
@@ -64,4 +66,6 @@ MonoBehaviour:
   modifiers: []
   exhaust: 1
   retain: 0
+  innate: 0
   favoredCharacter: 9
+  animationSpeed: 1

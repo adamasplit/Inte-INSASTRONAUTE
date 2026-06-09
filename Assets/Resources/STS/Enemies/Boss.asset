@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Boss
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Boss
-  maxHP: 100
+  maxHP: 150
   pattern:
   - {fileID: 11400000, guid: d8ffafdfb06c29744a6dadf200def953, type: 2}
   - {fileID: 11400000, guid: 2ce7f3460e042954ba14f630cb9b5dda, type: 2}
@@ -27,3 +27,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e9e09946711bd0b4ca74d517fb11babe, type: 2}
   rewardCards:
   - {fileID: 11400000, guid: d1ea40f05d81b044db2fd8ad86c7bac7, type: 2}
+  startingStatus: 33
+  startingStatusDuration: 0
+  startingStatusValue: 1

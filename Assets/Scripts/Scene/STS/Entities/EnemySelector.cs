@@ -17,11 +17,11 @@ public static class EnemySelector
         var candidates = pool.enemies
             .Where(e =>
                 e.minFloor <= floor &&
-                e.maxFloor >= floor &&
+                (e.act==-1 || e.act==RunManager.Instance.act) &&
+                (e.maxFloor >= floor||e.maxFloor==-1) &&
                 e.elite == elite &&
                 e.boss == boss)
             .ToList();
-        Debug.Log($"Found {candidates.Count} candidates");
         if (candidates.Count == 0)
         {
             Debug.LogError("No enemy found for this config");

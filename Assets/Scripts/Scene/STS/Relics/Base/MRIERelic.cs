@@ -1,17 +1,18 @@
-public class MRIERelic:Relic
+public class MRIERelic:BaseRelic
 {
-    public MRIERelic()
+    public MRIERelic():base()
     {
-        name="Coeur galactique";
-        description="Au début de chaque combat, ajoute 1 Météorite à votre défausse.";
-        rarity=RelicRarity.Base;
+        namesByStage[0] = "Coeur galactique";
+        descriptionsByStage[0] = "Au début de chaque combat, ajoute 1 Météorite à votre pioche et une Galaxie à votre défausse.";
+        Upgrade(0);
     }
     public override void OnCombatStart(Character character)
     {
         base.OnCombatStart(character);
         if (character is Player player)
         {
-            player.GetCombatManager().deck.AddToHand(new CardInstance(STSCardDatabase.Get("Météorite")));
+            player.GetCombatManager().deck.drawPile.Add(new CardInstance(STSCardDatabase.Get("Météorite")));
+            player.GetCombatManager().deck.discardPile.Add(new CardInstance(STSCardDatabase.Get("Galaxie")));
         }
     }
 }

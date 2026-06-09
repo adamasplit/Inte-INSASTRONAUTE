@@ -1,0 +1,46 @@
+{
+  "id": "Ultravibration",
+  "collectionCardId": "MECA",
+  "cost": 0,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Uncommon",
+  "targetingMode": "AllCharacters",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 15,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
+    },
+    {
+      "type": "Heal",
+      "value": 5,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "MECA",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "startingCount": 1
+}

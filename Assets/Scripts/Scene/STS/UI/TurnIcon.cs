@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class TurnIcon : MonoBehaviour
 {
+    public GameObject highlight;
     public Image outline;
     public Image portrait;
     public Image background;
@@ -21,6 +22,10 @@ public class TurnIcon : MonoBehaviour
         portrait.gameObject.SetActive(portrait.sprite != null);
 
         background.color = character.isPlayer ? Color.blue : Color.red;
+        if (character.dead)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     void Update()
@@ -41,7 +46,7 @@ public class TurnIcon : MonoBehaviour
         targetPosition = pos;
     }
 
-    public bool IsMoving(float epsilon = 0.1f)
+    public bool IsMoving(float epsilon = 0.01f)
     {
         if (preview)
             return false;
@@ -50,6 +55,10 @@ public class TurnIcon : MonoBehaviour
         float dx = current.x - targetPosition.x;
         float dz = current.z - targetPosition.z;
         return (dx * dx + dz * dz) > (epsilon * epsilon);
+    }
+    public void SetHighlight(bool highlight)
+    {
+        this.highlight.SetActive(highlight);
     }
 
     public void SetPreview(bool preview)

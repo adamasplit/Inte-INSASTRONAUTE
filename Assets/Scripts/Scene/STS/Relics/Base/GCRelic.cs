@@ -1,14 +1,19 @@
-public class GCRelic:Relic
+public class GCRelic:BaseRelic
 {
-    public GCRelic()
+    public GCRelic():base()
     {
-        name="Fondation solide";
-        description="À la fin de chaque tour (ennemi ou allié), donne 2 d'Armure. L'Armure n'est pas perdue en cas de tours consécutifs.";
+        namesByStage[0] = "Fondation solide";
+        descriptionsByStage[0] = "À la fin de chaque tour (ennemi ou allié), donne 3 d'Armure. L'Armure n'est pas perdue en cas de tours consécutifs.";
         rarity=RelicRarity.Base;
+        Upgrade(0);
     }
-    public override void OnAnyTurnEnd(Character character)
+    public override void OnFieldTurnEnd(Character character)
     {
-        RunManager.Instance.player.AddArmor(2);
+        if (character.isPlayer)
+        {
+            RunManager.Instance.player.AddArmor(3);
+            VFXManager.Instance.PlayEffect("GCRelicActivate", character);
+        }
     }
     public override int ArmorOnTurnStart(int previousArmor,Character character)
     {

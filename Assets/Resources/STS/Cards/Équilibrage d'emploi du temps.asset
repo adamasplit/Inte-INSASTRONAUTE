@@ -13,22 +13,30 @@ MonoBehaviour:
   m_Name: "\xC9quilibrage d'emploi du temps"
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: "\xC9quilibrage d'emploi du temps"
+  collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 9818239ccf1b3c04099be22da29fab5c, type: 2}
   cost: 0
   type: 1
   rarity: 4
   effects:
   - type: 6
-    value: 10
+    value: 4
     targetSelf: 0
     statusType: 0
     duration: 0
+    description: 
+    cardID: 
   - type: 5
-    value: 10
+    value: 4
     targetSelf: 1
     statusType: 0
     duration: 0
+    description: 
+    cardID: 
   targetingMode: 1
   modifiers: []
   exhaust: 0
   retain: 0
+  innate: 0
+  favoredCharacter: 9
+  animationSpeed: 1

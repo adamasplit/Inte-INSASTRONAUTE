@@ -23,7 +23,6 @@ public static class PlayersDatabase
 
             players[Enum.Parse<SelectableCharacter>(dto.characterId)] = dto;
         }
-        Debug.Log($"Loaded {players.Count} players.");
     }
     public static PlayerInfoDTO Get(SelectableCharacter character)
     {
