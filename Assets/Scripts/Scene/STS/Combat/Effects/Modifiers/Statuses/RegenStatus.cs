@@ -12,6 +12,10 @@ public class RegenStatus : StatusEffect
     public override void OnTurnStart(Character target)
     {
         target.Heal(Duration);
+        Tick(target);
+    }
+    public override void OnTurnEnd(Character target)
+    {
     }
     public override string Desc()
     {

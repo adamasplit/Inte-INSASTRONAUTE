@@ -87,7 +87,7 @@ public class EffectEntryDrawer : PropertyDrawer
                 durationProp);
             y += lineHeight + spacing;
         }
-        if ((EffectType)typeProp.enumValueIndex == EffectType.AddCardToHand)
+        if ((EffectType)typeProp.enumValueIndex == EffectType.AddCardToHand|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDrawPile|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDiscardPile)
         {
             var cardIDProp = property.FindPropertyRelative("cardID");
             EditorGUI.PropertyField(
@@ -114,6 +114,27 @@ public class EffectEntryDrawer : PropertyDrawer
                 conditionValueProp);
             y += lineHeight + spacing;
         }
+        if ((EffectType)typeProp.enumValueIndex == EffectType.CardSelection)
+        {
+            var cardSelectionSourceProp = property.FindPropertyRelative("cardSelectionSource");
+            var cardFilterTagsProp = property.FindPropertyRelative("cardFilterTags");
+            var cardSelectionEffectProp = property.FindPropertyRelative("cardSelectionEffect");
+
+            EditorGUI.PropertyField(
+                new Rect(position.x, y, position.width, lineHeight),
+                cardSelectionSourceProp);
+            y += lineHeight + spacing;
+
+            EditorGUI.PropertyField(
+                new Rect(position.x, y, position.width, lineHeight),
+                cardFilterTagsProp);
+            y += lineHeight + spacing*30;
+
+            EditorGUI.PropertyField(
+                new Rect(position.x, y, position.width, lineHeight),
+                cardSelectionEffectProp);
+            y += lineHeight + spacing;
+        }
 
         EditorGUI.EndProperty();
     }
@@ -135,13 +156,17 @@ public class EffectEntryDrawer : PropertyDrawer
         {
             lines += 1; // duration for multihit
         }
-        if ((EffectType)typeProp.enumValueIndex == EffectType.AddCardToHand)
+        if ((EffectType)typeProp.enumValueIndex == EffectType.AddCardToHand|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDrawPile|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDiscardPile)
         {
             lines += 1; // cardID for AddCardToHand
         }
         if ((EffectType)typeProp.enumValueIndex == EffectType.StealBuff || (EffectType)typeProp.enumValueIndex == EffectType.TransferDebuff||(EffectType)typeProp.enumValueIndex == EffectType.DispelBuff || (EffectType)typeProp.enumValueIndex == EffectType.DispelDebuff)
         {
             lines += 1; // trueEffect for StealBuff, TransferDebuff, DispelBuff and DispelDebuff
+        }
+        if ((EffectType)typeProp.enumValueIndex == EffectType.CardSelection)
+        {
+            lines += 6; // cardSelectionSource + cardFilterTags + cardSelectionEffect + (potentially more for cardFilterTags if we wanted to display them individually)
         }
         if (conditionalProp.boolValue)
         {

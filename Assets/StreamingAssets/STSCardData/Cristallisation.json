@@ -1,6 +1,8 @@
 {
-  "id": "Cristallisation",
+  "id": "cristallisation",
+  "cardName": "Cristallisation",
   "collectionCardId": "",
+  "iconId": "Cristal",
   "cost": 1,
   "xCost": false,
   "type": "Attaque",
@@ -21,7 +23,10 @@
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
-      "trueEffect": false
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     },
     {
       "type": "Status",
@@ -35,12 +40,17 @@
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
-      "trueEffect": false
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "CFI",
   "animationSpeed": 1.0,
   "innate": false,
-  "startingCount": 0
+  "infinite": false,
+  "created": false,
+  "startingCount": 1
 }

@@ -1,6 +1,8 @@
 {
-  "id": "Recristallisation",
+  "id": "recristallisation",
+  "cardName": "Recristallisation",
   "collectionCardId": "",
+  "iconId": "Cristal",
   "cost": 0,
   "xCost": false,
   "type": "Attaque",
@@ -21,7 +23,10 @@
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
-      "trueEffect": false
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     },
     {
       "type": "Damage",
@@ -35,12 +40,17 @@
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
-      "trueEffect": false
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "Impossible",
   "animationSpeed": 0.1,
   "innate": false,
+  "infinite": false,
+  "created": false,
   "startingCount": 0
 }

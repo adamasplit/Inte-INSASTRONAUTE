@@ -1,6 +1,8 @@
 {
-  "id": "Bouclier",
+  "id": "bouclier",
+  "cardName": "Bouclier",
   "collectionCardId": "",
+  "iconId": "Armure",
   "cost": 2,
   "xCost": false,
   "type": "Compétence",
@@ -20,8 +22,11 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
-      "trueEffect": false
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     },
     {
       "type": "Status",
@@ -34,8 +39,11 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
-      "trueEffect": false
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     },
     {
       "type": "Draw",
@@ -48,13 +56,18 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
-      "trueEffect": false
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "Impossible",
   "animationSpeed": 1.0,
   "innate": false,
+  "infinite": false,
+  "created": false,
   "startingCount": 0
 }

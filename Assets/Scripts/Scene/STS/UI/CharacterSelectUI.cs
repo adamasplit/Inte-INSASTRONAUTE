@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 public class CharacterSelectUI : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class CharacterSelectUI : MonoBehaviour
     public TextMeshProUGUI relicDescriptionText;
     public Relic relic;
     public RectTransform boxContainer;
-    void Awake()
+    async void Awake()
     {
         foreach (SelectableCharacter character in System.Enum.GetValues(typeof(SelectableCharacter)))
         {
@@ -27,7 +28,7 @@ public class CharacterSelectUI : MonoBehaviour
             CharacterSelectButton btn = btnObj.GetComponent<CharacterSelectButton>();
             btn.Init(character, OnCharacterSelected);
         }
-        PlayersDatabase.Load();
+        await PlayersDatabase.LoadAsync();
         OnCharacterSelected(SelectableCharacter.EP);
         circularMenu.Init();
         Hide();
@@ -67,7 +68,8 @@ public class CharacterSelectUI : MonoBehaviour
         };
         relicDescriptionText.text = $"<color=yellow>{relic.name}</color>\n";
         relicDescriptionText.text += relic.Describe();
-        backgroundImage.color= SelectableCharacterUtils.getCharacterColor(character);
+        Color col=SelectableCharacterUtils.getCharacterColor(character);
+        backgroundImage.color= new Color(col.r*0.4f, col.g*0.4f, col.b*0.4f, 1f);
         confirmButton.onClick.RemoveAllListeners();
         confirmButton.onClick.AddListener(() => OnCharacterConfirm(character));
     }

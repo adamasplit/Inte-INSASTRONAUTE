@@ -46,15 +46,15 @@ public static class EnchantManager
             possibleEnchants.Add((EnchantType.Unbreaking, 1.0f));
             possibleEnchants.Add((EnchantType.CurseOfVanishing, 0.5f));
         }
-        else if (!card.HasEnchantment("Infinity")&&!card.HasEnchantment("Mécanique"))
+        else if (!card.HasEnchantment("Infinity")&&!card.HasEnchantment("Mécanique")&&!card.data.infinite)
         {
             possibleEnchants.Add((EnchantType.Infinity, 0.5f));
         }
-        if (card.data.targetingMode==TargetingMode.AllEnemies||card.data.targetingMode==TargetingMode.AllCharacters)
+        if (card.targetingMode==TargetingMode.AllEnemies||card.targetingMode==TargetingMode.AllCharacters)
         {
             possibleEnchants.Add((EnchantType.SweepingEdge, 0.5f));
         }
-        if (card.data.targetingMode==TargetingMode.Enemy||card.data.targetingMode==TargetingMode.RandomEnemy)
+        if (card.targetingMode==TargetingMode.Enemy||card.targetingMode==TargetingMode.RandomEnemy)
         {
             if (!card.data.effects.Exists(e=>e.type==EffectType.Damage)) possibleEnchants.Add((EnchantType.Sharpness, 1.0f));
             if (!card.data.effects.Exists(e=>e.type==EffectType.DelayTurn)) possibleEnchants.Add((EnchantType.Knockback, 0.6f));

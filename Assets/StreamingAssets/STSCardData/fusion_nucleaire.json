@@ -1,0 +1,39 @@
+{
+  "id": "fusion_nucleaire",
+  "cardName": "Fusion nucléaire",
+  "collectionCardId": "",
+  "iconId": "Hollow",
+  "cost": 1,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Legendary",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": true,
+  "effects": [
+    {
+      "type": "CardSelection",
+      "value": 2,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "Merge"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "CFI",
+  "animationSpeed": 1.0,
+  "innate": true,
+  "infinite": true,
+  "created": false,
+  "startingCount": 1
+}

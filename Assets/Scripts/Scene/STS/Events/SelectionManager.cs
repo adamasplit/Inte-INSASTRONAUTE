@@ -4,9 +4,11 @@ public class SelectionManager : MonoBehaviour
 {
     public static SelectionManager Instance;
 
-    public List<STSCardData> selectedCards = new();
+    public List<CardInstance> selectedCards = new();
 
-    System.Action<List<STSCardData>> onComplete;
+    System.Action<List<CardInstance>> onComplete;
+    public bool selectionMode;
+    public int requiredCount;
 
     void Awake()
     {
@@ -15,23 +17,35 @@ public class SelectionManager : MonoBehaviour
 
     public void StartSelection(
         int count,
-        System.Action<List<STSCardData>> callback)
+        System.Action<List<CardInstance>> callback)
     {
         selectedCards.Clear();
         onComplete = callback;
 
         // activer UI deck selection mode
-        GlobalUIManager.Instance.EnableCardSelection(count);
+        EnableCardSelection(count);
     }
 
-    public void OnCardClicked(STSCardData card)
+    public void OnCardClicked(CardInstance card)
     {
         selectedCards.Add(card);
 
-        if (selectedCards.Count >= GlobalUIManager.Instance.requiredCount)
+        if (selectedCards.Count >= requiredCount)
         {
             onComplete?.Invoke(selectedCards);
-            GlobalUIManager.Instance.DisableCardSelection();
+            DisableCardSelection();
         }
+    }
+
+    public void EnableCardSelection(int count)
+    {
+        selectionMode = true;
+        requiredCount = count;
+    }
+
+    public void DisableCardSelection()
+    {
+        selectionMode = false;
+        requiredCount = 0;
     }
 }

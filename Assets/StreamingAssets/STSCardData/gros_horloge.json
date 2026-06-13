@@ -1,0 +1,39 @@
+{
+  "id": "gros_horloge",
+  "cardName": "Gros Horloge",
+  "collectionCardId": "delirium",
+  "iconId": null,
+  "cost": 2,
+  "xCost": false,
+  "type": "Pouvoir",
+  "rarity": "Rare",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Clock",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "infinite": false,
+  "created": false,
+  "startingCount": 0
+}

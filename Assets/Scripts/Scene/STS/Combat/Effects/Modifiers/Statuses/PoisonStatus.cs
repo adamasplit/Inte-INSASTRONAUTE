@@ -12,6 +12,10 @@ public class PoisonStatus : StatusEffect
     public override void OnTurnStart(Character target)
     {
         target.TakeDamage(Duration);
+        Tick(target);
+    }
+    public override void OnTurnEnd(Character target)
+    {
     }
     public override string Desc()
     {

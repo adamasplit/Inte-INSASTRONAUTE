@@ -199,7 +199,7 @@ public class CombatManager : MonoBehaviour
             {
                 playedView.Flash();
             }
-            if (source != null && source.isPlayer && card.data.targetingMode == TargetingMode.RandomEnemy)
+            if (source != null && source.isPlayer && card.targetingMode == TargetingMode.RandomEnemy)
             {
                 var aliveEnemies = enemies.Where(e => e != null && e.IsAlive).ToList();
                 if (aliveEnemies.Any())
@@ -253,7 +253,7 @@ public class CombatManager : MonoBehaviour
                     if (effect.targetSelf)
                     {
                         VFXManager.Instance.PlayEffect(effect, ui.GetView(source).transform.position);
-                        EffectResolver.Apply(effect, ctxSelf);
+                        yield return EffectResolver.Apply(effect, ctxSelf);
                     }
                     else
                     {
@@ -261,7 +261,7 @@ public class CombatManager : MonoBehaviour
                         {
                             VFXManager.Instance.PlayEffect(effect, ui.GetView(target).transform.position);
                         }
-                        EffectResolver.Apply(effect, ctxTarget);
+                        yield return EffectResolver.Apply(effect, ctxTarget);
                     }
                 }
                 ui.RefreshUI();
@@ -298,10 +298,10 @@ public class CombatManager : MonoBehaviour
 
         if (source != null && source.isPlayer)
         {
-            if (card.HasEnchantment("Infinity"))
+            if (card.HasEnchantment("Infinity")||card.data.infinite)
             {
                 deck.AddToHand(card);
-                card.AddModifier(new FlatModifier(StatType.Cost, 1));
+                if (!card.data.infinite) card.AddModifier(new FlatModifier(StatType.Cost, 1));
             }
             else
             {
@@ -510,7 +510,7 @@ public class CombatManager : MonoBehaviour
             };
             //Debug.Log("Generating rewards for combat result: floor " + result.floor + ", elite: " + result.elite + ", boss: " + result.boss);
             RunManager.Instance.pendingReward = RewardGenerator.GenerateReward(result);
-            SceneManager.LoadScene("STS_Reward");
+            STSSceneLoader.Instance.LoadScene("STS_Reward");
         }
         else if (outcome == TeamOutcome.Defeat)
         {

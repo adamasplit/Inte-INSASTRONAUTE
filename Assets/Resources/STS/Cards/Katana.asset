@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: Katana
+  m_Name: katana
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: Katana
   collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 786841ea8e858bc4d9e21fff30db7161, type: 2}
+  icon: {fileID: 0}
   cost: 1
   xCost: 0
   type: 0
@@ -23,15 +24,25 @@ MonoBehaviour:
   - type: 0
     value: 6
     targetSelf: 0
+    targetOthers: 0
     statusType: 0
     duration: 0
     description: 
     cardID: 
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   targetingMode: 1
   modifiers: []
   exhaust: 0
   retain: 0
   innate: 0
+  infinite: 0
+  created: 0
   favoredCharacter: 11
   animationSpeed: 1
   startingCount: 5

@@ -1,6 +1,8 @@
 {
-  "id": "Corrosion",
+  "id": "corrosion",
+  "cardName": "Corrosion",
   "collectionCardId": "",
+  "iconId": "Affliction",
   "cost": 0,
   "xCost": true,
   "type": "Pouvoir",
@@ -16,12 +18,15 @@
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
-      "description": "La cible perd X de force.",
+      "description": "",
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
-      "trueEffect": false
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     },
     {
       "type": "Status",
@@ -30,17 +35,22 @@
       "targetOthers": false,
       "statusType": "Weakness",
       "duration": 1,
-      "description": "Appliquez X d'Affaibli.",
+      "description": "",
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
-      "trueEffect": false
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "CFI",
   "animationSpeed": 1.0,
   "innate": false,
+  "infinite": false,
+  "created": false,
   "startingCount": 0
 }

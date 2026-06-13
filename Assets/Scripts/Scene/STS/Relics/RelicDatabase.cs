@@ -20,7 +20,10 @@ public static class RelicDatabase
             new RestHealRelic(),
             new UltimateStrengthRelic(),
             new UltimateDexterityRelic(),
-            new MoraleRelic()
+            new MoraleRelic(),
+            new ThornsRelic(),
+            new ISRelic(),
+            new DSRelic()
         };
     }
     public static List<Relic> GetRelicsByRarity(RelicRarity rarity)

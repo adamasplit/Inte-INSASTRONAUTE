@@ -1,0 +1,39 @@
+{
+  "id": "etude_d_impact",
+  "cardName": "Étude d'impact",
+  "collectionCardId": "",
+  "iconId": "Zone",
+  "cost": 1,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "AddCardToDrawPile",
+      "value": 2,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "Energie renouvelable",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "EP",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "infinite": false,
+  "created": false,
+  "startingCount": 1
+}

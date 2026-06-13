@@ -80,7 +80,7 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
         var target = GetHoveredTarget();
         var sim = turnSystem.SimulateCard(turnSystem.timeline, cardView.cardInstance, GetTargets(target));
         var future = turnSystem.GetFuture(sim,10);
-        ui.HighlightTargets(cardView.cardInstance.data.targetingMode, target);
+        ui.HighlightTargets(cardView.cardInstance.targetingMode, target);
         timelineUI.Display(future,true,GetTargets(target));
         cardView.RefreshDescription(target, false, GetTargets(target));
     }
@@ -116,7 +116,7 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
             Debug.LogError("CardView has no card instance");
             return new List<Character>();
         }
-        var mode = cardView.cardInstance.data.targetingMode;
+        var mode = cardView.cardInstance.targetingMode;
         return combat.GetTargets(mode, target);
     }
     void Update()

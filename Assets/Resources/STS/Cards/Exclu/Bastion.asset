@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: Bastion
+  m_Name: bastion
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: Bastion
   collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 668413857164f0a4bb942813ad0192fc, type: 2}
+  icon: {fileID: 21300000, guid: a85e04e3f79aa7d4c8a9c2ed09c4d205, type: 3}
   cost: 1
   xCost: 0
   type: 1
@@ -31,6 +32,7 @@ MonoBehaviour:
     conditional: 0
     conditionType: 0
     conditionValue: 
+    trueEffect: 0
   - type: 6
     value: 4
     targetSelf: 1
@@ -42,6 +44,7 @@ MonoBehaviour:
     conditional: 0
     conditionType: 0
     conditionValue: 
+    trueEffect: 0
   targetingMode: 0
   modifiers: []
   exhaust: 0

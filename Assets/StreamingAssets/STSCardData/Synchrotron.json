@@ -1,6 +1,8 @@
 {
-  "id": "Synchrotron",
+  "id": "synchrotron",
+  "cardName": "Synchrotron",
   "collectionCardId": "",
+  "iconId": "Magique",
   "cost": 2,
   "xCost": false,
   "type": "Attaque",
@@ -21,7 +23,10 @@
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
-      "trueEffect": false
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     },
     {
       "type": "GainEnergy",
@@ -35,7 +40,10 @@
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
-      "trueEffect": false
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     },
     {
       "type": "LoseHP",
@@ -49,12 +57,17 @@
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
-      "trueEffect": false
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "EP",
   "animationSpeed": 1.0,
   "innate": false,
+  "infinite": false,
+  "created": false,
   "startingCount": 0
 }

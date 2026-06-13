@@ -1,0 +1,39 @@
+{
+  "id": "cycle_de_vie",
+  "cardName": "Cycle de vie",
+  "collectionCardId": "",
+  "iconId": "Buff",
+  "cost": 1,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "Player",
+  "exhaust": true,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Status",
+      "value": 1,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "LifeCycle",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "MRIE",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "infinite": false,
+  "created": false,
+  "startingCount": 0
+}

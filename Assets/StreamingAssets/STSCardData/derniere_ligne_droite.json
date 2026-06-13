@@ -1,0 +1,45 @@
+{
+  "id": "derniere_ligne_droite",
+  "cardName": "Dernière ligne droite",
+  "collectionCardId": "purple_rouen",
+  "iconId": null,
+  "cost": 0,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Epic",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 1,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": null,
+      "cardID": null,
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [
+    {
+      "type": "Damage",
+      "kind": "Played",
+      "value": 6
+    }
+  ],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "infinite": false,
+  "created": false,
+  "startingCount": 0
+}

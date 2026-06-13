@@ -1,6 +1,8 @@
 {
-  "id": "Galanterie",
+  "id": "galanterie",
+  "cardName": "Galanterie",
   "collectionCardId": "gala",
+  "iconId": null,
   "cost": 0,
   "xCost": false,
   "type": "Compétence",
@@ -21,7 +23,10 @@
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
-      "trueEffect": false
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     },
     {
       "type": "DispelBuff",
@@ -35,12 +40,17 @@
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
-      "trueEffect": true
+      "trueEffect": true,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "innate": false,
+  "infinite": false,
+  "created": false,
   "startingCount": 0
 }

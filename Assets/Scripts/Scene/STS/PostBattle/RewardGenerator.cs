@@ -121,15 +121,17 @@ public static class RewardGenerator
     static List<CardEntry> GetFloorCards(int floor,CombatResult result=null)
     {
         List<CardEntry> floorCards = new List<CardEntry>();
-        if (STSCardDatabase.allCards==null)
+        if (STSCardDatabase.allCards==null || STSCardDatabase.allCards.Count==0)
         {
-            STSCardDatabase.Load();
+            STSCardDatabase.EnsureLoadedAsync().GetAwaiter().GetResult();
         }
         foreach (var card in STSCardDatabase.allCards)
         {
-            if (card.favoredCharacter != SelectableCharacter.Aucun && RunManager.Instance != null && card.favoredCharacter != RunManager.Instance.selectedCharacter)
+            if (card.favoredCharacter != SelectableCharacter.Aucun && RunManager.Instance != null 
+            && card.favoredCharacter != RunManager.Instance.selectedCharacter
+            ||card.created)
             {
-                continue; // Skip cards that are favored for a different character
+                continue; // Skip cards that are favored for a different character or created cards
             }
             int weight;
             if (result.boss)

@@ -70,6 +70,15 @@ public class DeckManager
         discardPile.Add(card);
         OnCardDiscarded?.Invoke(card);
     }
+    public void Discard(CardInstance card)
+    {
+        if (hand.Contains(card))
+        {
+            hand.Remove(card);
+            discardPile.Add(card);
+            OnCardDiscarded?.Invoke(card);
+        }
+    }
 
     public void RemoveFromHand(CardInstance card)
     {
@@ -84,6 +93,19 @@ public class DeckManager
     public void Exhaust(CardInstance card)
     {
         exhaustPile.Add(card);
+    }
+
+    public void Delete(CardInstance card)
+    {
+        //Just remove the card from all piles without sending it to discard or exhaust
+        if (hand.Contains(card))
+        {
+            OnCardExhausted?.Invoke(card);
+        }
+        hand.Remove(card);
+        drawPile.Remove(card);
+        discardPile.Remove(card);
+        exhaustPile.Remove(card);
     }
 
     public void DiscardHand()
@@ -115,7 +137,7 @@ public class DeckManager
         {
             CardInstance instance = new CardInstance(cardToAdd);
             hand.Add(instance);
-            OnCardDrawn?.Invoke(instance);
+            OnCardAddedToHand?.Invoke(instance);
         }
     }
     public CardInstance GetAndRemoveTopCard()

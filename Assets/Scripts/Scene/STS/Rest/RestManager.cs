@@ -97,7 +97,7 @@ public class RestManager : MonoBehaviour
     }
     public void ReturnToMap()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("STS_Map");
+        STSSceneLoader.Instance.LoadScene("STS_Map");
     }
 
     void UpdateChargesDisplay()

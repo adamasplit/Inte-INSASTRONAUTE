@@ -8,12 +8,10 @@ public class LostHPModifier : StatModifier
         addedValue = amount;
         modifierType = ModifierType.Multiplicative;
     }
-
     public override int Modify(int value, EffectContext ctx)
     {
         if (ctx.source == null)
             return value;
-
         return value * (1 + addedValue * (ctx.source.maxHP - ctx.source.currentHP) / 100);
     }
 
@@ -21,4 +19,4 @@ public class LostHPModifier : StatModifier
     {
         return $"+ {addedValue}% {StatTypeString.ToFrench(type)} par % de PV perdus du lanceur";
     }
-}
+} 

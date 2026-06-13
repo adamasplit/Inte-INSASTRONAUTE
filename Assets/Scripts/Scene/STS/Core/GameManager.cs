@@ -1,6 +1,7 @@
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 public class GameManager : MonoBehaviour
 {
     public UIManager ui;
@@ -8,9 +9,9 @@ public class GameManager : MonoBehaviour
     public TurnSystem turnSystem;
     public List<STSCardData> cardsOnTest = new List<STSCardData>();
 
-    void Start()
+    async void Start()
     {
-        STSCardDatabase.Load();
+        await STSCardDatabase.LoadAsync();
         TestDatabase.Init();
         SetupGame();
         ui.Init(combat);
@@ -24,16 +25,20 @@ public class GameManager : MonoBehaviour
         if (RunManager.Instance == null||RunManager.Instance.forceTutorial)
         {
             new GameObject("RunManager").AddComponent<RunManager>();
-            RunManager.Instance.forceTutorial = true;
-            //RunManager.Instance.act = 1;
             combat.allies.Add(RunManager.Instance.player!=null ? RunManager.Instance.player : new Player("Player", 100));
             var enemies = new List<Character>
-            {
-                new Enemy("Dummy"),
-                new Enemy("Dummy"),
-                new Enemy("Dummy")
-            };
+                    {
+                        new Enemy("Dummy"),
+                        new Enemy("Dummy"),
+                        new Enemy("Dummy")
+                    };
             combat.enemies = enemies;
+            //combat.enemies = new List<Character>
+            //        {
+            //            new Enemy("Alexander"),
+            //            new Enemy("Ark"),
+            //            new Enemy("Golbez")
+            //        };
             combat.deck = new DeckManager();
 
             // Ajout de cartes de test
@@ -64,6 +69,13 @@ public class GameManager : MonoBehaviour
                         combat.deck.drawPile.Add(new CardInstance(attackCard));
                         combat.deck.drawPile.Add(new CardInstance(blockCard));
                     }
+                    enemies = new List<Character>
+                    {
+                        new Enemy("Dummy"),
+                        new Enemy("Dummy"),
+                        new Enemy("Dummy")
+                    };
+                    combat.enemies = enemies;
                 }
                 else
                 {
@@ -75,6 +87,7 @@ public class GameManager : MonoBehaviour
                     {
                         combat.deck.drawPile.Add(new CardInstance(STSCardDatabase.Get(cardData.cardName)));
                     }
+                    
                 }
             }
             combat.deck.Shuffle(combat.deck.drawPile);

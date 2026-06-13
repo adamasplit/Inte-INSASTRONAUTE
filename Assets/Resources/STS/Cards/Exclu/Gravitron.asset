@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: Gravitron
+  m_Name: gravitron
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: Gravitron
   collectionCardId: 
   collectionCard: {fileID: 0}
+  icon: {fileID: 21300000, guid: 0c335ac5eb6bcdc45b8f8ac2813197de, type: 3}
   cost: 2
   xCost: 0
   type: 1
@@ -31,6 +32,7 @@ MonoBehaviour:
     conditional: 0
     conditionType: 0
     conditionValue: 
+    trueEffect: 0
   targetingMode: 2
   modifiers: []
   exhaust: 1

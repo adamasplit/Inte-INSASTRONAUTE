@@ -20,5 +20,9 @@ public enum EffectType
     DispelDebuff,
     EndTurn,
     Gravity,
-    Break
+    Break,
+    AddRandomCardToHand,
+    AddCardToDrawPile,
+    AddCardToDiscardPile,
+    CardSelection
 }

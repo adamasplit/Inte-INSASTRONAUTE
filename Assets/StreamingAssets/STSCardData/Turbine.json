@@ -1,6 +1,8 @@
 {
-  "id": "Turbine",
+  "id": "turbine",
+  "cardName": "Turbine",
   "collectionCardId": "",
+  "iconId": "Energie",
   "cost": 2,
   "xCost": false,
   "type": "Pouvoir",
@@ -21,12 +23,17 @@
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
-      "trueEffect": false
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "EP",
   "animationSpeed": 1.0,
   "innate": false,
+  "infinite": false,
+  "created": false,
   "startingCount": 0
 }

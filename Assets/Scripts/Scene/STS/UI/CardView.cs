@@ -16,6 +16,8 @@ public class CardView : MonoBehaviour,IPointerClickHandler
     public Image rarityBorder;
     public Image rarityBorder2;
     public Image rarityBorder3;
+    public Image imgBg;
+    public Image imgOverlay;
     public Image cardImage;
     public RawImage glowOverlay;
     public TextMeshProUGUI cardTypeText;
@@ -25,15 +27,31 @@ public class CardView : MonoBehaviour,IPointerClickHandler
     bool isInitialized = false;
     public bool isAnimating;
     public RectTransform rootRect;
+    public bool selectionPreview;
+    public GameObject selectionHighlight;
+    public void toggleSelection()
+    {
+        selectionPreview = !selectionPreview;
+        selectionHighlight.SetActive(selectionPreview);
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (GlobalUIManager.Instance != null && GlobalUIManager.Instance.selectionMode)
+        if (SelectionManager.Instance != null && SelectionManager.Instance.selectionMode)
         {
-            SelectionManager.Instance.OnCardClicked(cardInstance.data);
+            SelectionManager.Instance.OnCardClicked(cardInstance);
             return;
         }
         if (ui!=null)
         {
+            if (ui.IsSelectingCards())
+            {
+                ui.selectionController.ToggleCard(this);
+
+                ui.RefreshHandLayout();
+
+                return;
+            }
+
             ui.SelectCard(this);
         }
         RestCardController restCard = GetComponentInParent<RestCardController>();
@@ -67,15 +85,26 @@ public class CardView : MonoBehaviour,IPointerClickHandler
                 return;
             }
             cardBg.color = SelectableCharacterUtils.getCharacterColor(card.data.favoredCharacter);
-            if (card.data.favoredCharacter == SelectableCharacter.Impossible )
-            {
-                specialCardOverlay.SetActive(true);
-            }
+            specialCardOverlay.SetActive(card.data.favoredCharacter == SelectableCharacter.Impossible);
             SetName(card.data.cardName);
             
             cardTypeText.text = card.data.type.ToString();
             nameText.text+= "\n<i><color=grey>" + (card.data.collectionCard != null && card.data.collectionCard.cardName != card.data.cardName ? card.data.collectionCard.cardName : "")+ "</color></i>";
             cardImage.sprite = card.data.collectionCard != null ? card.data.collectionCard.sprite : null;
+            if (cardImage.sprite==null&& card.data.icon!=null)
+            {
+                cardImage.sprite = card.data.icon;
+                // Conserve aspect ratio
+                cardImage.preserveAspect = true;
+                imgBg.enabled = true;
+                imgOverlay.enabled = true;
+            }
+            else
+            {
+                imgBg.enabled = false;
+                imgOverlay.enabled = false;
+                cardImage.preserveAspect = false;
+            }
             Color rarityColor = Color.white;
             switch (card.data.rarity)
             {
@@ -100,6 +129,8 @@ public class CardView : MonoBehaviour,IPointerClickHandler
             }
             rarityBorder.color = rarityColor;
             rarityBorder2.color = rarityColor;
+            imgBg.color=rarityColor*0.5f;
+            imgOverlay.color = new Color(rarityColor.r, rarityColor.g, rarityColor.b, 0.2f);
             
             RefreshDescription();
             if (card.enchantments.Count > 0)
@@ -131,7 +162,6 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         else
         {
             costText.text = cost>cardInstance.data.cost ? $"<color=red>{cost}</color>" : cost<cardInstance.data.cost ? $"<color=green>{cost}</color>" : cost.ToString();
-            costText.text = cost.ToString()+"</color>";
         }
     }
     public void SetDescription(string description)

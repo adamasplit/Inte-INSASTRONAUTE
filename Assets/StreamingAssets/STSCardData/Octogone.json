@@ -1,6 +1,8 @@
 {
-  "id": "Octogone",
+  "id": "octogone",
+  "cardName": "Octogone",
   "collectionCardId": "stadium",
+  "iconId": null,
   "cost": 1,
   "xCost": false,
   "type": "Compétence",
@@ -21,7 +23,10 @@
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": null,
-      "trueEffect": false
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     },
     {
       "type": "Status",
@@ -35,7 +40,10 @@
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": null,
-      "trueEffect": false
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     },
     {
       "type": "Status",
@@ -49,12 +57,17 @@
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": null,
-      "trueEffect": false
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "innate": false,
+  "infinite": false,
+  "created": false,
   "startingCount": 0
 }

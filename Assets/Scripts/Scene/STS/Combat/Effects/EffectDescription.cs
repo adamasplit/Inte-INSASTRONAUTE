@@ -1,3 +1,4 @@
+using UnityEngine;
 public static class EffectDescription
 {
     public static string Get(EffectEntry effect, EffectContext ctx)
@@ -43,8 +44,8 @@ public static class EffectDescription
     }
     public static string GetEffectDescription(EffectEntry effect, EffectContext ctx)
     {
-        bool allCharacters = ctx.card!=null && ctx.card.data.targetingMode == TargetingMode.AllCharacters;
-        bool allEnemies = ctx.card!=null && ctx.card.data.targetingMode == TargetingMode.AllEnemies;
+        bool allCharacters = ctx.card!=null && ctx.card.targetingMode == TargetingMode.AllCharacters;
+        bool allEnemies = ctx.card!=null && ctx.card.targetingMode == TargetingMode.AllEnemies;
         bool multipleTargets=allCharacters || allEnemies;
         switch (effect.type)
         {
@@ -141,11 +142,11 @@ public static class EffectDescription
             }
             case EffectType.Discard:
             {
-                return $"Défaussez {effect.value} carte"+(effect.value>1?"s":"");
+                return $"Défaussez {effect.value} carte"+(effect.value>1?"s":" au hasard");
             }
             case EffectType.Exhaust:
             {
-                return $"Epuisez {effect.value} carte"+(effect.value>1?"s":"")+" de votre main";
+                return $"Epuisez {effect.value} carte"+(effect.value>1?"s":"")+" au hasard de votre main";
             }
             case EffectType.LoseHP:
             {
@@ -190,6 +191,51 @@ public static class EffectDescription
                     return $"Perdez votre Armure";
                 }
                     return $"Brisez l'Armure de la cible";
+            }
+            case EffectType.CardSelection:
+            {
+                string pl=effect.value>1?"les":"la";
+                string cft = "";
+                foreach (var tag in effect.cardFilterTags)
+                {
+                    cft += tag switch
+                    {
+                        CardFilterTag.Attack => "Attaque",
+                        CardFilterTag.Skill => "Compétence",
+                        CardFilterTag.Power => "Pouvoir",
+                        CardFilterTag.Cost0 => "de coût 0",
+                        _ => tag.ToString()
+                    } + " ";
+                }
+                string source = effect.cardSelectionSource switch
+                {
+                    CardSelectionSource.Hand => "votre main",
+                    CardSelectionSource.DrawPile => "votre pioche",
+                    CardSelectionSource.DiscardPile => "votre défausse",
+                    _ => effect.cardSelectionSource.ToString()
+                };
+                string effectDesc= effect.cardSelectionEffect switch
+                {
+                    CardSelectionEffect.Exhaust => "épuisez-"+pl,
+                    CardSelectionEffect.Discard => "défaussez-"+pl,
+                    CardSelectionEffect.Transform => "transformez-"+pl,
+                    CardSelectionEffect.Merge => "fusionnez-"+pl,
+                    CardSelectionEffect.ReturnToHand => "ajoutez-"+pl+" à votre main",
+                    _ => effect.cardSelectionEffect.ToString()
+                };
+                return $"Choisissez {effect.value} carte"+(effect.value>1?"s":"")+(cft!= "" ? " "+cft : "")+" dans "+source+" et "+effectDesc;
+            }
+            case EffectType.AddRandomCardToHand:
+            {
+                return $"Ajoutez {effect.value} carte"+(effect.value>1?"s":"")+" aléatoire"+(effect.cardID!=null&&effect.cardID!=""? $" de type <color=green>{effect.cardID}</color>":"")+" à votre main";
+            }
+            case EffectType.AddCardToDrawPile:
+            {
+                return $"Ajoutez {effect.value} <color=green>{effect.cardID}</color> à votre pioche";
+            }
+            case EffectType.AddCardToDiscardPile:
+            {
+                return $"Ajoutez {effect.value} <color=green>{effect.cardID}</color> à votre défausse";
             }
             default:
                 return "Effet inconnu..";

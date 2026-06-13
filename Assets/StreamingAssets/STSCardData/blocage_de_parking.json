@@ -1,0 +1,39 @@
+{
+  "id": "blocage_de_parking",
+  "cardName": "Blocage de parking",
+  "collectionCardId": "parking_visiteur",
+  "iconId": null,
+  "cost": 2,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Uncommon",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "DeleteNextTurn",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": null,
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "infinite": false,
+  "created": false,
+  "startingCount": 0
+}

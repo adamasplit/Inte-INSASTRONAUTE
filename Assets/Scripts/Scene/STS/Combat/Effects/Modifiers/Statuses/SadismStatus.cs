@@ -3,7 +3,6 @@ public class SadismStatus:StatusEffect
 {
     public SadismStatus()
     {
-        Value = 20;
         Duration = -1;
         Name = "Préparation...";
         debuff=false;
@@ -29,10 +28,10 @@ public class SadismStatus:StatusEffect
     }
     public override int Modify(int damage, EffectContext ctx)
     {
-        return Mathf.FloorToInt(damage + (damage * Value) / 100);
+        return Mathf.FloorToInt(damage + (damage * 20) / 100);
     }
     public override string Desc()
     {
-        return $"{Value}% dégâts supplémentaires. Cet effet évolue lorsqu'un ennemi passe en-dessous de 80% de sa vie.";
+        return $"{20}% dégâts supplémentaires. Cet effet évolue lorsqu'un ennemi passe en-dessous de 80% de sa vie.";
     }
 }

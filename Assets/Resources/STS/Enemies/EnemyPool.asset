@@ -65,7 +65,7 @@ MonoBehaviour:
     enemies:
     - {fileID: 11400000, guid: d016aeed86060b343a1748f46c58f50b, type: 2}
     minFloor: 0
-    maxFloor: 50
+    maxFloor: 10
     act: -1
     weight: 1
     elite: 1
@@ -74,7 +74,7 @@ MonoBehaviour:
     enemies:
     - {fileID: 11400000, guid: 209b8bd4547d5ad42826840f6c73a3e3, type: 2}
     minFloor: 0
-    maxFloor: 50
+    maxFloor: 10
     act: -1
     weight: 1
     elite: 1
@@ -83,7 +83,7 @@ MonoBehaviour:
     enemies:
     - {fileID: 11400000, guid: 845a5b5209525f6478d6a650c1e11882, type: 2}
     minFloor: -1
-    maxFloor: -1
+    maxFloor: 10
     act: -1
     weight: 1
     elite: 1

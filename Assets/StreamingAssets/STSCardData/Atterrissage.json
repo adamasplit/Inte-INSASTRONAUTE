@@ -1,6 +1,8 @@
 {
-  "id": "Atterrissage",
+  "id": "atterrissage",
+  "cardName": "Atterrissage",
   "collectionCardId": "",
+  "iconId": "Choc",
   "cost": 0,
   "xCost": false,
   "type": "Attaque",
@@ -20,13 +22,18 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
-      "trueEffect": false
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "Impossible",
   "animationSpeed": 2.0,
   "innate": false,
+  "infinite": false,
+  "created": false,
   "startingCount": 0
 }

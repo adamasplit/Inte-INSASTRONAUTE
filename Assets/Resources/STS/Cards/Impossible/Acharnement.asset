@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: Acharnement
+  m_Name: acharnement
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: Acharnement
   collectionCardId: 
   collectionCard: {fileID: 0}
+  icon: {fileID: 21300000, guid: 69f0ece1bc8f5474296335c74e867859, type: 3}
   cost: 0
   xCost: 0
   type: 0
@@ -46,7 +47,7 @@ MonoBehaviour:
     trueEffect: 0
   targetingMode: 2
   modifiers: []
-  exhaust: 0
+  exhaust: 1
   retain: 0
   innate: 0
   favoredCharacter: 10

@@ -88,7 +88,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             return;
         }
 
-        var mode = cardView.cardInstance.data.targetingMode;
+        var mode = cardView.cardInstance.targetingMode;
 
         var targets = combat.GetTargets(mode, target);
 
@@ -112,13 +112,13 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             return false;
 
         if (acceptsEnemyCards)
-            return cardView.cardInstance.data.targetingMode == TargetingMode.Enemy ||
-                   cardView.cardInstance.data.targetingMode == TargetingMode.AllEnemies ||
-                   cardView.cardInstance.data.targetingMode == TargetingMode.AllCharacters||
-                   cardView.cardInstance.data.targetingMode == TargetingMode.RandomEnemy;
+            return cardView.cardInstance.targetingMode == TargetingMode.Enemy ||
+                   cardView.cardInstance.targetingMode == TargetingMode.AllEnemies ||
+                   cardView.cardInstance.targetingMode == TargetingMode.AllCharacters||
+                   cardView.cardInstance.targetingMode == TargetingMode.RandomEnemy;
         else
-            return cardView.cardInstance.data.targetingMode == TargetingMode.Player ||
-                   cardView.cardInstance.data.targetingMode == TargetingMode.AllCharacters;
+            return cardView.cardInstance.targetingMode == TargetingMode.Player ||
+                   cardView.cardInstance.targetingMode == TargetingMode.AllCharacters;
     }
     public IEnumerator FlashWhite()
     {

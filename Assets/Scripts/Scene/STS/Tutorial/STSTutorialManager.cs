@@ -332,7 +332,7 @@ public class STSTutorialManager : MonoBehaviour
 
             onComplete = () =>
             {
-                SceneManager.LoadScene("STS_Boot");
+                STSSceneLoader.Instance.LoadScene("STS_Boot");
             },
             next = () => null
         };
@@ -467,7 +467,7 @@ public class STSTutorialManager : MonoBehaviour
 
             onComplete = () =>
             {
-                SceneManager.LoadScene("STS_Boot");
+                STSSceneLoader.Instance.LoadScene("STS_Boot");
             },
             next = () => null
         };

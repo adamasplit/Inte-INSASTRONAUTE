@@ -1,0 +1,39 @@
+{
+  "id": "eveil",
+  "cardName": "Éveil",
+  "collectionCardId": "",
+  "iconId": null,
+  "cost": 1,
+  "xCost": false,
+  "type": "Pouvoir",
+  "rarity": "Rare",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Status",
+      "value": 10,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Awakening",
+      "duration": 3,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "infinite": false,
+  "created": false,
+  "startingCount": 0
+}

@@ -39,6 +39,6 @@ public class GameOverController : MonoBehaviour
     public void ToMenu()
     {
         RunManager.Instance.OnRunEnd();
-        SceneManager.LoadScene("STS_Boot");
+        STSSceneLoader.Instance.LoadScene("STS_Boot");
     }
 }

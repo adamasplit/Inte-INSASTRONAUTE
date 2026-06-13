@@ -1,0 +1,39 @@
+{
+  "id": "rush_du_matin",
+  "cardName": "Rush du matin",
+  "collectionCardId": "cafe",
+  "iconId": null,
+  "cost": 0,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "AdvanceTurn",
+      "value": 4,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": null,
+      "cardID": null,
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "infinite": false,
+  "created": false,
+  "startingCount": 0
+}

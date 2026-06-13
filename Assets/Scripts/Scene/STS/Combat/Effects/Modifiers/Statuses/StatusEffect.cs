@@ -131,6 +131,7 @@ public abstract class StatusEffect : StatModifier
             StatusType.FullBreak=>new FullBreakStatus(duration),
             StatusType.Status=>new StatusStatus(duration),
             StatusType.CostNullify=>new CostNullifyStatus(value),
+            StatusType.FollowUp=>new FollowUpStatus(),
             _ => null
         };
         return stat;

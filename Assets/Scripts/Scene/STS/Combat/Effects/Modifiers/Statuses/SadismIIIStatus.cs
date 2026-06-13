@@ -4,7 +4,6 @@ public class SadismIIIStatus:StatusEffect
 {
     public SadismIIIStatus()
     {
-        Value = 50;
         Duration = -1;
         Name = "Prêt à annihiler";
         debuff=false;
@@ -18,11 +17,11 @@ public class SadismIIIStatus:StatusEffect
     }
     public override int Modify(int damage, EffectContext ctx)
     {
-        return Mathf.FloorToInt(damage + (damage * Value) / 100);
+        return Mathf.FloorToInt(damage + (damage * 50) / 100);
     }
     public override string Desc()
     {
-        return $"{Value}% dégâts supplémentaires subis et +{Value} d'Armure gagnée. Lorsque vous attaquez un ennemi qui a moins de 50% de sa vie, déclenchez une attaque supplémentaire.";
+        return $"{50}% dégâts supplémentaires subis et +{50}% d'Armure gagnée. Lorsque vous attaquez un ennemi qui a moins de 50% de sa vie, déclenchez une attaque supplémentaire.";
     }
     public override void OnCardPlayed(Character source,Character target,CardInstance card)
     {

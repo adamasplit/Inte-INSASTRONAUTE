@@ -87,11 +87,11 @@ public class RewardManager : MonoBehaviour
         RunManager.Instance.pendingReward = null;
         if (goingToMap)
         {
-            SceneManager.LoadScene("STS_Map");
+            STSSceneLoader.Instance.LoadScene("STS_Map");
         }
         else
         {
-            SceneManager.LoadScene("STS_Retreat");
+            STSSceneLoader.Instance.LoadScene("STS_Retreat");
         }
     }
 }

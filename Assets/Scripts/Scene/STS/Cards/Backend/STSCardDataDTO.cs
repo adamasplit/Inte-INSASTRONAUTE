@@ -5,7 +5,9 @@ using System.Collections.Generic;
 public class STSCardDataDTO
 {
     public string id;
+    public string cardName;
     public string collectionCardId;
+    public string iconId;
 
     public int cost;
     public bool xCost;
@@ -26,5 +28,7 @@ public class STSCardDataDTO
     public string favoredCharacter;
     public float animationSpeed;
     public bool innate;
+    public bool infinite;
+    public bool created;
         public int startingCount;
 }

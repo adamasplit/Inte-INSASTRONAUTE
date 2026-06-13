@@ -32,6 +32,49 @@ public class UIManager : MonoBehaviour
     public CardAnimator animator;
     public TextMeshProUGUI discardCountText;
     public TextMeshProUGUI deckCountText;
+    public CardSelectionController selectionController;
+    public bool IsSelectingCards()
+    {
+        return selectionController.Active;
+    }
+    public IEnumerator RequestCardSelection(
+        CardSelectionRequest request,
+        System.Action<List<CardInstance>> onConfirm
+    )
+    {
+        List<CardView> hand = currentHandViews
+            .FindAll(v => v != null && request.filter(v.cardInstance));
+
+        if (hand.Count <= request.amount)
+        {
+            request.selectedCards = hand
+                .ConvertAll(v => v.cardInstance);
+
+            onConfirm?.Invoke(request.selectedCards);
+
+            ResetSelectionVisuals();
+            yield break;
+        }
+
+        // UI flow normal
+        selectionController.Open(request);
+
+        yield return selectionController.WaitForSelection();
+
+        onConfirm?.Invoke(request.selectedCards);
+
+        ResetSelectionVisuals();
+    }
+    private void ResetSelectionVisuals()
+    {
+        foreach (var view in currentHandViews)
+        {
+            if (view != null)
+                view.selectionPreview = false;
+        }
+
+        RefreshHandLayout();
+    }
     public void SelectCard(CardView card)
     {
         if (selectedCard == card)
@@ -84,12 +127,12 @@ public class UIManager : MonoBehaviour
         combat.deck.OnCardDrawn -= DrawCardAnimated;
         combat.deck.OnCardDiscarded -= DiscardCardAnimated;
         combat.deck.OnCardExhausted -= ExhaustCardAnimated;
-        combat.deck.OnCardAddedToHand -= DrawCardAnimated;
+        combat.deck.OnCardAddedToHand -= AddCardAnimated;
 
         combat.deck.OnCardDrawn += DrawCardAnimated;
         combat.deck.OnCardDiscarded += DiscardCardAnimated;
         combat.deck.OnCardExhausted += ExhaustCardAnimated;
-        combat.deck.OnCardAddedToHand += DrawCardAnimated;
+        combat.deck.OnCardAddedToHand += AddCardAnimated;
         //CreateInitialHand();
     }
 
@@ -480,6 +523,44 @@ public IEnumerator AnimateCardToCenter(CardView view)
         );
 
         Destroy(view.rootRect.gameObject);
+    }
+    public void AddCardAnimated(CardInstance card)
+    {
+        CardView view = CreateHandCard(card);
+
+        RectTransform rect =
+            view.rootRect;
+
+        rect.SetParent(animator.animationLayer, false);
+        ReparentKeepScreenPosition(rect, animator.animationLayer);
+
+        Vector3 center = animator.animationLayer.TransformPoint(Vector3.zero);
+        rect.position = center;
+
+        view.isAnimating = true;
+
+        StartCoroutine(
+            AnimateDraw(view)
+        );
+    }
+    public void TransformCard(CardInstance oldCard, CardInstance newCard)
+    {
+        if (oldCard == null || newCard == null)
+            return;
+
+        oldCard.data = newCard.data;
+        oldCard.targetingMode = newCard.targetingMode;
+        oldCard.baseModifiers.Clear();
+        oldCard.addedModifiers.Clear();
+        oldCard.enchantments.Clear();
+        oldCard.addedEffects.Clear();
+
+        CardView view = GetView(oldCard);
+        if (view != null)
+        {
+            view.SetCard(oldCard);
+            view.RefreshDescription(null, true);
+        }
     }
     public void RemoveView(CardView view)
     {

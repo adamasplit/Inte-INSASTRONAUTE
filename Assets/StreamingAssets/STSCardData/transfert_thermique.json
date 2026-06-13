@@ -1,0 +1,45 @@
+{
+  "id": "transfert_thermique",
+  "cardName": "Transfert thermique",
+  "collectionCardId": "",
+  "iconId": "Dégâts et effet",
+  "cost": 2,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Epic",
+  "targetingMode": "Enemy",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 4,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [
+    {
+      "type": "Damage",
+      "kind": "DebuffOnSelf",
+      "value": 4
+    }
+  ],
+  "favoredCharacter": "EP",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "infinite": false,
+  "created": false,
+  "startingCount": 0
+}

@@ -1,38 +1,96 @@
-using System.IO;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using UnityEngine;
 
 public static class STSCardDatabase
 {
     static Dictionary<string, STSCardData> cardDict;
+    static bool isLoaded;
+    static Task loadTask;
 
     public static List<STSCardData> allCards;
 
-    public static void Load()
+    public static async Task LoadAsync()
     {
+        if (loadTask != null)
+        {
+            await loadTask;
+            return;
+        }
+
+        loadTask = LoadInternalAsync();
+        await loadTask;
+    }
+
+    static async Task LoadInternalAsync()
+    {
+        if (isLoaded)
+            return;
+
         cardDict = new();
         allCards = new();
 
-        string path =
-            Path.Combine(Application.streamingAssetsPath, "STSCardData");
-
-        string[] files = Directory.GetFiles(path, "*.json");
+        List<string> files = await StreamingAssetsLoader.ListJsonFilesAsync("STSCardData");
+        Debug.Log($"STSCardDatabase found {files.Count} card JSON files.");
 
         foreach (string file in files)
         {
-            string json = File.ReadAllText(file);
+            try
+            {
+                string json = await StreamingAssetsLoader.ReadAllTextAsync(file);
+                if (string.IsNullOrEmpty(json))
+                    continue;
 
-            STSCardDataDTO dto =
-                JsonConvert.DeserializeObject<STSCardDataDTO>(json);
+                STSCardDataDTO dto =
+                    JsonConvert.DeserializeObject<STSCardDataDTO>(json);
 
-            STSCardData card =
-                STSCardData.FromDTO(dto);
+                if (dto == null)
+                {
+                    Debug.LogWarning($"Invalid card JSON in '{file}'.");
+                    continue;
+                }
 
-            cardDict[card.cardName] = card;
+                STSCardData card =
+                    STSCardData.FromDTO(dto);
 
-            allCards.Add(card);
+                cardDict[card.cardName] = card;
+
+                allCards.Add(card);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Failed to load card '{file}': {ex}");
+            }
         }
+
+        isLoaded = allCards.Count > 0;
+        if (!isLoaded)
+        {
+            Debug.LogError("STSCardDatabase loaded zero cards. Check StreamingAssets/STSCardData and its JSON contents.");
+            cardDict = null;
+            allCards = null;
+        }
+
+        loadTask = null;
+    }
+
+    public static void Load()
+    {
+#if UNITY_ANDROID || UNITY_WEBGL
+        Debug.LogError("STSCardDatabase.Load() is not supported on Android/WebGL. Use LoadAsync() and await it.");
+#else
+        LoadAsync().GetAwaiter().GetResult();
+#endif
+    }
+
+    public static async Task EnsureLoadedAsync()
+    {
+        if (allCards != null && allCards.Count > 0)
+            return;
+
+        isLoaded = false;
+        await LoadAsync();
     }
 
     public static STSCardData Get(string id)
@@ -57,5 +115,35 @@ public static class STSCardDatabase
         }
 
         return cards;
+    }
+    public static STSCardData GetRandomCard()
+    {
+        if (allCards == null || allCards.Count == 0)
+        {
+            Debug.LogError("No cards loaded in STSCardDatabase!");
+            return null;
+        }
+
+        int index = UnityEngine.Random.Range(0, allCards.Count);
+        return allCards[index];
+    }
+    public static STSCardData GetRandomCard(SelectableCharacter character)
+    {
+        if (allCards == null || allCards.Count == 0)
+        {
+            Debug.LogError("No cards loaded in STSCardDatabase!");
+            return null;
+        }
+
+        List<STSCardData> favoredCards = allCards.FindAll(c => c.favoredCharacter == character&&c.created);
+        if (favoredCards.Count > 0)
+        {
+            int index = UnityEngine.Random.Range(0, favoredCards.Count);
+            return favoredCards[index];
+        }
+        else
+        {
+            return GetRandomCard();
+        }
     }
 }

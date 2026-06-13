@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: Urbanisme
+  m_Name: urbanisme
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: Urbanisme
   collectionCardId: 
   collectionCard: {fileID: 0}
+  icon: {fileID: 21300000, guid: 38f0a5a43275dcb41b696a8faf9fcbb4, type: 3}
   cost: 2
   xCost: 0
   type: 1

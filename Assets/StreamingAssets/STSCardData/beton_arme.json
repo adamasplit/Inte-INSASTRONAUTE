@@ -1,0 +1,62 @@
+{
+  "id": "beton_arme",
+  "cardName": "Béton armé",
+  "collectionCardId": "",
+  "iconId": "Buff",
+  "cost": 2,
+  "xCost": false,
+  "type": "Pouvoir",
+  "rarity": "Rare",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Shielding",
+      "duration": 3,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    },
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Thorns",
+      "duration": 3,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [
+    {
+      "type": "StatusDuration",
+      "kind": "Played",
+      "value": 1
+    }
+  ],
+  "favoredCharacter": "GC",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "infinite": false,
+  "created": false,
+  "startingCount": 0
+}

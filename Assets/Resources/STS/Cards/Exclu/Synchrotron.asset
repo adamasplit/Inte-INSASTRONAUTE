@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: Synchrotron
+  m_Name: synchrotron
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: Synchrotron
   collectionCardId: 
   collectionCard: {fileID: 0}
+  icon: {fileID: 21300000, guid: bfab4b172435f9046b1d279bd5dba190, type: 3}
   cost: 2
   xCost: 0
   type: 0
@@ -31,6 +32,7 @@ MonoBehaviour:
     conditional: 0
     conditionType: 0
     conditionValue: 
+    trueEffect: 0
   - type: 12
     value: 3
     targetSelf: 0
@@ -42,6 +44,7 @@ MonoBehaviour:
     conditional: 0
     conditionType: 0
     conditionValue: 
+    trueEffect: 0
   - type: 11
     value: 6
     targetSelf: 1
@@ -53,6 +56,7 @@ MonoBehaviour:
     conditional: 0
     conditionType: 0
     conditionValue: 
+    trueEffect: 0
   targetingMode: 2
   modifiers: []
   exhaust: 0

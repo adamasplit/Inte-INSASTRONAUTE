@@ -1,6 +1,8 @@
 {
-  "id": "Gravitron",
+  "id": "gravitron",
+  "cardName": "Gravitron",
   "collectionCardId": "",
+  "iconId": "Gravité",
   "cost": 2,
   "xCost": false,
   "type": "Compétence",
@@ -21,12 +23,17 @@
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
-      "trueEffect": false
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "MECA",
   "animationSpeed": 1.0,
   "innate": false,
+  "infinite": false,
+  "created": false,
   "startingCount": 0
 }

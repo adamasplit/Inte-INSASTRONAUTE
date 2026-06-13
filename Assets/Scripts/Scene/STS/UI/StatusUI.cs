@@ -11,7 +11,7 @@ public class StatusUI : MonoBehaviour
     public Image buffDebuffIndicator;
     public Image buffDebuffOverlay;
     public Image frame;
-    private string name;
+    private string statusName;
     private string description;
     private bool tooltipVisible = false;
     private UIManager uiManager;
@@ -38,7 +38,7 @@ public class StatusUI : MonoBehaviour
         tooltipVisible = !tooltipVisible;
         if (tooltipVisible)
         {
-            TooltipManager.Instance.ShowTooltip(name, description, transform.position);
+            TooltipManager.Instance.ShowTooltip(statusName, description, transform.position);
         }
         else
         {
@@ -71,7 +71,7 @@ public class StatusUI : MonoBehaviour
         {
             icon.enabled = false;
         }
-        name = status.Name;
+        statusName = status.Name;
         durationText.text = status.Duration > 0 ? status.Duration.ToString() : "";
         valueText.text = status.Value != 0 ? status.Value.ToString() : "";
         valueText.color = Color.white;

@@ -38,5 +38,6 @@ public enum StatusType
     Thorns,
     FullBreak,
     Status,
-    CostNullify
+    CostNullify,
+    FollowUp
 }

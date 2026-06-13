@@ -1,0 +1,39 @@
+{
+  "id": "tournee_generale",
+  "cardName": "Tournée générale",
+  "collectionCardId": "quartier_libre",
+  "iconId": null,
+  "cost": 1,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Uncommon",
+  "targetingMode": "Player",
+  "exhaust": false,
+  "retain": false,
+  "effects": [
+    {
+      "type": "Draw",
+      "value": 3,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": null,
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0,
+  "innate": false,
+  "infinite": false,
+  "created": false,
+  "startingCount": 0
+}

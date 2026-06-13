@@ -50,11 +50,22 @@ public class HandLayoutController : MonoBehaviour
             float angle = -offset * (layoutMaxAngle / Mathf.Max(1, center));
 
             // sélection
-            if (cardView == selectedCard)
+            bool highlighted =
+                cardView == selectedCard
+                || cardView.selectionPreview;
+
+            if(highlighted)
             {
                 y += selectedYOffset;
-                states[cardView].targetScale = selectedScale;
+
+                states[cardView].targetScale =
+                    selectedScale;
                 card.SetAsLastSibling();
+                if (cardView.selectionPreview)
+                {
+                    angle = 0f;
+                    y+=selectedYOffset*1f;
+                }
             }
             else
             {

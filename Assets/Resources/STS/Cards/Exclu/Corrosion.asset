@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: Corrosion
+  m_Name: corrosion
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   cardName: Corrosion
   collectionCardId: 
   collectionCard: {fileID: 0}
+  icon: {fileID: 21300000, guid: ff7453f7bfc858743b96a22d1a9cf0fe, type: 3}
   cost: 0
   xCost: 1
   type: 2
@@ -26,7 +27,7 @@ MonoBehaviour:
     targetOthers: 0
     statusType: 0
     duration: 0
-    description: La cible perd X de force.
+    description: 
     cardID: 
     conditional: 0
     conditionType: 0
@@ -38,7 +39,7 @@ MonoBehaviour:
     targetOthers: 0
     statusType: 2
     duration: 1
-    description: Appliquez X d'Affaibli.
+    description: 
     cardID: 
     conditional: 0
     conditionType: 0

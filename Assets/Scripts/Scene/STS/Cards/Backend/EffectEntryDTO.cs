@@ -1,5 +1,5 @@
 using System;
-
+using System.Collections.Generic;
 [Serializable]
 public class EffectEntryDTO
 {
@@ -19,4 +19,7 @@ public class EffectEntryDTO
     public string conditionType;
     public string conditionValue;
     public bool trueEffect;
+    public string cardSelectionSource;
+    public List<string> cardFilterTags;
+    public string cardSelectionEffect;
 }

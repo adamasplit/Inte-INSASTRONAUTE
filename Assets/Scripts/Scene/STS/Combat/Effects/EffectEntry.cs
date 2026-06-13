@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 [Serializable]
 public class EffectEntry
 {
@@ -15,8 +16,16 @@ public class EffectEntry
     public ConditionType conditionType;
     public string conditionValue;
     public bool trueEffect; // For effects that have a "true" version that ignores dispel (like StealBuff vs TrueStealBuff)
+    public CardSelectionSource cardSelectionSource; // For effects that involve selecting cards, specify the source of the cards
+    public List<CardFilterTag> cardFilterTags = new(); // For effects that involve selecting cards, specify tags to filter the cards
+    public CardSelectionEffect cardSelectionEffect; // For effects that involve selecting cards, specify an additional effect to apply to the selected cards
     public EffectEntryDTO ToDTO()
     {
+        List<string> cft = new();
+        foreach (var tag in cardFilterTags)
+        {
+            cft.Add(tag.ToString());
+        }
         return new EffectEntryDTO
         {
             type = type.ToString(),
@@ -34,11 +43,18 @@ public class EffectEntry
             conditional = conditional,
             conditionType = conditionType.ToString(),
             conditionValue = conditionValue,
-            trueEffect = trueEffect
+            trueEffect = trueEffect,
+            cardSelectionSource = cardSelectionSource.ToString(),
+            cardFilterTags = cft,
+            cardSelectionEffect = cardSelectionEffect.ToString()
         };
     }
     public static EffectEntry FromDTO(EffectEntryDTO dto)
     {
+        List<CardFilterTag> cft = new();
+        foreach (var tag in dto.cardFilterTags)        {
+            cft.Add(Enum.Parse<CardFilterTag>(tag));
+        }
         return new EffectEntry
         {
             type = Enum.Parse<EffectType>(dto.type),
@@ -56,7 +72,10 @@ public class EffectEntry
             conditional = dto.conditional,
             conditionType = Enum.Parse<ConditionType>(dto.conditionType),
             conditionValue = dto.conditionValue,
-            trueEffect = dto.trueEffect
+            trueEffect = dto.trueEffect,
+            cardSelectionSource = Enum.Parse<CardSelectionSource>(dto.cardSelectionSource),
+            cardFilterTags = cft,
+            cardSelectionEffect = Enum.Parse<CardSelectionEffect>(dto.cardSelectionEffect)
         };
     }
 

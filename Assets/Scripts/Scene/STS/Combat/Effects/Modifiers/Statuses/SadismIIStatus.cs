@@ -3,7 +3,6 @@ public class SadismIIStatus:StatusEffect
 {
     public SadismIIStatus()
     {
-        Value = 30;
         Duration = -1;
         Name = "Préparation...";
         debuff=false;
@@ -26,10 +25,10 @@ public class SadismIIStatus:StatusEffect
     }
     public override int Modify(int damage, EffectContext ctx)
     {
-        return Mathf.FloorToInt(damage + (damage * Value) / 100);
+        return Mathf.FloorToInt(damage + (damage * 30) / 100);
     }
     public override string Desc()
     {
-        return $"{Value}% dégâts supplémentaires subis et +{Value} d'Armure gagnée. Cet effet évolue lorsqu'un ennemi passe en-dessous de 50% de sa vie.";
+        return $"{30}% dégâts supplémentaires subis et +{30}% d'Armure gagnée. Cet effet évolue lorsqu'un ennemi passe en-dessous de 50% de sa vie.";
     }
 }

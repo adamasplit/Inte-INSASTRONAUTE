@@ -1,6 +1,8 @@
 {
-  "id": "Combustion",
+  "id": "combustion",
+  "cardName": "Combustion",
   "collectionCardId": "",
+  "iconId": "Physique",
   "cost": 0,
   "xCost": true,
   "type": "Attaque",
@@ -20,13 +22,18 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
-      "trueEffect": false
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "EP",
   "animationSpeed": 1.0,
   "innate": false,
+  "infinite": false,
+  "created": false,
   "startingCount": 1
 }

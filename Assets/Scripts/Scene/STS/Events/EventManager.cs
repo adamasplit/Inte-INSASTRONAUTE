@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using TMPro;
 public class EventManager : MonoBehaviour
@@ -8,15 +9,15 @@ public class EventManager : MonoBehaviour
     public TextMeshProUGUI description;
     public UnityEngine.UI.Image image;
     public DeckSelectionPanel deckSelectionPanel;
-    public string eventJsonPath = "Assets/StreamingAssets/Events/EventData.json";
+    public string eventJsonPath = "Events/EventData.json";
 
     private List<EventData> loadedEvents;
 
-    void Start()
+    async void Start()
     {
         if (RunManager.Instance == null)
         {
-            STSCardDatabase.Load();
+            await STSCardDatabase.LoadAsync();
             new GameObject("RunManager").AddComponent<RunManager>();
             for (int i = 0; i < 10; i++)
             {
@@ -33,12 +34,12 @@ public class EventManager : MonoBehaviour
             RunManager.Instance.deck.AddRange(STSCardDatabase.allCards.Select(data => new CardInstance(data)));
         }
         DeckSelectionPanel.Instance=this.deckSelectionPanel;
-        LoadRandomEvent();
+        await LoadRandomEventAsync();
     }
 
-    void LoadRandomEvent()
+    async Task LoadRandomEventAsync()
     {
-        loadedEvents = EventDatabase.LoadFromJson(eventJsonPath);
+        loadedEvents = await EventDatabase.LoadFromJsonAsync(eventJsonPath);
         if (loadedEvents == null || loadedEvents.Count == 0)
         {
             Debug.LogError("No events loaded from JSON!");
@@ -68,6 +69,6 @@ public class EventManager : MonoBehaviour
 
     public void ReturnToMap()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("STS_Map");
+        STSSceneLoader.Instance.LoadScene("STS_Map");
     }
 }

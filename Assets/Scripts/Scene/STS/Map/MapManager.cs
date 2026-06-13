@@ -75,24 +75,24 @@ public class MapManager : MonoBehaviour
         switch (node.type)
         {
             case NodeType.Combat:
-                SceneManager.LoadScene("STS_Combat");
+                STSSceneLoader.Instance.LoadScene("STS_Combat");
                 break;
 
             case NodeType.Rest:
                 RunManager.Instance.restCharges = RunManager.Instance.maxRestCharges;
-                SceneManager.LoadScene("STS_Rest");
+                STSSceneLoader.Instance.LoadScene("STS_Rest");
                 break;
 
             case NodeType.Event:
-                SceneManager.LoadScene("STS_Event");
+                STSSceneLoader.Instance.LoadScene("STS_Event");
                 break;
             case NodeType.Elite:
                 RunManager.Instance.eliteEncounter = true;
-                SceneManager.LoadScene("STS_Combat");
+                STSSceneLoader.Instance.LoadScene("STS_Combat");
                 break;
             case NodeType.Boss:
                 RunManager.Instance.bossEncounter = true;
-                SceneManager.LoadScene("STS_Combat");
+                STSSceneLoader.Instance.LoadScene("STS_Combat");
                 break;
             default:
                 Debug.LogError($"Unknown node type: {node.type}");

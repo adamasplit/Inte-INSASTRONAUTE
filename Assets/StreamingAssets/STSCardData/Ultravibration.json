@@ -1,6 +1,8 @@
 {
-  "id": "Ultravibration",
+  "id": "ultravibration",
+  "cardName": "Ultravibration",
   "collectionCardId": "MECA",
+  "iconId": "Choc",
   "cost": 0,
   "xCost": false,
   "type": "Attaque",
@@ -20,8 +22,11 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
-      "trueEffect": false
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     },
     {
       "type": "Heal",
@@ -34,13 +39,18 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
-      "trueEffect": false
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "MECA",
   "animationSpeed": 1.0,
   "innate": false,
+  "infinite": false,
+  "created": false,
   "startingCount": 1
 }

@@ -354,7 +354,7 @@ public class TurnSystem : MonoBehaviour
         foreach (var effect in card.GetEffects())
         {
             if (effect.targetSelf)
-                EffectResolver.Apply(effect, ctxSelf);
+                EffectResolver.Preview(effect, ctxSelf);
             else
             foreach (var target in targets)            
             {
@@ -368,7 +368,7 @@ public class TurnSystem : MonoBehaviour
                     timeline = sim,
                     isPreview = true
                 };
-                EffectResolver.Apply(effect, ctx);
+                EffectResolver.Preview(effect, ctx);
                 sim= ctx.timeline;
             }
         }

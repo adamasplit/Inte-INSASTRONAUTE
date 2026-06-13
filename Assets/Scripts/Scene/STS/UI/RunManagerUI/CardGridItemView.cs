@@ -23,6 +23,12 @@ public class CardGridItemView : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (SelectionManager.Instance != null && SelectionManager.Instance.selectionMode)
+        {
+            SelectionManager.Instance.OnCardClicked(cardInstance);
+            cardView.toggleSelection();
+            return;
+        }
         Debug.Log($"CardGridItemView clicked: {cardInstance?.data?.name}");
         if (DeckSelectionPanel.Instance != null)
         {

@@ -84,7 +84,7 @@ public class RetreatManager : MonoBehaviour
     {
         RunManager.Instance.RegenerateMap = true;
         RunManager.Instance.act++;
-        SceneManager.LoadScene("STS_Map");
+        STSSceneLoader.Instance.LoadScene("STS_Map");
     }
     public void OnRetreatPressed()
     {
@@ -98,7 +98,7 @@ public class RetreatManager : MonoBehaviour
         goingToMenu = true;
         AddObtainedCardsToCollection();
         RunManager.Instance.OnRunEnd();
-        SceneManager.LoadScene("STS_Boot");
+        STSSceneLoader.Instance.LoadScene("STS_Boot");
     }
 
     public async Task AddObtainedCardsToCollection()
