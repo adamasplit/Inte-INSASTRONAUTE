@@ -146,16 +146,7 @@ public class CombatManager : MonoBehaviour
         }
         CardView playedView = null;
 
-        int replayCount=1;
-        if (card.HasEnchantment("Écho"))
-        {
-            CardEnchantment e=card.enchantments.Find(en=>en.data.name=="Écho");
-            replayCount+=((ReplayEnchantment)e.data).GetReplayCount(e.level);
-        }
-        if (card.HasEnchantment("Stellaire"))
-        {
-            replayCount+=4;
-        }
+        int replayCount=BattleCalculator.GetModifiedValue(1, StatType.ReplayCount, ctxSelf);
         if (card.data.xCost)
         {
             replayCount=replayCount*source.resources.energy;
@@ -298,16 +289,16 @@ public class CombatManager : MonoBehaviour
 
         if (source != null && source.isPlayer)
         {
-            if (card.HasEnchantment("Infinity")||card.data.infinite)
+            if (card.HasEnchantment("Infinity")||card.data.HasTag(CardTag.Infinite))
             {
                 deck.AddToHand(card);
-                if (!card.data.infinite) card.AddModifier(new FlatModifier(StatType.Cost, 1));
+                if (!card.data.HasTag(CardTag.Infinite)) card.AddModifier(new FlatModifier(StatType.Cost, 1));
             }
             else
             {
                 if (card.data.type != CardType.Pouvoir)
                 {
-                    if (card.data.exhaust)
+                    if (card.data.HasTag(CardTag.Exhaust))
                     {
                         float exhaustChance = BattleCalculator.GetModifiedValue(100, StatType.ExhaustChance, ctxSelf) / 100f;
                         if (UnityEngine.Random.value < exhaustChance)
@@ -330,7 +321,7 @@ public class CombatManager : MonoBehaviour
             {
                 yield return ui.AnimateCardToDiscard(
                     playedView,
-                    card.data.exhaust
+                    card.data.HasTag(CardTag.Exhaust)
                 );
             }
         }
@@ -444,7 +435,7 @@ public class CombatManager : MonoBehaviour
         resolvingCombatCleanup = false;
     }
 
-    public List<Character> GetTargets(TargetingMode mode, Character hovered)
+    public List<Character> GetDisplayTargets(TargetingMode mode, Character hovered)
     {
         switch (mode)
         {
@@ -458,19 +449,33 @@ public class CombatManager : MonoBehaviour
                 return enemies.Where(e => e != null && e.IsAlive).ToList();
 
             case TargetingMode.AllCharacters:
-                var list = enemies.Where(e => e != null && e.IsAlive).Cast<Character>().ToList();
-                if (player != null && player.IsAlive)
-                    list.Add(player);
-                return list;
+                return GetAllCharacters();
 
             case TargetingMode.RandomEnemy:
-                var aliveEnemies = enemies.Where(e => e != null && e.IsAlive).ToList();
-                return aliveEnemies.Any()
-                    ? new List<Character> { aliveEnemies[UnityEngine.Random.Range(0, aliveEnemies.Count)] }
-                    : new List<Character>();
+                return RandomEnemy();
 
             default:
                 return new();
+        }
+    }
+    public List<Character> AutoCardTargets(TargetingMode mode,Character source,Character target)
+    {
+        if (mode==TargetingMode.AllCharacters)
+        {
+            return GetAllCharacters();
+        }
+        if (!source.isPlayer)
+        {
+            return new List<Character>{player};
+        }
+        switch (mode)
+        {
+            case TargetingMode.Enemy:
+                return new List<Character>{target};
+            case TargetingMode.AllEnemies:
+                return enemies.Where(e => e != null && e.IsAlive).ToList();
+            default:
+                return RandomEnemy();
         }
     }
     public List<Character> GetAllCharacters()
@@ -480,7 +485,13 @@ public class CombatManager : MonoBehaviour
             list.Add(player);
         return list;
     }
-
+    public List<Character> RandomEnemy()
+    {
+        var aliveEnemies = enemies.Where(e => e != null && e.IsAlive).ToList();
+                return aliveEnemies.Any()
+                    ? new List<Character> { aliveEnemies[UnityEngine.Random.Range(0, aliveEnemies.Count)] }
+                    : new List<Character>();
+    }
     public void NotifyTurnEnded()
     {
         if (tutorialMode)

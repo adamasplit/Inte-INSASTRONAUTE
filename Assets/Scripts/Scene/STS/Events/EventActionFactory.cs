@@ -4,14 +4,19 @@ public static class EventActionFactory
         PanelOptionData option,
         EventManager manager)
     {
-        return () => ExecuteEntry(0, option, manager);
+        return () =>
+        {
+            manager.HideEventPanel();
+            ExecuteEntry(0, option, manager);
+            manager.description.text = option.completionMessage; // Display the completion message if provided
+        };
     }
 
     private static void ExecuteEntry(int index, PanelOptionData option, EventManager manager)
     {
         if (option == null || option.entries == null || index >= option.entries.Count)
         {
-            manager.ReturnToMap();
+            manager.ShowEventContinue(manager.ReturnToMap);
             return;
         }
 
@@ -19,6 +24,27 @@ public static class EventActionFactory
 
         switch (System.Enum.Parse<EventOptionType>(entry.type))
         {
+            case EventOptionType.CardReward:
+            {
+                Reward reward = new Reward();
+                reward.items.Add(RewardGenerator.GenerateCardReward());
+                manager.PresentReward(reward, () => ExecuteEntry(index + 1, option, manager));
+                break;
+            }
+
+            case EventOptionType.RelicReward:
+            {
+                Reward reward = new Reward();
+                reward.items.Add(RewardGenerator.GenerateRelicReward());
+                manager.PresentReward(reward, () => ExecuteEntry(index + 1, option, manager));
+                break;
+            }
+
+            case EventOptionType.GoldReward:
+                RunManager.Instance.gold += entry.value;
+                ExecuteEntry(index + 1, option, manager);
+                break;
+
             case EventOptionType.Heal:
                 RunManager.Instance.player.Heal(entry.value);
                 ExecuteEntry(index + 1, option, manager);
@@ -65,9 +91,56 @@ public static class EventActionFactory
                 ExecuteEntry(index + 1, option, manager);
                 break;
 
+            case EventOptionType.TransformCard:
+                DeckSelectionPanel.Instance.Open(
+                    "Choose cards to transform",
+                    entry.value,
+                    cards =>
+                    {
+                        foreach (var card in cards)
+                        {
+                            TransformCard(card, STSCardDatabase.GetRandomCard(RunManager.Instance.selectedCharacter));
+                        }
+
+                        ExecuteEntry(index + 1, option, manager);
+                    });
+                break;
+
+            case EventOptionType.AddCard:
+                for (int i = 0; i < entry.value; i++)
+                {
+                    STSCardData cardData = string.IsNullOrEmpty(entry.id)
+                        ? STSCardDatabase.GetRandomCard(RunManager.Instance.selectedCharacter)
+                        : STSCardDatabase.Get(entry.id);
+
+                    if (cardData != null)
+                    {
+                        RunManager.Instance.deck.Add(new CardInstance(cardData));
+                    }
+                }
+
+                ExecuteEntry(index + 1, option, manager);
+                break;
+
             default:
                 ExecuteEntry(index + 1, option, manager);
                 break;
         }
+    }
+
+    private static void TransformCard(CardInstance oldCard, STSCardData newCardData)
+    {
+        if (oldCard == null || newCardData == null)
+        {
+            return;
+        }
+
+        CardInstance newCard = new CardInstance(newCardData);
+        oldCard.data = newCard.data;
+        oldCard.targetingMode = newCard.targetingMode;
+        oldCard.baseModifiers.Clear();
+        oldCard.addedModifiers.Clear();
+        oldCard.enchantments.Clear();
+        oldCard.addedEffects.Clear();
     }
 }

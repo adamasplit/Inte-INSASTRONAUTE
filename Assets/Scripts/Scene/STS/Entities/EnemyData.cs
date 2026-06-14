@@ -13,6 +13,7 @@ public class EnemyData : ScriptableObject
     public StatusType startingStatus;
     public int startingStatusDuration;
     public int startingStatusValue;
+    public string startingStatusInfo;
     #if UNITY_EDITOR
     private void OnValidate()
     {

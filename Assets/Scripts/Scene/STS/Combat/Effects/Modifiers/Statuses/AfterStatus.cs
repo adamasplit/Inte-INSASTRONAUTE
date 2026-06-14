@@ -10,7 +10,11 @@ public class AfterStatus : StatusEffect
     }
     public override string Desc()
     {
-        return $"\nInflige {Value} dégâts à la fin du tour.";
+        return $"Inflige {Value} dégâts à la fin du tour.";
+    }
+    public override string CardDesc(bool targetSelf)
+    {
+        return $"La cible subit {Value} dégâts à la fin du tour.";
     }
     public override void OnTurnEnd(Character target)
     {

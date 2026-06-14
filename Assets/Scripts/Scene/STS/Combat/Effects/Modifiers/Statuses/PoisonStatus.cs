@@ -19,6 +19,6 @@ public class PoisonStatus : StatusEffect
     }
     public override string Desc()
     {
-        return $"\nInflige {Duration} dégâts au début de chaque tour";
+        return $"Inflige {Duration} dégâts au début de chaque tour";
     }
 }

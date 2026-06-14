@@ -8,8 +8,6 @@
   "type": "Attaque",
   "rarity": "Common",
   "targetingMode": "Enemy",
-  "exhaust": true,
-  "retain": false,
   "effects": [
     {
       "type": "Damage",
@@ -22,7 +20,7 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "cardFilterTags": [],
@@ -39,7 +37,7 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "cardFilterTags": [],
@@ -56,7 +54,7 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "cardFilterTags": [],
@@ -73,7 +71,7 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "cardFilterTags": [],
@@ -90,7 +88,7 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "cardFilterTags": [],
@@ -107,7 +105,7 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "cardFilterTags": [],
@@ -117,8 +115,8 @@
   "modifiers": [],
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": [
+    "Exhaust"
+  ]
 }

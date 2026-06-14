@@ -72,23 +72,20 @@ public abstract class StatusEffect : StatModifier
     public virtual void OnTargetedByCard(Character source,Character target, CardInstance card) { }
     public virtual void OnCardDrawn(Character target, CardInstance card) { }
     public virtual string Desc(){return $"\n{Value} (Description inconnue)";}
+    public virtual string CardDesc(bool targetSelf){return Desc();}
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {
         return false;
+    }
+    public override string Describe()
+    {
+        return Desc();
     }
     public override int Modify(int value, EffectContext ctx)
     {
         return value;
     }
-    public override string Describe()
-    {
-        string res = "";
-        //if (Duration > 0)
-        //    res += $" ({Duration})";
-        res += Desc();
-        return res;
-    }
-    public static StatusEffect Factory(StatusType type, int value, int duration)
+    public static StatusEffect Factory(StatusType type, int value, int duration,string effectInfo="")
     {
         StatusEffect stat = type switch
         {
@@ -102,7 +99,7 @@ public abstract class StatusEffect : StatModifier
             StatusType.FullMoon => new FullMoonStatus(),
             StatusType.Slow => new SlowStatus(duration),
             StatusType.Haste => new HasteStatus(duration),
-            StatusType.Divination => new DivinationStatus(),
+            StatusType.Divination => new DivinationStatus(value),
             StatusType.Targeting => new TargetingStatus(),
             StatusType.Jump => new JumpStatus(value),
             StatusType.Fragile => new FragileStatus(duration),
@@ -131,7 +128,8 @@ public abstract class StatusEffect : StatModifier
             StatusType.FullBreak=>new FullBreakStatus(duration),
             StatusType.Status=>new StatusStatus(duration),
             StatusType.CostNullify=>new CostNullifyStatus(value),
-            StatusType.FollowUp=>new FollowUpStatus(),
+            StatusType.FollowUp=>new FollowUpStatus(value,effectInfo),
+            StatusType.Echo=>new EchoStatus(value),
             _ => null
         };
         return stat;

@@ -3,23 +3,21 @@
   "cardName": "Demi-volée",
   "collectionCardId": "toss",
   "iconId": null,
-  "cost": 0,
+  "cost": 2,
   "xCost": false,
   "type": "Pouvoir",
   "rarity": "Rare",
   "targetingMode": "Player",
-  "exhaust": false,
-  "retain": false,
   "effects": [
     {
       "type": "Status",
-      "value": 0,
+      "value": 1,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "FollowUp",
       "duration": 0,
       "description": "",
-      "cardID": "",
+      "cardID": "Tir cadré",
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
@@ -32,8 +30,6 @@
   "modifiers": [],
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": []
 }

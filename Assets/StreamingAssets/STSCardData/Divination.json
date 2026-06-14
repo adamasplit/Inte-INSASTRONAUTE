@@ -7,9 +7,7 @@
   "xCost": false,
   "type": "Pouvoir",
   "rarity": "Legendary",
-  "targetingMode": "Player",
-  "exhaust": false,
-  "retain": false,
+  "targetingMode": "Enemy",
   "effects": [
     {
       "type": "Status",
@@ -22,7 +20,24 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    },
+    {
+      "type": "Status",
+      "value": 2,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "FollowUp",
+      "duration": 0,
+      "description": "",
+      "cardID": "Malédiction",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "cardFilterTags": [],
@@ -32,8 +47,6 @@
   "modifiers": [],
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": []
 }

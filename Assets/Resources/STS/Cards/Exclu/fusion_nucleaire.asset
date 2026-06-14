@@ -43,7 +43,7 @@ MonoBehaviour:
   retain: 1
   innate: 1
   infinite: 1
-  created: 0
   favoredCharacter: 4
   animationSpeed: 1
-  startingCount: 1
+  startingCount: 0
+  tags: 0a0000000c0000000d000000

@@ -87,7 +87,7 @@ public class EffectEntry
             EffectType.Damage => "Damage",
             EffectType.Heal => "Heal",
             EffectType.Armor => "Armor",
-            EffectType.Status=>StatusEffect.Factory(statusType,0,0).buff?"Buff":"Debuff",
+            EffectType.Status=>StatusEffect.Factory(statusType,0,0,cardID).buff?"Buff":"Debuff",
             EffectType.AdvanceTurn=>"TurnAdvance",
             EffectType.DelayTurn=>"TurnDelay",
             EffectType.DeleteNextTurn=>"TurnDelete",

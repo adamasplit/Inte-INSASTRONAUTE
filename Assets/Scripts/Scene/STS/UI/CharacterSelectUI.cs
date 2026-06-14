@@ -31,8 +31,7 @@ public class CharacterSelectUI : MonoBehaviour
         await PlayersDatabase.LoadAsync();
         OnCharacterSelected(SelectableCharacter.EP);
         circularMenu.Init();
-        Hide();
-    }
+        Hide();    }
     public void Show()
     {
         selectPanel.SetActive(true);

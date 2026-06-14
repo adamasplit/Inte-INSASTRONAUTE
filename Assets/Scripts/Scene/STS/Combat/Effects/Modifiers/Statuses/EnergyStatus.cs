@@ -10,7 +10,7 @@ public class EnergyStatus : StatusEffect
     }
     public override string Desc()
     {
-        return $"\nGagnez {Value} énergie au début du tour.";
+        return $"Gagnez {Value} énergie au début du tour.";
     }
     public override void OnTurnStart(Character target)
     {

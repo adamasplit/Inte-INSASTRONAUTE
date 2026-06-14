@@ -85,7 +85,7 @@ public class RunManager : MonoBehaviour
         deck.Clear();
         foreach (STSCardData card in STSCardDatabase.allCards)
         {
-            if (card.startingCount > 0 && (card.favoredCharacter == SelectableCharacter.Starting || card.favoredCharacter == selectedCharacter))
+            if (card.startingCount > 0 && (card.favoredCharacter == SelectableCharacter.Starting || card.favoredCharacter == selectedCharacter|| card.favoredCharacter == SelectableCharacter.Aucun))
             {
                 for (int i = 0; i < card.startingCount; i++)
                 {

@@ -8,8 +8,6 @@
   "type": "Attaque",
   "rarity": "Special",
   "targetingMode": "Enemy",
-  "exhaust": true,
-  "retain": false,
   "effects": [
     {
       "type": "Damage",
@@ -32,8 +30,9 @@
   "modifiers": [],
   "favoredCharacter": "Impossible",
   "animationSpeed": 2.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": [
+    "Exhaust",
+    "Unobtainable"
+  ]
 }

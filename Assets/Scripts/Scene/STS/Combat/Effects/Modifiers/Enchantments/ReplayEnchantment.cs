@@ -15,7 +15,8 @@ public class ReplayEnchantment : EnchantmentData
     {
         return new List<StatModifier>
         {
-            new PercentModifier(StatType.Any, -10 / (GetReplayCount(level)))
+            new PercentModifier(StatType.Any, -10 / (GetReplayCount(level))),
+            new FlatModifier(StatType.ReplayCount, GetReplayCount(level))
         };
     }
 }

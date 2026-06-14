@@ -1,12 +1,17 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+public interface IRewardFlowHost
+{
+    void NotifyClaimed(RewardEntryView entry);
+}
+
 public abstract class RewardEntryView : MonoBehaviour
 {
     protected RewardItem item;
-    protected RewardManager manager;
+    protected IRewardFlowHost manager;
 
-    public virtual void Init(RewardItem rewardItem, RewardManager mgr)
+    public virtual void Init(RewardItem rewardItem, IRewardFlowHost mgr)
     {
         item = rewardItem;
         manager = mgr;

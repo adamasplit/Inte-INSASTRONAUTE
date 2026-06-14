@@ -15,6 +15,8 @@ public static class RewardGenerator
     }
     public static Reward GenerateReward(CombatResult result)
     {
+        result ??= new CombatResult();
+
         Reward reward = new Reward();
 
         CardReward cardReward = new CardReward
@@ -44,6 +46,24 @@ public static class RewardGenerator
         reward.items.Add(cardReward);
         return reward;
     }
+    public static CardReward GenerateCardReward(CombatResult result = null)
+    {
+        result ??= new CombatResult();
+
+        return new CardReward
+        {
+            choices = GenerateCardChoices(result)
+        };
+    }
+    public static RelicReward GenerateRelicReward(CombatResult result = null)
+    {
+        result ??= new CombatResult();
+
+        return new RelicReward
+        {
+            relic = RelicDrop.GetRandomRelic(result)
+        };
+    }
     static int GenerateGold(CombatResult result)
     {
         int baseGold = Random.Range(15, 26);
@@ -58,6 +78,8 @@ public static class RewardGenerator
     }
     static List<CardInstance> GenerateCardChoices(CombatResult result)
     {
+        result ??= new CombatResult();
+
         List<CardEntry> pool = BuildCardPool(result);
 
         List<CardInstance> choices = new List<CardInstance>();
@@ -129,7 +151,7 @@ public static class RewardGenerator
         {
             if (card.favoredCharacter != SelectableCharacter.Aucun && RunManager.Instance != null 
             && card.favoredCharacter != RunManager.Instance.selectedCharacter
-            ||card.created)
+            ||card.HasTag(CardTag.Created))
             {
                 continue; // Skip cards that are favored for a different character or created cards
             }

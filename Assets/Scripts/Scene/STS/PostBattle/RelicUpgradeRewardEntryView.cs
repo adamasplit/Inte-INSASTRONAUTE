@@ -3,7 +3,7 @@ public class RelicUpgradeRewardEntryView : RewardEntryView
     public TMPro.TextMeshProUGUI relicName;
     public TMPro.TextMeshProUGUI relicDescription;
     BaseRelicUpgradeReward reward;
-    public override void Init(RewardItem item,RewardManager mgr)
+    public override void Init(RewardItem item, IRewardFlowHost mgr)
     {
         base.Init(item,mgr);
         BaseRelicUpgradeReward relicUpgradeReward = item as BaseRelicUpgradeReward;

@@ -10,7 +10,7 @@ public class LifeCycleStatus : StatusEffect
     }
     public override string Desc()
     {
-        return $"\nQuand vous perdez des PV à ce tour, gagnez {Value} énergie.";
+        return $"Quand vous perdez des PV à ce tour, gagnez {Value} énergie.";
     }
     public override void OnDamageTaken(Character source,Character target, ref int damage)
     {

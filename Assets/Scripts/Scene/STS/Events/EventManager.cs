@@ -9,6 +9,7 @@ public class EventManager : MonoBehaviour
     public TextMeshProUGUI description;
     public UnityEngine.UI.Image image;
     public DeckSelectionPanel deckSelectionPanel;
+    public EventRewardManager rewardManager;
     public string eventJsonPath = "Events/EventData.json";
 
     private List<EventData> loadedEvents;
@@ -49,6 +50,14 @@ public class EventManager : MonoBehaviour
         ShowEvent(loadedEvents[idx]);
     }
 
+    public void HideEventPanel()
+    {
+        if (panel != null)
+        {
+            panel.gameObject.SetActive(false);
+        }
+    }
+
     void ShowEvent(EventData ev)
     {
         description.text = ev.description;
@@ -70,5 +79,50 @@ public class EventManager : MonoBehaviour
     public void ReturnToMap()
     {
         STSSceneLoader.Instance.LoadScene("STS_Map");
+    }
+
+    public void ShowEventContinue(System.Action onComplete)
+    {
+        if (rewardManager != null)
+        {
+            rewardManager.ShowContinue(onComplete);
+            return;
+        }
+
+        onComplete?.Invoke();
+    }
+
+    public void PresentReward(Reward reward, System.Action onComplete)
+    {
+        if (rewardManager != null)
+        {
+            rewardManager.ShowReward(reward, onComplete);
+            return;
+        }
+
+        Debug.LogWarning("EventRewardManager is not assigned. Applying reward immediately.");
+
+        foreach (var item in reward.items)
+        {
+            if (item is CardReward cardReward && cardReward.choices != null && cardReward.choices.Count > 0)
+            {
+                RunManager.Instance.deck.Add(cardReward.choices[0]);
+                cardReward.Claim();
+            }
+            else if (item is RelicReward relicReward)
+            {
+                relicReward.Claim();
+            }
+            else if (item is GoldReward goldReward)
+            {
+                goldReward.Claim();
+            }
+            else if (item is BaseRelicUpgradeReward upgradeReward)
+            {
+                upgradeReward.Claim();
+            }
+        }
+
+        onComplete?.Invoke();
     }
 }

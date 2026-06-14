@@ -42,7 +42,7 @@ public class DeckManager
             if (firstTurn)
             {
                 //Draw innate cards first
-                CardInstance innateCard = drawPile.Find(c => c.data.innate);
+                CardInstance innateCard = drawPile.Find(c => c.data.HasTag(CardTag.Innate));
                 if (innateCard != null)
                 {
                     drawPile.Remove(innateCard);
@@ -120,7 +120,7 @@ public class DeckManager
                 combatManager.PlayCard(combatManager.player, card, new List<Character> { combatManager.enemies[UnityEngine.Random.Range(0, combatManager.enemies.Count)] },true);
                 continue;
             }
-            if (card.data.retain)
+            if (card.data.HasTag(CardTag.Retain))
                 continue;
 
             hand.RemoveAt(i);

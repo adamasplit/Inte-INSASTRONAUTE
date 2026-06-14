@@ -17,6 +17,6 @@ public class BurnStatus : StatusEffect
     }
     public override string Desc()
     {
-        return $"\nInflige {Duration} dégâts à la fin de chaque tour";
+        return $"Inflige {Duration} dégâts à la fin de chaque tour";
     }
 }

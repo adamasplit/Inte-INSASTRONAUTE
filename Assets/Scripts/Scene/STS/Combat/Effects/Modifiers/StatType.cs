@@ -10,5 +10,6 @@ public enum StatType
     ExhaustChance,
     Any,
     TurnManipulationDelay,
-    TurnManipulationAdvance
+    TurnManipulationAdvance,
+    ReplayCount
 }

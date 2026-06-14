@@ -32,6 +32,6 @@ public class FullBreakStatus : StatusEffect
     }
     public override string Desc()
     {
-        return "\nAugmente les dégâts reçus de 20% et réduit tous les effets appliqués de 20%";
+        return $"Augmente les dégâts reçus de 20% et réduit tous les effets appliqués de 20%";
     }
 }

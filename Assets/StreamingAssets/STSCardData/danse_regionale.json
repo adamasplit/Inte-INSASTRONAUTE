@@ -8,8 +8,6 @@
   "type": "Compétence",
   "rarity": "Epic",
   "targetingMode": "Player",
-  "exhaust": true,
-  "retain": false,
   "effects": [
     {
       "type": "Heal",
@@ -22,7 +20,7 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "cardFilterTags": [],
@@ -39,7 +37,7 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "cardFilterTags": [],
@@ -49,8 +47,8 @@
   "modifiers": [],
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": [
+    "Exhaust"
+  ]
 }

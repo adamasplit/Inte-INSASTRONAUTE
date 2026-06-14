@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: desespoir
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: desespoir
   cardName: "D\xE9sespoir"
   collectionCardId: 
   collectionCard: {fileID: 0}
@@ -33,6 +34,9 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   - type: 11
     value: 2
     targetSelf: 0
@@ -45,11 +49,12 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   targetingMode: 2
   modifiers: []
-  exhaust: 0
-  retain: 0
-  innate: 0
   favoredCharacter: 10
   animationSpeed: 1
   startingCount: 0
+  tags: 07000000

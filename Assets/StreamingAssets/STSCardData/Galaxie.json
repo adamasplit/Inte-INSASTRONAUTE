@@ -8,8 +8,6 @@
   "type": "Compétence",
   "rarity": "Special",
   "targetingMode": "AllEnemies",
-  "exhaust": true,
-  "retain": true,
   "effects": [
     {
       "type": "DispelBuff",
@@ -66,8 +64,10 @@
   "modifiers": [],
   "favoredCharacter": "Impossible",
   "animationSpeed": 2.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": [
+    "Exhaust",
+    "Retain",
+    "Unobtainable"
+  ]
 }

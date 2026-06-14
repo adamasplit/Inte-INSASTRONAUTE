@@ -9,6 +9,7 @@ public class VigorStatus : StatusEffect
         modifierType = ModifierType.Additive;
         buff=true;
     }
+    private bool isApplied = false;
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {
         return stat == StatType.Damage && ctx.source.statusEffects.Contains(this);
@@ -20,12 +21,19 @@ public class VigorStatus : StatusEffect
         int res = damage + Value;
         if (!ctx.isPreview)
         {
-            mustExpire = true;
+            isApplied = true;
         }
         return res;
     }
+    public override void OnCardPlayed(Character source, Character target, CardInstance card)
+    {
+        if (isApplied)
+        {
+            mustExpire = true;
+        }
+    }
     public override string Desc()
     {
-        return $"\nLe prochain effet de dégâts que vous appliquez est augmenté de {Value}.";
+        return $"Le prochain effet de dégâts que vous appliquez est augmenté de {Value}.";
     }
 }

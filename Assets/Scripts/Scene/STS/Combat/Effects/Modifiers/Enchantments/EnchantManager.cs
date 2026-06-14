@@ -40,13 +40,13 @@ public static class EnchantManager
         {
             possibleEnchants.Add((EnchantType.Efficiency, 0.5f));
         }
-        if (card.data.exhaust)
+        if (card.data.HasTag(CardTag.Exhaust))
         {
             possibleEnchants.Add((EnchantType.Mending, 1.0f));
             possibleEnchants.Add((EnchantType.Unbreaking, 1.0f));
             possibleEnchants.Add((EnchantType.CurseOfVanishing, 0.5f));
         }
-        else if (!card.HasEnchantment("Infinity")&&!card.HasEnchantment("Mécanique")&&!card.data.infinite)
+        else if (!card.HasEnchantment("Infinity")&&!card.HasEnchantment("Mécanique")&&!card.data.HasTag(CardTag.Infinite))
         {
             possibleEnchants.Add((EnchantType.Infinity, 0.5f));
         }

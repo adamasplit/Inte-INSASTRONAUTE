@@ -135,7 +135,7 @@ public static class STSCardDatabase
             return null;
         }
 
-        List<STSCardData> favoredCards = allCards.FindAll(c => c.favoredCharacter == character&&c.created);
+        List<STSCardData> favoredCards = allCards.FindAll(c => c.favoredCharacter == character&&c.HasTag(CardTag.Created));
         if (favoredCards.Count > 0)
         {
             int index = UnityEngine.Random.Range(0, favoredCards.Count);

@@ -8,8 +8,6 @@
   "type": "Pouvoir",
   "rarity": "Rare",
   "targetingMode": "Player",
-  "exhaust": false,
-  "retain": false,
   "effects": [
     {
       "type": "Status",
@@ -30,7 +28,7 @@
     },
     {
       "type": "Status",
-      "value": 0,
+      "value": 3,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Thorns",
@@ -55,8 +53,6 @@
   ],
   "favoredCharacter": "GC",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": []
 }

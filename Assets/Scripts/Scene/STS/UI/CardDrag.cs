@@ -78,11 +78,11 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
         }
         
         var target = GetHoveredTarget();
-        var sim = turnSystem.SimulateCard(turnSystem.timeline, cardView.cardInstance, GetTargets(target));
+        var sim = turnSystem.SimulateCard(turnSystem.timeline, cardView.cardInstance, GetDisplayTargets(target));
         var future = turnSystem.GetFuture(sim,10);
         ui.HighlightTargets(cardView.cardInstance.targetingMode, target);
-        timelineUI.Display(future,true,GetTargets(target));
-        cardView.RefreshDescription(target, false, GetTargets(target));
+        timelineUI.Display(future,true,GetDisplayTargets(target));
+        cardView.RefreshDescription(target, false, GetDisplayTargets(target));
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -109,7 +109,7 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         return DropZone.hoveredCharacter;
     }
-    List<Character> GetTargets(Character target)
+    List<Character> GetDisplayTargets(Character target)
     {
         if (cardView.cardInstance == null)
         {
@@ -117,7 +117,7 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
             return new List<Character>();
         }
         var mode = cardView.cardInstance.targetingMode;
-        return combat.GetTargets(mode, target);
+        return combat.GetDisplayTargets(mode, target);
     }
     void Update()
     {

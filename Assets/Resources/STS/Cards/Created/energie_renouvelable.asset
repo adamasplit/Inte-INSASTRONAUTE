@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: energie_renouvelable
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: energie_renouvelable
   cardName: Energie renouvelable
   collectionCardId: 
   collectionCard: {fileID: 0}
@@ -33,13 +34,16 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   targetingMode: 0
   modifiers: []
   exhaust: 0
   retain: 0
   innate: 0
   infinite: 0
-  created: 1
   favoredCharacter: 0
   animationSpeed: 1
   startingCount: 0
+  tags: 06000000

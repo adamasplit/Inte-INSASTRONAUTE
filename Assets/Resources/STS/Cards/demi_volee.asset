@@ -12,23 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: demi_volee
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: demi_volee
   cardName: "Demi-vol\xE9e"
   collectionCardId: 
   collectionCard: {fileID: 11400000, guid: b46b0e25dac032342b72180dfc574819, type: 2}
   icon: {fileID: 0}
-  cost: 0
+  cost: 2
   xCost: 0
   type: 2
   rarity: 2
   effects:
   - type: 3
-    value: 0
+    value: 1
     targetSelf: 0
     targetOthers: 0
     statusType: 39
     duration: 0
     description: 
-    cardID: 
+    cardID: "Tir cadr\xE9"
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -38,11 +39,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
   targetingMode: 0
   modifiers: []
-  exhaust: 0
-  retain: 0
-  innate: 0
-  infinite: 0
-  created: 0
   favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
+  tags: 

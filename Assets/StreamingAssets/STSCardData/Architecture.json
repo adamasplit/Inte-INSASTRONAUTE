@@ -8,8 +8,6 @@
   "type": "Compétence",
   "rarity": "Uncommon",
   "targetingMode": "Enemy",
-  "exhaust": true,
-  "retain": false,
   "effects": [
     {
       "type": "StealBuff",
@@ -49,8 +47,8 @@
   "modifiers": [],
   "favoredCharacter": "AI",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 1
+  "startingCount": 1,
+  "tags": [
+    "Exhaust"
+  ]
 }

@@ -8,8 +8,6 @@
   "type": "Compétence",
   "rarity": "Rare",
   "targetingMode": "Player",
-  "exhaust": true,
-  "retain": false,
   "effects": [
     {
       "type": "Draw",
@@ -49,8 +47,9 @@
   "modifiers": [],
   "favoredCharacter": "EP",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": true,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": [
+    "Created",
+    "Exhaust"
+  ]
 }

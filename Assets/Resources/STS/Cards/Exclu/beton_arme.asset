@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: beton_arme
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: beton_arme
   cardName: "B\xE9ton arm\xE9"
   collectionCardId: 
   collectionCard: {fileID: 0}
@@ -33,8 +34,11 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   - type: 3
-    value: 0
+    value: 3
     targetSelf: 0
     targetOthers: 0
     statusType: 35
@@ -45,6 +49,9 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   targetingMode: 0
   modifiers:
   - type: 5
@@ -53,6 +60,8 @@ MonoBehaviour:
   exhaust: 0
   retain: 0
   innate: 0
+  infinite: 0
   favoredCharacter: 6
   animationSpeed: 1
   startingCount: 0
+  tags: 

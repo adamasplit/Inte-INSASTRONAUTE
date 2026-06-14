@@ -17,6 +17,10 @@ public class PanelOptionView : MonoBehaviour
         }
         label.text += "</size></color>";
         icon.sprite = option.icon;
+        if (icon.sprite==null)
+        {
+            icon.gameObject.SetActive(false);
+        }
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => {option.action?.Invoke(); });
         if (option.action == null)

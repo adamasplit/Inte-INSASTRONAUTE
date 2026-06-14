@@ -29,11 +29,13 @@ public class PanelOptionData
 {
     public string text;
     public string iconName;
+    public string completionMessage;
     public List<PanelOptionEntryData> entries = new();
     public PanelOptionData(PanelOption option)
     {
         text = option.text;
         iconName = option.icon != null ? option.icon.name : null;
+        completionMessage = option.completionMessage;
         if (option.entries != null)
         {
             foreach (var entry in option.entries)
@@ -47,6 +49,7 @@ public class PanelOptionData
     {
         PanelOption opt = new PanelOption();
         opt.text = text;
+        opt.completionMessage = completionMessage;
         // icon lookup by iconName if needed
         opt.entries = new List<PanelOptionEntry>();
         foreach (var entryData in entries)
@@ -66,9 +69,11 @@ public class PanelOptionEntryData
 {
     public string type;
     public int value;
+    public string id;
     public PanelOptionEntryData(PanelOptionEntry entry)
     {
         type = entry.type.ToString();
         value = entry.value;
+        id = entry.id;
     }
 }

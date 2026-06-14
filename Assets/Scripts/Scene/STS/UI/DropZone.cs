@@ -15,6 +15,8 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     public bool acceptsEnemyCards = false;
     public static Character hoveredCharacter;
     bool deathAnimationPlayed;
+    bool enemyImageSizeCached;
+    Vector2 enemyImageSize;
 
     public void Init(CombatManager cm, Character t, bool acceptsEnemy)
     {
@@ -30,6 +32,18 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         {
             image.gameObject.SetActive(false);
         }
+
+        if (image != null)
+        {
+            RectTransform imageRect = image.rectTransform;
+            imageRect.localScale = Vector3.one;
+            imageRect.anchoredPosition = Vector2.zero;
+            Color color = image.color;
+            color.a = 1f;
+            image.color = color;
+        }
+
+        enemyImageSizeCached = false;
         acceptsEnemyCards = acceptsEnemy;
         deathAnimationPlayed = false;
 
@@ -41,11 +55,35 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     }
     void Update()
     {
-        float targetSize=Mathf.Min(GetComponent<RectTransform>().sizeDelta.x, GetComponent<RectTransform>().sizeDelta.y, 500);
+        if (image == null)
+            return;
+
+        RectTransform imageRect = image.rectTransform;
+
         if (target.isPlayer)
-            image.GetComponent<RectTransform>().sizeDelta = new Vector2(800, 800);
-        else
-            image.GetComponent<RectTransform>().sizeDelta = new Vector2(targetSize, targetSize);
+        {
+            imageRect.sizeDelta = new Vector2(800, 800);
+            return;
+        }
+
+        if (!enemyImageSizeCached)
+        {
+            RectTransform zoneRect = GetComponent<RectTransform>();
+            float targetSize = Mathf.Min(zoneRect.rect.width, zoneRect.rect.height, 500f);
+            if (targetSize <= 0f)
+            {
+                targetSize = Mathf.Min(imageRect.sizeDelta.x, imageRect.sizeDelta.y, 500f);
+            }
+            if (targetSize <= 0f)
+            {
+                targetSize = 500f;
+            }
+
+            enemyImageSize = new Vector2(targetSize, targetSize);
+            enemyImageSizeCached = true;
+        }
+
+        imageRect.sizeDelta = enemyImageSize;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -90,7 +128,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
         var mode = cardView.cardInstance.targetingMode;
 
-        var targets = combat.GetTargets(mode, target);
+        var targets = combat.GetDisplayTargets(mode, target);
 
         if (targets.Count == 0)
             return;

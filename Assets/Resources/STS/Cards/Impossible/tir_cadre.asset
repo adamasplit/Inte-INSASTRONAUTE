@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: tir_cadre
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: tir_cadre
   cardName: "Tir cadr\xE9"
   collectionCardId: 
   collectionCard: {fileID: 0}
@@ -19,7 +20,7 @@ MonoBehaviour:
   cost: 0
   xCost: 0
   type: 0
-  rarity: 5
+  rarity: 2
   effects:
   - type: 0
     value: 2
@@ -53,11 +54,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
   targetingMode: 1
   modifiers: []
-  exhaust: 1
-  retain: 0
-  innate: 0
-  infinite: 0
-  created: 0
   favoredCharacter: 10
   animationSpeed: 1
   startingCount: 0
+  tags: 0800000009000000

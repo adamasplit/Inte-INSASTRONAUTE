@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: etude_d_impact
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: etude_d_impact
   cardName: "\xC9tude d'impact"
   collectionCardId: 
   collectionCard: {fileID: 0}
@@ -42,7 +43,7 @@ MonoBehaviour:
   retain: 0
   innate: 0
   infinite: 0
-  created: 0
   favoredCharacter: 0
   animationSpeed: 1
-  startingCount: 1
+  startingCount: 0
+  tags: 

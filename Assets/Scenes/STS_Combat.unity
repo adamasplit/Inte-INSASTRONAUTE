@@ -2769,12 +2769,7 @@ MonoBehaviour:
   ui: {fileID: 121123196}
   combat: {fileID: 976502727}
   turnSystem: {fileID: 976502729}
-  cardsOnTest:
-  - {fileID: 11400000, guid: 9f91d4894f9e4fc4493418824097b525, type: 2}
-  - {fileID: 11400000, guid: c81fe9c9fcbafbc4196a821088811f19, type: 2}
-  - {fileID: 11400000, guid: c81fe9c9fcbafbc4196a821088811f19, type: 2}
-  - {fileID: 11400000, guid: c81fe9c9fcbafbc4196a821088811f19, type: 2}
-  - {fileID: 11400000, guid: c81fe9c9fcbafbc4196a821088811f19, type: 2}
+  cardsOnTest: []
 --- !u!114 &976502729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3433,7 +3428,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 107f46427b79695429168041272609f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectionManager
-  selectedCards: []
+  selectionMode: 0
+  requiredCount: 0
 --- !u!114 &1311949280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3446,8 +3442,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad116fc4a5969eb4794cf8d7a6a0a325, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GlobalUIManager
-  selectionMode: 0
-  requiredCount: 0
 --- !u!1 &1353585266
 GameObject:
   m_ObjectHideFlags: 0

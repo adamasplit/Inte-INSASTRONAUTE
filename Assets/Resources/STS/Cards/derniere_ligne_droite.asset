@@ -12,21 +12,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: derniere_ligne_droite
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: derniere_ligne_droite
   cardName: "Derni\xE8re ligne droite"
+  collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 95bbccd27b1617f48b5a6eb0bfa4c174, type: 2}
+  icon: {fileID: 0}
   cost: 0
+  xCost: 0
   type: 0
   rarity: 3
   effects:
   - type: 0
     value: 1
     targetSelf: 0
+    targetOthers: 0
     statusType: 0
     duration: 0
+    description: 
+    cardID: 
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   targetingMode: 1
   modifiers:
   - type: 0
     kind: 2
-    value: 6
+    value: 3
   exhaust: 0
   retain: 0
+  innate: 0
+  infinite: 0
+  favoredCharacter: 9
+  animationSpeed: 1
+  startingCount: 0
+  tags: 

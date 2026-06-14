@@ -8,8 +8,6 @@
   "type": "Attaque",
   "rarity": "Epic",
   "targetingMode": "Enemy",
-  "exhaust": false,
-  "retain": false,
   "effects": [
     {
       "type": "Damage",
@@ -18,11 +16,11 @@
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
-      "description": null,
-      "cardID": null,
+      "description": "",
+      "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "cardFilterTags": [],
@@ -33,13 +31,11 @@
     {
       "type": "Damage",
       "kind": "Played",
-      "value": 6
+      "value": 3
     }
   ],
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": []
 }

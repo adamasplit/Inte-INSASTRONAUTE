@@ -1,58 +1,108 @@
 {
     "events": [
         {
-            "title": "!!!",
-            "description": "C'est les DS demain...",
+            "title": "",
+            "description": "C'est les DS dans 1 jour...",
             "imageName": "",
             "options": [
                 {
-                    "text": "Retire 5 cartes",
+                    "text": "S'éclaircir l'esprit",
                     "iconName": "",
+                    "completionMessage": "Est-ce que ça sera suffisant?",
                     "entries": [
                         {
                             "type": "RemoveCard",
-                            "value": 5
+                            "value": 5,
+                            "id": ""
                         }
                     ]
                 },
                 {
-                    "text": "Perds 10 PV",
+                    "text": "Scroller",
                     "iconName": "",
+                    "completionMessage": "Réviser c'est douter de ses capacités",
                     "entries": [
                         {
                             "type": "Damage",
-                            "value": 10
+                            "value": 10,
+                            "id": ""
+                        },
+                        {
+                            "type": "CardReward",
+                            "value": 1,
+                            "id": ""
                         }
                     ]
                 }
             ]
         },
         {
-            "title": "baba",
+            "title": "",
             "description": "La nuit tombe...",
             "imageName": "",
             "options": [
                 {
                     "text": "Réviser pendant la nuit",
                     "iconName": "",
+                    "completionMessage": "",
                     "entries": [
                         {
                             "type": "Damage",
-                            "value": 10
+                            "value": 20,
+                            "id": ""
                         },
                         {
                             "type": "MaxHpGain",
-                            "value": 20
+                            "value": 10,
+                            "id": ""
                         }
                     ]
                 },
                 {
                     "text": "Se reposer",
                     "iconName": "",
+                    "completionMessage": "",
                     "entries": [
                         {
                             "type": "Heal",
-                            "value": 25
+                            "value": 25,
+                            "id": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "",
+            "description": "C'est la soirée du WEI...",
+            "imageName": "",
+            "options": [
+                {
+                    "text": "Aller se coucher tôt",
+                    "iconName": "",
+                    "completionMessage": "",
+                    "entries": [
+                        {
+                            "type": "MaxHpGain",
+                            "value": 3,
+                            "id": ""
+                        }
+                    ]
+                },
+                {
+                    "text": "???",
+                    "iconName": "",
+                    "completionMessage": "",
+                    "entries": [
+                        {
+                            "type": "Damage",
+                            "value": 9,
+                            "id": ""
+                        },
+                        {
+                            "type": "RelicReward",
+                            "value": 1,
+                            "id": ""
                         }
                     ]
                 }

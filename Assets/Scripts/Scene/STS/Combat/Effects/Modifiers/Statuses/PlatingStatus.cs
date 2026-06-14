@@ -14,6 +14,6 @@ public class PlatingStatus : StatusEffect
     }
     public override string Desc()
     {
-        return $"\nGagnez {Duration} d'Armure à la fin de chaque tour";
+        return $"Gagnez {Duration} d'Armure à la fin de chaque tour";
     }
 }

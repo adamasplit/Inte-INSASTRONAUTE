@@ -8,8 +8,6 @@
   "type": "Compétence",
   "rarity": "Rare",
   "targetingMode": "AllEnemies",
-  "exhaust": false,
-  "retain": false,
   "effects": [
     {
       "type": "TransferDebuff",
@@ -49,8 +47,6 @@
   "modifiers": [],
   "favoredCharacter": "MRIE",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": []
 }

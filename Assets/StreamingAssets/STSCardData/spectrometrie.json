@@ -8,11 +8,26 @@
   "type": "Compétence",
   "rarity": "Uncommon",
   "targetingMode": "Enemy",
-  "exhaust": false,
-  "retain": false,
   "effects": [
     {
       "type": "Break",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Vuln",
+      "duration": 3,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "ArmorBreak",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    },
+    {
+      "type": "AddCardToDrawPile",
       "value": 0,
       "targetSelf": false,
       "targetOthers": false,
@@ -32,8 +47,6 @@
   "modifiers": [],
   "favoredCharacter": "CFI",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": []
 }

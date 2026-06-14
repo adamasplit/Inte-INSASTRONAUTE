@@ -7,4 +7,5 @@ public class PanelOption
     public Sprite icon;
     public List<PanelOptionEntry> entries = new();
     public System.Action action;
+    public string completionMessage; // Optional message to display after action is completed
 }

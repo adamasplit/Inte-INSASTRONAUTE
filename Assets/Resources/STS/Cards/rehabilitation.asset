@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: rehabilitation
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: rehabilitation
   cardName: "R\xE9habilitation"
   collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: 53feeae6b13bcb741b7a89640350e4d6, type: 2}
+  collectionCard: {fileID: 11400000, guid: 9818239ccf1b3c04099be22da29fab5c, type: 2}
   icon: {fileID: 0}
   cost: 1
   xCost: 0
-  type: 0
+  type: 1
   rarity: 0
   effects:
   - type: 1
@@ -57,7 +58,7 @@ MonoBehaviour:
   retain: 0
   innate: 0
   infinite: 0
-  created: 0
   favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
+  tags: 09000000

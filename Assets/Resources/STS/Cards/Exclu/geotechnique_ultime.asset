@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: geotechnique_ultime
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: geotechnique_ultime
   cardName: "G\xE9otechnique ultime"
   collectionCardId: 
   collectionCard: {fileID: 0}
@@ -33,6 +34,9 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   - type: 0
     value: 40
     targetSelf: 0
@@ -45,6 +49,9 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   - type: 18
     value: 0
     targetSelf: 0
@@ -57,11 +64,16 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   targetingMode: 3
   modifiers: []
   exhaust: 1
   retain: 0
   innate: 0
+  infinite: 0
   favoredCharacter: 6
   animationSpeed: 1
   startingCount: 0
+  tags: 09000000

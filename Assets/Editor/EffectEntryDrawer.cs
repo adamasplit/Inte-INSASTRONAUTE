@@ -23,6 +23,7 @@ public class EffectEntryDrawer : PropertyDrawer
         var conditionTypeProp = property.FindPropertyRelative("conditionType");
         var conditionValueProp = property.FindPropertyRelative("conditionValue");
         var trueEffectProp = property.FindPropertyRelative("trueEffect");
+        var cardIDProp = property.FindPropertyRelative("cardID");
 
         // TYPE
         EditorGUI.PropertyField(
@@ -86,10 +87,13 @@ public class EffectEntryDrawer : PropertyDrawer
                 new Rect(position.x, y, position.width, lineHeight),
                 durationProp);
             y += lineHeight + spacing;
+            EditorGUI.PropertyField(
+                new Rect(position.x, y, position.width, lineHeight),
+                cardIDProp);
+            y += lineHeight + spacing;
         }
         if ((EffectType)typeProp.enumValueIndex == EffectType.AddCardToHand|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDrawPile|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDiscardPile)
         {
-            var cardIDProp = property.FindPropertyRelative("cardID");
             EditorGUI.PropertyField(
                 new Rect(position.x, y, position.width, lineHeight),
                 cardIDProp);
@@ -150,7 +154,7 @@ public class EffectEntryDrawer : PropertyDrawer
 
         if ((EffectType)typeProp.enumValueIndex == EffectType.Status)
         {
-            lines += 3; // header + statusType + duration
+            lines += 4; // header + statusType + duration
         }
         if ((EffectType)typeProp.enumValueIndex == EffectType.Multihit)
         {

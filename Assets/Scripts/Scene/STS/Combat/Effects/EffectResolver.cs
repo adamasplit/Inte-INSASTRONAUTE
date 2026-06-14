@@ -171,7 +171,7 @@ public static class EffectResolver
                     yield break;
                 int val = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
                 int dur = BattleCalculator.GetModifiedValue(effect.duration, StatType.StatusDuration, ctx);
-                StatusEffect stat=StatusEffect.Factory(effect.statusType,val,dur);
+                StatusEffect stat=StatusEffect.Factory(effect.statusType,val,dur,effect.cardID);
                 ctx.target.AddStatus(stat);
                 yield break;
             }
@@ -399,7 +399,7 @@ public static class EffectResolver
                                         if (c.data.type == CardType.Pouvoir) return true;
                                         break;
                                     case CardFilterTag.Retain:
-                                        if (c.data.retain) return true;
+                                        if (c.data.HasTag(CardTag.Retain)) return true;
                                         break;
                                     case CardFilterTag.Cost0:
                                         if (c.data.cost == 0) return true;

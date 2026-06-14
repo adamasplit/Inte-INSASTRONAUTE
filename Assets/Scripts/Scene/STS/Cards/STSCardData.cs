@@ -16,20 +16,20 @@ public class STSCardData : ScriptableObject
     public List<EffectEntry> effects;
     public TargetingMode targetingMode;
     public List<ModifierData> modifiers = new();
-    public bool exhaust=false;
-    public bool retain=false;
-    public bool innate=false;
-    public bool infinite=false;
-    public bool created=false; // Cards that are created during combat (e.g. by other cards) should have this set to true to avoid obtaining them outside of combat through the collection card system
     public SelectableCharacter favoredCharacter=SelectableCharacter.Aucun;
     public float animationSpeed=1f;
     public int startingCount=0;
+    public List<CardTag> tags = new();
     #if UNITY_EDITOR
     private void OnValidate()
     {
         id = name;
     }
     #endif
+    public bool HasTag(CardTag tag)
+    {
+        return tags.Contains(tag);
+    }
     public STSCardDataDTO ToDTO()
     {
         STSCardDataDTO dto = new();
@@ -45,15 +45,11 @@ public class STSCardData : ScriptableObject
         dto.rarity = rarity.ToString();
 
         dto.targetingMode = targetingMode.ToString();
-
-        dto.exhaust = exhaust;
-
-        dto.retain = retain;
-
-        dto.innate = innate;
         dto.xCost = xCost;
-        dto.infinite = infinite;
-        dto.created = created;
+        foreach (var tag in tags)
+        {
+            dto.tags.Add(tag.ToString());
+        }
 
         dto.favoredCharacter = favoredCharacter.ToString();
         dto.animationSpeed = animationSpeed;
@@ -99,13 +95,8 @@ public class STSCardData : ScriptableObject
         card.targetingMode =
             Enum.Parse<TargetingMode>(dto.targetingMode);
 
-        card.exhaust = dto.exhaust;
         card.xCost = dto.xCost;
-        card.innate = dto.innate;
-        card.infinite = dto.infinite;
         card.animationSpeed = dto.animationSpeed;
-        card.created = dto.created;
-        card.retain = dto.retain;
         card.effects = new List<EffectEntry>();
         foreach (var effectDto in dto.effects)
         {
@@ -116,7 +107,17 @@ public class STSCardData : ScriptableObject
         {
             card.modifiers.Add(ModifierData.FromDTO(modDto));
         }
-
+        foreach(string tag in dto.tags)
+        {
+            if (Enum.TryParse<CardTag>(tag, out var parsedTag))
+            {
+                card.tags.Add(parsedTag);
+            }
+            else
+            {
+                Debug.LogWarning($"Unknown tag '{tag}' in card '{dto.id}'");
+            }
+        }
         card.favoredCharacter = Enum.Parse<SelectableCharacter>(dto.favoredCharacter);
         card.startingCount = dto.startingCount;
         return card;

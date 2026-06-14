@@ -8,8 +8,6 @@
   "type": "Compétence",
   "rarity": "Epic",
   "targetingMode": "Enemy",
-  "exhaust": true,
-  "retain": false,
   "effects": [
     {
       "type": "EndTurn",
@@ -83,8 +81,8 @@
   "modifiers": [],
   "favoredCharacter": "EP",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 1
+  "startingCount": 1,
+  "tags": [
+    "Exhaust"
+  ]
 }

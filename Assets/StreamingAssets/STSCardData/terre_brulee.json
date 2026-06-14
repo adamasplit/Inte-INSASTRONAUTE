@@ -8,8 +8,6 @@
   "type": "Attaque",
   "rarity": "Epic",
   "targetingMode": "AllEnemies",
-  "exhaust": true,
-  "retain": false,
   "effects": [
     {
       "type": "Damage",
@@ -49,8 +47,8 @@
   "modifiers": [],
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": [
+    "Exhaust"
+  ]
 }

@@ -8,8 +8,6 @@
   "type": "Compétence",
   "rarity": "Rare",
   "targetingMode": "Player",
-  "exhaust": false,
-  "retain": false,
   "effects": [
     {
       "type": "Status",
@@ -17,12 +15,12 @@
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Vuln",
-      "duration": 3,
+      "duration": 2,
       "description": "",
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "cardFilterTags": [],
@@ -39,7 +37,7 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "cardFilterTags": [],
@@ -49,8 +47,6 @@
   "modifiers": [],
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": []
 }

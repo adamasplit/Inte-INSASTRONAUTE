@@ -19,6 +19,6 @@ public class RegenStatus : StatusEffect
     }
     public override string Desc()
     {
-        return $"\nSoigne {Duration} PV au début de chaque tour";
+        return $"Soigne {Duration} PV au début de chaque tour";
     }
 }

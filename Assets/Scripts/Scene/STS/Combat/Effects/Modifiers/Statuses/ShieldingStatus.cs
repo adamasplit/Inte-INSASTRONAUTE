@@ -14,6 +14,6 @@ public class ShieldingStatus : StatusEffect
     }
     public override string Desc()
     {
-        return $"\nGagnez {Duration} d'Armure au début de chaque tour";
+        return $"Gagnez {Duration} d'Armure au début de chaque tour";
     }
 }

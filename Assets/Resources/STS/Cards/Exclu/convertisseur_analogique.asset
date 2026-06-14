@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: convertisseur_analogique
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: convertisseur_analogique
   cardName: Convertisseur analogique
   collectionCardId: 
   collectionCard: {fileID: 0}
@@ -43,6 +44,6 @@ MonoBehaviour:
   innate: 0
   infinite: 0
   created: 0
-  favoredCharacter: 9
+  favoredCharacter: 3
   animationSpeed: 1
   startingCount: 0

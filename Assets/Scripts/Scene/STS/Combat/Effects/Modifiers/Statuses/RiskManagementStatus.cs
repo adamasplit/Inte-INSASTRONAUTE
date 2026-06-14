@@ -12,7 +12,7 @@ public class RiskManagementStatus : StatusEffect
     }
     public override void Merge(StatusEffect other)
     {
-        other.Value = Mathf.Min(other.Value, this.Value);
+        other.Value = Mathf.Max(other.Value, this.Value);
     }
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {
@@ -21,13 +21,18 @@ public class RiskManagementStatus : StatusEffect
     }
     public override string Desc()
     {
-        return $"\nVous ne pouvez pas perdre plus de {Value} PV en un seul coup.";
+        return $"Vous ne pouvez pas perdre plus de {maxDamage()} PV en un seul coup.";
     }
-    public override void OnDamageTaken(Character source,Character target, ref int damage)
+    private int maxDamage()
     {
-        if (damage > Value)
+        return Mathf.Max(5,30-Value);
+    }
+    public override int Modify(int damage, EffectContext ctx)
+    {
+        if (damage>maxDamage())
         {
-            damage = Value;
+            damage=maxDamage();
         }
+        return damage;
     }
 }

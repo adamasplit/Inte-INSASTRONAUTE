@@ -29,8 +29,8 @@ public class CostNullifyStatus : StatusEffect
     {
         if (Value>1)
         {
-            return $"\nLes {Value} prochaines cartes jouées coûtent 0.";
+            return $"Les {Value} prochaines cartes jouées coûtent 0.";
         }
-        return $"\nLa prochaine carte jouée coûte 0.";
+        return $"La prochaine carte jouée coûte 0.";
     }
 }

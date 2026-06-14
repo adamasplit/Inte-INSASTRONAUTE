@@ -8,8 +8,6 @@
   "type": "Pouvoir",
   "rarity": "Legendary",
   "targetingMode": "Player",
-  "exhaust": false,
-  "retain": false,
   "effects": [
     {
       "type": "Status",
@@ -32,8 +30,6 @@
   "modifiers": [],
   "favoredCharacter": "MRIE",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": []
 }

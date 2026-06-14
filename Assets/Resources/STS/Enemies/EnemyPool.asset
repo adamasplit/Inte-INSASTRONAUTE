@@ -46,7 +46,7 @@ MonoBehaviour:
   - displayName: Difficult
     enemies:
     - {fileID: 11400000, guid: 32beb350830d4ea4080266b5e66083b2, type: 2}
-    minFloor: 0
+    minFloor: 5
     maxFloor: 10
     act: -1
     weight: 1

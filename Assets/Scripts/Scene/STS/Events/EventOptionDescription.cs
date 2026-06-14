@@ -26,6 +26,8 @@ public static class EventOptionDescription
                 return $"Retirez {option.value} carte"+(option.value>1?"s":"")+" de votre deck";
             case EventOptionType.TransformCard:
                 return $"Transformez {option.value} carte"+(option.value>1?"s":"")+" de votre deck";
+            case EventOptionType.AddCard:
+                return $"Ajoutez {option.value} {option.id} à votre deck";
             default:
                 return "";
         }

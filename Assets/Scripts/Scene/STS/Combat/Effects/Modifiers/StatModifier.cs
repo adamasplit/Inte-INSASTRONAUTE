@@ -5,7 +5,7 @@ public abstract class StatModifier
     public ModifierType modifierType;
     public virtual bool AppliesTo(StatType stat,EffectContext ctx)
     {
-        return type == stat || (type == StatType.Any&&stat!=StatType.Cost);
+        return type == stat || (type == StatType.Any&&(stat!=StatType.Cost&&stat!=StatType.ReplayCount));
     }
     public abstract int Modify(int value, EffectContext ctx);
     public abstract string Describe();

@@ -16,6 +16,6 @@ public class ContinuousStatus : StatusEffect
     }
     public override string Desc()
     {
-        return $"\nLa cible subit {Value} dégâts à la fin du tour de n'importe quel personnage. (s'active {Duration} fois).";
+        return $"La cible subit {Value} dégâts à la fin du tour de n'importe quel personnage. (s'active {Duration} fois).";
     }
 }

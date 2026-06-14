@@ -21,6 +21,6 @@ public class WeaknessStatus : StatusEffect
     }
     public override string Desc()
     {
-        return "\nInflige 25% de dégâts en moins";
+        return $"Inflige 25% de dégâts en moins";
     }
 }

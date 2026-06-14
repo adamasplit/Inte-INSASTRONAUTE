@@ -8,8 +8,6 @@
   "type": "Compétence",
   "rarity": "Epic",
   "targetingMode": "Player",
-  "exhaust": false,
-  "retain": false,
   "effects": [
     {
       "type": "Armor",
@@ -49,8 +47,6 @@
   "modifiers": [],
   "favoredCharacter": "GC",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 1
+  "startingCount": 1,
+  "tags": []
 }

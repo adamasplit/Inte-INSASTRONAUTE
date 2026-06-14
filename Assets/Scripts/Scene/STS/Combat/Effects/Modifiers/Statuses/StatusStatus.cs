@@ -28,6 +28,6 @@ public class StatusStatus : StatusEffect
     }
     public override string Desc()
     {
-        return $"\nÀ la fin du tour, déclenche un effet de statut aléatoire : Étourdissement, Aveuglement, ou Déchéance sur la cible.";
+        return $"À la fin du tour, déclenche un effet de statut aléatoire : Étourdissement, Aveuglement, ou Déchéance sur la cible.";
     }
 }

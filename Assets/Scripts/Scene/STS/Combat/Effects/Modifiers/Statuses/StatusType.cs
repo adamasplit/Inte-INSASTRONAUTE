@@ -39,5 +39,6 @@ public enum StatusType
     FullBreak,
     Status,
     CostNullify,
-    FollowUp
+    FollowUp,
+    Echo
 }

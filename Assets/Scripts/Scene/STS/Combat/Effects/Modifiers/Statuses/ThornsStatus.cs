@@ -17,4 +17,8 @@ public class ThornsStatus : StatusEffect
             VFXManager.Instance.PlayEffect("Thorns", target);
         }
     }
+    public override string Desc()
+    {
+        return $"Vous infligez {Value} de dégâts à l'attaquant lorsqu'il vous inflige des dégâts.";
+    }
 }

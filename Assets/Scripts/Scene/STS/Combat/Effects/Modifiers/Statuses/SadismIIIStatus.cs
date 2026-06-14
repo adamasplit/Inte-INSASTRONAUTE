@@ -25,11 +25,11 @@ public class SadismIIIStatus:StatusEffect
     }
     public override void OnCardPlayed(Character source,Character target,CardInstance card)
     {
-        if (card.data.type == CardType.Attaque&& card.data.name != "Acharnement"&&source.GetCombatManager().currentCardName!="Acharnement" && target.currentHP <= target.maxHP * 0.5f)
+        if (card.data.type == CardType.Attaque&&!card.HasTag(CardTag.FollowUp) && target.currentHP <= target.maxHP * 0.5f)
         {
             CardInstance crystalCard = new CardInstance(STSCardDatabase.Get("Acharnement"));
             VFXManager.Instance.PlayEffect("Sadism", target);
-            source.GetCombatManager().PlayCard(source,crystalCard,source.GetCombatManager().enemies,false,true);
+            source.GetCombatManager().PlayCard(source,crystalCard,source.GetCombatManager().AutoCardTargets(crystalCard.targetingMode,source,target),false,true);
         }
     }
 }

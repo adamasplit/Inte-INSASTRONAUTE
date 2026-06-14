@@ -75,7 +75,7 @@ public static class EffectDescription
             {
                 int val = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
                 int dur = BattleCalculator.GetModifiedValue(effect.duration, StatType.StatusDuration, ctx);
-                StatusEffect stat=StatusEffect.Factory(effect.statusType,val,dur);
+                StatusEffect stat=StatusEffect.Factory(effect.statusType,val,dur,effect.cardID);
                 if (stat.generic) 
                 {
                     if (effect.targetSelf)
@@ -107,7 +107,7 @@ public static class EffectDescription
                 else
                     {
                         //Remove last character if it's a dot or a plus sign
-                        string desc= stat.Desc();
+                        string desc= stat.CardDesc(effect.targetSelf);
                         if (desc.EndsWith(".") || desc.EndsWith("+"))
                         {
                             desc = desc.Substring(0, desc.Length - 1);

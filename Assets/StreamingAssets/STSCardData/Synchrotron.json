@@ -8,8 +8,6 @@
   "type": "Attaque",
   "rarity": "Legendary",
   "targetingMode": "AllEnemies",
-  "exhaust": false,
-  "retain": false,
   "effects": [
     {
       "type": "Damage",
@@ -66,8 +64,6 @@
   "modifiers": [],
   "favoredCharacter": "EP",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": []
 }

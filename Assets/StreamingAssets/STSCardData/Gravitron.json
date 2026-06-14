@@ -8,8 +8,6 @@
   "type": "Compétence",
   "rarity": "Rare",
   "targetingMode": "AllEnemies",
-  "exhaust": true,
-  "retain": false,
   "effects": [
     {
       "type": "Status",
@@ -32,8 +30,8 @@
   "modifiers": [],
   "favoredCharacter": "MECA",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": [
+    "Exhaust"
+  ]
 }

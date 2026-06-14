@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd8dfbaa6b4ba54bbcfde29ea06fc65, type: 3}
+  m_Name: ds
+  m_EditorClassIdentifier: Assembly-CSharp::EventDataSO
+  title: 
+  description: C'est les DS dans 1 jour...
+  image: {fileID: 0}
+  options:
+  - text: "S'\xE9claircir l'esprit"
+    icon: {fileID: 0}
+    entries:
+    - type: 9
+      value: 5
+      id: 
+    completionMessage: "Est-ce que \xE7a sera suffisant?"
+  - text: Scroller
+    icon: {fileID: 0}
+    entries:
+    - type: 7
+      value: 10
+      id: 
+    - type: 1
+      value: 1
+      id: 
+    completionMessage: "R\xE9viser c'est douter de ses capacit\xE9s"

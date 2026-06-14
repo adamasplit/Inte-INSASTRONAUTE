@@ -1,0 +1,35 @@
+{
+  "id": "turbomachine",
+  "cardName": "Turbomachine",
+  "collectionCardId": "",
+  "iconId": "Energie2",
+  "cost": 2,
+  "xCost": false,
+  "type": "Pouvoir",
+  "rarity": "Legendary",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "DelayImmunity",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "EP",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

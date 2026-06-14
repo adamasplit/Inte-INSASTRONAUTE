@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1cd8dfbaa6b4ba54bbcfde29ea06fc65, type: 3}
-  m_Name: TestEvent
+  m_Name: nuit
   m_EditorClassIdentifier: Assembly-CSharp::EventDataSO
-  title: baba
+  title: 
   description: La nuit tombe...
   image: {fileID: 0}
   options:
@@ -20,9 +20,9 @@ MonoBehaviour:
     icon: {fileID: 0}
     entries:
     - type: 7
-      value: 10
-    - type: 5
       value: 20
+    - type: 5
+      value: 10
   - text: Se reposer
     icon: {fileID: 0}
     entries:

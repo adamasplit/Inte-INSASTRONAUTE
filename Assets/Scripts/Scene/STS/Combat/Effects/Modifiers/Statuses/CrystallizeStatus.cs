@@ -22,7 +22,7 @@ public class CrystallizeStatus : StatusEffect
     }
     public override void OnTargetedByCard(Character source, Character target, CardInstance card)
     {
-        if (card.data.type == CardType.Attaque&&followUp)
+        if (card.data.type == CardType.Attaque&&followUp&&!card.HasTag(CardTag.FollowUp))
         {
             CardInstance crystalCard = new CardInstance(STSCardDatabase.Get("Recristallisation"));
             VFXManager.Instance.PlayEffect("Crystallize", target);

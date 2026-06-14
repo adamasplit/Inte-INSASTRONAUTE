@@ -22,6 +22,6 @@ public class VulnStatus : StatusEffect
     }
     public override string Desc()
     {
-        return "\nReçoit 50% de dégâts en plus";
+        return $"Reçoit 50% de dégâts en plus";
     }
 }

@@ -8,8 +8,6 @@
   "type": "Pouvoir",
   "rarity": "Epic",
   "targetingMode": "Player",
-  "exhaust": true,
-  "retain": false,
   "effects": [
     {
       "type": "LoseHP",
@@ -66,8 +64,8 @@
   "modifiers": [],
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": [
+    "Exhaust"
+  ]
 }

@@ -209,7 +209,8 @@ public class CharacterUI : MonoBehaviour
                     target = RunManager.Instance.player,
                     combat = cm,
                     state = cm.state,
-                    card = new CardInstance(next)
+                    card = new CardInstance(next),
+                    isPreview=true
                 });
                 effectUIObj.SetValue(val);
             }

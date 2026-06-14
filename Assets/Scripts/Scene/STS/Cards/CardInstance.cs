@@ -9,9 +9,18 @@ public class CardInstance
     public List<CardEnchantment> enchantments = new();
     public List<EffectEntry> addedEffects = new();
     public TargetingMode targetingMode;
+    public bool HasTag(CardTag tag)
+    {
+        return data.HasTag(tag);
+    }
     public CardInstance(STSCardData data)
     {
         this.data = data;
+        if (data==null)
+        {
+            Debug.LogError("Card data is null for card instance.");
+            return;
+        }
         this.targetingMode = data.targetingMode;
         if (data.modifiers != null)
         {
@@ -66,7 +75,6 @@ public class CardInstance
                 text += desc + "\n";
             }
         }
-        Debug.Log("modifiers count: "+GetModifiers().Count);
         foreach (var mod in GetModifiers(StatType.Damage,false,false))
         {
             text += $"{mod.Describe()}\n";
@@ -75,9 +83,9 @@ public class CardInstance
         {
             text += $"{mod.Describe()}\n";
         }
-        if (data.exhaust)
+        if (data.HasTag(CardTag.Exhaust))
             text += "<color=orange>[Épuisement]</color>\n";
-        if (data.retain)
+        if (data.HasTag(CardTag.Retain))
             text += "<color=orange>[Retenue]</color>\n";
         foreach (var ench in enchantments)
         {
@@ -228,6 +236,17 @@ public class CardInstance
                 if (!merged.GetEffects().Contains(effect))
                 {
                     merged.addedEffects.Add(effect);
+                }
+            }
+            foreach (var ench in card.enchantments)
+            {
+                merged.AddEnchantment(ench);
+            }
+            foreach (var tag in card.data.tags)
+            {
+                if (!merged.data.tags.Contains(tag))
+                {
+                    merged.data.tags.Add(tag);
                 }
             }
         }

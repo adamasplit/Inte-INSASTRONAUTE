@@ -52,13 +52,28 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+  - type: 11
+    value: 1
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 14
+    duration: 0
+    description: 
+    cardID: 
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   targetingMode: 5
   modifiers: []
   exhaust: 0
   retain: 0
   innate: 0
   infinite: 0
-  created: 0
   favoredCharacter: 1
   animationSpeed: 1
   startingCount: 0
+  tags: 

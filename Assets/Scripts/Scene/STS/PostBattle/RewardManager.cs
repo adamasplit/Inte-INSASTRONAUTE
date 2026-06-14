@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
-public class RewardManager : MonoBehaviour
+public class RewardManager : MonoBehaviour, IRewardFlowHost
 {
     public Transform rewardList;
 

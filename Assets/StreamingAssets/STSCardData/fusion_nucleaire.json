@@ -8,8 +8,6 @@
   "type": "Compétence",
   "rarity": "Legendary",
   "targetingMode": "Player",
-  "exhaust": false,
-  "retain": true,
   "effects": [
     {
       "type": "CardSelection",
@@ -32,8 +30,10 @@
   "modifiers": [],
   "favoredCharacter": "CFI",
   "animationSpeed": 1.0,
-  "innate": true,
-  "infinite": true,
-  "created": false,
-  "startingCount": 1
+  "startingCount": 0,
+  "tags": [
+    "Retain",
+    "Innate",
+    "Infinite"
+  ]
 }

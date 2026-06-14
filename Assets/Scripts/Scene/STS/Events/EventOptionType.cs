@@ -10,5 +10,6 @@ public enum EventOptionType
     Damage,
     UpgradeCard,
     RemoveCard,
-    TransformCard
+    TransformCard,
+    AddCard
 }

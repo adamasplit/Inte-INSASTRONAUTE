@@ -8,8 +8,6 @@
   "type": "Compétence",
   "rarity": "Legendary",
   "targetingMode": "Player",
-  "exhaust": true,
-  "retain": false,
   "effects": [
     {
       "type": "Heal",
@@ -32,8 +30,8 @@
   "modifiers": [],
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": [
+    "Exhaust"
+  ]
 }

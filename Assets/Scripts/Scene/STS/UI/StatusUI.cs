@@ -98,7 +98,7 @@ public class StatusUI : MonoBehaviour
         buffDebuffIndicator.sprite = buffDebuffSprite;
         buffDebuffOverlay.sprite = buffDebuffSprite;
         maskImage.sprite = buffDebuffSprite;
-        description = status.Describe();
+        description = status.Desc();
 
         if (playSpawnAnimation)
         {

@@ -8,8 +8,6 @@
   "type": "Compétence",
   "rarity": "Special",
   "targetingMode": "Player",
-  "exhaust": false,
-  "retain": false,
   "effects": [
     {
       "type": "Armor",
@@ -66,8 +64,8 @@
   "modifiers": [],
   "favoredCharacter": "Impossible",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": [
+    "Unobtainable"
+  ]
 }

@@ -1,15 +1,13 @@
 {
   "id": "s_ameliorer_en_continu",
   "cardName": "S'améliorer en continu",
-  "collectionCardId": "ingenieur_humaniste",
+  "collectionCardId": "rattrapages",
   "iconId": null,
   "cost": 1,
   "xCost": false,
   "type": "Compétence",
   "rarity": "Legendary",
   "targetingMode": "Player",
-  "exhaust": false,
-  "retain": false,
   "effects": [
     {
       "type": "CardSelection",
@@ -27,13 +25,28 @@
       "cardSelectionSource": "DrawPile",
       "cardFilterTags": [],
       "cardSelectionEffect": "Enchant"
+    },
+    {
+      "type": "EndTurn",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Speed",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "DrawPile",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "Enchant"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
-  "innate": false,
-  "infinite": false,
-  "created": false,
-  "startingCount": 0
+  "startingCount": 0,
+  "tags": []
 }

@@ -4,7 +4,7 @@ public class RelicRewardEntryView : RewardEntryView
 
     RelicReward reward;
 
-    public override void Init(RewardItem rewardItem, RewardManager mgr)
+    public override void Init(RewardItem rewardItem, IRewardFlowHost mgr)
     {
         base.Init(rewardItem, mgr);
 

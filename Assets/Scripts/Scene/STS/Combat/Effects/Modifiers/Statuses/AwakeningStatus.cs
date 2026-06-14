@@ -19,6 +19,6 @@ public class AwakeningStatus : StatusEffect
     }
     public override string Desc()
     {
-        return $"\nSoigne {Value} PV au bout de {Duration} tours.";
+        return $"Soigne {Value} PV au bout de {Duration} tours.";
     }
 }

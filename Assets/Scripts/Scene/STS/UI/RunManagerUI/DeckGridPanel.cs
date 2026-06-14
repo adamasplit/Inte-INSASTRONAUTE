@@ -68,6 +68,12 @@ public class DeckGridPanel : MonoBehaviour
     public void SelectCard(CardInstance card, CardGridItemView itemView)
     {
         if (isAnimating) return;
+        //Hide previously selected card's preview if any
+        if (selectedItemView != null && selectedItemView != itemView)
+        {
+            selectedItemView.gameObject.SetActive(true);
+            HidePreview();
+        }
         selectedItemView = itemView;
         StartCoroutine(AnimateCardToPreview(itemView, card));
     }

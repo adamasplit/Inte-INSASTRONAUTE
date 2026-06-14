@@ -1,8 +1,10 @@
+using UnityEngine;
 public class DivinationStatus : StatusEffect
 {
-    public DivinationStatus()
+
+    public DivinationStatus(int value)
     {
-        Value = 1;
+        Value = value;
         Duration = -1;
         Name = "Divination";
         buff=true;
@@ -14,11 +16,16 @@ public class DivinationStatus : StatusEffect
     }
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {
-        return stat == StatType.Damage&&!ctx.source.isPlayer && ctx.target.statusEffects.Contains(this) && ctx.source != ctx.target;
+        return stat == StatType.Damage &&ctx.target!=null&& ctx.target.statusEffects.Contains(this) && ctx.source != ctx.target;
     }
     public override int Modify(int damage, EffectContext ctx)
     {
+        Debug.Log($"activation pour {ctx.card.data.cardName}");
         if (!ctx.isPreview) Value--;
+        if (Value <= 0)
+        {
+            mustExpire=true;
+        }
         return 0;
     }
 }

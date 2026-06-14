@@ -15,6 +15,6 @@ public class ElasticStatus : StatusEffect
     }
     public override string Desc()
     {
-        return $"\nGagnez {Value} d'Armure quand vous subissez des dégâts";
+        return $"Gagnez {Value} d'Armure quand vous subissez des dégâts";
     }
 }

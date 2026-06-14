@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: s_ameliorer_en_continu
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: s_ameliorer_en_continu
   cardName: "S'am\xE9liorer en continu"
   collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: 9818239ccf1b3c04099be22da29fab5c, type: 2}
+  collectionCard: {fileID: 11400000, guid: 3ea0a0a61a928f840ba75e2b69b3e644, type: 2}
   icon: {fileID: 0}
   cost: 1
   xCost: 0
@@ -24,6 +25,21 @@ MonoBehaviour:
   - type: 24
     value: 3
     targetSelf: 1
+    targetOthers: 0
+    statusType: 14
+    duration: 0
+    description: 
+    cardID: 
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 2
+    cardFilterTags: 
+    cardSelectionEffect: 4
+  - type: 18
+    value: 0
+    targetSelf: 0
     targetOthers: 0
     statusType: 14
     duration: 0

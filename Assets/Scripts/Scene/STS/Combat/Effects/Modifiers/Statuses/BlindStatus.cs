@@ -21,6 +21,6 @@ public class BlindStatus : StatusEffect
     }
     public override string Desc()
     {
-        return "\nLes attaques infligent 0 dégâts";
+        return "Les attaques infligent 0 dégâts";
     }
 }

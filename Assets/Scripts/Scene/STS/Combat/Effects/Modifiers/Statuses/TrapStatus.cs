@@ -15,7 +15,7 @@ public class TrapStatus : StatusEffect
     }
     public override string Desc()
     {
-        return $"\nLa cible subit {Value} dégâts à la fin de son tour pendant {Duration} tours.";
+        return $"La cible subit {Value} dégâts à la fin de son tour pendant {Duration} tours.";
     }
     public override void OnTurnEnd(Character target)
     {
