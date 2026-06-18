@@ -10,9 +10,13 @@ public class DivinationStatus : StatusEffect
         buff=true;
         framed=true;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return $"Annule les dégâts d'une attaque ennemie. Se déclenche {Value} fois.";
+        if (isPlayer)
+        {
+            return $"Annule les dégâts d'une attaque ennemie. Se déclenche {Value} fois.";
+        }
+        return $"Annule les dégâts d'une de vos attaques. Se déclenche {Value} fois.";
     }
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {
@@ -21,6 +25,10 @@ public class DivinationStatus : StatusEffect
     public override int Modify(int damage, EffectContext ctx)
     {
         Debug.Log($"activation pour {ctx.card.data.cardName}");
+        if (damage<=ctx.target.armor)
+        {
+            return damage;
+        }
         if (!ctx.isPreview) Value--;
         if (Value <= 0)
         {

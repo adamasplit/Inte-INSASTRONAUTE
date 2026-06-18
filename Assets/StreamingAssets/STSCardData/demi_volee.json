@@ -12,10 +12,10 @@
     {
       "type": "Status",
       "value": 1,
-      "targetSelf": false,
+      "targetSelf": true,
       "targetOthers": false,
-      "statusType": "FollowUp",
-      "duration": 0,
+      "statusType": "CardFollowUp",
+      "duration": 3,
       "description": "",
       "cardID": "Tir cadré",
       "conditional": false,

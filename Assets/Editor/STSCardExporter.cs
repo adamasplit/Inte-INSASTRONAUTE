@@ -12,6 +12,7 @@ public static class STSCardExporter
         Directory.CreateDirectory(folder);
 
         var guids = AssetDatabase.FindAssets("t:STSCardData");
+        List<STSCardDataDTO> cardDtos = new();
 
         foreach (var guid in guids)
         {
@@ -25,10 +26,10 @@ public static class STSCardExporter
             string json =
                 JsonConvert.SerializeObject(dto, Formatting.Indented);
 
-            string outputPath =
-                Path.Combine(folder, dto.id + ".json");
+            string outputPath = Path.Combine(folder, dto.id + ".json");
 
             File.WriteAllText(outputPath, json);
+            cardDtos.Add(dto);
         }
 
         List<string> cardFiles = new();
@@ -48,8 +49,22 @@ public static class STSCardExporter
         string indexJson = JsonConvert.SerializeObject(new { files = cardFiles }, Formatting.Indented);
         File.WriteAllText(Path.Combine(folder, "index.json"), indexJson);
 
+        string cardsJson = JsonConvert.SerializeObject(new CardDatabaseWrapper(cardDtos), Formatting.Indented);
+        File.WriteAllText(Path.Combine(folder, "cards.json"), cardsJson);
+
         AssetDatabase.Refresh();
 
         Debug.Log("Cards exported.");
+    }
+
+    [System.Serializable]
+    private class CardDatabaseWrapper
+    {
+        public List<STSCardDataDTO> cards;
+
+        public CardDatabaseWrapper(List<STSCardDataDTO> cards)
+        {
+            this.cards = cards;
+        }
     }
 }

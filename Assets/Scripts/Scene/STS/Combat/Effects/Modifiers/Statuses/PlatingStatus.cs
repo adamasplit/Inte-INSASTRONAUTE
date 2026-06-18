@@ -12,8 +12,12 @@ public class PlatingStatus : StatusEffect
     {
         target.AddArmor(Duration);
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return $"Gagnez {Duration} d'Armure à la fin de chaque tour";
+        if (isPlayer)
+        {
+            return $"Vous gagnez {Duration} d'Armure à la fin de votre tour";
+        }
+        return $"L'ennemi gagne {Duration} d'Armure à la fin de son tour";
     }
 }

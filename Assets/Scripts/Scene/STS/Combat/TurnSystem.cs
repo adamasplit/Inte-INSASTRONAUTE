@@ -65,11 +65,11 @@ public class TurnSystem : MonoBehaviour
                 uid = TurnEntry.nextUID++
             });
         }
-        float time=0;
+        float time=0f;
         foreach (var e in combat.enemies)
         {
              // pour éviter que les ennemis aient tous la même initiative
-            time+=10f/ (combat.enemies.Count+1);
+            time+=baseDelay/ (combat.enemies.Count+1);
             timeline.Add(new TurnEntry
             {
                 character = e,
@@ -207,27 +207,36 @@ public class TurnSystem : MonoBehaviour
         }
 
         var enemy = enemyChar as Enemy;
-
-        yield return new WaitForSeconds(0.3f);
-
-        var cardData = enemy.GetNextAction();
-
-        if (cardData != null)
+        if (enemy == null)
         {
-            var cardInstance = new CardInstance(cardData);
+            EndTurn(enemyChar.turnDelay(baseDelay));
+            yield break;
+        }
 
+        yield return new WaitForSeconds(0.2f);
+
+        var action = enemy.GetNextActionPlan();
+
+        if (action != null)
+        {
+            var runtimeCard = action.CreateRuntimeCard(enemy.name);
+            if (runtimeCard == null)
+            {
+                yield return new WaitForSeconds(0.2f);
+                EndTurn(enemyChar.turnDelay(baseDelay));
+                yield break;
+            }
+            var cardInstance = new CardInstance(runtimeCard);
             var target = combat.allies.FirstOrDefault(a => a != null && a.IsAlive);
-
             if (target == null)
             {
                 combat.TryEndCombatIfNeeded();
                 yield break;
             }
-
             combat.PlayCard(enemy, cardInstance, new List<Character> { target });
         }
 
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.2f);
 
         EndTurn(enemyChar.turnDelay(baseDelay));
     }

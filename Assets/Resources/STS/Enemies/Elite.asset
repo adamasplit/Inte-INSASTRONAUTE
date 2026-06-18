@@ -14,10 +14,142 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Elite
   maxHP: 60
-  pattern:
-  - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
-  - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
-  - {fileID: 11400000, guid: 40593402db7177c4ebce302746126dcd, type: 2}
-  - {fileID: 11400000, guid: e9e09946711bd0b4ca74d517fb11babe, type: 2}
+  pattern: []
+  randomStart: 1
+  movePattern:
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 6
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 6
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 20
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    - type: 2
+      value: 15
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 2
+      value: 4
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    - type: 1
+      value: 4
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 1
+      value: 12
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 
+    weight: 0
   rewardCards:
   - {fileID: 11400000, guid: 40593402db7177c4ebce302746126dcd, type: 2}
+  startingStatus: 0
+  startingStatusDuration: 0
+  startingStatusValue: 0
+  startingStatusInfo: 

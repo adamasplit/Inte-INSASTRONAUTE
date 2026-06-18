@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
+  m_Name: inversion_de_matrice
+  m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: inversion_de_matrice
+  cardName: Inversion de matrice
+  collectionCardId: 
+  collectionCard: {fileID: 11400000, guid: 9c002dd119d6cd54d8ad94b6254784ef, type: 2}
+  icon: {fileID: 21300000, guid: 53770f7c52348c641bb46c1fb020948c, type: 3}
+  cost: 1
+  xCost: 0
+  type: 0
+  rarity: 0
+  effects:
+  - type: 1
+    value: 1
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+  - type: 0
+    value: 2
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+  targetingMode: 1
+  modifiers: []
+  favoredCharacter: 2
+  animationSpeed: 1
+  startingCount: 1
+  tags: 

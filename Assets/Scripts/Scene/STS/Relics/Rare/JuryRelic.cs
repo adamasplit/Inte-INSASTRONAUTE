@@ -6,6 +6,7 @@ public class JuryRelic : Relic
         description = "Au début de chaque combat, gagnez 1 de Force et 1 de Dextérité.";
         rarity=RelicRarity.Rare;
     }
+    
     public override void OnCombatStart(Character player)
     {
         player.AddStatus(StatusEffect.Factory(StatusType.Strength,1,-1));

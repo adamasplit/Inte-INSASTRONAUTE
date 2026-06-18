@@ -1,0 +1,35 @@
+{
+  "id": "amalgame",
+  "cardName": "Amalgame",
+  "collectionCardId": "",
+  "iconId": null,
+  "cost": 0,
+  "xCost": false,
+  "type": "Pouvoir",
+  "rarity": "Common",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "CardSelection",
+      "value": -1,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "DrawPile",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "Merge"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

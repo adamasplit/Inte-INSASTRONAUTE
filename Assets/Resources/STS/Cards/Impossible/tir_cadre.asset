@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: "Tir cadr\xE9"
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 21300000, guid: 4a198ba8e29ac55448edfe249721f9d7, type: 3}
+  icon: {fileID: 21300000, guid: f3100a1ca9a93c047abf2e2c44d8532f, type: 3}
   cost: 0
   xCost: 0
   type: 0

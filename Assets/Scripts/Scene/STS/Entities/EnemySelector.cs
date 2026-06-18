@@ -17,7 +17,8 @@ public static class EnemySelector
         var candidates = pool.enemies
             .Where(e =>
                 e.minFloor <= floor &&
-                (e.act==-1 || e.act==RunManager.Instance.act) &&
+                (e.minAct == -1 || e.minAct <= RunManager.Instance.act) &&
+                (e.maxAct == -1 || e.maxAct >= RunManager.Instance.act) &&
                 (e.maxFloor >= floor||e.maxFloor==-1) &&
                 e.elite == elite &&
                 e.boss == boss)

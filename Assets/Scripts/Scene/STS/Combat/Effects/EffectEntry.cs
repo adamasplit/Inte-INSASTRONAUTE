@@ -103,4 +103,38 @@ public class EffectEntry
         }
         return null;
     }
+    public static EffectEntry Clone(EffectEntry source)
+    {
+        if (source == null)
+            return null;
+
+        var copy = new EffectEntry
+        {
+            type = source.type,
+            value = source.value,
+            targetSelf = source.targetSelf,
+            targetOthers = source.targetOthers,
+            statusType = source.statusType,
+            duration = source.duration,
+            description = source.description,
+            cardID = source.cardID,
+            conditional = source.conditional,
+            conditionType = source.conditionType,
+            conditionValue = source.conditionValue,
+            trueEffect = source.trueEffect,
+            cardSelectionSource = source.cardSelectionSource,
+            cardSelectionEffect = source.cardSelectionEffect
+        };
+
+        if (source.cardFilterTags != null)
+        {
+            copy.cardFilterTags = new List<CardFilterTag>();
+            foreach (var tag in source.cardFilterTags)
+            {
+                copy.cardFilterTags.Add(tag);
+            }
+        }
+
+        return copy;
+    }
 }

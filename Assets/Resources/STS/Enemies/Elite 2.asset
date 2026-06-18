@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
+  m_Name: Elite 2
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Ark
+  maxHP: 90
+  pattern:
+  - {fileID: 11400000, guid: 4bf0038dad0dbb349984a18c5b7a05b7, type: 2}
+  - {fileID: 11400000, guid: 42c0c0ff917c5aa4b8316fa92ad3c62c, type: 2}
+  - {fileID: 11400000, guid: f2637645116f9e747af7a977b7e09baa, type: 2}
+  - {fileID: 11400000, guid: 947f6155c4106314fbc1b7371ce37c70, type: 2}
+  - {fileID: 11400000, guid: 63eef1034cdf61344b92f72fccf35325, type: 2}
+  - {fileID: 11400000, guid: a8068919e29a31242a25cb2cd4b183b3, type: 2}
+  rewardCards: []
+  startingStatus: 0
+  startingStatusDuration: 0
+  startingStatusValue: 0

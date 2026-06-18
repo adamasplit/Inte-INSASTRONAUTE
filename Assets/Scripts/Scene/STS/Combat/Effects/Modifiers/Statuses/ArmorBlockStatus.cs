@@ -21,8 +21,12 @@ public class ArmorBlockStatus : StatusEffect
     {
         return 0;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
+        if (isPlayer)
+        {
+            return $"Vous ne pouvez plus gagner d'armure pendant {Duration} tours.";
+        }
         return $"La cible ne peut plus gagner d'armure pendant {Duration} tours.";
     }
 }

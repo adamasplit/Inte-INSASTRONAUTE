@@ -12,7 +12,7 @@
     {
       "type": "Armor",
       "value": 4,
-      "targetSelf": false,
+      "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,

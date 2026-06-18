@@ -11,13 +11,22 @@ public class GameManager : MonoBehaviour
 
     async void Start()
     {
-        await STSCardDatabase.LoadAsync();
-        TestDatabase.Init();
-        SetupGame();
-        ui.Init(combat);
-        turnSystem.Begin();
-        ui.RefreshUI();
-        combat.Init();
+        STSSceneLoader.Instance?.BeginLoading();
+
+        try
+        {
+            await STSCardDatabase.LoadAsync();
+            TestDatabase.Init();
+            SetupGame();
+            ui.Init(combat);
+            turnSystem.Begin();
+            ui.RefreshUI();
+            combat.Init();
+        }
+        finally
+        {
+            STSSceneLoader.Instance?.EndLoading();
+        }
     }
 
     void SetupGame()
@@ -42,7 +51,7 @@ public class GameManager : MonoBehaviour
             combat.deck = new DeckManager();
 
             // Ajout de cartes de test
-            if (cardsOnTest.Count==0)
+            if (cardsOnTest.Count==0&&!RunManager.Instance.forceTutorial)
             {
                 for (int i = 0; i < 1; i++)
                 {

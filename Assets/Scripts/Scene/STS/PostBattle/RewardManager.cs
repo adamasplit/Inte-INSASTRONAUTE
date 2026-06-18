@@ -38,6 +38,8 @@ public class RewardManager : MonoBehaviour, IRewardFlowHost
         {
             SpawnReward(item);
         }
+
+        STSSceneLoader.Instance?.SceneReady();
     }
 
     void SpawnReward(RewardItem item)

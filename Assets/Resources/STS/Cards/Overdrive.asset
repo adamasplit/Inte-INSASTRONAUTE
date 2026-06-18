@@ -37,8 +37,8 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-  - type: 8
-    value: 6
+  - type: 24
+    value: 3
     targetSelf: 0
     targetOthers: 0
     statusType: 0
@@ -49,10 +49,10 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
     trueEffect: 0
-    cardSelectionSource: 0
+    cardSelectionSource: 2
     cardFilterTags: 
-    cardSelectionEffect: 0
-  - type: 24
+    cardSelectionEffect: 3
+  - type: 12
     value: 3
     targetSelf: 0
     targetOthers: 0
@@ -69,10 +69,6 @@ MonoBehaviour:
     cardSelectionEffect: 0
   targetingMode: 0
   modifiers: []
-  exhaust: 1
-  retain: 0
-  innate: 0
-  infinite: 0
   favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0

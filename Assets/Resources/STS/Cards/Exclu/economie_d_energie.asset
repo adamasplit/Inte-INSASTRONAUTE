@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: "\xC9conomie d'\xE9nergie"
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 35c6220a57e736e448a6ff87de6e98f5, type: 3}
   cost: 1
   xCost: 0
   type: 1
@@ -39,11 +39,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
   targetingMode: 0
   modifiers: []
-  exhaust: 0
-  retain: 0
-  innate: 0
-  infinite: 0
-  created: 0
   favoredCharacter: 5
   animationSpeed: 1
   startingCount: 0
+  tags: 

@@ -31,7 +31,7 @@
       "value": 2,
       "targetSelf": false,
       "targetOthers": false,
-      "statusType": "FollowUp",
+      "statusType": "CardFollowUp",
       "duration": 0,
       "description": "",
       "cardID": "Malédiction",

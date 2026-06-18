@@ -19,9 +19,9 @@ public class RiskManagementStatus : StatusEffect
         if (ctx.target == null) return false;
         return stat == StatType.Damage && ctx.target.statusEffects.Contains(this);
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return $"Vous ne pouvez pas perdre plus de {maxDamage()} PV en un seul coup.";
+        return (isPlayer ? "Vous ne pouvez pas perdre plus de " : "L'ennemi ne peut pas perdre plus de ") + $"{maxDamage()} PV en un seul coup.";
     }
     private int maxDamage()
     {

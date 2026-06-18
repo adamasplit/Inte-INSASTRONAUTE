@@ -2,7 +2,7 @@
   "id": "economie_d_energie",
   "cardName": "Économie d'énergie",
   "collectionCardId": "",
-  "iconId": null,
+  "iconId": "Zone",
   "cost": 1,
   "xCost": false,
   "type": "Compétence",

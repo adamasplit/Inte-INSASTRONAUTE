@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: synchrotron
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: synchrotron
   cardName: Synchrotron
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 21300000, guid: bfab4b172435f9046b1d279bd5dba190, type: 3}
+  icon: {fileID: 21300000, guid: 4ab8197107962c948b56475a99197704, type: 3}
   cost: 2
   xCost: 0
   type: 0
@@ -33,6 +34,9 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   - type: 12
     value: 3
     targetSelf: 0
@@ -45,6 +49,9 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   - type: 11
     value: 6
     targetSelf: 1
@@ -57,11 +64,12 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   targetingMode: 2
   modifiers: []
-  exhaust: 0
-  retain: 0
-  innate: 0
   favoredCharacter: 0
   animationSpeed: 1
   startingCount: 0
+  tags: 

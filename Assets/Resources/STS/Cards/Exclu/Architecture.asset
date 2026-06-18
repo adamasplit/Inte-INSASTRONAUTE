@@ -27,7 +27,7 @@ MonoBehaviour:
     targetSelf: 0
     targetOthers: 0
     statusType: 0
-    duration: 0
+    duration: 20
     description: 
     cardID: 
     conditional: 0
@@ -42,7 +42,7 @@ MonoBehaviour:
     targetSelf: 0
     targetOthers: 0
     statusType: 0
-    duration: 0
+    duration: 20
     description: 
     cardID: 
     conditional: 0
@@ -54,10 +54,6 @@ MonoBehaviour:
     cardSelectionEffect: 0
   targetingMode: 1
   modifiers: []
-  exhaust: 1
-  retain: 0
-  innate: 0
-  infinite: 0
   favoredCharacter: 7
   animationSpeed: 1
   startingCount: 1

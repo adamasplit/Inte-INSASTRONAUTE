@@ -39,6 +39,8 @@ public enum StatusType
     FullBreak,
     Status,
     CostNullify,
-    FollowUp,
-    Echo
+    CardFollowUp,
+    Echo,
+    FieldTurnFollowUp,
+    Vigor
 }

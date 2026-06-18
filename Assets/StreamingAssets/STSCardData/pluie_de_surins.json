@@ -1,0 +1,35 @@
+{
+  "id": "pluie_de_surins",
+  "cardName": "Pluie de surins",
+  "collectionCardId": "",
+  "iconId": "Magique",
+  "cost": 0,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Special",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "Multihit",
+      "value": 3,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 7,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

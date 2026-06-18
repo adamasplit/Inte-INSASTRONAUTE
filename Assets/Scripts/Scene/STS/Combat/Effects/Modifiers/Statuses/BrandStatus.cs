@@ -21,7 +21,7 @@ public class BrandStatus:StatusEffect
         int debuffCount = ctx.target.statusEffects.Where(se=>se.debuff && se != this).Count();
         return damage + (damage * Value * debuffCount) / 100;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"+{Value}% dégâts subis par debuff sur la cible.";
     }

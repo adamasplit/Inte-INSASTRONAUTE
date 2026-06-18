@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: "M\xE9gagravitron"
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 21300000, guid: 0c335ac5eb6bcdc45b8f8ac2813197de, type: 3}
+  icon: {fileID: 21300000, guid: ecca81ce7d5f6ab4b959903af5a87559, type: 3}
   cost: 4
   xCost: 0
   type: 0
@@ -54,11 +54,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
   targetingMode: 2
   modifiers: []
-  exhaust: 1
-  retain: 0
-  innate: 0
-  infinite: 0
   favoredCharacter: 1
   animationSpeed: 1
   startingCount: 0
-  tags: 09000000
+  tags: 090000000a000000

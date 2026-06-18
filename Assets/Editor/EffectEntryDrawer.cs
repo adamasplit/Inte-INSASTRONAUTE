@@ -105,6 +105,9 @@ public class EffectEntryDrawer : PropertyDrawer
                 new Rect(position.x, y, position.width, lineHeight),
                 trueEffectProp);
             y += lineHeight + spacing;
+            EditorGUI.PropertyField(
+                new Rect(position.x, y, position.width, lineHeight),
+                durationProp);
         }
         if (conditionalProp.boolValue)
         {
@@ -160,13 +163,13 @@ public class EffectEntryDrawer : PropertyDrawer
         {
             lines += 1; // duration for multihit
         }
-        if ((EffectType)typeProp.enumValueIndex == EffectType.AddCardToHand|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDrawPile|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDiscardPile)
+        if ((EffectType)typeProp.enumValueIndex == EffectType.AddCardToHand|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDrawPile|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDiscardPile|| (EffectType)typeProp.enumValueIndex == EffectType.ForceNextCard)
         {
-            lines += 1; // cardID for AddCardToHand
+            lines += 1; // cardID for AddCardToHand and other similar effects
         }
         if ((EffectType)typeProp.enumValueIndex == EffectType.StealBuff || (EffectType)typeProp.enumValueIndex == EffectType.TransferDebuff||(EffectType)typeProp.enumValueIndex == EffectType.DispelBuff || (EffectType)typeProp.enumValueIndex == EffectType.DispelDebuff)
         {
-            lines += 1; // trueEffect for StealBuff, TransferDebuff, DispelBuff and DispelDebuff
+            lines += 2; // trueEffect for StealBuff, TransferDebuff, DispelBuff and DispelDebuff
         }
         if ((EffectType)typeProp.enumValueIndex == EffectType.CardSelection)
         {

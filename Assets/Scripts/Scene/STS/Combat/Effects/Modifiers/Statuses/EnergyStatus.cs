@@ -8,9 +8,13 @@ public class EnergyStatus : StatusEffect
         framed=true;
         buff=true;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return $"Gagnez {Value} énergie au début du tour.";
+        if (isPlayer)
+        {
+            return $"Gagnez {Value} énergie au début du tour.";
+        }
+        return $"L'ennemi gagne {Value} énergie au début du tour.";
     }
     public override void OnTurnStart(Character target)
     {

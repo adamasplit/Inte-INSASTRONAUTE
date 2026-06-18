@@ -3,7 +3,7 @@
   "cardName": "Pinte de trop",
   "collectionCardId": "paix_dieu",
   "iconId": null,
-  "cost": 0,
+  "cost": 1,
   "xCost": false,
   "type": "Compétence",
   "rarity": "Rare",
@@ -48,5 +48,7 @@
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": []
+  "tags": [
+    "Exhaust"
+  ]
 }

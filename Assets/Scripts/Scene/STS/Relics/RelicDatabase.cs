@@ -23,7 +23,9 @@ public static class RelicDatabase
             new MoraleRelic(),
             new ThornsRelic(),
             new ISRelic(),
-            new DSRelic()
+            new DSRelic(),
+            new FastWorkerRelic(),
+            new JuryRelic()
         };
     }
     public static List<Relic> GetRelicsByRarity(RelicRarity rarity)

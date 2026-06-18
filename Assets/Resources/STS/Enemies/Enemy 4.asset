@@ -25,8 +25,66 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7de4cf7e640ce4249af25b7c0c898a3a, type: 2}
   - {fileID: 11400000, guid: e7b8e19fba3483b419503d79f3957277, type: 2}
   - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
+  randomStart: 0
+  movePattern:
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 3
+      value: 2
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 17
+      duration: 0
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 0100000002000000
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 1
+      value: 2
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 17
+      duration: 0
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    - type: 1
+      value: 2
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 17
+      duration: 0
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 0100000002000000
+    weight: 0
   rewardCards:
   - {fileID: 11400000, guid: 939ba07da08ebcf4694b78e5d2c9659a, type: 2}
   startingStatus: 0
   startingStatusDuration: 0
   startingStatusValue: 0
+  startingStatusInfo: 

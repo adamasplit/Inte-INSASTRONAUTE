@@ -2,7 +2,7 @@
   "id": "synchrotron",
   "cardName": "Synchrotron",
   "collectionCardId": "",
-  "iconId": "Magique",
+  "iconId": "Cyclotron",
   "cost": 2,
   "xCost": false,
   "type": "Attaque",

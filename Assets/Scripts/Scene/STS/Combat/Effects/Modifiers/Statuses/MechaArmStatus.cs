@@ -23,7 +23,7 @@ public class MechaArmStatus : StatusEffect
                 VFXManager.Instance.PlayEffect("Armor", target);
                 break;
             case 2:
-                foreach (var enemy in target.GetCombatManager().enemies)
+                foreach (var enemy in target.GetCombatManager().GetAdversaries(target))
                 {
                     enemy.TakeDamage(3*Value);
                 }
@@ -31,8 +31,8 @@ public class MechaArmStatus : StatusEffect
                 break;
         }
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return $"À la fin de votre tour, déclenche un effet aléatoire : +{1*Value} PV, +{4*Value} Armure, ou {3*Value} dégâts sur tous les ennemis.";
+        return (isPlayer ? "À la fin de votre tour" : "À la fin du tour de l'ennemi") + $", déclenche un effet aléatoire : +{1*Value} PV, +{4*Value} Armure, ou {3*Value} dégâts sur tous les ennemis.";
     }
 }

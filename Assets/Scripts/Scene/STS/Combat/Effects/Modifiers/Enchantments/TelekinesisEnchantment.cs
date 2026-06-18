@@ -5,7 +5,7 @@ public class TelekinesisEnchantment : EnchantmentData
     public TelekinesisEnchantment()
     {
         name = "Télékinésie";
-        description = $"Empêche l'attaque d'avoir des dégâts réduits.";
+        description = $"L'attaque ne peut pas infliger moins de dégâts que sa valeur de base.";
         maxLevel = 1;
     }
 

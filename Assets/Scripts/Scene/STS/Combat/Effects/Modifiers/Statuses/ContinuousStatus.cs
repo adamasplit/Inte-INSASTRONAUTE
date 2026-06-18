@@ -14,8 +14,12 @@ public class ContinuousStatus : StatusEffect
         target.TakeDamage(this.Value);
         VFXManager.Instance.PlayEffect("Continuous", target);
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
+        if (isPlayer)
+        {
+            return $"Vous subissez {Value} dégâts à la fin du tour de n'importe quel personnage. (s'active {Duration} fois).";
+        }
         return $"La cible subit {Value} dégâts à la fin du tour de n'importe quel personnage. (s'active {Duration} fois).";
     }
 }

@@ -29,10 +29,10 @@ public class RelicListItemView : MonoBehaviour
         return rarity switch
         {
             RelicRarity.Common => Color.white,
-            RelicRarity.Uncommon => Color.green,
-            RelicRarity.Rare => Color.blue,
-            RelicRarity.Epic => new Color(1f, 0f, 1f), // Magenta
-            RelicRarity.Legendary => Color.yellow,
+            RelicRarity.Uncommon => Color.blue,
+            RelicRarity.Rare => Color.yellow,
+            RelicRarity.Boss => Color.red,
+            RelicRarity.Base => Color.green,
             _ => Color.white
         };
     }

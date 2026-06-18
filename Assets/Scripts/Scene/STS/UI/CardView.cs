@@ -38,8 +38,36 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         selectionPreview = !selectionPreview;
         selectionHighlight.SetActive(selectionPreview);
     }
+    private bool IsDescriptionTextClick(PointerEventData eventData)
+    {
+        if (descriptionText == null || eventData == null)
+            return false;
+
+        RectTransform descriptionRect = descriptionText.rectTransform;
+        if (descriptionRect != null && RectTransformUtility.RectangleContainsScreenPoint(descriptionRect, eventData.position, eventData.pressEventCamera))
+            return true;
+
+        if (collectionCardDescBg != null && collectionCardDescBg.rectTransform != null)
+            return RectTransformUtility.RectangleContainsScreenPoint(collectionCardDescBg.rectTransform, eventData.position, eventData.pressEventCamera);
+
+        return false;
+    }
+    private bool GetTooltipSide()
+    {
+        return ui != null && ui.handLayout != null && ui.handLayout.cardSide(this);
+    }
+    private bool IsSelectedCard()
+    {
+        return ui != null && ui.selectedCard == this;
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (IsDescriptionTextClick(eventData) && IsSelectedCard())
+        {
+            ShowCardTooltips(GetTooltipSide(), true, true);
+            return;
+        }
+
         if (SelectionManager.Instance != null && SelectionManager.Instance.selectionMode)
         {
             SelectionManager.Instance.OnCardClicked(cardInstance);
@@ -185,6 +213,18 @@ public class CardView : MonoBehaviour,IPointerClickHandler
     public GameObject enchantTooltipPrefab;
     public Transform enchantTooltipContainer;
     public Transform enchantTooltipContainerLeft;
+    private struct TooltipData
+    {
+        public string title;
+        public string description;
+
+        public TooltipData(string title, string description)
+        {
+            this.title = title;
+            this.description = description;
+        }
+    }
+
     void LateUpdate()
     {
         if (enchantTooltipContainer != null)
@@ -194,40 +234,133 @@ public class CardView : MonoBehaviour,IPointerClickHandler
     }
     public void Select(bool rightSide)
     {
-        ShowEnchantTooltips(rightSide);
+        ShowCardTooltips(rightSide, true, false);
     }
     public void Deselect()
     {
-        HideEnchantTooltips();
+        HideCardTooltips();
     }
-    public void ShowEnchantTooltips(bool leftSide=true)
+    public void ShowCardTooltips(bool leftSide=true, bool includeCardTooltip=false,bool showDescription=false)
     {
-        foreach (Transform child in enchantTooltipContainer)
+        if (enchantTooltipContainer != null)
         {
-            Destroy(child.gameObject);
+            foreach (Transform child in enchantTooltipContainer)
+            {
+                Destroy(child.gameObject);
+            }
         }
-        foreach (Transform child in enchantTooltipContainerLeft)
+        if (enchantTooltipContainerLeft != null)
         {
-            Destroy(child.gameObject);
+            foreach (Transform child in enchantTooltipContainerLeft)
+            {
+                Destroy(child.gameObject);
+            }
         }
         if (cardInstance == null) return;
+
+        Transform targetContainer = leftSide ? enchantTooltipContainerLeft : enchantTooltipContainer;
+        if (targetContainer == null)
+            targetContainer = leftSide ? enchantTooltipContainer : enchantTooltipContainerLeft;
+        if (targetContainer == null || enchantTooltipPrefab == null)
+            return;
+
+        List<TooltipData> tooltips = new();
+
+        if (includeCardTooltip)
+        {
+            EffectContext ctx = new EffectContext
+            {
+                source = combat == null ? null : combat.player,
+                target = null,
+                combat = combat,
+                state = combat == null ? null : combat.state,
+                card = cardInstance,
+                isPreview = true,
+                targets = new List<Character>()
+            };
+            //tooltips.Add(new TooltipData(cardInstance.data.cardName, cardInstance.GetDescription(ctx)));
+
+            foreach (var effect in cardInstance.GetEffects())
+            {
+                AddStatusTooltip(effect, tooltips, ctx);
+                AddCreatedCardTooltip(effect, tooltips);
+            }
+            if (showDescription)
+            {
+                tooltips.Add(new TooltipData("Description", cardInstance.lastDescription));
+            }
+        }
+
         foreach (CardEnchantment enchant in cardInstance.enchantments)
         {
-            GameObject tooltipObj = Instantiate(enchantTooltipPrefab, leftSide ? enchantTooltipContainerLeft : enchantTooltipContainer);
+            tooltips.Add(new TooltipData(enchant.data.name, enchant.data.description));
+        }
+        foreach (TooltipData tooltipData in tooltips)
+        {
+            GameObject tooltipObj = Instantiate(enchantTooltipPrefab, targetContainer);
             Tooltip tooltip = tooltipObj.GetComponent<Tooltip>();
-            tooltip.SetTooltip(null,enchant.data.name, enchant.data.description);
+            tooltip.SetTooltip(null, tooltipData.title, tooltipData.description);
+        }
+        // Force layout rebuild to ensure the tooltips are positioned correctly
+        LayoutRebuilder.ForceRebuildLayoutImmediate(targetContainer.GetComponent<RectTransform>());
+    }
+    public void HideCardTooltips()
+    {
+        if (enchantTooltipContainer != null)
+        {
+            foreach (Transform child in enchantTooltipContainer)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        if (enchantTooltipContainerLeft != null)
+        {
+            foreach (Transform child in enchantTooltipContainerLeft)
+            {
+                Destroy(child.gameObject);
+            }
         }
     }
-    public void HideEnchantTooltips()
+
+    private void AddStatusTooltip(EffectEntry effect, List<TooltipData> tooltips,EffectContext context = null)
     {
-        foreach (Transform child in enchantTooltipContainer)
+        if (effect.type != EffectType.Status)
+            return;
+
+        StatusEffect status = StatusEffect.Factory(effect.statusType, effect.value, effect.duration, effect.cardID);
+        if (status == null || !status.generic)
+            return;
+
+        bool alreadyAdded = tooltips.Exists(t => t.title == status.Name && t.description == status.Desc(effect.targetSelf));
+        if (!alreadyAdded)
+            tooltips.Add(new TooltipData(status.Name, status.Desc(effect.targetSelf)));
+    }
+
+    private void AddCreatedCardTooltip(EffectEntry effect, List<TooltipData> tooltips)
+    {
+        if (string.IsNullOrEmpty(effect.cardID))
+            return;
+
+        //if (effect.type != EffectType.AddCardToHand && effect.type != EffectType.AddCardToDrawPile && effect.type != EffectType.AddCardToDiscardPile && effect.type != EffectType.AddRandomCardToHand)
+        //    return;
+
+        STSCardData cardData = STSCardDatabase.Get(effect.cardID);
+        if (cardData == null)
+            return;
+
+        bool alreadyAdded = tooltips.Exists(t => t.title == cardData.cardName);
+        if (alreadyAdded)
+            return;
+
+        CardInstance previewCard = new CardInstance(cardData);
+        EffectContext context = new EffectContext
         {
-            Destroy(child.gameObject);
-        }
-        foreach (Transform child in enchantTooltipContainerLeft)
-        {
-            Destroy(child.gameObject);
-        }
+            card = previewCard,
+            isPreview = true,
+            targets = new List<Character>()
+        };
+
+        tooltips.Add(new TooltipData(cardData.cardName, previewCard.GetDescription(context)));
     }
     bool isFlashing;
     // Only one flash at a time: if a new flash starts while one is already playing, it will restart the animation

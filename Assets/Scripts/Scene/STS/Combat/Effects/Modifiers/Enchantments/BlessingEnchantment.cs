@@ -5,7 +5,7 @@ public class BlessingEnchantment : EnchantmentData
 
     public BlessingEnchantment()
     {
-        name = "Blessing";
+        name = "Bénédiction";
         description = $"Augmente les soins de {healPerLevel}% par niveau.";
         maxLevel=100;
     }

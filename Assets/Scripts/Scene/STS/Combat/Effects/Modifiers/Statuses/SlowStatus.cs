@@ -18,7 +18,7 @@ public class SlowStatus : StatusEffect
     {
         return (turnDelay * (100 + 20)) / 100;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"-{20}% de vitesse";
     }

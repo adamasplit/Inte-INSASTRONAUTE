@@ -4,7 +4,7 @@ public class MechanicalEnchantment : EnchantmentData
     public MechanicalEnchantment()
     {
         name = "Mécanique";
-        description = $"S'active automatiquement à la fin du tour et s'épuise.";
+        description = $"S'active automatiquement à la fin du tour.";
         maxLevel=1;
     }
 

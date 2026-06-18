@@ -13,14 +13,15 @@ MonoBehaviour:
   m_Name: EnemyPool
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPool
   enemies:
-  - displayName: Test encounter
+  - displayName: "3 ennemis diff\xE9rents"
     enemies:
     - {fileID: 11400000, guid: cd6d3998007ee2a4fa40288240d496fc, type: 2}
     - {fileID: 11400000, guid: 030305c5255494040b1aa2598d91e63d, type: 2}
     - {fileID: 11400000, guid: 931c0fae846614e41adfb2bda056c8c7, type: 2}
-    minFloor: 0
-    maxFloor: 10
-    act: -1
+    minFloor: 3
+    maxFloor: -1
+    minAct: -1
+    maxAct: -1
     weight: 1
     elite: 0
     boss: 0
@@ -28,27 +29,30 @@ MonoBehaviour:
     enemies:
     - {fileID: 11400000, guid: ad7696afb4d04fa44b2adf8360baaffd, type: 2}
     minFloor: 0
-    maxFloor: 10
-    act: -1
+    maxFloor: -1
+    minAct: 0
+    maxAct: 0
     weight: 1
     elite: 1
     boss: 0
-  - displayName: Easier test
+  - displayName: 2 armures
     enemies:
     - {fileID: 11400000, guid: cd6d3998007ee2a4fa40288240d496fc, type: 2}
     - {fileID: 11400000, guid: cd6d3998007ee2a4fa40288240d496fc, type: 2}
-    minFloor: 0
-    maxFloor: 10
-    act: -1
+    minFloor: 3
+    maxFloor: -1
+    minAct: -1
+    maxAct: -1
     weight: 1
     elite: 0
     boss: 0
-  - displayName: Difficult
+  - displayName: Dragon
     enemies:
     - {fileID: 11400000, guid: 32beb350830d4ea4080266b5e66083b2, type: 2}
     minFloor: 5
     maxFloor: 10
-    act: -1
+    minAct: -1
+    maxAct: -1
     weight: 1
     elite: 0
     boss: 0
@@ -57,7 +61,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: b9089d6d4d15dea4887c882b4866b068, type: 2}
     minFloor: 0
     maxFloor: 50
-    act: 0
+    minAct: 0
+    maxAct: 0
     weight: 1
     elite: 0
     boss: 1
@@ -65,8 +70,9 @@ MonoBehaviour:
     enemies:
     - {fileID: 11400000, guid: d016aeed86060b343a1748f46c58f50b, type: 2}
     minFloor: 0
-    maxFloor: 10
-    act: -1
+    maxFloor: -1
+    minAct: -1
+    maxAct: 0
     weight: 1
     elite: 1
     boss: 0
@@ -74,8 +80,9 @@ MonoBehaviour:
     enemies:
     - {fileID: 11400000, guid: 209b8bd4547d5ad42826840f6c73a3e3, type: 2}
     minFloor: 0
-    maxFloor: 10
-    act: -1
+    maxFloor: -1
+    minAct: -1
+    maxAct: 0
     weight: 1
     elite: 1
     boss: 0
@@ -83,8 +90,9 @@ MonoBehaviour:
     enemies:
     - {fileID: 11400000, guid: 845a5b5209525f6478d6a650c1e11882, type: 2}
     minFloor: -1
-    maxFloor: 10
-    act: -1
+    maxFloor: -1
+    minAct: -1
+    maxAct: 0
     weight: 1
     elite: 1
     boss: 0
@@ -93,7 +101,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 199b8eed905aa69418145b8654584d75, type: 2}
     minFloor: -1
     maxFloor: -1
-    act: 1
+    minAct: 1
+    maxAct: 1
     weight: 1
     elite: 0
     boss: 1
@@ -102,7 +111,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 62d448cb3ca46b544a44a03f015d553a, type: 2}
     minFloor: 0
     maxFloor: 50
-    act: 1
+    minAct: 1
+    maxAct: -1
     weight: 1
     elite: 1
     boss: 0
@@ -110,8 +120,9 @@ MonoBehaviour:
     enemies:
     - {fileID: 11400000, guid: 7e4ffab8eee381e4e991dc9db3851083, type: 2}
     minFloor: 0
-    maxFloor: 50
-    act: 1
+    maxFloor: -1
+    minAct: 1
+    maxAct: -1
     weight: 1
     elite: 1
     boss: 0
@@ -119,8 +130,102 @@ MonoBehaviour:
     enemies:
     - {fileID: 11400000, guid: da2e327b84ae212458a5d3ed4c523231, type: 2}
     minFloor: 0
-    maxFloor: 50
-    act: 1
+    maxFloor: -1
+    minAct: 1
+    maxAct: -1
     weight: 1
     elite: 1
+    boss: 0
+  - displayName: Soldat
+    enemies:
+    - {fileID: 11400000, guid: 608eaf8a8bf48ba4eba40360729054f7, type: 2}
+    minFloor: 0
+    maxFloor: 3
+    minAct: 0
+    maxAct: -1
+    weight: 1
+    elite: 0
+    boss: 0
+  - displayName: Invader&Soldat
+    enemies:
+    - {fileID: 11400000, guid: 5ebca3933452ea94382f9b4b7a5095e5, type: 2}
+    - {fileID: 11400000, guid: 608eaf8a8bf48ba4eba40360729054f7, type: 2}
+    minFloor: 2
+    maxFloor: -1
+    minAct: -1
+    maxAct: -1
+    weight: 1
+    elite: 0
+    boss: 0
+  - displayName: Soldat2 (acte 2)
+    enemies:
+    - {fileID: 11400000, guid: 85c410f17db55464eb18ddba4075ca0f, type: 2}
+    minFloor: 0
+    maxFloor: -1
+    minAct: 1
+    maxAct: -1
+    weight: 1
+    elite: 0
+    boss: 0
+  - displayName: Griever
+    enemies:
+    - {fileID: 11400000, guid: c3a24f78142d76d419446d6d96575d06, type: 2}
+    minFloor: 0
+    maxFloor: -1
+    minAct: 1
+    maxAct: -1
+    weight: 1
+    elite: 1
+    boss: 0
+  - displayName: Nemesis
+    enemies:
+    - {fileID: 11400000, guid: e20f7f895264cda4880ab9034bf1c831, type: 2}
+    minFloor: -1
+    maxFloor: -1
+    minAct: 2
+    maxAct: -1
+    weight: 1
+    elite: 0
+    boss: 1
+  - displayName: Regent
+    enemies:
+    - {fileID: 11400000, guid: 15ae27e06c6ae68478b52d324363b7f4, type: 2}
+    minFloor: -1
+    maxFloor: -1
+    minAct: 2
+    maxAct: -1
+    weight: 1
+    elite: 0
+    boss: 1
+  - displayName: Cultist
+    enemies:
+    - {fileID: 11400000, guid: 52c1615c45a6d61489ee606be60df6eb, type: 2}
+    minFloor: -1
+    maxFloor: -1
+    minAct: 2
+    maxAct: -1
+    weight: 1
+    elite: 0
+    boss: 1
+  - displayName: InvadersPlus
+    enemies:
+    - {fileID: 11400000, guid: 5ebca3933452ea94382f9b4b7a5095e5, type: 2}
+    - {fileID: 11400000, guid: ac9834509dcfb044cb6ad0d9d371cf35, type: 2}
+    minFloor: 0
+    maxFloor: 3
+    minAct: 1
+    maxAct: -1
+    weight: 0.531
+    elite: 0
+    boss: 0
+  - displayName: Invaders
+    enemies:
+    - {fileID: 11400000, guid: 5ebca3933452ea94382f9b4b7a5095e5, type: 2}
+    - {fileID: 11400000, guid: 5ebca3933452ea94382f9b4b7a5095e5, type: 2}
+    minFloor: 0
+    maxFloor: 3
+    minAct: -1
+    maxAct: 0
+    weight: 0.515
+    elite: 0
     boss: 0

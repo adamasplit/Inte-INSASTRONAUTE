@@ -45,7 +45,7 @@ public class StatusUI : MonoBehaviour
             TooltipManager.Instance.HideTooltip();
         }
     }
-    public void SetStatus(StatusEffect status, UIManager uiManager, bool playSpawnAnimation = true)
+    public void SetStatus(StatusEffect status, UIManager uiManager,bool isPlayer, bool playSpawnAnimation = true)
     {
         this.uiManager = uiManager;
         BoundStatus = status;
@@ -98,7 +98,7 @@ public class StatusUI : MonoBehaviour
         buffDebuffIndicator.sprite = buffDebuffSprite;
         buffDebuffOverlay.sprite = buffDebuffSprite;
         maskImage.sprite = buffDebuffSprite;
-        description = status.Desc();
+        description = status.Desc(isPlayer);
 
         if (playSpawnAnimation)
         {

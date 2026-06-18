@@ -23,7 +23,7 @@ MonoBehaviour:
   rarity: 5
   effects:
   - type: 0
-    value: 3
+    value: 1
     targetSelf: 0
     targetOthers: 0
     statusType: 0
@@ -38,7 +38,7 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
   - type: 6
-    value: 2
+    value: 1
     targetSelf: 0
     targetOthers: 0
     statusType: 0

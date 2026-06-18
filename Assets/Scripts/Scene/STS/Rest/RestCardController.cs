@@ -16,5 +16,6 @@ public class RestCardController : MonoBehaviour
     public void OnClick()
     {
         manager.OnCardSelected(card);
+        view.selectionHighlight.SetActive(true);
     }
 }

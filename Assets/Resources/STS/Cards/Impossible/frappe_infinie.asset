@@ -23,11 +23,11 @@ MonoBehaviour:
   rarity: 5
   effects:
   - type: 7
-    value: 1
+    value: 2
     targetSelf: 0
     targetOthers: 0
     statusType: 0
-    duration: 12
+    duration: 6
     description: 
     cardID: 
     conditional: 0

@@ -19,7 +19,7 @@ public class FragileStatus : StatusEffect
     {
         return (armorGain * (100 - 25)) / 100;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"-25% d'armure gagnée";
     }

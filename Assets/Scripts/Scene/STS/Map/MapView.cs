@@ -49,6 +49,10 @@ public class MapView : MonoBehaviour
                 xPos,
                 node.floor * spacingY
             );
+            if (node.type==NodeType.Start)
+            {
+                rt.anchoredPosition = new Vector2(0f, 0f);
+            }
             if (node.floor > maxFloor) maxFloor = node.floor;
 
             nodeToUI[node] = rt;

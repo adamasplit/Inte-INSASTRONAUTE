@@ -30,8 +30,12 @@ public class STSTutorialManager : MonoBehaviour
         {
             Debug.Log("RunManager absent ou forceTutorial à false, lancement du tutoriel par défaut.");
         }
+        ui.SetOverlayAlpha(0.6f);
+        InitializeFlags();
         BuildTutorialBase();
         BuildTutorialTimeline();
+        BuildTutorialMap();
+        BuildTutorialStatus();
         Debug.Log($"Lancement du tutoriel avec value={value}");
         switch (value)
         {
@@ -40,6 +44,12 @@ public class STSTutorialManager : MonoBehaviour
                 break;
             case 1:
                 StartTutorial(nodes["timeline"]);
+                break;
+            case 2:
+                StartTutorial(nodes["mapIntro"]);
+                break;
+            case 3:
+                StartTutorial(nodes["statuses"]);
                 break;
             default:
                 StartTutorial(nodes["intro"]);
@@ -54,10 +64,10 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["startCombat"]
         };
@@ -68,14 +78,14 @@ public class STSTutorialManager : MonoBehaviour
             onStart = () =>
             {
                 
-                pressed = false;
+                flags["pressed"] = false;
             },
             onComplete = () =>
             {
                 combat.allowTurn = true;
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["hand"]
         };
@@ -95,37 +105,37 @@ public class STSTutorialManager : MonoBehaviour
         };
         nodes["hand"] = new TutorialNode
         {
-            text = "Voici votre main. Au début de chaque tour, vous piochez 5 cartes. Vous pouvez sélectionner une carte pour voir sa description.",
+            text = "Voici votre main. Au début de chaque tour, vous piochez 5 cartes. Vous pouvez sélectionner une carte et cliquer sur sa description pour la voir plus en détail.",
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["playCard"]
         };
         nodes["playCard"] = new TutorialNode
         {
-            text = "Glissez une carte sur une cible pour la jouer.",
+            text = "Glissez une carte sur une cible pour la jouer. (Pour vous cibler vous-même, glissez-la vers le bas de l'écran.)",
 
             onStart = () =>
             {
-                pressed = false;
-                attackPlayed = false;
-                defendPlayed = false;
+                flags["pressed"] = false;
+                flags["attackPlayed"] = false;
+                flags["defendPlayed"] = false;
                 STSTutorialUI.Instance.HideOverlay();
             },
 
-            condition = () => attackPlayed || defendPlayed,
+            condition = () => flags["attackPlayed"] || flags["defendPlayed"],
 
             next = () =>
             {
-                if (attackPlayed)
+                if (flags["attackPlayed"])
                     return nodes["attack"];
 
-                if (defendPlayed)
+                if (flags["defendPlayed"])
                     return nodes["defend"];
 
                 return nodes["attack"];
@@ -139,7 +149,7 @@ public class STSTutorialManager : MonoBehaviour
             },
             text = "Vous avez joué une attaque !",
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["explainAttack"]
         };
@@ -151,7 +161,7 @@ public class STSTutorialManager : MonoBehaviour
             },
             text = "Vous avez joué une compétence !",
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["explainDefend"]
         };
@@ -161,12 +171,12 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
                 STSTutorialUI.Instance.Unhighlight();
                 STSTutorialUI.Instance.ShowOverlay();
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["explainEndTurn"]
         };
@@ -176,10 +186,10 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["showEnergy"]
         };
@@ -189,10 +199,10 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["explainArmor"]
         };
@@ -202,10 +212,10 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["explainArmor2"]
         };
@@ -215,25 +225,25 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["showEnergy"]
         };
         nodes["showEnergy"] = new TutorialNode
         {
-            text = "Voici votre énergie: en jouant votre carte, vous en avez dépensé 1. Ce coût est indiqué en haut à gauche de la carte.",
+            text = "Voici votre énergie: en jouant votre carte, vous en avez dépensé 1. Ce coût est indiqué en haut à droite de la carte.",
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
                 ui.HideOverlay();
                 ui.Highlight(energyArea, canvas);
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["explainEnergy"]
         };
@@ -243,10 +253,10 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["explainEnergy2"]
         };
@@ -256,10 +266,10 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () =>nodes["promptEndTurn"]
         };
@@ -269,12 +279,13 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
+                flags["turnEnded"] = false;
                 ui.HideOverlay();
                 ui.Highlight(endTurnButton, canvas, 10f);
             },
 
-            condition = () => turnEnded,
+            condition = () => flags["turnEnded"],
 
             next = () => nodes["endTurn"]
         };
@@ -284,10 +295,10 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["explainIntents"]
         };
@@ -297,12 +308,12 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
                 ui.HideOverlay();
                 ui.Highlight(FindFirstObjectByType<IntentUI>().GetComponent<RectTransform>(), canvas);
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["explainIntents2"]
         };
@@ -312,10 +323,10 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["globalExplanation"]
         };
@@ -325,10 +336,155 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
+                ui.HideDummyMapPreview();
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
+
+            onComplete = () =>
+            {
+                STSSceneLoader.Instance.LoadScene("STS_Boot");
+            },
+            next = () => null
+        };
+    }
+    public void BuildTutorialMap()
+    {
+        nodes["mapIntro"] = new TutorialNode
+        {
+            text = "Voici une carte d'exemple. Chaque noeud représente un type de rencontre possible pendant votre partie.",
+
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                ui.ShowOverlay();
+                ui.SetOverlayAlpha(1f);
+                ui.ShowDummyMapPreview();
+                ui.HighlightDummyMapNode(NodeType.Start, canvas, 10f);
+            },
+
+            condition = () => flags["pressed"],
+
+            next = () => nodes["mapStart"]
+        };
+        nodes["mapStart"] = new TutorialNode
+        {
+            text = "Le noeud de départ marque le début de votre trajet sur la carte.",
+
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                ui.ShowDummyMapPreview();
+                ui.HighlightDummyMapNode(NodeType.Start, canvas, 10f);
+            },
+
+            condition = () => flags["pressed"],
+
+            next = () => nodes["mapCombat"]
+        };
+        nodes["mapCombat"] = new TutorialNode
+        {
+            text = "Un noeud de combat déclenche un affrontement standard et vous donne des récompenses de cartes.",
+
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                ui.ShowDummyMapPreview();
+                ui.HighlightDummyMapNode(NodeType.Combat, canvas, 10f);
+            },
+
+            condition = () => flags["pressed"],
+
+            next = () => nodes["mapElite"]
+        };
+        nodes["mapElite"] = new TutorialNode
+        {
+            text = "Les élites sont plus dangereuses, mais elles permettent d'obtenir des récompenses plus importantes. Le jeu en vaut la chandelle !",
+
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                ui.ShowDummyMapPreview();
+                ui.HighlightDummyMapNode(NodeType.Elite, canvas, 10f);
+            },
+
+            condition = () => flags["pressed"],
+
+            next = () => nodes["mapRest"]
+        };
+        nodes["mapRest"] = new TutorialNode
+        {
+            text = "Dans un noeud de repos, vous avez 3 charges d'action: vous pouvez toutes les utiliser pour vous soigner, ou bien en utiliser pour améliorer vos cartes.",
+
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                ui.ShowDummyMapPreview();
+                ui.HighlightDummyMapNode(NodeType.Rest, canvas, 10f);
+            },
+
+            condition = () => flags["pressed"],
+
+            next = () => nodes["mapEvent"]
+        };
+        nodes["mapEvent"] = new TutorialNode
+        {
+            text = "Les noeuds d'évènement proposent souvent des choix et conséquences uniques.",
+
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                ui.ShowDummyMapPreview();
+                ui.HighlightDummyMapNode(NodeType.Event, canvas, 10f);
+            },
+
+            condition = () => flags["pressed"],
+
+            next = () => nodes["mapBoss"]
+        };
+        nodes["mapBoss"] = new TutorialNode
+        {
+            text = "Le boss termine la carte de l'acte et mène au combat final de cette zone. Il est inévitable.",
+
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                ui.ShowDummyMapPreview();
+                ui.HighlightDummyMapNode(NodeType.Boss, canvas, 10f);
+            },
+
+            condition = () => flags["pressed"],
+
+            next = () => nodes["mapWrapUp"]
+        };
+        nodes["mapWrapUp"] = new TutorialNode
+        {
+            text = "En lisant la carte à l'avance, vous pouvez planifier votre route entre combats, repos, évènements et boss.",
+
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                ui.HideDummyMapPreview();
+                ui.Unhighlight();
+            },
+
+            condition = () => flags["pressed"],
+
+            next = () => nodes["globalMapExplanation"]
+        };
+        nodes["globalMapExplanation"] = new TutorialNode
+        {
+            text = "C'est tout pour le tutoriel de la carte ! Bon courage pour votre partie !",
+
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                ui.HideDummyMapPreview();
+                ui.Unhighlight();
+            },
+
+            condition = () => flags["pressed"],
 
             onComplete = () =>
             {
@@ -346,12 +502,11 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
                 combat.allowTurn = true;
                 ui.ShowOverlay();
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["timelineExplanation"]
         };
@@ -361,12 +516,12 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
                 ui.Highlight(timelineArea,canvas);
                 ui.HideOverlay();
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["timelineExplanation2"]
         };
@@ -376,36 +531,36 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
                 combat.deck.AddCardToHand("Délai");
                 combat.deck.AddCardToHand("Hâte");
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["promptCardUse"]
         };
         nodes["promptCardUse"] = new TutorialNode
         {
-            text = "Essayez de jouer ces cartes pour voir comment elles affectent la timeline !",
+            text = "Essayez de jouer ces cartes tout en regardant la timeline pour voir comment elles l'affectent !",
 
             onStart = () =>
             {
-                pressed = false;
-                delayPlayed = false;
-                hastePlayed = false;
+                flags["pressed"] = false;
+                flags["delayPlayed"] = false;
+                flags["hastePlayed"] = false;
                 ui.HideOverlay();
                 ui.Unhighlight();
             },
 
-            condition = () => delayPlayed || hastePlayed,
+            condition = () => flags["delayPlayed"] || flags["hastePlayed"],
 
             next = () =>
             {
-                if (delayPlayed)
+                if (flags["delayPlayed"])
                     return nodes["timelineDelay"];
 
-                if (hastePlayed)
+                if (flags["hastePlayed"])
                     return nodes["timelineHaste"];
 
                 return nodes["timelineDelay"];
@@ -417,11 +572,11 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
                 ui.ShowOverlay();
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["timelineGlobal"]
         };
@@ -431,11 +586,11 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
                 ui.ShowOverlay();
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["timelineGlobal"]
         };
@@ -445,10 +600,10 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
             next = () => nodes["timelineEnd"]
         };
@@ -458,13 +613,195 @@ public class STSTutorialManager : MonoBehaviour
 
             onStart = () =>
             {
-                pressed = false;
+                flags["pressed"] = false;
                 ui.ShowOverlay();
                 ui.Unhighlight();
             },
 
-            condition = () => pressed,
+            condition = () => flags["pressed"],
 
+            onComplete = () =>
+            {
+                STSSceneLoader.Instance.LoadScene("STS_Boot");
+            },
+            next = () => null
+        };
+    }
+    private void BuildTutorialStatus()
+    {
+        nodes["statuses"] = new TutorialNode
+        {
+            text = "Bienvenue dans ce tutoriel sur les effets de statut !",
+            onStart = () =>
+            {
+                combat.allowTurn = true;
+                flags["pressed"] = false;
+                ui.ShowOverlay();
+            },
+            condition = () => flags["pressed"],
+            next = () => nodes["statusesExplanation"]
+        };
+        nodes["statusesExplanation"] = new TutorialNode
+        {
+            text = "Les effets de statut sont des effets qui peuvent être appliqués aux personnages et qui influencent le déroulement du combat. Ils peuvent être positifs ou négatifs (ou, plus rarement, neutres).",
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+            },
+            condition = () => flags["pressed"],
+            next = () => nodes["statusesEnemyDemoIntro"]
+        };
+        nodes["statusesEnemyDemoIntro"] = new TutorialNode
+        {
+            text = "Regardez deux ennemis: leurs prochaines actions vont appliquer des effets de statut.",
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                flags["enemyForcePlayed"] = false;
+                flags["enemyPoisonPlayed"] = false;
+                ui.HideOverlay();
+                QueueStatusEnemyDemo();
+            },
+            condition = () => flags["enemyForcePlayed"] && flags["enemyPoisonPlayed"],
+            next = () => nodes["statusesPrompt"]
+        };
+        nodes["statusesPrompt"] = new TutorialNode
+        {
+            text = "Essayez maintenant de jouer les cartes 'Poison' et 'Force' pour voir les statuts qu'elles appliquent !",
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                flags["poisonPlayed"] = false;
+                flags["forcePlayed"] = false;
+                combat.deck.AddCardToHand("Poison");
+                combat.deck.AddCardToHand("Force");
+                ui.HideOverlay();
+            },
+            condition = () => flags["poisonPlayed"] || flags["forcePlayed"],
+            next = () =>
+            {
+                if (flags["poisonPlayed"])
+                    return nodes["statusesPoison"];
+
+                if (flags["forcePlayed"])
+                    return nodes["statusesForce"];
+
+                return nodes["statusesPoison"];
+            }
+        };
+        nodes["statusesPoison"] = new TutorialNode
+        {
+            text = "Vous avez appliqué le statut 'Poison' à un ennemi ! Le poison inflige des dégâts au début de chaque tour.",
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                ui.ShowOverlay();
+            },
+            condition = () => flags["pressed"],
+            next = () => nodes["statusesDispelIntro"]
+        };
+        nodes["statusesForce"] = new TutorialNode
+        {
+            text = "Vous avez appliqué le statut 'Force' ! La force augmente la puissance de certains coups et peut modifier l'impact d'une attaque.",
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                ui.ShowOverlay();
+            },
+            condition = () => flags["pressed"],
+            next = () => nodes["statusesDispelIntro"]
+        };
+        nodes["statusesDispelIntro"] = new TutorialNode
+        {
+            text = "Voici deux cartes utilitaires: Dissipation retire un buff, et Purification retire un debuff. Essayez-les sur la bonne cible.",
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                flags["dispelPlayed"] = false;
+                flags["cleansePlayed"] = false;
+                flags["dispelSucceeded"] = false;
+                flags["cleanseSucceeded"] = false;
+
+                PrepareDispelDemoTargets();
+                combat.deck.AddCardToHand("Dissipation");
+                combat.deck.AddCardToHand("Purification");
+                ui.HideOverlay();
+            },
+            condition = () => flags["dispelPlayed"],
+            next = () =>
+            {
+                if (flags["dispelSucceeded"])
+                    return nodes["statusesWrapUp"];
+                if (flags["dispelPlayed"])
+                    return nodes["statusesDispelRetry"];
+                if (flags["cleanseSucceeded"])
+                    return nodes["statusesWrapUp"];
+                if (flags["cleansePlayed"])
+                    return nodes["statusesCleanseRetry"];
+
+                return nodes["statusesDispelRetry"];
+            }
+        };
+        nodes["statusesDispelRetry"] = new TutorialNode
+        {
+            text = "Dissipation n'a rien retiré. Essayez-la sur l'ennemi qui a un buff.",
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                flags["dispelPlayed"] = false;
+                flags["dispelSucceeded"] = false;
+                combat.deck.AddCardToHand("Dissipation");
+            },
+            condition = () => flags["dispelPlayed"],
+            next = () => {
+                if (flags["dispelSucceeded"]) return nodes["statusesWrapUp"];
+                return nodes["statusesDispelRetry2"];
+            }
+        };
+        nodes["statusesDispelRetry2"] = new TutorialNode
+        {
+            text = "... Pas grave.",
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                combat.deck.AddCardToHand("Dissipation");
+                ui.ShowOverlay();
+            },
+            condition = () => flags["pressed"],
+            next = () => nodes["statusesWrapUp"]
+        };
+        nodes["statusesCleanseRetry"] = new TutorialNode
+        {
+            text = "Purification n'a rien retiré. Vous n'avez sans doute pas de debuff à retirer.",
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                combat.deck.AddCardToHand("Purification");
+                ui.ShowOverlay();
+            },
+            condition = () => flags["pressed"],
+            next = () => nodes["statusesWrapUp"]
+        };
+        nodes["statusesWrapUp"] = new TutorialNode
+        {
+            text="Certains effets ne peuvent pas être retirés par la plupart des cartes. Cela est indiqué par un cadre gris ou doré (les cadres dorés ne peuvent jamais être retirés par une carte).",
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                ui.ShowOverlay();
+            },
+            condition = () => flags["pressed"],
+            next = () => nodes["statusesEnd"]
+        };
+        nodes["statusesEnd"]=new TutorialNode
+        {
+            text = "Les statuts et leur dissipation peuvent changer le rythme d'un combat, que ce soit sur un ennemi, sur vous-même, ou via une action imposée par une carte.",
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                ui.ShowOverlay();
+            },
+            condition = () => flags["pressed"],
             onComplete = () =>
             {
                 STSSceneLoader.Instance.LoadScene("STS_Boot");
@@ -478,9 +815,101 @@ public class STSTutorialManager : MonoBehaviour
         current = startNode;
         EnterNode(current);
     }
+    private void InitializeFlags()
+    {
+        flags["pressed"] = false;
+        flags["attackPlayed"] = false;
+        flags["defendPlayed"] = false;
+        flags["delayPlayed"] = false;
+        flags["hastePlayed"] = false;
+        flags["turnEnded"] = false;
+        flags["enemyForcePlayed"] = false;
+        flags["enemyPoisonPlayed"] = false;
+        flags["poisonPlayed"] = false;
+        flags["forcePlayed"] = false;
+        flags["dispelPlayed"] = false;
+        flags["cleansePlayed"] = false;
+        flags["dispelSucceeded"] = false;
+        flags["cleanseSucceeded"] = false;
+    }
 
+    private void QueueStatusEnemyDemo()
+    {
+        if (combat == null || combat.enemies == null)
+        {
+            Debug.LogWarning("Cannot queue tutorial enemy demo: combat or enemies list is null.");
+            return;
+        }
+
+        Enemy firstEnemy = null;
+        Enemy secondEnemy = null;
+
+        foreach (var character in combat.enemies)
+        {
+            var enemy = character as Enemy;
+            if (enemy == null || !enemy.IsAlive)
+                continue;
+
+            if (firstEnemy == null)
+            {
+                firstEnemy = enemy;
+                continue;
+            }
+
+            secondEnemy = enemy;
+            break;
+        }
+
+        if (firstEnemy != null)
+        {
+            firstEnemy.ForceNextAction("Force");
+        }
+        else
+        {
+            Debug.LogWarning("Tutorial enemy demo could not find a first alive enemy to force.");
+        }
+
+        if (secondEnemy != null)
+        {
+            secondEnemy.ForceNextAction("Poison");
+        }
+        else
+        {
+            Debug.LogWarning("Tutorial enemy demo could not find a second alive enemy to force.");
+        }
+
+        if (combat.ui != null)
+        {
+            combat.ui.RefreshUI(false);
+        }
+    }
+
+    private void PrepareDispelDemoTargets()
+    {
+        if (combat == null)
+        {
+            return;
+        }
+
+        Enemy buffedEnemy = null;
+        foreach (var character in combat.enemies)
+        {
+            buffedEnemy = character as Enemy;
+            if (buffedEnemy != null && buffedEnemy.IsAlive)
+            {
+                break;
+            }
+        }
+        //if (buffedEnemy != null)
+        //{
+        //    buffedEnemy.AddStatus(StatusEffect.Factory(StatusType.Strength, 1, -1));
+        //}
+        //if (combat.player != null)
+        //{
+        //    combat.player.AddStatus(StatusEffect.Factory(StatusType.Weakness, 0, 2));
+        //}
+    }
     
-
     void Update()
     {
         if (waitTimer > 0f)
@@ -513,30 +942,61 @@ public class STSTutorialManager : MonoBehaviour
         current = next;
         EnterNode(current);
     }
-    private bool pressed;
-    private bool attackPlayed;
-    private bool defendPlayed;
-    private bool delayPlayed;
-    private bool hastePlayed;
-    private bool turnEnded;
+    private Dictionary<string, bool> flags = new Dictionary<string, bool>();
     float waitTimer;
     public void NotifyCardPlayed(CardInstance card)
     {
         if (card.data.type == CardType.Attaque)
-            attackPlayed = true;
+            flags["attackPlayed"] = true;
         else if (card.data.type == CardType.Compétence)
-            defendPlayed = true;
+            flags["defendPlayed"] = true;
         if (card.data.cardName == "Délai")
-            delayPlayed = true;
+            flags["delayPlayed"] = true;
         else if (card.data.cardName == "Hâte")
-            hastePlayed = true;
+            flags["hastePlayed"] = true;
+        if (card.data.cardName == "Poison")
+            flags["poisonPlayed"] = true;
+        else if (card.data.cardName == "Force")
+            flags["forcePlayed"] = true;
+        else if (card.data.cardName == "Dissipation")
+            flags["dispelPlayed"] = true;
+        else if (card.data.cardName == "Purification")
+            flags["cleansePlayed"] = true;
+    }
+
+    public void NotifyEnemyCardPlayed(Enemy enemy, CardInstance card)
+    {
+        if (card == null || card.data == null)
+            return;
+
+        if (card.data.cardName == "Force")
+            flags["enemyForcePlayed"] = true;
+        else if (card.data.cardName == "Poison")
+            flags["enemyPoisonPlayed"] = true;
+    }
+
+    public void NotifyDispelResult(string cardName, bool success)
+    {
+        if (cardName == "Dissipation")
+        {
+            flags["dispelSucceeded"] = success;
+        }
+        else if (cardName == "Purification")
+        {
+            flags["cleanseSucceeded"] = success;
+        }
+
+        if (success && combat != null && combat.ui != null)
+        {
+            combat.ui.RefreshUI(false);
+        }
     }
     public void NotifyTurnEnded()
     {
-        turnEnded = true;
+        flags["turnEnded"] = true;
     }
     public void NotifyScreenPressed()
     {
-        pressed = true;
+        flags["pressed"] = true;
     }
 }

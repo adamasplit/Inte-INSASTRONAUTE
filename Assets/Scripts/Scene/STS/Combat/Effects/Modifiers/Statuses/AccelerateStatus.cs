@@ -9,7 +9,7 @@ public class AccelerateStatus : StatusEffect
         buff=true;
         framed=true;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"Donne {Value} de Vitesse à chaque fin de tour";
     }

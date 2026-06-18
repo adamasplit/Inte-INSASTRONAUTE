@@ -25,6 +25,7 @@ public class StreamingAssetsIndexPreprocessor : IPreprocessBuildWithReport
 
     private static void RebuildIndexes()
     {
+        STSCardExporter.ExportCards();
         BuildFolderIndex("STSCardData");
         BuildFolderIndex("Players");
         BuildFolderIndex("Events");

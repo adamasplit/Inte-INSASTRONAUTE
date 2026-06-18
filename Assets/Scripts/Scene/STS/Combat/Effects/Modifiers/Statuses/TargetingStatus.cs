@@ -7,8 +7,8 @@ public class TargetingStatus : StatusEffect
         Name = "Ciblage";
         framed=true;
     }
-    public override string Describe()
+    public override string Desc(bool isPlayer)
     {
-        return $"Cet ennemi est visé par une attaque puissante.";
+        return $"Ce personnage est visé par une attaque puissante.";
     }
 }

@@ -13,27 +13,17 @@ public class STSLoadingScreen : MonoBehaviour
         UpdateLoadingScreen(progress);
     }
 
-    private System.Collections.IEnumerator SimulateLoading()
-    {
-        float progress = 0f;
-        while (progress < 1f)
-        {
-            progress += Time.deltaTime * 0.5f; // Simulate loading progress
-            UpdateLoadingScreen(progress);
-            yield return null;
-        }
-        // Loading complete
-    }
-
     private void UpdateLoadingScreen(float progress)
     {
+        float clampedProgress = Mathf.Clamp01(progress);
+
         if (loadingImage != null)
         {
-            loadingImage.fillAmount = progress; // Update the fill amount of the loading image
+            loadingImage.fillAmount = clampedProgress; // Update the fill amount of the loading image
         }
         if (loadingText != null)
         {
-            loadingText.text = $"Loading... {Mathf.RoundToInt(progress * 100)}%"; // Update the loading text
+            loadingText.text = $"Loading... {Mathf.RoundToInt(clampedProgress * 100)}%"; // Update the loading text
         }
     }
 

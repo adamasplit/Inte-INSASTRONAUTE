@@ -11,7 +11,7 @@
   "effects": [
     {
       "type": "Damage",
-      "value": 18,
+      "value": 10,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -20,7 +20,7 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "cardFilterTags": [],
@@ -28,7 +28,7 @@
     },
     {
       "type": "DelayTurn",
-      "value": 12,
+      "value": 9,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -37,7 +37,7 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "cardFilterTags": [],

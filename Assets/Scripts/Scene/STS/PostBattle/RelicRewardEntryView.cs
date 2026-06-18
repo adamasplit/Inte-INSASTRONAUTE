@@ -10,7 +10,7 @@ public class RelicRewardEntryView : RewardEntryView
 
         reward = rewardItem as RelicReward;
 
-        relicName.text = "Relique: " + reward.relic.name+"\n<size=20>"+reward.relic.description+"</size>";
+        relicName.text = "Équipement: " + reward.relic.name+"\n<size=20>"+reward.relic.description+"</size>";
     }
 
     public void ClaimRelic()

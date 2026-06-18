@@ -7,6 +7,7 @@ public class CardRewardEntryView : RewardEntryView
     public GameObject cardPanel;
 
     CardReward reward;
+    bool cardsLayoutFrozen;
 
     public override void Init(RewardItem rewardItem, IRewardFlowHost mgr)
     {
@@ -20,18 +21,35 @@ public class CardRewardEntryView : RewardEntryView
             var ctrl = obj.GetComponent<RewardCardController>();
             ctrl.Init(card, this);
         }
+
+        cardsLayoutFrozen = false;
+        UILayoutHelper.RebuildAfterFrame(this, cardsContainer as RectTransform);
     }
     public void ToggleCardPanel(bool show)
     {
         cardPanel.SetActive(show);
     }
 
-    public void SelectCard(CardInstance card)
+    public void SelectCard(CardInstance card, RewardCardController sourceController)
     {
         RunManager.Instance.deck.Add(card);
 
         reward.Claim();
 
         StartCoroutine(Collapse());
+    }
+
+    public void DisableCardsLayout()
+    {
+        UILayoutHelper.DisableLayoutHierarchy(cardsContainer as RectTransform);
+    }
+
+    public void FreezeCardsLayoutOnce()
+    {
+        if (cardsLayoutFrozen)
+            return;
+
+        cardsLayoutFrozen = true;
+        UILayoutHelper.DisableLayoutLocal(cardsContainer as RectTransform);
     }
 }

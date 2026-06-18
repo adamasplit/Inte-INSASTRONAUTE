@@ -17,7 +17,7 @@ public class PoisonStatus : StatusEffect
     public override void OnTurnEnd(Character target)
     {
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"Inflige {Duration} dégâts au début de chaque tour";
     }

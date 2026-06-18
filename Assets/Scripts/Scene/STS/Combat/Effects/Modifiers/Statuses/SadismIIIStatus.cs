@@ -19,9 +19,13 @@ public class SadismIIIStatus:StatusEffect
     {
         return Mathf.FloorToInt(damage + (damage * 50) / 100);
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return $"{50}% dégâts supplémentaires subis et +{50}% d'Armure gagnée. Lorsque vous attaquez un ennemi qui a moins de 50% de sa vie, déclenchez une attaque supplémentaire.";
+        if (isPlayer)
+        {
+            return $"{50}% dégâts supplémentaires subis et +{50}% d'Armure gagnée. Lorsque vous attaquez un ennemi qui a moins de 50% de sa vie, déclenchez une attaque supplémentaire.";
+        }
+        return $"{50}% dégâts supplémentaires subis et +{50}% d'Armure gagnée. Lorsque qu'un adversaire qui a moins de 50% de sa vie est ciblé, cela déclenche une attaque supplémentaire.";
     }
     public override void OnCardPlayed(Character source,Character target,CardInstance card)
     {

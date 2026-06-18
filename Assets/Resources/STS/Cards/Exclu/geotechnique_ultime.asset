@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: "G\xE9otechnique ultime"
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 21300000, guid: 35c6220a57e736e448a6ff87de6e98f5, type: 3}
+  icon: {fileID: 21300000, guid: 33bf8384efc214642af3e69950c61eba, type: 3}
   cost: 2
   xCost: 0
   type: 0
@@ -69,10 +69,6 @@ MonoBehaviour:
     cardSelectionEffect: 0
   targetingMode: 3
   modifiers: []
-  exhaust: 1
-  retain: 0
-  innate: 0
-  infinite: 0
   favoredCharacter: 6
   animationSpeed: 1
   startingCount: 0

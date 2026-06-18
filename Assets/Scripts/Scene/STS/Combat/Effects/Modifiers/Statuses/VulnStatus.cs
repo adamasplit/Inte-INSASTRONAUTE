@@ -20,7 +20,7 @@ public class VulnStatus : StatusEffect
     {
         return Mathf.CeilToInt(damage * 1.5f);
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"Reçoit 50% de dégâts en plus";
     }

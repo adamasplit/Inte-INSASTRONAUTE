@@ -5,6 +5,12 @@ using UnityEngine;
 
 public static class STSCardDatabase
 {
+    [System.Serializable]
+    private class CardDatabaseWrapper
+    {
+        public List<STSCardDataDTO> cards;
+    }
+
     static Dictionary<string, STSCardData> cardDict;
     static bool isLoaded;
     static Task loadTask;
@@ -31,36 +37,66 @@ public static class STSCardDatabase
         cardDict = new();
         allCards = new();
 
-        List<string> files = await StreamingAssetsLoader.ListJsonFilesAsync("STSCardData");
-        Debug.Log($"STSCardDatabase found {files.Count} card JSON files.");
-
-        foreach (string file in files)
+        string combinedJson = await StreamingAssetsLoader.ReadAllTextAsync("STSCardData/cards.json");
+        if (!string.IsNullOrEmpty(combinedJson))
         {
             try
             {
-                string json = await StreamingAssetsLoader.ReadAllTextAsync(file);
-                if (string.IsNullOrEmpty(json))
-                    continue;
-
-                STSCardDataDTO dto =
-                    JsonConvert.DeserializeObject<STSCardDataDTO>(json);
-
-                if (dto == null)
+                CardDatabaseWrapper wrapper = JsonConvert.DeserializeObject<CardDatabaseWrapper>(combinedJson);
+                if (wrapper != null && wrapper.cards != null)
                 {
-                    Debug.LogWarning($"Invalid card JSON in '{file}'.");
-                    continue;
+                    Debug.Log($"STSCardDatabase loaded {wrapper.cards.Count} cards from cards.json.");
+                    foreach (STSCardDataDTO dto in wrapper.cards)
+                    {
+                        if (dto == null)
+                        {
+                            continue;
+                        }
+
+                        STSCardData card = STSCardData.FromDTO(dto);
+                        cardDict[card.cardName] = card;
+                        allCards.Add(card);
+                    }
                 }
-
-                STSCardData card =
-                    STSCardData.FromDTO(dto);
-
-                cardDict[card.cardName] = card;
-
-                allCards.Add(card);
             }
             catch (System.Exception ex)
             {
-                Debug.LogError($"Failed to load card '{file}': {ex}");
+                Debug.LogError($"Failed to load combined cards.json: {ex}");
+            }
+        }
+        else
+        {
+            List<string> files = await StreamingAssetsLoader.ListJsonFilesAsync("STSCardData");
+            Debug.Log($"STSCardDatabase found {files.Count} card JSON files.");
+
+            foreach (string file in files)
+            {
+                try
+                {
+                    string json = await StreamingAssetsLoader.ReadAllTextAsync(file);
+                    if (string.IsNullOrEmpty(json))
+                        continue;
+
+                    STSCardDataDTO dto =
+                        JsonConvert.DeserializeObject<STSCardDataDTO>(json);
+
+                    if (dto == null)
+                    {
+                        Debug.LogWarning($"Invalid card JSON in '{file}'.");
+                        continue;
+                    }
+
+                    STSCardData card =
+                        STSCardData.FromDTO(dto);
+
+                    cardDict[card.cardName] = card;
+
+                    allCards.Add(card);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"Failed to load card '{file}': {ex}");
+                }
             }
         }
 

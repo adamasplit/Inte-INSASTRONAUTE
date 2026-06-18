@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: finance_experte
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: finance_experte
   cardName: Finance experte
   collectionCardId: 
   collectionCard: {fileID: 0}
@@ -26,18 +27,19 @@ MonoBehaviour:
     targetSelf: 0
     targetOthers: 0
     statusType: 34
-    duration: 0
+    duration: 5
     description: 
     cardID: 
     conditional: 0
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   targetingMode: 1
   modifiers: []
-  exhaust: 0
-  retain: 0
-  innate: 0
   favoredCharacter: 2
   animationSpeed: 1
   startingCount: 0
+  tags: 

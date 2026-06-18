@@ -1,3 +1,4 @@
+using UnityEngine;
 public class LostHPModifier : StatModifier
 {
     public int addedValue;
@@ -10,9 +11,10 @@ public class LostHPModifier : StatModifier
     }
     public override int Modify(int value, EffectContext ctx)
     {
+        Debug.Log("LostHPModifier modifying " + value + " with addedValue " + addedValue + " and source currentHP " + (ctx.source != null ? ctx.source.currentHP.ToString() : "null") + " and maxHP " + (ctx.source != null ? ctx.source.maxHP.ToString() : "null"));
         if (ctx.source == null)
             return value;
-        return value * (1 + addedValue * (ctx.source.maxHP - ctx.source.currentHP) / 100);
+        return Mathf.RoundToInt(value * (1f + addedValue * (ctx.source.maxHP - ctx.source.currentHP) / 100f));
     }
 
     public override string Describe()

@@ -100,6 +100,8 @@ public class CombatManager : MonoBehaviour
             }
             tutorial.Init();
         }
+
+        STSSceneLoader.Instance?.SceneReady();
     }
 
     public void FieldTurnEnd()
@@ -156,7 +158,12 @@ public class CombatManager : MonoBehaviour
         {
             if (createView)
             {
-                playedView=ui.CreateCardView(card);
+                Transform sourceView = ui.GetView(source);
+                playedView = ui.CreateCardView(
+                    card,
+                    false,
+                    sourceView != null ? (Vector3?)sourceView.position : null
+                );
             }
             else
             {
@@ -166,7 +173,14 @@ public class CombatManager : MonoBehaviour
 
             if (playedView != null)
             {
-                ui.RemoveView(playedView);
+                if (createView)
+                {
+                    // Already seeded in CreateCardView.
+                }
+                else
+                {
+                    ui.RemoveView(playedView);
+                }
 
                 yield return ui.AnimateCardToCenter(playedView);
             }
@@ -337,7 +351,14 @@ public class CombatManager : MonoBehaviour
             turnSystem.timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
         if (tutorialMode)
         {
-            tutorial.NotifyCardPlayed(card);
+            if (source != null && source.isPlayer)
+            {
+                tutorial.NotifyCardPlayed(card);
+            }
+            else
+            {
+                tutorial.NotifyEnemyCardPlayed(source as Enemy, card);
+            }
         }
     }
 
@@ -484,6 +505,17 @@ public class CombatManager : MonoBehaviour
         if (player != null && player.IsAlive)
             list.Add(player);
         return list;
+    }
+    public List<Character> GetAdversaries(Character character)
+    {
+        if (character.isPlayer)
+        {
+            return enemies.Where(e => e != null && e.IsAlive).ToList();
+        }
+        else
+        {
+            return player != null && player.IsAlive ? new List<Character> { player } : new List<Character>();
+        }
     }
     public List<Character> RandomEnemy()
     {

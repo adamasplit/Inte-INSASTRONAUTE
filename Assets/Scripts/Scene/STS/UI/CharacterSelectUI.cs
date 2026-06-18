@@ -20,18 +20,30 @@ public class CharacterSelectUI : MonoBehaviour
     public RectTransform boxContainer;
     async void Awake()
     {
-        foreach (SelectableCharacter character in System.Enum.GetValues(typeof(SelectableCharacter)))
+        STSSceneLoader.Instance?.BeginLoading();
+
+        try
         {
-            if (character == SelectableCharacter.Aucun|| character == SelectableCharacter.Impossible|| character == SelectableCharacter.Starting) continue;
-            GameObject btnObj = Instantiate(characterButtonPrefab, characterListContainer);
-            btnObj.name = character.ToString();
-            CharacterSelectButton btn = btnObj.GetComponent<CharacterSelectButton>();
-            btn.Init(character, OnCharacterSelected);
+            foreach (SelectableCharacter character in System.Enum.GetValues(typeof(SelectableCharacter)))
+            {
+                if (character == SelectableCharacter.Aucun|| character == SelectableCharacter.Impossible|| character == SelectableCharacter.Starting) continue;
+                GameObject btnObj = Instantiate(characterButtonPrefab, characterListContainer);
+                btnObj.name = character.ToString();
+                CharacterSelectButton btn = btnObj.GetComponent<CharacterSelectButton>();
+                btn.Init(character, OnCharacterSelected);
+            }
+
+            await PlayersDatabase.LoadAsync();
+            OnCharacterSelected(SelectableCharacter.EP);
+            circularMenu.Init();
+            Hide();
         }
-        await PlayersDatabase.LoadAsync();
-        OnCharacterSelected(SelectableCharacter.EP);
-        circularMenu.Init();
-        Hide();    }
+        finally
+        {
+            STSSceneLoader.Instance?.EndLoading();
+            STSSceneLoader.Instance?.SceneReady();
+        }
+    }
     public void Show()
     {
         selectPanel.SetActive(true);
@@ -79,6 +91,7 @@ public class CharacterSelectUI : MonoBehaviour
             Debug.LogError($"No relic assigned for character {character}. Cannot start run.");
             return;
         }
+        RunManager.Instance.forceTutorial = false;
         int hp = PlayersDatabase.Get(character)?.hp ?? 100;
         RunManager.Instance.StartRun(character.ToString(), hp, new List<Relic>() {relic});
     }

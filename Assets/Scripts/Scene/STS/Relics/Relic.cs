@@ -15,7 +15,7 @@ public abstract class Relic
     public virtual void OnTurnEnd(Character player) {}
     public virtual void OnEnterRestSite(Character player) {}
     public virtual void OnEnterShop(Character player) {}
-    public virtual void OnCardPlayed(Character player,List<Character> target, CardInstance card) {}
+    public virtual void OnCardPlayed(Character player,List<Character> targets, CardInstance card) {}
     public virtual void OnOwnArmorBroken(Character source, Character target) {}
     public virtual void OnTargetArmorBroken(Character source, Character target) {}
     public virtual void OnDamageDealt(Character source, Character target, int amount) {}
@@ -26,7 +26,7 @@ public abstract class Relic
     public string Describe()
     {
         if (description==""||description==null)
-            return "Les informations sur cette relique sont indisponibles.";
+            return "Les informations sur cet équipement sont indisponibles.";
         return $"{description}";
     }
 }

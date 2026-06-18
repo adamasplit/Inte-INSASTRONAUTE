@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: combustion
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: combustion
   cardName: Combustion
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 21300000, guid: 69f0ece1bc8f5474296335c74e867859, type: 3}
+  icon: {fileID: 21300000, guid: 012bc4b30d2508c4cbc51d99a9564a47, type: 3}
   cost: 0
   xCost: 1
   type: 0
@@ -33,11 +34,12 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   targetingMode: 1
   modifiers: []
-  exhaust: 0
-  retain: 0
-  innate: 0
   favoredCharacter: 0
   animationSpeed: 1
   startingCount: 1
+  tags: 

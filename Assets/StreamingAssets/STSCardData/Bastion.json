@@ -2,7 +2,7 @@
   "id": "bastion",
   "cardName": "Bastion",
   "collectionCardId": "GC",
-  "iconId": "Armure",
+  "iconId": "shield",
   "cost": 1,
   "xCost": false,
   "type": "Compétence",

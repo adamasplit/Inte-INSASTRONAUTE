@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 public abstract class StatusEffect : StatModifier
 {
+    protected Character owner;
     public string Name;
     public int Value;
     public int maxValue=99;
@@ -13,6 +14,23 @@ public abstract class StatusEffect : StatModifier
     public bool framed=false; // Statuts pouvant être supprimés par des cartes ou des effets de statut (certains indispellables peuvent être supprimés quand même)
     public bool inextendable=false; // Statuts dont la durée ne peut pas être augmentée
     public bool goldFrame=false; // Statuts rares bénéficiant d'une true resistance à la suppression
+    public virtual StatusEffect Dispel(int remainingPercentage=0)
+    {
+        if (remainingPercentage>0)
+        {
+            StatusEffect dispelled = Factory((StatusType)System.Enum.Parse(typeof(StatusType), this.GetType().Name.Replace("Status","")), Value, Duration, Name);
+            dispelled.Value = Mathf.CeilToInt(Value * (remainingPercentage / 100f));
+            this.Value -= dispelled.Value;
+            
+            dispelled.Duration = Duration>0 ? Mathf.CeilToInt(Duration * (remainingPercentage / 100f)) : -1;
+            this.Duration -= dispelled.Duration<0 ? 0 : dispelled.Duration;
+            
+            Debug.Log($"Dispelled {dispelled.Name} with value {dispelled.Value} and duration {dispelled.Duration}. Remaining: {this.Value} value, {this.Duration} duration.");
+            return dispelled;
+        }
+        owner.RemoveStatus(this);
+        return this;
+    }
     public virtual void InsertInto(List<StatusEffect> list)
     {
         StatusEffect other = list.Find(s => s.GetType() == this.GetType());
@@ -34,12 +52,12 @@ public abstract class StatusEffect : StatModifier
         }
         else
         {
-            other.Value = Mathf.Min(other.Value + this.Value, other.maxValue);
+            other.Value = Mathf.Clamp(other.Value + this.Value, -other.maxValue, other.maxValue);
         }
     }
     public virtual void Extend(int duration)
     {
-        if (!inextendable&&duration>0)
+        if (!inextendable&&duration>0&&Duration>0)
             Duration += duration;
     }
     public virtual void Update(Character target){}
@@ -49,7 +67,10 @@ public abstract class StatusEffect : StatModifier
         Duration--;
     }
 
-    public virtual void OnApply(Character target) { }
+    public virtual void OnApply(Character target)
+    {
+        owner = target;
+    }
     public virtual void OnExpire(Character target) { }
     public virtual void OnTurnStart(Character target) { }
     public virtual void OnTurnEnd(Character target)
@@ -71,15 +92,14 @@ public abstract class StatusEffect : StatModifier
     public virtual void OnCardPlayed(Character source,Character target,CardInstance card) { }
     public virtual void OnTargetedByCard(Character source,Character target, CardInstance card) { }
     public virtual void OnCardDrawn(Character target, CardInstance card) { }
-    public virtual string Desc(){return $"\n{Value} (Description inconnue)";}
-    public virtual string CardDesc(bool targetSelf){return Desc();}
+    public virtual string Desc(bool isPlayer){return $"\n{Value} (Description inconnue)";}
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {
         return false;
     }
     public override string Describe()
     {
-        return Desc();
+        return Desc(owner.isPlayer);
     }
     public override int Modify(int value, EffectContext ctx)
     {
@@ -128,8 +148,10 @@ public abstract class StatusEffect : StatModifier
             StatusType.FullBreak=>new FullBreakStatus(duration),
             StatusType.Status=>new StatusStatus(duration),
             StatusType.CostNullify=>new CostNullifyStatus(value),
-            StatusType.FollowUp=>new FollowUpStatus(value,effectInfo),
+            StatusType.CardFollowUp=>new CardFollowUpStatus(value,duration,effectInfo),
             StatusType.Echo=>new EchoStatus(value),
+            StatusType.FieldTurnFollowUp=>new FieldTurnFollowUpStatus(value,duration,effectInfo),
+            StatusType.Vigor=>new VigorStatus(value),
             _ => null
         };
         return stat;

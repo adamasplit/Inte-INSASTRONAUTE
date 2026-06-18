@@ -98,15 +98,25 @@ public class UIManager : MonoBehaviour
 
         return null;
     }
-    public CardView CreateCardView(CardInstance card)
+    public CardView CreateCardView(CardInstance card, bool addToHand = true, Vector3? startWorldPosition = null)
     {
-        GameObject obj = Instantiate(cardButtonPrefab, handPanel);
+        Transform parent = addToHand ? handPanel : animator.animationLayer;
+        GameObject obj = Instantiate(cardButtonPrefab, parent);
+        if (!addToHand)
+            obj.SetActive(false);
 
         CardView view = obj.GetComponentInChildren<CardView>();
 
+        if (!addToHand && startWorldPosition.HasValue)
+            view.rootRect.position = startWorldPosition.Value;
+
         view.SetCard(card);
 
-        currentHandViews.Add(view);
+        if (addToHand)
+            currentHandViews.Add(view);
+
+        if (!addToHand)
+            obj.SetActive(true);
 
         return view;
     }

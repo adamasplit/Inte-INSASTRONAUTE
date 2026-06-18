@@ -14,9 +14,13 @@ public class JumpStatus:StatusEffect
         goldFrame=true;
         modifierType = ModifierType.Override;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return $"Porte une attaque puissante sur un ennemi au début de votre prochain tour. Vous ne pouvez pas subir de dégâts avant cela.";
+        if (isPlayer)
+        {
+            return $"Portez une attaque puissante sur un ennemi au début de votre prochain tour. Vous ne pouvez pas subir de dégâts avant cela.";
+        }
+        return $"L'ennemi portera une attaque puissante sur vous au début de son prochain tour. Il ne peut pas subir de dégâts avant cela.";
     }
     public override void OnTurnEnd(Character character)
     {
@@ -32,7 +36,7 @@ public class JumpStatus:StatusEffect
     public override void OnTurnStart(Character character)
     {
         mustExpire = true; 
-        Character target=character.GetCombatManager().enemies.Find(e => e.statusEffects.Any(s => s is TargetingStatus));
+        Character target=character.GetCombatManager().GetAdversaries(character).Find(e => e.statusEffects.Any(s => s is TargetingStatus));
         TargetingStatus targeting = target?.statusEffects.OfType<TargetingStatus>().FirstOrDefault();
         if (targeting != null)
         {
@@ -40,9 +44,9 @@ public class JumpStatus:StatusEffect
         }
         if (target == null)
         {
-            target=character.GetCombatManager().enemies[Random.Range(0,character.GetCombatManager().enemies.Count)];
+            target=character.GetCombatManager().GetAdversaries(character)[Random.Range(0,character.GetCombatManager().GetAdversaries(character).Count)];
         }
         CardInstance card = new CardInstance(STSCardDatabase.Get("Atterrissage"));
-        character.GetCombatManager().PlayCard(character,card,new List<Character>(){target},false,true);
+        character.GetCombatManager().PlayCard(character,card,character.GetCombatManager().AutoCardTargets(card.targetingMode,character,target),false,true);
     }
 }

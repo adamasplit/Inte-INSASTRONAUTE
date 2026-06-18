@@ -8,6 +8,7 @@ public class VigorStatus : StatusEffect
         Name = "Vigueur";
         modifierType = ModifierType.Additive;
         buff=true;
+        generic=true;
     }
     private bool isApplied = false;
     public override bool AppliesTo(StatType stat, EffectContext ctx)
@@ -32,8 +33,8 @@ public class VigorStatus : StatusEffect
             mustExpire = true;
         }
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return $"Le prochain effet de dégâts que vous appliquez est augmenté de {Value}.";
+        return $"Le prochain effet de dégâts appliqué est augmenté de {Value}.";
     }
 }

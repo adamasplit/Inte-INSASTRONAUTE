@@ -292,13 +292,13 @@ public static class EffectResolver
             {
                 if (ctx.isPreview)
                     yield break;
-                List<StatusEffect> buffsToSteal = ctx.target.statusEffects.Where(s => s.buff && (!s.framed||effect.trueEffect)).ToList();
+                List<StatusEffect> buffsToSteal = ctx.target.statusEffects.Where(s => s.buff && (!s.framed||effect.trueEffect)&&!s.goldFrame).ToList();
                 for (int i = 0; (i < effect.value || effect.value == -1) && buffsToSteal.Count > 0; i++)
                 {
                     StatusEffect buff = buffsToSteal[0];
                     buffsToSteal.RemoveAt(0);
-                    ctx.target.RemoveStatus(buff);
-                    ctx.source.AddStatus(buff);
+                    StatusEffect dispelled=buff.Dispel(effect.duration);
+                    ctx.source.AddStatus(dispelled);
                 }
                 yield break;
             }
@@ -306,13 +306,13 @@ public static class EffectResolver
             {
                 if (ctx.isPreview)
                     yield break;
-                List<StatusEffect> debuffsToTransfer = ctx.source.statusEffects.Where(s => !s.buff && (!s.framed||effect.trueEffect)).ToList();
+                List<StatusEffect> debuffsToTransfer = ctx.source.statusEffects.Where(s => !s.buff && (!s.framed||effect.trueEffect)&&!s.goldFrame).ToList();
                 for (int i = 0; (i < effect.value || effect.value == -1) && debuffsToTransfer.Count > 0; i++)
                 {
                     StatusEffect debuff = debuffsToTransfer[0];
                     debuffsToTransfer.RemoveAt(0);
-                    ctx.source.RemoveStatus(debuff);
-                    ctx.target.AddStatus(debuff);
+                    StatusEffect dispelled=debuff.Dispel(effect.duration);
+                    ctx.target.AddStatus(dispelled);
                 }
                 yield break;
             }
@@ -320,26 +320,32 @@ public static class EffectResolver
             {
                 if (ctx.isPreview)
                     yield break;
-                List<StatusEffect> buffsToDispel = ctx.target.statusEffects.Where(s => s.buff && (!s.framed||effect.trueEffect)).ToList();
+                bool removedAny = false;
+                List<StatusEffect> buffsToDispel = ctx.target.statusEffects.Where(s => s.buff && (!s.framed||effect.trueEffect)&&!s.goldFrame).ToList();
                 for (int i = 0; (i < effect.value || effect.value == -1) && buffsToDispel.Count > 0; i++)
                 {
                     StatusEffect buff = buffsToDispel[0];
                     buffsToDispel.RemoveAt(0);
-                    ctx.target.RemoveStatus(buff);
+                    buff.Dispel(effect.duration);
+                    removedAny = true;
                 }
+                ctx.combat?.tutorial?.NotifyDispelResult(ctx.card?.data?.cardName, removedAny);
                 yield break;
             }
             case EffectType.DispelDebuff:
             {
                 if (ctx.isPreview)
                     yield break;
-                List<StatusEffect> debuffsToDispel = ctx.target.statusEffects.Where(s => !s.buff && (!s.framed||effect.trueEffect)).ToList();
+                bool removedAny = false;
+                List<StatusEffect> debuffsToDispel = ctx.target.statusEffects.Where(s => !s.buff && (!s.framed||effect.trueEffect)&&!s.goldFrame).ToList();
                 for (int i = 0; (i < effect.value || effect.value == -1) && debuffsToDispel.Count > 0; i++)
                 {
                     StatusEffect debuff = debuffsToDispel[0];
                     debuffsToDispel.RemoveAt(0);
-                    ctx.target.RemoveStatus(debuff);
+                    debuff.Dispel(effect.duration);
+                    removedAny = true;
                 }
+                ctx.combat?.tutorial?.NotifyDispelResult(ctx.card?.data?.cardName, removedAny);
                 yield break;
             }
             case EffectType.EndTurn:
@@ -422,7 +428,7 @@ public static class EffectResolver
                         };
                     }
 
-                    int amount = effect.value;
+                    int amount = effect.value!=-1? effect.value : int.MaxValue; // If value is -1, allow selecting all cards
                     var deck = ctx.source.GetCombatManager().deck;
                     List<CardInstance> candidates = effect.cardSelectionSource switch
                     {
@@ -578,6 +584,20 @@ public static class EffectResolver
                             STSCardData data = STSCardDatabase.Get(effect.cardID);
                             ctx.source.GetCombatManager().deck.discardPile.Add(new CardInstance(data));
                         }
+                    }
+                    yield break;
+                }
+            case EffectType.ForceNextCard:
+                {
+                    if (ctx.isPreview)
+                        yield break;
+                    if (effect.cardID == null || effect.cardID == ""||ctx.target.isPlayer)
+                    {
+                        yield break;
+                    }
+                    else
+                    {
+                        ((Enemy)ctx.target).ForceNextAction(effect.cardID);
                     }
                     yield break;
                 }

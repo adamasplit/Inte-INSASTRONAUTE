@@ -36,7 +36,7 @@ public class DexterityStatus : StatusEffect
     {
         return armor + Value;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         if (Value > 0)
         {

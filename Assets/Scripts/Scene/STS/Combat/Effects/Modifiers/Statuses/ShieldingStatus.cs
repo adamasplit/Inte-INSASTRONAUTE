@@ -12,8 +12,12 @@ public class ShieldingStatus : StatusEffect
     {
         target.AddArmor(Duration);
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return $"Gagnez {Duration} d'Armure au début de chaque tour";
+        if (isPlayer)
+        {
+            return $"Vous gagnez {Duration} d'Armure au début de votre tour";
+        }
+        return $"Gagne {Duration} d'Armure au début de son tour";
     }
 }

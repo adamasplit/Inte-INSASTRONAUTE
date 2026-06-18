@@ -24,6 +24,8 @@ public class RunManager : MonoBehaviour
     public RunManagerUI ui;
     public int gold=0;
     public bool forceTutorial=false;
+    public bool addAllCardsToDeck=false;//Debug option to add all cards to the deck for testing purposes
+    public List<string> debugCards=new List<string>();//Debug option to specify which cards to add to the deck when addAllCardsToDeck is true
     void Awake()
     {
         if (Instance != null)
@@ -52,7 +54,7 @@ public class RunManager : MonoBehaviour
         relic.OnAcquire(player);
     }
     private bool startingRun = false;
-    public async void StartRun(string character,int maxHP, List<Relic> startingRelics,bool startOnMap=true,bool forceTutorial=false,int tutorialStage=0)
+    public async Task StartRunAsync(string character, int maxHP, List<Relic> startingRelics, bool startOnMap = true, bool forceTutorial = false, int tutorialStage = 0, string nextSceneName = null)
     {
         // First end other executions of StartRun to prevent multiple runs from starting at the same time
         if (startingRun)
@@ -61,44 +63,73 @@ public class RunManager : MonoBehaviour
             return;
         }
         startingRun = true;
-        OnRunEnd();
-        forceTutorial=forceTutorial;
-        act=tutorialStage;
-        ui.gameObject.SetActive(true);
-        
-        await STSCardDatabase.LoadAsync();
-        gold=0;
-        if (Enum.TryParse(character, out SelectableCharacter parsedCharacter))
-        {
-            selectedCharacter = parsedCharacter;
-        }
-        else
-        {
-            Debug.LogError($"Invalid character: {character}. No character selected.");
-            selectedCharacter = SelectableCharacter.Aucun;
-        }
-        player = new Player(character, maxHP);
-        relics = startingRelics;
-        currentFloor = 1;
-        RegenerateMap = true;
+        STSSceneLoader.Instance?.BeginLoading();
 
-        deck.Clear();
-        foreach (STSCardData card in STSCardDatabase.allCards)
+        bool loadedScene = false;
+
+        try
         {
-            if (card.startingCount > 0 && (card.favoredCharacter == SelectableCharacter.Starting || card.favoredCharacter == selectedCharacter|| card.favoredCharacter == SelectableCharacter.Aucun))
+            OnRunEnd();
+            this.forceTutorial = forceTutorial;
+            act = tutorialStage;
+            ui.gameObject.SetActive(true);
+
+            await STSCardDatabase.LoadAsync();
+            gold = 0;
+            if (Enum.TryParse(character, out SelectableCharacter parsedCharacter))
             {
-                for (int i = 0; i < card.startingCount; i++)
+                selectedCharacter = parsedCharacter;
+            }
+            else
+            {
+                Debug.LogError($"Invalid character: {character}. No character selected.");
+                selectedCharacter = SelectableCharacter.Aucun;
+            }
+
+            player = new Player(character, maxHP);
+            relics = startingRelics;
+            currentFloor = 1;
+            RegenerateMap = true;
+
+            deck.Clear();
+            foreach (STSCardData card in STSCardDatabase.allCards)
+            {
+                if ((addAllCardsToDeck&&(debugCards.Contains(card.cardName)||debugCards.Count == 0)) 
+                || (card.startingCount > 0 
+                && (card.favoredCharacter == SelectableCharacter.Starting || card.favoredCharacter == selectedCharacter || card.favoredCharacter == SelectableCharacter.Aucun)))
                 {
-                    Debug.Log($"Adding starting card: {card.name}");
-                    deck.Add(new CardInstance(card));
+                    for (int i = 0; i < (addAllCardsToDeck ? 1 : card.startingCount); i++)
+                    {
+                        Debug.Log($"Adding starting card: {card.name}");
+                        deck.Add(new CardInstance(card));
+                    }
                 }
             }
+
+            if (startOnMap)
+            {
+                STSSceneLoader.Instance?.LoadScene("STS_Map");
+                loadedScene = true;
+            }
+            else if (!string.IsNullOrEmpty(nextSceneName))
+            {
+                STSSceneLoader.Instance?.LoadScene(nextSceneName);
+                loadedScene = true;
+            }
         }
-        if (startOnMap)
+        finally
         {
-            STSSceneLoader.Instance.LoadScene("STS_Map");
+            if (loadedScene)
+            {
+                STSSceneLoader.Instance?.EndLoading();
+            }
+            startingRun = false;
         }
-        startingRun = false;
+    }
+
+    public async void StartRun(string character, int maxHP, List<Relic> startingRelics, bool startOnMap = true, bool forceTutorial = false, int tutorialStage = 0)
+    {
+        await StartRunAsync(character, maxHP, startingRelics, startOnMap, forceTutorial, tutorialStage);
     }
 
     public void OnRunEnd()
@@ -114,9 +145,13 @@ public class RunManager : MonoBehaviour
     }
     public void StartTutorialRun(int stage)
     {
-        StartRun("", 50, new List<Relic>(), false,false,stage);
+        _ = StartTutorialRunAsync(stage);
+    }
+
+    private async Task StartTutorialRunAsync(int stage)
+    {
+        await StartRunAsync("", 50, new List<Relic>(), false, true, stage, "STS_Combat");
         forceTutorial = true;
         act = stage;
-        STSSceneLoader.Instance.LoadScene("STS_Combat");
     }
 }

@@ -38,7 +38,7 @@ public static class RewardGenerator
         {
             amount = GenerateGold(result)
         });
-        if (result.boss)
+        if (result.boss&&RunManager.Instance!=null&&RunManager.Instance.act%3==2)
         {
             BaseRelicUpgradeReward upgradeReward = GenerateRelicUpgradeReward(result);
             if (upgradeReward != null) reward.items.Add(upgradeReward);
@@ -58,10 +58,13 @@ public static class RewardGenerator
     public static RelicReward GenerateRelicReward(CombatResult result = null)
     {
         result ??= new CombatResult();
-
+        Relic relic=null;
+        do{
+            relic = RelicDrop.GetRandomRelic(result);
+        } while(relic==null||(RunManager.Instance!=null&&RunManager.Instance.relics.Exists(r=>r.name==relic.name)));
         return new RelicReward
         {
-            relic = RelicDrop.GetRandomRelic(result)
+            relic = relic
         };
     }
     static int GenerateGold(CombatResult result)
@@ -86,7 +89,13 @@ public static class RewardGenerator
 
         for (int i = 0; i < 3; i++)
         {
-            choices.Add(GetRandomCard(pool,result));
+            CardInstance card;
+            int attempts = 0;
+            do
+            {
+                card = GetRandomCard(pool, result);
+            } while (choices.Exists(c => c.data == card.data) && attempts < 100);
+            choices.Add(card);
         }
 
         return choices;
@@ -132,7 +141,7 @@ public static class RewardGenerator
                 if (result != null&&result.elite)
                 {
                     Debug.Log("Enchanting card for elite reward");
-                    EnchantManager.ApplyEnchant(cardInstance,Random.Range(1, 15));
+                    EnchantManager.ApplyEnchant(cardInstance,Random.Range(1, 5+(RunManager.Instance!=null?RunManager.Instance.act*2:1)));
                 }
                 return cardInstance;
             }
@@ -176,6 +185,10 @@ public static class RewardGenerator
                     _ => 0
                 };
             }
+            if (card.favoredCharacter==RunManager.Instance?.selectedCharacter)
+            {
+                weight *= 2; // Double the weight for favored character cards
+            }  
             floorCards.Add(new CardEntry(card, weight));
         }
         return floorCards;

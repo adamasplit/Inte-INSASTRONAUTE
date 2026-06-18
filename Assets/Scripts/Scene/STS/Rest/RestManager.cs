@@ -1,5 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Collections;
+using UnityEngine.UI;
 public class RestManager : MonoBehaviour
 {
     public GenericPanel enchantPanel;
@@ -9,13 +12,13 @@ public class RestManager : MonoBehaviour
     public Transform chargesContainer;
     CardInstance selectedCard;
 
-    void Start()
+    async void Start()
     {
         if (RunManager.Instance==null)
         {
             GameObject newRunManager = new GameObject("RunManager");
             newRunManager.AddComponent<RunManager>();
-            RunManager.Instance.StartRun("",50,new List<Relic>{},false);
+            await RunManager.Instance.StartRunAsync("",50,new List<Relic>{},false);
         }
         foreach (var relic in RunManager.Instance.relics)
         {
@@ -23,6 +26,8 @@ public class RestManager : MonoBehaviour
         }
         BuildDeck();
         UpdateChargesDisplay();
+        STSSceneLoader.Instance?.EndLoading();
+        STSSceneLoader.Instance?.SceneReady();
     }
 
     void BuildDeck()
@@ -38,6 +43,8 @@ public class RestManager : MonoBehaviour
             var ctrl = obj.GetComponent<RestCardController>();
             ctrl.Init(card, this);
         }
+
+        StartCoroutine(RefreshDeckContainerAfterFrame());
     }
 
     // ---------------- HEAL ----------------
@@ -54,6 +61,15 @@ public class RestManager : MonoBehaviour
     // ---------------- ENCHANT ----------------
     public void OnCardSelected(CardInstance card)
     {
+        if (selectedCard != null)
+        {
+            // Deselect the previously selected card
+            var previousCardController = deckContainer.GetComponentInChildren<RestCardController>();
+            if (previousCardController != null)
+            {
+                previousCardController.view.selectionHighlight.SetActive(false);
+            }
+        }
         selectedCard = card;
 
         var options = new List<PanelOption>();
@@ -80,7 +96,7 @@ public class RestManager : MonoBehaviour
         });
 
         enchantPanel.gameObject.SetActive(true);
-        enchantPanel.Show("Enchant card", options);
+        enchantPanel.Show("Enchanter la carte", options);
     }
 
     public void OnEnchant(int charges)
@@ -108,5 +124,31 @@ public class RestManager : MonoBehaviour
         {
             Instantiate(chargePrefab, chargesContainer);
         }
+
+        UILayoutHelper.RebuildAfterFrame(this, chargesContainer as RectTransform);
+    }
+
+    private IEnumerator RefreshDeckContainerAfterFrame()
+    {
+        yield return null;
+        Canvas.ForceUpdateCanvases();
+
+        RectTransform deckRect = deckContainer as RectTransform;
+        if (deckRect == null)
+            yield break;
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(deckRect);
+        Canvas.ForceUpdateCanvases();
+
+        Bounds bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(deckRect, deckRect);
+        Vector3 size = bounds.size;
+
+        if (size.x > 0f)
+            deckRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
+
+        if (size.y > 0f)
+            deckRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
+
+        Canvas.ForceUpdateCanvases();
     }
 }

@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Piratage
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 6166603e4ec16874181da3e6331eaaf2, type: 3}
   cost: 1
   xCost: 0
   type: 1
@@ -37,12 +37,8 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-  targetingMode: 0
+  targetingMode: 1
   modifiers: []
-  exhaust: 1
-  retain: 0
-  innate: 0
-  infinite: 0
   favoredCharacter: 3
   animationSpeed: 1
   startingCount: 0

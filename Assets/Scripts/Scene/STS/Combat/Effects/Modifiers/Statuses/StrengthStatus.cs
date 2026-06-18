@@ -37,7 +37,7 @@ public class StrengthStatus : StatusEffect
     {
         return damage + Value;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         if (Value > 0)
         {

@@ -7,7 +7,8 @@ public class EncounterEntry
     public List<EnemyData> enemies;
     public int minFloor;
     public int maxFloor;
-    public int act=-1;
+    public int minAct=-1;
+    public int maxAct=-1;
 
     [Range(0, 1)]
     public float weight = 1f;

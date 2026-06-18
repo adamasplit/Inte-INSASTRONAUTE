@@ -26,15 +26,15 @@ public class ITIRelic:BaseRelic
 
     public override void OnDamageTaken(Character source, Character target, int amount)
     {
-        if (stage != 2)
-            return;
+        if (stage == 2)
+        {
+            var combat = source.combat;
+            var enemies = combat.enemies;
+            if (enemies.Count == 0)
+                return;
 
-        var combat = source.combat;
-        var enemies = combat.enemies;
-        if (enemies.Count == 0)
-            return;
-
-        var randomEnemy = enemies[Random.Range(0, enemies.Count)];
-        randomEnemy.TakeDamage(amount);
+            var randomEnemy = enemies[Random.Range(0, enemies.Count)];
+            randomEnemy.TakeDamage(amount);
+        }
     }
 }

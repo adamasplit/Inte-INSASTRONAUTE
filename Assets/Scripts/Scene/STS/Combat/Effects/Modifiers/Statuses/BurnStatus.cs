@@ -15,8 +15,12 @@ public class BurnStatus : StatusEffect
         target.TakeDamage(Duration);
         VFXManager.Instance.PlayEffect("Burn", target);
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return $"Inflige {Duration} dégâts à la fin de chaque tour";
+        if (isPlayer)
+        {
+            return $"Inflige {Duration} dégâts à la fin de votre tour";
+        }
+        return $"Inflige {Duration} dégâts à la fin du tour de la cible";
     }
 }

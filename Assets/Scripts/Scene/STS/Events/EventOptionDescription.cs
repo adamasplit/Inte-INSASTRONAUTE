@@ -9,7 +9,7 @@ public static class EventOptionDescription
             case EventOptionType.CardReward:
                 return "Recevez une carte";
             case EventOptionType.RelicReward:
-                return "Recevez une relique";
+                return "Recevez une pièce d'équipement";
             case EventOptionType.GoldReward:
                 return "Recevez de l'or";
             case EventOptionType.Heal:

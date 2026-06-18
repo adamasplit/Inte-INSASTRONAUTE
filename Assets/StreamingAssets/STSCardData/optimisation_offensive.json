@@ -11,7 +11,7 @@
   "effects": [
     {
       "type": "Status",
-      "value": 10,
+      "value": 6,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",

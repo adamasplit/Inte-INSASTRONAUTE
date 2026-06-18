@@ -15,7 +15,7 @@
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "ArmorBlock",
-      "duration": 0,
+      "duration": 5,
       "description": "",
       "cardID": "",
       "conditional": false,

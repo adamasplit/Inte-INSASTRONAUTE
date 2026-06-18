@@ -12,7 +12,7 @@ public class SadismStatus:StatusEffect
     }
     public override void Update(Character target)
     {
-        foreach (Character character in target.GetCombatManager().enemies)
+        foreach (Character character in target.GetCombatManager().GetAdversaries(target))
         {
             if (character.currentHP <= character.maxHP *0.8f)
             {
@@ -30,8 +30,8 @@ public class SadismStatus:StatusEffect
     {
         return Mathf.FloorToInt(damage + (damage * 20) / 100);
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return $"{20}% dégâts supplémentaires. Cet effet évolue lorsqu'un ennemi passe en-dessous de 80% de sa vie.";
+        return $"{20}% dégâts supplémentaires. Cet effet évolue lorsqu'un adversaire passe en-dessous de 80% de sa vie.";
     }
 }

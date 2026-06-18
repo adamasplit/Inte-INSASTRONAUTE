@@ -21,7 +21,7 @@ public class EchoStatus : StatusEffect
         }
         return res;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"La prochaine carte jouée se rejoue {Value} fois.";
     }

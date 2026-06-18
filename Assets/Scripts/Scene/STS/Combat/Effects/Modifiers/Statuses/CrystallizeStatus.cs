@@ -12,7 +12,7 @@ public class CrystallizeStatus : StatusEffect
         debuff=true;
         generic=true;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         if (Value==maxValue)
         {

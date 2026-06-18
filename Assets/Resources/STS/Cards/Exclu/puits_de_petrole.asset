@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: "Puits de p\xE9trole"
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: e7c84acf50fa33946a7f2b4741049b19, type: 3}
   cost: 1
   xCost: 0
   type: 0
@@ -54,10 +54,6 @@ MonoBehaviour:
     cardSelectionEffect: 0
   targetingMode: 1
   modifiers: []
-  exhaust: 0
-  retain: 0
-  innate: 0
-  infinite: 0
   favoredCharacter: 0
   animationSpeed: 1
   startingCount: 0

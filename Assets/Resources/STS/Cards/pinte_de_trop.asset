@@ -17,7 +17,7 @@ MonoBehaviour:
   collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 224b9c058364e3d4891b658a5d034c85, type: 2}
   icon: {fileID: 0}
-  cost: 0
+  cost: 1
   xCost: 0
   type: 1
   rarity: 2
@@ -54,11 +54,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
   targetingMode: 0
   modifiers: []
-  exhaust: 0
-  retain: 0
-  innate: 0
-  infinite: 0
-  created: 0
   favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
+  tags: 09000000

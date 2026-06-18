@@ -2,7 +2,7 @@
   "id": "bras_mecatronique",
   "cardName": "Bras mécatronique",
   "collectionCardId": "",
-  "iconId": "Pouvoir",
+  "iconId": "Pouvoir2",
   "cost": 3,
   "xCost": false,
   "type": "Pouvoir",
@@ -11,7 +11,7 @@
   "effects": [
     {
       "type": "Status",
-      "value": 1,
+      "value": 2,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "MechaArm",

@@ -2,7 +2,7 @@
   "id": "megagravitron",
   "cardName": "Mégagravitron",
   "collectionCardId": "",
-  "iconId": "Gravité",
+  "iconId": "Comète",
   "cost": 4,
   "xCost": false,
   "type": "Attaque",
@@ -49,6 +49,7 @@
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": [
-    "Exhaust"
+    "Exhaust",
+    "Retain"
   ]
 }

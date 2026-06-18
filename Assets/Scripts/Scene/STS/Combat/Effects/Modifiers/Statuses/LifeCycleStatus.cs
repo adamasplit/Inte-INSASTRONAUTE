@@ -8,7 +8,7 @@ public class LifeCycleStatus : StatusEffect
         inextendable=true;
         buff=true;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"Quand vous perdez des PV à ce tour, gagnez {Value} énergie.";
     }

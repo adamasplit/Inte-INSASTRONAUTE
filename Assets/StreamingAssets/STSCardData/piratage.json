@@ -2,12 +2,12 @@
   "id": "piratage",
   "cardName": "Piratage",
   "collectionCardId": "",
-  "iconId": null,
+  "iconId": "Foudre",
   "cost": 1,
   "xCost": false,
   "type": "Compétence",
   "rarity": "Legendary",
-  "targetingMode": "Player",
+  "targetingMode": "Enemy",
   "effects": [
     {
       "type": "Status",

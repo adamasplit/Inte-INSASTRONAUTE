@@ -19,7 +19,7 @@ public class WeaknessStatus : StatusEffect
     {
         return Mathf.FloorToInt(damage * 0.75f);
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"Inflige 25% de dégâts en moins";
     }

@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections;
 
 public class DeckGridPanel : MonoBehaviour
 {
@@ -33,6 +34,14 @@ public class DeckGridPanel : MonoBehaviour
     public void Show(List<CardInstance> deck,string name)
     {
         titleText.text = name;
+
+        gameObject.SetActive(true);
+        if (panelCanvasGroup != null)
+        {
+            panelCanvasGroup.alpha = 1f;
+            panelCanvasGroup.blocksRaycasts = true;
+        }
+
         // Clear existing grid items
         foreach (Transform child in gridContainer)
             Destroy(child.gameObject);
@@ -50,16 +59,8 @@ public class DeckGridPanel : MonoBehaviour
             }
         }
 
-        // Rebuild layout
-        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)gridContainer);
-
-        // Show panel
-        gameObject.SetActive(true);
-        if (panelCanvasGroup != null)
-        {
-            panelCanvasGroup.alpha = 1f;
-            panelCanvasGroup.blocksRaycasts = true;
-        }
+        // Rebuild layout once the panel is active so the scroll content gets its real size.
+        StartCoroutine(RefreshGridContentSizeAfterFrame());
 
         // Hide preview initially
         HidePreview();
@@ -180,5 +181,48 @@ public class DeckGridPanel : MonoBehaviour
         }
         HidePreview();
         selectedItemView = null;
+    }
+
+    private IEnumerator RefreshGridContentSizeAfterFrame()
+    {
+        yield return null;
+        Canvas.ForceUpdateCanvases();
+
+        RectTransform gridContainerRect = gridContainer as RectTransform;
+        if (gridContainerRect == null || gridLayout == null)
+            yield break;
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(gridContainerRect);
+
+        int itemCount = gridContainer.childCount;
+        if (itemCount <= 0)
+            yield break;
+
+        int columns = GetColumnCount(gridContainerRect, itemCount);
+        int rows = Mathf.CeilToInt((float)itemCount / columns);
+
+        float height = gridLayout.padding.top + gridLayout.padding.bottom;
+        if (rows > 0)
+        {
+            height += rows * gridLayout.cellSize.y;
+            height += Mathf.Max(0, rows - 1) * gridLayout.spacing.y;
+        }
+
+        gridContainerRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+        Canvas.ForceUpdateCanvases();
+    }
+
+    private int GetColumnCount(RectTransform gridContainerRect, int itemCount)
+    {
+        if (gridLayout.constraint == GridLayoutGroup.Constraint.FixedColumnCount)
+            return Mathf.Max(1, gridLayout.constraintCount);
+
+        if (gridLayout.constraint == GridLayoutGroup.Constraint.FixedRowCount)
+            return Mathf.Max(1, Mathf.CeilToInt((float)itemCount / Mathf.Max(1, gridLayout.constraintCount)));
+
+        float availableWidth = gridContainerRect.rect.width - gridLayout.padding.left - gridLayout.padding.right;
+        float cellAndSpacingWidth = gridLayout.cellSize.x + gridLayout.spacing.x;
+        int calculated = Mathf.FloorToInt((availableWidth + gridLayout.spacing.x) / Mathf.Max(1f, cellAndSpacingWidth));
+        return Mathf.Max(1, calculated);
     }
 }

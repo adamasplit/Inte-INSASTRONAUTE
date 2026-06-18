@@ -2,7 +2,7 @@
   "id": "transfert_thermique",
   "cardName": "Transfert thermique",
   "collectionCardId": "",
-  "iconId": "Dégâts et effet",
+  "iconId": "Darkness",
   "cost": 2,
   "xCost": false,
   "type": "Attaque",
@@ -31,7 +31,7 @@
     {
       "type": "Damage",
       "kind": "DebuffOnSelf",
-      "value": 4
+      "value": 7
     }
   ],
   "favoredCharacter": "EP",

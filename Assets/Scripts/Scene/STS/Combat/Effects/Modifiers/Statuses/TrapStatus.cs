@@ -8,12 +8,13 @@ public class TrapStatus : StatusEffect
         Duration = duration;
         inextendable = true;
         debuff=true;
+        generic=true;
     }
     public override void InsertInto(List<StatusEffect> list)
     {
         list.Add(this);
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"La cible subit {Value} dégâts à la fin de son tour pendant {Duration} tours.";
     }

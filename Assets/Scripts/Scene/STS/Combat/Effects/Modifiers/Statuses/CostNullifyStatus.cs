@@ -18,6 +18,7 @@ public class CostNullifyStatus : StatusEffect
         int res = 0;
         if (!ctx.isPreview)
         {
+            Value--;
             if (Value<=0)
             {
                 mustExpire = true;
@@ -25,7 +26,7 @@ public class CostNullifyStatus : StatusEffect
         }
         return res;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         if (Value>1)
         {

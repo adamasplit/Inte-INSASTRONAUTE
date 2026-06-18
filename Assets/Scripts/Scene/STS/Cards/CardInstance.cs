@@ -9,9 +9,11 @@ public class CardInstance
     public List<CardEnchantment> enchantments = new();
     public List<EffectEntry> addedEffects = new();
     public TargetingMode targetingMode;
+    public List<CardTag> tags = new();
+    public string lastDescription = "";
     public bool HasTag(CardTag tag)
     {
-        return data.HasTag(tag);
+        return tags.Contains(tag) || data.HasTag(tag);
     }
     public CardInstance(STSCardData data)
     {
@@ -83,9 +85,9 @@ public class CardInstance
         {
             text += $"{mod.Describe()}\n";
         }
-        if (data.HasTag(CardTag.Exhaust))
+        if (HasTag(CardTag.Exhaust))
             text += "<color=orange>[Épuisement]</color>\n";
-        if (data.HasTag(CardTag.Retain))
+        if (HasTag(CardTag.Retain))
             text += "<color=orange>[Retenue]</color>\n";
         foreach (var ench in enchantments)
         {
@@ -95,7 +97,8 @@ public class CardInstance
             text += $"{ench.data.name} {levelText}";
             text += "</color></size>\n";
         }
-        return text.TrimEnd();
+        lastDescription = text.TrimEnd();
+        return lastDescription;
     }
     public List<StatModifier> GetModifiers(StatType type,bool includeEnchantments=true,bool includeAdded=true)
     {
@@ -200,6 +203,10 @@ public class CardInstance
         {
             clone.addedEffects.Add(effect);
         }
+        foreach (var tag in tags)
+        {
+            clone.tags.Add(tag);
+        }
         return clone;
     }
     public static CardInstance Merge(List<CardInstance> cards)
@@ -242,11 +249,11 @@ public class CardInstance
             {
                 merged.AddEnchantment(ench);
             }
-            foreach (var tag in card.data.tags)
+            foreach (var tag in card.tags)
             {
-                if (!merged.data.tags.Contains(tag))
+                if (!merged.tags.Contains(tag))
                 {
-                    merged.data.tags.Add(tag);
+                    merged.tags.Add(tag);
                 }
             }
         }

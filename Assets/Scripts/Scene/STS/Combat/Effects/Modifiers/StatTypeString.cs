@@ -5,11 +5,11 @@ public static class StatTypeString
         switch (type)
         {
             case StatType.Damage:
-                return "Dégâts";
+                return "dégâts infligés";
             case StatType.Armor:
-                return "Armure";
+                return "armure gagnée";
             case StatType.Heal:
-                return "Soins";
+                return "soins prodigués";
             default:
                 return type.ToString();
         }

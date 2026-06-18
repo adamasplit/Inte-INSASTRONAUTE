@@ -16,10 +16,46 @@ MonoBehaviour:
   maxHP: 220
   pattern:
   - {fileID: 11400000, guid: 40593402db7177c4ebce302746126dcd, type: 2}
+  randomStart: 0
+  movePattern:
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 20
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    - type: 2
+      value: 10
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 
+    weight: 0
   rewardCards:
-  - {fileID: 11400000, guid: ea5ae116e0bae1c47908728dbae2bea3, type: 2}
   - {fileID: 11400000, guid: 40593402db7177c4ebce302746126dcd, type: 2}
-  - {fileID: 11400000, guid: 9050fa5b55e517842aa6b728b0c04bc4, type: 2}
   startingStatus: 0
   startingStatusDuration: 0
   startingStatusValue: 0
+  startingStatusInfo: 

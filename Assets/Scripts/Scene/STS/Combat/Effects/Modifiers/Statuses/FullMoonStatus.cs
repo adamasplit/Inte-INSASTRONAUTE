@@ -10,9 +10,13 @@ public class FullMoonStatus : StatusEffect
         buff=true;
         framed=true;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return $"Donne {Value} de Force en infligeant des dégâts à un ennemi";
+        if (isPlayer)
+        {
+            return $"Donne {Value} de Force temporaire en infligeant des dégâts à un ennemi";
+        }
+        return $"L'ennemi gagne {Value} de Force temporaire quand il vous inflige des dégâts";
     }
     public override void OnDamageDealt(Character source, Character target, ref int damage)
     {

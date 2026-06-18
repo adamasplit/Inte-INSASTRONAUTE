@@ -17,7 +17,7 @@ public class AwakeningStatus : StatusEffect
         base.OnExpire(target);
         target.Heal(Value);
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"Soigne {Value} PV au bout de {Duration} tours.";
     }

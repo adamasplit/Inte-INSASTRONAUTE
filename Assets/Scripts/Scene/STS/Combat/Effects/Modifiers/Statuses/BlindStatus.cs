@@ -19,8 +19,12 @@ public class BlindStatus : StatusEffect
     {
         return 0;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return "Les attaques infligent 0 dégâts";
+        if (isPlayer)
+        {
+            return "Vos attaques infligent 0 dégâts";
+        }
+        return "Les attaques de cet ennemi infligent 0 dégâts";
     }
 }

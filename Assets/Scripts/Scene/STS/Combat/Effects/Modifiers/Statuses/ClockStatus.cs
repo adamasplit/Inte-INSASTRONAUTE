@@ -10,9 +10,13 @@ public class ClockStatus : StatusEffect
         buff=true;
         framed=true;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return $"Chaque fois que vous infligez des dégâts à un ennemi, son tour est retardé de {Value}.";
+        if (isPlayer)
+        {
+            return $"Chaque fois que vous infligez des dégâts à un ennemi, son tour est retardé de {Value}.";
+        }
+        return $"Chaque fois que l'ennemi vous inflige des dégâts, votre tour est retardé de {Value}.";
     }
     public override void OnDamageDealt(Character source, Character target, ref int damage)
     {

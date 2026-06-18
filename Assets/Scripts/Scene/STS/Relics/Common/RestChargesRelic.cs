@@ -4,7 +4,7 @@ public class RestChargesRelic : Relic
     {
         rarity = RelicRarity.Common;
         name = "Expérience";
-        description = "Gagne 1 charge en plus lorsque vous entrez dans un site de repos.";
+        description = "Gagnez 1 charge en plus lorsque vous entrez dans un site de repos.";
     }
 
     public override void OnEnterRestSite(Character player)

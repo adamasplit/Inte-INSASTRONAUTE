@@ -13,8 +13,12 @@ public class ElasticStatus : StatusEffect
     {
         target.AddArmor(Value);
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return $"Gagnez {Value} d'Armure quand vous subissez des dégâts";
+        if (isPlayer)
+        {
+            return $"Gagnez {Value} d'Armure quand vous subissez des dégâts";
+        }
+        return $"L'ennemi gagne {Value} d'Armure quand vous lui infligez des dégâts";
     }
 }

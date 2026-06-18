@@ -8,7 +8,7 @@ public class AdvanceImmunityStatus : StatusEffect
         debuff=true;
         framed=true;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"Les tours ne peuvent pas être avancés";
     }

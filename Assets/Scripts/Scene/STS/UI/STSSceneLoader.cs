@@ -6,6 +6,8 @@ public class STSSceneLoader : MonoBehaviour
 {
     public static STSSceneLoader Instance { get; private set; }
     public STSLoadingScreen loadingScreen;
+    private int backgroundLoadingCount = 0;
+    private bool sceneTransitionPending = false;
 
     private void Awake()
     {
@@ -20,20 +22,29 @@ public class STSSceneLoader : MonoBehaviour
         }
     }
 
-    public void LoadScene(string sceneName)
+    public void BeginLoading()
     {
-        // Start async loading and update the loading screen progress
-        StartCoroutine(LoadSceneAsyncRoutine(sceneName));
+        backgroundLoadingCount++;
+        if (loadingScreen != null)
+        {
+            loadingScreen.gameObject.SetActive(true);
+        }
     }
 
-    private IEnumerator LoadSceneAsyncRoutine(string sceneName)
+    public void LoadScene(string sceneName)
     {
+        // Start async loading and update the loading screen progress.
+        sceneTransitionPending = true;
         if (loadingScreen != null)
         {
             loadingScreen.gameObject.SetActive(true);
             loadingScreen.SetProgress(0f);
         }
+        StartCoroutine(LoadSceneAsyncRoutine(sceneName));
+    }
 
+    private IEnumerator LoadSceneAsyncRoutine(string sceneName)
+    {
         AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
 
         while (!op.isDone)
@@ -52,17 +63,38 @@ public class STSSceneLoader : MonoBehaviour
         if (loadingScreen != null)
         {
             loadingScreen.SetProgress(1f);
-            // Give one frame to render the completed progress
-            yield return null;
-            loadingScreen.HideLoadingScreen();
         }
     }
 
     public void EndLoading()
     {
-        if (loadingScreen != null)
+        if (backgroundLoadingCount > 0)
         {
-            loadingScreen.HideLoadingScreen();
+            backgroundLoadingCount--;
         }
+
+        TryHideLoadingScreen();
+    }
+
+    public void SceneReady()
+    {
+        sceneTransitionPending = false;
+        TryHideLoadingScreen();
+    }
+
+    private void TryHideLoadingScreen()
+    {
+        if (loadingScreen == null)
+        {
+            return;
+        }
+
+        if (sceneTransitionPending || backgroundLoadingCount > 0)
+        {
+            loadingScreen.gameObject.SetActive(true);
+            return;
+        }
+
+        loadingScreen.HideLoadingScreen();
     }
 }

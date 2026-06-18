@@ -16,26 +16,36 @@ public class EventManager : MonoBehaviour
 
     async void Start()
     {
-        if (RunManager.Instance == null)
-        {
-            await STSCardDatabase.LoadAsync();
-            new GameObject("RunManager").AddComponent<RunManager>();
-            for (int i = 0; i < 10; i++)
-            {
-                RunManager.Instance.AddRelic(RelicDrop.GetRandomRelic(new CombatResult()));
-            }
-            RunManager.Instance.player = new Player("Player", 1500);
+        STSSceneLoader.Instance?.BeginLoading();
 
-            // Ajout de cartes de test
-            TestDatabase.Init();
-            CardInstance enchantedCard = new CardInstance(TestDatabase.attackCard);
-            enchantedCard.enchantments.Add(new CardEnchantment { data = new SharpnessEnchantment(), level = 10 });
-            enchantedCard.enchantments.Add(new CardEnchantment { data = new MechanicalEnchantment(), level = 1 });
-            RunManager.Instance.deck.Add(enchantedCard);
-            RunManager.Instance.deck.AddRange(STSCardDatabase.allCards.Select(data => new CardInstance(data)));
+        try
+        {
+            if (RunManager.Instance == null)
+            {
+                await STSCardDatabase.LoadAsync();
+                new GameObject("RunManager").AddComponent<RunManager>();
+                for (int i = 0; i < 10; i++)
+                {
+                    RunManager.Instance.AddRelic(RelicDrop.GetRandomRelic(new CombatResult()));
+                }
+                RunManager.Instance.player = new Player("Player", 1500);
+
+                // Ajout de cartes de test
+                TestDatabase.Init();
+                CardInstance enchantedCard = new CardInstance(TestDatabase.attackCard);
+                enchantedCard.enchantments.Add(new CardEnchantment { data = new SharpnessEnchantment(), level = 10 });
+                enchantedCard.enchantments.Add(new CardEnchantment { data = new MechanicalEnchantment(), level = 1 });
+                RunManager.Instance.deck.Add(enchantedCard);
+                RunManager.Instance.deck.AddRange(STSCardDatabase.allCards.Select(data => new CardInstance(data)));
+            }
+            DeckSelectionPanel.Instance=this.deckSelectionPanel;
+            await LoadRandomEventAsync();
         }
-        DeckSelectionPanel.Instance=this.deckSelectionPanel;
-        await LoadRandomEventAsync();
+        finally
+        {
+            STSSceneLoader.Instance?.EndLoading();
+            STSSceneLoader.Instance?.SceneReady();
+        }
     }
 
     async Task LoadRandomEventAsync()

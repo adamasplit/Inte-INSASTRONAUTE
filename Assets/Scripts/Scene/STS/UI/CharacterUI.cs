@@ -81,14 +81,14 @@ public class CharacterUI : MonoBehaviour
 
             if (activeStatusUIs.TryGetValue(status, out var statusUI))
             {
-                statusUI.SetStatus(status, uiManager, false);
+                statusUI.SetStatus(status, uiManager, character.isPlayer,false);
                 statusUI.transform.SetSiblingIndex(i);
             }
             else
             {
                 var statusUIObj = Instantiate(statusUIPrefab, statusContainer);
                 statusUI = statusUIObj.GetComponent<StatusUI>();
-                statusUI.SetStatus(status, uiManager);
+                statusUI.SetStatus(status, uiManager, character.isPlayer);
                 statusUI.transform.SetSiblingIndex(i);
             }
         }

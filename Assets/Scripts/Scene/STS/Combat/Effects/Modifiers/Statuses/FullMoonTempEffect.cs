@@ -23,7 +23,7 @@ public class FullMoonTempEffect : StatusEffect
             list.Add(this);
         }
     }
-    public override string Describe()
+    public override string Desc(bool isPlayer)
     {
         return $"Retire {Value} de Force à la fin du tour";
     }

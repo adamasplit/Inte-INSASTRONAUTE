@@ -27,8 +27,8 @@
       "cardSelectionEffect": "None"
     },
     {
-      "type": "Draw",
-      "value": 6,
+      "type": "CardSelection",
+      "value": 3,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -39,12 +39,12 @@
       "conditionType": "KillingBlow",
       "conditionValue": "",
       "trueEffect": false,
-      "cardSelectionSource": "Hand",
+      "cardSelectionSource": "DrawPile",
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "ReturnToHand"
     },
     {
-      "type": "CardSelection",
+      "type": "GainEnergy",
       "value": 3,
       "targetSelf": false,
       "targetOthers": false,

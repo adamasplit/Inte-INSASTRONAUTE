@@ -9,11 +9,11 @@ public static class RelicDrop
             RelicDatabase.Load();
         }
         int roll = Random.Range(0, 100);
-        if (roll < 50)
+        if (roll < 60)
         {
             return GetRandomRelicOfRarity(RelicRarity.Common);
         }
-        else if (roll < 80)
+        else if (roll < 85)
         {
             return GetRandomRelicOfRarity(RelicRarity.Uncommon);
         }

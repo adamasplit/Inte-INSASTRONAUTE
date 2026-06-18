@@ -14,19 +14,257 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Boss
   maxHP: 150
-  pattern:
-  - {fileID: 11400000, guid: d8ffafdfb06c29744a6dadf200def953, type: 2}
-  - {fileID: 11400000, guid: 2ce7f3460e042954ba14f630cb9b5dda, type: 2}
-  - {fileID: 11400000, guid: 7b8a925988a1b5d4192def37a2aa21ee, type: 2}
-  - {fileID: 11400000, guid: 7b8a925988a1b5d4192def37a2aa21ee, type: 2}
-  - {fileID: 11400000, guid: ab435d11cc4dd5c439a0fd085dc9fa91, type: 2}
-  - {fileID: 11400000, guid: d1ea40f05d81b044db2fd8ad86c7bac7, type: 2}
-  - {fileID: 11400000, guid: 863a3b41d8c94f0439c965e8be683dcc, type: 2}
-  - {fileID: 11400000, guid: d1ea40f05d81b044db2fd8ad86c7bac7, type: 2}
-  - {fileID: 11400000, guid: 2ce7f3460e042954ba14f630cb9b5dda, type: 2}
-  - {fileID: 11400000, guid: e9e09946711bd0b4ca74d517fb11babe, type: 2}
+  pattern: []
+  randomStart: 0
+  movePattern:
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 3
+      value: 0
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 2
+      duration: 2
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    - type: 3
+      value: 0
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 1
+      duration: 2
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    - type: 3
+      value: 0
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 13
+      duration: 2
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 16
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 1
+      duration: 2
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    - type: 3
+      value: 0
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 20
+      duration: 4
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 8
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 1
+      duration: 2
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    - type: 3
+      value: 4
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 42
+      duration: 4
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 3
+      value: 3
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 0
+      duration: 2
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    - type: 3
+      value: 2
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 42
+      duration: 4
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 11
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 0
+      duration: 2
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 
+    weight: 2
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 1
+      value: 10
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 0
+      duration: 2
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    - type: 6
+      value: 7
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 0
+      duration: 2
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 5
+      value: 10
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 0
+      duration: 2
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    - type: 6
+      value: 3
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 0
+      duration: 2
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 
+    weight: 0
   rewardCards:
   - {fileID: 11400000, guid: d1ea40f05d81b044db2fd8ad86c7bac7, type: 2}
   startingStatus: 33
   startingStatusDuration: 0
   startingStatusValue: 1
+  startingStatusInfo: 

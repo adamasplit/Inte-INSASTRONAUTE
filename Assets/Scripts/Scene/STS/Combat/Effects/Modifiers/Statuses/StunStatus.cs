@@ -8,7 +8,7 @@ public class StunStatus : StatusEffect
         framed=true;
         generic=true;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"Ce personnage est étourdi et ne peut pas agir.";
     }

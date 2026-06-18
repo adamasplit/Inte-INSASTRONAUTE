@@ -24,10 +24,10 @@ MonoBehaviour:
   effects:
   - type: 3
     value: 1
-    targetSelf: 0
+    targetSelf: 1
     targetOthers: 0
     statusType: 39
-    duration: 0
+    duration: 3
     description: 
     cardID: "Tir cadr\xE9"
     conditional: 0

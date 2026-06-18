@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: catastrophe_naturelle
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: catastrophe_naturelle
   cardName: Catastrophe naturelle
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 21300000, guid: bfab4b172435f9046b1d279bd5dba190, type: 3}
+  icon: {fileID: 21300000, guid: cd49ad737d070fc449bb5ba664b1fc1b, type: 3}
   cost: 0
   xCost: 1
   type: 0
@@ -33,6 +34,9 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   - type: 16
     value: -1
     targetSelf: 0
@@ -45,6 +49,9 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   - type: 2
     value: 3
     targetSelf: 1
@@ -57,11 +64,12 @@ MonoBehaviour:
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   targetingMode: 3
   modifiers: []
-  exhaust: 0
-  retain: 0
-  innate: 0
   favoredCharacter: 5
   animationSpeed: 1
   startingCount: 0
+  tags: 

@@ -24,5 +24,6 @@ public enum EffectType
     AddRandomCardToHand,
     AddCardToDrawPile,
     AddCardToDiscardPile,
-    CardSelection
+    CardSelection,
+    ForceNextCard
 }

@@ -9,7 +9,7 @@ public class StrengthenStatus : StatusEffect
         buff=true;
         framed=true;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"Donne {Value} de Force à chaque fin de tour";
     }

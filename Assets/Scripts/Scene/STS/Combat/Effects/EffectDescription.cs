@@ -78,13 +78,14 @@ public static class EffectDescription
                 StatusEffect stat=StatusEffect.Factory(effect.statusType,val,dur,effect.cardID);
                 if (stat.generic) 
                 {
+                    int usedValue=stat.Duration>0?stat.Duration:stat.Value;
                     if (effect.targetSelf)
                     {
-                        return $"Gagnez {stat.Duration} de {stat.Name}";
+                        return $"Gagnez {usedValue} de {stat.Name}";
                     }
                     else
                     {
-                        return $"Appliquez {stat.Duration} de {stat.Name}";
+                        return $"Appliquez {usedValue} de {stat.Name}";
                     }
                 }
                 else if (effect.statusType==StatusType.Strength||effect.statusType==StatusType.Dexterity||effect.statusType==StatusType.Speed)
@@ -107,7 +108,7 @@ public static class EffectDescription
                 else
                     {
                         //Remove last character if it's a dot or a plus sign
-                        string desc= stat.CardDesc(effect.targetSelf);
+                        string desc= stat.Desc(effect.targetSelf);
                         if (desc.EndsWith(".") || desc.EndsWith("+"))
                         {
                             desc = desc.Substring(0, desc.Length - 1);
@@ -162,19 +163,19 @@ public static class EffectDescription
             }
             case EffectType.StealBuff:
             {
-                return $"Volez "+transform(effect.value, "tous les")+" buff"+(effect.value!=1?"s":"")+" de la cible"+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
+                return $"Volez "+dispel(effect.duration)+transform(effect.value, " tous les")+" buff"+(effect.value!=1?"s":"")+" de la cible"+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
             }
             case EffectType.TransferDebuff:
             {
-                return $"Transférez "+transform(effect.value, "tous vos")+" debuff"+(effect.value!=1?"s":"")+" de vous à la cible"+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
+                return $"Transférez "+dispel(effect.duration)+transform(effect.value, " tous vos")+" debuff"+(effect.value!=1?"s":"")+" de vous à la cible"+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
             }
             case EffectType.DispelBuff:
             {
-                return $"Dissipez "+transform(effect.value, (effect.targetSelf?"tous vos":"tous les"))+" buff"+(effect.value!=1?"s":"")+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
+                return $"Dissipez "+dispel(effect.duration)+transform(effect.value, (effect.targetSelf?" tous vos":"tous les"))+" buff"+(effect.value!=1?"s":"")+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
             }
             case EffectType.DispelDebuff:
             {
-                return $"Dissipez "+transform(effect.value, (effect.targetSelf?"tous vos":"tous les"))+" debuff"+(effect.value!=1?"s":"")+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
+                return $"Dissipez "+dispel(effect.duration)+transform(effect.value, (effect.targetSelf?" tous vos":"tous les"))+" debuff"+(effect.value!=1?"s":"")+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
             }
             case EffectType.EndTurn:
             {
@@ -194,7 +195,7 @@ public static class EffectDescription
             }
             case EffectType.CardSelection:
             {
-                string pl=effect.value>1?"les":"la";
+                string pl=effect.value!=1?"les":"la";
                 string cft = "";
                 foreach (var tag in effect.cardFilterTags)
                 {
@@ -221,9 +222,11 @@ public static class EffectDescription
                     CardSelectionEffect.Transform => "transformez-"+pl,
                     CardSelectionEffect.Merge => "fusionnez-"+pl,
                     CardSelectionEffect.ReturnToHand => "ajoutez-"+pl+" à votre main",
+                    CardSelectionEffect.Enchant => "enchantez-"+pl,
                     _ => effect.cardSelectionEffect.ToString()
                 };
-                return $"Choisissez {effect.value} carte"+(effect.value>1?"s":"")+(cft!= "" ? " "+cft : "")+" dans "+source+" et "+effectDesc;
+                string cardStr = effect.value!=-1? $"Choisissez {effect.value.ToString()}" : "Prenez toutes les";
+                return cardStr+" carte"+(effect.value!=1?"s":"")+(cft!= "" ? " "+cft : "")+" dans "+source+" et "+effectDesc;
             }
             case EffectType.AddRandomCardToHand:
             {
@@ -237,9 +240,29 @@ public static class EffectDescription
             {
                 return $"Ajoutez {effect.value} <color=green>{effect.cardID}</color> à votre défausse";
             }
+            case EffectType.ForceNextCard:
+            {
+                return $"La cible jouera <color=green>{effect.cardID}</color> à son prochain tour";
+            }
             default:
                 return "Effet inconnu..";
         }
+    }
+    private static string dispel(int remainingPercentage)
+    {
+        if (remainingPercentage==0)
+        {
+            return "";
+        }
+        if (remainingPercentage<33)
+        {
+            return "partiellement ";
+        }
+        if (remainingPercentage<66)
+        {
+            return "à moitié ";
+        }
+        return "en grande partie";
     }
     private static string transform(int value, string all)
     {

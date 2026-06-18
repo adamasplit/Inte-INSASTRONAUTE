@@ -50,6 +50,8 @@ public class DeckSelectionPanel : MonoBehaviour
             var ctrl = obj.GetComponent<DeckSelectionCardController>();
             ctrl.Init(card, this);
         }
+
+        UILayoutHelper.RebuildAfterFrame(this, gridContainer as RectTransform);
     }
 
     public void OnCardToggled(

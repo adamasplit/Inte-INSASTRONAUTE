@@ -31,11 +31,11 @@ public class SpeedStatus : StatusEffect
     {
         if (Value>=0)
         {
-            return Mathf.RoundToInt(50f * Mathf.Log10(Value + 1f));
+            return Mathf.Clamp(Mathf.RoundToInt(50f * Mathf.Log10(Value + 1f)), 0, 99);
         }
         else
         {
-            return -Mathf.RoundToInt(50f * Mathf.Log10(-Value + 1f));
+            return -Mathf.Clamp(Mathf.RoundToInt(50f * Mathf.Log10(-Value + 1f)), 0, 99);
         }
     }
 
@@ -48,15 +48,15 @@ public class SpeedStatus : StatusEffect
     {
         return turnDelay * (100 - SpeedValue()) / 100;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         if (Value > 0)
         {
-            return $"Réduit le délai de vos tours de {SpeedValue()}%";
+            return $"Réduit le délai des tours de {SpeedValue()}%";
         }
         else if (Value < 0)
         {
-            return $"Augmente le délai de vos tours de {-SpeedValue()}%";
+            return $"Augmente le délai des tours de {-SpeedValue()}%";
         }
         else
         {

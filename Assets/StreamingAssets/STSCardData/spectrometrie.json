@@ -3,7 +3,7 @@
   "cardName": "Spectrométrie",
   "collectionCardId": "",
   "iconId": "Debuff",
-  "cost": 1,
+  "cost": 0,
   "xCost": false,
   "type": "Compétence",
   "rarity": "Uncommon",
@@ -11,23 +11,6 @@
   "effects": [
     {
       "type": "Break",
-      "value": 0,
-      "targetSelf": false,
-      "targetOthers": false,
-      "statusType": "Vuln",
-      "duration": 3,
-      "description": "",
-      "cardID": "",
-      "conditional": false,
-      "conditionType": "ArmorBreak",
-      "conditionValue": "",
-      "trueEffect": false,
-      "cardSelectionSource": "Hand",
-      "cardFilterTags": [],
-      "cardSelectionEffect": "None"
-    },
-    {
-      "type": "AddCardToDrawPile",
       "value": 0,
       "targetSelf": false,
       "targetOthers": false,

@@ -12,11 +12,13 @@ public class SadismIIStatus:StatusEffect
     }
     public override void Update(Character target)
     {
-        foreach (Character character in target.GetCombatManager().enemies)
-        if (character.currentHP <= character.maxHP *0.5f)
+        foreach (Character character in target.GetCombatManager().GetAdversaries(target))
         {
-            target.AddStatus(new SadismIIIStatus());
-            this.mustExpire=true;
+            if (character.currentHP <= character.maxHP * 0.5f)
+            {
+                target.AddStatus(new SadismIIIStatus());
+                this.mustExpire=true;
+            }
         }
     }
     public override bool AppliesTo(StatType stat, EffectContext ctx)
@@ -27,8 +29,8 @@ public class SadismIIStatus:StatusEffect
     {
         return Mathf.FloorToInt(damage + (damage * 30) / 100);
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return $"{30}% dégâts supplémentaires subis et +{30}% d'Armure gagnée. Cet effet évolue lorsqu'un ennemi passe en-dessous de 50% de sa vie.";
+        return $"{30}% dégâts supplémentaires subis et +{30}% d'Armure gagnée. Cet effet évolue lorsqu'un adversaire passe en-dessous de 50% de sa vie.";
     }
 }

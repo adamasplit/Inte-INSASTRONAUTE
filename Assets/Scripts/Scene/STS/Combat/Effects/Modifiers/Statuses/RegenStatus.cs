@@ -17,7 +17,7 @@ public class RegenStatus : StatusEffect
     public override void OnTurnEnd(Character target)
     {
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"Soigne {Duration} PV au début de chaque tour";
     }

@@ -12,31 +12,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: fureur_du_meteore
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: fureur_du_meteore
   cardName: "Fureur du m\xE9t\xE9ore"
   collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 3faa5f537f9ea9047a4a93eae0c40431, type: 2}
+  icon: {fileID: 0}
   cost: 2
+  xCost: 0
   type: 0
   rarity: 4
   effects:
   - type: 0
-    value: 18
+    value: 10
     targetSelf: 0
+    targetOthers: 0
     statusType: 0
     duration: 0
     description: 
     cardID: 
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   - type: 6
-    value: 12
+    value: 9
     targetSelf: 0
+    targetOthers: 0
     statusType: 0
     duration: 0
     description: 
     cardID: 
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   targetingMode: 2
   modifiers: []
-  exhaust: 0
-  retain: 0
-  innate: 0
   favoredCharacter: 9
   animationSpeed: 1
+  startingCount: 0
+  tags: 

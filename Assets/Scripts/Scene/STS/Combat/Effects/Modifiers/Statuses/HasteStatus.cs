@@ -18,7 +18,7 @@ public class HasteStatus : StatusEffect
     {
         return (turnDelay * (100 - 35)) / 100;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"+{35}% de vitesse";
     }

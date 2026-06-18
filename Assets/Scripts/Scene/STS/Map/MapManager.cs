@@ -23,6 +23,7 @@ public class MapManager : MonoBehaviour
             allNodes = RunManager.Instance.map;
             currentNode = RunManager.Instance.currentNode;
             view.GenerateView(allNodes);
+            StartCoroutine(NotifyReadyNextFrame());
             return;
         }
         var map = generator.Generate(RunManager.Instance != null&&RunManager.Instance.RegenerateMap ? RunManager.Instance.currentFloor : 0);
@@ -32,12 +33,22 @@ public class MapManager : MonoBehaviour
             RunManager.Instance.RegenerateMap = false;
             RunManager.Instance.map = map;
             RunManager.Instance.player.currentHP = RunManager.Instance.player.maxHP;
+            RunManager.Instance.currentFloor=1;
         }
         allNodes = map;
         Debug.Log($"Generated map with {allNodes.Count} nodes");
         currentNode = generator.startNode;
 
         view.GenerateView(allNodes);
+        StartCoroutine(NotifyReadyNextFrame());
+    }
+
+    private System.Collections.IEnumerator NotifyReadyNextFrame()
+    {
+        // Wait a couple frames to ensure all spawned UI elements complete their Awake/Start/OnEnable
+        yield return null;
+        yield return null;
+        STSSceneLoader.Instance?.SceneReady();
     }
 
     public void MoveToNode(MapNode node)
@@ -72,6 +83,7 @@ public class MapManager : MonoBehaviour
     {
         yield return StartCoroutine(FadeToBlack(0.2f));
         node.visited = true;
+        RunManager.Instance.currentFloor+=1;
         switch (node.type)
         {
             case NodeType.Combat:

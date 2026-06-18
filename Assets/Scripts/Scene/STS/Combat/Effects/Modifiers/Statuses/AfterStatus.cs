@@ -8,13 +8,13 @@ public class AfterStatus : StatusEffect
         inextendable = true;
         debuff=true;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
-        return $"Inflige {Value} dégâts à la fin du tour.";
-    }
-    public override string CardDesc(bool targetSelf)
-    {
-        return $"La cible subit {Value} dégâts à la fin du tour.";
+        if (isPlayer)
+        {
+            return $"Vous subissez {Value} dégâts à la fin de votre tour.";
+        }
+        return $"La cible subit {Value} dégâts à la fin de son tour.";
     }
     public override void OnTurnEnd(Character target)
     {

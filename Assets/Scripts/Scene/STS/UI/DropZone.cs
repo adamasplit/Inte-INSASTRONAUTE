@@ -37,7 +37,10 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         {
             RectTransform imageRect = image.rectTransform;
             imageRect.localScale = Vector3.one;
-            imageRect.anchoredPosition = Vector2.zero;
+            if (!target.isPlayer)
+            {
+                imageRect.anchoredPosition = Vector2.zero;
+            }
             Color color = image.color;
             color.a = 1f;
             image.color = color;

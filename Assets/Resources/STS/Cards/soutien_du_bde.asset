@@ -12,18 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: soutien_du_bde
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  cardName: Enflammer
+  id: soutien_du_bde
+  cardName: Soutien du BDE
+  collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 550250c1f7fa6a14988bc0a5e1ad5cc6, type: 2}
+  icon: {fileID: 0}
   cost: 1
+  xCost: 0
   type: 2
   rarity: 2
   effects:
   - type: 3
     value: 2
     targetSelf: 1
+    targetOthers: 0
     statusType: 0
     duration: -1
+    description: 
+    cardID: 
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   targetingMode: 0
   modifiers: []
-  exhaust: 0
-  retain: 0
+  favoredCharacter: 9
+  animationSpeed: 1
+  startingCount: 0
+  tags: 

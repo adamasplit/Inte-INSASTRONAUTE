@@ -30,7 +30,7 @@ public class FullBreakStatus : StatusEffect
         }
         return value;
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"Augmente les dégâts reçus de 20% et réduit tous les effets appliqués de 20%";
     }

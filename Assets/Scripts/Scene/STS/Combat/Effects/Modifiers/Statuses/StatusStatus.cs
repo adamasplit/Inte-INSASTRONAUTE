@@ -26,7 +26,7 @@ public class StatusStatus : StatusEffect
                 break;
         }
     }
-    public override string Desc()
+    public override string Desc(bool isPlayer)
     {
         return $"À la fin du tour, déclenche un effet de statut aléatoire : Étourdissement, Aveuglement, ou Déchéance sur la cible.";
     }

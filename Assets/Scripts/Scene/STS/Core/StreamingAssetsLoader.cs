@@ -172,9 +172,9 @@ public static class StreamingAssetsLoader
         string root = Application.streamingAssetsPath;
         if (root.EndsWith("/", StringComparison.Ordinal))
         {
-            return root + relativePath;
+            return Uri.EscapeUriString(root + relativePath);
         }
 
-        return root + "/" + relativePath;
+        return Uri.EscapeUriString(root + "/" + relativePath);
     }
 }
