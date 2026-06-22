@@ -17,6 +17,6 @@ public class ArmorOnSelfModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+ {addedValue} {StatTypeString.ToFrench(type)} par Armure du lanceur";
+        return $"+ {addedValue} {StatTypeString.ToFrench(type)} par Armure sur vous";
     }
 }

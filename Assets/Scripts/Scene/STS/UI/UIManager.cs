@@ -33,6 +33,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI discardCountText;
     public TextMeshProUGUI deckCountText;
     public CardSelectionController selectionController;
+    private int pendingDrawAnimations = 0;
     public bool IsSelectingCards()
     {
         return selectionController.Active;
@@ -93,6 +94,13 @@ public class UIManager : MonoBehaviour
         foreach (var view in currentHandViews)
         {
             if (view.cardInstance == card)
+                return view;
+        }
+        // Also check if the card is in the animation layer (e.g., during draw or discard animations)
+        foreach (Transform child in animator.animationLayer)
+        {
+            CardView view = child.GetComponentInChildren<CardView>();
+            if (view != null && view.cardInstance == card)
                 return view;
         }
 
@@ -346,9 +354,8 @@ public class UIManager : MonoBehaviour
 
         view.isAnimating = true;
 
-        StartCoroutine(
-            AnimateDraw(view)
-        );
+        int staggerIndex = pendingDrawAnimations++;
+        StartCoroutine(AnimateDrawWithStagger(view, staggerIndex));
     }
 
     IEnumerator AnimateDraw(CardView view)
@@ -377,7 +384,12 @@ public class UIManager : MonoBehaviour
         yield return animator.MoveCard(
             rect,
             rect.position,
-            target
+            target,
+            1f,
+            true,
+            true,
+            startScale: new Vector3(0.4f, 0.4f, 1f),
+            endScale: new Vector3(1f, 1f, 1f)
         );
 
         rect.SetParent(handPanel, true);
@@ -409,14 +421,15 @@ public class UIManager : MonoBehaviour
     {
         CardView view = GetView(card);
 
-        if (view == null)
-            return;
-
-        currentHandViews.Remove(view);
-
-        StartCoroutine(
-            AnimateExhaust(view)
-        );
+        if (view != null)
+        {
+            currentHandViews.Remove(view);
+            StartCoroutine(AnimateExhaust(view));
+        }
+        else
+        {
+            StartCoroutine(AnimateExhaust(card));
+        }
 
         RefreshHandLayout();
     }
@@ -433,7 +446,12 @@ public class UIManager : MonoBehaviour
         yield return animator.MoveCard(
             rect,
             rect.position,
-            discardAnchor.position
+            discardAnchor.position,
+            1f,
+            true,
+            true,
+            startScale: Vector3.one,
+            endScale: new Vector3(0.4f, 0.4f, 1f)
         );
 
         Destroy(view.gameObject);
@@ -448,15 +466,21 @@ public class UIManager : MonoBehaviour
         rect.SetParent(animator.animationLayer, true);
         ReparentKeepScreenPosition(rect, animator.animationLayer);
 
-        Vector3 center = Vector3.zero;
+        yield return view.PlayExhaustAnimation();
 
-        yield return animator.MoveCard(
-            rect,
-            rect.position,
-            center
-        );
+        Destroy(view.gameObject);
+    }
 
-        yield return new WaitForSeconds(0.15f);
+    IEnumerator AnimateExhaust(CardInstance card)
+    {
+        CardView view = CreateCardView(card, false, animator.animationLayer.TransformPoint(Vector3.zero));
+        if (view == null)
+            yield break;
+
+        view.isAnimating = true;
+        view.rootRect.SetAsLastSibling();
+
+        yield return view.PlayExhaustAnimation();
 
         Destroy(view.gameObject);
     }
@@ -519,7 +543,7 @@ public IEnumerator AnimateCardToCenter(CardView view)
     {
         if (exhaust)
         {
-            Destroy(view.rootRect.gameObject);
+            yield return AnimateExhaust(view.cardInstance);
             yield break;
         }
 
@@ -529,10 +553,51 @@ public IEnumerator AnimateCardToCenter(CardView view)
             discardAnchor.position,
             1f,
             true,
-            true
+            true,
+            startScale: Vector3.one,
+            endScale: new Vector3(0.4f, 0.4f, 1f)
         );
 
         Destroy(view.rootRect.gameObject);
+    }
+
+    public IEnumerator AnimateCardToPile(CardInstance card, CardSelectionSource destination)
+    {
+        if (card == null)
+            yield break;
+
+        Vector3 startWorldPosition = animator.animationLayer.TransformPoint(Vector3.zero);
+        CardView view = CreateCardView(card, false, startWorldPosition);
+        if (view == null)
+            yield break;
+
+        RectTransform rect = view.rootRect;
+        rect.SetParent(animator.animationLayer, true);
+        ReparentKeepScreenPosition(rect, animator.animationLayer);
+        rect.position = startWorldPosition;
+
+        Vector3 targetPosition = destination switch
+        {
+            CardSelectionSource.DrawPile => deckAnchor.position,
+            CardSelectionSource.DiscardPile => discardAnchor.position,
+            CardSelectionSource.ExhaustPile => discardAnchor.position,
+            CardSelectionSource.All => deckAnchor.position,
+            CardSelectionSource.AllExceptExhaustPile => deckAnchor.position,
+            _ => deckAnchor.position
+        };
+
+        yield return animator.MoveCard(
+            rect,
+            rect.position,
+            targetPosition,
+            0.8f,
+            true,
+            true,
+            startScale: new Vector3(0.8f, 0.8f, 1f),
+            endScale: new Vector3(0.4f, 0.4f, 1f)
+        );
+
+        Destroy(view.gameObject);
     }
     public void AddCardAnimated(CardInstance card)
     {
@@ -549,9 +614,20 @@ public IEnumerator AnimateCardToCenter(CardView view)
 
         view.isAnimating = true;
 
-        StartCoroutine(
-            AnimateDraw(view)
-        );
+        int staggerIndex = pendingDrawAnimations++;
+        StartCoroutine(AnimateDrawWithStagger(view, staggerIndex));
+    }
+
+    IEnumerator AnimateDrawWithStagger(CardView view, int staggerIndex)
+    {
+        if (staggerIndex > 0)
+        {
+            yield return new WaitForSeconds(0.05f * staggerIndex);
+        }
+
+        yield return AnimateDraw(view);
+
+        pendingDrawAnimations = Mathf.Max(0, pendingDrawAnimations - 1);
     }
     public void TransformCard(CardInstance oldCard, CardInstance newCard)
     {

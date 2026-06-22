@@ -31,7 +31,9 @@
     {
       "type": "Damage",
       "kind": "ArmorOnSelf",
-      "value": 1
+      "value": 1,
+      "info": "",
+      "description": "(inflige des dégâts égaux à votre Armure)"
     }
   ],
   "favoredCharacter": "GC",

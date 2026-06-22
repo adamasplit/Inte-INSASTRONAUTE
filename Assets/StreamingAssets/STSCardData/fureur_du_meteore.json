@@ -3,15 +3,15 @@
   "cardName": "Fureur du météore",
   "collectionCardId": "fdm",
   "iconId": null,
-  "cost": 2,
-  "xCost": false,
+  "cost": 0,
+  "xCost": true,
   "type": "Attaque",
   "rarity": "Legendary",
   "targetingMode": "AllEnemies",
   "effects": [
     {
       "type": "Damage",
-      "value": 10,
+      "value": 4,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -28,7 +28,7 @@
     },
     {
       "type": "DelayTurn",
-      "value": 9,
+      "value": 3,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",

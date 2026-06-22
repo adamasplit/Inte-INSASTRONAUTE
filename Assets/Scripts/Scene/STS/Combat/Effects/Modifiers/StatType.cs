@@ -11,5 +11,6 @@ public enum StatType
     Any,
     TurnManipulationDelay,
     TurnManipulationAdvance,
-    ReplayCount
+    ReplayCount,
+    EnergyGain
 }

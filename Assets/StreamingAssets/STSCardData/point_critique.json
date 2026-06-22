@@ -1,0 +1,52 @@
+{
+  "id": "point_critique",
+  "cardName": "Point critique",
+  "collectionCardId": "",
+  "iconId": "critique",
+  "cost": 1,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Uncommon",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 8,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "FullBreak",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "ArmorBreak",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    },
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "FullBreak",
+      "duration": 1,
+      "description": "",
+      "cardID": "",
+      "conditional": true,
+      "conditionType": "ArmorBreak",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "GM",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

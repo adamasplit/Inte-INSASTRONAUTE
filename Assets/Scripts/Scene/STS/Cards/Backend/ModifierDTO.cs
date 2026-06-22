@@ -6,4 +6,6 @@ public class ModifierDTO
     public string kind;
 
     public int value;
+    public string info;
+    public string description;
 }

@@ -12,7 +12,7 @@
     {
       "type": "Status",
       "value": 10,
-      "targetSelf": false,
+      "targetSelf": true,
       "targetOthers": false,
       "statusType": "RiskManagement",
       "duration": 0,

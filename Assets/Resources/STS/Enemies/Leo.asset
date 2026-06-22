@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Leo
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Leo
-  maxHP: 150
+  displayName: 
+  maxHP: 87
   pattern: []
   randomStart: 1
   movePattern:
@@ -97,7 +98,7 @@ MonoBehaviour:
     effects:
     - type: 3
       value: 2
-      targetSelf: 0
+      targetSelf: 1
       targetOthers: 0
       statusType: 0
       duration: 0

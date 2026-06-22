@@ -1,0 +1,52 @@
+{
+  "id": "court_circuit",
+  "cardName": "Court-circuit",
+  "collectionCardId": "",
+  "iconId": "Break",
+  "cost": 0,
+  "xCost": true,
+  "type": "Attaque",
+  "rarity": "Uncommon",
+  "targetingMode": "RandomEnemy",
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 10,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    },
+    {
+      "type": "LoseHP",
+      "value": 1,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "ITI",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

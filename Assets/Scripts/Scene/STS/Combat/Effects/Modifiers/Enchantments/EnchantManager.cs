@@ -61,7 +61,7 @@ public static class EnchantManager
         }
         if (!card.HasEnchantment("Écho"))
         {
-            possibleEnchants.Add((EnchantType.Astra, 0.05f));
+            //possibleEnchants.Add((EnchantType.Astra, 0.05f));
         }
         if (!card.HasEnchantment("Stellaire"))
         {

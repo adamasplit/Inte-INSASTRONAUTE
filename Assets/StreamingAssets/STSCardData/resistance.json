@@ -12,7 +12,7 @@
     {
       "type": "Status",
       "value": 5,
-      "targetSelf": false,
+      "targetSelf": true,
       "targetOthers": false,
       "statusType": "Dexterity",
       "duration": 0,

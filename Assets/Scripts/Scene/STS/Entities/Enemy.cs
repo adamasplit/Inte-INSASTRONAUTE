@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 public class Enemy : Character
 {
@@ -17,11 +18,12 @@ public class Enemy : Character
     public EnemyData data;
 
     private int patternIndex = 0;
-    private STSCardData forcedNextAction;
+    private readonly Queue<STSCardData> forcedNextActions = new();
 
     public void Init(EnemyData d)
     {
-        name=d.name;
+        name=d.displayName;
+        Debug.Log($"Initializing enemy {name} with data: {d.name} and displayName: {d.displayName}");
         data = d;
         patternIndex = 0;
         maxHP = d.maxHP;
@@ -43,14 +45,13 @@ public class Enemy : Character
 
     public EnemyMoveEntry GetNextActionPlan()
     {
-        if (forcedNextAction != null)
+        if (forcedNextActions.Count > 0)
         {
             var overrideAction = new EnemyMoveEntry
             {
-                card = forcedNextAction
+                card = forcedNextActions.Dequeue()
             };
 
-            forcedNextAction = null;
             return overrideAction;
         }
 
@@ -69,8 +70,8 @@ public class Enemy : Character
 
     public STSCardData PeekNextAction()
     {
-        if (forcedNextAction != null)
-            return forcedNextAction;
+        if (forcedNextActions.Count > 0)
+            return forcedNextActions.Peek();
 
         if (data == null || data.ActionCount == 0)
             return null;
@@ -80,11 +81,34 @@ public class Enemy : Character
 
     public void ForceNextAction(string cardName)
     {
-        forcedNextAction = STSCardDatabase.Get(cardName);
+        ForceNextAction(cardName, 1);
+    }
 
-        if (forcedNextAction == null)
+    public void ForceNextAction(string cardName, int turns)
+    {
+        var cardData = STSCardDatabase.Get(cardName);
+
+        if (cardData == null)
         {
             Debug.LogWarning($"Could not force enemy action '{cardName}' for {name}.");
+            return;
+        }
+
+        ForceNextAction(cardData, turns);
+    }
+
+    public void ForceNextAction(STSCardData cardData, int turns = 1)
+    {
+        if (cardData == null)
+        {
+            Debug.LogWarning($"Could not force a null enemy action for {name}.");
+            return;
+        }
+
+        int count = Mathf.Max(1, turns);
+        for (int i = 0; i < count; i++)
+        {
+            forcedNextActions.Enqueue(cardData);
         }
     }
 }

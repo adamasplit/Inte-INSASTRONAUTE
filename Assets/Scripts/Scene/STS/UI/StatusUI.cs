@@ -66,7 +66,11 @@ public class StatusUI : MonoBehaviour
             rectTransform.localScale = Vector3.one;
         }
         icon.enabled = true;
-        icon.sprite = Resources.Load<Sprite>($"STS/Icons/Status/{status.Name}");
+        icon.sprite = Resources.Load<Sprite>($"STS/Icons/Status/{status.IconPath()}");
+        if (icon.sprite == null)
+        {
+            icon.sprite = Resources.Load<Sprite>($"STS/Icons/Cards/{status.IconPath()}");
+        }
         if (icon.sprite == null)
         {
             icon.enabled = false;

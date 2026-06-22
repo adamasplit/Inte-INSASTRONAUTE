@@ -6,12 +6,12 @@
   "cost": 2,
   "xCost": false,
   "type": "Attaque",
-  "rarity": "Epic",
+  "rarity": "Common",
   "targetingMode": "Enemy",
   "effects": [
     {
       "type": "Damage",
-      "value": 4,
+      "value": 5,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -31,7 +31,9 @@
     {
       "type": "Damage",
       "kind": "DebuffOnSelf",
-      "value": 7
+      "value": 10,
+      "info": "",
+      "description": ""
     }
   ],
   "favoredCharacter": "EP",

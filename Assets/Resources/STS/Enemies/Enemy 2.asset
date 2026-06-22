@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Enemy 2
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Enemy 2
-  maxHP: 12
+  displayName: 
+  maxHP: 13
   pattern:
   - {fileID: 11400000, guid: f616076eed1cf1c46afe77ec11937d99, type: 2}
   - {fileID: 11400000, guid: e7b8e19fba3483b419503d79f3957277, type: 2}

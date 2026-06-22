@@ -5,7 +5,7 @@
   "iconId": "Comète",
   "cost": 4,
   "xCost": false,
-  "type": "Attaque",
+  "type": "Pouvoir",
   "rarity": "Legendary",
   "targetingMode": "AllEnemies",
   "effects": [

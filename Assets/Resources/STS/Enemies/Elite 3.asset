@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Elite 3
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  enemyName: Golbez
-  maxHP: 200
+  enemyName: Elite 3
+  maxHP: 100
   pattern:
   - {fileID: 11400000, guid: 6246dcd0d58203c4ab020d1b25cdde07, type: 2}
   - {fileID: 11400000, guid: c81fe9c9fcbafbc4196a821088811f19, type: 2}
@@ -21,7 +21,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9050fa5b55e517842aa6b728b0c04bc4, type: 2}
   - {fileID: 11400000, guid: 3746bd040a2bae743abad70f31212e3b, type: 2}
   - {fileID: 11400000, guid: 3746bd040a2bae743abad70f31212e3b, type: 2}
+  randomStart: 0
+  movePattern: []
   rewardCards: []
   startingStatus: 28
   startingStatusDuration: 0
   startingStatusValue: 0
+  startingStatusInfo: 

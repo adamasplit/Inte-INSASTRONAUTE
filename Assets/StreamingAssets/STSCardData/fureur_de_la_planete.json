@@ -28,11 +28,11 @@
     },
     {
       "type": "Status",
-      "value": 16,
+      "value": 10,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Poison",
-      "duration": 16,
+      "duration": 10,
       "description": "",
       "cardID": "",
       "conditional": false,

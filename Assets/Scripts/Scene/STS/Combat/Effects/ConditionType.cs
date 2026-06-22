@@ -1,5 +1,9 @@
 public enum ConditionType
 {
     KillingBlow,
-    ArmorBreak
+    ArmorBreak,
+    FirstTimePlayingThisCardThisTurn,
+    FirstTimePlayingThisCardThisCombat,
+    TargetHasStatus,
+    TargetHasNoStatus
 }

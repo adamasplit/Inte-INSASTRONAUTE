@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: katana
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  cardName: Katana
+  id: katana
+  cardName: Frappe au katana
   collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 786841ea8e858bc4d9e21fff30db7161, type: 2}
   icon: {fileID: 0}
@@ -38,11 +39,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
   targetingMode: 1
   modifiers: []
-  exhaust: 0
-  retain: 0
-  innate: 0
-  infinite: 0
-  created: 0
   favoredCharacter: 11
   animationSpeed: 1
   startingCount: 5
+  tags: 

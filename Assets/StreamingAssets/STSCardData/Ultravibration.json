@@ -2,7 +2,7 @@
   "id": "ultravibration",
   "cardName": "Ultravibration",
   "collectionCardId": "MECA",
-  "iconId": "Choc",
+  "iconId": "ultravibration",
   "cost": 0,
   "xCost": false,
   "type": "Attaque",

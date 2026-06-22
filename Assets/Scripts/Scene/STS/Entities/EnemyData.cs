@@ -71,7 +71,7 @@ public class EnemyMoveEntry
 public class EnemyData : ScriptableObject
 {
     public string enemyName;
-
+    public string displayName;
     public int maxHP;
 
     public List<STSCardData> pattern;

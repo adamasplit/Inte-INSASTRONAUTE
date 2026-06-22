@@ -5,7 +5,7 @@
   "iconId": "Buff",
   "cost": 1,
   "xCost": false,
-  "type": "Compétence",
+  "type": "Pouvoir",
   "rarity": "Rare",
   "targetingMode": "Player",
   "effects": [
@@ -15,7 +15,7 @@
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "LifeCycle",
-      "duration": 0,
+      "duration": -1,
       "description": "",
       "cardID": "",
       "conditional": false,
@@ -31,7 +31,5 @@
   "favoredCharacter": "MRIE",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": [
-    "Exhaust"
-  ]
+  "tags": []
 }

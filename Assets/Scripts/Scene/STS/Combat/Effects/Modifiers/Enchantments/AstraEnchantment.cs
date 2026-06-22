@@ -12,7 +12,7 @@ public class AstraEnchantment : EnchantmentData
     {
         return new List<StatModifier>
         {
-            new OverrideModifier(StatType.Any, 1),
+            new OneModifier(StatType.Any),
             new FlatModifier(StatType.ReplayCount, 4)
         };
     }

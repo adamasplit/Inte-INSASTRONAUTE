@@ -10,6 +10,18 @@ public static class StatTypeString
                 return "armure gagnée";
             case StatType.Heal:
                 return "soins prodigués";
+            case StatType.TurnManipulationDelay:
+                return "retard de tour";
+            case StatType.Cost:
+                return "coût";
+            case StatType.ReplayCount:
+                return "nombre d'activations";
+            case StatType.Any:
+                return "tout";
+            case StatType.StatusPotency:
+                return "puissance du statut";
+            case StatType.StatusDuration:
+                return "durée du statut";
             default:
                 return type.ToString();
         }

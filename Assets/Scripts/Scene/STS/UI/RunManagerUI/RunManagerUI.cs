@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 public class RunManagerUI : MonoBehaviour
 {
     public TextMeshProUGUI floorText;
@@ -19,6 +20,9 @@ public class RunManagerUI : MonoBehaviour
     public RelicListPanel relicListPanel;
     public DeckGridPanel deckGridPanel;
     public Canvas canvas;
+
+    [Header("Run Session")]
+    public Button saveAndReturnToMenuButton;
     
     void Start()
     {
@@ -26,6 +30,8 @@ public class RunManagerUI : MonoBehaviour
             relicsButton.onClick.AddListener(ShowRelics);
         if (deckButton != null)
             deckButton.onClick.AddListener(ShowDeck);
+        if (saveAndReturnToMenuButton != null)
+            saveAndReturnToMenuButton.onClick.AddListener(SaveAndReturnToMenu);
         
         // Ensure an EventSystem exists so UI can receive clicks
         var es = UnityEngine.EventSystems.EventSystem.current;
@@ -55,6 +61,14 @@ public class RunManagerUI : MonoBehaviour
     void Update()
     {
         if (RunManager.Instance == null) return;
+        if (saveAndReturnToMenuButton != null)
+        {
+            bool canSave = SceneManager.GetActiveScene().name == "STS_Map"
+                && RunManager.Instance.map != null
+                && RunManager.Instance.player != null;
+
+            saveAndReturnToMenuButton.interactable = canSave;
+        }
         floorText.text = $"Étage {RunManager.Instance.currentFloor}";
         actText.text = $"Acte {RunManager.Instance.act + 1}";
         hpText.text = $"PV : {RunManager.Instance.player.currentHP}/{RunManager.Instance.player.maxHP}";
@@ -81,5 +95,20 @@ public class RunManagerUI : MonoBehaviour
     {
         if (deckGridPanel != null)
             deckGridPanel.Show(RunManager.Instance.deck,"Deck");
+    }
+
+    void SaveAndReturnToMenu()
+    {
+        if (RunManager.Instance == null)
+            return;
+
+        if (!RunManager.Instance.SaveRunState())
+        {
+            Debug.LogWarning("Save failed. Staying in the current run.");
+            return;
+        }
+
+        RunManager.Instance.OnRunEnd(false);
+        STSSceneLoader.Instance?.LoadScene("STS_Boot");
     }
 }

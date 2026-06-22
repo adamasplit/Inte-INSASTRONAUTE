@@ -6,7 +6,7 @@
   "cost": 0,
   "xCost": false,
   "type": "Compétence",
-  "rarity": "Common",
+  "rarity": "Rare",
   "targetingMode": "Enemy",
   "effects": [
     {

@@ -17,13 +17,13 @@ MonoBehaviour:
   collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 3faa5f537f9ea9047a4a93eae0c40431, type: 2}
   icon: {fileID: 0}
-  cost: 2
-  xCost: 0
+  cost: 0
+  xCost: 1
   type: 0
   rarity: 4
   effects:
   - type: 0
-    value: 10
+    value: 4
     targetSelf: 0
     targetOthers: 0
     statusType: 0
@@ -38,7 +38,7 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
   - type: 6
-    value: 9
+    value: 3
     targetSelf: 0
     targetOthers: 0
     statusType: 0

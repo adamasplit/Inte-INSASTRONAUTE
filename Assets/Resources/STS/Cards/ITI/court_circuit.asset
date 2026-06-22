@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
+  m_Name: court_circuit
+  m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: court_circuit
+  cardName: Court-circuit
+  collectionCardId: 
+  collectionCard: {fileID: 0}
+  icon: {fileID: 21300000, guid: 798a6b5642b33804aa82660c30911b53, type: 3}
+  cost: 0
+  xCost: 1
+  type: 0
+  rarity: 1
+  effects:
+  - type: 0
+    value: 10
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+  - type: 11
+    value: 1
+    targetSelf: 1
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+  targetingMode: 5
+  modifiers: []
+  favoredCharacter: 3
+  animationSpeed: 1
+  startingCount: 0
+  tags: 

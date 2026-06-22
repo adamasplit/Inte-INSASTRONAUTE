@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
+  m_Name: generation_moleculaire
+  m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: generation_moleculaire
+  cardName: "G\xE9n\xE9ration mol\xE9culaire"
+  collectionCardId: 
+  collectionCard: {fileID: 0}
+  icon: {fileID: 21300000, guid: febf4b625230e9041a69e546414ed390, type: 3}
+  cost: 1
+  xCost: 0
+  type: 1
+  rarity: 2
+  effects:
+  - type: 21
+    value: 2
+    targetSelf: 1
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 0c000000
+    cardSelectionEffect: 0
+  targetingMode: 0
+  modifiers: []
+  favoredCharacter: 4
+  animationSpeed: 1
+  startingCount: 0
+  tags: 

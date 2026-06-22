@@ -2,7 +2,7 @@
   "id": "economie_d_energie",
   "cardName": "Économie d'énergie",
   "collectionCardId": "",
-  "iconId": "Zone",
+  "iconId": "batterie",
   "cost": 1,
   "xCost": false,
   "type": "Compétence",
@@ -11,7 +11,7 @@
   "effects": [
     {
       "type": "Status",
-      "value": 3,
+      "value": 2,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "CostNullify",

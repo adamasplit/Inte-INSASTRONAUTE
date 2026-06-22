@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: Nemesis
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Nemesis
-  maxHP: 180
+  maxHP: 67
   pattern:
   - {fileID: 11400000, guid: 63eef1034cdf61344b92f72fccf35325, type: 2}
   - {fileID: 11400000, guid: f7e089ff183e78345bb79159a96b4f8e, type: 2}
   - {fileID: 11400000, guid: d8ffafdfb06c29744a6dadf200def953, type: 2}
   - {fileID: 11400000, guid: f7e089ff183e78345bb79159a96b4f8e, type: 2}
+  randomStart: 0
   movePattern: []
   rewardCards:
   - {fileID: 11400000, guid: f7e089ff183e78345bb79159a96b4f8e, type: 2}

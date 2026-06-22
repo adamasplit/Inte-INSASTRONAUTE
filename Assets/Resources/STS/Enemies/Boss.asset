@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Boss
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Boss
-  maxHP: 150
+  displayName: 
+  maxHP: 230
   pattern: []
   randomStart: 0
   movePattern:
@@ -122,7 +123,7 @@ MonoBehaviour:
       cardSelectionEffect: 0
     - type: 3
       value: 4
-      targetSelf: 0
+      targetSelf: 1
       targetOthers: 0
       statusType: 42
       duration: 4

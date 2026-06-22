@@ -11,6 +11,7 @@ public class PlatingStatus : StatusEffect
     public override void OnTurnEnd(Character target)
     {
         target.AddArmor(Duration);
+        Tick(target);
     }
     public override string Desc(bool isPlayer)
     {

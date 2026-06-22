@@ -3,6 +3,8 @@ using System.Collections.Generic;
 public abstract class StatusEffect : StatModifier
 {
     protected Character owner;
+    public StatusType statusType;
+    public string cardID;
     public string Name;
     public int Value;
     public int maxValue=99;
@@ -14,6 +16,16 @@ public abstract class StatusEffect : StatModifier
     public bool framed=false; // Statuts pouvant être supprimés par des cartes ou des effets de statut (certains indispellables peuvent être supprimés quand même)
     public bool inextendable=false; // Statuts dont la durée ne peut pas être augmentée
     public bool goldFrame=false; // Statuts rares bénéficiant d'une true resistance à la suppression
+    public virtual string IconPath()
+    {
+        // Class name minus "Status" suffix, e.g., "PoisonStatus" becomes "Poison"
+        string className = this.GetType().Name;
+        if (className.EndsWith("Status"))
+        {
+            className = className.Substring(0, className.Length - "Status".Length);
+        }
+        return className;
+    }
     public virtual StatusEffect Dispel(int remainingPercentage=0)
     {
         if (remainingPercentage>0)
@@ -33,7 +45,7 @@ public abstract class StatusEffect : StatModifier
     }
     public virtual void InsertInto(List<StatusEffect> list)
     {
-        StatusEffect other = list.Find(s => s.GetType() == this.GetType());
+        StatusEffect other = list.Find(s => s.GetType() == this.GetType()&&Mathf.Sign(s.Duration)==Mathf.Sign(this.Duration));
         if (other != null)
         {
             this.Merge(other);
@@ -64,6 +76,10 @@ public abstract class StatusEffect : StatModifier
 
     protected void Tick(Character target)
     {
+        if (debuff&&target.statusEffects.Exists(s=> s is DebuffHaltStatus&&s!=this))
+        {
+            return;
+        }
         Duration--;
     }
 
@@ -92,6 +108,11 @@ public abstract class StatusEffect : StatModifier
     public virtual void OnCardPlayed(Character source,Character target,CardInstance card) { }
     public virtual void OnTargetedByCard(Character source,Character target, CardInstance card) { }
     public virtual void OnCardDrawn(Character target, CardInstance card) { }
+    public virtual int ArmorOnTurnStart(int previousArmor, Character character) { return 0; }
+    public virtual bool CanApply(StatusEffect newStatus, Character target)
+    {
+        return true;
+    }
     public virtual string Desc(bool isPlayer){return $"\n{Value} (Description inconnue)";}
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {
@@ -125,11 +146,11 @@ public abstract class StatusEffect : StatModifier
             StatusType.Fragile => new FragileStatus(duration),
             StatusType.Speed => new SpeedStatus(value),
             StatusType.Accelerate=>new AccelerateStatus(value),
-            StatusType.Stun=>new StunStatus(value),
+            StatusType.Stun=>new StunStatus(duration),
             StatusType.Strengthen=>new StrengthenStatus(value),
             StatusType.Clock=>new ClockStatus(),
             StatusType.After=>new AfterStatus(value),
-            StatusType.Burn=>new BurnStatus(value),
+            StatusType.Burn=>new BurnStatus(duration),
             StatusType.Sadism=>new SadismStatus(),
             StatusType.MechaArm=>new MechaArmStatus(value),
             StatusType.Energy=>new EnergyStatus(value),
@@ -144,16 +165,27 @@ public abstract class StatusEffect : StatModifier
             StatusType.Plating=>new PlatingStatus(duration),
             StatusType.DelayImmunity=>new DelayImmunityStatus(),
             StatusType.ArmorBlock=>new ArmorBlockStatus(duration),
-            StatusType.Thorns=>new ThornsStatus(value),
+            StatusType.Thorns=>new ThornsStatus(value,duration),
             StatusType.FullBreak=>new FullBreakStatus(duration),
             StatusType.Status=>new StatusStatus(duration),
             StatusType.CostNullify=>new CostNullifyStatus(value),
             StatusType.CardFollowUp=>new CardFollowUpStatus(value,duration,effectInfo),
-            StatusType.Echo=>new EchoStatus(value),
+            StatusType.Echo=>new EchoStatus(value,duration),
             StatusType.FieldTurnFollowUp=>new FieldTurnFollowUpStatus(value,duration,effectInfo),
             StatusType.Vigor=>new VigorStatus(value),
+            StatusType.Artifact=>new ArtifactStatus(value),
+            StatusType.Filter=>new FilterStatus(value),
+            StatusType.DelayedStun=>new DelayedStunStatus(duration),
+            StatusType.DebuffHalt=>new DebuffHaltStatus(duration),
+            StatusType.Freeze=>new FreezeStatus(duration),
+            StatusType.DelayedDeath=>new DelayedDeathStatus(duration),
+            StatusType.AreaDmgReduction=>new AreaDmgReductionStatus(value,duration),
+            StatusType.ConserveArmor=>new ConserveArmorStatus(value,duration),
+            StatusType.EnergyUp=>new EnergyUpStatus(value,duration),
             _ => null
         };
+        stat.statusType = type;
+        stat.cardID = effectInfo;
         return stat;
     }
 }

@@ -1,0 +1,52 @@
+{
+  "id": "choc_thermique",
+  "cardName": "Choc thermique",
+  "collectionCardId": "",
+  "iconId": "feu_glace",
+  "cost": 2,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Epic",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Freeze",
+      "duration": 1,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "TargetHasStatus",
+      "conditionValue": "Burn",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    },
+    {
+      "type": "Damage",
+      "value": 25,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": true,
+      "conditionType": "TargetHasStatus",
+      "conditionValue": "Burn",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "EP",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

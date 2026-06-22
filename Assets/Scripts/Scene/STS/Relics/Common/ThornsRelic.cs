@@ -9,6 +9,6 @@ public class ThornsRelic : Relic
 
     public override void OnCombatStart(Character player)
     {
-        player.AddStatus(new ThornsStatus(3));
+        player.AddStatus(new ThornsStatus(3,-1));
     }
 }

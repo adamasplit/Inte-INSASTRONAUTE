@@ -2,7 +2,7 @@
   "id": "turbomachine",
   "cardName": "Turbomachine",
   "collectionCardId": "",
-  "iconId": "Energie2",
+  "iconId": "turbomachine",
   "cost": 2,
   "xCost": false,
   "type": "Pouvoir",

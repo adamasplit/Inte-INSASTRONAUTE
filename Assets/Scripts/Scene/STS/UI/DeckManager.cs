@@ -92,7 +92,16 @@ public class DeckManager
 
     public void Exhaust(CardInstance card)
     {
+        if (card == null)
+            return;
+
+        hand.Remove(card);
+        drawPile.Remove(card);
+        discardPile.Remove(card);
+        exhaustPile.Remove(card);
+
         exhaustPile.Add(card);
+        OnCardExhausted?.Invoke(card);
     }
 
     public void Delete(CardInstance card)
@@ -113,7 +122,7 @@ public class DeckManager
         for (int i = hand.Count - 1; i >= 0; i--)
         {
             CardInstance card = hand[i];
-
+            card.RemoveTemporaryModifiers();
             if (card.HasEnchantment("Mécanique"))
             {
                 Debug.Log("Card has Mécanique enchantment, playing instead of discarding.");

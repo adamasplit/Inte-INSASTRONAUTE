@@ -13,5 +13,8 @@ public enum CardTag
     Retain,
     Ethereal,
     Innate,
-    Infinite
+    Infinite,
+    Atom,
+    Molecule,
+    Norm
 }

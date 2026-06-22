@@ -20,7 +20,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 931c0fae846614e41adfb2bda056c8c7, type: 2}
     minFloor: 3
     maxFloor: -1
-    minAct: -1
+    minAct: 1
     maxAct: -1
     weight: 1
     elite: 0
@@ -136,21 +136,11 @@ MonoBehaviour:
     weight: 1
     elite: 1
     boss: 0
-  - displayName: Soldat
-    enemies:
-    - {fileID: 11400000, guid: 608eaf8a8bf48ba4eba40360729054f7, type: 2}
-    minFloor: 0
-    maxFloor: 3
-    minAct: 0
-    maxAct: -1
-    weight: 1
-    elite: 0
-    boss: 0
   - displayName: Invader&Soldat
     enemies:
     - {fileID: 11400000, guid: 5ebca3933452ea94382f9b4b7a5095e5, type: 2}
     - {fileID: 11400000, guid: 608eaf8a8bf48ba4eba40360729054f7, type: 2}
-    minFloor: 2
+    minFloor: 4
     maxFloor: -1
     minAct: -1
     maxAct: -1
@@ -227,5 +217,57 @@ MonoBehaviour:
     minAct: -1
     maxAct: 0
     weight: 0.515
+    elite: 0
+    boss: 0
+  - displayName: Soldat
+    enemies:
+    - {fileID: 11400000, guid: 608eaf8a8bf48ba4eba40360729054f7, type: 2}
+    minFloor: 0
+    maxFloor: 3
+    minAct: 0
+    maxAct: -1
+    weight: 1
+    elite: 0
+    boss: 0
+  - displayName: Donu
+    enemies:
+    - {fileID: 11400000, guid: 6e4d04522751307419bac01201aa5c1a, type: 2}
+    minFloor: 0
+    maxFloor: 3
+    minAct: 0
+    maxAct: -1
+    weight: 1
+    elite: 0
+    boss: 0
+  - displayName: Deca
+    enemies:
+    - {fileID: 11400000, guid: 9657838d29f7c60429199829821e5660, type: 2}
+    minFloor: 0
+    maxFloor: 3
+    minAct: 0
+    maxAct: -1
+    weight: 1
+    elite: 0
+    boss: 0
+  - displayName: Donu+Deca
+    enemies:
+    - {fileID: 11400000, guid: 9657838d29f7c60429199829821e5660, type: 2}
+    - {fileID: 11400000, guid: 6e4d04522751307419bac01201aa5c1a, type: 2}
+    minFloor: 4
+    maxFloor: -1
+    minAct: 0
+    maxAct: -1
+    weight: 1
+    elite: 0
+    boss: 0
+  - displayName: "2 ennemis diff\xE9rents"
+    enemies:
+    - {fileID: 11400000, guid: 030305c5255494040b1aa2598d91e63d, type: 2}
+    - {fileID: 11400000, guid: 931c0fae846614e41adfb2bda056c8c7, type: 2}
+    minFloor: 2
+    maxFloor: 5
+    minAct: 0
+    maxAct: -1
+    weight: 1
     elite: 0
     boss: 0

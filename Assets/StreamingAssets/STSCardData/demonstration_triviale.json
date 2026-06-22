@@ -5,8 +5,8 @@
   "iconId": "rdm",
   "cost": 3,
   "xCost": false,
-  "type": "Attaque",
-  "rarity": "Common",
+  "type": "Compétence",
+  "rarity": "Rare",
   "targetingMode": "AllEnemies",
   "effects": [
     {
@@ -48,5 +48,7 @@
   "favoredCharacter": "GM",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": []
+  "tags": [
+    "Exhaust"
+  ]
 }

@@ -1,0 +1,39 @@
+{
+  "id": "interruption",
+  "cardName": "Interruption",
+  "collectionCardId": "",
+  "iconId": null,
+  "cost": 0,
+  "xCost": false,
+  "type": "Rien",
+  "rarity": "Common",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "EndTurn",
+      "value": 0,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": [
+    "Exhaust",
+    "Curse",
+    "FollowUp"
+  ]
+}

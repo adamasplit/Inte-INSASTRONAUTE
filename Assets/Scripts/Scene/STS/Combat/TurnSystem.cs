@@ -182,7 +182,6 @@ public class TurnSystem : MonoBehaviour
         {
             player.DrawCard();
         }
-        combat.state.cardsPlayedThisTurn = 0;
         foreach (var relic in RunManager.Instance.relics)
         {
             if (relic == null)
@@ -564,5 +563,14 @@ public class TurnSystem : MonoBehaviour
                 uid = t.uid
             })
             .ToList();
+    }
+    public float GetTimeUntilNextTurn(Character character)
+    {
+        var entry = timeline.FirstOrDefault(t => t.character == character);
+        if (entry == null)
+            return -1f;
+
+        float currentTime = timeline[0].time;
+        return Mathf.Max(0f, entry.time - currentTime);
     }
 }

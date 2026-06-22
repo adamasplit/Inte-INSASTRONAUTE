@@ -14,7 +14,7 @@ public class FullBreakStatus : StatusEffect
 
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {
-        if (ctx.target == null) return false;
+        if (ctx.target == null||(!StatTypeChecker.IsValid(stat))) return false;
         return true;
     }
 

@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: Cultist
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Cultist
-  maxHP: 160
+  displayName: 
+  maxHP: 240
   pattern:
   - {fileID: 11400000, guid: 998821578d21bd44e85fcfac270f5d90, type: 2}
+  randomStart: 0
   movePattern: []
   rewardCards: []
   startingStatus: 17

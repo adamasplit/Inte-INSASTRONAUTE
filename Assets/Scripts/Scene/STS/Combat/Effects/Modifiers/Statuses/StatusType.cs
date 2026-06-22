@@ -42,5 +42,14 @@ public enum StatusType
     CardFollowUp,
     Echo,
     FieldTurnFollowUp,
-    Vigor
+    Vigor,
+    Artifact,
+    Filter,
+    DelayedStun,
+    DebuffHalt,
+    Freeze,
+    DelayedDeath,
+    AreaDmgReduction,
+    ConserveArmor,
+    EnergyUp
 }

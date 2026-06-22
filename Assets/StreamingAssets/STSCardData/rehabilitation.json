@@ -1,8 +1,8 @@
 {
   "id": "rehabilitation",
-  "cardName": "Réhabilitation",
-  "collectionCardId": "ingenieur_humaniste",
-  "iconId": null,
+  "cardName": "Recyclage",
+  "collectionCardId": "",
+  "iconId": "cycle",
   "cost": 1,
   "xCost": false,
   "type": "Compétence",
@@ -45,7 +45,7 @@
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Aucun",
+  "favoredCharacter": "MRIE",
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": [

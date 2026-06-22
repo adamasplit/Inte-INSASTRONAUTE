@@ -11,5 +11,8 @@ public enum ModifierKind
     BuffOnTarget,
     ArmorOnSelf,
     LostHP,
-    TargetLostHP
+    TargetLostHP,
+    TimeUntilNextTurn,
+    ArmorOnTarget,
+    HPLostSinceLastTurn
 }

@@ -94,7 +94,7 @@ public class RunManager : MonoBehaviour
             deck.Clear();
             foreach (STSCardData card in STSCardDatabase.allCards)
             {
-                if ((addAllCardsToDeck&&(debugCards.Contains(card.cardName)||debugCards.Count == 0)) 
+                if ((addAllCardsToDeck&&(debugCards.Contains(card.cardName)||(debugCards.Count == 0&&card.favoredCharacter==selectedCharacter))) 
                 || (card.startingCount > 0 
                 && (card.favoredCharacter == SelectableCharacter.Starting || card.favoredCharacter == selectedCharacter || card.favoredCharacter == SelectableCharacter.Aucun)))
                 {
@@ -134,14 +134,43 @@ public class RunManager : MonoBehaviour
 
     public void OnRunEnd()
     {
+        OnRunEnd(true);
+    }
+
+    public void OnRunEnd(bool clearSave)
+    {
+        if (clearSave)
+        {
+            STSRunSaveSystem.ClearSave();
+        }
+
         gold=0;
-        ui.gameObject.SetActive(false);
+        if (ui != null)
+        {
+            ui.gameObject.SetActive(false);
+        }
         player = null;
         deck.Clear();
         relics.Clear();
         pendingReward = null;
         currentNode = null;
         map = null;
+    }
+
+    public bool SaveRunState()
+    {
+        return STSRunSaveSystem.SaveRun(this);
+    }
+
+    public bool LoadSavedRun()
+    {
+        bool loaded = STSRunSaveSystem.LoadRun(this);
+        if (loaded && ui != null)
+        {
+            ui.gameObject.SetActive(true);
+        }
+
+        return loaded;
     }
     public void StartTutorialRun(int stage)
     {

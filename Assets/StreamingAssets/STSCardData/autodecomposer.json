@@ -6,7 +6,7 @@
   "cost": 1,
   "xCost": false,
   "type": "Attaque",
-  "rarity": "Epic",
+  "rarity": "Rare",
   "targetingMode": "Enemy",
   "effects": [
     {
@@ -32,7 +32,7 @@
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Poison",
-      "duration": 3,
+      "duration": 4,
       "description": "",
       "cardID": "",
       "conditional": false,

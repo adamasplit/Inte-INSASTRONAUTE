@@ -31,7 +31,9 @@
     {
       "type": "Damage",
       "kind": "Played",
-      "value": 3
+      "value": 3,
+      "info": null,
+      "description": null
     }
   ],
   "favoredCharacter": "Aucun",

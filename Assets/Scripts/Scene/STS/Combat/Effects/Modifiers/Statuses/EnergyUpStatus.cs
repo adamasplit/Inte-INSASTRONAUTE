@@ -11,7 +11,7 @@ public class EnergyUpStatus : StatusEffect
     }
     public override void OnTurnStart(Character character)
     {
-        Duration--;
+        Tick(character);
     }
     public override void OnTurnEnd(Character character)
     {

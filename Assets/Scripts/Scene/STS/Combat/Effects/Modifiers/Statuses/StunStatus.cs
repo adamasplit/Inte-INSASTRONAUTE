@@ -3,6 +3,7 @@ public class StunStatus : StatusEffect
     public StunStatus(int duration)
     {
         Value = 0;
+        statusType = StatusType.Stun;
         Duration = duration;
         Name = "Étourdissement";
         framed=true;

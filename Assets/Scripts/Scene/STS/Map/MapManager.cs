@@ -49,6 +49,7 @@ public class MapManager : MonoBehaviour
         yield return null;
         yield return null;
         STSSceneLoader.Instance?.SceneReady();
+        RunManager.Instance?.SaveRunState();
     }
 
     public void MoveToNode(MapNode node)

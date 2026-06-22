@@ -7,5 +7,8 @@ public enum CardSelectionEffect
     Enchant,
     Unenchant,
     Transform,
-    Merge
+    Merge,
+    TopOfDrawPile,
+    ConsumeAndDealDamageToAll,
+    ConsumeAndGainArmor
 }

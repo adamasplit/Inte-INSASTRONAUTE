@@ -21,7 +21,7 @@ public class RiskManagementStatus : StatusEffect
     }
     public override string Desc(bool isPlayer)
     {
-        return (isPlayer ? "Vous ne pouvez pas perdre plus de " : "L'ennemi ne peut pas perdre plus de ") + $"{maxDamage()} PV en un seul coup.";
+        return (isPlayer ? "Vous ne pouvez pas subir plus de " : "L'ennemi ne peut pas subir plus de ") + $"{maxDamage()} dégâts en un seul coup.";
     }
     private int maxDamage()
     {

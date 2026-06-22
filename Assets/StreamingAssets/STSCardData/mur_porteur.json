@@ -31,7 +31,9 @@
     {
       "type": "Damage",
       "kind": "BuffOnSelf",
-      "value": 3
+      "value": 3,
+      "info": null,
+      "description": null
     }
   ],
   "favoredCharacter": "AI",

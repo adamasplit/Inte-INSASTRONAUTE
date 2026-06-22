@@ -11,7 +11,7 @@
   "effects": [
     {
       "type": "Armor",
-      "value": 40,
+      "value": 30,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",

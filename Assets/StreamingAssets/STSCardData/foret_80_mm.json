@@ -1,0 +1,60 @@
+{
+  "id": "foret_80_mm",
+  "cardName": "Foret 80 mm",
+  "collectionCardId": "",
+  "iconId": "perceuse",
+  "cost": 1,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Epic",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "LoseHP",
+      "value": 3,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    },
+    {
+      "type": "Damage",
+      "value": 10,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [
+    {
+      "type": "Damage",
+      "kind": "ArmorScaling",
+      "value": 10,
+      "info": "",
+      "description": ""
+    }
+  ],
+  "favoredCharacter": "MECA",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Enemy 4
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Enemy 4
-  maxHP: 66
+  displayName: 
+  maxHP: 61
   pattern:
   - {fileID: 11400000, guid: 939ba07da08ebcf4694b78e5d2c9659a, type: 2}
   - {fileID: 11400000, guid: 30750bcc4c2971c4c91efb7cbf198b56, type: 2}
@@ -22,7 +23,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 400a53d1e4803304898a63e2e23ddb00, type: 2}
   - {fileID: 11400000, guid: f616076eed1cf1c46afe77ec11937d99, type: 2}
   - {fileID: 11400000, guid: e7b8e19fba3483b419503d79f3957277, type: 2}
-  - {fileID: 11400000, guid: 7de4cf7e640ce4249af25b7c0c898a3a, type: 2}
+  - {fileID: 0}
   - {fileID: 11400000, guid: e7b8e19fba3483b419503d79f3957277, type: 2}
   - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
   randomStart: 0
@@ -51,7 +52,7 @@ MonoBehaviour:
     moveName: 
     effects:
     - type: 1
-      value: 2
+      value: 6
       targetSelf: 1
       targetOthers: 0
       statusType: 17
@@ -65,8 +66,28 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
-    - type: 1
+    - type: 3
       value: 2
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 2
+      duration: 2
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 0300000002000000
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 7
       targetSelf: 0
       targetOthers: 0
       statusType: 17
@@ -80,7 +101,27 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
-    nextMoveIndices: 0100000002000000
+    nextMoveIndices: 0100000003000000
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 7
+      value: 1
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 17
+      duration: 3
+      description: 
+      cardID: 
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+    nextMoveIndices: 0200000001000000
     weight: 0
   rewardCards:
   - {fileID: 11400000, guid: 939ba07da08ebcf4694b78e5d2c9659a, type: 2}

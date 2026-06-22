@@ -1,0 +1,37 @@
+{
+  "id": "override",
+  "cardName": "Override",
+  "collectionCardId": "",
+  "iconId": "override",
+  "cost": 3,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Legendary",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "ForceNextCard",
+      "value": 2,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "Reboot",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "ITI",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": [
+    "Exhaust"
+  ]
+}

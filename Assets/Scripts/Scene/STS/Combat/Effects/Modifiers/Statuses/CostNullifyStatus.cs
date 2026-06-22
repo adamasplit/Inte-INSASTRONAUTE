@@ -16,7 +16,7 @@ public class CostNullifyStatus : StatusEffect
     public override int Modify(int cost, EffectContext ctx)
     {
         int res = 0;
-        if (!ctx.isPreview)
+        if (!ctx.isPreview&&!ctx.card.HasTag(CardTag.FollowUp))
         {
             Value--;
             if (Value<=0)

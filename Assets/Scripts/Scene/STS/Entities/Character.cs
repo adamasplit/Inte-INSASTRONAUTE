@@ -39,6 +39,11 @@ public class Character
         if (ignoreArmor)
         {
             currentHP = Mathf.Max(0, currentHP - amount);
+            if (!combat.state.hpLostSinceLastTurn.ContainsKey(this))
+            {
+                combat.state.hpLostSinceLastTurn[this] = 0;
+            }
+            combat.state.hpLostSinceLastTurn[this] += amount;
             info.amount = amount;
             if (currentHP == 0)
             {
@@ -52,6 +57,14 @@ public class Character
             int startingArmor = armor;
             int damageAfterArmor = Mathf.Max(0, amount - armor);
             armor = Mathf.Max(0, armor - amount);
+            if (combat.state.hpLostSinceLastTurn.ContainsKey(this))
+            {
+                combat.state.hpLostSinceLastTurn[this] += damageAfterArmor;
+            }
+            else
+            {
+                combat.state.hpLostSinceLastTurn[this] = damageAfterArmor;
+            }
             currentHP = Mathf.Max(0, currentHP - damageAfterArmor);
             if (currentHP == 0)
             {
@@ -94,10 +107,16 @@ public class Character
     }
     public void AddStatus(StatusEffect status)
     {
-        //Debug.Log($"Adding status {status.Name} to {name} with potency {status.Value} and duration {status.Duration}");
+        // Check if the status can be applied (e.g. if the character intercepts a given amount of negative statuses)
+        foreach (var existingStatus in statusEffects)
+        {
+            if (!existingStatus.CanApply(status,this))
+            {
+                return; 
+            }
+        }
         status.InsertInto(statusEffects);
         status.OnApply(this);
-        //Debug.Log($"{name} status effects: {string.Join(", ", statusEffects.ConvertAll(s => s.Name + "(" + s.Duration + ")"))}");
     }
     public void RemoveStatus(StatusEffect status)
     {
@@ -115,7 +134,7 @@ public class Character
     public void ExpireStatuses()
     {
         var toRemove = new List<StatusEffect>();
-        foreach (var status in statusEffects)
+        foreach (var status in statusEffects.ToList())
         {
             if (status.Duration == 0||status.mustExpire)
             {
@@ -139,6 +158,10 @@ public class Character
             {
                 newArmor =Mathf.Max(newArmor, relic.ArmorOnTurnStart(armor, this));
             }
+            foreach (var status in statusEffects.ToList())
+            {
+                newArmor = Mathf.Max(newArmor, status.ArmorOnTurnStart(armor,this));
+            }
         }
         armor=newArmor;
         resources.energy = 3;
@@ -151,7 +174,7 @@ public class Character
             }
             resources.energy = newEnergy;
         }
-        foreach (var status in statusEffects)
+        foreach (var status in statusEffects.ToList())
         {
             status.OnTurnStart(this);
         }
@@ -159,8 +182,8 @@ public class Character
         {
             relic.OnAnyTurnStart(this);
         }
-
         ExpireStatuses();
+        combat.state.ResetTurnStartFlags(this);
     }
     public void EndTurn()
     {
@@ -178,8 +201,8 @@ public class Character
                 relic.OnTurnEnd(this);
             }
         }
+        combat.state.ResetTurnEndFlags(this);
         combat.FieldTurnEnd();
-        combat.state.ResetTurnFlags(this);
     }
     public void FieldTurnEnd()
     {
@@ -223,7 +246,7 @@ public class Character
         if (cm == null)
             return;
 
-        cm.deck.Draw();
+        cm.deck.Draw(1,cm.state.turnCount==1);
     }
     public void DiscardCard()
     {
@@ -269,7 +292,7 @@ public class Character
     }
     public void OnTargetArmorBroken(Character target)
     {
-        foreach (var status in statusEffects)
+        foreach (var status in statusEffects.ToList())
         {
             status.OnTargetArmorBroken(this, target);
         }
@@ -283,7 +306,7 @@ public class Character
     }
     public void OnOwnArmorBroken(Character source)
     {
-        foreach (var status in statusEffects)
+        foreach (var status in statusEffects.ToList())
         {
             status.OnOwnArmorBroken(source, this);
         }

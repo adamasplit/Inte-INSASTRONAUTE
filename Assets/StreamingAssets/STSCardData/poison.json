@@ -31,7 +31,9 @@
     {
       "type": "ReplayCount",
       "kind": "Flat",
-      "value": 0
+      "value": 0,
+      "info": null,
+      "description": null
     }
   ],
   "favoredCharacter": "Starting",

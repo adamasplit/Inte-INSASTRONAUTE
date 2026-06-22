@@ -2,11 +2,11 @@
   "id": "aerodynamique",
   "cardName": "Aérodynamique",
   "collectionCardId": "",
-  "iconId": "renzokuken",
+  "iconId": "aero",
   "cost": 2,
   "xCost": false,
   "type": "Pouvoir",
-  "rarity": "Rare",
+  "rarity": "Uncommon",
   "targetingMode": "Player",
   "effects": [
     {

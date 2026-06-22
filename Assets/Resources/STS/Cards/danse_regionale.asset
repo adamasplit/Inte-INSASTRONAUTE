@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: danse_regionale
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: danse_regionale
-  cardName: Danse du limousin
+  cardName: "Danse r\xE9gionale"
   collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 4c8c124f3131af642b58a8a8c3b7c494, type: 2}
   icon: {fileID: 0}
@@ -54,10 +54,6 @@ MonoBehaviour:
     cardSelectionEffect: 0
   targetingMode: 0
   modifiers: []
-  exhaust: 1
-  retain: 0
-  innate: 0
-  infinite: 0
   favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0

@@ -19,6 +19,6 @@ public class LostHPModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+ {addedValue}% {StatTypeString.ToFrench(type)} par % de PV perdus du lanceur";
+        return $"+ {addedValue}% {StatTypeString.ToFrench(type)} pour chaque % de PV perdus";
     }
 } 

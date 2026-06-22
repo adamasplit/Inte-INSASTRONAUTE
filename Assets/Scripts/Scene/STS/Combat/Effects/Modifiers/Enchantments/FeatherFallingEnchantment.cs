@@ -7,7 +7,7 @@ public class FeatherFallingEnchantment : EnchantmentData
     public FeatherFallingEnchantment()
     {
         name = "Feather Falling";
-        description = $"Avance le tour du lanceur de la carte en fonction du niveau.";
+        description = $"Avance le tour du joueur en fonction du niveau.";
         maxLevel=100;
     }
 

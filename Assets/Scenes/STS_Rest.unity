@@ -1336,6 +1336,7 @@ MonoBehaviour:
   cardPrefab: {fileID: 3577838548751180402, guid: 8bfd60c94f1905f4ea01a13172498f75, type: 3}
   chargePrefab: {fileID: 1482060740411714935, guid: 39de7621736cecc44a261d50c45dcd0d, type: 3}
   chargesContainer: {fileID: 434258905}
+  deckContentPadding: 150
 --- !u!1 &1521776228
 GameObject:
   m_ObjectHideFlags: 0

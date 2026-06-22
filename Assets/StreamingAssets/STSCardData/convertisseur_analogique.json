@@ -6,7 +6,7 @@
   "cost": 1,
   "xCost": false,
   "type": "Compétence",
-  "rarity": "Common",
+  "rarity": "Epic",
   "targetingMode": "Player",
   "effects": [
     {

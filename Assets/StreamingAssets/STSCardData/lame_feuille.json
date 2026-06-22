@@ -1,12 +1,12 @@
 {
   "id": "lame_feuille",
   "cardName": "Lame-Feuille",
-  "collectionCardId": "greensa",
-  "iconId": null,
+  "collectionCardId": "",
+  "iconId": "Physique",
   "cost": 1,
   "xCost": false,
   "type": "Attaque",
-  "rarity": "Common",
+  "rarity": "Uncommon",
   "targetingMode": "Enemy",
   "effects": [
     {
@@ -45,7 +45,7 @@
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Aucun",
+  "favoredCharacter": "MRIE",
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": []

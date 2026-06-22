@@ -1,0 +1,17 @@
+{
+  "id": "reboot",
+  "cardName": "Reboot",
+  "collectionCardId": "",
+  "iconId": "reboot",
+  "cost": 0,
+  "xCost": false,
+  "type": "Rien",
+  "rarity": "Uncommon",
+  "targetingMode": "Player",
+  "effects": [],
+  "modifiers": [],
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

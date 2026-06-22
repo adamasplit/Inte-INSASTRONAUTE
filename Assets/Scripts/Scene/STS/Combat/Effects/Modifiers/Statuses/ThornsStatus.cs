@@ -1,9 +1,13 @@
 public class ThornsStatus : StatusEffect
 {
-    public ThornsStatus(int value)
+    public ThornsStatus(int value,int duration)
     {
         Value = value;
-        Duration = -1;
+        Duration = duration;
+        if (Duration==0)
+        {
+            Duration=-1;
+        }
         Name = "Épines";
         buff=true;
         debuff=false;

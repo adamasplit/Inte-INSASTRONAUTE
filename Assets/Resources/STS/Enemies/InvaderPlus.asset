@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: InvaderPlus
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: InvaderPlus
-  maxHP: 20
+  displayName: 
+  maxHP: 25
   pattern:
   - {fileID: 11400000, guid: 1c9b5117112e64d42a126561722bf83b, type: 2}
   - {fileID: 11400000, guid: c7ac447ff7972ba4eb5730eb6bd3e645, type: 2}
+  randomStart: 0
   movePattern: []
   rewardCards: []
   startingStatus: 0

@@ -1,11 +1,20 @@
 using System;
+using UnityEngine;
 [System.Serializable]
 public class ModifierData
 {
     public StatType type;
     public ModifierKind kind;
     public int value;
+    public string info;
+    public string description;
     public StatModifier CreateModifier()
+    {
+        StatModifier modifier = CreateStatModifier();
+        modifier.description = description;
+        return modifier;
+    }
+    private StatModifier CreateStatModifier()
     {
         switch (kind)
         {
@@ -33,18 +42,25 @@ public class ModifierData
                 return new LostHPModifier(type, value);
             case ModifierKind.TargetLostHP:
                 return new TargetLostHPModifier(type, value);
+            case ModifierKind.TimeUntilNextTurn:
+                return new TimeUntilNextTurnModifier(type, value);
+            case ModifierKind.ArmorOnTarget:
+                return new ArmorOnTargetModifier(type, value);
+            case ModifierKind.HPLostSinceLastTurn:
+                return new HPLostSinceLastTurnModifier(type, value);
             default:
                 throw new System.Exception("Unknown modifier kind: " + kind);
         }
     }
-
     public ModifierDTO ToDTO()
     {
         return new ModifierDTO
         {
             type = type.ToString(),
             kind = kind.ToString(),
-            value = value
+            value = value,
+            info = info,
+            description = description
         };
     }
     public static ModifierData FromDTO(ModifierDTO dto)
@@ -53,7 +69,9 @@ public class ModifierData
         {
             type = Enum.Parse<StatType>(dto.type),
             kind = Enum.Parse<ModifierKind>(dto.kind),
-            value = dto.value
+            value = dto.value,
+            info = dto.info,
+            description = dto.description
         };
     }
 }

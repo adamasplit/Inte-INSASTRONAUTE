@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
+  m_Name: triangulation_gnss
+  m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: triangulation_gnss
+  cardName: Triangulation GNSS
+  collectionCardId: 
+  collectionCard: {fileID: 0}
+  icon: {fileID: 21300000, guid: 1ad584b7fe3d69641b771f0233ccc49c, type: 3}
+  cost: 2
+  xCost: 0
+  type: 1
+  rarity: 3
+  effects:
+  - type: 26
+    value: 0
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+  targetingMode: 1
+  modifiers: []
+  favoredCharacter: 3
+  animationSpeed: 1
+  startingCount: 0
+  tags: 09000000

@@ -15,7 +15,7 @@
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
-      "duration": 0,
+      "duration": 50,
       "description": "",
       "cardID": "",
       "conditional": false,

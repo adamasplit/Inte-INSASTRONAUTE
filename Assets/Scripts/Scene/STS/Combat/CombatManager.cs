@@ -251,17 +251,16 @@ public class CombatManager : MonoBehaviour
                         continue; // Skip this effect if condition is not met
                     }
                 }
-                foreach(var target in targets)
-                {
-                ctxTarget.target = target;
-                
-                    if (effect.targetSelf)
+                if (effect.targetSelf)
                     {
                         VFXManager.Instance.PlayEffect(effect, ui.GetView(source).transform.position);
                         yield return EffectResolver.Apply(effect, ctxSelf);
                     }
-                    else
+                else
+                {
+                    foreach(var target in targets)
                     {
+                        ctxTarget.target = target;
                         if (ui.GetView(target) != null)
                         {
                             VFXManager.Instance.PlayEffect(effect, ui.GetView(target).transform.position);
@@ -272,7 +271,8 @@ public class CombatManager : MonoBehaviour
                 ui.RefreshUI();
                 yield return new WaitForSeconds((effect.type == EffectType.Damage ? 0.1f : 0.3f)*card.data.animationSpeed/replayCount); // Small delay between effects for better readability
             }
-            state.cardsPlayedThisTurn++;
+            state.cardsPlayedThisTurn.Add(card);
+            state.cardsPlayedThisCombat.Add(card);
             foreach (StatusEffect status in source.statusEffects)
             {
                 status.AfterAction(source);
@@ -306,7 +306,12 @@ public class CombatManager : MonoBehaviour
             if (card.HasEnchantment("Infinity")||card.data.HasTag(CardTag.Infinite))
             {
                 deck.AddToHand(card);
-                if (!card.data.HasTag(CardTag.Infinite)) card.AddModifier(new FlatModifier(StatType.Cost, 1));
+                
+                if (!card.data.HasTag(CardTag.Infinite)) {
+                    StatModifier mod=new FlatModifier(StatType.Cost, 1);
+                    mod.temporary=true;
+                    card.AddModifier(mod);
+                }
             }
             else
             {
@@ -360,6 +365,35 @@ public class CombatManager : MonoBehaviour
                 tutorial.NotifyEnemyCardPlayed(source as Enemy, card);
             }
         }
+    }
+
+    public void FollowUpCard(bool randomCard, string cardName, Character source,Character target)
+    {
+        Debug.Log($"Follow-up card triggered: {(randomCard ? "Random card" : cardName)} from {source.name} targeting {target.name}");
+        STSCardData data;
+        if (randomCard)
+        {
+            data= STSCardDatabase.GetRandomCard();
+        }
+        else
+        {
+            data = STSCardDatabase.Get(cardName);
+        }
+        if (data == null)
+        {
+            Debug.LogWarning($"Carte de suivi introuvable : {cardName}");
+            return;
+        }
+        CardInstance followUpCard = new CardInstance(data);
+        if (!followUpCard.HasTag(CardTag.FollowUp))
+        {
+            followUpCard.AddTag(CardTag.FollowUp);
+        }
+        if (!followUpCard.HasTag(CardTag.Exhaust))
+        {
+            followUpCard.AddTag(CardTag.Exhaust);
+        }
+        PlayCard(source,followUpCard,AutoCardTargets(followUpCard.targetingMode,source,target),true,true);
     }
 
 
@@ -492,7 +526,10 @@ public class CombatManager : MonoBehaviour
         switch (mode)
         {
             case TargetingMode.Enemy:
-                return new List<Character>{target};
+                if (target!=null&&target!=source)
+                    return new List<Character>{target};
+                else
+                    return RandomEnemy();
             case TargetingMode.AllEnemies:
                 return enemies.Where(e => e != null && e.IsAlive).ToList();
             default:

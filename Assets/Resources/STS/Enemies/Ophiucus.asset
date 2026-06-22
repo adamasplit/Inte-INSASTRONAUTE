@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ophiucus
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Ophiucus
-  maxHP: 80
+  maxHP: 75
   pattern:
   - {fileID: 11400000, guid: 79543af691dd8ad4ebf4ae8c812f53c6, type: 2}
   - {fileID: 11400000, guid: 2ce7f3460e042954ba14f630cb9b5dda, type: 2}
@@ -25,5 +25,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ea5ae116e0bae1c47908728dbae2bea3, type: 2}
   - {fileID: 11400000, guid: 2ce7f3460e042954ba14f630cb9b5dda, type: 2}
   - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
+  randomStart: 0
+  movePattern: []
   rewardCards:
   - {fileID: 11400000, guid: 79543af691dd8ad4ebf4ae8c812f53c6, type: 2}
+  startingStatus: 0
+  startingStatusDuration: 0
+  startingStatusValue: 0
+  startingStatusInfo: 

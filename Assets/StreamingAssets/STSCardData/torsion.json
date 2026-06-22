@@ -1,0 +1,43 @@
+{
+  "id": "torsion",
+  "cardName": "Torsion",
+  "collectionCardId": "",
+  "iconId": "torsion",
+  "cost": 1,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Uncommon",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Vuln",
+      "duration": 3,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [
+    {
+      "type": "StatusDuration",
+      "kind": "ArmorScaling",
+      "value": 20,
+      "info": "",
+      "description": ""
+    }
+  ],
+  "favoredCharacter": "MECA",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

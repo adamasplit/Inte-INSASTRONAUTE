@@ -10,6 +10,7 @@ public class RestManager : MonoBehaviour
     public GameObject cardPrefab;
     public GameObject chargePrefab;
     public Transform chargesContainer;
+    [SerializeField] private float deckContentPadding = 48f;
     CardInstance selectedCard;
 
     async void Start()
@@ -144,10 +145,10 @@ public class RestManager : MonoBehaviour
         Vector3 size = bounds.size;
 
         if (size.x > 0f)
-            deckRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
+            deckRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x + deckContentPadding * 2f);
 
         if (size.y > 0f)
-            deckRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
+            deckRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y + deckContentPadding * 2f);
 
         Canvas.ForceUpdateCanvases();
     }

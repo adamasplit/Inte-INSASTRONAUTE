@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Linq;
 public class CardInstance
 {
+    public string displayName ;
     public STSCardData data;
     public List<StatModifier> baseModifiers = new();
     public List<StatModifier> addedModifiers = new();
@@ -15,6 +16,13 @@ public class CardInstance
     {
         return tags.Contains(tag) || data.HasTag(tag);
     }
+    public void AddTag(CardTag tag)
+    {
+        if (!tags.Contains(tag))
+        {
+            tags.Add(tag);
+        }
+    }
     public CardInstance(STSCardData data)
     {
         this.data = data;
@@ -23,6 +31,7 @@ public class CardInstance
             Debug.LogError("Card data is null for card instance.");
             return;
         }
+        this.displayName = data.cardName;
         this.targetingMode = data.targetingMode;
         if (data.modifiers != null)
         {
@@ -32,6 +41,10 @@ public class CardInstance
                 baseModifiers.Add(modData.CreateModifier());
             }
         }
+    }
+    public void RemoveTemporaryModifiers()
+    {
+        addedModifiers.RemoveAll(mod => mod.temporary);
     }
 
     public int Cost(EffectContext ctx=null)
@@ -77,18 +90,30 @@ public class CardInstance
                 text += desc + "\n";
             }
         }
-        foreach (var mod in GetModifiers(StatType.Damage,false,false))
+        foreach (var mod in GetModifiers(false,true))
         {
-            text += $"{mod.Describe()}\n";
-        }
-        foreach (var mod in GetModifiers(StatType.Armor,false,false))
-        {
-            text += $"{mod.Describe()}\n";
+            if (mod.description!=" ")
+            {
+                if (string.IsNullOrEmpty(mod.description))
+                {
+                    text += $"{mod.Describe()}\n";
+                }
+                else
+                {
+                    text += $"{mod.description}\n";
+                }
+            }
         }
         if (HasTag(CardTag.Exhaust))
             text += "<color=orange>[Épuisement]</color>\n";
         if (HasTag(CardTag.Retain))
             text += "<color=orange>[Retenue]</color>\n";
+        if (HasTag(CardTag.Ethereal))
+            text += "<color=orange>[Éthérée]</color>\n";
+        if (HasTag(CardTag.Infinite))
+            text += "<color=orange>[Infinie]</color>\n";
+        if (HasTag(CardTag.Innate))
+            text += "<color=red>[Innée]</color>\n";
         foreach (var ench in enchantments)
         {
             // Affiche les enchantements commençant par "Curse" en rouge, les autres en violet
@@ -177,7 +202,10 @@ public class CardInstance
             enchantments.Add(enchantment);
         }
     }
-
+    public bool HasEnchantments()
+    {
+        return enchantments.Count > 0;
+    }
     public bool HasEnchantment(string enchantmentName)
     {
         return enchantments.Exists(e => e.data.name == enchantmentName);
@@ -215,9 +243,10 @@ public class CardInstance
 
         STSCardData data = cards[0].data;
         CardInstance merged = new CardInstance(data);
-
+        merged.displayName = "";
         foreach (var card in cards)
         {
+            merged.displayName += card.displayName+(cards.IndexOf(card)==cards.Count-1?"":"+");
             if (card.targetingMode==TargetingMode.AllCharacters)
             {
                 merged.targetingMode = TargetingMode.AllCharacters;
@@ -236,7 +265,10 @@ public class CardInstance
             }
             foreach (var mod in card.GetModifiers())
             {
-                merged.AddModifier(mod);
+                if (!merged.GetModifiers().Contains(mod))
+                {
+                    merged.addedModifiers.Add(mod);
+                }
             }
             foreach (var effect in card.GetEffects())
             {

@@ -19,6 +19,6 @@ public class AwakeningStatus : StatusEffect
     }
     public override string Desc(bool isPlayer)
     {
-        return $"Soigne {Value} PV au bout de {Duration} tours.";
+        return $"Soigne {Value} PV au bout de {Duration} tour"+(Duration>1?"s":"");
     }
 }

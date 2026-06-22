@@ -21,9 +21,11 @@ public enum EffectType
     EndTurn,
     Gravity,
     Break,
-    AddRandomCardToHand,
+    AddRandomCard,
     AddCardToDrawPile,
     AddCardToDiscardPile,
     CardSelection,
-    ForceNextCard
+    ForceNextCard,
+    DoubleDebuffs,
+    SetStatusToMaxValue
 }

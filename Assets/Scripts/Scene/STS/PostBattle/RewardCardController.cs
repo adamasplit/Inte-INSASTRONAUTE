@@ -13,9 +13,11 @@ public class RewardCardController : MonoBehaviour, IPointerEnterHandler, IPointe
 
     void Awake()
     {
-        baseScale = transform.localScale;
+        baseScale = Vector3.one*1.5f;
+        
         if (baseScale == Vector3.zero)
             baseScale = Vector3.one;
+        transform.localScale = baseScale;
         if (view == null)
         {
             view = GetComponentInChildren<CardView>();
@@ -45,7 +47,7 @@ public class RewardCardController : MonoBehaviour, IPointerEnterHandler, IPointe
         transform.SetAsLastSibling();
         if (view != null)
         {
-            view.ShowCardTooltips(ShouldShowOnLeft(), true,true);
+            view.ShowRewardCardTooltips();
         }
     }
 

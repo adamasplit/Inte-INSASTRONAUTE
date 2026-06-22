@@ -24,9 +24,10 @@ public static class RewardGenerator
             choices = GenerateCardChoices(result)
         };
 
-        
-
-        Relic relic = RelicDrop.GetRandomRelic(result);
+        Relic relic = null;
+        do{
+            relic = RelicDrop.GetRandomRelic(result);
+        } while (relic==null||(RunManager.Instance!=null&&RunManager.Instance.relics.Exists(r=>r.name==relic.name)));
         if (relic != null&&result.elite)
         {
             reward.items.Add(new RelicReward

@@ -62,15 +62,15 @@ public class CardView : MonoBehaviour,IPointerClickHandler
     }
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (IsDescriptionTextClick(eventData) && IsSelectedCard())
-        {
-            ShowCardTooltips(GetTooltipSide(), true, true);
-            return;
-        }
 
         if (SelectionManager.Instance != null && SelectionManager.Instance.selectionMode)
         {
             SelectionManager.Instance.OnCardClicked(cardInstance);
+            return;
+        }
+        if (IsDescriptionTextClick(eventData)&&IsSelectedCard())
+        {
+            ShowCardTooltips(GetTooltipSide(), true, true);
             return;
         }
         if (ui!=null)
@@ -85,6 +85,11 @@ public class CardView : MonoBehaviour,IPointerClickHandler
             }
 
             ui.SelectCard(this);
+        }
+        if (IsDescriptionTextClick(eventData))
+        {
+            ShowCardTooltips(GetTooltipSide(), true, true);
+            return;
         }
         RestCardController restCard = GetComponentInParent<RestCardController>();
         if (restCard != null)
@@ -119,7 +124,7 @@ public class CardView : MonoBehaviour,IPointerClickHandler
             cardTypeText.text = card.data.type.ToString();
             cardBg.color = SelectableCharacterUtils.getCharacterColor(card.data.favoredCharacter);
             specialCardOverlay.SetActive(card.data.HasTag(CardTag.Unobtainable));
-            SetName(card.data.cardName);
+            SetName(card.displayName);
             SetWithCollectionCard(card);
             Color rarityColor = Color.white;
             switch (card.data.rarity)
@@ -213,6 +218,7 @@ public class CardView : MonoBehaviour,IPointerClickHandler
     public GameObject enchantTooltipPrefab;
     public Transform enchantTooltipContainer;
     public Transform enchantTooltipContainerLeft;
+    public Transform rewardTooltipContainerBelow;
     private struct TooltipData
     {
         public string title;
@@ -231,6 +237,8 @@ public class CardView : MonoBehaviour,IPointerClickHandler
             enchantTooltipContainer.rotation = Quaternion.identity;
         if (enchantTooltipContainerLeft != null)
             enchantTooltipContainerLeft.rotation = Quaternion.identity;
+        if (rewardTooltipContainerBelow != null)
+            rewardTooltipContainerBelow.rotation = Quaternion.identity;
     }
     public void Select(bool rightSide)
     {
@@ -320,6 +328,94 @@ public class CardView : MonoBehaviour,IPointerClickHandler
                 Destroy(child.gameObject);
             }
         }
+        if (rewardTooltipContainerBelow != null)
+        {
+            foreach (Transform child in rewardTooltipContainerBelow)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+    }
+
+    public void ShowRewardCardTooltips()
+    {
+        if (cardInstance == null || enchantTooltipPrefab == null)
+            return;
+
+        EnsureRewardTooltipContainerBelow();
+        if (rewardTooltipContainerBelow == null)
+            return;
+
+        foreach (Transform child in rewardTooltipContainerBelow)
+        {
+            Destroy(child.gameObject);
+        }
+
+        List<TooltipData> tooltips = new();
+        EffectContext ctx = new EffectContext
+        {
+            source = combat == null ? null : combat.player,
+            target = null,
+            combat = combat,
+            state = combat == null ? null : combat.state,
+            card = cardInstance,
+            isPreview = true,
+            targets = new List<Character>()
+        };
+
+        //tooltips.Add(new TooltipData(cardInstance.data.cardName, cardInstance.GetDescription(ctx)));
+
+        foreach (var effect in cardInstance.GetEffects())
+        {
+            AddStatusTooltip(effect, tooltips, ctx);
+            AddCreatedCardTooltip(effect, tooltips);
+        }
+
+        foreach (CardEnchantment enchant in cardInstance.enchantments)
+        {
+            tooltips.Add(new TooltipData(enchant.data.name, enchant.data.description));
+        }
+
+        foreach (TooltipData tooltipData in tooltips)
+        {
+            GameObject tooltipObj = Instantiate(enchantTooltipPrefab, rewardTooltipContainerBelow);
+            Tooltip tooltip = tooltipObj.GetComponent<Tooltip>();
+            tooltip.SetTooltip(null, tooltipData.title, tooltipData.description);
+        }
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rewardTooltipContainerBelow.GetComponent<RectTransform>());
+    }
+
+    private void EnsureRewardTooltipContainerBelow()
+    {
+        if (rewardTooltipContainerBelow != null)
+            return;
+
+        RectTransform anchorParent = rootRect != null ? rootRect : GetComponent<RectTransform>();
+        if (anchorParent == null)
+            return;
+
+        GameObject containerObject = new GameObject("RewardTooltipContainerBelow", typeof(RectTransform), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
+        containerObject.transform.SetParent(anchorParent, false);
+
+        RectTransform containerRect = containerObject.GetComponent<RectTransform>();
+        containerRect.anchorMin = new Vector2(0.5f, 0f);
+        containerRect.anchorMax = new Vector2(0.5f, 0f);
+        containerRect.pivot = new Vector2(0.5f, 1f);
+        containerRect.anchoredPosition = new Vector2(0f, -(anchorParent.rect.height * 0.5f + 12f));
+
+        VerticalLayoutGroup layout = containerObject.GetComponent<VerticalLayoutGroup>();
+        layout.childControlWidth = true;
+        layout.childControlHeight = true;
+        layout.childForceExpandWidth = false;
+        layout.childForceExpandHeight = false;
+        layout.spacing = 6f;
+
+        ContentSizeFitter fitter = containerObject.GetComponent<ContentSizeFitter>();
+        fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        rewardTooltipContainerBelow = containerRect;
     }
 
     private void AddStatusTooltip(EffectEntry effect, List<TooltipData> tooltips,EffectContext context = null)
@@ -391,6 +487,44 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         whiteOverlay.gameObject.SetActive(false);
     }
 
+    public IEnumerator PlayExhaustAnimation()
+    {
+        if (whiteOverlay != null)
+        {
+            whiteOverlay.gameObject.SetActive(true);
+        }
+
+        float duration = 0.2f;
+        float elapsed = 0f;
+        Vector3 startScale = rootRect.localScale;
+        Color startOverlayColor = whiteOverlay != null ? whiteOverlay.color : Color.white;
+        float startAlpha = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+
+            float xScale = Mathf.Lerp(startScale.x, 0, t);
+            float yScale = Mathf.Lerp(startScale.y, startScale.y * 2f, t);
+            rootRect.localScale = new Vector3(xScale, yScale, startScale.z);
+
+            if (whiteOverlay != null)
+            {
+                whiteOverlay.color = new Color(startOverlayColor.r, startOverlayColor.g, startOverlayColor.b, Mathf.Lerp(startAlpha, 1f, t));
+            }
+
+            yield return null;
+        }
+
+        rootRect.localScale = new Vector3(0f, startScale.y * 2f, startScale.z);
+
+        if (whiteOverlay != null)
+        {
+            whiteOverlay.color = new Color(startOverlayColor.r, startOverlayColor.g, startOverlayColor.b, 1f);
+        }
+    }
+
     public void SetWithCollectionCard(CardInstance card)
     {
         if (card.data.collectionCard==null||card.data.collectionCard.sprite==null)
@@ -408,7 +542,7 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         else
         {
             //nameText.text+= "\n<i><color=grey>" + (card.data.collectionCard != null && card.data.collectionCard.cardName != card.data.cardName ? card.data.collectionCard.cardName : "")+ "</color></i>";
-            if (card.data.collectionCard.cardName==card.data.cardName)
+            if (card.data.collectionCard.cardName==card.displayName)
             {
                 nameText.text = "";
             }

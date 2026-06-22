@@ -6,7 +6,7 @@
   "cost": 1,
   "xCost": false,
   "type": "Attaque",
-  "rarity": "Rare",
+  "rarity": "Common",
   "targetingMode": "Enemy",
   "effects": [
     {
@@ -27,7 +27,7 @@
       "cardSelectionEffect": "None"
     },
     {
-      "type": "AddRandomCardToHand",
+      "type": "AddRandomCard",
       "value": 1,
       "targetSelf": true,
       "targetOthers": false,
@@ -40,7 +40,9 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
-      "cardFilterTags": [],
+      "cardFilterTags": [
+        "Atom"
+      ],
       "cardSelectionEffect": "None"
     }
   ],

@@ -22,7 +22,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     {
         combat = cm;
         target = t;
-        Sprite sprite=Resources.Load<Sprite>("STS/Characters/" + target.name);
+        Sprite sprite=Resources.Load<Sprite>("STS/Characters/" + (target.isPlayer?target.name:((Enemy)target).data.enemyName));
         if (sprite != null)
         {
             image.gameObject.SetActive(true);

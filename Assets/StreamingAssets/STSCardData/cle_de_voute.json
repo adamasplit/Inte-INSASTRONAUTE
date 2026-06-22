@@ -1,0 +1,35 @@
+{
+  "id": "cle_de_voute",
+  "cardName": "Clé de voûte",
+  "collectionCardId": "",
+  "iconId": "voute",
+  "cost": 1,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Brand",
+      "duration": 4,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "AI",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

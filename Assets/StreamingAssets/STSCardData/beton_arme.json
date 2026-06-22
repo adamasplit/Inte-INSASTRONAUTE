@@ -12,7 +12,7 @@
     {
       "type": "Status",
       "value": 0,
-      "targetSelf": false,
+      "targetSelf": true,
       "targetOthers": false,
       "statusType": "Shielding",
       "duration": 3,
@@ -29,7 +29,7 @@
     {
       "type": "Status",
       "value": 3,
-      "targetSelf": false,
+      "targetSelf": true,
       "targetOthers": false,
       "statusType": "Thorns",
       "duration": 3,
@@ -44,13 +44,7 @@
       "cardSelectionEffect": "None"
     }
   ],
-  "modifiers": [
-    {
-      "type": "StatusDuration",
-      "kind": "Played",
-      "value": 1
-    }
-  ],
+  "modifiers": [],
   "favoredCharacter": "GC",
   "animationSpeed": 1.0,
   "startingCount": 0,

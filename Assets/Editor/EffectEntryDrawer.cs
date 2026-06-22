@@ -24,6 +24,9 @@ public class EffectEntryDrawer : PropertyDrawer
         var conditionValueProp = property.FindPropertyRelative("conditionValue");
         var trueEffectProp = property.FindPropertyRelative("trueEffect");
         var cardIDProp = property.FindPropertyRelative("cardID");
+        var cardSelectionSourceProp = property.FindPropertyRelative("cardSelectionSource");
+        var cardFilterTagsProp = property.FindPropertyRelative("cardFilterTags");
+        var cardSelectionEffectProp = property.FindPropertyRelative("cardSelectionEffect");
 
         // TYPE
         EditorGUI.PropertyField(
@@ -92,12 +95,35 @@ public class EffectEntryDrawer : PropertyDrawer
                 cardIDProp);
             y += lineHeight + spacing;
         }
-        if ((EffectType)typeProp.enumValueIndex == EffectType.AddCardToHand|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDrawPile|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDiscardPile)
+        if ((EffectType)typeProp.enumValueIndex == EffectType.SetStatusToMaxValue)
+        {
+            EditorGUI.PropertyField(
+                new Rect(position.x, y, position.width, lineHeight),
+                statusTypeProp);
+            y += lineHeight + spacing;
+        }
+        if ((EffectType)typeProp.enumValueIndex == EffectType.AddCardToHand|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDrawPile|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDiscardPile|| (EffectType)typeProp.enumValueIndex == EffectType.ForceNextCard)
         {
             EditorGUI.PropertyField(
                 new Rect(position.x, y, position.width, lineHeight),
                 cardIDProp);
             y += lineHeight + spacing;
+        }
+        if ((EffectType)typeProp.enumValueIndex == EffectType.AddRandomCard)
+        {
+            EditorGUI.PropertyField(
+                new Rect(position.x, y, position.width, lineHeight),
+                cardSelectionSourceProp,
+                new GUIContent("Destination"));
+            y += lineHeight + spacing;
+
+            float tagsHeight = EditorGUI.GetPropertyHeight(cardFilterTagsProp, true);
+            EditorGUI.PropertyField(
+                new Rect(position.x, y, position.width, tagsHeight),
+                cardFilterTagsProp,
+                new GUIContent("Card Filters"),
+                true);
+            y += tagsHeight + spacing;
         }
         if ((EffectType)typeProp.enumValueIndex == EffectType.StealBuff || (EffectType)typeProp.enumValueIndex == EffectType.TransferDebuff || (EffectType)typeProp.enumValueIndex == EffectType.DispelBuff || (EffectType)typeProp.enumValueIndex == EffectType.DispelDebuff)
         {
@@ -123,23 +149,25 @@ public class EffectEntryDrawer : PropertyDrawer
         }
         if ((EffectType)typeProp.enumValueIndex == EffectType.CardSelection)
         {
-            var cardSelectionSourceProp = property.FindPropertyRelative("cardSelectionSource");
-            var cardFilterTagsProp = property.FindPropertyRelative("cardFilterTags");
-            var cardSelectionEffectProp = property.FindPropertyRelative("cardSelectionEffect");
-
             EditorGUI.PropertyField(
                 new Rect(position.x, y, position.width, lineHeight),
                 cardSelectionSourceProp);
             y += lineHeight + spacing;
 
+            float tagsHeight = EditorGUI.GetPropertyHeight(cardFilterTagsProp, true);
             EditorGUI.PropertyField(
-                new Rect(position.x, y, position.width, lineHeight),
-                cardFilterTagsProp);
-            y += lineHeight + spacing*30;
+                new Rect(position.x, y, position.width, tagsHeight),
+                cardFilterTagsProp,
+                true);
+            y += tagsHeight + spacing;
 
             EditorGUI.PropertyField(
                 new Rect(position.x, y, position.width, lineHeight),
                 cardSelectionEffectProp);
+            y += lineHeight + spacing;
+            EditorGUI.PropertyField(
+                new Rect(position.x, y, position.width, lineHeight),
+                durationProp);
             y += lineHeight + spacing;
         }
 
@@ -153,32 +181,44 @@ public class EffectEntryDrawer : PropertyDrawer
 
         var typeProp = property.FindPropertyRelative("type");
         var conditionalProp = property.FindPropertyRelative("conditional");
-        int lines = 6; // type + value + targetSelf + description+ conditional
+        float height = 6 * (lineHeight + spacing); // type + value + targetSelf + description + conditional
 
         if ((EffectType)typeProp.enumValueIndex == EffectType.Status)
         {
-            lines += 4; // header + statusType + duration
+            height += 4 * (lineHeight + spacing); // header + statusType + duration + cardID
+        }
+        if ((EffectType)typeProp.enumValueIndex == EffectType.SetStatusToMaxValue)
+        {
+            height += lineHeight + spacing; // statusType
         }
         if ((EffectType)typeProp.enumValueIndex == EffectType.Multihit)
         {
-            lines += 1; // duration for multihit
+            height += lineHeight + spacing; // duration for multihit
         }
         if ((EffectType)typeProp.enumValueIndex == EffectType.AddCardToHand|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDrawPile|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDiscardPile|| (EffectType)typeProp.enumValueIndex == EffectType.ForceNextCard)
         {
-            lines += 1; // cardID for AddCardToHand and other similar effects
+            height += lineHeight + spacing; // cardID for AddCardToHand and other similar effects
+        }
+        if ((EffectType)typeProp.enumValueIndex == EffectType.AddRandomCard)
+        {
+            height += lineHeight + spacing;
+            height += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("cardFilterTags"), true) + spacing;
         }
         if ((EffectType)typeProp.enumValueIndex == EffectType.StealBuff || (EffectType)typeProp.enumValueIndex == EffectType.TransferDebuff||(EffectType)typeProp.enumValueIndex == EffectType.DispelBuff || (EffectType)typeProp.enumValueIndex == EffectType.DispelDebuff)
         {
-            lines += 2; // trueEffect for StealBuff, TransferDebuff, DispelBuff and DispelDebuff
+            height += 2 * (lineHeight + spacing); // trueEffect + duration
         }
         if ((EffectType)typeProp.enumValueIndex == EffectType.CardSelection)
         {
-            lines += 6; // cardSelectionSource + cardFilterTags + cardSelectionEffect + (potentially more for cardFilterTags if we wanted to display them individually)
+            height += lineHeight + spacing;
+            height += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("cardFilterTags"), true) + spacing;
+            height += lineHeight + spacing;
+            height += lineHeight + spacing; // cardSelectionSource + cardSelectionEffect
         }
         if (conditionalProp.boolValue)
         {
-            lines += 2; // conditionType + conditionValue
+            height += 2 * (lineHeight + spacing); // conditionType + conditionValue
         }
-        return lines * (lineHeight + spacing);
+        return height;
     }
 }

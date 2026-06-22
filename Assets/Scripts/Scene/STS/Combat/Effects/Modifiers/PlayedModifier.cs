@@ -9,13 +9,13 @@ public class PlayedModifier : StatModifier
 
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {
-        return base.AppliesTo(stat, ctx) && (ctx!=null && ctx.state!=null && ctx.state.cardsPlayedThisTurn > 0);
+        return base.AppliesTo(stat, ctx) && (ctx!=null && ctx.state!=null && ctx.state.cardsPlayedThisTurn.Count > 0);
     }
     public override int Modify(int value, EffectContext ctx)
     {
         if (ctx.state==null)
             return value;
-        return value + ctx.state.cardsPlayedThisTurn * perCard;
+        return value + ctx.state.cardsPlayedThisTurn.Count * perCard;
     }
     public override string Describe()
     {

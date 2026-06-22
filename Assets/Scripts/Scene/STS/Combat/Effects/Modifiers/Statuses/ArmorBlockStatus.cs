@@ -25,8 +25,8 @@ public class ArmorBlockStatus : StatusEffect
     {
         if (isPlayer)
         {
-            return $"Vous ne pouvez plus gagner d'armure pendant {Duration} tours.";
+            return $"Vous ne pouvez plus gagner d'armure pendant {Duration} tour"+(Duration>1?"s":"");
         }
-        return $"La cible ne peut plus gagner d'armure pendant {Duration} tours.";
+        return $"La cible ne peut plus gagner d'armure pendant {Duration} tour"+(Duration>1?"s":"");
     }
 }

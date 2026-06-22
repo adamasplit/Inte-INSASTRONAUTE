@@ -21,6 +21,13 @@ public class DeckGridPanel : MonoBehaviour
     public Button closeButton;
     public CanvasGroup panelCanvasGroup;
 
+    [Header("Animation")]
+    [SerializeField] private float entranceDuration = 0.25f;
+    [SerializeField] private float entranceOffset = 180f;
+
+    [Header("Content Padding")]
+    [SerializeField] private float contentPadding = 48f;
+
     private CardGridItemView selectedItemView;
     private GameObject animatingCardObj;
     private bool isAnimating = false;
@@ -208,8 +215,32 @@ public class DeckGridPanel : MonoBehaviour
             height += Mathf.Max(0, rows - 1) * gridLayout.spacing.y;
         }
 
+        height += contentPadding * 2f;
+
         gridContainerRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
         Canvas.ForceUpdateCanvases();
+
+        yield return AnimateGridEntrance(gridContainerRect);
+    }
+
+    private IEnumerator AnimateGridEntrance(RectTransform gridContainerRect)
+    {
+        Vector2 targetPosition = gridContainerRect.anchoredPosition;
+        Vector2 startPosition = targetPosition + Vector2.down * Mathf.Max(entranceOffset, gridContainerRect.rect.height * 0.5f);
+
+        gridContainerRect.anchoredPosition = startPosition;
+
+        float elapsed = 0f;
+        while (elapsed < entranceDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / entranceDuration);
+            float eased = t * t * (3f - 2f * t);
+            gridContainerRect.anchoredPosition = Vector2.LerpUnclamped(startPosition, targetPosition, eased);
+            yield return null;
+        }
+
+        gridContainerRect.anchoredPosition = targetPosition;
     }
 
     private int GetColumnCount(RectTransform gridContainerRect, int itemCount)

@@ -6,7 +6,7 @@
   "cost": 1,
   "xCost": false,
   "type": "Pouvoir",
-  "rarity": "Legendary",
+  "rarity": "Rare",
   "targetingMode": "AllCharacters",
   "effects": [
     {

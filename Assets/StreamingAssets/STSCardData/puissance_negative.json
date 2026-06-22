@@ -31,7 +31,9 @@
     {
       "type": "Damage",
       "kind": "LostHP",
-      "value": 2
+      "value": 2,
+      "info": "",
+      "description": ""
     }
   ],
   "favoredCharacter": "MECA",

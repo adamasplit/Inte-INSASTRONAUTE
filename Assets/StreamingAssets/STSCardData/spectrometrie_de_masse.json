@@ -6,7 +6,7 @@
   "cost": 3,
   "xCost": false,
   "type": "Attaque",
-  "rarity": "Epic",
+  "rarity": "Uncommon",
   "targetingMode": "AllEnemies",
   "effects": [
     {

@@ -10,5 +10,8 @@ public enum CardFilterTag
     Cost0,
     Cost1,
     Cost2,
-    Cost3Plus
+    Cost3Plus,
+    Atom,
+    Molecule,
+    Norm
 }

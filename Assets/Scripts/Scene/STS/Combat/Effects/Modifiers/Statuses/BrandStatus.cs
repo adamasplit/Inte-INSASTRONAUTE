@@ -12,6 +12,7 @@ public class BrandStatus:StatusEffect
         framed=true;
         modifierType = ModifierType.Additive;
     }
+    
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {
         return stat == StatType.Damage && ctx.target.statusEffects.Contains(this);

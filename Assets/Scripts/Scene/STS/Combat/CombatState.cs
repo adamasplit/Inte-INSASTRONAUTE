@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 public class CombatState
 {
+    public int turnCount=0;
     public List<StatModifier> modifiers = new();
 
     public List<StatModifier> GetModifiers(StatType type)
@@ -9,22 +10,29 @@ public class CombatState
     }
 
     public int cardsDiscardedThisCombat;
-    public int cardsPlayedThisTurn;
+    
     public int energySpentThisTurn;
     public Dictionary<Character, int> damageDealtThisCombat = new();
+    public Dictionary<Character, int> hpLostSinceLastTurn = new();
     public bool playerLastTurn;
     public bool killingBlow;
     public bool armorBroken;
-
+    public List<CardInstance> cardsPlayedThisCombat = new();
+    public List<CardInstance> cardsPlayedThisTurn = new();
     public void ResetActionFlags()
     {
         killingBlow = false;
         armorBroken = false;
     }
-    public void ResetTurnFlags(Character character)
+    public void ResetTurnStartFlags(Character character)
     {
-        cardsPlayedThisTurn = 0;
+        turnCount++;
+        cardsPlayedThisTurn.Clear();
         energySpentThisTurn = 0;
         playerLastTurn = character.isPlayer;
+    }
+    public void ResetTurnEndFlags(Character character)
+    {
+        hpLostSinceLastTurn[character] = 0;
     }
 }
