@@ -39,6 +39,15 @@ public class StatusUI : MonoBehaviour
         if (tooltipVisible)
         {
             TooltipManager.Instance.ShowTooltip(statusName, description, transform.position);
+            if (BoundStatus!=null&&BoundStatus is FollowUpStatus followUpStatus)
+            {
+                STSCardData data = followUpStatus.GetCardData();
+                if (data != null)                
+                {
+                    CardInstance tempCard = new CardInstance(data);
+                    TooltipManager.Instance.ShowTooltip(data.cardName,tempCard.GetDescription(), transform.position + new Vector3(0, -100, 0));
+                }
+            }
         }
         else
         {

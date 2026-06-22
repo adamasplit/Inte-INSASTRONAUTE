@@ -3,7 +3,7 @@
   "cardName": "Inversion de matrice",
   "collectionCardId": "GM",
   "iconId": "Coups",
-  "cost": 1,
+  "cost": 0,
   "xCost": false,
   "type": "Attaque",
   "rarity": "Common",

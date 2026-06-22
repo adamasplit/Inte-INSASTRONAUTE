@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: ultravibration
+  m_Name: inondation
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: ultravibration
-  cardName: Ultravibration
+  id: inondation
+  cardName: Inondation
   collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: cbc74e4d59119fa47adf459be71db12d, type: 2}
-  icon: {fileID: 21300000, guid: d9055ca2f7c8a7945ab45a7c7d6d45fa, type: 3}
+  collectionCard: {fileID: 0}
+  icon: {fileID: 0}
   cost: 0
   xCost: 0
   type: 0
-  rarity: 1
+  rarity: 0
   effects:
   - type: 0
-    value: 15
+    value: 12
     targetSelf: 0
     targetOthers: 0
     statusType: 0
@@ -37,8 +37,8 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-  - type: 0
-    value: 5
+  - type: 2
+    value: 4
     targetSelf: 1
     targetOthers: 0
     statusType: 0
@@ -52,9 +52,9 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-  targetingMode: 2
+  targetingMode: 3
   modifiers: []
-  favoredCharacter: 1
+  favoredCharacter: 5
   animationSpeed: 1
-  startingCount: 1
+  startingCount: 0
   tags: 

@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Amalgame
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 7cea5e24abf8dfc408a7ee0cc04ea114, type: 3}
   cost: 0
   xCost: 0
   type: 2

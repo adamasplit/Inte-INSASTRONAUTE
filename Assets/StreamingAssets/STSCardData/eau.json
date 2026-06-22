@@ -1,18 +1,18 @@
 {
-  "id": "raffinage",
-  "cardName": "Raffinage",
+  "id": "eau",
+  "cardName": "Eau",
   "collectionCardId": "",
-  "iconId": "spirale2",
+  "iconId": "purge",
   "cost": 1,
   "xCost": false,
-  "type": "Pouvoir",
-  "rarity": "Epic",
-  "targetingMode": "Player",
+  "type": "Attaque",
+  "rarity": "Legendary",
+  "targetingMode": "Enemy",
   "effects": [
     {
-      "type": "CardSelection",
-      "value": -1,
-      "targetSelf": true,
+      "type": "Damage",
+      "value": 1,
+      "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
@@ -22,21 +22,19 @@
       "conditionType": "KillingBlow",
       "conditionValue": "",
       "trueEffect": false,
-      "cardSelectionSource": "All",
-      "cardFilterTags": [
-        "Skill"
-      ],
-      "cardSelectionEffect": "Exhaust"
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
     },
     {
-      "type": "AddCardToDrawPile",
-      "value": 1,
+      "type": "Heal",
+      "value": 0,
       "targetSelf": true,
       "targetOthers": false,
-      "statusType": "Strength",
-      "duration": 0,
-      "description": "",
-      "cardID": "Amalgame",
+      "statusType": "Burn",
+      "duration": 4,
+      "description": "Regagnez des PV égaux aux dégâts infligés.",
+      "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
@@ -46,9 +44,20 @@
       "cardSelectionEffect": "None"
     }
   ],
-  "modifiers": [],
+  "modifiers": [
+    {
+      "type": "Heal",
+      "kind": "DamageDealtWithLastAction",
+      "value": 1,
+      "info": "",
+      "description": " "
+    }
+  ],
   "favoredCharacter": "CFI",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": []
+  "tags": [
+    "Molecule",
+    "Created"
+  ]
 }

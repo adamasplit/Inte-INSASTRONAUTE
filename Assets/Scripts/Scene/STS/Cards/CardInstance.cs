@@ -61,8 +61,15 @@ public class CardInstance
         return cost;
     }
 
-    public string GetDescription(EffectContext ctx)
+    public string GetDescription(EffectContext ctx=null)
     {
+        if (ctx == null)
+        {
+            ctx = new EffectContext();
+            ctx.source = null;
+            ctx.target = null;
+            ctx.combat = null;
+        }
         string text = "";
         switch (targetingMode)
         {

@@ -166,7 +166,8 @@ public static class EffectResolver
             {
                 if (ctx.isPreview)
                     yield break; // Skip actual healing during preview
-                ctx.target.Heal(effect.value);
+                int value= BattleCalculator.GetModifiedValue(effect.value, StatType.Heal, ctx);
+                ctx.target.Heal(value);
                 yield break;
             }
             case EffectType.Status:

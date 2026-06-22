@@ -17,12 +17,14 @@ public class CombatState
     public bool playerLastTurn;
     public bool killingBlow;
     public bool armorBroken;
+    public int damageDealtWithLastAction;
     public List<CardInstance> cardsPlayedThisCombat = new();
     public List<CardInstance> cardsPlayedThisTurn = new();
     public void ResetActionFlags()
     {
         killingBlow = false;
         armorBroken = false;
+        damageDealtWithLastAction = 0;
     }
     public void ResetTurnStartFlags(Character character)
     {

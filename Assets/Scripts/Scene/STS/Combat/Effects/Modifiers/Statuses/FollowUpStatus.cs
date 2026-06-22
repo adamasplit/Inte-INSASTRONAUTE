@@ -4,6 +4,15 @@ public abstract class FollowUpStatus:StatusEffect
 {
     protected int moveIndex=0;
     protected bool randomCard=false;
+    protected STSCardData cardData=null;
+    public STSCardData GetCardData()
+    {
+        if (randomCard)
+        {
+            return null;
+        }
+        return cardData;
+    }
     public FollowUpStatus(int value,int duration,string effectInfo="")
     {
         Duration = -1;
@@ -13,20 +22,20 @@ public abstract class FollowUpStatus:StatusEffect
         debuff=false;
         buff=true;
         framed=true;
-        STSCardData data=null;
+        cardData=null;
         if (effectInfo!=""&&effectInfo!=null)
         {
-            data = STSCardDatabase.Get(effectInfo);
+            cardData = STSCardDatabase.Get(effectInfo);
         }
-        if (data == null) 
+        if (cardData == null) 
         {
             randomCard=true;
             Name = "Carte aléatoire";
         }
         else
         {
-            Name = data.cardName;
-            if (data.HasTag(CardTag.Status) || data.HasTag(CardTag.Curse))
+            Name = cardData.cardName;
+            if (cardData.HasTag(CardTag.Status) || cardData.HasTag(CardTag.Curse))
             {
                 buff=false;
                 debuff=true;
@@ -39,10 +48,9 @@ public abstract class FollowUpStatus:StatusEffect
         {
             return "Random";
         }
-        STSCardData data = STSCardDatabase.Get(Name);
-        if (data != null&&data.icon!=null)
+        if (cardData != null&&cardData.icon!=null)
         {
-            return data.icon.name;
+            return cardData.icon.name;
         }
         return base.IconPath();
     }

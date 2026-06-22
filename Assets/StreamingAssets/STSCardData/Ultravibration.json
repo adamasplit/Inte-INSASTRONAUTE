@@ -7,7 +7,7 @@
   "xCost": false,
   "type": "Attaque",
   "rarity": "Uncommon",
-  "targetingMode": "AllCharacters",
+  "targetingMode": "AllEnemies",
   "effects": [
     {
       "type": "Damage",
@@ -27,7 +27,7 @@
       "cardSelectionEffect": "None"
     },
     {
-      "type": "Heal",
+      "type": "Damage",
       "value": 5,
       "targetSelf": true,
       "targetOthers": false,

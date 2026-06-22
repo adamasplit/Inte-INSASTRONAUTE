@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: "Electromagn\xE9tisme"
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 21300000, guid: ffb9cb11c2601c54787b16487d1fb3f9, type: 3}
+  icon: {fileID: 21300000, guid: 5991566daf28b794cb895a7d0dbf838c, type: 3}
   cost: 1
   xCost: 0
   type: 1

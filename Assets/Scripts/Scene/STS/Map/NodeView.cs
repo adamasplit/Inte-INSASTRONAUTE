@@ -58,6 +58,10 @@ public class NodeView : MonoBehaviour
     {
         var spritePath = $"STS/Map/NodeNeon{((int)node.type) + 1}";
         icon.sprite = Resources.Load<Sprite>(spritePath);
+        if (node.type==NodeType.Boss)
+        {
+            transform.localScale = Vector3.one * 1.5f; // Scale up boss nodes
+        }
         if (icon.sprite == null)
         {
             Debug.LogWarning($"Icon sprite not found for node type {node.type} at path '{spritePath}'.");

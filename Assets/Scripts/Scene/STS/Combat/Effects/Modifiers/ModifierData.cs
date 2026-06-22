@@ -48,6 +48,8 @@ public class ModifierData
                 return new ArmorOnTargetModifier(type, value);
             case ModifierKind.HPLostSinceLastTurn:
                 return new HPLostSinceLastTurnModifier(type, value);
+            case ModifierKind.DamageDealtWithLastAction:
+                return new DamageDealtWithLastActionModifier(type, value);
             default:
                 throw new System.Exception("Unknown modifier kind: " + kind);
         }

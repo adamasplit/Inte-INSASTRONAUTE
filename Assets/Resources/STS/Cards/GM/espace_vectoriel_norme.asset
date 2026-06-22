@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: "Espace vectoriel norm\xE9"
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 1ad584b7fe3d69641b771f0233ccc49c, type: 3}
   cost: 1
   xCost: 0
   type: 1

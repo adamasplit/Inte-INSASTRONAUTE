@@ -2,7 +2,7 @@
   "id": "espace_vectoriel_norme",
   "cardName": "Espace vectoriel normé",
   "collectionCardId": "",
-  "iconId": null,
+  "iconId": "triangulation",
   "cost": 1,
   "xCost": false,
   "type": "Compétence",

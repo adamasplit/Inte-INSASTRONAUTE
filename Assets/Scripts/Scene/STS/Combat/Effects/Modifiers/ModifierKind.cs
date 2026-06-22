@@ -14,5 +14,6 @@ public enum ModifierKind
     TargetLostHP,
     TimeUntilNextTurn,
     ArmorOnTarget,
-    HPLostSinceLastTurn
+    HPLostSinceLastTurn,
+    DamageDealtWithLastAction
 }

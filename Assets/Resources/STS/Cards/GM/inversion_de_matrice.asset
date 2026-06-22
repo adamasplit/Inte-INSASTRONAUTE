@@ -17,7 +17,7 @@ MonoBehaviour:
   collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 9c002dd119d6cd54d8ad94b6254784ef, type: 2}
   icon: {fileID: 21300000, guid: 53770f7c52348c641bb46c1fb020948c, type: 3}
-  cost: 1
+  cost: 0
   xCost: 0
   type: 0
   rarity: 0

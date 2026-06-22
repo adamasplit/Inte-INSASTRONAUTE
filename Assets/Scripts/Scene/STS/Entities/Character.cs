@@ -36,14 +36,22 @@ public class Character
     public DamageInfo TakeDamage(int amount, bool ignoreArmor=false)
     {
         var info = new DamageInfo();
+        if (combat!=null&& combat.state!=null)
+        {
+            Debug.Log($"{name} is taking {amount} damage. Current HP: {currentHP}, Armor: {armor}, Ignore Armor: {ignoreArmor}");
+            combat.state.damageDealtWithLastAction+= amount;
+        }
         if (ignoreArmor)
         {
             currentHP = Mathf.Max(0, currentHP - amount);
-            if (!combat.state.hpLostSinceLastTurn.ContainsKey(this))
+            if (combat != null && combat.state != null)
             {
-                combat.state.hpLostSinceLastTurn[this] = 0;
+                if (!combat.state.hpLostSinceLastTurn.ContainsKey(this))
+                {
+                    combat.state.hpLostSinceLastTurn[this] = 0;
+                }
+                combat.state.hpLostSinceLastTurn[this] += amount;
             }
-            combat.state.hpLostSinceLastTurn[this] += amount;
             info.amount = amount;
             if (currentHP == 0)
             {
@@ -57,13 +65,16 @@ public class Character
             int startingArmor = armor;
             int damageAfterArmor = Mathf.Max(0, amount - armor);
             armor = Mathf.Max(0, armor - amount);
-            if (combat.state.hpLostSinceLastTurn.ContainsKey(this))
+            if (combat != null && combat.state != null)
             {
-                combat.state.hpLostSinceLastTurn[this] += damageAfterArmor;
-            }
-            else
-            {
-                combat.state.hpLostSinceLastTurn[this] = damageAfterArmor;
+                if (combat.state.hpLostSinceLastTurn.ContainsKey(this))
+                {
+                    combat.state.hpLostSinceLastTurn[this] += damageAfterArmor;
+                }
+                else
+                {
+                    combat.state.hpLostSinceLastTurn[this] = damageAfterArmor;
+                }
             }
             currentHP = Mathf.Max(0, currentHP - damageAfterArmor);
             if (currentHP == 0)

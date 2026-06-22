@@ -32,8 +32,8 @@
       "type": "Damage",
       "kind": "LostHP",
       "value": 2,
-      "info": "",
-      "description": ""
+      "info": null,
+      "description": null
     }
   ],
   "favoredCharacter": "Impossible",

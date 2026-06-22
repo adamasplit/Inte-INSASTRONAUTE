@@ -2,7 +2,7 @@
   "id": "recurrence",
   "cardName": "Récurrence",
   "collectionCardId": "",
-  "iconId": null,
+  "iconId": "iter",
   "cost": 0,
   "xCost": false,
   "type": "Rien",

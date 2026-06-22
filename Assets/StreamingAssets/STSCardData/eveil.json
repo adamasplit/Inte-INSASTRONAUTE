@@ -20,7 +20,7 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": "",
+      "conditionValue": null,
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "cardFilterTags": [],

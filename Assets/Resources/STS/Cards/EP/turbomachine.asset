@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Turbomachine
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 21300000, guid: ab5f283f4cc4b394ca57fd8e60cc979c, type: 3}
+  icon: {fileID: 21300000, guid: 84760d6aa05b4b8479b679b120c94085, type: 3}
   cost: 2
   xCost: 0
   type: 2

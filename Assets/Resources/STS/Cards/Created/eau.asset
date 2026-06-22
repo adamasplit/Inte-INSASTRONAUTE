@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: ultravibration
+  m_Name: eau
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: ultravibration
-  cardName: Ultravibration
+  id: eau
+  cardName: Eau
   collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: cbc74e4d59119fa47adf459be71db12d, type: 2}
-  icon: {fileID: 21300000, guid: d9055ca2f7c8a7945ab45a7c7d6d45fa, type: 3}
-  cost: 0
+  collectionCard: {fileID: 0}
+  icon: {fileID: 21300000, guid: 3b9afd9b2eedea241961a4d734bc7314, type: 3}
+  cost: 1
   xCost: 0
   type: 0
-  rarity: 1
+  rarity: 4
   effects:
   - type: 0
-    value: 15
+    value: 1
     targetSelf: 0
     targetOthers: 0
     statusType: 0
@@ -37,13 +37,13 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-  - type: 0
-    value: 5
+  - type: 2
+    value: 0
     targetSelf: 1
     targetOthers: 0
-    statusType: 0
-    duration: 0
-    description: 
+    statusType: 20
+    duration: 4
+    description: "Regagnez des PV \xE9gaux aux d\xE9g\xE2ts inflig\xE9s."
     cardID: 
     conditional: 0
     conditionType: 0
@@ -52,9 +52,14 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-  targetingMode: 2
-  modifiers: []
-  favoredCharacter: 1
+  targetingMode: 1
+  modifiers:
+  - type: 2
+    kind: 15
+    value: 1
+    info: 
+    description: ' '
+  favoredCharacter: 4
   animationSpeed: 1
-  startingCount: 1
-  tags: 
+  startingCount: 0
+  tags: 0f00000006000000
