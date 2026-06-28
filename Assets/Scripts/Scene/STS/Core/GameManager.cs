@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
         try
         {
             await STSCardDatabase.LoadAsync();
+            await EnemyDataDatabase.LoadAsync();
             TestDatabase.Init();
             SetupGame();
             ui.Init(combat);
@@ -105,7 +106,7 @@ public class GameManager : MonoBehaviour
         {
             combat.allies.Add(RunManager.Instance.player);
             List<EnemyData> enemies = EnemySelector.GetRandomEncounter(RunManager.Instance.currentFloor, RunManager.Instance.eliteEncounter, RunManager.Instance.bossEncounter);
-            combat.enemies = enemies.Select(e => (Character)new Enemy(e.enemyName) { data = e }).ToList();
+            combat.enemies = enemies.Select(e => (Character)new Enemy(e.enemyName)).ToList();
             combat.deck = new DeckManager();
             foreach (CardInstance card in RunManager.Instance.deck)
             {

@@ -1,0 +1,21 @@
+{
+  "id": "Griever",
+  "enemyName": "Griever",
+  "displayName": null,
+  "maxHP": 99,
+  "randomStart": false,
+  "patternCardIds": [
+    "gravitron",
+    "vol",
+    "soutien_du_bde",
+    "pulsar_a_ondes"
+  ],
+  "movePattern": [],
+  "rewardCardIds": [
+    "pulsar_a_ondes"
+  ],
+  "startingStatus": "Strength",
+  "startingStatusDuration": 0,
+  "startingStatusValue": 0,
+  "startingStatusInfo": ""
+}

@@ -74,19 +74,19 @@ public class CardInstance
         switch (targetingMode)
         {
             case TargetingMode.Player:
-                text += "<color=green>(Vous)</color> :\n";
+                text += "<color=green>(Soi-même)</color> :\n";
                 break;
             case TargetingMode.Enemy:
-                text += "<color=red>(Ennemi)</color> :\n";
+                text += "<color=red>(Adversaire)</color> :\n";
                 break;
             case TargetingMode.AllCharacters:
                 text += "<color=blue>(Tous les personnages)</color> :\n";
                 break;
             case TargetingMode.AllEnemies:
-                text += "<color=red>(Tous les ennemis)</color> :\n";
+                text += "<color=red>(Tous les adversaires)</color> :\n";
                 break;
             case TargetingMode.RandomEnemy:
-                text += "<color=red>(Ennemi aléatoire)</color> :\n";
+                text += "<color=red>(Adversaire aléatoire)</color> :\n";
                 break;
         }
         foreach (var e in GetEffects())
@@ -166,14 +166,17 @@ public class CardInstance
         return mods;
     }
 
-    public List<EffectEntry> GetEffects()
+    public List<EffectEntry> GetEffects(bool includeEnchantments=true,bool includeAdded=true)
     {
         List<EffectEntry> effects = new();
         effects.AddRange(data.effects);
         effects.AddRange(addedEffects);
-        foreach (var enchantment in enchantments)
+        if (includeEnchantments)
         {
-            effects.AddRange(enchantment.GetEffects());
+            foreach (var enchantment in enchantments)
+            {
+                effects.AddRange(enchantment.GetEffects());
+            }
         }
         return effects;
     }
@@ -270,16 +273,16 @@ public class CardInstance
             {
                 merged.targetingMode = TargetingMode.Enemy;
             }
-            foreach (var mod in card.GetModifiers())
+            foreach (var mod in card.GetModifiers(false, true))
             {
-                if (!merged.GetModifiers().Contains(mod))
+                if (!merged.GetModifiers(false, true).Contains(mod))
                 {
                     merged.addedModifiers.Add(mod);
                 }
             }
-            foreach (var effect in card.GetEffects())
+            foreach (var effect in card.GetEffects(false, true))
             {
-                if (!merged.GetEffects().Contains(effect))
+                if (!merged.GetEffects(false, true).Contains(effect))
                 {
                     merged.addedEffects.Add(effect);
                 }

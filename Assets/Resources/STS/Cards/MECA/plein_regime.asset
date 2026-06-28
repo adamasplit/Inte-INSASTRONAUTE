@@ -19,29 +19,14 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 43ad36d243cd9d440abd07dbec726212, type: 3}
   cost: 1
   xCost: 0
-  type: 1
-  rarity: 1
+  type: 2
+  rarity: 2
   effects:
-  - type: 11
-    value: 2
-    targetSelf: 1
-    targetOthers: 0
-    statusType: 0
-    duration: 0
-    description: 
-    cardID: 
-    conditional: 0
-    conditionType: 0
-    conditionValue: 
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 0
   - type: 3
-    value: 3
+    value: 1
     targetSelf: 1
     targetOthers: 0
-    statusType: 14
+    statusType: 54
     duration: 0
     description: 
     cardID: 

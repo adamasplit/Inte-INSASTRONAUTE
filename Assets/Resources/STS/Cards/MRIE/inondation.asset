@@ -16,11 +16,11 @@ MonoBehaviour:
   cardName: Inondation
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 05c3d1586939f574cb196f4c8e434cad, type: 3}
   cost: 0
   xCost: 0
   type: 0
-  rarity: 0
+  rarity: 1
   effects:
   - type: 0
     value: 12

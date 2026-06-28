@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Soldat2
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Soldat2
+  displayName: Hyoh
   maxHP: 61
   pattern:
   - {fileID: 11400000, guid: 011494d9d8058df4da536748a903afc2, type: 2}
@@ -20,6 +21,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 72d16df4bf31aca4f91961297f8635ef, type: 2}
   - {fileID: 11400000, guid: ec9f91d9136fc314385edccd7514e8a4, type: 2}
   - {fileID: 11400000, guid: d1ea40f05d81b044db2fd8ad86c7bac7, type: 2}
+  randomStart: 0
   movePattern: []
   rewardCards: []
   startingStatus: 14

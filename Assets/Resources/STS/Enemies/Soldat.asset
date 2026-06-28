@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Soldat
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Soldat
-  maxHP: 39
+  displayName: 
+  maxHP: 24
   pattern:
   - {fileID: 11400000, guid: f59f743623abecb4481b3ee07df58bc5, type: 2}
   - {fileID: 11400000, guid: 9923c9fc1db595147aba776426bbd956, type: 2}

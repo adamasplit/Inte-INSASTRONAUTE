@@ -13,6 +13,8 @@ public class RelicUpgradeRewardEntryView : RewardEntryView
             relicName.text = relicUpgradeReward.relic.namesByStage[relicUpgradeReward.stage];
             relicDescription.text = relicUpgradeReward.relic.descriptionsByStage[relicUpgradeReward.stage];
         }
+
+        UILayoutHelper.ApplyChildActualSizeAfterFrame(this, transform as UnityEngine.RectTransform, extraWidth: 20f, extraHeight: 12f);
     }
     public void ClaimRelicUpgrade()
     {

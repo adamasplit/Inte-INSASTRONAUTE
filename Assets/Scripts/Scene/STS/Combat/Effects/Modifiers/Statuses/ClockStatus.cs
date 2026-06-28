@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 public class ClockStatus : StatusEffect
 {
-    public ClockStatus()
+    public ClockStatus(int value)
     {
-        Value = 1;
+        Value = value;
         Duration = -1;
         Name = "Horloge";
         buff=true;

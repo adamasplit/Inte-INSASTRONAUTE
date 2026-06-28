@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Enemy 4
   displayName: 
-  maxHP: 61
+  maxHP: 32
   pattern:
   - {fileID: 11400000, guid: 939ba07da08ebcf4694b78e5d2c9659a, type: 2}
   - {fileID: 11400000, guid: 30750bcc4c2971c4c91efb7cbf198b56, type: 2}

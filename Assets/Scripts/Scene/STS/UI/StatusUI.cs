@@ -41,11 +41,13 @@ public class StatusUI : MonoBehaviour
             TooltipManager.Instance.ShowTooltip(statusName, description, transform.position);
             if (BoundStatus!=null&&BoundStatus is FollowUpStatus followUpStatus)
             {
+                Debug.Log($"Status {statusName} is a FollowUpStatus. Attempting to get card data for tooltip.");
                 STSCardData data = followUpStatus.GetCardData();
                 if (data != null)                
                 {
+                    Debug.Log($"FollowUpStatus has card data: {data.cardName}. Showing tooltip for the card.");
                     CardInstance tempCard = new CardInstance(data);
-                    TooltipManager.Instance.ShowTooltip(data.cardName,tempCard.GetDescription(), transform.position + new Vector3(0, -100, 0));
+                    TooltipManager.Instance.ShowTooltip(data.cardName,tempCard.GetDescription(), transform.position + new Vector3(0, -100, 0),false);
                 }
             }
         }

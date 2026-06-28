@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: "D\xE9bogage"
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: ff7453f7bfc858743b96a22d1a9cf0fe, type: 3}
   cost: 0
   xCost: 0
   type: 1

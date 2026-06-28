@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: "B\xE9ton arm\xE9"
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 21300000, guid: 2fa03572ca677d745b26c24845436c26, type: 3}
+  icon: {fileID: 21300000, guid: cee25c60d10ed5b4a8490789d29813ae, type: 3}
   cost: 2
   xCost: 0
   type: 2
@@ -42,7 +42,7 @@ MonoBehaviour:
     targetSelf: 1
     targetOthers: 0
     statusType: 35
-    duration: 3
+    duration: -1
     description: 
     cardID: 
     conditional: 0

@@ -30,6 +30,7 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        cardView.isDragging = true;
         cardView.OnPointerClick(eventData); // Ensure the card is selected 
         startPos = rect.anchoredPosition;
         transform.localScale = Vector3.one * 1.1f;
@@ -92,9 +93,10 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
         timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
         if (cardView != null)
         {
-            Debug.Log("Deselecting card and refreshing description");
+            Debug.Log("Deselecting card and refreshing description for card: " + cardView.cardInstance?.displayName);
             cardView.Deselect();
             cardView.RefreshDescription(null, false, null);
+            cardView.isDragging = false;
         }
         transform.localScale = Vector3.one;
         if (arrow != null) Destroy(arrow.gameObject);

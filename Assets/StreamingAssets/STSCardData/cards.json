@@ -360,10 +360,27 @@
           "statusType": "Strength",
           "duration": 0,
           "description": "",
-          "cardID": null,
+          "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        },
+        {
+          "type": "Status",
+          "value": -2,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Speed",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "cardFilterTags": [],
@@ -1185,7 +1202,7 @@
       "id": "spectrometrie_de_masse",
       "cardName": "Spectrométrie de masse",
       "collectionCardId": "",
-      "iconId": "Break",
+      "iconId": "lionheart",
       "cost": 3,
       "xCost": false,
       "type": "Attaque",
@@ -1465,6 +1482,45 @@
       ]
     },
     {
+      "id": "carbone",
+      "cardName": "Carbone",
+      "collectionCardId": "",
+      "iconId": "Atome",
+      "cost": 0,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Common",
+      "targetingMode": "Enemy",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Vuln",
+          "duration": 1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "CFI",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Created",
+        "Exhaust",
+        "Atom"
+      ]
+    },
+    {
       "id": "combustible",
       "cardName": "Combustible",
       "collectionCardId": "",
@@ -1523,7 +1579,7 @@
       "id": "debogage",
       "cardName": "Débogage",
       "collectionCardId": "",
-      "iconId": null,
+      "iconId": "Affliction",
       "cost": 0,
       "xCost": false,
       "type": "Compétence",
@@ -1575,6 +1631,117 @@
       ]
     },
     {
+      "id": "diamant",
+      "cardName": "Diamant",
+      "collectionCardId": "",
+      "iconId": "diamant",
+      "cost": 1,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Legendary",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 2,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        },
+        {
+          "type": "Status",
+          "value": 2,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Dexterity",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "CFI",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Molecule",
+        "Created",
+        "Exhaust"
+      ]
+    },
+    {
+      "id": "dioxygene",
+      "cardName": "Dioxygène",
+      "collectionCardId": "",
+      "iconId": "purge",
+      "cost": 1,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Common",
+      "targetingMode": "Enemy",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 4,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        },
+        {
+          "type": "Armor",
+          "value": 4,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "CFI",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Created",
+        "Molecule"
+      ]
+    },
+    {
       "id": "eau",
       "cardName": "Eau",
       "collectionCardId": "",
@@ -1582,7 +1749,7 @@
       "cost": 1,
       "xCost": false,
       "type": "Attaque",
-      "rarity": "Legendary",
+      "rarity": "Epic",
       "targetingMode": "Enemy",
       "effects": [
         {
@@ -1747,10 +1914,49 @@
       ]
     },
     {
+      "id": "fer",
+      "cardName": "Fer",
+      "collectionCardId": "",
+      "iconId": "Atome",
+      "cost": 0,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Uncommon",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "Draw",
+          "value": 1,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Weakness",
+          "duration": 1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "CFI",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Created",
+        "Exhaust",
+        "Atom"
+      ]
+    },
+    {
       "id": "frappe_industrielle",
       "cardName": "Frappe industrielle",
       "collectionCardId": "",
-      "iconId": null,
+      "iconId": "Industrie",
       "cost": 0,
       "xCost": false,
       "type": "Attaque",
@@ -1800,6 +2006,45 @@
         "Created",
         "FollowUp",
         "Exhaust"
+      ]
+    },
+    {
+      "id": "helium",
+      "cardName": "Soufre",
+      "collectionCardId": "",
+      "iconId": "Atome",
+      "cost": 0,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Epic",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Haste",
+          "duration": 1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "CFI",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Created",
+        "Exhaust",
+        "Atom"
       ]
     },
     {
@@ -2139,6 +2384,45 @@
       ]
     },
     {
+      "id": "plomb",
+      "cardName": "Plomb",
+      "collectionCardId": "",
+      "iconId": "Atome",
+      "cost": 0,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Rare",
+      "targetingMode": "Enemy",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Slow",
+          "duration": 1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "CFI",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Created",
+        "Exhaust",
+        "Atom"
+      ]
+    },
+    {
       "id": "plutonium",
       "cardName": "Plutonium",
       "collectionCardId": "",
@@ -2169,6 +2453,45 @@
       ],
       "modifiers": [],
       "favoredCharacter": "Aucun",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Created",
+        "Exhaust",
+        "Atom"
+      ]
+    },
+    {
+      "id": "polonium",
+      "cardName": "Polonium",
+      "collectionCardId": "",
+      "iconId": "Atome",
+      "cost": 0,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Legendary",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "GainEnergy",
+          "value": 1,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Weakness",
+          "duration": 1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "CFI",
       "animationSpeed": 1.0,
       "startingCount": 0,
       "tags": [
@@ -4011,7 +4334,7 @@
       "id": "beton_arme",
       "cardName": "Béton armé",
       "collectionCardId": "",
-      "iconId": "Buff",
+      "iconId": "garde",
       "cost": 2,
       "xCost": false,
       "type": "Pouvoir",
@@ -4041,7 +4364,76 @@
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Thorns",
-          "duration": 3,
+          "duration": -1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "GC",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": []
+    },
+    {
+      "id": "catapulte",
+      "cardName": "Catapulte",
+      "collectionCardId": "",
+      "iconId": "rocks",
+      "cost": 2,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Rare",
+      "targetingMode": "Enemy",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 16,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        },
+        {
+          "type": "DelayTurn",
+          "value": 7,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        },
+        {
+          "type": "DelayTurn",
+          "value": 7,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -4106,7 +4498,7 @@
       "id": "contrepoids",
       "cardName": "Contrepoids",
       "collectionCardId": "",
-      "iconId": null,
+      "iconId": "strike",
       "cost": 1,
       "xCost": false,
       "type": "Attaque",
@@ -4172,6 +4564,41 @@
           "targetOthers": false,
           "statusType": "Elastic",
           "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "GC",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": []
+    },
+    {
+      "id": "forteresse",
+      "cardName": "Forteresse",
+      "collectionCardId": "",
+      "iconId": "ultimate_shield",
+      "cost": 5,
+      "xCost": false,
+      "type": "Pouvoir",
+      "rarity": "Legendary",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "ConserveArmor",
+          "duration": -1,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -4772,7 +5199,7 @@
       "effects": [
         {
           "type": "Armor",
-          "value": 1,
+          "value": 4,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -4789,7 +5216,7 @@
         },
         {
           "type": "Damage",
-          "value": 2,
+          "value": 10,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -5227,7 +5654,7 @@
       "effects": [
         {
           "type": "Status",
-          "value": 0,
+          "value": 1,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Clock",
@@ -5236,7 +5663,7 @@
           "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "cardFilterTags": [],
@@ -5505,6 +5932,43 @@
       "tags": [
         "Exhaust",
         "Unobtainable"
+      ]
+    },
+    {
+      "id": "autodecomposition",
+      "cardName": "Autodécomposition",
+      "collectionCardId": "",
+      "iconId": null,
+      "cost": 0,
+      "xCost": false,
+      "type": "Rien",
+      "rarity": "Common",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Poison",
+          "duration": 2,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Curse"
       ]
     },
     {
@@ -5815,7 +6279,7 @@
       "id": "frappe_infinie",
       "cardName": "Frappe infinie",
       "collectionCardId": "",
-      "iconId": "Multihit",
+      "iconId": "cut",
       "cost": 0,
       "xCost": false,
       "type": "Attaque",
@@ -6495,12 +6959,11 @@
         }
       ],
       "modifiers": [],
-      "favoredCharacter": "GM",
+      "favoredCharacter": "Impossible",
       "animationSpeed": 1.0,
       "startingCount": 0,
       "tags": [
-        "Curse",
-        "Created"
+        "Curse"
       ]
     },
     {
@@ -6867,36 +7330,19 @@
       "iconId": "Magique",
       "cost": 1,
       "xCost": false,
-      "type": "Attaque",
+      "type": "Pouvoir",
       "rarity": "Rare",
       "targetingMode": "Enemy",
       "effects": [
         {
-          "type": "Damage",
-          "value": 20,
+          "type": "Status",
+          "value": 1,
           "targetSelf": false,
           "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
+          "statusType": "FieldTurnFollowUp",
+          "duration": 1,
           "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None"
-        },
-        {
-          "type": "Status",
-          "value": 0,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "Poison",
-          "duration": 4,
-          "description": "",
-          "cardID": "",
+          "cardID": "Autodécomposition",
           "conditional": false,
           "conditionType": "KillingBlow",
           "conditionValue": "",
@@ -7000,6 +7446,41 @@
       "tags": []
     },
     {
+      "id": "condensateur",
+      "cardName": "Condensateur",
+      "collectionCardId": "",
+      "iconId": null,
+      "cost": 0,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Rare",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 3,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "EnergyUp",
+          "duration": 2,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "ITI",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": []
+    },
+    {
       "id": "convertisseur_analogique",
       "cardName": "Convertisseur analogique",
       "collectionCardId": "",
@@ -7055,7 +7536,7 @@
       "id": "court_circuit",
       "cardName": "Court-circuit",
       "collectionCardId": "",
-      "iconId": "Break",
+      "iconId": "thunder",
       "cost": 0,
       "xCost": true,
       "type": "Attaque",
@@ -7601,7 +8082,7 @@
       "cardName": "Piratage",
       "collectionCardId": "",
       "iconId": "Foudre",
-      "cost": 1,
+      "cost": 2,
       "xCost": false,
       "type": "Compétence",
       "rarity": "Legendary",
@@ -7965,7 +8446,7 @@
       "id": "destruction_de_materiel",
       "cardName": "Destruction de matériel",
       "collectionCardId": "",
-      "iconId": "Choc",
+      "iconId": "destruction",
       "cost": 2,
       "xCost": false,
       "type": "Compétence",
@@ -8011,7 +8492,9 @@
       "favoredCharacter": "MECA",
       "animationSpeed": 1.0,
       "startingCount": 0,
-      "tags": []
+      "tags": [
+        "Exhaust"
+      ]
     },
     {
       "id": "foret_80_mm",
@@ -8313,33 +8796,16 @@
       "iconId": "fury",
       "cost": 1,
       "xCost": false,
-      "type": "Compétence",
-      "rarity": "Uncommon",
+      "type": "Pouvoir",
+      "rarity": "Rare",
       "targetingMode": "Player",
       "effects": [
         {
-          "type": "LoseHP",
-          "value": 2,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None"
-        },
-        {
           "type": "Status",
-          "value": 3,
+          "value": 1,
           "targetSelf": true,
           "targetOthers": false,
-          "statusType": "Speed",
+          "statusType": "FullThrottle",
           "duration": 0,
           "description": "",
           "cardID": "",
@@ -8448,6 +8914,97 @@
           "description": ""
         }
       ],
+      "favoredCharacter": "MECA",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": []
+    },
+    {
+      "id": "remise_en_etat",
+      "cardName": "Remise en état",
+      "collectionCardId": "",
+      "iconId": "engrenages",
+      "cost": 1,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Epic",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "CardSelection",
+          "value": 1,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "ExhaustPile",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "TopOfDrawPile"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "MECA",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Exhaust"
+      ]
+    },
+    {
+      "id": "resserrage_de_vis",
+      "cardName": "Resserrage de vis",
+      "collectionCardId": "",
+      "iconId": "torsion",
+      "cost": 1,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Common",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "Armor",
+          "value": 5,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        },
+        {
+          "type": "CardSelection",
+          "value": 1,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [
+            "Unupgraded"
+          ],
+          "cardSelectionEffect": "Enchant"
+        }
+      ],
+      "modifiers": [],
       "favoredCharacter": "MECA",
       "animationSpeed": 1.0,
       "startingCount": 0,
@@ -8627,6 +9184,41 @@
       "tags": []
     },
     {
+      "id": "taraud",
+      "cardName": "Taraud",
+      "collectionCardId": "",
+      "iconId": "foreuse",
+      "cost": 1,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Rare",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 1,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Vulnerabilize",
+          "duration": 2,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "MECA",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": []
+    },
+    {
       "id": "torsion",
       "cardName": "Torsion",
       "collectionCardId": "",
@@ -8668,6 +9260,77 @@
       "animationSpeed": 1.0,
       "startingCount": 0,
       "tags": []
+    },
+    {
+      "id": "tour_a_metaux",
+      "cardName": "Tour à métaux",
+      "collectionCardId": "",
+      "iconId": "spirale2",
+      "cost": 2,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Rare",
+      "targetingMode": "AllEnemies",
+      "effects": [
+        {
+          "type": "Status",
+          "value": -1,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        },
+        {
+          "type": "Status",
+          "value": -1,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Dexterity",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        },
+        {
+          "type": "Status",
+          "value": -1,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Speed",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "MECA",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Exhaust"
+      ]
     },
     {
       "id": "ultravibration",
@@ -8849,7 +9512,7 @@
       "iconId": "Zone",
       "cost": 1,
       "xCost": false,
-      "type": "Attaque",
+      "type": "Compétence",
       "rarity": "Common",
       "targetingMode": "Player",
       "effects": [
@@ -9343,11 +10006,11 @@
       "id": "inondation",
       "cardName": "Inondation",
       "collectionCardId": "",
-      "iconId": null,
+      "iconId": "inondation",
       "cost": 0,
       "xCost": false,
       "type": "Attaque",
-      "rarity": "Common",
+      "rarity": "Uncommon",
       "targetingMode": "AllCharacters",
       "effects": [
         {
@@ -9395,7 +10058,7 @@
       "id": "lame_feuille",
       "cardName": "Lame-Feuille",
       "collectionCardId": "",
-      "iconId": "Physique",
+      "iconId": "lame_feuille",
       "cost": 1,
       "xCost": false,
       "type": "Attaque",

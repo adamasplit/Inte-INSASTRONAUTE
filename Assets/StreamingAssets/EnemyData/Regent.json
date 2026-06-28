@@ -1,0 +1,18 @@
+{
+  "id": "Regent",
+  "enemyName": "Regent",
+  "displayName": null,
+  "maxHP": 90,
+  "randomStart": false,
+  "patternCardIds": [
+    "after_de_ouf"
+  ],
+  "movePattern": [],
+  "rewardCardIds": [
+    "chute_d_etoile"
+  ],
+  "startingStatus": "CardFollowUp",
+  "startingStatusDuration": 2,
+  "startingStatusValue": 0,
+  "startingStatusInfo": "Chute d'étoile"
+}

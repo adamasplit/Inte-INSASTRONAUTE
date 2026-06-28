@@ -25,5 +25,6 @@ public class GenericPanel : MonoBehaviour
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(panelRoot);
+        UILayoutHelper.RebuildAfterFrame(this, panelRoot);
     }
 }

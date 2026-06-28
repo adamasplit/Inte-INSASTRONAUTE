@@ -17,7 +17,7 @@ public class ConserveArmorStatus : StatusEffect
     }
     public override string Desc(bool isPlayer)
     {
-        return $"Vous ne perdez pas votre Armure au début du tour pendant {Duration} tour"+(Duration>1?"s":"");
+        return $"Vous ne perdez pas votre Armure au début du tour"+(Duration>0?$" pendant {Duration} tour"+(Duration>1?"s":""):"");
     }
     public override int ArmorOnTurnStart(int previousArmor, Character character)
     {

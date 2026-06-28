@@ -1,0 +1,17 @@
+{
+  "id": "InvaderPlus",
+  "enemyName": "InvaderPlus",
+  "displayName": "",
+  "maxHP": 13,
+  "randomStart": false,
+  "patternCardIds": [
+    "acide",
+    "autodecomposer"
+  ],
+  "movePattern": [],
+  "rewardCardIds": [],
+  "startingStatus": "Strength",
+  "startingStatusDuration": 0,
+  "startingStatusValue": 0,
+  "startingStatusInfo": ""
+}

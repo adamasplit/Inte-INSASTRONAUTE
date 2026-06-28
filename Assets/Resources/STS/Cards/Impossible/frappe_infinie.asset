@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Frappe infinie
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 21300000, guid: daba30c920637924ba3281c8baa1a294, type: 3}
+  icon: {fileID: 21300000, guid: 536616779aceca04184dc8ef91627ced, type: 3}
   cost: 0
   xCost: 0
   type: 0

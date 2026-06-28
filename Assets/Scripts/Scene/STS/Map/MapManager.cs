@@ -15,16 +15,23 @@ public class MapManager : MonoBehaviour
 
     void Awake()
     {
+        StartCoroutine(InitializeMap());
+    }
+
+    private System.Collections.IEnumerator InitializeMap()
+    {
         RunManager.Instance.eliteEncounter=false;
         RunManager.Instance.bossEncounter=false;
         StartCoroutine(FadeFromBlack(0.5f));
+        yield return null;
+
         if (RunManager.Instance!=null && RunManager.Instance.map != null&&!RunManager.Instance.RegenerateMap)
         {
             allNodes = RunManager.Instance.map;
             currentNode = RunManager.Instance.currentNode;
             view.GenerateView(allNodes);
             StartCoroutine(NotifyReadyNextFrame());
-            return;
+            yield break;
         }
         var map = generator.Generate(RunManager.Instance != null&&RunManager.Instance.RegenerateMap ? RunManager.Instance.currentFloor : 0);
         if (RunManager.Instance!=null)

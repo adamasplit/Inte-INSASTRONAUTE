@@ -188,7 +188,7 @@ public static class RewardGenerator
             }
             if (card.favoredCharacter==RunManager.Instance?.selectedCharacter)
             {
-                weight *= 2; // Double the weight for favored character cards
+                //weight *= 2; // Double the weight for favored character cards
             }  
             floorCards.Add(new CardEntry(card, weight));
         }

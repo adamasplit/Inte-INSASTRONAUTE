@@ -9,6 +9,17 @@ public class HandLayoutController : MonoBehaviour
     public CardView selectedCard;
     // 1.3f pour 150f de spacing
     private float selectedScale => (spacing / 150f) * 1.3f;
+    private float GetHandScaleMultiplier(int cardCount)
+    {
+        if (cardCount < 7)
+            return 1f;
+
+        if (cardCount >= 10)
+            return 0.75f;
+
+        float t = (cardCount - 7f) / 3f;
+        return Mathf.Lerp(1f, 0.75f, t);
+    }
     private float selectedYOffset = 100f;
     private float pushStrength = 100f;
     public float smooth = 12f;
@@ -31,6 +42,7 @@ public class HandLayoutController : MonoBehaviour
         float layoutSpacing = spacing * compactFactor;
         float layoutArcHeight = arcHeight * compactFactor;
         float layoutMaxAngle = maxAngle * compactFactor;
+        float handScaleMultiplier = GetHandScaleMultiplier(count);
 
         float center = (count - 1) / 2f;
 
@@ -49,6 +61,15 @@ public class HandLayoutController : MonoBehaviour
             float y = -Mathf.Abs(offset) * layoutArcHeight;
             float angle = -offset * (layoutMaxAngle / Mathf.Max(1, center));
 
+            if (cardView.isDragging)
+            {
+                states[cardView].targetPos = card.anchoredPosition;
+                states[cardView].targetAngle = 0f;
+                states[cardView].targetScale = selectedScale * handScaleMultiplier;
+                card.SetAsLastSibling();
+                continue;
+            }
+
             // sélection
             bool highlighted =
                 cardView == selectedCard
@@ -59,7 +80,7 @@ public class HandLayoutController : MonoBehaviour
                 y += selectedYOffset;
 
                 states[cardView].targetScale =
-                    selectedScale;
+                    selectedScale * handScaleMultiplier;
                 card.SetAsLastSibling();
                 if (cardView.selectionPreview)
                 {
@@ -69,7 +90,7 @@ public class HandLayoutController : MonoBehaviour
             }
             else
             {
-                states[cardView].targetScale = 1f;
+                states[cardView].targetScale = handScaleMultiplier;
 
                 if (selectedCard != null)
                 {

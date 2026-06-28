@@ -17,6 +17,7 @@ public class CardAnimator : MonoBehaviour
         bool forceRotation = false,
         Vector3? startScale = null,
         Vector3? endScale = null,
+        Quaternion? endRotation = null,
         GameObject trailSource = null,
         float trailSpawnInterval = 0.03f,
         float trailAlpha = 0.35f,
@@ -25,6 +26,8 @@ public class CardAnimator : MonoBehaviour
     {
         float t = 0f;
         Quaternion startRotation = rect.localRotation;
+        Quaternion targetRotation = endRotation ?? (forceRotation ? Quaternion.identity : startRotation);
+        bool shouldRotate = forceRotation || endRotation.HasValue;
         Vector3 initialScale = startScale ?? rect.localScale;
         Vector3 finalScale = endScale ?? initialScale;
         float trailTimer = 0f;
@@ -51,11 +54,11 @@ public class CardAnimator : MonoBehaviour
 
             rect.position = pos;
             rect.localScale = Vector3.Lerp(initialScale, finalScale, eased);
-            if (forceRotation)
+            if (shouldRotate)
             {
                 rect.localRotation = Quaternion.Lerp(
                     startRotation,
-                    Quaternion.identity,
+                    targetRotation,
                     eased
                 );
             }
@@ -71,9 +74,9 @@ public class CardAnimator : MonoBehaviour
 
         rect.position = end;
         rect.localScale = finalScale;
-        if (forceRotation)
+        if (shouldRotate)
         {
-            rect.localRotation = Quaternion.identity;
+            rect.localRotation = targetRotation;
         }
     }
 

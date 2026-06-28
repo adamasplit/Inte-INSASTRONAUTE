@@ -1,0 +1,16 @@
+{
+  "id": "Cultist",
+  "enemyName": "Cultist",
+  "displayName": "",
+  "maxHP": 120,
+  "randomStart": false,
+  "patternCardIds": [
+    "frappe"
+  ],
+  "movePattern": [],
+  "rewardCardIds": [],
+  "startingStatus": "Strengthen",
+  "startingStatusDuration": 0,
+  "startingStatusValue": 5,
+  "startingStatusInfo": ""
+}

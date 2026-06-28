@@ -2,7 +2,7 @@
   "id": "lame_feuille",
   "cardName": "Lame-Feuille",
   "collectionCardId": "",
-  "iconId": "Physique",
+  "iconId": "lame_feuille",
   "cost": 1,
   "xCost": false,
   "type": "Attaque",

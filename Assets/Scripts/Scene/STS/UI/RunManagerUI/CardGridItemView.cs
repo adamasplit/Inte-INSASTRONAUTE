@@ -29,14 +29,13 @@ public class CardGridItemView : MonoBehaviour, IPointerClickHandler
             cardView.toggleSelection();
             return;
         }
-        Debug.Log($"CardGridItemView clicked: {cardInstance?.data?.name}");
         if (DeckSelectionPanel.Instance != null)
         {
             DeckSelectionCardController controller = GetComponentInParent<DeckSelectionCardController>();
             controller.OnClick();
             return;
         }
-        if (parentPanel != null && cardInstance != null)
+        if (parentPanel != null)
         {
             parentPanel.SelectCard(cardInstance, this);
         }

@@ -54,7 +54,7 @@ public static class STSCardDatabase
                         }
 
                         STSCardData card = STSCardData.FromDTO(dto);
-                        cardDict[card.cardName] = card;
+                        RegisterCard(card);
                         allCards.Add(card);
                     }
                 }
@@ -89,7 +89,7 @@ public static class STSCardDatabase
                     STSCardData card =
                         STSCardData.FromDTO(dto);
 
-                    cardDict[card.cardName] = card;
+                    RegisterCard(card);
 
                     allCards.Add(card);
                 }
@@ -109,6 +109,22 @@ public static class STSCardDatabase
         }
 
         loadTask = null;
+    }
+
+    static void RegisterCard(STSCardData card)
+    {
+        if (card == null)
+            return;
+
+        if (!string.IsNullOrEmpty(card.cardName))
+        {
+            cardDict[card.cardName] = card;
+        }
+
+        if (!string.IsNullOrEmpty(card.id) && !string.Equals(card.id, card.cardName, System.StringComparison.Ordinal))
+        {
+            cardDict[card.id] = card;
+        }
     }
 
     public static void Load()

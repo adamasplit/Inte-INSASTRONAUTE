@@ -11,7 +11,7 @@
   "effects": [
     {
       "type": "Status",
-      "value": 0,
+      "value": 1,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Clock",
@@ -20,7 +20,7 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "cardFilterTags": [],

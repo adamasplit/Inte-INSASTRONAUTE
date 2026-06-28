@@ -51,5 +51,8 @@ public enum StatusType
     DelayedDeath,
     AreaDmgReduction,
     ConserveArmor,
-    EnergyUp
+    EnergyUp,
+    Vulnerabilize,
+    Imitate,
+    FullThrottle
 }

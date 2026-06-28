@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Court-circuit
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 21300000, guid: 798a6b5642b33804aa82660c30911b53, type: 3}
+  icon: {fileID: 21300000, guid: 5991566daf28b794cb895a7d0dbf838c, type: 3}
   cost: 0
   xCost: 1
   type: 0

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Deca
   displayName: 
-  maxHP: 32
+  maxHP: 16
   pattern: []
   randomStart: 0
   movePattern:

@@ -1,0 +1,20 @@
+{
+  "id": "Soldat2",
+  "enemyName": "Soldat2",
+  "displayName": "Hyoh",
+  "maxHP": 61,
+  "randomStart": false,
+  "patternCardIds": [
+    "frappe_electrique",
+    "bastion",
+    "mise_en_cage",
+    "protecteur_de_la_planete",
+    "meteorite"
+  ],
+  "movePattern": [],
+  "rewardCardIds": [],
+  "startingStatus": "Speed",
+  "startingStatusDuration": 0,
+  "startingStatusValue": 3,
+  "startingStatusInfo": ""
+}

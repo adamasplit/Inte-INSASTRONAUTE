@@ -36,6 +36,16 @@ public class MapView : MonoBehaviour
         nodeToUI.Clear();
         lineEntries.Clear();
         int maxFloor = 0;
+        Canvas.ForceUpdateCanvases();
+        RectTransform parentRect = mapPanel.parent as RectTransform;
+        if (parentRect != null)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
+            Canvas.ForceUpdateCanvases();
+        }
+
+        float panelWidth = GetAvailableMapWidth();
+        float horizontalSpan = Mathf.Max(panelWidth - spacingX, 0f);
         // 1. Spawn nodes
         foreach (var node in allNodes)
         {
@@ -43,8 +53,7 @@ public class MapView : MonoBehaviour
             RectTransform rt = obj.GetComponent<RectTransform>();
 
             // Use posX for natural horizontal placement (0..1 mapped to panel width)
-            float panelWidth = mapPanel.parent.GetComponent<RectTransform>().rect.width;
-            float xPos = (node.posX - 0.5f) * (panelWidth - spacingX); // center at 0, spread out
+            float xPos = (node.posX - 0.5f) * horizontalSpan; // center at 0, spread out
             rt.anchoredPosition = new Vector2(
                 xPos,
                 node.floor * spacingY
@@ -83,6 +92,46 @@ public class MapView : MonoBehaviour
             scrollRect.verticalNormalizedPosition = 1f - normalized;
         }
     }
+
+    float GetAvailableMapWidth()
+    {
+        float result = 0f;
+        string source = "none";
+        
+        if (scrollRect != null && scrollRect.viewport != null)
+        {
+            float viewportWidth = scrollRect.viewport.rect.width;
+            if (viewportWidth > 0f)
+            {
+                result = viewportWidth;
+                source = "viewport";
+            }
+        }
+
+        if (result <= 0f)
+        {
+            RectTransform parentRect = mapPanel.parent as RectTransform;
+            if (parentRect != null && parentRect.rect.width > 0f)
+            {
+                result = parentRect.rect.width;
+                source = "parent";
+            }
+        }
+
+        if (result <= 0f)
+        {
+            RectTransform mapRect = mapPanel as RectTransform;
+            if (mapRect != null && mapRect.rect.width > 0f)
+            {
+                result = mapRect.rect.width;
+                source = "mapPanel";
+            }
+        }
+
+        Debug.Log($"[MapView] GetAvailableMapWidth: {result} (source: {source}, viewport={scrollRect?.viewport?.rect.width ?? -1}, parent={mapPanel?.parent?.GetComponent<RectTransform>()?.rect.width ?? -1}, map={mapPanel?.GetComponent<RectTransform>()?.rect.width ?? -1})");
+        return result;
+    }
+
     void DrawConnections(List<MapNode> nodes)
     {
         foreach (var node in nodes)

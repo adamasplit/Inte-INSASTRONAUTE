@@ -71,6 +71,8 @@ public class RewardManager : MonoBehaviour, IRewardFlowHost
         var view = obj.GetComponent<RewardEntryView>();
         view.Init(item, this);
 
+        UILayoutHelper.ApplyPreferredSizeAfterFrame(this, obj.transform as RectTransform, fitWidth: true, fitHeight: true, extraWidth: 20f, extraHeight: 12f);
+
         activeEntries.Add(view);
     }
 

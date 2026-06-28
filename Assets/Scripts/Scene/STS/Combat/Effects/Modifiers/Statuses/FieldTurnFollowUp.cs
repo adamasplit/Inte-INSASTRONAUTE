@@ -7,27 +7,27 @@ public class FieldTurnFollowUpStatus:FollowUpStatus
     }
     public override string Desc(bool isPlayer)
     {
-        string maxValueStr = maxValue > 1 ? $"{maxValue}" : "";
+        string maxValueStr = maxValue > 1 ? $"{maxValue} " : "";
         switch (moveIndex)
         {
             case 1: // End of own turn
                 if (isPlayer)
                 {
-                    return $"Toutes les {maxValueStr} fins de votre tour, déclenchez {Name}.";
+                    return $"Toutes les {maxValueStr}fins de votre tour, déclenchez {Name}.";
                 }
-                return $"Toutes les {maxValueStr} fins de son tour, l'ennemi joue aussi {Name}.";
+                return $"Toutes les {maxValueStr}fins de son tour, l'ennemi joue aussi {Name}.";
             case 2: // Start of own turn
                 if (isPlayer)
                 {
-                    return $"Tous les {maxValueStr} débuts de votre tour, déclenchez {Name}.";
+                    return $"Tous les {maxValueStr}débuts de votre tour, déclenchez {Name}.";
                 }
-                return $"Tous les {maxValueStr} débuts de son tour, l'ennemi joue aussi {Name}.";
+                return $"Tous les {maxValueStr}débuts de son tour, l'ennemi joue aussi {Name}.";
             default: // Any field turn end
                 if (isPlayer)
                 {
-                    return $"Tous les {maxValueStr} tours, déclenchez {Name}.";
+                    return $"Tous les {maxValueStr}tours, déclenchez {Name}.";
                 }
-                return $"Tous les {maxValueStr} tours, l'ennemi joue aussi {Name}.";
+                return $"Tous les {maxValueStr}tours, l'ennemi joue aussi {Name}.";
         }
     }
     public override void OnFieldTurnEnd(Character character)

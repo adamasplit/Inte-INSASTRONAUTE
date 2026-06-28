@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: InvaderPlus
   displayName: 
-  maxHP: 25
+  maxHP: 13
   pattern:
   - {fileID: 11400000, guid: 1c9b5117112e64d42a126561722bf83b, type: 2}
   - {fileID: 11400000, guid: c7ac447ff7972ba4eb5730eb6bd3e645, type: 2}

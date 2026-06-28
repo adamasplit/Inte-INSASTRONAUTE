@@ -11,6 +11,8 @@ public class RelicRewardEntryView : RewardEntryView
         reward = rewardItem as RelicReward;
 
         relicName.text = "Équipement: " + reward.relic.name+"\n<size=20>"+reward.relic.description+"</size>";
+
+        UILayoutHelper.ApplyChildActualSizeAfterFrame(this, transform as UnityEngine.RectTransform, extraWidth: 20f, extraHeight: 12f);
     }
 
     public void ClaimRelic()

@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Frappe industrielle
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 13d4146e8e89e3c46870a648ca5b38be, type: 3}
   cost: 0
   xCost: 0
   type: 0

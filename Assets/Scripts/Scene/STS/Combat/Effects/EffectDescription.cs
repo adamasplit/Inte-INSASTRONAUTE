@@ -72,7 +72,11 @@ public static class EffectDescription
             case EffectType.Damage:
             {
                 string dmg = BattleCalculator.GetModifiedDescription(effect.value, StatType.Damage, ctx);
-                return $"Infligez {dmg} dégâts";
+                if (effect.targetSelf)
+                {
+                    return $"Subissez {dmg} dégâts";
+                }
+                return $"Infligez {dmg} dégâts"+(multipleTargets?" à toutes les cibles":"");
             }
             case EffectType.Multihit:
             {
@@ -217,7 +221,7 @@ public static class EffectDescription
             }
             case EffectType.CardSelection:
             {
-                string cft = DescribeCardFilters(effect.cardFilterTags,true);
+                string cft = DescribeCardFilters(effect.cardFilterTags,effect.value!=1);
                 string source = effect.cardSelectionSource switch
                 {
                     CardSelectionSource.Hand => "votre main",

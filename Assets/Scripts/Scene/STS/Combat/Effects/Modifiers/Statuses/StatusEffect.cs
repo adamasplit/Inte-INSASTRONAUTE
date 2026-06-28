@@ -148,7 +148,7 @@ public abstract class StatusEffect : StatModifier
             StatusType.Accelerate=>new AccelerateStatus(value),
             StatusType.Stun=>new StunStatus(duration),
             StatusType.Strengthen=>new StrengthenStatus(value),
-            StatusType.Clock=>new ClockStatus(),
+            StatusType.Clock=>new ClockStatus(value),
             StatusType.After=>new AfterStatus(value),
             StatusType.Burn=>new BurnStatus(duration),
             StatusType.Sadism=>new SadismStatus(),
@@ -182,6 +182,9 @@ public abstract class StatusEffect : StatModifier
             StatusType.AreaDmgReduction=>new AreaDmgReductionStatus(value,duration),
             StatusType.ConserveArmor=>new ConserveArmorStatus(value,duration),
             StatusType.EnergyUp=>new EnergyUpStatus(value,duration),
+            StatusType.Vulnerabilize=>new VulnerabilizeStatus(value,duration),
+            StatusType.Imitate=>new ImitateStatus(),
+            StatusType.FullThrottle=>new FullThrottleStatus(value), 
             _ => null
         };
         stat.statusType = type;

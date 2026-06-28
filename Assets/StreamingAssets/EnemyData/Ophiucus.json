@@ -1,0 +1,27 @@
+{
+  "id": "Ophiucus",
+  "enemyName": "Ophiucus",
+  "displayName": "",
+  "maxHP": 34,
+  "randomStart": false,
+  "patternCardIds": [
+    "bouclier",
+    "equilibrage_d_emploi_du_temps",
+    "katana",
+    "katana",
+    null,
+    "equilibrage_d_emploi_du_temps",
+    "katana",
+    "atterrissage",
+    "equilibrage_d_emploi_du_temps",
+    "katana"
+  ],
+  "movePattern": [],
+  "rewardCardIds": [
+    "bouclier"
+  ],
+  "startingStatus": "Strength",
+  "startingStatusDuration": 0,
+  "startingStatusValue": 0,
+  "startingStatusInfo": ""
+}

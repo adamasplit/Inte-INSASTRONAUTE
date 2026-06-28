@@ -26,6 +26,13 @@ public class RunManager : MonoBehaviour
     public bool forceTutorial=false;
     public bool addAllCardsToDeck=false;//Debug option to add all cards to the deck for testing purposes
     public List<string> debugCards=new List<string>();//Debug option to specify which cards to add to the deck when addAllCardsToDeck is true
+    void Update()
+    {
+        if (SceneManager.GetActiveScene().name != "STS_Combat" && player != null && player.currentHP <= 0)
+        {
+            player.currentHP = 1;
+        }
+    }
     void Awake()
     {
         if (Instance != null)
@@ -75,6 +82,7 @@ public class RunManager : MonoBehaviour
             ui.gameObject.SetActive(true);
 
             await STSCardDatabase.LoadAsync();
+            await EnemyDataDatabase.LoadAsync();
             gold = 0;
             if (Enum.TryParse(character, out SelectableCharacter parsedCharacter))
             {

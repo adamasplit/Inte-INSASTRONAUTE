@@ -18,7 +18,7 @@ public class EchoStatus : StatusEffect
     public override int Modify(int replayCount, EffectContext ctx)
     {
         if (ctx.card == null) return replayCount;
-        if (ctx.card.data.type!=cardType()) return replayCount;
+        if (ctx.card.data.type!=cardType()&&moveIndex!=0) return replayCount;
         int res = replayCount + Value;
         if (!ctx.isPreview)
         {

@@ -13,6 +13,13 @@ public class ThornsStatus : StatusEffect
         debuff=false;
         generic = true;
     }
+    public override void OnTurnStart(Character target)
+    {
+        Tick(target);
+    }
+    public override void OnTurnEnd(Character target)
+    {
+    }
     public override void OnDamageTaken(Character source,Character target,ref int damage)
     {
         base.OnDamageTaken(source,target,ref damage);

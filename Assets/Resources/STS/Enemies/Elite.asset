@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Elite
   displayName: 
-  maxHP: 100
+  maxHP: 60
   pattern: []
   randomStart: 1
   movePattern:

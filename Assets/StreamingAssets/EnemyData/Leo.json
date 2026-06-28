@@ -1,0 +1,208 @@
+{
+  "id": "Leo",
+  "enemyName": "Leo",
+  "displayName": "",
+  "maxHP": 45,
+  "randomStart": true,
+  "patternCardIds": [],
+  "movePattern": [
+    {
+      "cardId": "lionheart",
+      "moveName": "",
+      "effects": [],
+      "nextMoveIndices": [
+        1,
+        2,
+        3
+      ],
+      "weight": 0
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 7,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        },
+        {
+          "type": "Status",
+          "value": 2,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Vuln",
+          "duration": 2,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "nextMoveIndices": [
+        2,
+        4
+      ],
+      "weight": 0
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 4,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        },
+        {
+          "type": "Armor",
+          "value": 3,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Vuln",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "nextMoveIndices": [
+        1,
+        3
+      ],
+      "weight": 0
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 2,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        },
+        {
+          "type": "Armor",
+          "value": 1,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Vuln",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "nextMoveIndices": [
+        4,
+        1
+      ],
+      "weight": 0
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 2,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Slow",
+          "duration": 2,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        },
+        {
+          "type": "Damage",
+          "value": 3,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Vuln",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "nextMoveIndices": [
+        3,
+        2
+      ],
+      "weight": 0
+    }
+  ],
+  "rewardCardIds": [
+    "lionheart"
+  ],
+  "startingStatus": "Strength",
+  "startingStatusDuration": 0,
+  "startingStatusValue": 0,
+  "startingStatusInfo": ""
+}

@@ -2,7 +2,7 @@
   "id": "debogage",
   "cardName": "Débogage",
   "collectionCardId": "",
-  "iconId": null,
+  "iconId": "Affliction",
   "cost": 0,
   "xCost": false,
   "type": "Compétence",

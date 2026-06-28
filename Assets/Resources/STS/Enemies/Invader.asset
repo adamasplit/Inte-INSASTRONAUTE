@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Invader
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Invader
-  maxHP: 10
+  displayName: Space Invader
+  maxHP: 6
   pattern:
   - {fileID: 11400000, guid: 1c9b5117112e64d42a126561722bf83b, type: 2}
   - {fileID: 11400000, guid: dd3a81fb1eb2a134e9cbfd9ffb897664, type: 2}

@@ -6,7 +6,7 @@
   "cost": 1,
   "xCost": false,
   "type": "Attaque",
-  "rarity": "Legendary",
+  "rarity": "Epic",
   "targetingMode": "Enemy",
   "effects": [
     {

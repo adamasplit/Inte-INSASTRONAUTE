@@ -18,7 +18,7 @@ public class GameOverController : MonoBehaviour
     {
         
         titleText.text = "Game over...";
-        reasonText.text = $"Vous avez été vaincu par {enemy.name}!";
+        reasonText.text = $"Vous avez été vaincu par {enemy.name} !";
         StartCoroutine(FadeIn());
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;

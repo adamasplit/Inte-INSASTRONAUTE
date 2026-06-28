@@ -2,7 +2,7 @@
   "id": "frappe_industrielle",
   "cardName": "Frappe industrielle",
   "collectionCardId": "",
-  "iconId": null,
+  "iconId": "Industrie",
   "cost": 0,
   "xCost": false,
   "type": "Attaque",

@@ -5,7 +5,11 @@ public class Enemy : Character
     public Enemy(string name) : base(name, 0)
     {
         this.isPlayer = false;
-        data=Resources.Load<EnemyData>("STS/Enemies/" + name);
+        data = EnemyDataDatabase.Get(name);
+        if (data == null)
+        {
+            data = Resources.Load<EnemyData>("STS/Enemies/" + name);
+        }
         if (data != null)
         {
             Init(data);
@@ -23,17 +27,20 @@ public class Enemy : Character
     public void Init(EnemyData d)
     {
         name=d.displayName;
+        if (name == null || name == "")
+        {
+            name = d.enemyName;
+        }
         Debug.Log($"Initializing enemy {name} with data: {d.name} and displayName: {d.displayName}");
         data = d;
         patternIndex = 0;
         maxHP = d.maxHP;
+        float multiplier = 1.3f;
         if (RunManager.Instance != null)
         {
-            for (int i = 0; i < RunManager.Instance.act; i++)
-            {
-                maxHP = Mathf.RoundToInt(maxHP * 1.5f); // Scale HP by 50% per act
-            }
+            multiplier+= RunManager.Instance.act*0.5f;
         }
+        maxHP = Mathf.RoundToInt(maxHP * multiplier);
         maxHP+=Random.Range(1,5); // Add a random value between 1 and 5 to maxHP
         currentHP = maxHP;
         Debug.Log($"Initialized enemy {name} with {maxHP} HP. Adding starting status: {d.startingStatus} with value {d.startingStatusValue} and duration {d.startingStatusDuration}");

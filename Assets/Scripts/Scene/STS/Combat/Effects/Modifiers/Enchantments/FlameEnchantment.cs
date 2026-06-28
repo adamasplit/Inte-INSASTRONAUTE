@@ -3,9 +3,9 @@ public class FlameEnchantment : EnchantmentData
 {
     public FlameEnchantment()
     {
-        name = "Flame";
-        description = $"Inflige des dégâts de feu à la cible en fonction du niveau";
-        maxLevel=1;
+        name = "Fire Aspect";
+        description = $"Inflige Brûlure à la cible en fonction du niveau";
+        maxLevel=5;
     }
 
     public override List<EffectEntry> GenerateEffects(int level)
@@ -16,7 +16,7 @@ public class FlameEnchantment : EnchantmentData
             {
                 type = EffectType.Status,
                 statusType = StatusType.Burn,
-                duration=10,
+                duration=level*2,
                 value=5
             }
         };

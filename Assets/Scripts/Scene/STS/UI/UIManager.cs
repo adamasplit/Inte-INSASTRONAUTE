@@ -34,6 +34,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI deckCountText;
     public CardSelectionController selectionController;
     private int pendingDrawAnimations = 0;
+    private int pendingPlayedCardAnimations = 0;
     public bool IsSelectingCards()
     {
         return selectionController.Active;
@@ -78,12 +79,12 @@ public class UIManager : MonoBehaviour
     }
     public void SelectCard(CardView card)
     {
-        if (selectedCard == card)
+        if (selectedCard == card&&!card.isDragging)
         {
             Deselect();
             return;
         }
-        if (selectedCard != null) selectedCard.Deselect();
+        if (selectedCard != null&&!selectedCard.isDragging) selectedCard.Deselect();
         selectedCard = card;
         card.Select(handLayout.cardSide(card));
         RefreshHandLayout();
@@ -131,6 +132,7 @@ public class UIManager : MonoBehaviour
 
     public void Deselect()
     {
+        Debug.Log("Deselecting card {" + selectedCard?.cardInstance?.displayName + "}");
         if (selectedCard != null)
         {
             selectedCard.Deselect();
@@ -509,7 +511,11 @@ public class UIManager : MonoBehaviour
 
 public IEnumerator AnimateCardToCenter(CardView view)
 {
+    if (view == null || view.rootRect == null)
+        yield break;
+
     view.isAnimating = true;
+    int queueIndex = pendingPlayedCardAnimations++;
 
     RectTransform rect = view.rootRect;
 
@@ -519,13 +525,21 @@ public IEnumerator AnimateCardToCenter(CardView view)
         animator.animationLayer,
         true
     );
+    rect.SetAsLastSibling();
 
     rect.position = startPos;
 
     Canvas.ForceUpdateCanvases();
 
+    Vector3 queueOffset = new Vector3(
+        queueIndex * 18f,
+        -queueIndex * 9f,
+        0f
+    );
     Vector3 center =
-        animator.animationLayer.TransformPoint(Vector3.zero);
+        animator.animationLayer.TransformPoint(queueOffset);
+
+    float tilt = Random.Range(-5f, 5f);
 
     yield return animator.MoveCard(
         rect,
@@ -533,8 +547,11 @@ public IEnumerator AnimateCardToCenter(CardView view)
         center,
         3f,
         false,
-        true
+        true,
+        endRotation: Quaternion.Euler(0f, 0f, tilt)
     );
+
+    pendingPlayedCardAnimations = Mathf.Max(0, pendingPlayedCardAnimations - 1);
 }
     public IEnumerator AnimateCardToDiscard(
         CardView view,
@@ -650,6 +667,7 @@ public IEnumerator AnimateCardToCenter(CardView view)
     }
     public void RemoveView(CardView view)
     {
+        Debug.Log("Removing card view: " + view.cardInstance?.displayName);
         currentHandViews.Remove(view);
 
         if (selectedCard == view)

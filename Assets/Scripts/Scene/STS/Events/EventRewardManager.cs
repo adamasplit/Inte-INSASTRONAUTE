@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,15 +11,20 @@ public class EventRewardManager : MonoBehaviour, IRewardFlowHost
     public GameObject goldRewardPrefab;
     public GameObject baseRelicUpgradeRewardPrefab;
     public GameObject continueButton;
+    [SerializeField] float continueButtonFailSafeDelay = 2f;
 
     private readonly List<RewardEntryView> activeEntries = new();
     private Action onComplete;
+    private Coroutine continueButtonFailSafeRoutine;
 
     public void ShowReward(Reward reward, Action completion)
     {
+        gameObject.SetActive(true);
         rewardList.gameObject.SetActive(true);
 
         onComplete = completion;
+
+        StopContinueButtonFailSafe();
 
         if (continueButton != null)
         {
@@ -43,18 +49,25 @@ public class EventRewardManager : MonoBehaviour, IRewardFlowHost
         {
             continueButton.SetActive(true);
         }
+
+        ArmContinueButtonFailSafe();
     }
 
     public void ShowContinue(Action completion)
     {
+        gameObject.SetActive(true);
         onComplete = completion;
 
         rewardList.gameObject.SetActive(false);
+
+        StopContinueButtonFailSafe();
 
         if (continueButton != null)
         {
             continueButton.SetActive(true);
         }
+
+        ArmContinueButtonFailSafe();
     }
 
     private void SpawnReward(RewardItem item)
@@ -86,6 +99,7 @@ public class EventRewardManager : MonoBehaviour, IRewardFlowHost
         GameObject obj = Instantiate(prefab, rewardList);
         RewardEntryView view = obj.GetComponent<RewardEntryView>();
         view.Init(item, this);
+        UILayoutHelper.ApplyPreferredSizeAfterFrame(this, obj.transform as RectTransform, fitWidth: true, fitHeight: true, extraWidth: 20f, extraHeight: 12f);
         activeEntries.Add(view);
     }
 
@@ -102,9 +116,38 @@ public class EventRewardManager : MonoBehaviour, IRewardFlowHost
 
     public void Continue()
     {
+        StopContinueButtonFailSafe();
         gameObject.SetActive(false);
 
         onComplete?.Invoke();
         onComplete = null;
+    }
+
+    private void ArmContinueButtonFailSafe()
+    {
+        StopContinueButtonFailSafe();
+        continueButtonFailSafeRoutine = StartCoroutine(ContinueButtonFailSafe());
+    }
+
+    private void StopContinueButtonFailSafe()
+    {
+        if (continueButtonFailSafeRoutine != null)
+        {
+            StopCoroutine(continueButtonFailSafeRoutine);
+            continueButtonFailSafeRoutine = null;
+        }
+    }
+
+    private IEnumerator ContinueButtonFailSafe()
+    {
+        yield return new WaitForSeconds(continueButtonFailSafeDelay);
+
+        if (continueButton == null || !continueButton.activeInHierarchy)
+        {
+            Debug.LogWarning("Event continue button did not appear. Triggering fail-safe completion.");
+            Continue();
+        }
+
+        continueButtonFailSafeRoutine = null;
     }
 }

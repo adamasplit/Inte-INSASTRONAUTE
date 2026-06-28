@@ -2,11 +2,11 @@
   "id": "inondation",
   "cardName": "Inondation",
   "collectionCardId": "",
-  "iconId": null,
+  "iconId": "inondation",
   "cost": 0,
   "xCost": false,
   "type": "Attaque",
-  "rarity": "Common",
+  "rarity": "Uncommon",
   "targetingMode": "AllCharacters",
   "effects": [
     {

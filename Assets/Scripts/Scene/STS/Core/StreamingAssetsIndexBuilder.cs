@@ -25,6 +25,7 @@ public static class StreamingAssetsIndexBuilder
     public static void RebuildIndexes()
     {
         BuildFolderIndex("STSCardData");
+        BuildFolderIndex("EnemyData");
         BuildFolderIndex("Players");
         AssetDatabase.Refresh();
         Debug.Log("StreamingAssets JSON indexes rebuilt.");

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Boss
   displayName: 
-  maxHP: 230
+  maxHP: 115
   pattern: []
   randomStart: 0
   movePattern:

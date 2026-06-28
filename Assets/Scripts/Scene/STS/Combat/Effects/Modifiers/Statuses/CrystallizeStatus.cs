@@ -33,12 +33,10 @@ public class CrystallizeStatus : StatusEffect
     }
     public override void OnDamageTaken(Character source,Character target, ref int damage)
     {
-        if (source.GetCombatManager().currentCardName=="Recristallisation")
+        if (source.GetCombatManager().currentCard.displayName=="Recristallisation")
         {
             return; // Ignore damage from Recristallisation to prevent infinite loop
         }
-        Debug.Log($"CrystallizeStatus: Target {target.name} is taking damage from {source.name}. Current Value: {Value}");
-        Debug.Log($"CrystallizeStatus: Current card is {source.GetCombatManager().currentCardName}");
         if (Value >= maxValue)
         {
             followUp=true;

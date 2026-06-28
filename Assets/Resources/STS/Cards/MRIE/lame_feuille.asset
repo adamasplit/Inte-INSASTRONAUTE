@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Lame-Feuille
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 21300000, guid: 69f0ece1bc8f5474296335c74e867859, type: 3}
+  icon: {fileID: 21300000, guid: 6fd11516867d78d48aa4cc49ca7fdcf9, type: 3}
   cost: 1
   xCost: 0
   type: 0

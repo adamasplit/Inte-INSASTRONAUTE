@@ -2,7 +2,7 @@
   "id": "court_circuit",
   "cardName": "Court-circuit",
   "collectionCardId": "",
-  "iconId": "Break",
+  "iconId": "thunder",
   "cost": 0,
   "xCost": true,
   "type": "Attaque",

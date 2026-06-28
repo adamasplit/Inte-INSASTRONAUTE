@@ -16,7 +16,14 @@ public class LifeCycleStatus : StatusEffect
     {
         if (target.isPlayer)
         {
-            target.GainEnergy(Value);
+            if (target.onTurn)
+            {
+                target.GainEnergy(Value);
+            }
+            else
+            {
+                target.AddStatus(new EnergyUpStatus(Value,1));
+            }
         }
     }
 }

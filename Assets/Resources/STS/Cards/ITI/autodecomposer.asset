@@ -19,32 +19,17 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: bfab4b172435f9046b1d279bd5dba190, type: 3}
   cost: 1
   xCost: 0
-  type: 0
+  type: 2
   rarity: 2
   effects:
-  - type: 0
-    value: 20
+  - type: 3
+    value: 1
     targetSelf: 0
     targetOthers: 0
-    statusType: 0
-    duration: 0
+    statusType: 41
+    duration: 1
     description: 
-    cardID: 
-    conditional: 0
-    conditionType: 0
-    conditionValue: 
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 0
-  - type: 3
-    value: 0
-    targetSelf: 1
-    targetOthers: 0
-    statusType: 5
-    duration: 4
-    description: 
-    cardID: 
+    cardID: "Autod\xE9composition"
     conditional: 0
     conditionType: 0
     conditionValue: 

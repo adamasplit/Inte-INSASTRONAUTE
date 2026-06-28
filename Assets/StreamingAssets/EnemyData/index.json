@@ -1,0 +1,29 @@
+{
+  "files": [
+    "Boss.json",
+    "Cultist.json",
+    "Dark.json",
+    "Deca.json",
+    "Donu.json",
+    "Dummy.json",
+    "Elite 1.json",
+    "Elite 2.json",
+    "Elite 3.json",
+    "Elite.json",
+    "Enemy 1.json",
+    "Enemy 2.json",
+    "Enemy 3.json",
+    "Enemy 4.json",
+    "Enemy 5.json",
+    "Griever.json",
+    "Invader.json",
+    "InvaderPlus.json",
+    "Leo.json",
+    "Mime.json",
+    "Nemesis.json",
+    "Ophiucus.json",
+    "Regent.json",
+    "Soldat.json",
+    "Soldat2.json"
+  ]
+}

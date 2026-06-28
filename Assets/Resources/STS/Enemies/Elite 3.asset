@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Elite 3
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Elite 3
-  maxHP: 100
+  displayName: 
+  maxHP: 45
   pattern:
   - {fileID: 11400000, guid: 6246dcd0d58203c4ab020d1b25cdde07, type: 2}
   - {fileID: 11400000, guid: c81fe9c9fcbafbc4196a821088811f19, type: 2}

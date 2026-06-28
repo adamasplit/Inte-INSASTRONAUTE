@@ -10,8 +10,13 @@ public class RestManager : MonoBehaviour
     public GameObject cardPrefab;
     public GameObject chargePrefab;
     public Transform chargesContainer;
-    [SerializeField] private float deckContentPadding = 48f;
+    private float deckContentPadding = 48f;
+    private float enchantPreviewDelay = 1f;
+    private float enchantExitDuration = 1f;
+    [SerializeField] private float enchantExitScreenMargin = 64f;
     CardInstance selectedCard;
+    RestCardController selectedController;
+    bool isEnchanting;
 
     async void Start()
     {
@@ -60,18 +65,21 @@ public class RestManager : MonoBehaviour
     }
 
     // ---------------- ENCHANT ----------------
-    public void OnCardSelected(CardInstance card)
+    public void OnCardSelected(RestCardController controller)
     {
-        if (selectedCard != null)
+        if (controller == null)
+            return;
+
+        foreach (Transform child in deckContainer)
         {
-            // Deselect the previously selected card
-            var previousCardController = deckContainer.GetComponentInChildren<RestCardController>();
-            if (previousCardController != null)
-            {
-                previousCardController.view.selectionHighlight.SetActive(false);
-            }
+            RestCardController cardController = child.GetComponent<RestCardController>();
+            if (cardController != null)
+                cardController.SetSelected(false);
         }
-        selectedCard = card;
+
+        selectedController = controller;
+        selectedCard = controller.Card;
+        selectedController.SetSelected(true);
 
         var options = new List<PanelOption>();
 
@@ -102,15 +110,91 @@ public class RestManager : MonoBehaviour
 
     public void OnEnchant(int charges)
     {
-        if (RunManager.Instance.restCharges < charges)
+        if (isEnchanting)
             return;
+
+        StartCoroutine(EnchantRoutine(charges));
+    }
+
+    private IEnumerator EnchantRoutine(int charges)
+    {
+        if (selectedCard == null || selectedController == null)
+            yield break;
+
+        if (RunManager.Instance.restCharges < charges)
+            yield break;
+
+        isEnchanting = true;
+        enchantPanel.gameObject.SetActive(false);
+
+        selectedController.SetSelected(false);
 
         RunManager.Instance.restCharges -= charges;
         int enchantLevel = Random.Range(charges, charges*2+1);
         Debug.Log($"Enchanting card with level {enchantLevel} using {charges} charges.");
         EnchantManager.ApplyEnchant(selectedCard, enchantLevel);
+
+        // Refresh immediately so the player can see the applied enchant visuals before it exits.
+        selectedController.RefreshView();
+        //if (selectedController.view != null)
+        //    selectedController.view.Flash();
+
+        Canvas canvas = selectedController.GetComponentInParent<Canvas>();
+        RectTransform canvasRect = canvas != null ? canvas.transform as RectTransform : null;
+        if (canvasRect != null)
+        {
+            Vector2 startScreenPosition = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+            Vector2 endScreenPosition = new Vector2(Screen.width - enchantExitScreenMargin, Screen.height - enchantExitScreenMargin);
+
+            GameObject animatedCardObject = new GameObject("RestEnchantCardClone", typeof(RectTransform), typeof(CanvasGroup));
+            animatedCardObject.transform.SetParent(canvasRect, false);
+            animatedCardObject.transform.SetAsLastSibling();
+
+            RectTransform animatedRoot = animatedCardObject.GetComponent<RectTransform>();
+            animatedRoot.anchorMin = new Vector2(0.5f, 0.5f);
+            animatedRoot.anchorMax = new Vector2(0.5f, 0.5f);
+            animatedRoot.pivot = new Vector2(0.5f, 0.5f);
+            animatedRoot.sizeDelta = new Vector2(200f, 300f);
+
+            GameObject animatedCardViewObject = Instantiate(selectedController.view.gameObject, animatedRoot);
+            animatedCardViewObject.transform.SetAsLastSibling();
+            RectTransform animatedCardViewRect = animatedCardViewObject.GetComponent<RectTransform>();
+            if (animatedCardViewRect != null)
+            {
+                animatedCardViewRect.anchorMin = Vector2.zero;
+                animatedCardViewRect.anchorMax = Vector2.one;
+                animatedCardViewRect.offsetMin = Vector2.zero;
+                animatedCardViewRect.offsetMax = Vector2.zero;
+                animatedCardViewRect.localScale = Vector3.one;
+            }
+
+            CardView animatedCardView = animatedCardViewObject.GetComponent<CardView>();
+            if (animatedCardView != null)
+            {
+                animatedCardView.SetCard(selectedCard);
+            }
+
+            CanvasGroup animatedGroup = animatedCardObject.GetComponent<CanvasGroup>();
+            if (animatedGroup != null)
+            {
+                animatedGroup.alpha = 1f;
+            }
+
+            selectedController.SetVisualVisible(false);
+
+            yield return StartCoroutine(selectedController.PlayEnchantExitAnimation(enchantPreviewDelay, enchantExitDuration, startScreenPosition, endScreenPosition, animatedRoot));
+            Destroy(animatedCardObject);
+        }
+        else
+        {
+            selectedController.SetVisualVisible(false);
+        }
+
+        selectedCard = null;
+        selectedController = null;
         BuildDeck();
         UpdateChargesDisplay();
+        isEnchanting = false;
     }
     public void ReturnToMap()
     {

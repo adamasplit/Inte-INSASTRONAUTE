@@ -2,7 +2,7 @@
   "id": "frappe_infinie",
   "cardName": "Frappe infinie",
   "collectionCardId": "",
-  "iconId": "Multihit",
+  "iconId": "cut",
   "cost": 0,
   "xCost": false,
   "type": "Attaque",

@@ -12,19 +12,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: blocage_de_parking
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: blocage_de_parking
   cardName: Blocage de parking
+  collectionCardId: 
   collectionCard: {fileID: 11400000, guid: 672efab9a56269d498921ffc3b56948a, type: 2}
+  icon: {fileID: 0}
   cost: 2
+  xCost: 0
   type: 1
   rarity: 1
   effects:
   - type: 4
     value: 0
     targetSelf: 0
+    targetOthers: 0
     statusType: 0
     duration: 0
     description: 
+    cardID: 
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+  - type: 3
+    value: -2
+    targetSelf: 1
+    targetOthers: 0
+    statusType: 14
+    duration: 0
+    description: 
+    cardID: 
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   targetingMode: 1
   modifiers: []
-  exhaust: 0
-  retain: 0
+  favoredCharacter: 9
+  animationSpeed: 1
+  startingCount: 0
+  tags: 

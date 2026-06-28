@@ -9,7 +9,14 @@ public class VulnStatus : StatusEffect
         debuff=true;
         generic=true;
     }
-
+    public override void OnTurnEnd(Character target)
+    {
+        // Implementation for when the turn ends
+    }
+    public override void OnTurnStart(Character target)
+    {
+        Tick(target);
+    }
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {
         if (ctx.target == null) return false;

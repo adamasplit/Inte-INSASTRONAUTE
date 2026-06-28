@@ -1,0 +1,22 @@
+{
+  "id": "Elite 1",
+  "enemyName": "Elite 1",
+  "displayName": "Golbez",
+  "maxHP": 70,
+  "randomStart": false,
+  "patternCardIds": [
+    "cristallisation",
+    "frappe_ultime",
+    "blou_blou",
+    "auto_conception",
+    "regression"
+  ],
+  "movePattern": [],
+  "rewardCardIds": [
+    "execution"
+  ],
+  "startingStatus": "MechaArm",
+  "startingStatusDuration": 0,
+  "startingStatusValue": 1,
+  "startingStatusInfo": ""
+}

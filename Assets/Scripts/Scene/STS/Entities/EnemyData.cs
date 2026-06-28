@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-
+using System;
 [System.Serializable]
 public class EnemyMoveEntry
 {
@@ -65,11 +65,67 @@ public class EnemyMoveEntry
 
         return runtimeCard;
     }
+
+    public EnemyMoveEntryDTO ToDTO()
+    {
+        var dto = new EnemyMoveEntryDTO
+        {
+            cardId = card != null ? (!string.IsNullOrEmpty(card.id) ? card.id : card.cardName) : null,
+            moveName = moveName,
+            weight = weight
+        };
+
+        if (effects != null)
+        {
+            foreach (var effect in effects)
+            {
+                dto.effects.Add(effect.ToDTO());
+            }
+        }
+
+        if (nextMoveIndices != null)
+        {
+            dto.nextMoveIndices.AddRange(nextMoveIndices);
+        }
+
+        return dto;
+    }
+
+    public static EnemyMoveEntry FromDTO(EnemyMoveEntryDTO dto)
+    {
+        var entry = new EnemyMoveEntry
+        {
+            moveName = dto.moveName,
+            weight = dto.weight
+        };
+
+        if (!string.IsNullOrEmpty(dto.cardId))
+        {
+            entry.card = STSCardDatabase.Get(dto.cardId);
+        }
+
+        if (dto.effects != null)
+        {
+            entry.effects = new List<EffectEntry>();
+            foreach (var effectDto in dto.effects)
+            {
+                entry.effects.Add(EffectEntry.FromDTO(effectDto));
+            }
+        }
+
+        if (dto.nextMoveIndices != null)
+        {
+            entry.nextMoveIndices = new List<int>(dto.nextMoveIndices);
+        }
+
+        return entry;
+    }
 }
 
 [CreateAssetMenu(menuName = "Combat/Enemy")]
 public class EnemyData : ScriptableObject
 {
+    public string id;
     public string enemyName;
     public string displayName;
     public int maxHP;
@@ -138,7 +194,7 @@ public class EnemyData : ScriptableObject
         if (totalWeight <= 0)
             return 0;
 
-        int roll = Random.Range(0, totalWeight);
+        int roll = UnityEngine.Random.Range(0, totalWeight);
         for (int i = 0; i < ActionCount; i++)
         {
             var action = GetActionAt(i);
@@ -170,7 +226,7 @@ public class EnemyData : ScriptableObject
         if (totalWeight <= 0)
             return -1;
 
-        int roll = Random.Range(0, totalWeight);
+        int roll = UnityEngine.Random.Range(0, totalWeight);
         for (int i = 0; i < currentMove.nextMoveIndices.Count; i++)
         {
             int moveIndex = currentMove.nextMoveIndices[i];
@@ -185,9 +241,125 @@ public class EnemyData : ScriptableObject
 
         return -1;
     }
+
+    public EnemyDataDTO ToDTO()
+    {
+        var dto = new EnemyDataDTO
+        {
+            id = !string.IsNullOrEmpty(id) ? id : name,
+            enemyName = enemyName,
+            displayName = displayName,
+            maxHP = maxHP,
+            randomStart = randomStart,
+            startingStatus = startingStatus.ToString(),
+            startingStatusDuration = startingStatusDuration,
+            startingStatusValue = startingStatusValue,
+            startingStatusInfo = startingStatusInfo
+        };
+
+        if (pattern != null)
+        {
+            foreach (var card in pattern)
+            {
+                dto.patternCardIds.Add(card != null ? (!string.IsNullOrEmpty(card.id) ? card.id : card.cardName) : null);
+            }
+        }
+
+        if (movePattern != null)
+        {
+            foreach (var move in movePattern)
+            {
+                if (move != null)
+                {
+                    dto.movePattern.Add(move.ToDTO());
+                }
+            }
+        }
+
+        if (rewardCards != null)
+        {
+            foreach (var card in rewardCards)
+            {
+                dto.rewardCardIds.Add(card != null ? (!string.IsNullOrEmpty(card.id) ? card.id : card.cardName) : null);
+            }
+        }
+
+        return dto;
+    }
+
+    public static EnemyData FromDTO(EnemyDataDTO dto)
+    {
+        var enemy = ScriptableObject.CreateInstance<EnemyData>();
+        enemy.name = !string.IsNullOrEmpty(dto.id) ? dto.id : dto.enemyName;
+        enemy.id = !string.IsNullOrEmpty(dto.id) ? dto.id : enemy.name;
+        enemy.enemyName = !string.IsNullOrEmpty(dto.enemyName) ? dto.enemyName : enemy.name;
+        enemy.displayName = dto.displayName;
+        enemy.maxHP = dto.maxHP;
+        enemy.randomStart = dto.randomStart;
+
+        enemy.pattern = new List<STSCardData>();
+        if (dto.patternCardIds != null)
+        {
+            foreach (var cardId in dto.patternCardIds)
+            {
+                if (string.IsNullOrEmpty(cardId))
+                {
+                    continue;
+                }
+
+                var card = STSCardDatabase.Get(cardId);
+                if (card != null)
+                {
+                    enemy.pattern.Add(card);
+                }
+            }
+        }
+
+        enemy.movePattern = new List<EnemyMoveEntry>();
+        if (dto.movePattern != null)
+        {
+            foreach (var moveDto in dto.movePattern)
+            {
+                if (moveDto != null)
+                {
+                    enemy.movePattern.Add(EnemyMoveEntry.FromDTO(moveDto));
+                }
+            }
+        }
+
+        enemy.rewardCards = new List<STSCardData>();
+        if (dto.rewardCardIds != null)
+        {
+            foreach (var cardId in dto.rewardCardIds)
+            {
+                if (string.IsNullOrEmpty(cardId))
+                {
+                    continue;
+                }
+
+                var card = STSCardDatabase.Get(cardId);
+                if (card != null)
+                {
+                    enemy.rewardCards.Add(card);
+                }
+            }
+        }
+
+        if (!string.IsNullOrEmpty(dto.startingStatus) && Enum.TryParse(dto.startingStatus, out StatusType parsedStatus))
+        {
+            enemy.startingStatus = parsedStatus;
+        }
+
+        enemy.startingStatusDuration = dto.startingStatusDuration;
+        enemy.startingStatusValue = dto.startingStatusValue;
+        enemy.startingStatusInfo = dto.startingStatusInfo;
+
+        return enemy;
+    }
     #if UNITY_EDITOR
     private void OnValidate()
     {
+        id = name;
         enemyName = name;
     }
     #endif

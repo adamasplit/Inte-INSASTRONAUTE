@@ -1,0 +1,174 @@
+{
+  "id": "Enemy 1",
+  "enemyName": "Enemy 1",
+  "displayName": "",
+  "maxHP": 12,
+  "randomStart": false,
+  "patternCardIds": [],
+  "movePattern": [
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 5,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "nextMoveIndices": [],
+      "weight": 0
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Armor",
+          "value": 8,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        },
+        {
+          "type": "Damage",
+          "value": 7,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "nextMoveIndices": [],
+      "weight": 0
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Armor",
+          "value": 8,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        },
+        {
+          "type": "Status",
+          "value": 3,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "nextMoveIndices": [],
+      "weight": 0
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 11,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "nextMoveIndices": [],
+      "weight": 0
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Armor",
+          "value": 12,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "nextMoveIndices": [],
+      "weight": 0
+    }
+  ],
+  "rewardCardIds": [],
+  "startingStatus": "CardFollowUp",
+  "startingStatusDuration": 0,
+  "startingStatusValue": 0,
+  "startingStatusInfo": "Baba"
+}

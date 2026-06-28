@@ -2,7 +2,7 @@
   "id": "contrepoids",
   "cardName": "Contrepoids",
   "collectionCardId": "",
-  "iconId": null,
+  "iconId": "strike",
   "cost": 1,
   "xCost": false,
   "type": "Attaque",

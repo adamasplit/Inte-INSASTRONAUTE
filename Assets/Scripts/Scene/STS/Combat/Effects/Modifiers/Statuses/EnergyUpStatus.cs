@@ -9,6 +9,11 @@ public class EnergyUpStatus : StatusEffect
         modifierType = ModifierType.Additive;
         buff=true;
     }
+    public override void Merge(StatusEffect other)
+    {
+        other.Duration += this.Duration;
+        other.Value = this.Value+other.Value;
+    }
     public override void OnTurnStart(Character character)
     {
         Tick(character);
@@ -19,5 +24,9 @@ public class EnergyUpStatus : StatusEffect
     public override void OnExpire(Character character)
     {
         character.resources.energy += Value;
+    }
+    public override string Desc(bool isPlayer)
+    {
+        return $"Gagnez {Value} énergie dans {Duration} tour"+(Duration>1?"s":"");
     }
 }

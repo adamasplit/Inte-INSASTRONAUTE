@@ -41,6 +41,15 @@ public class CombatManager : MonoBehaviour
                 ui.RefreshUI();
             }
         }
+        if (!combatEnded && Keyboard.current != null && Keyboard.current.backspaceKey.wasPressedThisFrame)
+        {
+            Debug.Log("Cheat: Drawing a card for player (Input System).");
+            if (player != null)
+            {
+                deck.Draw();
+            }
+            TryEndCombatIfNeeded();
+        }
         #endif
     }
 #endif
@@ -64,7 +73,7 @@ public class CombatManager : MonoBehaviour
     public TeamOutcome outcome { get; private set; } = TeamOutcome.None;
     public List<EnemyData> currentEnemiesData = new();
     public CardAnimator animator;
-    public string currentCardName; // For animation purposes
+    public CardInstance currentCard; // For animation purposes
     public STSTutorialManager tutorial;
     private bool tutorialMode;
     public bool forceTutorial = false;
@@ -195,7 +204,7 @@ public class CombatManager : MonoBehaviour
             yield return null;
         }
         activeCardPlays++; // Increment active card plays counter
-        currentCardName = card.data.cardName; // Set current card name for animation purposes
+        currentCard = card; // Set current card for animation purposes
 
         // Actually apply effects
         for (int j=0;j<replayCount;j++)
@@ -303,6 +312,7 @@ public class CombatManager : MonoBehaviour
 
         if (source != null && source.isPlayer)
         {
+            bool exhausted = false;
             if (card.HasEnchantment("Infinity")||card.data.HasTag(CardTag.Infinite))
             {
                 deck.AddToHand(card);
@@ -323,6 +333,7 @@ public class CombatManager : MonoBehaviour
                         if (UnityEngine.Random.value < exhaustChance)
                         {
                             deck.Exhaust(card);
+                            exhausted = true;
                         }
                         else
                         {
@@ -340,7 +351,7 @@ public class CombatManager : MonoBehaviour
             {
                 yield return ui.AnimateCardToDiscard(
                     playedView,
-                    card.data.HasTag(CardTag.Exhaust)
+                    exhausted
                 );
             }
         }

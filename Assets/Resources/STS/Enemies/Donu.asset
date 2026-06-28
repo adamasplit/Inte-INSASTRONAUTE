@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Donu
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Donu
-  displayName: 
-  maxHP: 32
+  displayName: Donu
+  maxHP: 16
   pattern: []
   randomStart: 0
   movePattern:
@@ -77,7 +77,7 @@ MonoBehaviour:
     moveName: 
     effects:
     - type: 3
-      value: -2
+      value: -1
       targetSelf: 0
       targetOthers: 0
       statusType: 0

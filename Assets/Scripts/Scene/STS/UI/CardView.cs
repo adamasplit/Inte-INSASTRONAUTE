@@ -33,6 +33,7 @@ public class CardView : MonoBehaviour,IPointerClickHandler
     public RectTransform rootRect;
     public bool selectionPreview;
     public GameObject selectionHighlight;
+    public bool isDragging;
     public void toggleSelection()
     {
         selectionPreview = !selectionPreview;
@@ -68,14 +69,14 @@ public class CardView : MonoBehaviour,IPointerClickHandler
             SelectionManager.Instance.OnCardClicked(cardInstance);
             return;
         }
-        if (IsDescriptionTextClick(eventData)&&IsSelectedCard())
-        {
-            ShowCardTooltips(GetTooltipSide(), true, true);
-            return;
-        }
         if (ui!=null)
         {
-            if (ui.IsSelectingCards())
+            if (IsDescriptionTextClick(eventData)&&IsSelectedCard())
+            {
+                ShowCardTooltips(GetTooltipSide(), true, true);
+                return;
+            }
+            if (ui.IsSelectingCards()&&combat.currentCard!=cardInstance)
             {
                 ui.selectionController.ToggleCard(this);
 
@@ -83,14 +84,14 @@ public class CardView : MonoBehaviour,IPointerClickHandler
 
                 return;
             }
-
             ui.SelectCard(this);
+            if (IsDescriptionTextClick(eventData))
+            {
+                ShowCardTooltips(GetTooltipSide(), true, true);
+                return;
+            }
         }
-        if (IsDescriptionTextClick(eventData))
-        {
-            ShowCardTooltips(GetTooltipSide(), true, true);
-            return;
-        }
+        
         RestCardController restCard = GetComponentInParent<RestCardController>();
         if (restCard != null)
         {
@@ -182,6 +183,11 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         }
         else
         {
+            if (cardInstance == null || cardInstance.data == null)
+            {
+                costText.text = cost.ToString();
+                return;
+            }
             costText.text = cost>cardInstance.data.cost ? $"<color=red>{cost}</color>" : cost<cardInstance.data.cost ? $"<color=green>{cost}</color>" : cost.ToString();
         }
     }
@@ -303,6 +309,7 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         {
             tooltips.Add(new TooltipData(enchant.data.name, enchant.data.description));
         }
+        AddTagTooltips(tooltips);
         foreach (TooltipData tooltipData in tooltips)
         {
             GameObject tooltipObj = Instantiate(enchantTooltipPrefab, targetContainer);
@@ -375,7 +382,7 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         {
             tooltips.Add(new TooltipData(enchant.data.name, enchant.data.description));
         }
-
+        AddTagTooltips(tooltips);
         foreach (TooltipData tooltipData in tooltips)
         {
             GameObject tooltipObj = Instantiate(enchantTooltipPrefab, rewardTooltipContainerBelow);
@@ -384,6 +391,41 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(rewardTooltipContainerBelow.GetComponent<RectTransform>());
+    }
+    private void AddTagTooltips(List<TooltipData> tooltips)
+    {
+        if (cardInstance == null || cardInstance.data == null)
+            return;
+
+        foreach (CardTag tag in cardInstance.data.tags)
+        {
+            (string tagName, string tagDescription) = GetTagDescription(tag);
+            if (!string.IsNullOrEmpty(tagDescription))
+            {
+                bool alreadyAdded = tooltips.Exists(t => t.title == tagName && t.description == tagDescription);
+                if (!alreadyAdded)
+                    tooltips.Add(new TooltipData(tagName, tagDescription));
+            }
+        }
+    }
+    private (string, string) GetTagDescription(CardTag tag)
+    {
+        switch (tag)
+        {
+            case CardTag.Exhaust:
+                return ("Épuisement", "Quand cette carte est jouée, elle disparaît et ne peut pas revenir dans votre pioche pendant ce combat.");
+            case CardTag.Retain:
+                return ("Retenue", "Cette carte reste dans votre main à la fin du tour.");
+            case CardTag.Ethereal:
+                return ("Éthérée", "Si cette carte est dans votre main à la fin du tour, elle est épuisée.");
+            case CardTag.Infinite:
+                return ("Infinie", "Cette carte peut être jouée un nombre illimité de fois dans un tour.");
+            case CardTag.Innate:
+                return ("Innée", "Cette carte est toujours dans votre main au début du combat.");
+            // Add more cases for other tags as needed
+            default:
+                return ("", "");
+        }
     }
 
     private void EnsureRewardTooltipContainerBelow()

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Dark
   displayName: 
-  maxHP: 180
+  maxHP: 90
   pattern:
   - {fileID: 11400000, guid: 40593402db7177c4ebce302746126dcd, type: 2}
   randomStart: 0

@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: "Spectrom\xE9trie de masse"
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 21300000, guid: 798a6b5642b33804aa82660c30911b53, type: 3}
+  icon: {fileID: 21300000, guid: d7225aa6b9c646040ace75f2f278cea1, type: 3}
   cost: 3
   xCost: 0
   type: 0

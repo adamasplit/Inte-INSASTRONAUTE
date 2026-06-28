@@ -39,7 +39,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
   targetingMode: 0
   modifiers: []
-  favoredCharacter: 2
+  favoredCharacter: 10
   animationSpeed: 1
   startingCount: 0
-  tags: 0500000006000000
+  tags: 05000000

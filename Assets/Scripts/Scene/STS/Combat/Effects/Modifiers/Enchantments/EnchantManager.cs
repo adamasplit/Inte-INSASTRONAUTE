@@ -42,11 +42,11 @@ public static class EnchantManager
         }
         if (card.data.HasTag(CardTag.Exhaust))
         {
-            possibleEnchants.Add((EnchantType.Mending, 1.0f));
+            possibleEnchants.Add((EnchantType.Mending, 0.2f));
             possibleEnchants.Add((EnchantType.Unbreaking, 1.0f));
             possibleEnchants.Add((EnchantType.CurseOfVanishing, 0.5f));
         }
-        else if (!card.HasEnchantment("Infinity")&&!card.HasEnchantment("Mécanique")&&!card.data.HasTag(CardTag.Infinite))
+        else if (!card.HasEnchantment("Infinity")&&!card.HasEnchantment("Mécanique")&&!card.data.HasTag(CardTag.Infinite)&&card.data.type!=CardType.Pouvoir)
         {
             possibleEnchants.Add((EnchantType.Infinity, 0.5f));
         }

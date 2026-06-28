@@ -2,7 +2,7 @@
   "id": "destruction_de_materiel",
   "cardName": "Destruction de matériel",
   "collectionCardId": "",
-  "iconId": "Choc",
+  "iconId": "destruction",
   "cost": 2,
   "xCost": false,
   "type": "Compétence",
@@ -48,5 +48,7 @@
   "favoredCharacter": "MECA",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": []
+  "tags": [
+    "Exhaust"
+  ]
 }

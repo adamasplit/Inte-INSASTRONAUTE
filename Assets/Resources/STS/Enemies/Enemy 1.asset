@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Enemy 1
   displayName: 
-  maxHP: 25
+  maxHP: 12
   pattern: []
   randomStart: 0
   movePattern:

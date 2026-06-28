@@ -1,0 +1,135 @@
+{
+  "id": "Invader",
+  "enemyName": "Invader",
+  "displayName": "Space Invader",
+  "maxHP": 6,
+  "randomStart": false,
+  "patternCardIds": [
+    "acide",
+    "tir_cadre"
+  ],
+  "movePattern": [
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Weakness",
+          "duration": 2,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "nextMoveIndices": [],
+      "weight": 1
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Fragile",
+          "duration": 2,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "nextMoveIndices": [],
+      "weight": 1
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Weakness",
+          "duration": 1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        },
+        {
+          "type": "Damage",
+          "value": 4,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Weakness",
+          "duration": 1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "nextMoveIndices": [],
+      "weight": 1
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 6,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Jump",
+          "duration": 1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None"
+        }
+      ],
+      "nextMoveIndices": [],
+      "weight": 1
+    }
+  ],
+  "rewardCardIds": [],
+  "startingStatus": "Strength",
+  "startingStatusDuration": 0,
+  "startingStatusValue": 0,
+  "startingStatusInfo": ""
+}

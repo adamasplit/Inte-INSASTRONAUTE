@@ -1,0 +1,56 @@
+{
+  "id": "diamant",
+  "cardName": "Diamant",
+  "collectionCardId": "",
+  "iconId": "diamant",
+  "cost": 1,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Legendary",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 2,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    },
+    {
+      "type": "Status",
+      "value": 2,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Dexterity",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "CFI",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": [
+    "Molecule",
+    "Created",
+    "Exhaust"
+  ]
+}

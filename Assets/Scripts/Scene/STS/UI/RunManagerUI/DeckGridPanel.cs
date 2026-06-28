@@ -24,6 +24,7 @@ public class DeckGridPanel : MonoBehaviour
     [Header("Animation")]
     [SerializeField] private float entranceDuration = 0.25f;
     [SerializeField] private float entranceOffset = 180f;
+    [SerializeField] private bool enableEntranceAnimation = false;
 
     [Header("Content Padding")]
     [SerializeField] private float contentPadding = 48f;
@@ -67,8 +68,12 @@ public class DeckGridPanel : MonoBehaviour
         }
 
         // Rebuild layout once the panel is active so the scroll content gets its real size.
-        StartCoroutine(RefreshGridContentSizeAfterFrame());
+        if (enableEntranceAnimation)
+            StartCoroutine(RefreshGridContentSizeAfterFrame());
+        else
+            StartCoroutine(RefreshGridContentSizeAfterFrameImmediate());
 
+        UpdateCloseButtonState();
         // Hide preview initially
         HidePreview();
     }
@@ -76,9 +81,18 @@ public class DeckGridPanel : MonoBehaviour
     public void SelectCard(CardInstance card, CardGridItemView itemView)
     {
         if (isAnimating) return;
+        if (card==null||selectedItemView == itemView)
+        {
+            // Deselect the card if it's already selected
+            selectedItemView.gameObject.SetActive(true);
+            HidePreview();
+            selectedItemView = null;
+            return;
+        }
         //Hide previously selected card's preview if any
         if (selectedItemView != null && selectedItemView != itemView)
         {
+            Debug.Log($"DeckGridPanel: Hiding previous selection for card {selectedItemView?.cardView?.cardInstance?.data?.cardName}");
             selectedItemView.gameObject.SetActive(true);
             HidePreview();
         }
@@ -169,6 +183,9 @@ public class DeckGridPanel : MonoBehaviour
 
     public void Hide()
     {
+        if (SelectionManager.Instance != null && SelectionManager.Instance.selectionMode)
+            return;
+
         if (panelCanvasGroup != null)
         {
             panelCanvasGroup.alpha = 0f;
@@ -220,7 +237,39 @@ public class DeckGridPanel : MonoBehaviour
         gridContainerRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
         Canvas.ForceUpdateCanvases();
 
-        yield return AnimateGridEntrance(gridContainerRect);
+        if (enableEntranceAnimation)
+            yield return AnimateGridEntrance(gridContainerRect);
+    }
+
+    private IEnumerator RefreshGridContentSizeAfterFrameImmediate()
+    {
+        yield return null;
+        Canvas.ForceUpdateCanvases();
+
+        RectTransform gridContainerRect = gridContainer as RectTransform;
+        if (gridContainerRect == null || gridLayout == null)
+            yield break;
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(gridContainerRect);
+
+        int itemCount = gridContainer.childCount;
+        if (itemCount <= 0)
+            yield break;
+
+        int columns = GetColumnCount(gridContainerRect, itemCount);
+        int rows = Mathf.CeilToInt((float)itemCount / columns);
+
+        float height = gridLayout.padding.top + gridLayout.padding.bottom;
+        if (rows > 0)
+        {
+            height += rows * gridLayout.cellSize.y;
+            height += Mathf.Max(0, rows - 1) * gridLayout.spacing.y;
+        }
+
+        height += contentPadding * 2f;
+
+        gridContainerRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+        Canvas.ForceUpdateCanvases();
     }
 
     private IEnumerator AnimateGridEntrance(RectTransform gridContainerRect)
@@ -255,5 +304,19 @@ public class DeckGridPanel : MonoBehaviour
         float cellAndSpacingWidth = gridLayout.cellSize.x + gridLayout.spacing.x;
         int calculated = Mathf.FloorToInt((availableWidth + gridLayout.spacing.x) / Mathf.Max(1f, cellAndSpacingWidth));
         return Mathf.Max(1, calculated);
+    }
+
+    void Update()
+    {
+        UpdateCloseButtonState();
+    }
+
+    private void UpdateCloseButtonState()
+    {
+        if (closeButton == null)
+            return;
+
+        bool isSelecting = SelectionManager.Instance != null && SelectionManager.Instance.selectionMode;
+        closeButton.interactable = !isSelecting;
     }
 }

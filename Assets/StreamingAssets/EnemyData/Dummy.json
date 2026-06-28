@@ -1,0 +1,16 @@
+{
+  "id": "Dummy",
+  "enemyName": "Dummy",
+  "displayName": null,
+  "maxHP": 999,
+  "randomStart": false,
+  "patternCardIds": [
+    "revision_model_text"
+  ],
+  "movePattern": [],
+  "rewardCardIds": [],
+  "startingStatus": "Strength",
+  "startingStatusDuration": 0,
+  "startingStatusValue": 0,
+  "startingStatusInfo": ""
+}
