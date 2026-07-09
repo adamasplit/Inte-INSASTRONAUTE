@@ -1,10 +1,20 @@
+using System;
 public class PlayedModifier : StatModifier
 {
     public int perCard = 1;
-    public PlayedModifier(StatType type, int amount)
+    CardType info;
+    public PlayedModifier(StatType type, int amount,string info)
     {
         this.type = type;
         perCard = amount;
+        if (string.IsNullOrEmpty(info))
+        {
+            this.info = CardType.Rien;
+        }
+        else
+        {
+            this.info = Enum.Parse<CardType>(info);
+        }
     }
 
     public override bool AppliesTo(StatType stat, EffectContext ctx)
@@ -15,10 +25,23 @@ public class PlayedModifier : StatModifier
     {
         if (ctx.state==null)
             return value;
-        return value + ctx.state.cardsPlayedThisTurn.Count * perCard;
+        return value + VerifyCards(ctx.state.cardsPlayedThisTurn) * perCard;
+    }
+    private int VerifyCards(System.Collections.Generic.List<CardInstance> cards)
+    {
+        if (info == CardType.Rien)
+            return cards.Count;
+        int count = 0;
+        foreach (CardInstance card in cards)
+        {
+            if (card.data.type == info)
+                count++;
+        }
+        return count;
     }
     public override string Describe()
     {
-        return $"+{perCard} {StatTypeString.ToFrench(type)} par carte jouée ce tour";
+        string str = info==CardType.Rien?"carte":info.ToString().ToLower();
+        return $"{StatTypeString.ToFrench(type, perCard,modifierType)} par {str} jouée ce tour";
     }
 }

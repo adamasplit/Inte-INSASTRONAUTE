@@ -12,6 +12,7 @@ public class CombatState
     public int cardsDiscardedThisCombat;
     
     public int energySpentThisTurn;
+    public int energyGainedThisTurn;
     public Dictionary<Character, int> damageDealtThisCombat = new();
     public Dictionary<Character, int> hpLostSinceLastTurn = new();
     public bool playerLastTurn;
@@ -31,6 +32,7 @@ public class CombatState
         turnCount++;
         cardsPlayedThisTurn.Clear();
         energySpentThisTurn = 0;
+        energyGainedThisTurn = 0;
         playerLastTurn = character.isPlayer;
     }
     public void ResetTurnEndFlags(Character character)

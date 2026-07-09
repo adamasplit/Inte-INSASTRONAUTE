@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using TMPro;
+using System;
 public class EventManager : MonoBehaviour
 {
     public GenericPanel panel;
@@ -56,8 +57,43 @@ public class EventManager : MonoBehaviour
             Debug.LogError("No events loaded from JSON!");
             return;
         }
-        int idx = Random.Range(0, loadedEvents.Count);
-        ShowEvent(loadedEvents[idx]);
+
+        float totalWeight = 0;
+        foreach (var ev in loadedEvents)
+        {
+            if (ev == null)
+            {
+                continue;
+            }
+
+            totalWeight += ev.weight;
+        }
+
+        if (totalWeight <= 0)
+        {
+            Debug.LogError("All loaded events had invalid weights.");
+            return;
+        }
+
+        float roll = UnityEngine.Random.Range(0f, totalWeight);
+        float cumulative = 0;
+
+        foreach (var ev in loadedEvents)
+        {
+            if (ev == null)
+            {
+                continue;
+            }
+
+            cumulative += ev.weight;
+            if (roll < cumulative)
+            {
+                ShowEvent(ev);
+                return;
+            }
+        }
+
+        ShowEvent(loadedEvents[0]);
     }
 
     public void HideEventPanel()
@@ -66,6 +102,51 @@ public class EventManager : MonoBehaviour
         {
             panel.gameObject.SetActive(false);
         }
+    }
+
+    public bool UpdateEventOption(string optionId, Action<PanelOption> mutator)
+    {
+        if (panel == null)
+        {
+            return false;
+        }
+
+        return panel.UpdateOption(optionId, mutator);
+    }
+
+    public bool ReplaceEventOption(string optionId, PanelOption replacement)
+    {
+        if (panel == null)
+        {
+            return false;
+        }
+
+        return panel.ReplaceOption(optionId, replacement);
+    }
+
+    public bool ReplaceEventOptions(List<string> targetIds, List<PanelOption> replacements, string fallbackOptionId)
+    {
+        if (panel == null)
+        {
+            return false;
+        }
+
+        return panel.ReplaceOptions(targetIds, replacements, fallbackOptionId);
+    }
+
+    public bool ReplaceCurrentEventOption(PanelOption currentOption, List<PanelOption> replacements)
+    {
+        if (panel == null)
+        {
+            return false;
+        }
+
+        return panel.ReplaceCurrentOption(currentOption, replacements);
+    }
+
+    public void ReplaceEventOptions(List<PanelOption> options)
+    {
+        panel?.ReplaceOptions(options);
     }
 
     void ShowEvent(EventData ev)
@@ -78,10 +159,7 @@ public class EventManager : MonoBehaviour
         var options = new List<PanelOption>();
         foreach (var opt in ev.options)
         {
-            System.Action action = EventActionFactory.GetAction(opt, this);
-            PanelOption panopt=opt.ToPanelOption();
-            panopt.action = action;
-            options.Add(panopt); // icon lookup by opt.iconName if needed
+            options.Add(opt.ToPanelOption(this)); // icon lookup by opt.iconName if needed
         }
         panel.Show(ev.title, options);
     }

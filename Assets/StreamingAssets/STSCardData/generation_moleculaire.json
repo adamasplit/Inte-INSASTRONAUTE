@@ -23,10 +23,12 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [
         "Molecule"
       ],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

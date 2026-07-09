@@ -27,7 +27,8 @@ public class EffectEntryDrawer : PropertyDrawer
         var cardSelectionSourceProp = property.FindPropertyRelative("cardSelectionSource");
         var cardFilterTagsProp = property.FindPropertyRelative("cardFilterTags");
         var cardSelectionEffectProp = property.FindPropertyRelative("cardSelectionEffect");
-
+        var indexProp = property.FindPropertyRelative("index");
+        var animationTypeProp = property.FindPropertyRelative("animationType");
         // TYPE
         EditorGUI.PropertyField(
             new Rect(position.x, y, position.width, lineHeight),
@@ -63,12 +64,22 @@ public class EffectEntryDrawer : PropertyDrawer
             new Rect(position.x, y, position.width, lineHeight),
             conditionalProp);
         y += lineHeight + spacing;
-
+        if ((EffectType)typeProp.enumValueIndex==EffectType.Damage)
+        {
+            EditorGUI.PropertyField(
+                new Rect(position.x, y, position.width, lineHeight),
+                animationTypeProp);
+            y += lineHeight + spacing;
+        }
         if ((EffectType)typeProp.enumValueIndex==EffectType.Multihit)
         {
             EditorGUI.PropertyField(
                 new Rect(position.x, y, position.width, lineHeight),
                 durationProp);
+            y += lineHeight + spacing;
+            EditorGUI.PropertyField(
+                new Rect(position.x, y, position.width, lineHeight),
+                animationTypeProp);
             y += lineHeight + spacing;
         }
 
@@ -94,8 +105,12 @@ public class EffectEntryDrawer : PropertyDrawer
                 new Rect(position.x, y, position.width, lineHeight),
                 cardIDProp);
             y += lineHeight + spacing;
+            EditorGUI.PropertyField(
+                new Rect(position.x, y, position.width, lineHeight),
+                indexProp);
+            y += lineHeight + spacing;
         }
-        if ((EffectType)typeProp.enumValueIndex == EffectType.SetStatusToMaxValue)
+        if ((EffectType)typeProp.enumValueIndex == EffectType.SetStatusToMaxValue||(EffectType)typeProp.enumValueIndex == EffectType.DispelBuffsIntoStatus||(EffectType)typeProp.enumValueIndex == EffectType.DispelSpecificStatus)
         {
             EditorGUI.PropertyField(
                 new Rect(position.x, y, position.width, lineHeight),
@@ -134,6 +149,7 @@ public class EffectEntryDrawer : PropertyDrawer
             EditorGUI.PropertyField(
                 new Rect(position.x, y, position.width, lineHeight),
                 durationProp);
+            y += lineHeight + spacing;
         }
         if (conditionalProp.boolValue)
         {
@@ -170,6 +186,13 @@ public class EffectEntryDrawer : PropertyDrawer
                 durationProp);
             y += lineHeight + spacing;
         }
+        if ((EffectType)typeProp.enumValueIndex == EffectType.AddCopyOfCard)
+        {
+            EditorGUI.PropertyField(
+                new Rect(position.x, y, position.width, lineHeight),
+                cardSelectionSourceProp);
+            y += lineHeight + spacing;
+        }
 
         EditorGUI.EndProperty();
     }
@@ -182,18 +205,21 @@ public class EffectEntryDrawer : PropertyDrawer
         var typeProp = property.FindPropertyRelative("type");
         var conditionalProp = property.FindPropertyRelative("conditional");
         float height = 6 * (lineHeight + spacing); // type + value + targetSelf + description + conditional
-
+        if ((EffectType)typeProp.enumValueIndex == EffectType.Damage)
+        {
+            height += lineHeight + spacing; // animationType for Damage effect
+        }
         if ((EffectType)typeProp.enumValueIndex == EffectType.Status)
         {
-            height += 4 * (lineHeight + spacing); // header + statusType + duration + cardID
+            height += 6 * (lineHeight + spacing); // header + statusType + duration + cardID + index
         }
-        if ((EffectType)typeProp.enumValueIndex == EffectType.SetStatusToMaxValue)
+        if ((EffectType)typeProp.enumValueIndex == EffectType.SetStatusToMaxValue|| (EffectType)typeProp.enumValueIndex == EffectType.DispelBuffsIntoStatus||(EffectType)typeProp.enumValueIndex == EffectType.DispelSpecificStatus)
         {
             height += lineHeight + spacing; // statusType
         }
         if ((EffectType)typeProp.enumValueIndex == EffectType.Multihit)
         {
-            height += lineHeight + spacing; // duration for multihit
+            height +=2*(lineHeight + spacing); // duration+animationType for multihit
         }
         if ((EffectType)typeProp.enumValueIndex == EffectType.AddCardToHand|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDrawPile|| (EffectType)typeProp.enumValueIndex == EffectType.AddCardToDiscardPile|| (EffectType)typeProp.enumValueIndex == EffectType.ForceNextCard)
         {
@@ -214,6 +240,10 @@ public class EffectEntryDrawer : PropertyDrawer
             height += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("cardFilterTags"), true) + spacing;
             height += lineHeight + spacing;
             height += lineHeight + spacing; // cardSelectionSource + cardSelectionEffect
+        }
+        if ((EffectType)typeProp.enumValueIndex == EffectType.AddCopyOfCard)
+        {
+            height += lineHeight + spacing; // source
         }
         if (conditionalProp.boolValue)
         {

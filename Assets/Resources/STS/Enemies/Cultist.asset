@@ -12,15 +12,134 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Cultist
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Cultist
   enemyName: Cultist
   displayName: 
-  maxHP: 120
+  maxHP: 100
   pattern:
   - {fileID: 11400000, guid: 998821578d21bd44e85fcfac270f5d90, type: 2}
   randomStart: 0
-  movePattern: []
+  movePattern:
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 3
+      value: 3
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 3
+      value: 1
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 43
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 01000000
+    weight: 1
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 7
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 3
+      value: 1
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 2
+      duration: 1
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 02000000
+    weight: 1
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 11
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 3
+      value: 2
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 00000000
+    weight: 1
   rewardCards: []
   startingStatus: 17
   startingStatusDuration: 0
   startingStatusValue: 5
   startingStatusInfo: 
+  startingStatusIndex: 0

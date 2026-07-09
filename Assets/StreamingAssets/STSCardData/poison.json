@@ -23,19 +23,13 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
-  "modifiers": [
-    {
-      "type": "ReplayCount",
-      "kind": "Flat",
-      "value": 0,
-      "info": null,
-      "description": null
-    }
-  ],
+  "modifiers": [],
   "favoredCharacter": "Starting",
   "animationSpeed": 1.0,
   "startingCount": 0,

@@ -54,5 +54,8 @@ public enum StatusType
     EnergyUp,
     Vulnerabilize,
     Imitate,
-    FullThrottle
+    FullThrottle,
+    Fatigue,
+    DamageReduction,
+    AnyCardFollowUp
 }

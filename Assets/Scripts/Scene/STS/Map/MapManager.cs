@@ -10,11 +10,18 @@ public class MapManager : MonoBehaviour
     public MapView view;
     public MapGenerator generator = new();
     public Image blackOverlay;
+    public Image mapBackgroundImage;
 
     private System.Collections.Generic.List<MapNode> allNodes;
 
     void Awake()
     {
+        if (RunManager.Instance!=null)
+        {
+            RunManager.Instance.inCombat=false;
+        }
+        int act = Mathf.Min(RunManager.Instance != null ? RunManager.Instance.act+1 : 1,4);
+        mapBackgroundImage.sprite = Resources.Load<Sprite>($"STS/Backgrounds/Map_BG{act}");
         StartCoroutine(InitializeMap());
     }
 
@@ -89,35 +96,50 @@ public class MapManager : MonoBehaviour
 
     IEnumerator ResolveNode(MapNode node)
     {
-        yield return StartCoroutine(FadeToBlack(0.2f));
-        node.visited = true;
-        RunManager.Instance.currentFloor+=1;
+        string sceneName="STS_Map";
         switch (node.type)
         {
             case NodeType.Combat:
-                STSSceneLoader.Instance.LoadScene("STS_Combat");
+                sceneName = "STS_Combat";
                 break;
 
             case NodeType.Rest:
                 RunManager.Instance.restCharges = RunManager.Instance.maxRestCharges;
-                STSSceneLoader.Instance.LoadScene("STS_Rest");
+                sceneName = "STS_Rest";
                 break;
 
             case NodeType.Event:
-                STSSceneLoader.Instance.LoadScene("STS_Event");
-                break;
+                //50% chance to trigger an event, 50% chance to trigger a combat encounter instead
+                if (Random.value < 0.5f)
+                {
+                    sceneName = "STS_Combat";
+                    break;
+                }
+                else
+                {
+                    sceneName = "STS_Event";
+                    break;
+                }
             case NodeType.Elite:
                 RunManager.Instance.eliteEncounter = true;
-                STSSceneLoader.Instance.LoadScene("STS_Combat");
+                sceneName = "STS_Combat";
                 break;
             case NodeType.Boss:
                 RunManager.Instance.bossEncounter = true;
-                STSSceneLoader.Instance.LoadScene("STS_Combat");
+                sceneName = "STS_Combat";
                 break;
             default:
                 Debug.LogError($"Unknown node type: {node.type}");
                 break;
         }
+        if (sceneName == "STS_Combat")
+        {
+            SFXManager.Instance.PlaySound("Encounter");
+        }
+        yield return StartCoroutine(FadeToBlack(0.5f));
+        node.visited = true;
+        RunManager.Instance.currentFloor+=1;
+        STSSceneLoader.Instance.LoadScene(sceneName);
     }
 
     IEnumerator FadeToBlack(float duration)

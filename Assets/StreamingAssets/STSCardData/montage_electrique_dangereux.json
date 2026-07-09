@@ -11,7 +11,7 @@
   "effects": [
     {
       "type": "Damage",
-      "value": 16,
+      "value": 38,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Thunder"
     },
     {
       "type": "Status",
@@ -40,8 +42,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

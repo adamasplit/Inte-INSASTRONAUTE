@@ -23,13 +23,14 @@ MonoBehaviour:
   rarity: 3
   effects:
   - type: 3
-    value: 0
+    value: 3
     targetSelf: 1
     targetOthers: 0
     statusType: 41
-    duration: 3
+    duration: 0
     description: 
     cardID: "Pluie de m\xE9t\xE9ores"
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 

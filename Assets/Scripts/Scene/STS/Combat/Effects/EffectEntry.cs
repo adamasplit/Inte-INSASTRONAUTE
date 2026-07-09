@@ -12,6 +12,7 @@ public class EffectEntry
     public int duration;
     public string description; // Optional custom description for the effect
     public string cardID; // Optional: ID of the card this effect will create (for AddCardToHand or similar effects)
+    public int index; // Optional: Index of the effect for status effects that have multiple effects (like FieldTurnFollowUp)
     public bool conditional;
     public ConditionType conditionType;
     public string conditionValue;
@@ -19,6 +20,7 @@ public class EffectEntry
     public CardSelectionSource cardSelectionSource; // For effects that involve selecting cards, specify the source of the cards
     public List<CardFilterTag> cardFilterTags = new(); // For effects that involve selecting cards, specify tags to filter the cards
     public CardSelectionEffect cardSelectionEffect; // For effects that involve selecting cards, specify an additional effect to apply to the selected cards
+    public AnimationType animationType=AnimationType.Default; // For effects that have a specific animation type, specify it here
     public EffectEntryDTO ToDTO()
     {
         List<string> cft = new();
@@ -46,7 +48,9 @@ public class EffectEntry
             trueEffect = trueEffect,
             cardSelectionSource = cardSelectionSource.ToString(),
             cardFilterTags = cft,
-            cardSelectionEffect = cardSelectionEffect.ToString()
+            index = index,
+            cardSelectionEffect = cardSelectionEffect.ToString(),
+            animationType = animationType.ToString()
         };
     }
     public static EffectEntry FromDTO(EffectEntryDTO dto)
@@ -75,19 +79,19 @@ public class EffectEntry
             trueEffect = dto.trueEffect,
             cardSelectionSource = Enum.Parse<CardSelectionSource>(dto.cardSelectionSource),
             cardFilterTags = cft,
-            cardSelectionEffect = Enum.Parse<CardSelectionEffect>(dto.cardSelectionEffect)
+            index = dto.index,
+            cardSelectionEffect = Enum.Parse<CardSelectionEffect>(dto.cardSelectionEffect),
+            animationType = Enum.Parse<AnimationType>(dto.animationType)
         };
     }
-
-    public GameObject GetVFXPrefab()
+    public string GetEffectName()
     {
-        // Map effect types to VFX prefabs
-        string prefabName = type switch
+        return type switch
         {
-            EffectType.Damage => "Damage",
+            EffectType.Damage => "Damage"+animationType.ToString(),
             EffectType.Heal => "Heal",
             EffectType.Armor => "Armor",
-            EffectType.Status=>StatusEffect.Factory(statusType,0,0,cardID).buff?"Buff":"Debuff",
+            EffectType.Status=>StatusEffect.Factory(statusType,value,duration,cardID,index).debuff?"Debuff":"Buff",
             EffectType.AdvanceTurn=>"TurnAdvance",
             EffectType.DelayTurn=>"TurnDelay",
             EffectType.DeleteNextTurn=>"TurnDelete",
@@ -96,10 +100,24 @@ public class EffectEntry
             EffectType.Gravity=>"Gravity",
             _ => null
         };
+    }
+
+    public GameObject GetVFXPrefab()
+    {
+        // Map effect types to VFX prefabs
+        string prefabName = GetEffectName();
 
         if (prefabName != null)
         {
-            return Resources.Load<GameObject>($"STS/VFX/{prefabName}");
+            GameObject prefab = Resources.Load<GameObject>($"STS/VFX/{prefabName}");
+            if (prefab!= null)
+            {
+                return prefab;
+            }
+            else
+            {
+                return Resources.Load<GameObject>($"STS/VFX/{type.ToString()}");
+            }
         }
         return null;
     }
@@ -122,6 +140,7 @@ public class EffectEntry
             conditionType = source.conditionType,
             conditionValue = source.conditionValue,
             trueEffect = source.trueEffect,
+            index = source.index,
             cardSelectionSource = source.cardSelectionSource,
             cardSelectionEffect = source.cardSelectionEffect
         };

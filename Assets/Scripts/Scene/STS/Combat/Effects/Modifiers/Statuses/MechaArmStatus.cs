@@ -27,7 +27,7 @@ public class MechaArmStatus : StatusEffect
                 {
                     enemy.TakeDamage(3*Value);
                 }
-                VFXManager.Instance.PlayEffect("Shockwave", target);
+                VFXManager.Instance.PlayEffect("DamageMagic", target);
                 break;
         }
     }

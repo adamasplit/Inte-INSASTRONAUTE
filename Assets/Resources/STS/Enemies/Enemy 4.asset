@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Enemy 4
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Enemy 4
   enemyName: Enemy 4
   displayName: 
   maxHP: 32
@@ -23,7 +24,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 400a53d1e4803304898a63e2e23ddb00, type: 2}
   - {fileID: 11400000, guid: f616076eed1cf1c46afe77ec11937d99, type: 2}
   - {fileID: 11400000, guid: e7b8e19fba3483b419503d79f3957277, type: 2}
-  - {fileID: 0}
   - {fileID: 11400000, guid: e7b8e19fba3483b419503d79f3957277, type: 2}
   - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
   randomStart: 0
@@ -39,6 +39,7 @@ MonoBehaviour:
       duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -46,6 +47,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     nextMoveIndices: 0100000002000000
     weight: 0
   - card: {fileID: 0}
@@ -59,6 +61,7 @@ MonoBehaviour:
       duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -66,6 +69,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     - type: 3
       value: 2
       targetSelf: 0
@@ -74,6 +78,7 @@ MonoBehaviour:
       duration: 2
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -81,6 +86,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     nextMoveIndices: 0300000002000000
     weight: 0
   - card: {fileID: 0}
@@ -94,6 +100,7 @@ MonoBehaviour:
       duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -101,6 +108,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     nextMoveIndices: 0100000003000000
     weight: 0
   - card: {fileID: 0}
@@ -114,6 +122,7 @@ MonoBehaviour:
       duration: 3
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -121,6 +130,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     nextMoveIndices: 0200000001000000
     weight: 0
   rewardCards:
@@ -129,3 +139,4 @@ MonoBehaviour:
   startingStatusDuration: 0
   startingStatusValue: 0
   startingStatusInfo: 
+  startingStatusIndex: 0

@@ -1,33 +1,52 @@
+using UnityEngine;
 public static class EventActionFactory
 {
     public static System.Action GetAction(
-        PanelOptionData option,
+        PanelOption option,
         EventManager manager)
     {
         return () =>
         {
-            manager.HideEventPanel();
+            if (option.closePanel)
+            {
+                manager.HideEventPanel();
+            }
+
             ExecuteEntry(0, option, manager);
             manager.description.text = option.completionMessage; // Display the completion message if provided
         };
     }
 
-    private static void ExecuteEntry(int index, PanelOptionData option, EventManager manager)
+    private static void ExecuteEntry(int index, PanelOption option, EventManager manager)
     {
         if (option == null || option.entries == null || index >= option.entries.Count)
         {
-            manager.ShowEventContinue(manager.ReturnToMap);
+            if (option != null && option.closePanel)
+            {
+                manager.ShowEventContinue(manager.ReturnToMap);
+            }
+
             return;
         }
 
         var entry = option.entries[index];
 
-        switch (System.Enum.Parse<EventOptionType>(entry.type))
+        switch (entry.type)
         {
             case EventOptionType.CardReward:
             {
                 Reward reward = new Reward();
-                reward.items.Add(RewardGenerator.GenerateCardReward());
+                if (entry.cardRewardProfiles != null && entry.cardRewardProfiles.Count > 0)
+                {
+                    foreach (var profile in entry.cardRewardProfiles)
+                    {
+                        reward.items.Add(RewardGenerator.GenerateCardReward(null, profile));
+                    }
+                }
+                else
+                {
+                    reward.items.Add(RewardGenerator.GenerateCardReward(null, entry.cardRewardProfile));
+                }
                 manager.PresentReward(reward, () => ExecuteEntry(index + 1, option, manager));
                 break;
             }
@@ -121,6 +140,20 @@ public static class EventActionFactory
 
                 ExecuteEntry(index + 1, option, manager);
                 break;
+
+            case EventOptionType.ReplaceOptions:
+            {
+                bool replaced = entry.targetIds != null && entry.targetIds.Count > 0
+                    ? manager.ReplaceEventOptions(entry.targetIds, entry.replacementOptions, option.id)
+                    : manager.ReplaceCurrentEventOption(option, entry.replacementOptions);
+
+                if (!replaced)
+                {
+                    Debug.LogWarning($"ReplaceOptions entry on option '{option.id}' did not match any target ids.");
+                }
+
+                break;
+            }
 
             default:
                 ExecuteEntry(index + 1, option, manager);

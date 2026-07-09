@@ -16,6 +16,6 @@ public class DebuffOnSelfModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+{perDebuff} {StatTypeString.ToFrench(type)} par effet néfaste actif";
+        return $"{StatTypeString.ToFrench(type, perDebuff,modifierType)} par effet néfaste actif";
     }
 }

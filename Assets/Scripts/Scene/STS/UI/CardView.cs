@@ -34,6 +34,10 @@ public class CardView : MonoBehaviour,IPointerClickHandler
     public bool selectionPreview;
     public GameObject selectionHighlight;
     public bool isDragging;
+    private Coroutine combatClickDeselectRoutine;
+    private float lastCombatClickTime = -999f;
+    [SerializeField] private float combatDoubleClickThreshold = 0.3f;
+
     public void toggleSelection()
     {
         selectionPreview = !selectionPreview;
@@ -61,6 +65,24 @@ public class CardView : MonoBehaviour,IPointerClickHandler
     {
         return ui != null && ui.selectedCard == this;
     }
+    private void CancelPendingCombatDeselect()
+    {
+        if (combatClickDeselectRoutine != null)
+        {
+            StopCoroutine(combatClickDeselectRoutine);
+            combatClickDeselectRoutine = null;
+        }
+    }
+    private IEnumerator DeselectCombatCardAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(combatDoubleClickThreshold);
+        combatClickDeselectRoutine = null;
+
+        if (ui != null && ui.selectedCard == this)
+        {
+            ui.Deselect();
+        }
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
 
@@ -71,6 +93,30 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         }
         if (ui!=null)
         {
+            bool isCombatCard = combat != null;
+            bool isDoubleClick = isCombatCard && Time.unscaledTime - lastCombatClickTime <= combatDoubleClickThreshold;
+            lastCombatClickTime = Time.unscaledTime;
+
+            if (isCombatCard && !IsSelectedCard())
+            {
+                ui.HideCombatCardPreview();
+            }
+
+            if (isDoubleClick)
+            {
+                CancelPendingCombatDeselect();
+                ui.SelectCard(this, true);
+                ui.ShowCombatCardPreview(this);
+                return;
+            }
+
+            if (isCombatCard && IsSelectedCard())
+            {
+                CancelPendingCombatDeselect();
+                combatClickDeselectRoutine = StartCoroutine(DeselectCombatCardAfterDelay());
+                return;
+            }
+
             if (IsDescriptionTextClick(eventData)&&IsSelectedCard())
             {
                 ShowCardTooltips(GetTooltipSide(), true, true);
@@ -465,7 +511,7 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         if (effect.type != EffectType.Status)
             return;
 
-        StatusEffect status = StatusEffect.Factory(effect.statusType, effect.value, effect.duration, effect.cardID);
+        StatusEffect status = StatusEffect.Factory(effect.statusType, effect.value, effect.duration, effect.cardID,effect.index);
         if (status == null || !status.generic)
             return;
 
@@ -580,6 +626,7 @@ public class CardView : MonoBehaviour,IPointerClickHandler
             genericCardRoot.SetActive(true);
             descriptionText.color = Color.white;
             nameText.color = Color.white;
+            nameText.transform.localScale = Vector3.one;
         }
         else
         {
@@ -594,6 +641,7 @@ public class CardView : MonoBehaviour,IPointerClickHandler
             cardImage.preserveAspect = false;
             collectionCardRoot.SetActive(true);
             genericCardRoot.SetActive(false);
+            nameText.transform.localScale = Vector3.one * 0.6f;
             // Set the collection card description background color based on a pixel from the collection card's sprite
             if (card.data.collectionCard != null && card.data.collectionCard.sprite != null)
             {

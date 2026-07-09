@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Light"
     }
   ],
   "modifiers": [
@@ -32,8 +34,8 @@
       "type": "Damage",
       "kind": "LostHP",
       "value": 2,
-      "info": null,
-      "description": null
+      "info": "",
+      "description": ""
     }
   ],
   "favoredCharacter": "Impossible",

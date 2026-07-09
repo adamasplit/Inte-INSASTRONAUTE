@@ -23,13 +23,14 @@ MonoBehaviour:
   rarity: 2
   effects:
   - type: 3
-    value: 0
+    value: 20
     targetSelf: 0
     targetOthers: 0
     statusType: 22
     duration: 4
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -43,3 +44,4 @@ MonoBehaviour:
   animationSpeed: 1
   startingCount: 0
   tags: 
+  animationType: 0

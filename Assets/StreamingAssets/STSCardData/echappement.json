@@ -1,0 +1,45 @@
+{
+  "id": "echappement",
+  "cardName": "Échappement",
+  "collectionCardId": "",
+  "iconId": "feu",
+  "cost": 0,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Epic",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Burn",
+      "duration": 0,
+      "description": "Appliquez autant de Brûlure que vous avez dépensé d'énergie ce tour",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [
+    {
+      "type": "StatusDuration",
+      "kind": "EnergySpent",
+      "value": 1,
+      "info": "",
+      "description": " "
+    }
+  ],
+  "favoredCharacter": "EP",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

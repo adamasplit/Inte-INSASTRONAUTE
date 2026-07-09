@@ -19,16 +19,24 @@ public static class RewardGenerator
 
         Reward reward = new Reward();
 
+        CardRewardProfile cardRewardProfile = CardRewardProfile.CreateDefault(result);
+        if (result.boss)
+        {
+            cardRewardProfile.useExactRarity = true;
+            cardRewardProfile.exactRarity = CardRarity.Legendary;
+            cardRewardProfile.choiceCount = 3;
+        }
+
         CardReward cardReward = new CardReward
         {
-            choices = GenerateCardChoices(result)
+            choices = GenerateCardChoices(result, cardRewardProfile)
         };
 
         Relic relic = null;
         do{
             relic = RelicDrop.GetRandomRelic(result);
         } while (relic==null||(RunManager.Instance!=null&&RunManager.Instance.relics.Exists(r=>r.name==relic.name)));
-        if (relic != null&&result.elite)
+        if (relic != null && (result.elite || result.boss))
         {
             reward.items.Add(new RelicReward
             {
@@ -51,9 +59,17 @@ public static class RewardGenerator
     {
         result ??= new CombatResult();
 
+        return GenerateCardReward(result, null);
+    }
+
+    public static CardReward GenerateCardReward(CombatResult result, CardRewardProfile profile)
+    {
+        result ??= new CombatResult();
+        profile ??= CardRewardProfile.CreateDefault(result);
+
         return new CardReward
         {
-            choices = GenerateCardChoices(result)
+            choices = GenerateCardChoices(result, profile)
         };
     }
     public static RelicReward GenerateRelicReward(CombatResult result = null)
@@ -80,32 +96,80 @@ public static class RewardGenerator
 
         return baseGold;
     }
-    static List<CardInstance> GenerateCardChoices(CombatResult result)
+    static List<CardInstance> GenerateCardChoices(CombatResult result, CardRewardProfile profile)
     {
         result ??= new CombatResult();
+        profile ??= CardRewardProfile.CreateDefault(result);
 
-        List<CardEntry> pool = BuildCardPool(result);
+        List<CardInstance> choices = GenerateCardChoicesFromPool(result, profile, BuildCardPool(result, profile));
+
+        if (choices.Count > 0)
+        {
+            return choices;
+        }
+
+        CardRewardProfile relaxedProfile = profile.CreateRelaxedFallback();
+        Debug.LogWarning("Card reward profile produced no choices. Retrying with a relaxed fallback profile.");
+
+        choices = GenerateCardChoicesFromPool(result, relaxedProfile, BuildCardPool(result, relaxedProfile));
+
+        if (choices.Count > 0)
+        {
+            return choices;
+        }
+
+        Debug.LogWarning("Relaxed card reward fallback also produced no choices. Retrying with the default combat pool.");
+        return GenerateCardChoicesFromPool(result, CardRewardProfile.CreateDefault(result), BuildCardPool(result, CardRewardProfile.CreateDefault(result)));
+    }
+
+    static List<CardInstance> GenerateCardChoicesFromPool(CombatResult result, CardRewardProfile profile, List<CardEntry> pool)
+    {
+        if (pool == null || pool.Count == 0)
+        {
+            return new List<CardInstance>();
+        }
 
         List<CardInstance> choices = new List<CardInstance>();
+        int maxAttempts = Mathf.Max(20, profile.choiceCount * 50);
+        HashSet<string> seenCardIds = new HashSet<string>();
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < profile.choiceCount; i++)
         {
-            CardInstance card;
+            CardInstance card = null;
             int attempts = 0;
+
             do
             {
                 card = GetRandomCard(pool, result);
-            } while (choices.Exists(c => c.data == card.data) && attempts < 100);
+
+                if (card == null)
+                {
+                    break;
+                }
+
+                attempts++;
+            } while (card != null && card.data != null && seenCardIds.Contains(card.data.id) && attempts < maxAttempts);
+
+            if (card == null)
+            {
+                break;
+            }
+
+            if (card.data != null)
+            {
+                seenCardIds.Add(card.data.id);
+            }
+
             choices.Add(card);
         }
 
         return choices;
     }
-    static List<CardEntry> BuildCardPool(CombatResult result)
+    static List<CardEntry> BuildCardPool(CombatResult result, CardRewardProfile profile)
     {
         List<CardEntry> pool = new List<CardEntry>();
 
-        if (result.enemies != null&&RunManager.Instance!=null && RunManager.Instance.relics.Exists(r => r is ITIRelic))
+        if (result.enemies != null&&RunManager.Instance!=null && RunManager.Instance.relics.Exists(r=>r is ITIRelic))
         {
             ITIRelic iRelic = RunManager.Instance.relics.Find(r => r is ITIRelic) as ITIRelic;
             Debug.Log("Adding enemy reward cards to pool");
@@ -113,21 +177,34 @@ public static class RewardGenerator
             {
                 foreach (var card in enemy.rewardCards)
                 {
-                    pool.Add(new CardEntry(card, iRelic.DropRateForEnemyCards()));
+                    if (profile.Matches(card, result))
+                    {
+                        pool.Add(new CardEntry(card, iRelic.DropRateForEnemyCards()));
+                    }
                 }
             }
         }
 
-        pool.AddRange(GetFloorCards(RunManager.Instance!=null ? RunManager.Instance.currentFloor : 1,result));
+        pool.AddRange(GetFloorCards(RunManager.Instance!=null ? RunManager.Instance.currentFloor : 1,result,profile));
 
         return pool;
     }
     static CardInstance GetRandomCard(List<CardEntry> pool,CombatResult result=null)
     {
+        if (pool == null || pool.Count == 0)
+        {
+            return null;
+        }
+
         int totalWeight = 0;
         foreach (var entry in pool)
         {
-            totalWeight += entry.weight;
+            totalWeight += Mathf.Max(0, entry.weight);
+        }
+
+        if (totalWeight <= 0)
+        {
+            return null;
         }
 
         int randomValue = UnityEngine.Random.Range(0, totalWeight);
@@ -135,7 +212,7 @@ public static class RewardGenerator
 
         foreach (var entry in pool)
         {
-            cumulativeWeight += entry.weight;
+            cumulativeWeight += Mathf.Max(0, entry.weight);
             if (randomValue < cumulativeWeight)
             {
                 CardInstance cardInstance = new CardInstance(entry.card);
@@ -150,7 +227,7 @@ public static class RewardGenerator
 
         return null; // Should never reach here if pool is not empty
     }
-    static List<CardEntry> GetFloorCards(int floor,CombatResult result=null)
+    static List<CardEntry> GetFloorCards(int floor,CombatResult result=null, CardRewardProfile profile = null)
     {
         List<CardEntry> floorCards = new List<CardEntry>();
         if (STSCardDatabase.allCards==null || STSCardDatabase.allCards.Count==0)
@@ -159,37 +236,25 @@ public static class RewardGenerator
         }
         foreach (var card in STSCardDatabase.allCards)
         {
-            if (card.favoredCharacter != SelectableCharacter.Aucun && RunManager.Instance != null 
-            && card.favoredCharacter != RunManager.Instance.selectedCharacter
-            ||card.HasTag(CardTag.Created))
+            if (profile != null && !profile.Matches(card, result))
             {
-                continue; // Skip cards that are favored for a different character or created cards
+                continue; // Skip cards that do not match the requested profile
             }
             int weight;
-            if (result.boss)
+            if (profile != null)
             {
-                weight=card.rarity switch
-                {
-                    CardRarity.Legendary => 50,
-                    _ => 0
-                };
+                weight = profile.GetWeight(card.rarity, result);
             }
             else
             {
-                weight=card.rarity switch
-                {
-                    CardRarity.Common => 100,
-                    CardRarity.Uncommon => 50,
-                    CardRarity.Rare => 25,
-                    CardRarity.Epic => 10,
-                    CardRarity.Legendary => 5,
-                    _ => 0
-                };
+                weight = CardRewardProfile.GetDefaultWeight(card.rarity, result);
             }
-            if (card.favoredCharacter==RunManager.Instance?.selectedCharacter)
+
+            if (weight <= 0)
             {
-                //weight *= 2; // Double the weight for favored character cards
-            }  
+                continue;
+            }
+
             floorCards.Add(new CardEntry(card, weight));
         }
         return floorCards;

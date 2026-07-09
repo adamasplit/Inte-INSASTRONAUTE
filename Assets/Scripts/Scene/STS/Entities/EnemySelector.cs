@@ -4,43 +4,11 @@ using UnityEngine;
 
 public static class EnemySelector
 {
-    public static EnemyPool pool=null;
     public static List<EnemyData> GetRandomEncounter(
         int floor,
         bool elite = false,
         bool boss = false)
     {
-        if (pool == null)
-        {
-            pool=Resources.Load<EnemyPool>("STS/Enemies/EnemyPool");
-        }
-        var candidates = pool.enemies
-            .Where(e =>
-                e.minFloor <= floor &&
-                (e.minAct == -1 || e.minAct <= RunManager.Instance.act) &&
-                (e.maxAct == -1 || e.maxAct >= RunManager.Instance.act) &&
-                (e.maxFloor >= floor||e.maxFloor==-1) &&
-                e.elite == elite &&
-                e.boss == boss)
-            .ToList();
-        if (candidates.Count == 0)
-        {
-            Debug.LogError("No enemy found for this config");
-            return null;
-        }
-
-        float totalWeight = candidates.Sum(c => c.weight);
-        float roll = Random.value * totalWeight;
-
-        float current = 0;
-
-        foreach (var e in candidates)
-        {
-            current += e.weight;
-            if (roll <= current)
-                return e.enemies;
-        }
-
-        return candidates[0].enemies;
+        return EnemyPoolDatabase.GetRandomEncounter(floor, elite, boss);
     }
 }

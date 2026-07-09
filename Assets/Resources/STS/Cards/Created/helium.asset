@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: helium
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: helium
-  cardName: Soufre
+  cardName: "H\xE9lium"
   collectionCardId: 
   collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: e77e944a0475cd34eb844c24eacd86df, type: 3}
@@ -30,6 +30,7 @@ MonoBehaviour:
     duration: 1
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +38,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 4

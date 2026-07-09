@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Dark
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Dark
   enemyName: Dark
-  displayName: 
-  maxHP: 90
+  displayName: Roaring Knight
+  maxHP: 60
   pattern:
   - {fileID: 11400000, guid: 40593402db7177c4ebce302746126dcd, type: 2}
   randomStart: 0
@@ -22,14 +23,93 @@ MonoBehaviour:
   - card: {fileID: 0}
     moveName: 
     effects:
+    - type: 3
+      value: 4
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 42
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 2
+      value: 8
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 42
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 01000000
+    weight: 1
+  - card: {fileID: 0}
+    moveName: 
+    effects:
     - type: 0
-      value: 20
+      value: 15
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 20
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 3
+      value: 2
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 20
+      duration: 2
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 02000000
+    weight: 1
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 8
       targetSelf: 0
       targetOthers: 0
       statusType: 0
       duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -37,14 +117,16 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     - type: 2
-      value: 10
+      value: 5
       targetSelf: 1
       targetOthers: 0
-      statusType: 0
+      statusType: 42
       duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -52,11 +134,13 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
-    nextMoveIndices: 
-    weight: 0
+      animationType: 0
+    nextMoveIndices: 00000000
+    weight: 1
   rewardCards:
   - {fileID: 11400000, guid: 40593402db7177c4ebce302746126dcd, type: 2}
   startingStatus: 0
   startingStatusDuration: 0
   startingStatusValue: 0
   startingStatusInfo: 
+  startingStatusIndex: 0

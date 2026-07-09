@@ -2,11 +2,11 @@ using UnityEngine;
 public class EchoStatus : StatusEffect
 {
     private int moveIndex;
-    public EchoStatus(int value,int duration)
+    public EchoStatus(int value,int duration,int moveIndex)
     {
-        Value = duration;
-        moveIndex = value;
-        Duration = -1;
+        Value = value;
+        Duration = duration;
+        moveIndex = moveIndex;
         Name = "Écho";
         modifierType = ModifierType.Additive;
         buff=true;
@@ -18,17 +18,21 @@ public class EchoStatus : StatusEffect
     public override int Modify(int replayCount, EffectContext ctx)
     {
         if (ctx.card == null) return replayCount;
-        if (ctx.card.data.type!=cardType()&&moveIndex!=0) return replayCount;
+        if (ctx.card.data.type!=cardType()&&moveIndex!=0||ctx.card.HasTag(CardTag.FollowUp)) return replayCount;
         int res = replayCount + Value;
         if (!ctx.isPreview)
         {
-            mustExpire = true;
+            Duration--;
         }
         return res;
     }
+    public override void OnTurnEnd(Character character)
+    {
+    }
     public override string Desc(bool isPlayer)
     {
-        return $"La prochaine carte{(moveIndex==0?"":" "+cardType().ToString())} jouée se rejoue {Value} fois supplémentaire{(Value>1?"s":"")}.";
+        bool singular = Duration==1;
+        return $"{(singular?"La prochaine carte":$"Les {Duration} prochaines cartes")} {(moveIndex==0?"":" "+cardType().ToString())} jouée{(singular?"":"s")} se rejoue{(singular?"":"nt")} {Value} fois supplémentaire{(Value>1?"s":"")}.";
     }
     public CardType cardType()
     {

@@ -30,6 +30,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -43,3 +44,4 @@ MonoBehaviour:
   animationSpeed: 1
   startingCount: 0
   tags: 
+  animationType: 0

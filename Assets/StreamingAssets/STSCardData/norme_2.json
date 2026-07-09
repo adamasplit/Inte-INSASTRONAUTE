@@ -3,7 +3,7 @@
   "cardName": "Norme 2",
   "collectionCardId": "",
   "iconId": "norme",
-  "cost": 2,
+  "cost": 1,
   "xCost": false,
   "type": "Attaque",
   "rarity": "Common",
@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [

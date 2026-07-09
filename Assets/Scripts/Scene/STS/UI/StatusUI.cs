@@ -47,7 +47,11 @@ public class StatusUI : MonoBehaviour
                 {
                     Debug.Log($"FollowUpStatus has card data: {data.cardName}. Showing tooltip for the card.");
                     CardInstance tempCard = new CardInstance(data);
-                    TooltipManager.Instance.ShowTooltip(data.cardName,tempCard.GetDescription(), transform.position + new Vector3(0, -100, 0),false);
+                    TooltipManager.Instance.ShowTooltip(data.cardName,tempCard.GetDescription(), transform.position + new Vector3(0, -1, 0),false);
+                }
+                else
+                {
+                    Debug.Log($"FollowUpStatus has no card data. No additional tooltip will be shown.");
                 }
             }
         }

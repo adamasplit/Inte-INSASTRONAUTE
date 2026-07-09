@@ -22,6 +22,6 @@ public class DamageDealtWithLastActionModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+ {addedValue} {StatTypeString.ToFrench(type)} pour chaque dégât infligé avec cette action";
+        return $"{StatTypeString.ToFrench(type, addedValue,modifierType)} pour chaque dégât infligé avec cette action";
     }
 }

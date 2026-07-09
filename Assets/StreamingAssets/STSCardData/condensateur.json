@@ -2,7 +2,7 @@
   "id": "condensateur",
   "cardName": "Condensateur",
   "collectionCardId": "",
-  "iconId": null,
+  "iconId": "batterie",
   "cost": 0,
   "xCost": false,
   "type": "Compétence",
@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

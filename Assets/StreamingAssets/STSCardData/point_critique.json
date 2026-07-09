@@ -6,7 +6,7 @@
   "cost": 1,
   "xCost": false,
   "type": "Attaque",
-  "rarity": "Uncommon",
+  "rarity": "Common",
   "targetingMode": "Enemy",
   "effects": [
     {
@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     },
     {
       "type": "Status",
@@ -40,8 +42,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

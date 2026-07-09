@@ -24,12 +24,13 @@ MonoBehaviour:
   effects:
   - type: 18
     value: 0
-    targetSelf: 1
+    targetSelf: 0
     targetOthers: 0
     statusType: 0
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,9 +38,27 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-  targetingMode: 0
+    animationType: 0
+  - type: 33
+    value: 0
+    targetSelf: 1
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  targetingMode: 1
   modifiers: []
   favoredCharacter: 10
   animationSpeed: 1
   startingCount: 0
-  tags: 090000000500000008000000
+  tags: 090000000800000007000000

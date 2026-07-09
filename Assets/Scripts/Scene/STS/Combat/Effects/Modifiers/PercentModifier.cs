@@ -14,6 +14,6 @@ public class PercentModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+ {addedPercent}% {StatTypeString.ToFrench(type)}";
+        return $"{StatTypeString.ToFrench(type, addedPercent,modifierType)}";
     }
 }

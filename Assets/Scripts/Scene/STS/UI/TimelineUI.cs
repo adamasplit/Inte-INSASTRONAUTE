@@ -9,6 +9,12 @@ public class TimelineUI : MonoBehaviour
 
     public float spacing = 100f;
 
+    float GetAdaptiveScale()
+    {
+        float screenScale = UIAdaptiveScale.GetScreenScale();
+        return Mathf.Lerp(1f, screenScale, 0.75f);
+    }
+
     List<TurnIcon> icons = new();
     List<TurnEntry> previousDisplayTimeline = null;
 
@@ -19,13 +25,14 @@ public class TimelineUI : MonoBehaviour
         bool anyIconMoving = false;
         EnsureIconCount(timeline.Count);
         float referenceTime = timeline.Count > 0 ? timeline[0].time : 0f;
+        float adaptiveScale = GetAdaptiveScale();
 
         // Step 1: Calculate X positions for all icons
         List<float> xPositions = new();
         for (int i = 0; i < timeline.Count; i++)
         {
             var entry = timeline[i];
-            float x = GetTimelineX(Mathf.Max(0f, entry.time - referenceTime));
+            float x = GetTimelineX(Mathf.Max(0f, entry.time - referenceTime), adaptiveScale);
             xPositions.Add(x);
         }
 
@@ -52,7 +59,7 @@ public class TimelineUI : MonoBehaviour
         }
 
         // Step 3: Assign Y offsets for stacking
-        float stackSpacing = -50f; // vertical distance between stacked icons
+        float stackSpacing = -50f * adaptiveScale; // vertical distance between stacked icons
         int totalIcons = timeline.Count;
         for (int i = 0; i < totalIcons; i++)
         {
@@ -97,7 +104,7 @@ public class TimelineUI : MonoBehaviour
                 if (oldIndex != -1)
                 {
                     float previousReferenceTime = previousDisplayTimeline.Count > 0 ? previousDisplayTimeline[0].time : 0f;
-                    float oldX = GetTimelineX(Mathf.Max(0f, previousDisplayTimeline[oldIndex].time - previousReferenceTime));
+                    float oldX = GetTimelineX(Mathf.Max(0f, previousDisplayTimeline[oldIndex].time - previousReferenceTime), adaptiveScale);
                     // Find old group and stack index
                     float oldGroupKey = 0f;
                     List<int> oldGroup = null;
@@ -189,16 +196,21 @@ public class TimelineUI : MonoBehaviour
 
     float GetTimelineX(int relativeIndex)
     {
-        return GetTimelineX((float)relativeIndex);
+        return GetTimelineX((float)relativeIndex, GetAdaptiveScale());
     }
 
     float GetTimelineX(float relativeTime)
+    {
+        return GetTimelineX(relativeTime, GetAdaptiveScale());
+    }
+
+    float GetTimelineX(float relativeTime, float adaptiveScale)
     {
         float direction = Mathf.Sign(relativeTime);
         float distance = Mathf.Abs(relativeTime);
 
         // compression progressive
-        float compressed = Mathf.Pow(distance,0.9f) * spacing-container.GetComponent<RectTransform>().rect.width*0.5f;
+        float compressed = Mathf.Pow(distance, 0.9f) * spacing * adaptiveScale - container.GetComponent<RectTransform>().rect.width * 0.5f;
 
         return compressed * direction;
     }

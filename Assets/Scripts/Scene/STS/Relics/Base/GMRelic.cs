@@ -19,13 +19,13 @@ public class GMRelic:BaseRelic
         switch (stage)
         {
             case 0:
-                source.combat.turnSystem.ApplyDelayAllTurns(target, 5);
+                source.combat.turnSystem.ApplyDelayAllTurns(target, 10);
                 break;
             case 1:
                 target.TakeDamage(10);
                 break;
             case 2:
-                source.combat.turnSystem.ApplyDelayAllTurns(target, 999);
+                source.combat.turnSystem.ApplyDelayAllTurns(target, 25);
                 break;
             case 3:
                 target.TakeDamage(99999);

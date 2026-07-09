@@ -23,13 +23,14 @@ MonoBehaviour:
   rarity: 2
   effects:
   - type: 3
-    value: 0
+    value: 4
     targetSelf: 1
     targetOthers: 0
     statusType: 41
-    duration: 4
+    duration: 0
     description: 
     cardID: Frappe industrielle
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -45,6 +46,7 @@ MonoBehaviour:
     duration: 5
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 

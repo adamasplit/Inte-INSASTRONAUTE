@@ -17,19 +17,20 @@ MonoBehaviour:
   collectionCardId: 
   collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 4ab8197107962c948b56475a99197704, type: 3}
-  cost: 2
+  cost: 0
   xCost: 0
-  type: 0
+  type: 1
   rarity: 4
   effects:
-  - type: 0
-    value: 32
-    targetSelf: 0
+  - type: 11
+    value: 4
+    targetSelf: 1
     targetOthers: 0
     statusType: 0
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -39,27 +40,13 @@ MonoBehaviour:
     cardSelectionEffect: 0
   - type: 12
     value: 3
-    targetSelf: 0
-    targetOthers: 0
-    statusType: 0
-    duration: 0
-    description: 
-    cardID: 
-    conditional: 0
-    conditionType: 0
-    conditionValue: 
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 0
-  - type: 11
-    value: 6
     targetSelf: 1
     targetOthers: 0
     statusType: 0
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -67,9 +54,26 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-  targetingMode: 2
+  - type: 8
+    value: 3
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+  targetingMode: 0
   modifiers: []
   favoredCharacter: 0
   animationSpeed: 1
   startingCount: 0
   tags: 
+  animationType: 0

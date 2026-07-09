@@ -11,7 +11,7 @@
   "effects": [
     {
       "type": "Status",
-      "value": 0,
+      "value": 20,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Brand",
@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

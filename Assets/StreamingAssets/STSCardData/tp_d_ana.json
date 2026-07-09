@@ -1,0 +1,39 @@
+{
+  "id": "tp_d_ana",
+  "cardName": "TP d'Ana",
+  "collectionCardId": "",
+  "iconId": "vuln",
+  "cost": 1,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 1,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Fatigue",
+      "duration": -1,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "CFI",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": [
+    "Exhaust"
+  ]
+}

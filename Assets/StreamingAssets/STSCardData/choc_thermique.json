@@ -6,7 +6,7 @@
   "cost": 2,
   "xCost": false,
   "type": "Attaque",
-  "rarity": "Epic",
+  "rarity": "Uncommon",
   "targetingMode": "Enemy",
   "effects": [
     {
@@ -23,12 +23,14 @@
       "conditionValue": "Burn",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     },
     {
       "type": "Damage",
-      "value": 25,
+      "value": 13,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -40,8 +42,10 @@
       "conditionValue": "Burn",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Ice"
     }
   ],
   "modifiers": [],

@@ -11,11 +11,11 @@
   "effects": [
     {
       "type": "Status",
-      "value": 0,
+      "value": 4,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "FieldTurnFollowUp",
-      "duration": 4,
+      "duration": 0,
       "description": "",
       "cardID": "Frappe industrielle",
       "conditional": false,
@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     },
     {
       "type": "Armor",
@@ -40,8 +42,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

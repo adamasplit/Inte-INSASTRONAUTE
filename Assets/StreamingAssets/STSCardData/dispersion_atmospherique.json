@@ -23,13 +23,15 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     },
     {
       "type": "CardSelection",
       "value": 2,
-      "targetSelf": false,
+      "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
@@ -40,8 +42,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "Discard"
+      "cardSelectionEffect": "Discard",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 public class ReplayEnchantment : EnchantmentData
 {
     public ReplayEnchantment()
@@ -15,7 +16,20 @@ public class ReplayEnchantment : EnchantmentData
     {
         return new List<StatModifier>
         {
-            new PercentModifier(StatType.Any, -10 / (GetReplayCount(level))),
+            new PercentModifier(StatType.Any, Mathf.RoundToInt(100f*level switch
+            {
+                1 => -0.5f,
+                2 => -0.67f,
+                3 => -0.75f,
+                4 => -0.80f,
+                5 => -0.83f,
+                6 => -0.85f,
+                7 => -0.86f,
+                8 => -0.875f,
+                9 => -0.888f,
+                10 => -0.90f,
+                _ => -1f
+            })),
             new FlatModifier(StatType.ReplayCount, GetReplayCount(level))
         };
     }

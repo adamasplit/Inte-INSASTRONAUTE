@@ -1,6 +1,6 @@
 {
   "id": "limit_break",
-  "cardName": "Limit break",
+  "cardName": "Dépassement de limites",
   "collectionCardId": "",
   "iconId": "limit",
   "cost": 2,
@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Slash"
     }
   ],
   "modifiers": [

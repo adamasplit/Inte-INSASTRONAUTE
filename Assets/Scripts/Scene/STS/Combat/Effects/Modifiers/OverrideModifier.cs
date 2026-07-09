@@ -16,6 +16,6 @@ public class OverrideModifier : StatModifier
 
     public override string Describe()
     {
-        return $"Set {StatTypeString.ToFrench(type)} to {overrideValue}";
+        return $"Set {StatTypeString.ToFrench(type, overrideValue, modifierType)} to {overrideValue}";
     }
 }

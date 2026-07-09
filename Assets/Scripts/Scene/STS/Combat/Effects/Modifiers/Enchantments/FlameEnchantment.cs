@@ -3,7 +3,7 @@ public class FlameEnchantment : EnchantmentData
 {
     public FlameEnchantment()
     {
-        name = "Fire Aspect";
+        name = "Aura de feu";
         description = $"Inflige Brûlure à la cible en fonction du niveau";
         maxLevel=5;
     }

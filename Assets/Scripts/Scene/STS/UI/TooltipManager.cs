@@ -24,6 +24,7 @@ public class TooltipManager:MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
+        Debug.Log($"Showing tooltip: {name} - {description} at position {position}");
         GameObject obj = Instantiate(tooltipPrefab, tooltipLayer);
         Tooltip tooltip = obj.GetComponent<Tooltip>();
         tooltip.SetTooltip(this,name, description);

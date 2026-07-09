@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd8dfbaa6b4ba54bbcfde29ea06fc65, type: 3}
+  m_Name: bar_iti_gm
+  m_EditorClassIdentifier: Assembly-CSharp::EventDataSO
+  title: Bar ITI-GM
+  description: C'est le moment du bar des ITI et des GM !
+  image: {fileID: 0}
+  weight: 1
+  options:
+  - id: 
+    text: Aller avec les ITI
+    icon: {fileID: 0}
+    entries:
+    - type: 1
+      value: 0
+      id: 
+      targetIds: []
+      replacementOptions: []
+      cardRewardProfile:
+        useSelectedCharacterBias: 0
+        useSpecificFavoredCharacter: 1
+        specificFavoredCharacter: 3
+        allowCreatedCards: 0
+        allowUnobtainableCards: 0
+        useExactRarity: 0
+        exactRarity: 0
+        useExactCost: 0
+        exactCost: 0
+        useCostRange: 0
+        minimumCost: 0
+        maximumCost: 0
+        useExactType: 0
+        exactType: 0
+        overrideDefaultWeights: 0
+        rarityWeights: []
+        requiredTags: 
+        excludedTags: 
+        choiceCount: 0
+      cardRewardProfiles:
+      - useSelectedCharacterBias: 0
+        useSpecificFavoredCharacter: 1
+        specificFavoredCharacter: 3
+        allowCreatedCards: 0
+        allowUnobtainableCards: 0
+        useExactRarity: 0
+        exactRarity: 0
+        useExactCost: 0
+        exactCost: 0
+        useCostRange: 0
+        minimumCost: 0
+        maximumCost: 0
+        useExactType: 0
+        exactType: 0
+        overrideDefaultWeights: 0
+        rarityWeights: []
+        requiredTags: 
+        excludedTags: 
+        choiceCount: 3
+    completionMessage: 
+    closePanel: 1
+    previewCardIds: []
+    runtimeIndex: 0
+  - id: 
+    text: Aller avec les GM
+    icon: {fileID: 0}
+    entries:
+    - type: 1
+      value: 0
+      id: 
+      targetIds: []
+      replacementOptions: []
+      cardRewardProfile:
+        useSelectedCharacterBias: 0
+        useSpecificFavoredCharacter: 1
+        specificFavoredCharacter: 2
+        allowCreatedCards: 0
+        allowUnobtainableCards: 0
+        useExactRarity: 0
+        exactRarity: 0
+        useExactCost: 0
+        exactCost: 0
+        useCostRange: 0
+        minimumCost: 0
+        maximumCost: 0
+        useExactType: 0
+        exactType: 0
+        overrideDefaultWeights: 0
+        rarityWeights: []
+        requiredTags: 
+        excludedTags: 
+        choiceCount: 0
+      cardRewardProfiles:
+      - useSelectedCharacterBias: 0
+        useSpecificFavoredCharacter: 1
+        specificFavoredCharacter: 2
+        allowCreatedCards: 0
+        allowUnobtainableCards: 0
+        useExactRarity: 0
+        exactRarity: 0
+        useExactCost: 0
+        exactCost: 0
+        useCostRange: 0
+        minimumCost: 0
+        maximumCost: 0
+        useExactType: 0
+        exactType: 0
+        overrideDefaultWeights: 0
+        rarityWeights: []
+        requiredTags: 
+        excludedTags: 
+        choiceCount: 3
+    completionMessage: 
+    closePanel: 1
+    previewCardIds: []
+    runtimeIndex: 0

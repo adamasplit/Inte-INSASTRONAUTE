@@ -13,6 +13,6 @@ public class DiscardModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+{perDiscard} {StatTypeString.ToFrench(type)} par carte défaussée ce combat";
+        return $"{StatTypeString.ToFrench(type, perDiscard,modifierType)} par carte défaussée ce combat";
     }
 }

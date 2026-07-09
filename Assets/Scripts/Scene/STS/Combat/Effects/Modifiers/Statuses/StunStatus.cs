@@ -8,13 +8,10 @@ public class StunStatus : StatusEffect
         Name = "Étourdissement";
         framed=true;
         generic=true;
+        inextendable=true;
     }
     public override string Desc(bool isPlayer)
     {
         return $"Ce personnage est étourdi et ne peut pas agir.";
-    }
-    public override void OnTurnEnd(Character character)
-    {
-        mustExpire=true;
     }
 }

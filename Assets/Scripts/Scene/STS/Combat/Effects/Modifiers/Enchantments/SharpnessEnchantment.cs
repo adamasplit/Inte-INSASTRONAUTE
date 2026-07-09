@@ -17,7 +17,8 @@ public class SharpnessEnchantment : EnchantmentData
             new EffectEntry
             {
                 type = EffectType.Damage,
-                value = level * damagePerLevel
+                value = level * damagePerLevel,
+                animationType = AnimationType.Slash
             }
         };
     }

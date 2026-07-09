@@ -1,8 +1,8 @@
 {
   "id": "Soldat2",
   "enemyName": "Soldat2",
-  "displayName": "Hyoh",
-  "maxHP": 61,
+  "displayName": "Soldat d'élite",
+  "maxHP": 30,
   "randomStart": false,
   "patternCardIds": [
     "frappe_electrique",

@@ -23,13 +23,15 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Fire"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "EP",
   "animationSpeed": 1.0,
-  "startingCount": 1,
+  "startingCount": 0,
   "tags": []
 }

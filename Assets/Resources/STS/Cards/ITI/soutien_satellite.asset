@@ -23,13 +23,14 @@ MonoBehaviour:
   rarity: 3
   effects:
   - type: 3
-    value: 0
+    value: 10
     targetSelf: 1
     targetOthers: 0
     statusType: 41
-    duration: 10
+    duration: 1
     description: 
     cardID: Laser orbital
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 

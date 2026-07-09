@@ -31,11 +31,11 @@ public class SpeedStatus : StatusEffect
     {
         if (Value>=0)
         {
-            return Mathf.Clamp(Mathf.RoundToInt(50f * Mathf.Log10(Value + 1f)), 0, 99);
+            return Mathf.Clamp(Mathf.RoundToInt(33f * Mathf.Log10(Value + 1f)), 0, 99);
         }
         else
         {
-            return -Mathf.Clamp(Mathf.RoundToInt(50f * Mathf.Log10(-Value + 1f)), 0, 99);
+            return -Mathf.Clamp(Mathf.RoundToInt(33f * Mathf.Log10(-Value + 1f)), 0, 99);
         }
     }
 

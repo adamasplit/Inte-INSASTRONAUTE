@@ -12,24 +12,103 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cd8dfbaa6b4ba54bbcfde29ea06fc65, type: 3}
   m_Name: wei
   m_EditorClassIdentifier: Assembly-CSharp::EventDataSO
-  title: 
-  description: "C'est la soir\xE9e du WEI..."
+  title: WEI
+  description: "C'est la soir\xE9e du WEI... Apr\xE8s le talent show et toutes les
+    activit\xE9s de la journ\xE9e, quel est votre plan d'action?"
   image: {fileID: 0}
+  weight: 3
   options:
-  - text: "Aller se coucher t\xF4t"
+  - id: 
+    text: "Aller se coucher t\xF4t"
     icon: {fileID: 0}
     entries:
     - type: 5
       value: 3
       id: 
+      targetIds: []
+      replacementOptions: []
+      cardRewardProfile:
+        useSelectedCharacterBias: 1
+        useSpecificFavoredCharacter: 0
+        specificFavoredCharacter: 9
+        allowCreatedCards: 0
+        allowUnobtainableCards: 0
+        useExactRarity: 0
+        exactRarity: 0
+        useExactCost: 0
+        exactCost: 0
+        useCostRange: 0
+        minimumCost: 0
+        maximumCost: 0
+        useExactType: 0
+        exactType: 3
+        overrideDefaultWeights: 0
+        rarityWeights: []
+        requiredTags: 
+        excludedTags: 
+        choiceCount: 3
+      cardRewardProfiles: []
     completionMessage: 
-  - text: ???
+    closePanel: 1
+    previewCardIds: []
+    runtimeIndex: -1
+  - id: 
+    text: "Profiter de la soir\xE9e"
     icon: {fileID: 0}
     entries:
     - type: 7
       value: 9
       id: 
+      targetIds: []
+      replacementOptions: []
+      cardRewardProfile:
+        useSelectedCharacterBias: 1
+        useSpecificFavoredCharacter: 0
+        specificFavoredCharacter: 9
+        allowCreatedCards: 0
+        allowUnobtainableCards: 0
+        useExactRarity: 0
+        exactRarity: 0
+        useExactCost: 0
+        exactCost: 0
+        useCostRange: 0
+        minimumCost: 0
+        maximumCost: 0
+        useExactType: 0
+        exactType: 3
+        overrideDefaultWeights: 0
+        rarityWeights: []
+        requiredTags: 
+        excludedTags: 
+        choiceCount: 3
+      cardRewardProfiles: []
     - type: 2
       value: 1
       id: 
+      targetIds: []
+      replacementOptions: []
+      cardRewardProfile:
+        useSelectedCharacterBias: 1
+        useSpecificFavoredCharacter: 0
+        specificFavoredCharacter: 9
+        allowCreatedCards: 0
+        allowUnobtainableCards: 0
+        useExactRarity: 0
+        exactRarity: 0
+        useExactCost: 0
+        exactCost: 0
+        useCostRange: 0
+        minimumCost: 0
+        maximumCost: 0
+        useExactType: 0
+        exactType: 3
+        overrideDefaultWeights: 0
+        rarityWeights: []
+        requiredTags: 
+        excludedTags: 
+        choiceCount: 3
+      cardRewardProfiles: []
     completionMessage: 
+    closePanel: 1
+    previewCardIds: []
+    runtimeIndex: -1

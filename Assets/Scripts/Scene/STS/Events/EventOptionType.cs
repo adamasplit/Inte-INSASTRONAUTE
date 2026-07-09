@@ -11,5 +11,6 @@ public enum EventOptionType
     UpgradeCard,
     RemoveCard,
     TransformCard,
-    AddCard
+    AddCard,
+    ReplaceOptions
 }

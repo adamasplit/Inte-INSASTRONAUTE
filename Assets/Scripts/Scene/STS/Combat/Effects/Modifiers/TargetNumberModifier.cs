@@ -17,6 +17,6 @@ public class TargetNumberModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+ {addedValue}% {StatTypeString.ToFrench(type)} par cible touchée";
+        return $"{StatTypeString.ToFrench(type, addedValue,modifierType)} par cible touchée";
     }
 }

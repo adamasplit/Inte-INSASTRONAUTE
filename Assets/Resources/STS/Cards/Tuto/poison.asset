@@ -38,10 +38,7 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
   targetingMode: 1
-  modifiers:
-  - type: 11
-    kind: 0
-    value: 0
+  modifiers: []
   favoredCharacter: 11
   animationSpeed: 1
   startingCount: 0

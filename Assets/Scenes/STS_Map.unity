@@ -127,6 +127,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1194330512845493003, guid: c7b29f764e1f19444b90f02da187e7f8, type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1080
+      objectReference: {fileID: 0}
+    - target: {fileID: 1194330512845493003, guid: c7b29f764e1f19444b90f02da187e7f8, type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 1920
+      objectReference: {fileID: 0}
     - target: {fileID: 2081035307392800026, guid: c7b29f764e1f19444b90f02da187e7f8, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -429,7 +437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66a6444270e27f44aab9e6dccfc0e746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapView
-  scrollRect: {fileID: 0}
+  scrollRect: {fileID: 1822353239}
   mapManager: {fileID: 555565574}
   nodePrefab: {fileID: 991897015155304017, guid: 4bd59c1c1da3dbc4cad664e4283ad22d, type: 3}
   mapPanel: {fileID: 702316675}
@@ -467,6 +475,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MapManager
   view: {fileID: 555565572}
   blackOverlay: {fileID: 337914878}
+  mapBackgroundImage: {fileID: 967332262}
 --- !u!1 &702316674
 GameObject:
   m_ObjectHideFlags: 0
@@ -689,7 +698,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.18490559, g: 0.18490559, b: 0.18490559, a: 1}
+  m_Color: {r: 0.6075471, g: 0.6075471, b: 0.6075471, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -765,7 +774,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1024, y: 768}
+  m_ReferenceResolution: {x: 1080, y: 1920}
   m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -793,8 +802,8 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 1513251827
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &1009358837
 RectTransform:

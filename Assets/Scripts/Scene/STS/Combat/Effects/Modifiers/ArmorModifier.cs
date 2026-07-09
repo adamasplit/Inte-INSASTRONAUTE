@@ -17,6 +17,6 @@ public class ArmorModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+ {addedValue}% {StatTypeString.ToFrench(type)} par Armure de la cible";
+        return $"{StatTypeString.ToFrench(type, addedValue,modifierType)} par Armure de la cible";
     }
 }

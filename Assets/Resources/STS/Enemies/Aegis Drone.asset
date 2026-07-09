@@ -1,0 +1,144 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
+  m_Name: Aegis Drone
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Aegis Drone
+  enemyName: Aegis Drone
+  displayName: Robogarde
+  maxHP: 22
+  pattern: []
+  randomStart: 0
+  movePattern:
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 1
+      value: 6
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 31
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 3
+      value: 1
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 43
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 01000000
+    weight: 1
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 6
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 1
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 3
+      value: 2
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 1
+      duration: 1
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 02000000
+    weight: 1
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 3
+      value: 1
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 14
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 0
+      value: 9
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 00000000
+    weight: 1
+  rewardCards: []
+  startingStatus: 33
+  startingStatusDuration: 0
+  startingStatusValue: 1
+  startingStatusInfo: 
+  startingStatusIndex: 0

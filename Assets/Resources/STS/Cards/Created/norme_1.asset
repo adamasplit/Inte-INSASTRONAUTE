@@ -28,8 +28,10 @@ MonoBehaviour:
     targetOthers: 0
     statusType: 0
     duration: 0
-    description: 
+    description: "Infligez des d\xE9g\xE2ts \xE9gaux \xE0 votre armure + celle de
+      la cible"
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -43,7 +45,7 @@ MonoBehaviour:
     kind: 9
     value: 1
     info: 
-    description: 
+    description: ' '
   - type: 0
     kind: 13
     value: 1

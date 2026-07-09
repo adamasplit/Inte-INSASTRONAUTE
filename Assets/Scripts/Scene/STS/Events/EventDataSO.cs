@@ -7,5 +7,6 @@ public class EventDataSO : ScriptableObject
     public string title;
     public string description;
     public Sprite image;
+    public float weight = 1f;
     public List<PanelOption> options;
 }

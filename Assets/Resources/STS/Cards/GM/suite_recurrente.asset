@@ -27,9 +27,10 @@ MonoBehaviour:
     targetSelf: 0
     targetOthers: 0
     statusType: 41
-    duration: 1
+    duration: 0
     description: 
     cardID: "R\xE9currence"
+    index: 1
     conditional: 0
     conditionType: 0
     conditionValue: 

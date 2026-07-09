@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Enemy 2
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Enemy 2
   enemyName: Enemy 2
-  displayName: 
+  displayName: Spectre
   maxHP: 8
   pattern:
   - {fileID: 11400000, guid: f616076eed1cf1c46afe77ec11937d99, type: 2}
@@ -32,6 +33,7 @@ MonoBehaviour:
       duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -39,6 +41,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     - type: 1
       value: 3
       targetSelf: 1
@@ -47,6 +50,7 @@ MonoBehaviour:
       duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -54,6 +58,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     nextMoveIndices: 
     weight: 0
   rewardCards: []
@@ -61,3 +66,4 @@ MonoBehaviour:
   startingStatusDuration: 0
   startingStatusValue: 0
   startingStatusInfo: 
+  startingStatusIndex: 0

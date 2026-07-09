@@ -4,7 +4,7 @@ using System.Linq;
 public class MapGenerator
 {
     public int width = 5;
-    public int height = 12;
+    public int height = 11;
     public int pathCount = 4;
 
     public MapNode startNode;
@@ -65,9 +65,13 @@ public class MapGenerator
 
         int roll = Random.Range(0, 100);
 
-        if (roll < 60) return NodeType.Combat;
-        if (roll < 70) return NodeType.Elite;
-        if (roll < 90) return NodeType.Rest;
+        if (roll < 50) return NodeType.Combat;
+        if (roll < 60) 
+        {
+            if (floor<3) return NodeType.Combat; // avoid early elites
+            return NodeType.Elite;
+        }
+        if (roll < 75) return NodeType.Rest;
         return NodeType.Event;
     }
 

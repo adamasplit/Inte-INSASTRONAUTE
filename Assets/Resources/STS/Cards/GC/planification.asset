@@ -30,6 +30,7 @@ MonoBehaviour:
     duration: 2
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -45,6 +46,7 @@ MonoBehaviour:
     duration: 1
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 

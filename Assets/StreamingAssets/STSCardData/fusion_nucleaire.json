@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "Merge"
+      "cardSelectionEffect": "Merge",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Elite 2
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Elite 2
   enemyName: Elite 2
   displayName: 
   maxHP: 40
@@ -29,3 +30,4 @@ MonoBehaviour:
   startingStatusDuration: 0
   startingStatusValue: 0
   startingStatusInfo: 
+  startingStatusIndex: 0

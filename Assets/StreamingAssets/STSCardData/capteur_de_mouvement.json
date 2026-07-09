@@ -1,0 +1,37 @@
+{
+  "id": "capteur_de_mouvement",
+  "cardName": "Capteur de mouvement",
+  "collectionCardId": "",
+  "iconId": "prescience",
+  "cost": 1,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 3,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Dexterity",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": true,
+      "conditionType": "TargetWillAttack",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "ITI",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

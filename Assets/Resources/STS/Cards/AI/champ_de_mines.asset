@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: champ_de_mines
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: champ_de_mines
   cardName: Champ de mines
   collectionCardId: 
   collectionCard: {fileID: 0}
@@ -29,15 +30,18 @@ MonoBehaviour:
     duration: 3
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
   targetingMode: 5
   modifiers: []
-  exhaust: 0
-  retain: 0
-  innate: 0
   favoredCharacter: 7
   animationSpeed: 1
   startingCount: 0
+  tags: 
+  animationType: 0

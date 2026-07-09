@@ -18,6 +18,6 @@ public class TimeUntilNextTurnModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+ {addedValue} {StatTypeString.ToFrench(type)} par unité de temps jusqu'au prochain tour de la cible";
+        return $"{StatTypeString.ToFrench(type, addedValue,modifierType)} par unité de temps jusqu'au prochain tour de la cible";
     }
 }

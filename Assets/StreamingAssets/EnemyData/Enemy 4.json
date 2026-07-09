@@ -12,7 +12,6 @@
     "brisure_bond_et_baston",
     "lame_feuille",
     "chute_d_eau",
-    null,
     "chute_d_eau",
     "katana"
   ],
@@ -35,8 +34,10 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         }
       ],
       "nextMoveIndices": [
@@ -63,8 +64,10 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         },
         {
           "type": "Status",
@@ -80,8 +83,10 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         }
       ],
       "nextMoveIndices": [
@@ -108,8 +113,10 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         }
       ],
       "nextMoveIndices": [
@@ -136,8 +143,10 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         }
       ],
       "nextMoveIndices": [

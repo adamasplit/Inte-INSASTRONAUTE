@@ -109,6 +109,10 @@ public class CombatManager : MonoBehaviour
             }
             tutorial.Init();
         }
+        if (RunManager.Instance!=null)
+        {
+            RunManager.Instance.inCombat=true;
+        }
 
         STSSceneLoader.Instance?.SceneReady();
     }
@@ -137,7 +141,8 @@ public class CombatManager : MonoBehaviour
                 combat = this,
                 state = state,
                 card = card,
-                timeline = turnSystem.timeline
+                timeline = turnSystem.timeline,
+                targets=targets
             };
         EffectContext ctxTarget = new EffectContext
             {
@@ -242,7 +247,8 @@ public class CombatManager : MonoBehaviour
                             {
                                 type = EffectType.Damage,
                                 value = effect.value,
-                                targetSelf=effect.targetSelf
+                                targetSelf=effect.targetSelf,
+                                animationType=effect.animationType,
                             });
                         }
                 }
@@ -260,10 +266,25 @@ public class CombatManager : MonoBehaviour
                         continue; // Skip this effect if condition is not met
                     }
                 }
+                SFXManager.Instance.PlaySound(effect.GetEffectName());
                 if (effect.targetSelf)
                     {
                         VFXManager.Instance.PlayEffect(effect, ui.GetView(source).transform.position);
                         yield return EffectResolver.Apply(effect, ctxSelf);
+                    }
+                else if (effect.targetOthers)
+                    {
+                        // For this effect only, target all enemies that aren't among the original targets
+                        var otherTargets = enemies.Where(e => e != null && e.IsAlive && !targets.Contains(e)).ToList();
+                        foreach (var target in otherTargets)
+                        {
+                            ctxTarget.target = target;
+                            if (ui.GetView(target) != null)
+                            {
+                                VFXManager.Instance.PlayEffect(effect, ui.GetView(target).transform.position);
+                            }
+                            yield return EffectResolver.Apply(effect, ctxTarget);
+                        }
                     }
                 else
                 {
@@ -306,7 +327,7 @@ public class CombatManager : MonoBehaviour
             }
             foreach (Character character in GetAllCharacters())
             {
-                character.AfterAction();
+                character.AfterAction(source, card);
             }
         }
 
@@ -597,7 +618,8 @@ public class CombatManager : MonoBehaviour
                 enemies = currentEnemiesData,
                 floor = RunManager.Instance.currentFloor,
                 elite = RunManager.Instance.eliteEncounter,
-                boss = RunManager.Instance.bossEncounter
+                boss = RunManager.Instance.bossEncounter,
+                act = RunManager.Instance.act
             };
             //Debug.Log("Generating rewards for combat result: floor " + result.floor + ", elite: " + result.elite + ", boss: " + result.boss);
             RunManager.Instance.pendingReward = RewardGenerator.GenerateReward(result);

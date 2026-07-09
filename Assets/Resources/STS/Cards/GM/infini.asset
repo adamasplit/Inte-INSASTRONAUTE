@@ -30,6 +30,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: Point fixe
+    index: 2
     conditional: 0
     conditionType: 0
     conditionValue: 

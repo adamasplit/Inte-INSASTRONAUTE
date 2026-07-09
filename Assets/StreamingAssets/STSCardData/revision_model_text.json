@@ -20,16 +20,18 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "Starting",
   "animationSpeed": 1.0,
-  "startingCount": 5,
+  "startingCount": 3,
   "tags": []
 }

@@ -58,6 +58,30 @@ public static class EffectDescription
                     return $"Si la cible n'a pas {StatusEffect.Factory(Enum.Parse<StatusType>(effect.conditionValue), 0, 0, "").Name}, ";
                 }
                 return "";
+            case ConditionType.SelfArmorThreshold:
+                {
+                    return $"Si vous avez au moins {effect.conditionValue} d'armure, ";
+                }
+            case ConditionType.TargetArmorThreshold:
+                {
+                    return $"Si la cible a au moins {effect.conditionValue} d'armure, ";
+                }
+            case ConditionType.EnergyGainedThreshold:
+                {
+                    return $"Si vous avez gagné au moins {effect.conditionValue} d'énergie ce tour-ci, ";
+                }
+            case ConditionType.EnergySpentThreshold:
+                {
+                    return $"Si vous avez dépensé au moins {effect.conditionValue} d'énergie ce tour-ci, ";
+                }
+            case ConditionType.TargetWillAttack:
+                {
+                    return $"Si la cible s'apprête à attaquer, ";
+                }
+            case ConditionType.TargetWillNotAttack:
+                {
+                    return $"Si la cible ne va pas attaquer, ";
+                }
             default:
                 return "";
         }
@@ -99,7 +123,7 @@ public static class EffectDescription
             {
                 int val = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
                 int dur = BattleCalculator.GetModifiedValue(effect.duration, StatType.StatusDuration, ctx);
-                StatusEffect stat=StatusEffect.Factory(effect.statusType,val,dur,effect.cardID);
+                StatusEffect stat=StatusEffect.Factory(effect.statusType,val,dur,effect.cardID,effect.index);
                 if (stat.generic) 
                 {
                     int usedValue=stat.Duration>0?stat.Duration:stat.Value;
@@ -163,6 +187,14 @@ public static class EffectDescription
                     return $"Retardez votre prochain tour ({turns})";
                 return (multipleTargets?"Retardez les prochains tours de toutes les cibles":"Retardez le prochain tour de la cible") + $" ({turns})";
             }
+            case EffectType.CutInTurn:
+            {
+                if (effect.targetSelf)
+                {
+                    return "Placez votre prochain tour juste après celui de la cible";
+                }
+                return "Placez le prochain tour de la cible juste après le vôtre";
+            }
             case EffectType.Draw:
             {
                 return $"Piochez {FormatCardCountForDescription(effect.value, ctx)}";
@@ -205,7 +237,11 @@ public static class EffectDescription
             }
             case EffectType.EndTurn:
             {
-                return $"Terminez votre tour";
+                if (effect.targetSelf)
+                {
+                    return $"Terminez votre tour";
+                }
+                return $"Terminez le tour de la cible de force";
             }
             case EffectType.Gravity:
             {
@@ -232,7 +268,7 @@ public static class EffectDescription
                     CardSelectionSource.AllExceptExhaustPile => "votre main, votre pioche et votre défausse",
                     _ => effect.cardSelectionSource.ToString()
                 };
-                string filterSuffix = cft != "" ? " " + cft.TrimEnd() : "";
+                string filterSuffix = cft != "" ? "" + cft.TrimEnd() : "";
 
                 if (effect.value == -1)
                 {
@@ -275,16 +311,7 @@ public static class EffectDescription
             {
                 string countText = FormatCardCountForDescription(effect.value, ctx) + " aléatoire"+(effect.value!=1?"s":"");
                 string filterText = DescribeCardFilters(effect.cardFilterTags);
-                string destinationText = effect.cardSelectionSource switch
-                {
-                    CardSelectionSource.Hand => "à votre main",
-                    CardSelectionSource.DiscardPile => "à votre défausse",
-                    CardSelectionSource.DrawPile => "à votre pioche",
-                    CardSelectionSource.ExhaustPile => "à votre pile de cartes épuisées",
-                    CardSelectionSource.All => "à toutes vos piles de cartes",
-                    CardSelectionSource.AllExceptExhaustPile => "à votre main, votre pioche et votre défausse",
-                    _ => "à votre main"
-                };
+                string destinationText = GetDestinationText(effect.cardSelectionSource);
 
                 return $"Ajoutez {countText}{filterText} {destinationText}";
             }
@@ -306,8 +333,53 @@ public static class EffectDescription
             }
             case EffectType.SetStatusToMaxValue:
             {
-                StatusEffect stat=StatusEffect.Factory(effect.statusType,0,0,effect.cardID);
-                return $"Met {stat.Name} à sa valeur maximale";
+                StatusEffect stat=StatusEffect.Factory(effect.statusType,0,0,effect.cardID,effect.index);
+                return $"Mettez {stat.Name} à sa valeur maximale";
+            }
+            case EffectType.ExtendStatuses:
+            {
+                if (effect.targetSelf)
+                {
+                    return $"Prolongez la durée de tous vos effets de statut de {effect.value} tour"+(effect.value!=1?"s":"");
+                }
+                else
+                {
+                    return $"Prolongez la durée de tous les effets de statut de la cible de {effect.value} tour"+(effect.value!=1?"s":"");
+                }
+            }
+            case EffectType.DispelDebuffsIntoDamage:
+            {
+                string dmg = BattleCalculator.GetModifiedDescription(effect.value, StatType.Damage, ctx);
+                return $"Dissipez tous les debuffs de la cible et infligez {dmg} dégâts pour chaque debuff dissipé";
+            }
+            case EffectType.DispelBuffsIntoStatus:
+            {
+                StatusEffect stat=StatusEffect.Factory(effect.statusType,0,0,effect.cardID,effect.index);
+                if (effect.targetSelf)
+                {
+                    return $"Transformez tous vos buffs en {stat.Name}";
+                }
+                else
+                {
+                    return $"Dissipez tous les buffs de la cible et appliquez {stat.Name} pour chaque buff dissipé";
+                }
+            }
+            case EffectType.DispelSpecificStatus:
+            {
+                StatusEffect stat=StatusEffect.Factory(effect.statusType,0,0,effect.cardID,effect.index);
+                if (effect.targetSelf)
+                {
+                    return $"Dissipez votre {stat.Name}";
+                }
+                else
+                {
+                    return $"Dissipez les {stat.Name}s";
+                }
+            }
+            case EffectType.AddCopyOfCard:
+            {
+                string destinationText = GetDestinationText(effect.cardSelectionSource);
+                return $"Ajoutez {FormatQuantityForDescription(effect.value, ctx)} copie"+(effect.value!=1?"s":"")+$" de cette carte {destinationText}";
             }
             default:
                 return "Effet inconnu..";
@@ -352,7 +424,19 @@ public static class EffectDescription
     {
         return ShouldDisplayAsX(value, ctx) ? "X cartes" : $"{value} carte" + (value != 1 ? "s" : "");
     }
-
+    private static string GetDestinationText(CardSelectionSource cardSelectionSource)
+    {
+        return cardSelectionSource switch
+        {
+            CardSelectionSource.Hand => "à votre main",
+            CardSelectionSource.DiscardPile => "à votre défausse",
+            CardSelectionSource.DrawPile => "à votre pioche",
+            CardSelectionSource.ExhaustPile => "à votre pile de cartes épuisées",
+            CardSelectionSource.All => "à toutes vos piles de cartes",
+            CardSelectionSource.AllExceptExhaustPile => "à votre main, votre pioche et votre défausse",
+            _ => "à votre main"
+        };
+    }
     private static string DescribeCardFilters(System.Collections.Generic.List<CardFilterTag> tags,bool plural=false)
     {
         if (tags == null || tags.Count == 0)

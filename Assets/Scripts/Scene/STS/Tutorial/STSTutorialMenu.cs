@@ -8,6 +8,6 @@ public class STSTutorialMenu : MonoBehaviour
     public TMP_Dropdown tutorialStageDropdown;
     public void StartTutorial()
     {
-        RunManager.Instance.StartTutorialRun(tutorialStageDropdown.value);
+        RunManager.Instance.StartTutorialRun();
     }
 }

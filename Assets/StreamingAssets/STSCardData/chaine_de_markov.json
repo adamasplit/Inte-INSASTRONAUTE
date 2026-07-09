@@ -23,16 +23,18 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     },
     {
       "type": "Status",
-      "value": 0,
+      "value": 2,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Echo",
-      "duration": 2,
+      "duration": 1,
       "description": "",
       "cardID": "",
       "conditional": false,
@@ -40,8 +42,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

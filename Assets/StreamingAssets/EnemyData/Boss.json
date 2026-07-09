@@ -2,7 +2,7 @@
   "id": "Boss",
   "enemyName": "Boss",
   "displayName": "",
-  "maxHP": 115,
+  "maxHP": 90,
   "randomStart": false,
   "patternCardIds": [],
   "movePattern": [
@@ -12,11 +12,11 @@
       "effects": [
         {
           "type": "Status",
-          "value": 0,
-          "targetSelf": false,
+          "value": 3,
+          "targetSelf": true,
           "targetOthers": false,
-          "statusType": "Weakness",
-          "duration": 2,
+          "statusType": "Strength",
+          "duration": 0,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -24,16 +24,18 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         },
         {
           "type": "Status",
-          "value": 0,
-          "targetSelf": false,
+          "value": 1,
+          "targetSelf": true,
           "targetOthers": false,
-          "statusType": "Vuln",
-          "duration": 2,
+          "statusType": "Artifact",
+          "duration": 0,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -41,29 +43,16 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
-        },
-        {
-          "type": "Status",
-          "value": 0,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Fragile",
-          "duration": 2,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         }
       ],
-      "nextMoveIndices": [],
-      "weight": 0
+      "nextMoveIndices": [
+        1
+      ],
+      "weight": 1
     },
     {
       "cardId": null,
@@ -75,6 +64,25 @@
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Vuln",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "Status",
+          "value": 4,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Burn",
           "duration": 2,
           "description": "",
           "cardID": "",
@@ -83,16 +91,28 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
-        },
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "nextMoveIndices": [
+        2
+      ],
+      "weight": 1
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
         {
           "type": "Status",
-          "value": 0,
+          "value": 2,
           "targetSelf": false,
           "targetOthers": false,
-          "statusType": "Burn",
-          "duration": 4,
+          "statusType": "Weakness",
+          "duration": 2,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -100,20 +120,14 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
-        }
-      ],
-      "nextMoveIndices": [],
-      "weight": 0
-    },
-    {
-      "cardId": null,
-      "moveName": "",
-      "effects": [
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
         {
-          "type": "Damage",
-          "value": 8,
+          "type": "Status",
+          "value": 2,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Vuln",
@@ -125,58 +139,47 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
-        },
-        {
-          "type": "Status",
-          "value": 4,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "Vigor",
-          "duration": 4,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         }
       ],
-      "nextMoveIndices": [],
-      "weight": 0
+      "nextMoveIndices": [
+        3
+      ],
+      "weight": 1
     },
     {
       "cardId": null,
       "moveName": "",
       "effects": [
         {
+          "type": "Armor",
+          "value": 12,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Shielding",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
           "type": "Status",
           "value": 3,
           "targetSelf": true,
           "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 2,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None"
-        },
-        {
-          "type": "Status",
-          "value": 2,
-          "targetSelf": true,
-          "targetOthers": false,
           "statusType": "Vigor",
-          "duration": 4,
+          "duration": 0,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -184,12 +187,16 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         }
       ],
-      "nextMoveIndices": [],
-      "weight": 0
+      "nextMoveIndices": [
+        4
+      ],
+      "weight": 1
     },
     {
       "cardId": null,
@@ -201,7 +208,7 @@
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
-          "duration": 2,
+          "duration": 0,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -209,24 +216,18 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
-        }
-      ],
-      "nextMoveIndices": [],
-      "weight": 2
-    },
-    {
-      "cardId": null,
-      "moveName": "",
-      "effects": [
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
         {
-          "type": "Armor",
-          "value": 10,
+          "type": "Status",
+          "value": 2,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
-          "duration": 2,
+          "duration": 0,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -234,71 +235,16 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
-        },
-        {
-          "type": "DelayTurn",
-          "value": 7,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 2,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         }
       ],
-      "nextMoveIndices": [],
-      "weight": 0
-    },
-    {
-      "cardId": null,
-      "moveName": "",
-      "effects": [
-        {
-          "type": "AdvanceTurn",
-          "value": 10,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 2,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None"
-        },
-        {
-          "type": "DelayTurn",
-          "value": 3,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 2,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None"
-        }
+      "nextMoveIndices": [
+        1
       ],
-      "nextMoveIndices": [],
-      "weight": 0
+      "weight": 1
     }
   ],
   "rewardCardIds": [

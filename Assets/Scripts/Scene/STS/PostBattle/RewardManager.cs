@@ -29,7 +29,8 @@ public class RewardManager : MonoBehaviour, IRewardFlowHost
             {
                 floor = 1,
                 elite = true,
-                boss = true
+                boss = true,
+                act = 1
             };
             reward = RewardGenerator.GenerateReward(result);
         }

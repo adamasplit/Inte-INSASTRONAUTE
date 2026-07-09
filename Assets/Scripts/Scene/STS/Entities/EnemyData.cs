@@ -138,7 +138,7 @@ public class EnemyData : ScriptableObject
     public int startingStatusDuration;
     public int startingStatusValue;
     public string startingStatusInfo;
-
+    public int startingStatusIndex;
     public int ActionCount => movePattern != null && movePattern.Count > 0
         ? movePattern.Count
         : pattern != null ? pattern.Count : 0;
@@ -173,7 +173,8 @@ public class EnemyData : ScriptableObject
         if (action.nextMoveIndices.Count > 0)
             return GetNextMoveIndex(action);
 
-        return (currentIndex + 1) % ActionCount;
+        // Return a random index besides the current one
+        return UnityEngine.Random.Range(0, ActionCount - 1) + (currentIndex + 1) % ActionCount;
     }
 
     public int PickRandomActionIndex()

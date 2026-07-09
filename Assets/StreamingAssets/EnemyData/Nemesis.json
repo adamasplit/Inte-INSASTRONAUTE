@@ -1,7 +1,7 @@
 {
   "id": "Nemesis",
   "enemyName": "Nemesis",
-  "displayName": null,
+  "displayName": "",
   "maxHP": 67,
   "randomStart": false,
   "patternCardIds": [

@@ -92,6 +92,7 @@ public class StatusSaveData
     public string statusType;
     public int value;
     public int duration;
+    public int index;
     public string effectInfo;
 }
 
@@ -426,7 +427,7 @@ public static class STSRunSaveSystem
         if (!Enum.TryParse(data.statusType, out StatusType statusType))
             return null;
 
-        return StatusEffect.Factory(statusType, data.value, data.duration, data.effectInfo);
+        return StatusEffect.Factory(statusType, data.value, data.duration, data.effectInfo,data.index);
     }
 
     private static List<CardInstance> RestoreDeck(List<CardSaveData> savedDeck)

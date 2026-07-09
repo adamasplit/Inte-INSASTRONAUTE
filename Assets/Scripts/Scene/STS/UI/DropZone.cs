@@ -13,6 +13,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
     public Image highlight;
     public Image image;
+    public RectTransform imageRect;
 
     public bool isHovered = false;
 
@@ -21,6 +22,9 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     bool deathAnimationPlayed;
     bool enemyImageSizeCached;
     Vector2 enemyImageSize;
+    RectTransform dropZoneRect;
+    LayoutElement dropZoneSizeLock;
+    bool dropZoneSizeLockCreated;
     Texture2D deathDisintegrationTexture;
     Sprite deathDisintegrationSprite;
     Color32[] deathSourcePixels;
@@ -34,9 +38,12 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
     public void Init(CombatManager cm, Character t, bool acceptsEnemy)
     {
+        if (imageRect == null)
+            imageRect = image.rectTransform;
         combat = cm;
         target = t;
         CleanupDeathDisintegrationTexture();
+        dropZoneRect = transform as RectTransform;
 
         Sprite sprite = null;
         if (!target.isPlayer&&((Enemy)target).data!=null)
@@ -66,7 +73,6 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
         if (image != null)
         {
-            RectTransform imageRect = image.rectTransform;
             imageRect.localScale = Vector3.one;
             if (!target.isPlayer)
             {
@@ -85,6 +91,11 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         highlight.color = acceptsEnemy ? new Color(1, 0, 0, 0f) : new Color(0, 1, 0, 0f);
 
         isHovered = false;
+
+        if (target != null && !target.isPlayer)
+        {
+            EnsureDropZoneLayoutLock();
+        }
     }
 
     void OnDestroy()
@@ -100,7 +111,8 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         if (deathAnimationPlayed)
             return;
 
-        RectTransform imageRect = image.rectTransform;
+        if (imageRect == null)
+            imageRect = image.rectTransform;
 
         if (target.isPlayer)
         {
@@ -124,9 +136,48 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
             enemyImageSize = new Vector2(targetSize, targetSize);
             enemyImageSizeCached = true;
+            ApplyDropZoneSize(enemyImageSize);
         }
 
         imageRect.sizeDelta = enemyImageSize;
+        ApplyDropZoneSize(enemyImageSize);
+    }
+
+    void EnsureDropZoneLayoutLock()
+    {
+        if (dropZoneRect == null)
+            dropZoneRect = transform as RectTransform;
+
+        if (dropZoneSizeLock == null)
+        {
+            dropZoneSizeLock = GetComponent<LayoutElement>();
+            if (dropZoneSizeLock == null)
+            {
+                dropZoneSizeLock = gameObject.AddComponent<LayoutElement>();
+                dropZoneSizeLockCreated = true;
+            }
+        }
+    }
+
+    void ApplyDropZoneSize(Vector2 size)
+    {
+        if (target == null || target.isPlayer)
+            return;
+
+        EnsureDropZoneLayoutLock();
+
+        if (dropZoneRect != null)
+        {
+            dropZoneRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
+        }
+
+        dropZoneSizeLock.minWidth = size.x;
+        dropZoneSizeLock.preferredWidth = size.x;
+        dropZoneSizeLock.minHeight = -1f;
+        dropZoneSizeLock.preferredHeight = -1f;
+        dropZoneSizeLock.flexibleWidth = 0f;
+        dropZoneSizeLock.flexibleHeight = 0f;
+        dropZoneSizeLock.ignoreLayout = false;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -205,7 +256,6 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     public IEnumerator FlashWhite()
     {
         Color originalColor = image.color;
-        RectTransform imageRect = image.rectTransform;
         Vector2 originalPosition = imageRect.anchoredPosition;
         float moveDistance = 50f;
         Vector2 targetPosition = originalPosition + (target != null && target.isPlayer ? Vector2.zero : Vector2.down) * moveDistance;
@@ -264,7 +314,6 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate(image.rectTransform);
         Canvas.ForceUpdateCanvases();
-        RectTransform imageRect = image.rectTransform;
         Vector2 originalPosition = imageRect.anchoredPosition;
         Vector2 lockedSize = imageRect.rect.size;
         bool originalPreserveAspect = image.preserveAspect;
@@ -320,7 +369,6 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
     IEnumerator PlayFallbackDeathAnimation(float duration)
     {
-        RectTransform imageRect = image.rectTransform;
         Vector2 originalPosition = imageRect.anchoredPosition;
         Color originalColor = image.color;
 

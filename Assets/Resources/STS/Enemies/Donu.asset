@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Donu
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Donu
   enemyName: Donu
   displayName: Donu
   maxHP: 16
@@ -29,6 +30,7 @@ MonoBehaviour:
       duration: 2
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -36,6 +38,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     - type: 3
       value: 3
       targetSelf: 1
@@ -44,6 +47,7 @@ MonoBehaviour:
       duration: 2
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -51,6 +55,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     nextMoveIndices: 
     weight: 0
   - card: {fileID: 0}
@@ -64,6 +69,7 @@ MonoBehaviour:
       duration: 2
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -71,6 +77,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     nextMoveIndices: 
     weight: 0
   - card: {fileID: 0}
@@ -84,6 +91,7 @@ MonoBehaviour:
       duration: 3
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -91,6 +99,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     nextMoveIndices: 
     weight: 0
   rewardCards: []
@@ -98,3 +107,4 @@ MonoBehaviour:
   startingStatusDuration: 0
   startingStatusValue: 3
   startingStatusInfo: 
+  startingStatusIndex: 0

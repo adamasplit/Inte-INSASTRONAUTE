@@ -1,0 +1,37 @@
+{
+  "id": "recombustion",
+  "cardName": "Réaction atomique",
+  "collectionCardId": "",
+  "iconId": "ark",
+  "cost": 3,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Legendary",
+  "targetingMode": "AllEnemies",
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 50,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": true,
+      "conditionType": "EnergyGainedThreshold",
+      "conditionValue": "4",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Fire"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "EP",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

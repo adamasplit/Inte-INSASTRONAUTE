@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Regent
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Regent
   enemyName: Regent
+  displayName: 
   maxHP: 90
   pattern:
   - {fileID: 11400000, guid: 8726c1228b8e82d4e9b30060c42afa5a, type: 2}
+  randomStart: 0
   movePattern: []
   rewardCards:
   - {fileID: 11400000, guid: 0dff57f7a73d6d7428b443ee2a580f8a, type: 2}
@@ -23,3 +26,4 @@ MonoBehaviour:
   startingStatusDuration: 2
   startingStatusValue: 0
   startingStatusInfo: "Chute d'\xE9toile"
+  startingStatusIndex: 0

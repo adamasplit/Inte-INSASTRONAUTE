@@ -9,6 +9,7 @@ public abstract class StatusEffect : StatModifier
     public int Value;
     public int maxValue=99;
     public int Duration;
+    public int index=0;
     public bool buff=false;
     public bool debuff=false;
     public bool mustExpire=false;
@@ -106,6 +107,7 @@ public abstract class StatusEffect : StatModifier
     public virtual void BeforeAction(Character target) { }
     public virtual void AfterAction(Character target) { }
     public virtual void OnCardPlayed(Character source,Character target,CardInstance card) { }
+    public virtual void OnAnyCardPlayed(Character source,CardInstance card) { }
     public virtual void OnTargetedByCard(Character source,Character target, CardInstance card) { }
     public virtual void OnCardDrawn(Character target, CardInstance card) { }
     public virtual int ArmorOnTurnStart(int previousArmor, Character character) { return 0; }
@@ -126,7 +128,7 @@ public abstract class StatusEffect : StatModifier
     {
         return value;
     }
-    public static StatusEffect Factory(StatusType type, int value, int duration,string effectInfo="")
+    public static StatusEffect Factory(StatusType type, int value, int duration,string effectInfo="",int index=0)
     {
         StatusEffect stat = type switch
         {
@@ -169,9 +171,9 @@ public abstract class StatusEffect : StatModifier
             StatusType.FullBreak=>new FullBreakStatus(duration),
             StatusType.Status=>new StatusStatus(duration),
             StatusType.CostNullify=>new CostNullifyStatus(value),
-            StatusType.CardFollowUp=>new CardFollowUpStatus(value,duration,effectInfo),
-            StatusType.Echo=>new EchoStatus(value,duration),
-            StatusType.FieldTurnFollowUp=>new FieldTurnFollowUpStatus(value,duration,effectInfo),
+            StatusType.CardFollowUp=>new CardFollowUpStatus(value,duration,effectInfo,index),
+            StatusType.Echo=>new EchoStatus(value,duration,index),
+            StatusType.FieldTurnFollowUp=>new FieldTurnFollowUpStatus(value,duration,effectInfo,index),
             StatusType.Vigor=>new VigorStatus(value),
             StatusType.Artifact=>new ArtifactStatus(value),
             StatusType.Filter=>new FilterStatus(value),
@@ -185,10 +187,14 @@ public abstract class StatusEffect : StatModifier
             StatusType.Vulnerabilize=>new VulnerabilizeStatus(value,duration),
             StatusType.Imitate=>new ImitateStatus(),
             StatusType.FullThrottle=>new FullThrottleStatus(value), 
+            StatusType.Fatigue=>new FatigueStatus(),
+            StatusType.DamageReduction=>new DamageReductionStatus(value,duration),
+            StatusType.AnyCardFollowUp=>new AnyCardFollowUpStatus(value,duration,effectInfo,index),
             _ => null
         };
         stat.statusType = type;
         stat.cardID = effectInfo;
+        stat.index = index;
         return stat;
     }
 }

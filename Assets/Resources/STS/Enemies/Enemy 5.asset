@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Enemy 5
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Enemy 5
   enemyName: Enemy 5
   displayName: 
   maxHP: 28
@@ -34,6 +35,7 @@ MonoBehaviour:
       duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -41,6 +43,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     nextMoveIndices: 010000000200000003000000
     weight: 0
   - card: {fileID: 0}
@@ -54,6 +57,7 @@ MonoBehaviour:
       duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -61,6 +65,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     nextMoveIndices: 010000000200000003000000
     weight: 0
   - card: {fileID: 0}
@@ -74,6 +79,7 @@ MonoBehaviour:
       duration: 3
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -81,6 +87,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     nextMoveIndices: 010000000200000003000000
     weight: 0
   rewardCards:
@@ -89,3 +96,4 @@ MonoBehaviour:
   startingStatusDuration: 0
   startingStatusValue: 0
   startingStatusInfo: 
+  startingStatusIndex: 0

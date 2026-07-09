@@ -7,7 +7,12 @@ public static class EventOptionDescription
             case EventOptionType.None:
                 return "(Rien ne se passe)";
             case EventOptionType.CardReward:
-                return "Recevez une carte";
+                if (option.cardRewardProfiles != null && option.cardRewardProfiles.Count > 0)
+                {
+                    return "Recevez " + option.cardRewardProfiles.Count + " récompense"+(option.cardRewardProfiles.Count>1?"s":"")+" de carte";
+                }
+
+                return option.cardRewardProfile != null ? option.cardRewardProfile.GetShortDescription() : "Recevez une carte";
             case EventOptionType.RelicReward:
                 return "Recevez une pièce d'équipement";
             case EventOptionType.GoldReward:
@@ -28,6 +33,10 @@ public static class EventOptionDescription
                 return $"Transformez {option.value} carte"+(option.value>1?"s":"")+" de votre deck";
             case EventOptionType.AddCard:
                 return $"Ajoutez {option.value} {option.id} à votre deck";
+            //case EventOptionType.ReplaceOptions:
+            //    return option.targetIds != null && option.targetIds.Count > 0
+            //         $"Remplacez {string.Join(", ", option.targetIds)}"
+            //        : "Remplacez cette option";
             default:
                 return "";
         }

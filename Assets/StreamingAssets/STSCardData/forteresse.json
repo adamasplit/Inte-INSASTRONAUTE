@@ -1,6 +1,6 @@
 {
   "id": "forteresse",
-  "cardName": "Forteresse",
+  "cardName": "Forteresse mobile",
   "collectionCardId": "",
   "iconId": "ultimate_shield",
   "cost": 5,
@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

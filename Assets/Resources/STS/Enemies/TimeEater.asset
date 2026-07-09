@@ -1,0 +1,144 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
+  m_Name: TimeEater
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: TimeEater
+  enemyName: TimeEater
+  displayName: "D\xE9voreur de temps"
+  maxHP: 34
+  pattern: []
+  randomStart: 0
+  movePattern:
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 3
+      value: 2
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 3
+      value: 1
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 33
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 01000000
+    weight: 1
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 10
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 8
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 3
+      value: 2
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 8
+      duration: 2
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 02000000
+    weight: 1
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 5
+      value: 2
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 14
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 3
+      value: 1
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 14
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 00000000
+    weight: 1
+  rewardCards: []
+  startingStatus: 57
+  startingStatusDuration: 0
+  startingStatusValue: 8
+  startingStatusInfo: Interruption
+  startingStatusIndex: 0

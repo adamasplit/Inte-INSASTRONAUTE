@@ -1,36 +1,955 @@
 {
     "events": [
         {
-            "title": "",
-            "description": "C'est les DS dans 1 jour...",
+            "title": "Bar ITI-GM",
+            "description": "C'est le moment du bar des CFI et des MRIE !",
             "imageName": "",
+            "weight": 1.0,
             "options": [
                 {
-                    "text": "S'éclaircir l'esprit",
+                    "id": "",
+                    "text": "Aller avec les CFI",
                     "iconName": "",
-                    "completionMessage": "Est-ce que ça sera suffisant?",
+                    "completionMessage": "",
+                    "closePanel": true,
+                    "previewCardIds": [],
                     "entries": [
                         {
-                            "type": "RemoveCard",
-                            "value": 5,
-                            "id": ""
+                            "type": "CardReward",
+                            "value": 0,
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": false,
+                                "useSpecificFavoredCharacter": true,
+                                "specificFavoredCharacter": 4,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 0,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 0
+                            },
+                            "cardRewardProfiles": [
+                                {
+                                    "useSelectedCharacterBias": false,
+                                    "useSpecificFavoredCharacter": true,
+                                    "specificFavoredCharacter": 4,
+                                    "allowCreatedCards": false,
+                                    "allowUnobtainableCards": false,
+                                    "useExactRarity": false,
+                                    "exactRarity": 0,
+                                    "useExactCost": false,
+                                    "exactCost": 0,
+                                    "useCostRange": false,
+                                    "minimumCost": 0,
+                                    "maximumCost": 0,
+                                    "useExactType": false,
+                                    "exactType": 0,
+                                    "overrideDefaultWeights": false,
+                                    "rarityWeights": [],
+                                    "requiredTags": [],
+                                    "excludedTags": [],
+                                    "choiceCount": 3
+                                }
+                            ]
                         }
                     ]
                 },
                 {
+                    "id": "",
+                    "text": "Aller avec les MRIE",
+                    "iconName": "",
+                    "completionMessage": "",
+                    "closePanel": true,
+                    "previewCardIds": [],
+                    "entries": [
+                        {
+                            "type": "CardReward",
+                            "value": 0,
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": false,
+                                "useSpecificFavoredCharacter": true,
+                                "specificFavoredCharacter": 5,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 0,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 0
+                            },
+                            "cardRewardProfiles": [
+                                {
+                                    "useSelectedCharacterBias": false,
+                                    "useSpecificFavoredCharacter": true,
+                                    "specificFavoredCharacter": 5,
+                                    "allowCreatedCards": false,
+                                    "allowUnobtainableCards": false,
+                                    "useExactRarity": false,
+                                    "exactRarity": 0,
+                                    "useExactCost": false,
+                                    "exactCost": 0,
+                                    "useCostRange": false,
+                                    "minimumCost": 0,
+                                    "maximumCost": 0,
+                                    "useExactType": false,
+                                    "exactType": 0,
+                                    "overrideDefaultWeights": false,
+                                    "rarityWeights": [],
+                                    "requiredTags": [],
+                                    "excludedTags": [],
+                                    "choiceCount": 3
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Bar EP-MECA",
+            "description": "C'est le moment du bar des EP et des MECA!",
+            "imageName": "",
+            "weight": 1.0,
+            "options": [
+                {
+                    "id": "",
+                    "text": "Aller avec les EP",
+                    "iconName": "",
+                    "completionMessage": "",
+                    "closePanel": true,
+                    "previewCardIds": [],
+                    "entries": [
+                        {
+                            "type": "CardReward",
+                            "value": 0,
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": false,
+                                "useSpecificFavoredCharacter": true,
+                                "specificFavoredCharacter": 0,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 0,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 0
+                            },
+                            "cardRewardProfiles": [
+                                {
+                                    "useSelectedCharacterBias": false,
+                                    "useSpecificFavoredCharacter": true,
+                                    "specificFavoredCharacter": 0,
+                                    "allowCreatedCards": false,
+                                    "allowUnobtainableCards": false,
+                                    "useExactRarity": false,
+                                    "exactRarity": 0,
+                                    "useExactCost": false,
+                                    "exactCost": 0,
+                                    "useCostRange": false,
+                                    "minimumCost": 0,
+                                    "maximumCost": 0,
+                                    "useExactType": false,
+                                    "exactType": 0,
+                                    "overrideDefaultWeights": false,
+                                    "rarityWeights": [],
+                                    "requiredTags": [],
+                                    "excludedTags": [],
+                                    "choiceCount": 3
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "",
+                    "text": "Aller avec les MECA",
+                    "iconName": "",
+                    "completionMessage": "",
+                    "closePanel": true,
+                    "previewCardIds": [],
+                    "entries": [
+                        {
+                            "type": "CardReward",
+                            "value": 0,
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": false,
+                                "useSpecificFavoredCharacter": true,
+                                "specificFavoredCharacter": 1,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 0,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 0
+                            },
+                            "cardRewardProfiles": [
+                                {
+                                    "useSelectedCharacterBias": false,
+                                    "useSpecificFavoredCharacter": true,
+                                    "specificFavoredCharacter": 1,
+                                    "allowCreatedCards": false,
+                                    "allowUnobtainableCards": false,
+                                    "useExactRarity": false,
+                                    "exactRarity": 0,
+                                    "useExactCost": false,
+                                    "exactCost": 0,
+                                    "useCostRange": false,
+                                    "minimumCost": 0,
+                                    "maximumCost": 0,
+                                    "useExactType": false,
+                                    "exactType": 0,
+                                    "overrideDefaultWeights": false,
+                                    "rarityWeights": [],
+                                    "requiredTags": [],
+                                    "excludedTags": [],
+                                    "choiceCount": 3
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Bar inter-départ",
+            "description": "Un bar inter-départements au Quartier Libre : quoi de mieux pour se familiariser avec la promo? ",
+            "imageName": "",
+            "weight": 2.0,
+            "options": [
+                {
+                    "id": "",
+                    "text": "Y aller",
+                    "iconName": "",
+                    "completionMessage": "",
+                    "closePanel": true,
+                    "previewCardIds": [],
+                    "entries": [
+                        {
+                            "type": "CardReward",
+                            "value": 0,
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": false,
+                                "useSpecificFavoredCharacter": false,
+                                "specificFavoredCharacter": 0,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 0,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 5
+                            },
+                            "cardRewardProfiles": [
+                                {
+                                    "useSelectedCharacterBias": false,
+                                    "useSpecificFavoredCharacter": false,
+                                    "specificFavoredCharacter": 0,
+                                    "allowCreatedCards": false,
+                                    "allowUnobtainableCards": false,
+                                    "useExactRarity": false,
+                                    "exactRarity": 0,
+                                    "useExactCost": false,
+                                    "exactCost": 0,
+                                    "useCostRange": false,
+                                    "minimumCost": 0,
+                                    "maximumCost": 0,
+                                    "useExactType": false,
+                                    "exactType": 0,
+                                    "overrideDefaultWeights": false,
+                                    "rarityWeights": [],
+                                    "requiredTags": [],
+                                    "excludedTags": [],
+                                    "choiceCount": 5
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "",
+                    "text": "Ne pas venir",
+                    "iconName": "",
+                    "completionMessage": "",
+                    "closePanel": true,
+                    "previewCardIds": [],
+                    "entries": []
+                }
+            ]
+        },
+        {
+            "title": "Bar ITI-GM",
+            "description": "C'est le moment du bar des ITI et des GM !",
+            "imageName": "",
+            "weight": 1.0,
+            "options": [
+                {
+                    "id": "",
+                    "text": "Aller avec les ITI",
+                    "iconName": "",
+                    "completionMessage": "",
+                    "closePanel": true,
+                    "previewCardIds": [],
+                    "entries": [
+                        {
+                            "type": "CardReward",
+                            "value": 0,
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": false,
+                                "useSpecificFavoredCharacter": true,
+                                "specificFavoredCharacter": 3,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 0,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 0
+                            },
+                            "cardRewardProfiles": [
+                                {
+                                    "useSelectedCharacterBias": false,
+                                    "useSpecificFavoredCharacter": true,
+                                    "specificFavoredCharacter": 3,
+                                    "allowCreatedCards": false,
+                                    "allowUnobtainableCards": false,
+                                    "useExactRarity": false,
+                                    "exactRarity": 0,
+                                    "useExactCost": false,
+                                    "exactCost": 0,
+                                    "useCostRange": false,
+                                    "minimumCost": 0,
+                                    "maximumCost": 0,
+                                    "useExactType": false,
+                                    "exactType": 0,
+                                    "overrideDefaultWeights": false,
+                                    "rarityWeights": [],
+                                    "requiredTags": [],
+                                    "excludedTags": [],
+                                    "choiceCount": 3
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "",
+                    "text": "Aller avec les GM",
+                    "iconName": "",
+                    "completionMessage": "",
+                    "closePanel": true,
+                    "previewCardIds": [],
+                    "entries": [
+                        {
+                            "type": "CardReward",
+                            "value": 0,
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": false,
+                                "useSpecificFavoredCharacter": true,
+                                "specificFavoredCharacter": 2,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 0,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 0
+                            },
+                            "cardRewardProfiles": [
+                                {
+                                    "useSelectedCharacterBias": false,
+                                    "useSpecificFavoredCharacter": true,
+                                    "specificFavoredCharacter": 2,
+                                    "allowCreatedCards": false,
+                                    "allowUnobtainableCards": false,
+                                    "useExactRarity": false,
+                                    "exactRarity": 0,
+                                    "useExactCost": false,
+                                    "exactCost": 0,
+                                    "useCostRange": false,
+                                    "minimumCost": 0,
+                                    "maximumCost": 0,
+                                    "useExactType": false,
+                                    "exactType": 0,
+                                    "overrideDefaultWeights": false,
+                                    "rarityWeights": [],
+                                    "requiredTags": [],
+                                    "excludedTags": [],
+                                    "choiceCount": 3
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Booster",
+            "description": "La team Cartes vous offre un booster !",
+            "imageName": "",
+            "weight": 2.0,
+            "options": [
+                {
+                    "id": "",
+                    "text": "Accepter",
+                    "iconName": "",
+                    "completionMessage": "",
+                    "closePanel": true,
+                    "previewCardIds": [],
+                    "entries": [
+                        {
+                            "type": "CardReward",
+                            "value": 1,
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": false,
+                                "useSpecificFavoredCharacter": false,
+                                "specificFavoredCharacter": 0,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 0,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 0
+                            },
+                            "cardRewardProfiles": [
+                                {
+                                    "useSelectedCharacterBias": false,
+                                    "useSpecificFavoredCharacter": true,
+                                    "specificFavoredCharacter": 9,
+                                    "allowCreatedCards": false,
+                                    "allowUnobtainableCards": false,
+                                    "useExactRarity": false,
+                                    "exactRarity": 0,
+                                    "useExactCost": false,
+                                    "exactCost": 0,
+                                    "useCostRange": false,
+                                    "minimumCost": 0,
+                                    "maximumCost": 0,
+                                    "useExactType": false,
+                                    "exactType": 0,
+                                    "overrideDefaultWeights": false,
+                                    "rarityWeights": [],
+                                    "requiredTags": [],
+                                    "excludedTags": [],
+                                    "choiceCount": 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "",
+                    "text": "Refuser",
+                    "iconName": "",
+                    "completionMessage": "",
+                    "closePanel": true,
+                    "previewCardIds": [],
+                    "entries": []
+                }
+            ]
+        },
+        {
+            "title": "Ascension de la colline",
+            "description": "Vous essayez de monter la colline Sainte-Catherine ! Il y a des grandes récompenses à la clé, mais le voyage sera difficile...",
+            "imageName": "",
+            "weight": 1.0,
+            "options": [
+                {
+                    "id": "",
+                    "text": "Entamer l'ascension",
+                    "iconName": "",
+                    "completionMessage": "",
+                    "closePanel": false,
+                    "previewCardIds": [],
+                    "entries": [
+                        {
+                            "type": "Damage",
+                            "value": 2,
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": true,
+                                "useSpecificFavoredCharacter": false,
+                                "specificFavoredCharacter": 9,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 3,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 3
+                            },
+                            "cardRewardProfiles": []
+                        },
+                        {
+                            "type": "ReplaceOptions",
+                            "value": 2,
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [
+                                {
+                                    "id": "",
+                                    "text": "Continuer à grimper",
+                                    "iconName": "",
+                                    "completionMessage": "",
+                                    "closePanel": false,
+                                    "previewCardIds": [],
+                                    "entries": [
+                                        {
+                                            "type": "Damage",
+                                            "value": 3,
+                                            "id": "",
+                                            "targetIds": [],
+                                            "replacementOptions": [],
+                                            "cardRewardProfile": {
+                                                "useSelectedCharacterBias": true,
+                                                "useSpecificFavoredCharacter": false,
+                                                "specificFavoredCharacter": 9,
+                                                "allowCreatedCards": false,
+                                                "allowUnobtainableCards": false,
+                                                "useExactRarity": false,
+                                                "exactRarity": 0,
+                                                "useExactCost": false,
+                                                "exactCost": 0,
+                                                "useCostRange": false,
+                                                "minimumCost": 0,
+                                                "maximumCost": 0,
+                                                "useExactType": false,
+                                                "exactType": 3,
+                                                "overrideDefaultWeights": false,
+                                                "rarityWeights": [],
+                                                "requiredTags": [],
+                                                "excludedTags": [],
+                                                "choiceCount": 3
+                                            },
+                                            "cardRewardProfiles": []
+                                        },
+                                        {
+                                            "type": "ReplaceOptions",
+                                            "value": 3,
+                                            "id": "",
+                                            "targetIds": [],
+                                            "replacementOptions": [
+                                                {
+                                                    "id": "",
+                                                    "text": "Persévérer",
+                                                    "iconName": "",
+                                                    "completionMessage": "Vous approchez de la fin !",
+                                                    "closePanel": false,
+                                                    "previewCardIds": [],
+                                                    "entries": [
+                                                        {
+                                                            "type": "Damage",
+                                                            "value": 6,
+                                                            "id": "",
+                                                            "targetIds": [],
+                                                            "replacementOptions": [],
+                                                            "cardRewardProfile": {
+                                                                "useSelectedCharacterBias": true,
+                                                                "useSpecificFavoredCharacter": false,
+                                                                "specificFavoredCharacter": 9,
+                                                                "allowCreatedCards": false,
+                                                                "allowUnobtainableCards": false,
+                                                                "useExactRarity": false,
+                                                                "exactRarity": 0,
+                                                                "useExactCost": false,
+                                                                "exactCost": 0,
+                                                                "useCostRange": false,
+                                                                "minimumCost": 0,
+                                                                "maximumCost": 0,
+                                                                "useExactType": false,
+                                                                "exactType": 3,
+                                                                "overrideDefaultWeights": false,
+                                                                "rarityWeights": [],
+                                                                "requiredTags": [],
+                                                                "excludedTags": [],
+                                                                "choiceCount": 3
+                                                            },
+                                                            "cardRewardProfiles": []
+                                                        },
+                                                        {
+                                                            "type": "ReplaceOptions",
+                                                            "value": 6,
+                                                            "id": "",
+                                                            "targetIds": [],
+                                                            "replacementOptions": [
+                                                                {
+                                                                    "id": "",
+                                                                    "text": "Arriver jusqu'au sommet",
+                                                                    "iconName": "",
+                                                                    "completionMessage": "Bien joué! Est-ce que les points de défis valent le coup?",
+                                                                    "closePanel": true,
+                                                                    "previewCardIds": [
+                                                                        "Apogée"
+                                                                    ],
+                                                                    "entries": [
+                                                                        {
+                                                                            "type": "Damage",
+                                                                            "value": 10,
+                                                                            "id": "",
+                                                                            "targetIds": [],
+                                                                            "replacementOptions": [],
+                                                                            "cardRewardProfile": {
+                                                                                "useSelectedCharacterBias": true,
+                                                                                "useSpecificFavoredCharacter": false,
+                                                                                "specificFavoredCharacter": 9,
+                                                                                "allowCreatedCards": false,
+                                                                                "allowUnobtainableCards": false,
+                                                                                "useExactRarity": false,
+                                                                                "exactRarity": 0,
+                                                                                "useExactCost": false,
+                                                                                "exactCost": 0,
+                                                                                "useCostRange": false,
+                                                                                "minimumCost": 0,
+                                                                                "maximumCost": 0,
+                                                                                "useExactType": false,
+                                                                                "exactType": 3,
+                                                                                "overrideDefaultWeights": false,
+                                                                                "rarityWeights": [],
+                                                                                "requiredTags": [],
+                                                                                "excludedTags": [],
+                                                                                "choiceCount": 3
+                                                                            },
+                                                                            "cardRewardProfiles": []
+                                                                        },
+                                                                        {
+                                                                            "type": "AddCard",
+                                                                            "value": 1,
+                                                                            "id": "Apogée",
+                                                                            "targetIds": [],
+                                                                            "replacementOptions": [],
+                                                                            "cardRewardProfile": {
+                                                                                "useSelectedCharacterBias": true,
+                                                                                "useSpecificFavoredCharacter": false,
+                                                                                "specificFavoredCharacter": 9,
+                                                                                "allowCreatedCards": false,
+                                                                                "allowUnobtainableCards": false,
+                                                                                "useExactRarity": false,
+                                                                                "exactRarity": 0,
+                                                                                "useExactCost": false,
+                                                                                "exactCost": 0,
+                                                                                "useCostRange": false,
+                                                                                "minimumCost": 0,
+                                                                                "maximumCost": 0,
+                                                                                "useExactType": false,
+                                                                                "exactType": 3,
+                                                                                "overrideDefaultWeights": false,
+                                                                                "rarityWeights": [],
+                                                                                "requiredTags": [],
+                                                                                "excludedTags": [],
+                                                                                "choiceCount": 3
+                                                                            },
+                                                                            "cardRewardProfiles": []
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            "cardRewardProfile": {
+                                                                "useSelectedCharacterBias": true,
+                                                                "useSpecificFavoredCharacter": false,
+                                                                "specificFavoredCharacter": 9,
+                                                                "allowCreatedCards": false,
+                                                                "allowUnobtainableCards": false,
+                                                                "useExactRarity": false,
+                                                                "exactRarity": 0,
+                                                                "useExactCost": false,
+                                                                "exactCost": 0,
+                                                                "useCostRange": false,
+                                                                "minimumCost": 0,
+                                                                "maximumCost": 0,
+                                                                "useExactType": false,
+                                                                "exactType": 3,
+                                                                "overrideDefaultWeights": false,
+                                                                "rarityWeights": [],
+                                                                "requiredTags": [],
+                                                                "excludedTags": [],
+                                                                "choiceCount": 3
+                                                            },
+                                                            "cardRewardProfiles": []
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "cardRewardProfile": {
+                                                "useSelectedCharacterBias": true,
+                                                "useSpecificFavoredCharacter": false,
+                                                "specificFavoredCharacter": 9,
+                                                "allowCreatedCards": false,
+                                                "allowUnobtainableCards": false,
+                                                "useExactRarity": false,
+                                                "exactRarity": 0,
+                                                "useExactCost": false,
+                                                "exactCost": 0,
+                                                "useCostRange": false,
+                                                "minimumCost": 0,
+                                                "maximumCost": 0,
+                                                "useExactType": false,
+                                                "exactType": 3,
+                                                "overrideDefaultWeights": false,
+                                                "rarityWeights": [],
+                                                "requiredTags": [],
+                                                "excludedTags": [],
+                                                "choiceCount": 3
+                                            },
+                                            "cardRewardProfiles": []
+                                        }
+                                    ]
+                                }
+                            ],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": true,
+                                "useSpecificFavoredCharacter": false,
+                                "specificFavoredCharacter": 9,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 3,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 3
+                            },
+                            "cardRewardProfiles": []
+                        }
+                    ]
+                },
+                {
+                    "id": "giveup",
+                    "text": "Abandonner",
+                    "iconName": "",
+                    "completionMessage": "Une autre fois?",
+                    "closePanel": true,
+                    "previewCardIds": [],
+                    "entries": []
+                }
+            ]
+        },
+        {
+            "title": "",
+            "description": "C'est les DS dans 1 jour...",
+            "imageName": "",
+            "weight": 3.0,
+            "options": [
+                {
+                    "id": "",
+                    "text": "S'éclaircir l'esprit",
+                    "iconName": "",
+                    "completionMessage": "Est-ce que ça sera suffisant?",
+                    "closePanel": true,
+                    "previewCardIds": [],
+                    "entries": [
+                        {
+                            "type": "RemoveCard",
+                            "value": 3,
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": true,
+                                "useSpecificFavoredCharacter": false,
+                                "specificFavoredCharacter": 9,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 3,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 3
+                            },
+                            "cardRewardProfiles": []
+                        }
+                    ]
+                },
+                {
+                    "id": "",
                     "text": "Scroller",
                     "iconName": "",
                     "completionMessage": "Réviser c'est douter de ses capacités",
+                    "closePanel": true,
+                    "previewCardIds": [],
                     "entries": [
                         {
                             "type": "Damage",
                             "value": 10,
-                            "id": ""
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": true,
+                                "useSpecificFavoredCharacter": false,
+                                "specificFavoredCharacter": 9,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 3,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 3
+                            },
+                            "cardRewardProfiles": []
                         },
                         {
                             "type": "CardReward",
                             "value": 1,
-                            "id": ""
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": true,
+                                "useSpecificFavoredCharacter": false,
+                                "specificFavoredCharacter": 9,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 3,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 3
+                            },
+                            "cardRewardProfiles": []
                         }
                     ]
                 }
@@ -40,69 +959,315 @@
             "title": "",
             "description": "La nuit tombe...",
             "imageName": "",
+            "weight": 3.0,
             "options": [
                 {
-                    "text": "Réviser pendant la nuit",
+                    "id": "",
+                    "text": "S'entraîner pendant la nuit",
                     "iconName": "",
                     "completionMessage": "",
+                    "closePanel": true,
+                    "previewCardIds": [],
                     "entries": [
                         {
                             "type": "Damage",
                             "value": 20,
-                            "id": ""
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": true,
+                                "useSpecificFavoredCharacter": false,
+                                "specificFavoredCharacter": 9,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 3,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 3
+                            },
+                            "cardRewardProfiles": []
                         },
                         {
                             "type": "MaxHpGain",
                             "value": 10,
-                            "id": ""
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": true,
+                                "useSpecificFavoredCharacter": false,
+                                "specificFavoredCharacter": 9,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 3,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 3
+                            },
+                            "cardRewardProfiles": []
                         }
                     ]
                 },
                 {
+                    "id": "",
                     "text": "Se reposer",
                     "iconName": "",
                     "completionMessage": "",
+                    "closePanel": true,
+                    "previewCardIds": [],
                     "entries": [
                         {
                             "type": "Heal",
                             "value": 25,
-                            "id": ""
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": true,
+                                "useSpecificFavoredCharacter": false,
+                                "specificFavoredCharacter": 9,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 3,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 3
+                            },
+                            "cardRewardProfiles": []
                         }
                     ]
                 }
             ]
         },
         {
-            "title": "",
-            "description": "C'est la soirée du WEI...",
+            "title": "Turbulences",
+            "description": "Au cours de votre voyage spatial, vous traversez des turbulences... Pas suffisant pour vous arrêter, mais ça risque de vous ralentir.",
             "imageName": "",
+            "weight": 2.0,
             "options": [
                 {
-                    "text": "Aller se coucher tôt",
+                    "id": "",
+                    "text": "Foncer à toute vitesse",
                     "iconName": "",
-                    "completionMessage": "",
+                    "completionMessage": "Vos moteurs en prennent un coup mais vous traversez les turbulences aussi vite que possible.",
+                    "closePanel": true,
+                    "previewCardIds": [
+                        "Surchauffe"
+                    ],
                     "entries": [
                         {
-                            "type": "MaxHpGain",
-                            "value": 3,
-                            "id": ""
+                            "type": "AddCard",
+                            "value": 1,
+                            "id": "Surchauffe",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": false,
+                                "useSpecificFavoredCharacter": false,
+                                "specificFavoredCharacter": 0,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 0,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 0
+                            },
+                            "cardRewardProfiles": []
                         }
                     ]
                 },
                 {
-                    "text": "???",
+                    "id": "",
+                    "text": "Prendre son temps",
                     "iconName": "",
                     "completionMessage": "",
+                    "closePanel": true,
+                    "previewCardIds": [],
+                    "entries": [
+                        {
+                            "type": "Damage",
+                            "value": 13,
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": false,
+                                "useSpecificFavoredCharacter": false,
+                                "specificFavoredCharacter": 0,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 0,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 0
+                            },
+                            "cardRewardProfiles": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "WEI",
+            "description": "C'est la soirée du WEI... Après le talent show et toutes les activités de la journée, quel est votre plan d'action?",
+            "imageName": "",
+            "weight": 3.0,
+            "options": [
+                {
+                    "id": "",
+                    "text": "Aller se coucher tôt",
+                    "iconName": "",
+                    "completionMessage": "",
+                    "closePanel": true,
+                    "previewCardIds": [],
+                    "entries": [
+                        {
+                            "type": "MaxHpGain",
+                            "value": 3,
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": true,
+                                "useSpecificFavoredCharacter": false,
+                                "specificFavoredCharacter": 9,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 3,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 3
+                            },
+                            "cardRewardProfiles": []
+                        }
+                    ]
+                },
+                {
+                    "id": "",
+                    "text": "Profiter de la soirée",
+                    "iconName": "",
+                    "completionMessage": "",
+                    "closePanel": true,
+                    "previewCardIds": [],
                     "entries": [
                         {
                             "type": "Damage",
                             "value": 9,
-                            "id": ""
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": true,
+                                "useSpecificFavoredCharacter": false,
+                                "specificFavoredCharacter": 9,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 3,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 3
+                            },
+                            "cardRewardProfiles": []
                         },
                         {
                             "type": "RelicReward",
                             "value": 1,
-                            "id": ""
+                            "id": "",
+                            "targetIds": [],
+                            "replacementOptions": [],
+                            "cardRewardProfile": {
+                                "useSelectedCharacterBias": true,
+                                "useSpecificFavoredCharacter": false,
+                                "specificFavoredCharacter": 9,
+                                "allowCreatedCards": false,
+                                "allowUnobtainableCards": false,
+                                "useExactRarity": false,
+                                "exactRarity": 0,
+                                "useExactCost": false,
+                                "exactCost": 0,
+                                "useCostRange": false,
+                                "minimumCost": 0,
+                                "maximumCost": 0,
+                                "useExactType": false,
+                                "exactType": 3,
+                                "overrideDefaultWeights": false,
+                                "rarityWeights": [],
+                                "requiredTags": [],
+                                "excludedTags": [],
+                                "choiceCount": 3
+                            },
+                            "cardRewardProfiles": []
                         }
                     ]
                 }

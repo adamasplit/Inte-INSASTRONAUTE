@@ -8,6 +8,10 @@ public static class RelicDrop
         {
             RelicDatabase.Load();
         }
+        if (result != null && result.boss)
+        {
+            return GetRandomRelicOfRarity(RelicRarity.Boss);
+        }
         int roll = Random.Range(0, 100);
         if (roll < 60)
         {

@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Condensateur
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 913c439e552b5254b917f675f28d6c9c, type: 3}
   cost: 0
   xCost: 0
   type: 1

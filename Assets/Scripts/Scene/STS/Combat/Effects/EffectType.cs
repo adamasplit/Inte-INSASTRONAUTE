@@ -27,5 +27,11 @@ public enum EffectType
     CardSelection,
     ForceNextCard,
     DoubleDebuffs,
-    SetStatusToMaxValue
+    SetStatusToMaxValue,
+    ExtendStatuses,
+    DispelDebuffsIntoDamage,
+    DispelBuffsIntoStatus,
+    DispelSpecificStatus,
+    AddCopyOfCard,
+    CutInTurn
 }

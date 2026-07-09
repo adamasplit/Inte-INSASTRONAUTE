@@ -30,6 +30,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -38,13 +39,14 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
   - type: 3
-    value: 0
+    value: 2
     targetSelf: 1
     targetOthers: 0
     statusType: 40
-    duration: 2
+    duration: 1
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 

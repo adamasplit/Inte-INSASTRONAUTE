@@ -39,7 +39,6 @@ public class STSCardData : ScriptableObject
         dto.collectionCardId = collectionCard != null ? collectionCard.cardId : collectionCardId;
         dto.cost = cost;
         dto.iconId = icon != null ? icon.name : null;
-
         dto.type = type.ToString();
 
         dto.rarity = rarity.ToString();

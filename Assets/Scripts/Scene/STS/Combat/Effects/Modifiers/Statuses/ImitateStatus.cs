@@ -28,7 +28,7 @@ public class ImitateStatus : StatusEffect
             lastPlayedCard = card;
             if (target.isPlayer)
             {
-                CardInstance copyCard = new CardInstance(card.data);
+                CardInstance copyCard =card.Clone();
                 source.GetCombatManager().deck.AddToHand(copyCard);
             }
             else
@@ -36,7 +36,7 @@ public class ImitateStatus : StatusEffect
                 Enemy enemy = target as Enemy;
                 if (enemy != null && lastPlayedCard != null)
                 {
-                    enemy.ForceNextAction(lastPlayedCard.data);
+                    enemy.ForceNextAction(lastPlayedCard);
                 }
             }
         }

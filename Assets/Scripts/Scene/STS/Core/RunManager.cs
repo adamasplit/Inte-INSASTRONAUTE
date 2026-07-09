@@ -26,6 +26,7 @@ public class RunManager : MonoBehaviour
     public bool forceTutorial=false;
     public bool addAllCardsToDeck=false;//Debug option to add all cards to the deck for testing purposes
     public List<string> debugCards=new List<string>();//Debug option to specify which cards to add to the deck when addAllCardsToDeck is true
+    [HideInInspector] public bool inCombat=false;
     void Update()
     {
         if (SceneManager.GetActiveScene().name != "STS_Combat" && player != null && player.currentHP <= 0)
@@ -83,6 +84,7 @@ public class RunManager : MonoBehaviour
 
             await STSCardDatabase.LoadAsync();
             await EnemyDataDatabase.LoadAsync();
+            await EnemyPoolDatabase.LoadAsync();
             gold = 0;
             if (Enum.TryParse(character, out SelectableCharacter parsedCharacter))
             {
@@ -180,15 +182,20 @@ public class RunManager : MonoBehaviour
 
         return loaded;
     }
-    public void StartTutorialRun(int stage)
+    public void StartTutorialRun()
     {
-        _ = StartTutorialRunAsync(stage);
+        _ = StartTutorialRunAsync();
     }
 
-    private async Task StartTutorialRunAsync(int stage)
+    public void StartTutorialRun(int stage)
     {
-        await StartRunAsync("", 50, new List<Relic>(), false, true, stage, "STS_Combat");
+        StartTutorialRun();
+    }
+
+    private async Task StartTutorialRunAsync()
+    {
+        await StartRunAsync("", 50, new List<Relic>(), false, true, 0, "STS_Combat");
         forceTutorial = true;
-        act = stage;
+        act = 0;
     }
 }

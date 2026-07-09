@@ -23,10 +23,12 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "All",
+      "index": 0,
       "cardFilterTags": [
         "Atom"
       ],
-      "cardSelectionEffect": "ConsumeAndDealDamageToAll"
+      "cardSelectionEffect": "ConsumeAndDealDamageToAll",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

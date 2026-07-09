@@ -16,6 +16,6 @@ public class DebuffOnTargetModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+{perDebuff} {StatTypeString.ToFrench(type)} par effet négatif sur la cible";
+        return $"{StatTypeString.ToFrench(type, perDebuff,modifierType)} par effet négatif sur la cible";
     }
 }

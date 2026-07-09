@@ -80,6 +80,27 @@ public static class EffectResolver
                 }
                 break;
             }
+            case EffectType.CutInTurn:
+            {
+                if (ctx.isPreview)
+                {
+                    ctx.timeline = turnSystem.CutInTurn(
+                        ctx.timeline,
+                        ctx.targets,
+                        ctx.source,
+                        effect.targetSelf
+                    );
+                }
+                else
+                {
+                    turnSystem.ApplyCutInTurn(
+                        ctx.targets,
+                        ctx.source,
+                        effect.targetSelf
+                    );
+                }
+                break;
+            }
         }
     }
     public static IEnumerator Apply(EffectEntry effect, EffectContext ctx)
@@ -176,7 +197,7 @@ public static class EffectResolver
                     yield break;
                 int val = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
                 int dur = BattleCalculator.GetModifiedValue(effect.duration, StatType.StatusDuration, ctx);
-                StatusEffect stat=StatusEffect.Factory(effect.statusType,val,dur,effect.cardID);
+                StatusEffect stat=StatusEffect.Factory(effect.statusType,val,dur,effect.cardID,effect.index);
                 ctx.target.AddStatus(stat);
                 yield break;
             }
@@ -247,6 +268,27 @@ public static class EffectResolver
                     turnSystem.ApplyDelayAllTurns(
                         ctx.target,
                         delayAmount
+                    );
+                }
+                yield break;
+            }
+            case EffectType.CutInTurn:
+            {
+                if (ctx.isPreview)
+                {
+                    ctx.timeline = turnSystem.CutInTurn(
+                        ctx.timeline,
+                        ctx.targets,
+                        ctx.source,
+                        effect.targetSelf
+                    );
+                }
+                else
+                {
+                    turnSystem.ApplyCutInTurn(
+                        ctx.targets,
+                        ctx.source,
+                        effect.targetSelf
                     );
                 }
                 yield break;
@@ -357,7 +399,7 @@ public static class EffectResolver
             {
                 if (ctx.isPreview)
                     yield break;
-                if (ctx.source != null && ctx.source.isPlayer)
+                if (ctx.target != null && ctx.target.isPlayer)
                 {
                     ctx.combat.turnSystem.PlayerEndTurn();
                 }
@@ -741,7 +783,7 @@ public static class EffectResolver
                     List<StatusEffect> debuffsToDouble = ctx.target.statusEffects.Where(s => s.debuff).ToList();
                     foreach (var debuff in debuffsToDouble)
                     {
-                        StatusEffect newDebuff = StatusEffect.Factory(debuff.statusType, debuff.Value, debuff.Duration, debuff.cardID);
+                        StatusEffect newDebuff = StatusEffect.Factory(debuff.statusType, debuff.Value, debuff.Duration, debuff.cardID, debuff.index);
                         ctx.target.AddStatus(newDebuff);
                     }
                     yield break;
@@ -758,6 +800,115 @@ public static class EffectResolver
                     if (statusToSet != null)
                     {
                         statusToSet.Value = statusToSet.maxValue;
+                    }
+                    yield break;
+                }
+            case EffectType.ExtendStatuses:
+                {
+                    if (ctx.isPreview)
+                        yield break;
+                    if (ctx.target == null)
+                    {
+                        yield break;
+                    }
+                    foreach (var status in ctx.target.statusEffects)
+                    {
+                        if (status.inextendable||status.Duration<=0)
+                            continue;
+                        status.Duration += effect.value;
+                    }
+                    yield break;
+                }
+            case EffectType.DispelDebuffsIntoDamage:
+                {
+                    if (ctx.isPreview)
+                        yield break;
+                    if (ctx.target == null)
+                    {
+                        yield break;
+                    }
+                    List<StatusEffect> debuffsToDispel = ctx.target.statusEffects.Where(s => s.debuff&&(!s.goldFrame)).ToList();
+                    int totalDamage = 0;
+                    foreach (var debuff in debuffsToDispel)
+                    {
+                        totalDamage += BattleCalculator.GetModifiedValue(effect.value*(Mathf.Max(0, debuff.Value) + Mathf.Max(0, debuff.Duration)), StatType.Damage, ctx);
+                        debuff.Dispel(effect.duration);
+                    }
+                    ctx.target.TakeDamage(totalDamage);
+                    if (ctx.source != null)
+                    {
+                        ctx.source.OnDamageDealt(ctx.target, totalDamage);
+                        ctx.target.OnDamageTaken(ctx.source, totalDamage);
+                    }
+                    yield break;
+                }
+            case EffectType.DispelBuffsIntoStatus:
+                {
+                    if (ctx.isPreview)
+                        yield break;
+                    if (ctx.target == null)
+                    {
+                        yield break;
+                    }
+                    List<StatusEffect> buffsToDispel = ctx.target.statusEffects.Where(s => s.buff&&(!s.goldFrame)).ToList();
+                    foreach (var buff in buffsToDispel)
+                    {
+                        StatusEffect newStatus = StatusEffect.Factory(effect.statusType, effect.value*(Mathf.Max(0, buff.Value) + Mathf.Max(0, buff.Duration)), effect.duration, effect.cardID,effect.index);
+                        ctx.target.AddStatus(newStatus);
+                        buff.Dispel();
+                    }
+                    yield break;
+                }
+            case EffectType.DispelSpecificStatus:
+                {
+                    if (ctx.isPreview)
+                        yield break;
+                    if (ctx.target == null)
+                    {
+                        yield break;
+                    }
+                    List<StatusEffect> statusesToDispel = ctx.target.statusEffects.Where(s => s.statusType == effect.statusType&&(!s.goldFrame)).ToList();
+                    foreach (var status in statusesToDispel)
+                    {
+                        status.Dispel(effect.duration);
+                    }
+                    yield break;
+                }
+            case EffectType.AddCopyOfCard:
+                {
+                    if (ctx.isPreview)
+                        yield break;
+                    if (ctx.source == null || ctx.source.GetCombatManager() == null||ctx.card==null)
+                        yield break;
+
+                    var deck = ctx.source.GetCombatManager().deck;
+                    if (deck == null)
+                        yield break;
+
+                    int amount = Mathf.Max(effect.value, 0);
+
+                    if (amount == 0)
+                        yield break;
+
+                    List<CardInstance> candidates = effect.cardSelectionSource switch
+                    {
+                        CardSelectionSource.Hand => deck.hand,
+                        CardSelectionSource.DiscardPile => deck.discardPile,
+                        CardSelectionSource.DrawPile => deck.drawPile,
+                        CardSelectionSource.ExhaustPile => deck.exhaustPile,
+                        CardSelectionSource.All => deck.hand.Concat(deck.discardPile).Concat(deck.drawPile).Concat(deck.exhaustPile).ToList(),
+                        CardSelectionSource.AllExceptExhaustPile => deck.hand.Concat(deck.discardPile).Concat(deck.drawPile).ToList(),
+                        _ => new List<CardInstance>()
+                    };
+
+                    for (int i = 0; i < effect.value; i++)
+                    {
+                        CardInstance newCard = new CardInstance(ctx.card.data);
+                        AddCardToPile(deck, effect.cardSelectionSource, newCard);
+                        if (ui != null && effect.cardSelectionSource != CardSelectionSource.Hand)
+                        {
+                            yield return ui.AnimateCardToPile(newCard, effect.cardSelectionSource);
+                        }
                     }
                     yield break;
                 }
@@ -786,6 +937,86 @@ public static class EffectResolver
                 if (ctx.target == null)
                     return false;
                 return !ctx.target.statusEffects.Any(s => s.statusType.ToString() == strValue);
+            case ConditionType.SelfArmorThreshold:
+                if (ctx.source == null)
+                    return false;
+                if (int.TryParse(strValue, out int threshold))
+                {
+                    return ctx.source.armor >= threshold;
+                }
+                else
+                {
+                    Debug.LogWarning($"Valeur de seuil d'armure invalide : {strValue}");
+                    return false;
+                }
+            case ConditionType.TargetArmorThreshold:
+                if (ctx.target == null)
+                    return false;
+                if (int.TryParse(strValue, out int targetThreshold))
+                {
+                    return ctx.target.armor >= targetThreshold;
+                }
+                else
+                {
+                    Debug.LogWarning($"Valeur de seuil d'armure de la cible invalide : {strValue}");
+                    return false;
+                }
+            case ConditionType.EnergyGainedThreshold:
+                if (ctx.source == null)
+                    return false;
+                if (int.TryParse(strValue, out int energyGainedThreshold))
+                {
+                    return ctx.state.energyGainedThisTurn >= energyGainedThreshold;
+                }
+                else
+                {
+                    Debug.LogWarning($"Valeur de seuil d'énergie gagnée invalide : {strValue}");
+                    return false;
+                }
+            case ConditionType.EnergySpentThreshold:
+                if (ctx.source == null)
+                    return false;
+                if (int.TryParse(strValue, out int energySpentThreshold))
+                {
+                    return ctx.state.energySpentThisTurn >= energySpentThreshold;
+                }
+                else
+                {
+                    Debug.LogWarning($"Valeur de seuil d'énergie dépensée invalide : {strValue}");
+                    return false;
+                }
+            case ConditionType.TargetWillAttack:
+                if (ctx.targets == null||ctx.targets.Count == 0)
+                    return false;
+                foreach (var target in ctx.targets)
+                {
+                    Debug.Log($"Vérification si l'ennemi {target.name} va attaquer");
+                    if (target is Enemy enemy&&enemy.PeekNextAction() != null)
+                    {
+                        Debug.Log($"L'ennemi {enemy.name} va attaquer. Prochaine action : {enemy.PeekNextAction()?.type}");
+                        if (enemy.PeekNextAction()?.type == CardType.Attaque)
+                        {
+                            Debug.Log($"L'ennemi {enemy.name} va attaquer. Prochaine action : {enemy.PeekNextAction()?.type}");
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            case ConditionType.TargetWillNotAttack:
+                if (ctx.targets == null||ctx.targets.Count == 0)
+                    return false;
+                foreach (var target in ctx.targets)
+                {
+                    if (target is Enemy enemy2&&enemy2.PeekNextAction() != null)
+                    {
+                        Debug.Log($"Vérification si l'ennemi {enemy2.name} ne va pas attaquer. Prochaine action : {enemy2.PeekNextAction()?.type}");
+                        if (enemy2.PeekNextAction()?.type == CardType.Attaque)
+                        {
+                            return false; // If any enemy is going to attack, return false
+                        }
+                    }
+                }
+                return true; // If no enemy is found, assume none will attack
             default:
                 return false;
         }

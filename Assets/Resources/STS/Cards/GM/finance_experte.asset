@@ -20,7 +20,7 @@ MonoBehaviour:
   cost: 2
   xCost: 0
   type: 2
-  rarity: 4
+  rarity: 3
   effects:
   - type: 3
     value: 0
@@ -30,6 +30,7 @@ MonoBehaviour:
     duration: 5
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 

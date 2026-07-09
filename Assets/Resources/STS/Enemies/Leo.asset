@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Leo
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Leo
   enemyName: Leo
   displayName: 
   maxHP: 45
@@ -34,6 +35,7 @@ MonoBehaviour:
       duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -41,6 +43,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     - type: 3
       value: 2
       targetSelf: 0
@@ -49,6 +52,7 @@ MonoBehaviour:
       duration: 2
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -56,6 +60,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     nextMoveIndices: 0200000004000000
     weight: 0
   - card: {fileID: 0}
@@ -69,6 +74,7 @@ MonoBehaviour:
       duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -76,6 +82,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     - type: 1
       value: 3
       targetSelf: 1
@@ -84,6 +91,7 @@ MonoBehaviour:
       duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -91,6 +99,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     nextMoveIndices: 0100000003000000
     weight: 0
   - card: {fileID: 0}
@@ -104,6 +113,7 @@ MonoBehaviour:
       duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -111,6 +121,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     - type: 1
       value: 1
       targetSelf: 1
@@ -119,6 +130,7 @@ MonoBehaviour:
       duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -126,6 +138,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     nextMoveIndices: 0400000001000000
     weight: 0
   - card: {fileID: 0}
@@ -139,6 +152,7 @@ MonoBehaviour:
       duration: 2
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -146,6 +160,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     - type: 0
       value: 3
       targetSelf: 0
@@ -154,6 +169,7 @@ MonoBehaviour:
       duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -161,6 +177,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     nextMoveIndices: 0300000002000000
     weight: 0
   rewardCards:
@@ -169,3 +186,4 @@ MonoBehaviour:
   startingStatusDuration: 0
   startingStatusValue: 0
   startingStatusInfo: 
+  startingStatusIndex: 0

@@ -1,0 +1,37 @@
+{
+  "id": "interpolation",
+  "cardName": "Interpolation",
+  "collectionCardId": "",
+  "iconId": "between",
+  "cost": 2,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Uncommon",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "CutInTurn",
+      "value": 0,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "GM",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

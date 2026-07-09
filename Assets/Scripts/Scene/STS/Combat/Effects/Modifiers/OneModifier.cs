@@ -15,6 +15,6 @@ public class OneModifier : StatModifier
 
     public override string Describe()
     {
-        return $"Set {StatTypeString.ToFrench(type)} to 1, keeping the sign of the original value";
+        return $"Set {StatTypeString.ToFrench(type, 1,modifierType)} to 1, keeping the sign of the original value";
     }
 }

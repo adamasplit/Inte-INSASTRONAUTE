@@ -23,7 +23,7 @@ public class ModifierData
             case ModifierKind.Discard:
                 return new DiscardModifier(type, value);
             case ModifierKind.Played:
-                return new PlayedModifier(type, value);
+                return new PlayedModifier(type, value,info);
             case ModifierKind.DebuffOnSelf:
                 return new DebuffOnSelfModifier(type, value);
             case ModifierKind.BuffOnSelf:
@@ -50,6 +50,14 @@ public class ModifierData
                 return new HPLostSinceLastTurnModifier(type, value);
             case ModifierKind.DamageDealtWithLastAction:
                 return new DamageDealtWithLastActionModifier(type, value);
+            case ModifierKind.SpecificStatusOnSelf:
+                return new SpecificStatusOnSelfModifier(type, value, info);
+            case ModifierKind.SpecificStatusOnTarget:
+                return new SpecificStatusOnTargetModifier(type, value, info);
+            case ModifierKind.EnergySpent:
+                return new EnergySpentModifier(type, value);
+            case ModifierKind.EnergyGained:
+                return new EnergyGainedModifier(type, value);
             default:
                 throw new System.Exception("Unknown modifier kind: " + kind);
         }

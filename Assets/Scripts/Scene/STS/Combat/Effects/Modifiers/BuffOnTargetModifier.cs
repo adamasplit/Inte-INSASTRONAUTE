@@ -16,6 +16,6 @@ public class BuffOnTargetModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+{perBuff} {StatTypeString.ToFrench(type)} par effet bénéfique sur la cible";
+        return $"{StatTypeString.ToFrench(type, perBuff,modifierType)} par effet bénéfique sur la cible";
     }
 }

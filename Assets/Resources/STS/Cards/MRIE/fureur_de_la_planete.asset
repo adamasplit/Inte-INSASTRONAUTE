@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: "Fureur de la plan\xE8te"
   collectionCardId: 
   collectionCard: {fileID: 0}
-  icon: {fileID: 21300000, guid: 43ad36d243cd9d440abd07dbec726212, type: 3}
+  icon: {fileID: 21300000, guid: a411f166862f6464fb669de8264e4ff9, type: 3}
   cost: 3
   xCost: 0
   type: 2

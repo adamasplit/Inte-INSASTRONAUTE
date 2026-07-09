@@ -11,11 +11,11 @@
   "effects": [
     {
       "type": "Status",
-      "value": 0,
+      "value": 5,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "FieldTurnFollowUp",
-      "duration": 5,
+      "duration": 0,
       "description": "",
       "cardID": "Surchauffe",
       "conditional": false,
@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

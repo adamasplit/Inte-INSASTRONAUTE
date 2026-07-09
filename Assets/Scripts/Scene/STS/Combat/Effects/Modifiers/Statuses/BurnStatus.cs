@@ -12,7 +12,8 @@ public class BurnStatus : StatusEffect
     public override void OnTurnEnd(Character target)
     {
         target.TakeDamage(Duration);
-        VFXManager.Instance.PlayEffect("Burn", target);
+        VFXManager.Instance.PlayEffect("DamageFire", target);
+        SFXManager.Instance.PlaySound("DamageFire");
         base.OnTurnEnd(target);
     }
     public override string Desc(bool isPlayer)

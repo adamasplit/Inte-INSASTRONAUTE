@@ -2,7 +2,7 @@
   "id": "protecteur_de_la_planete",
   "cardName": "Protecteur de la planète",
   "collectionCardId": "",
-  "iconId": "Armure",
+  "iconId": "sigil",
   "cost": 2,
   "xCost": false,
   "type": "Compétence",
@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

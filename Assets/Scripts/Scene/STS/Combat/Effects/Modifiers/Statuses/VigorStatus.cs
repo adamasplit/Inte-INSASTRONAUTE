@@ -13,7 +13,7 @@ public class VigorStatus : StatusEffect
     private bool isApplied = false;
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {
-        return stat == StatType.Damage && ctx.source.statusEffects.Contains(this);
+        return stat == StatType.Damage && ctx.source.statusEffects.Contains(this) && !ctx.card.HasTag(CardTag.FollowUp);
     }
     public override int Modify(int damage, EffectContext ctx)
     {

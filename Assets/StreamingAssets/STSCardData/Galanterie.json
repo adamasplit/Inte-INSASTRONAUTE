@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": true,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     },
     {
       "type": "DelayTurn",
@@ -40,12 +42,14 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Aucun",
+  "favoredCharacter": "Starting",
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": []

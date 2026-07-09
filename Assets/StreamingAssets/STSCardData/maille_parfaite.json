@@ -23,10 +23,12 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "AllExceptExhaustPile",
+      "index": 0,
       "cardFilterTags": [
         "Atom"
       ],
-      "cardSelectionEffect": "ConsumeAndGainArmor"
+      "cardSelectionEffect": "ConsumeAndGainArmor",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

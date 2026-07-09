@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: mur_porteur
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: mur_porteur
   cardName: Mur porteur
   collectionCardId: 
   collectionCard: {fileID: 0}
@@ -29,18 +30,23 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 2
   targetingMode: 1
   modifiers:
   - type: 0
     kind: 4
     value: 3
-  exhaust: 0
-  retain: 0
-  innate: 0
+    info: 
+    description: 
   favoredCharacter: 7
   animationSpeed: 1
-  startingCount: 0
+  startingCount: 1
+  tags: 

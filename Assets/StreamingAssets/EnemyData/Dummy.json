@@ -1,7 +1,7 @@
 {
   "id": "Dummy",
   "enemyName": "Dummy",
-  "displayName": null,
+  "displayName": "",
   "maxHP": 999,
   "randomStart": false,
   "patternCardIds": [

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Collections;
 public class RunManagerUI : MonoBehaviour
 {
     public TextMeshProUGUI floorText;
@@ -23,6 +24,8 @@ public class RunManagerUI : MonoBehaviour
 
     [Header("Run Session")]
     public Button saveAndReturnToMenuButton;
+
+    public Image redOrGreenOverlay;
     
     void Start()
     {
@@ -110,5 +113,35 @@ public class RunManagerUI : MonoBehaviour
 
         RunManager.Instance.OnRunEnd(false);
         STSSceneLoader.Instance?.LoadScene("STS_Boot");
+    }
+
+    public void FlashRedOverlay(float duration = 0.5f)
+    {
+        StopAllCoroutines(); // Stop any existing overlay flashes
+        StartCoroutine(FlashOverlay(Color.red, duration));
+    }
+    public void FlashGreenOverlay(float duration = 0.5f)
+    {
+        StopAllCoroutines(); // Stop any existing overlay flashes
+        StartCoroutine(FlashOverlay(Color.green, duration));
+    }
+    public IEnumerator FlashOverlay(Color color, float duration)
+    {
+        if (redOrGreenOverlay == null)
+            yield break;
+
+        redOrGreenOverlay.color = new Color(color.r, color.g, color.b, 0.5f);
+        redOrGreenOverlay.gameObject.SetActive(true);
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = Mathf.Clamp01(0.5f - (elapsed / duration)/2f);
+            redOrGreenOverlay.color = new Color(color.r, color.g, color.b, alpha);
+            yield return null;
+        }
+
+        redOrGreenOverlay.gameObject.SetActive(false);
     }
 }

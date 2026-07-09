@@ -200,7 +200,6 @@ public class TurnSystem : MonoBehaviour
             yield break;
         if (enemyChar.HasStatus("Étourdissement"))
         {
-            enemyChar.RemoveStatus(enemyChar.statusEffects.First(s => s.Name == "Étourdissement"));
             EndTurn(enemyChar.turnDelay(baseDelay));
             yield break;
         }
@@ -352,6 +351,7 @@ public class TurnSystem : MonoBehaviour
         {
             source = source,
             target = source,
+            targets=targets,
             combat = combat,
             state = combat.state,
             card = card,
@@ -564,13 +564,94 @@ public class TurnSystem : MonoBehaviour
             })
             .ToList();
     }
-    public float GetTimeUntilNextTurn(Character character)
+    public float GetTimeUntilNextTurn(Character character,bool includeCurrentTurn=true)
     {
+        if (character == null || timeline == null || timeline.Count == 0)
+            return -1f;
+
         var entry = timeline.FirstOrDefault(t => t.character == character);
         if (entry == null)
             return -1f;
 
+        if (entry == timeline[0])
+        {
+            if (includeCurrentTurn)
+                return 0f;
+            else
+            {
+                float currentEntryTime = timeline[0].time;
+                float extraDelay = 0f;
+
+                if (currentTurnEntry != null && currentTurnEntry.character == character && pendingTurnDelay.TryGetValue(currentTurnEntry.uid, out var bonus))
+                {
+                    extraDelay = bonus;
+                }
+
+                float nextTurnTime = entry.time + character.turnDelay(baseDelay) + extraDelay;
+                return Mathf.Max(0f, nextTurnTime - currentEntryTime);
+            }
+        }
         float currentTime = timeline[0].time;
         return Mathf.Max(0f, entry.time - currentTime);
+    }
+    public List<TurnEntry> CutInTurn(List<TurnEntry> timeline, List<Character> targets, Character source,bool targetSelf)
+    {
+        if (targets == null || targets.Count == 0||targets.Count==1&&targets[0]==source)
+        {
+            Debug.LogWarning("CutInTurn called with no targets.");
+            return timeline;
+        }
+        Debug.Log($"CutInTurn: source={source.name}, targetSelf={targetSelf}, targets={string.Join(", ", targets.Select(t => t.name))}");
+        var sim = Clone(timeline);
+        if (targetSelf)
+        {
+            float currentTime = sim[0].time;
+            float nextTime = currentTime+GetTimeUntilNextTurn(source,false);
+            float earliestTargetTime = sim.Where(t => targets.Contains(t.character)&& t.character != source).Min(t => t.time);
+            Debug.Log($"CutInTurn: source={source.name}, targetSelf={targetSelf}, targets={string.Join(", ", targets.Select(t => t.name))}, currentTime={currentTime}, nextTime={nextTime}, earliestTargetTime={earliestTargetTime}, advancing by {nextTime - earliestTargetTime + 0.1f}");
+            sim=AdvanceAllTurns(sim, source, nextTime - earliestTargetTime - 0.1f);
+        }
+        else
+        {
+            foreach (var target in targets)
+            {
+                float currentTime = sim.Where(t => t.character == target).Min(t => t.time);
+                float nextTime = sim.Where(t => t.character != target).Min(t => t.time);
+                float earliestTargetTime = sim.Where(t => t.character == source).Min(t => t.time);
+                sim=AdvanceAllTurns(sim, target, nextTime - earliestTargetTime - 0.1f);
+            }
+        }
+        return sim;
+    }
+    public void ApplyCutInTurn(List<Character> targets, Character source,bool targetSelf)
+    {
+        if (targets == null || targets.Count == 0)
+        {
+            Debug.LogWarning("ApplyCutInTurn called with no targets.");
+            return;
+        }
+        Debug.Log($"Applying CutInTurn: source={source.name}, targetSelf={targetSelf}, targets={string.Join(", ", targets.Select(t => t.name))}");
+        if (targetSelf)
+        {
+            float currentTime = timeline[0].time;
+            float nextTime = currentTime+GetTimeUntilNextTurn(source,false);
+            if (currentTurnEntry.character!=source)
+            {
+                nextTime=timeline.Where(t => t.character == source).Min(t => t.time);
+            }
+            float earliestTargetTime = timeline.Where(t => targets.Contains(t.character)&& t.character != source).Min(t => t.time);
+            Debug.Log($"Applying CutInTurn: source={source.name}, targetSelf={targetSelf}, targets={string.Join(", ", targets.Select(t => t.name))}, currentTime={currentTime}, nextTime={nextTime}, earliestTargetTime={earliestTargetTime}, advancing by {nextTime - earliestTargetTime + 0.1f}");
+            ApplyAdvanceAllTurns(source, nextTime - earliestTargetTime - 0.1f);
+        }
+        else
+        {
+            foreach (var target in targets)
+            {
+                float currentTime = timeline.Where(t => t.character == target).Min(t => t.time);
+                float nextTime = timeline.Where(t => t.character != target).Min(t => t.time);
+                float earliestTargetTime = timeline.Where(t => t.character == source).Min(t => t.time);
+                ApplyAdvanceAllTurns(target, nextTime - earliestTargetTime - 0.1f);
+            }
+        }
     }
 }

@@ -103,11 +103,11 @@ public class CardInstance
             {
                 if (string.IsNullOrEmpty(mod.description))
                 {
-                    text += $"{mod.Describe()}\n";
+                    text += $"{mod.Describe()}{(mod.Describe().EndsWith(".") ? "" : ".")}\n";
                 }
                 else
                 {
-                    text += $"{mod.description}\n";
+                    text += $"{mod.description}{(mod.description.EndsWith(".") ? "" : ".")}\n";
                 }
             }
         }

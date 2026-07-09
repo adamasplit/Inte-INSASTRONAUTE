@@ -1,7 +1,7 @@
 {
   "id": "Enemy 1",
   "enemyName": "Enemy 1",
-  "displayName": "",
+  "displayName": "Armure",
   "maxHP": 12,
   "randomStart": false,
   "patternCardIds": [],
@@ -24,8 +24,10 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         }
       ],
       "nextMoveIndices": [],
@@ -49,8 +51,10 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         },
         {
           "type": "Damage",
@@ -66,8 +70,10 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         }
       ],
       "nextMoveIndices": [],
@@ -91,8 +97,10 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         },
         {
           "type": "Status",
@@ -108,8 +116,10 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         }
       ],
       "nextMoveIndices": [],
@@ -133,8 +143,10 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         }
       ],
       "nextMoveIndices": [],
@@ -158,8 +170,10 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         }
       ],
       "nextMoveIndices": [],

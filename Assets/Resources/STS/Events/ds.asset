@@ -15,21 +15,99 @@ MonoBehaviour:
   title: 
   description: C'est les DS dans 1 jour...
   image: {fileID: 0}
+  weight: 3
   options:
-  - text: "S'\xE9claircir l'esprit"
+  - id: 
+    text: "S'\xE9claircir l'esprit"
     icon: {fileID: 0}
     entries:
     - type: 9
-      value: 5
+      value: 3
       id: 
+      targetIds: []
+      replacementOptions: []
+      cardRewardProfile:
+        useSelectedCharacterBias: 1
+        useSpecificFavoredCharacter: 0
+        specificFavoredCharacter: 9
+        allowCreatedCards: 0
+        allowUnobtainableCards: 0
+        useExactRarity: 0
+        exactRarity: 0
+        useExactCost: 0
+        exactCost: 0
+        useCostRange: 0
+        minimumCost: 0
+        maximumCost: 0
+        useExactType: 0
+        exactType: 3
+        overrideDefaultWeights: 0
+        rarityWeights: []
+        requiredTags: 
+        excludedTags: 
+        choiceCount: 3
+      cardRewardProfiles: []
     completionMessage: "Est-ce que \xE7a sera suffisant?"
-  - text: Scroller
+    closePanel: 1
+    previewCardIds: []
+    runtimeIndex: -1
+  - id: 
+    text: Scroller
     icon: {fileID: 0}
     entries:
     - type: 7
       value: 10
       id: 
+      targetIds: []
+      replacementOptions: []
+      cardRewardProfile:
+        useSelectedCharacterBias: 1
+        useSpecificFavoredCharacter: 0
+        specificFavoredCharacter: 9
+        allowCreatedCards: 0
+        allowUnobtainableCards: 0
+        useExactRarity: 0
+        exactRarity: 0
+        useExactCost: 0
+        exactCost: 0
+        useCostRange: 0
+        minimumCost: 0
+        maximumCost: 0
+        useExactType: 0
+        exactType: 3
+        overrideDefaultWeights: 0
+        rarityWeights: []
+        requiredTags: 
+        excludedTags: 
+        choiceCount: 3
+      cardRewardProfiles: []
     - type: 1
       value: 1
       id: 
+      targetIds: []
+      replacementOptions: []
+      cardRewardProfile:
+        useSelectedCharacterBias: 1
+        useSpecificFavoredCharacter: 0
+        specificFavoredCharacter: 9
+        allowCreatedCards: 0
+        allowUnobtainableCards: 0
+        useExactRarity: 0
+        exactRarity: 0
+        useExactCost: 0
+        exactCost: 0
+        useCostRange: 0
+        minimumCost: 0
+        maximumCost: 0
+        useExactType: 0
+        exactType: 3
+        overrideDefaultWeights: 0
+        rarityWeights: []
+        requiredTags: 
+        excludedTags: 
+        choiceCount: 3
+      cardRewardProfiles: []
     completionMessage: "R\xE9viser c'est douter de ses capacit\xE9s"
+    closePanel: 1
+    previewCardIds: []
+    runtimeIndex: -1

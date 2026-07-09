@@ -23,10 +23,12 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "All",
+      "index": 0,
       "cardFilterTags": [
         "Skill"
       ],
-      "cardSelectionEffect": "Exhaust"
+      "cardSelectionEffect": "Exhaust",
+      "animationType": "Default"
     },
     {
       "type": "AddCardToDrawPile",
@@ -42,8 +44,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

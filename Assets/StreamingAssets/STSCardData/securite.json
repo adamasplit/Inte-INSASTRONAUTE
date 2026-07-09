@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     },
     {
       "type": "Draw",
@@ -40,14 +42,16 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "ExhaustPile",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "MRIE",
   "animationSpeed": 1.0,
-  "startingCount": 0,
+  "startingCount": 1,
   "tags": [
     "Retain"
   ]

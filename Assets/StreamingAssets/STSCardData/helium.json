@@ -1,6 +1,6 @@
 {
   "id": "helium",
-  "cardName": "Soufre",
+  "cardName": "Hélium",
   "collectionCardId": "",
   "iconId": "Atome",
   "cost": 0,
@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

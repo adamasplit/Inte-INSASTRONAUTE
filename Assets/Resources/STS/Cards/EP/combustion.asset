@@ -30,6 +30,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,9 +38,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 3
   targetingMode: 1
   modifiers: []
   favoredCharacter: 0
   animationSpeed: 1
-  startingCount: 1
+  startingCount: 0
   tags: 

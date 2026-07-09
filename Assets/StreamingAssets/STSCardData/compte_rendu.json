@@ -1,0 +1,17 @@
+{
+  "id": "compte_rendu",
+  "cardName": "",
+  "collectionCardId": "",
+  "iconId": null,
+  "cost": 0,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Common",
+  "targetingMode": "Player",
+  "effects": [],
+  "modifiers": [],
+  "favoredCharacter": "Starting",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

@@ -3,7 +3,7 @@ public class EfficiencyEnchantment : EnchantmentData
 {
     public EfficiencyEnchantment()
     {
-        name = "Efficiency";
+        name = "Efficacité";
         description = "Augmente l'efficacité des effets de statut appliqués par la carte.";
         maxLevel=5;
     }

@@ -11,11 +11,11 @@
   "effects": [
     {
       "type": "Status",
-      "value": 0,
+      "value": 10,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "FieldTurnFollowUp",
-      "duration": 10,
+      "duration": 1,
       "description": "",
       "cardID": "Laser orbital",
       "conditional": false,
@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

@@ -1,5 +1,8 @@
 {
   "files": [
+    "Aegis Drone.json",
+    "Behemoth.json",
+    "Bloom Parasite.json",
     "Boss.json",
     "Cultist.json",
     "Dark.json",
@@ -15,15 +18,26 @@
     "Enemy 3.json",
     "Enemy 4.json",
     "Enemy 5.json",
+    "Forge Warden.json",
+    "Glass Harrier.json",
+    "Gravemoth.json",
     "Griever.json",
     "Invader.json",
     "InvaderPlus.json",
+    "Leech Queen.json",
     "Leo.json",
+    "Leviathan.json",
     "Mime.json",
+    "Mirror Imp.json",
     "Nemesis.json",
     "Ophiucus.json",
     "Regent.json",
+    "Rift Adept.json",
+    "Rune Bulwark.json",
     "Soldat.json",
-    "Soldat2.json"
+    "Soldat2.json",
+    "Static Raptor.json",
+    "TimeEater.json",
+    "Ziz.json"
   ]
 }

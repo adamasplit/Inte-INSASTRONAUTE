@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     public CombatManager combat;
     public TurnSystem turnSystem;
     public List<STSCardData> cardsOnTest = new List<STSCardData>();
-
+    
     async void Start()
     {
         STSSceneLoader.Instance?.BeginLoading();
@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
         {
             await STSCardDatabase.LoadAsync();
             await EnemyDataDatabase.LoadAsync();
+            await EnemyPoolDatabase.LoadAsync();
             TestDatabase.Init();
             SetupGame();
             ui.Init(combat);

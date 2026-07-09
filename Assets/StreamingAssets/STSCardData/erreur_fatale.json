@@ -23,14 +23,16 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],
   "favoredCharacter": "ITI",
   "animationSpeed": 1.0,
-  "startingCount": 0,
+  "startingCount": 1,
   "tags": [
     "Exhaust"
   ]

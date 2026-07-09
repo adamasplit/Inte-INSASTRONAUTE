@@ -5,7 +5,7 @@ public class ImpalingEnchantment : EnchantmentData
 
     public ImpalingEnchantment()
     {
-        name = "Impaling";
+        name = "Transpercement";
         description = $"Augmente les dégâts de {damagePerLevel}% par niveau et par Armure sur la cible.";
         maxLevel=5;
     }

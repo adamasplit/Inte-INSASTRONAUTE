@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd8dfbaa6b4ba54bbcfde29ea06fc65, type: 3}
+  m_Name: colline
+  m_EditorClassIdentifier: Assembly-CSharp::EventDataSO
+  title: Ascension de la colline
+  description: "Vous essayez de monter la colline Sainte-Catherine ! Il y a des grandes
+    r\xE9compenses \xE0 la cl\xE9, mais le voyage sera difficile..."
+  image: {fileID: 0}
+  options:
+  - id: 
+    text: Entamer l'ascension
+    icon: {fileID: 0}
+    entries:
+    - type: 7
+      value: 2
+      id: 
+      targetIds: []
+      replacementOptions: []
+    - type: 12
+      value: 2
+      id: 
+      targetIds: []
+      replacementOptions:
+      - id: 
+        text: "Continuer \xE0 grimper"
+        icon: {fileID: 0}
+        entries:
+        - type: 7
+          value: 3
+          id: 
+          targetIds: []
+          replacementOptions: []
+        - type: 12
+          value: 3
+          id: 
+          targetIds: []
+          replacementOptions:
+          - id: 
+            text: "Pers\xE9v\xE9rer"
+            icon: {fileID: 0}
+            entries:
+            - type: 7
+              value: 6
+              id: 
+              targetIds: []
+              replacementOptions: []
+            - type: 12
+              value: 6
+              id: 
+              targetIds: []
+              replacementOptions:
+              - id: 
+                text: Arriver jusqu'au sommet
+                icon: {fileID: 0}
+                entries:
+                - type: 7
+                  value: 10
+                  id: 
+                  targetIds: []
+                  replacementOptions: []
+                - type: 11
+                  value: 1
+                  id: "Apog\xE9e"
+                  targetIds: []
+                  replacementOptions: []
+                completionMessage: "Bien jou\xE9! Est-ce que les points de d\xE9fis
+                  valent le coup?"
+                closePanel: 1
+                previewCardIds: []
+                runtimeIndex: -1
+            completionMessage: Vous approchez de la fin !
+            closePanel: 0
+            previewCardIds: []
+            runtimeIndex: -1
+        completionMessage: 
+        closePanel: 0
+        previewCardIds: []
+        runtimeIndex: -1
+    completionMessage: 
+    closePanel: 0
+    previewCardIds: []
+    runtimeIndex: -1
+  - id: giveup
+    text: Abandonner
+    icon: {fileID: 0}
+    entries: []
+    completionMessage: Une autre fois?
+    closePanel: 1
+    previewCardIds: []
+    runtimeIndex: -1

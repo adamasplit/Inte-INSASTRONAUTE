@@ -144,7 +144,7 @@ MonoBehaviour:
     maxFloor: -1
     minAct: -1
     maxAct: -1
-    weight: 1
+    weight: 0.7
     elite: 0
     boss: 0
   - displayName: Soldat2 (acte 2)
@@ -225,7 +225,7 @@ MonoBehaviour:
     minFloor: 0
     maxFloor: 6
     minAct: 0
-    maxAct: -1
+    maxAct: 0
     weight: 1
     elite: 0
     boss: 0
@@ -235,7 +235,7 @@ MonoBehaviour:
     minFloor: 0
     maxFloor: 6
     minAct: 0
-    maxAct: -1
+    maxAct: 0
     weight: 1
     elite: 0
     boss: 0
@@ -256,7 +256,7 @@ MonoBehaviour:
     minFloor: 7
     maxFloor: -1
     minAct: 0
-    maxAct: -1
+    maxAct: 0
     weight: 1
     elite: 0
     boss: 0
@@ -279,5 +279,182 @@ MonoBehaviour:
     minAct: -1
     maxAct: -1
     weight: 0.493
+    elite: 1
+    boss: 0
+  - displayName: "Trio d'\xE9lite"
+    enemies:
+    - {fileID: 11400000, guid: 1113faff9aa917f43bfce5020b4404fb, type: 2}
+    - {fileID: 11400000, guid: 3876bd87bab435e46bf318f1480dcf8d, type: 2}
+    - {fileID: 11400000, guid: 8aadcef31e70ac048bcfb09633a1869c, type: 2}
+    minFloor: -1
+    maxFloor: -1
+    minAct: 2
+    maxAct: -1
+    weight: 1
+    elite: 1
+    boss: 0
+  - displayName: Time Eater
+    enemies:
+    - {fileID: 11400000, guid: 15aa9b275414e3847a52a0590e0e66e3, type: 2}
+    minFloor: -1
+    maxFloor: -1
+    minAct: 2
+    maxAct: -1
+    weight: 0.2
+    elite: 0
+    boss: 0
+  - displayName: Autonomous Duo
+    enemies:
+    - {fileID: 11400000, guid: b92f663859654e749a426ce92343555d, type: 2}
+    - {fileID: 11400000, guid: 68e140b27be885e4b8a853fbc69bee0a, type: 2}
+    minFloor: 7
+    maxFloor: -1
+    minAct: 0
+    maxAct: -1
+    weight: 1
+    elite: 0
+    boss: 0
+  - displayName: Bloom Cluster
+    enemies:
+    - {fileID: 11400000, guid: 7efe67a4249a6e440bb27aec68ea3679, type: 2}
+    - {fileID: 11400000, guid: cd570b98a76a2ac428c23e0edeb4164f, type: 2}
+    minFloor: 7
+    maxFloor: -1
+    minAct: 1
+    maxAct: -1
+    weight: 1
+    elite: 0
+    boss: 0
+  - displayName: Mirror Rift
+    enemies:
+    - {fileID: 11400000, guid: 8907ce5f4f7757f438af373511eb1c44, type: 2}
+    - {fileID: 11400000, guid: 41367efee7a36594b8e7e8a0dd49d700, type: 2}
+    minFloor: 5
+    maxFloor: -1
+    minAct: 1
+    maxAct: -1
+    weight: 0
+    elite: 0
+    boss: 0
+  - displayName: Forge Defenders
+    enemies:
+    - {fileID: 11400000, guid: bb7ddcfd9001a9c42b0afbd2b0988afb, type: 2}
+    - {fileID: 11400000, guid: 58d1c2743b15b384bbf73ab9d5f24869, type: 2}
+    minFloor: 8
+    maxFloor: -1
+    minAct: 2
+    maxAct: -1
+    weight: 0
+    elite: 1
+    boss: 0
+  - displayName: Feathered Static
+    enemies:
+    - {fileID: 11400000, guid: 8f4a4a96da4cf6843b8a8c258f7b031d, type: 2}
+    - {fileID: 11400000, guid: ebefe057763df7d4aa45ad2f121d70d1, type: 2}
+    minFloor: 7
+    maxFloor: -1
+    minAct: 2
+    maxAct: -1
+    weight: 1
+    elite: 0
+    boss: 0
+  - displayName: Glass Harrier solo
+    enemies:
+    - {fileID: 11400000, guid: 8f4a4a96da4cf6843b8a8c258f7b031d, type: 2}
+    minFloor: 6
+    maxFloor: -1
+    minAct: 2
+    maxAct: -1
+    weight: 0.4
+    elite: 0
+    boss: 0
+  - displayName: Gravemoth solo
+    enemies:
+    - {fileID: 11400000, guid: ebefe057763df7d4aa45ad2f121d70d1, type: 2}
+    minFloor: 6
+    maxFloor: -1
+    minAct: 2
+    maxAct: -1
+    weight: 0.4
+    elite: 0
+    boss: 0
+  - displayName: Static Raptor solo
+    enemies:
+    - {fileID: 11400000, guid: 68e140b27be885e4b8a853fbc69bee0a, type: 2}
+    minFloor: 0
+    maxFloor: -1
+    minAct: 0
+    maxAct: -1
+    weight: 0.55
+    elite: 0
+    boss: 0
+  - displayName: Aegis Drone solo
+    enemies:
+    - {fileID: 11400000, guid: b92f663859654e749a426ce92343555d, type: 2}
+    minFloor: 0
+    maxFloor: -1
+    minAct: 0
+    maxAct: -1
+    weight: 0.55
+    elite: 0
+    boss: 0
+  - displayName: Rune Bulwark solo
+    enemies:
+    - {fileID: 11400000, guid: 58d1c2743b15b384bbf73ab9d5f24869, type: 2}
+    minFloor: 0
+    maxFloor: 8
+    minAct: 2
+    maxAct: -1
+    weight: 0
+    elite: 1
+    boss: 0
+  - displayName: Forge Warden solo
+    enemies:
+    - {fileID: 11400000, guid: bb7ddcfd9001a9c42b0afbd2b0988afb, type: 2}
+    minFloor: 0
+    maxFloor: 8
+    minAct: 2
+    maxAct: -1
+    weight: 0.35
+    elite: 1
+    boss: 0
+  - displayName: Rift Adept solo
+    enemies:
+    - {fileID: 11400000, guid: 41367efee7a36594b8e7e8a0dd49d700, type: 2}
+    minFloor: 4
+    maxFloor: -1
+    minAct: 1
+    maxAct: -1
+    weight: 0.45
+    elite: 0
+    boss: 0
+  - displayName: Mirror Imp solo
+    enemies:
+    - {fileID: 11400000, guid: 8907ce5f4f7757f438af373511eb1c44, type: 2}
+    minFloor: 4
+    maxFloor: -1
+    minAct: 1
+    maxAct: -1
+    weight: 0
+    elite: 0
+    boss: 0
+  - displayName: Leech Queen solo
+    enemies:
+    - {fileID: 11400000, guid: cd570b98a76a2ac428c23e0edeb4164f, type: 2}
+    minFloor: 1
+    maxFloor: -1
+    minAct: 1
+    maxAct: -1
+    weight: 0.45
+    elite: 0
+    boss: 0
+  - displayName: Bloom Parasite solo
+    enemies:
+    - {fileID: 11400000, guid: 7efe67a4249a6e440bb27aec68ea3679, type: 2}
+    minFloor: 1
+    maxFloor: -1
+    minAct: 1
+    maxAct: -1
+    weight: 0.45
     elite: 0
     boss: 0

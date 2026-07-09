@@ -8,7 +8,22 @@ public struct HighlightTarget
 
     public static HighlightTarget FromRectTransform(RectTransform rt, Canvas canvas)
     {
-        if (rt == null || canvas == null)
+        if (rt == null)
+        {
+            return default;
+        }
+
+        if (canvas == null)
+        {
+            canvas = rt.GetComponentInParent<Canvas>();
+        }
+
+        if (canvas == null)
+        {
+            canvas = Object.FindFirstObjectByType<Canvas>();
+        }
+
+        if (canvas == null)
         {
             return default;
         }

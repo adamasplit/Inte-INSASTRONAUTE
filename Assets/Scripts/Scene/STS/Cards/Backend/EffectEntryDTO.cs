@@ -20,6 +20,8 @@ public class EffectEntryDTO
     public string conditionValue;
     public bool trueEffect;
     public string cardSelectionSource;
+    public int index;
     public List<string> cardFilterTags;
     public string cardSelectionEffect;
+    public string animationType;
 }

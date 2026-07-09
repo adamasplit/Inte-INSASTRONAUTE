@@ -16,6 +16,6 @@ public class BuffOnSelfModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+{perBuff} {StatTypeString.ToFrench(type)} par effet bénéfique actif";
+        return $"{StatTypeString.ToFrench(type, perBuff,modifierType)} par effet bénéfique actif";
     }
 }

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Ophiucus
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Ophiucus
   enemyName: Ophiucus
   displayName: 
   maxHP: 34
@@ -20,7 +21,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2ce7f3460e042954ba14f630cb9b5dda, type: 2}
   - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
   - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
-  - {fileID: 0}
   - {fileID: 11400000, guid: 2ce7f3460e042954ba14f630cb9b5dda, type: 2}
   - {fileID: 11400000, guid: 526fe17b51ff4e34d972a15bbcc98282, type: 2}
   - {fileID: 11400000, guid: ea5ae116e0bae1c47908728dbae2bea3, type: 2}
@@ -34,3 +34,4 @@ MonoBehaviour:
   startingStatusDuration: 0
   startingStatusValue: 0
   startingStatusInfo: 
+  startingStatusIndex: 0

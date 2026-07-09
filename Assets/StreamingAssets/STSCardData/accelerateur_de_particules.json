@@ -23,10 +23,12 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "DrawPile",
+      "index": 0,
       "cardFilterTags": [
         "Unupgraded"
       ],
-      "cardSelectionEffect": "Enchant"
+      "cardSelectionEffect": "Enchant",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

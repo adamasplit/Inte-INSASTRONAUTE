@@ -127,6 +127,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1194330512845493003, guid: c7b29f764e1f19444b90f02da187e7f8, type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1080
+      objectReference: {fileID: 0}
+    - target: {fileID: 1194330512845493003, guid: c7b29f764e1f19444b90f02da187e7f8, type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 1920
+      objectReference: {fileID: 0}
     - target: {fileID: 2081035307392800026, guid: c7b29f764e1f19444b90f02da187e7f8, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -608,7 +616,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6976739340811818018, guid: 84e384f637ff72943877e98b4fd8a90d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -19944.367
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6976739340811818018, guid: 84e384f637ff72943877e98b4fd8a90d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1336,7 +1344,7 @@ MonoBehaviour:
   cardPrefab: {fileID: 3577838548751180402, guid: 8bfd60c94f1905f4ea01a13172498f75, type: 3}
   chargePrefab: {fileID: 1482060740411714935, guid: 39de7621736cecc44a261d50c45dcd0d, type: 3}
   chargesContainer: {fileID: 434258905}
-  deckContentPadding: 150
+  enchantExitScreenMargin: 64
 --- !u!1 &1521776228
 GameObject:
   m_ObjectHideFlags: 0

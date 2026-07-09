@@ -23,13 +23,14 @@ MonoBehaviour:
   rarity: 2
   effects:
   - type: 3
-    value: 0
+    value: 5
     targetSelf: 0
     targetOthers: 0
     statusType: 41
-    duration: 5
+    duration: 0
     description: 
     cardID: Surchauffe
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 

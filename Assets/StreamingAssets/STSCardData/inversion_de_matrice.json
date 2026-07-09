@@ -3,15 +3,15 @@
   "cardName": "Inversion de matrice",
   "collectionCardId": "GM",
   "iconId": "Coups",
-  "cost": 0,
+  "cost": 1,
   "xCost": false,
   "type": "Attaque",
   "rarity": "Common",
   "targetingMode": "Enemy",
   "effects": [
     {
-      "type": "Armor",
-      "value": 4,
+      "type": "Damage",
+      "value": 12,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -23,12 +23,14 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     },
     {
-      "type": "Damage",
-      "value": 10,
+      "type": "Armor",
+      "value": 6,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -40,8 +42,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

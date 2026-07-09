@@ -5,33 +5,19 @@ public class AIRelic:BaseRelic
     public AIRelic():base()
     {
         namesByStage[0] = "Intemporalité";
-        descriptionsByStage[0] = "Jouer une Attaque étend les debuffs de la cible, et jouer une Compétence étend vos buffs.";
+        descriptionsByStage[0] = "Les effets appliqués durent 2 tours de plus.";
         Upgrade(0);
     }
-    public override void OnCardPlayed(Character player, List<Character> targets, CardInstance card)
+    public override bool CanApplyStatus(StatusEffect status,Character target)
     {
-        if (card.data.type == CardType.Attaque)
+        if (target.isPlayer&&status.buff)
         {
-            foreach (var target in targets)
-            {
-                foreach (var status in target.statusEffects)
-                {
-                    if (status.debuff)
-                    {
-                        status.Extend(1);
-                    }
-                }
-            }
+            status.Extend(2); 
         }
-        else if (card.data.type == CardType.Compétence)
+        else if (!target.isPlayer&&status.debuff)
         {
-            foreach (var status in player.statusEffects)
-            {
-                if (status.buff)
-                {
-                    status.Extend(1);
-                }
-            }
+            status.Extend(2); // Les effets appliqués sur les ennemis durent 2 tours de plus
         }
+        return true;
     }
 }

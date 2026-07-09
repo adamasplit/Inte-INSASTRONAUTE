@@ -24,6 +24,12 @@ public class HandLayoutController : MonoBehaviour
     private float pushStrength = 100f;
     public float smooth = 12f;
 
+    float GetAdaptiveScale()
+    {
+        float screenScale = UIAdaptiveScale.GetScreenScale();
+        return Mathf.Lerp(1f, screenScale, 0.9f);
+    }
+
     [System.Serializable]
     public class CardLayoutState
     {
@@ -38,11 +44,13 @@ public class HandLayoutController : MonoBehaviour
         int count = cards.Count;
         if (count == 0) return;
 
+        float adaptiveScale = GetAdaptiveScale();
         float compactFactor = count > 5 ? 1f / (1f + (count - 5) * 0.18f) : 1f;
-        float layoutSpacing = spacing * compactFactor;
-        float layoutArcHeight = arcHeight * compactFactor;
-        float layoutMaxAngle = maxAngle * compactFactor;
+        float layoutSpacing = spacing * compactFactor * adaptiveScale;
+        float layoutArcHeight = arcHeight * compactFactor * adaptiveScale;
+        float layoutMaxAngle = maxAngle * compactFactor * adaptiveScale;
         float handScaleMultiplier = GetHandScaleMultiplier(count);
+        float layoutCardScale = Mathf.Lerp(1f, adaptiveScale, 0.85f);
 
         float center = (count - 1) / 2f;
 
@@ -65,7 +73,7 @@ public class HandLayoutController : MonoBehaviour
             {
                 states[cardView].targetPos = card.anchoredPosition;
                 states[cardView].targetAngle = 0f;
-                states[cardView].targetScale = selectedScale * handScaleMultiplier;
+                states[cardView].targetScale = selectedScale * handScaleMultiplier * layoutCardScale;
                 card.SetAsLastSibling();
                 continue;
             }
@@ -80,7 +88,7 @@ public class HandLayoutController : MonoBehaviour
                 y += selectedYOffset;
 
                 states[cardView].targetScale =
-                    selectedScale * handScaleMultiplier;
+                    selectedScale * handScaleMultiplier * layoutCardScale;
                 card.SetAsLastSibling();
                 if (cardView.selectionPreview)
                 {
@@ -90,13 +98,13 @@ public class HandLayoutController : MonoBehaviour
             }
             else
             {
-                states[cardView].targetScale = handScaleMultiplier;
+                states[cardView].targetScale = handScaleMultiplier * layoutCardScale;
 
                 if (selectedCard != null)
                 {
                     int selectedIndex = cards.IndexOf(selectedCard);
                     float dir = Mathf.Sign(i - selectedIndex);
-                    x += dir * pushStrength;
+                    x += dir * pushStrength * adaptiveScale * 1.1f;
                 }
             }
 

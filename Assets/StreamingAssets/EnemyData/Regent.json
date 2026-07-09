@@ -1,7 +1,7 @@
 {
   "id": "Regent",
   "enemyName": "Regent",
-  "displayName": null,
+  "displayName": "",
   "maxHP": 90,
   "randomStart": false,
   "patternCardIds": [

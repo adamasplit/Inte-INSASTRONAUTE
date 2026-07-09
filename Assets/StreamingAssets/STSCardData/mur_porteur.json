@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Magic"
     }
   ],
   "modifiers": [
@@ -32,12 +34,12 @@
       "type": "Damage",
       "kind": "BuffOnSelf",
       "value": 3,
-      "info": null,
-      "description": null
+      "info": "",
+      "description": ""
     }
   ],
   "favoredCharacter": "AI",
   "animationSpeed": 1.0,
-  "startingCount": 0,
+  "startingCount": 1,
   "tags": []
 }

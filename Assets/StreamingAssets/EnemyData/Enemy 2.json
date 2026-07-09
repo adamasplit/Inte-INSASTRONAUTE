@@ -1,7 +1,7 @@
 {
   "id": "Enemy 2",
   "enemyName": "Enemy 2",
-  "displayName": "",
+  "displayName": "Spectre",
   "maxHP": 8,
   "randomStart": false,
   "patternCardIds": [
@@ -28,8 +28,10 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         },
         {
           "type": "Armor",
@@ -45,8 +47,10 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
+          "index": 0,
           "cardFilterTags": [],
-          "cardSelectionEffect": "None"
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         }
       ],
       "nextMoveIndices": [],

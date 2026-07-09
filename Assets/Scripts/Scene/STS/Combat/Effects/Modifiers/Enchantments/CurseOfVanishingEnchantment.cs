@@ -3,7 +3,7 @@ public class CurseOfVanishingEnchantment : EnchantmentData
 {
     public CurseOfVanishingEnchantment()
     {
-        name = "Curse of Vanishing";
+        name = "Malédiction de disparition";
         description = "Augmente la chance que la carte s'épuise.";
         maxLevel=10;
     }

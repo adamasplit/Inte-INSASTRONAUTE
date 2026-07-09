@@ -3,9 +3,13 @@ using System.Collections.Generic;
 [System.Serializable]
 public class PanelOption
 {
+    public string id;
     public string text;
     public Sprite icon;
     public List<PanelOptionEntry> entries = new();
     public System.Action action;
     public string completionMessage; // Optional message to display after action is completed
+    public bool closePanel = true;
+    public List<string> previewCardIds = new();
+    public int runtimeIndex = -1;
 }

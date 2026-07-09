@@ -5,5 +5,11 @@ public enum ConditionType
     FirstTimePlayingThisCardThisTurn,
     FirstTimePlayingThisCardThisCombat,
     TargetHasStatus,
-    TargetHasNoStatus
+    TargetHasNoStatus,
+    SelfArmorThreshold,
+    TargetArmorThreshold,
+    EnergyGainedThreshold,
+    EnergySpentThreshold,
+    TargetWillAttack,
+    TargetWillNotAttack
 }

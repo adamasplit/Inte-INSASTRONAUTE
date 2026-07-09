@@ -46,7 +46,7 @@ public class Enemy : Character
         Debug.Log($"Initialized enemy {name} with {maxHP} HP. Adding starting status: {d.startingStatus} with value {d.startingStatusValue} and duration {d.startingStatusDuration}");
         if (d.startingStatusValue != 0 || d.startingStatusDuration != 0)
         {
-            AddStatus(StatusEffect.Factory(d.startingStatus, d.startingStatusValue, d.startingStatusDuration,d.startingStatusInfo));
+            AddStatus(StatusEffect.Factory(d.startingStatus, d.startingStatusValue, d.startingStatusDuration,d.startingStatusInfo,d.startingStatusIndex));
         }
     }
 
@@ -89,6 +89,10 @@ public class Enemy : Character
     public void ForceNextAction(string cardName)
     {
         ForceNextAction(cardName, 1);
+    }
+    public void ForceNextAction(CardInstance card)
+    {
+        ForceNextAction(card.data, 1);
     }
 
     public void ForceNextAction(string cardName, int turns)

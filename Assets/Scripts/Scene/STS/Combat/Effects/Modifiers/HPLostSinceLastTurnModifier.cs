@@ -20,6 +20,6 @@ public class HPLostSinceLastTurnModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+ {addedValue} {StatTypeString.ToFrench(type)} pour chaque PV perdu depuis le dernier tour";
+        return $"{StatTypeString.ToFrench(type, addedValue,modifierType)} pour chaque PV perdu depuis le dernier tour";
     }
 }

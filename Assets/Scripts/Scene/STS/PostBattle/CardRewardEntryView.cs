@@ -14,6 +14,14 @@ public class CardRewardEntryView : RewardEntryView
         base.Init(rewardItem, mgr);
 
         reward = rewardItem as CardReward;
+
+        if (reward == null || reward.choices == null || reward.choices.Count == 0)
+        {
+            reward?.Claim();
+            StartCoroutine(Collapse());
+            return;
+        }
+
         foreach (var card in reward.choices)
         {
             var obj = Instantiate(cardPrefab, cardsContainer);

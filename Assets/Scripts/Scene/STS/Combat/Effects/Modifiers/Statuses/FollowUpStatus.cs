@@ -13,12 +13,16 @@ public abstract class FollowUpStatus:StatusEffect
         }
         return cardData;
     }
-    public FollowUpStatus(int value,int duration,string effectInfo="")
+    public FollowUpStatus(int value,int duration,string effectInfo="",int index=0)
     {
         Duration = -1;
+        if (duration>0)
+        {
+            Duration=duration;
+        }
         Value = 1;
-        moveIndex = value;
-        maxValue=Mathf.Max(1, duration);
+        moveIndex = index;
+        maxValue=Mathf.Max(1, value);
         debuff=false;
         buff=true;
         framed=true;
@@ -65,6 +69,10 @@ public abstract class FollowUpStatus:StatusEffect
         {
             Value=1;
             source.GetCombatManager().FollowUpCard(randomCard, Name, source, target);
+            if (Duration>0)
+            {
+                Duration--;
+            }
         }
     }
 }

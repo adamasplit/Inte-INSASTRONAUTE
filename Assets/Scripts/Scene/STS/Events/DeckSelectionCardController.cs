@@ -23,6 +23,10 @@ public class DeckSelectionCardController : MonoBehaviour
 
     public void OnClick()
     {
+        if (panel==null)
+        {
+            panel=FindFirstObjectByType<DeckSelectionPanel>();
+        }
         selected = !selected;
 
         selectionOutline.SetActive(selected);

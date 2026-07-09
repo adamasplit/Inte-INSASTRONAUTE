@@ -12,17 +12,138 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Griever
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Griever
   enemyName: Griever
+  displayName: 
   maxHP: 99
   pattern:
   - {fileID: 11400000, guid: 3746bd040a2bae743abad70f31212e3b, type: 2}
   - {fileID: 11400000, guid: 947f6155c4106314fbc1b7371ce37c70, type: 2}
   - {fileID: 11400000, guid: e9e09946711bd0b4ca74d517fb11babe, type: 2}
   - {fileID: 11400000, guid: bb496c894f8276942b0aae082f4c4b4d, type: 2}
-  movePattern: []
+  randomStart: 0
+  movePattern:
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 1
+      value: 8
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 31
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 3
+      value: 1
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 43
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 01000000
+    weight: 1
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 8
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 3
+      value: 2
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 1
+      duration: 2
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 02000000
+    weight: 1
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 7
+      value: 2
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 2
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 3
+      value: 2
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 2
+      duration: 2
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 00000000
+    weight: 1
   rewardCards:
   - {fileID: 11400000, guid: bb496c894f8276942b0aae082f4c4b4d, type: 2}
   startingStatus: 0
   startingStatusDuration: 0
   startingStatusValue: 0
   startingStatusInfo: 
+  startingStatusIndex: 0

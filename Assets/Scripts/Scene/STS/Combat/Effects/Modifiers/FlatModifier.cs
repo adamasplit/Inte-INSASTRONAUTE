@@ -14,6 +14,6 @@ public class FlatModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+ {flatAmount} {StatTypeString.ToFrench(type)}";
+        return $"{StatTypeString.ToFrench(type, flatAmount,modifierType)}";
     }
 }

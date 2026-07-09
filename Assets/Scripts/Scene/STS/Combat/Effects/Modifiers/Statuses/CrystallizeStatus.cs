@@ -25,7 +25,6 @@ public class CrystallizeStatus : StatusEffect
         if (card.data.type == CardType.Attaque&&followUp&&!card.HasTag(CardTag.FollowUp))
         {
             CardInstance crystalCard = new CardInstance(STSCardDatabase.Get("Recristallisation"));
-            VFXManager.Instance.PlayEffect("Crystallize", target);
             source.GetCombatManager().PlayCard(source,crystalCard,new List<Character>(){target},false,true);
             Value = 1; // Réinitialisation du compteur
             followUp=false;

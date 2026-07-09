@@ -23,9 +23,11 @@ public class UIManager : MonoBehaviour
 
     public Transform handPanel;
     public GameObject cardButtonPrefab;
+    public GameObject DamagePopupPrefab;
     public HandLayoutController handLayout;
     public List<DropZone> allZones = new();
     public CardView selectedCard;
+    private GameObject combatPreviewCardObject;
     public GameOverController gameOverController;
     public RectTransform discardAnchor;
     public RectTransform deckAnchor;
@@ -35,6 +37,7 @@ public class UIManager : MonoBehaviour
     public CardSelectionController selectionController;
     private int pendingDrawAnimations = 0;
     private int pendingPlayedCardAnimations = 0;
+    public Image backgroundImage;
     public bool IsSelectingCards()
     {
         return selectionController.Active;
@@ -77,17 +80,88 @@ public class UIManager : MonoBehaviour
 
         RefreshHandLayout();
     }
-    public void SelectCard(CardView card)
+    public void SelectCard(CardView card, bool force = false)
     {
-        if (selectedCard == card&&!card.isDragging)
+        if (!force && selectedCard == card&&!card.isDragging)
         {
             Deselect();
             return;
         }
+        HideCombatCardPreview();
         if (selectedCard != null&&!selectedCard.isDragging) selectedCard.Deselect();
         selectedCard = card;
         card.Select(handLayout.cardSide(card));
         RefreshHandLayout();
+    }
+
+    public void ShowCombatCardPreview(CardView sourceCard)
+    {
+        if (sourceCard == null || sourceCard.cardInstance == null || animator == null || animator.animationLayer == null)
+            return;
+
+        HideCombatCardPreview();
+
+        CardView previewView = CreateCardView(sourceCard.cardInstance, false, sourceCard.rootRect.position);
+        if (previewView == null)
+            return;
+
+        combatPreviewCardObject = previewView.gameObject;
+
+        RectTransform previewRect = previewView.rootRect;
+        if (previewRect == null)
+            previewRect = previewView.GetComponent<RectTransform>();
+
+        if (previewRect == null)
+            return;
+
+        previewRect.SetAsLastSibling();
+
+        CanvasGroup previewGroup = combatPreviewCardObject.GetComponent<CanvasGroup>();
+        if (previewGroup == null)
+            previewGroup = combatPreviewCardObject.AddComponent<CanvasGroup>();
+        previewGroup.interactable = false;
+        previewGroup.blocksRaycasts = false;
+
+        CardDrag previewDrag = combatPreviewCardObject.GetComponent<CardDrag>();
+        if (previewDrag != null)
+            previewDrag.enabled = false;
+
+        Vector3 center = animator.animationLayer.TransformPoint(Vector3.zero);
+        Vector3 startScale = previewRect.localScale;
+        Vector3 targetScale = sourceCard.rootRect != null ? sourceCard.rootRect.localScale * 3f : startScale * 3f;
+
+        previewView.isAnimating = true;
+        StartCoroutine(AnimateCombatCardPreview(previewRect, center, startScale, targetScale, previewView));
+    }
+
+    private IEnumerator AnimateCombatCardPreview(RectTransform previewRect, Vector3 center, Vector3 startScale, Vector3 targetScale, CardView previewView)
+    {
+        if (animator == null)
+            yield break;
+
+        yield return animator.MoveCard(
+            previewRect,
+            previewRect.position,
+            center,
+            1f,
+            true,
+            true,
+            startScale: startScale,
+            endScale: targetScale,
+            endRotation: Quaternion.identity
+        );
+
+        if (previewView != null)
+            previewView.isAnimating = false;
+    }
+
+    public void HideCombatCardPreview()
+    {
+        if (combatPreviewCardObject != null)
+        {
+            Destroy(combatPreviewCardObject);
+            combatPreviewCardObject = null;
+        }
     }
 
     public CardView GetView(CardInstance card)
@@ -137,12 +211,15 @@ public class UIManager : MonoBehaviour
         {
             selectedCard.Deselect();
             selectedCard = null;
+            HideCombatCardPreview();
             RefreshHandLayout();
         }
     }
     public void Init(CombatManager cm)
     {
         combat = cm;
+        int act = Mathf.Min(RunManager.Instance != null ? RunManager.Instance.act+1 : 1,4);
+        backgroundImage.sprite = Resources.Load<Sprite>($"STS/Backgrounds/BG{act}");
         InitCharacters();
         combat.deck.OnCardDrawn -= DrawCardAnimated;
         combat.deck.OnCardDiscarded -= DiscardCardAnimated;
@@ -229,6 +306,42 @@ public class UIManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    public void ShowDamagePopup(Character character, int amount, bool healing = false, bool blocked = false)
+    {
+        if (character == null || amount <= 0 || animator == null || animator.animationLayer == null || DamagePopupPrefab == null)
+            return;
+
+        GameObject popupObject = Instantiate(DamagePopupPrefab, animator.animationLayer, false);
+        popupObject.transform.SetAsLastSibling();
+
+        RectTransform popupRect = popupObject.GetComponent<RectTransform>();
+        if (popupRect != null)
+        {
+            Vector3 startPosition = new Vector3(Random.Range(-10f, 10f), 24f, 0f);
+            
+            DropZone zone = GetDropZone(character);
+            if (zone != null)
+            {
+                RectTransform zoneRect = zone.GetComponent<RectTransform>();
+                RectTransform animLayerRect = animator.animationLayer as RectTransform;
+                if (zoneRect != null && animLayerRect != null)
+                {
+                    Vector3 zoneWorldPos = zoneRect.TransformPoint(Vector3.zero);
+                    Vector3 localPos = animLayerRect.InverseTransformPoint(zoneWorldPos);
+                    startPosition = new Vector3(localPos.x + Random.Range(-10f, 10f), localPos.y + 24f, localPos.z);
+                }
+            }
+            
+            popupRect.localPosition = startPosition;
+        }
+
+        DamagePopup popup = popupObject.GetComponent<DamagePopup>();
+        if (popup != null)
+        {
+            popup.Play(amount, healing, blocked);
+        }
     }
 
     public IEnumerator AnimateCharacterDeath(Character character)
@@ -641,6 +754,7 @@ public IEnumerator AnimateCardToCenter(CardView view)
         {
             yield return new WaitForSeconds(0.05f * staggerIndex);
         }
+        SFXManager.Instance.PlaySound("Draw");
 
         yield return AnimateDraw(view);
 
@@ -661,7 +775,7 @@ public IEnumerator AnimateCardToCenter(CardView view)
         CardView view = GetView(oldCard);
         if (view != null)
         {
-            view.SetCard(oldCard);
+            view.SetCard(newCard);
             view.RefreshDescription(null, true);
         }
     }

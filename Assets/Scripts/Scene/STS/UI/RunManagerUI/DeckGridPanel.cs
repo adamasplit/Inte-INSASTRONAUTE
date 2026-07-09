@@ -29,9 +29,25 @@ public class DeckGridPanel : MonoBehaviour
     [Header("Content Padding")]
     [SerializeField] private float contentPadding = 48f;
 
+    [Header("Depth")]
+    [SerializeField] private bool normalizeCardDepth = true;
+    [SerializeField] private float cardLocalZ = 0f;
+
     private CardGridItemView selectedItemView;
     private GameObject animatingCardObj;
     private bool isAnimating = false;
+    private bool refreshQueued = false;
+    private GridLayoutGroup.Constraint initialGridConstraint;
+    private int initialGridConstraintCount;
+
+    void Awake()
+    {
+        if (gridLayout != null)
+        {
+            initialGridConstraint = gridLayout.constraint;
+            initialGridConstraintCount = gridLayout.constraintCount;
+        }
+    }
 
     void Start()
     {
@@ -65,26 +81,64 @@ public class DeckGridPanel : MonoBehaviour
             {
                 itemView.Init(card, this);
             }
+            EnsureItemVisible(obj);
         }
 
         // Rebuild layout once the panel is active so the scroll content gets its real size.
-        if (enableEntranceAnimation)
-            StartCoroutine(RefreshGridContentSizeAfterFrame());
-        else
-            StartCoroutine(RefreshGridContentSizeAfterFrameImmediate());
+        QueueGridRefresh();
 
         UpdateCloseButtonState();
         // Hide preview initially
         HidePreview();
     }
 
+    private void EnsureItemVisible(GameObject item)
+    {
+        if (item == null)
+            return;
+
+        item.SetActive(true);
+        item.transform.localScale = Vector3.one;
+        item.transform.SetAsLastSibling();
+
+        RectTransform rect = item.transform as RectTransform;
+        if (rect != null)
+        {
+            Vector3 localPos = rect.localPosition;
+            float z = normalizeCardDepth ? cardLocalZ : localPos.z;
+            rect.localPosition = new Vector3(localPos.x, localPos.y, z);
+
+            if (gridLayout != null)
+            {
+                if (rect.rect.width <= 1f)
+                    rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, gridLayout.cellSize.x);
+                if (rect.rect.height <= 1f)
+                    rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, gridLayout.cellSize.y);
+            }
+        }
+
+        NormalizeItemDepth(item.transform);
+
+        CanvasGroup[] canvasGroups = item.GetComponentsInChildren<CanvasGroup>(true);
+        foreach (CanvasGroup cg in canvasGroups)
+        {
+            cg.alpha = 1f;
+            cg.interactable = true;
+            cg.blocksRaycasts = true;
+        }
+    }
+
     public void SelectCard(CardInstance card, CardGridItemView itemView)
     {
         if (isAnimating) return;
-        if (card==null||selectedItemView == itemView)
+        if (card == null)
+            return;
+
+        if (selectedItemView == itemView)
         {
             // Deselect the card if it's already selected
-            selectedItemView.gameObject.SetActive(true);
+            if (selectedItemView != null)
+                selectedItemView.gameObject.SetActive(true);
             HidePreview();
             selectedItemView = null;
             return;
@@ -207,56 +261,73 @@ public class DeckGridPanel : MonoBehaviour
         selectedItemView = null;
     }
 
+    private void OnEnable()
+    {
+        QueueGridRefresh();
+    }
+
+    private void OnRectTransformDimensionsChange()
+    {
+        if (isActiveAndEnabled)
+            QueueGridRefresh();
+    }
+
+    private void QueueGridRefresh()
+    {
+        if (refreshQueued || !isActiveAndEnabled)
+            return;
+
+        refreshQueued = true;
+        if (enableEntranceAnimation)
+            StartCoroutine(RefreshGridContentSizeAfterFrame());
+        else
+            StartCoroutine(RefreshGridContentSizeAfterFrameImmediate());
+    }
+
     private IEnumerator RefreshGridContentSizeAfterFrame()
     {
         yield return null;
-        Canvas.ForceUpdateCanvases();
+        RefreshGridContentSize();
 
         RectTransform gridContainerRect = gridContainer as RectTransform;
-        if (gridContainerRect == null || gridLayout == null)
-            yield break;
-
-        LayoutRebuilder.ForceRebuildLayoutImmediate(gridContainerRect);
-
-        int itemCount = gridContainer.childCount;
-        if (itemCount <= 0)
-            yield break;
-
-        int columns = GetColumnCount(gridContainerRect, itemCount);
-        int rows = Mathf.CeilToInt((float)itemCount / columns);
-
-        float height = gridLayout.padding.top + gridLayout.padding.bottom;
-        if (rows > 0)
-        {
-            height += rows * gridLayout.cellSize.y;
-            height += Mathf.Max(0, rows - 1) * gridLayout.spacing.y;
-        }
-
-        height += contentPadding * 2f;
-
-        gridContainerRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
-        Canvas.ForceUpdateCanvases();
-
-        if (enableEntranceAnimation)
+        if (enableEntranceAnimation && gridContainerRect != null)
             yield return AnimateGridEntrance(gridContainerRect);
     }
 
     private IEnumerator RefreshGridContentSizeAfterFrameImmediate()
     {
         yield return null;
+        RefreshGridContentSize();
+    }
+
+    private void RefreshGridContentSize()
+    {
         Canvas.ForceUpdateCanvases();
 
         RectTransform gridContainerRect = gridContainer as RectTransform;
         if (gridContainerRect == null || gridLayout == null)
-            yield break;
+        {
+            refreshQueued = false;
+            return;
+        }
+
+        RectTransform viewportRect = GetViewportRect();
+        if (viewportRect != null)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(viewportRect);
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(gridContainerRect);
 
         int itemCount = gridContainer.childCount;
         if (itemCount <= 0)
-            yield break;
+        {
+            refreshQueued = false;
+            return;
+        }
 
-        int columns = GetColumnCount(gridContainerRect, itemCount);
+        NormalizeAllItemsDepth();
+
+        RectTransform sizingRect = viewportRect != null ? viewportRect : gridContainerRect;
+        int columns = GetColumnCount(sizingRect, itemCount);
         int rows = Mathf.CeilToInt((float)itemCount / columns);
 
         float height = gridLayout.padding.top + gridLayout.padding.bottom;
@@ -270,6 +341,29 @@ public class DeckGridPanel : MonoBehaviour
 
         gridContainerRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
         Canvas.ForceUpdateCanvases();
+        refreshQueued = false;
+    }
+
+    private void NormalizeAllItemsDepth()
+    {
+        if (!normalizeCardDepth || gridContainer == null)
+            return;
+
+        foreach (Transform child in gridContainer)
+            NormalizeItemDepth(child);
+    }
+
+    private void NormalizeItemDepth(Transform root)
+    {
+        if (!normalizeCardDepth || root == null)
+            return;
+
+        RectTransform[] rects = root.GetComponentsInChildren<RectTransform>(true);
+        foreach (RectTransform r in rects)
+        {
+            Vector3 p = r.localPosition;
+            r.localPosition = new Vector3(p.x, p.y, cardLocalZ);
+        }
     }
 
     private IEnumerator AnimateGridEntrance(RectTransform gridContainerRect)
@@ -292,15 +386,25 @@ public class DeckGridPanel : MonoBehaviour
         gridContainerRect.anchoredPosition = targetPosition;
     }
 
-    private int GetColumnCount(RectTransform gridContainerRect, int itemCount)
+    private RectTransform GetViewportRect()
     {
-        if (gridLayout.constraint == GridLayoutGroup.Constraint.FixedColumnCount)
-            return Mathf.Max(1, gridLayout.constraintCount);
+        ScrollRect scrollRect = GetComponentInParent<ScrollRect>();
+        if (scrollRect != null && scrollRect.viewport != null)
+            return scrollRect.viewport;
 
-        if (gridLayout.constraint == GridLayoutGroup.Constraint.FixedRowCount)
-            return Mathf.Max(1, Mathf.CeilToInt((float)itemCount / Mathf.Max(1, gridLayout.constraintCount)));
+        Transform parentTransform = gridContainer != null ? gridContainer.parent : null;
+        return parentTransform as RectTransform;
+    }
 
-        float availableWidth = gridContainerRect.rect.width - gridLayout.padding.left - gridLayout.padding.right;
+    private int GetColumnCount(RectTransform availableAreaRect, int itemCount)
+    {
+        if (initialGridConstraint == GridLayoutGroup.Constraint.FixedColumnCount)
+            return Mathf.Max(1, initialGridConstraintCount);
+
+        if (initialGridConstraint == GridLayoutGroup.Constraint.FixedRowCount)
+            return Mathf.Max(1, Mathf.CeilToInt((float)itemCount / Mathf.Max(1, initialGridConstraintCount)));
+
+        float availableWidth = availableAreaRect.rect.width - gridLayout.padding.left - gridLayout.padding.right;
         float cellAndSpacingWidth = gridLayout.cellSize.x + gridLayout.spacing.x;
         int calculated = Mathf.FloorToInt((availableWidth + gridLayout.spacing.x) / Mathf.Max(1f, cellAndSpacingWidth));
         return Mathf.Max(1, calculated);

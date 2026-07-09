@@ -35,6 +35,10 @@ public class Character
     }
     public DamageInfo TakeDamage(int amount, bool ignoreArmor=false)
     {
+        if (RunManager.Instance != null && !RunManager.Instance.inCombat)
+        {
+            RunManager.Instance.ui.FlashRedOverlay();
+        }
         var info = new DamageInfo();
         if (combat!=null&& combat.state!=null)
         {
@@ -58,6 +62,10 @@ public class Character
                 info.killingBlow = true;
             }
             info.unblocked = true;
+            if (combat != null && combat.ui != null)
+            {
+                combat.ui.ShowDamagePopup(this, amount, false, false);
+            }
             return info;
         }
         else
@@ -84,6 +92,10 @@ public class Character
             info.amount = damageAfterArmor;
             info.unblocked = damageAfterArmor > 0;
             info.armorBroken = armor == 0 && amount > 0&& startingArmor > 0;
+            if (combat != null && combat.ui != null)
+            {
+                combat.ui.ShowDamagePopup(this, info.unblocked ? damageAfterArmor : amount, false, !info.unblocked);
+            }
             return info;
         }
     }
@@ -91,6 +103,7 @@ public class Character
     public void GainEnergy(int amount)
     {
         resources.energy += amount;
+        combat.state.energyGainedThisTurn += amount;
         if (isPlayer)
         {
             VFXManager.Instance.AnimateEnergyGain();
@@ -107,6 +120,11 @@ public class Character
     }
     public void Heal(int amount)
     {
+        int previousHP = currentHP;
+        if (RunManager.Instance != null && !RunManager.Instance.inCombat)
+        {
+            RunManager.Instance.ui.FlashGreenOverlay();
+        }
         if (isPlayer)
         {
             foreach (var relic in RunManager.Instance.relics)
@@ -115,10 +133,21 @@ public class Character
             }
         }
         currentHP = Mathf.Min(maxHP, currentHP + amount);
+        if (combat != null && combat.ui != null)
+        {
+            combat.ui.ShowDamagePopup(this, currentHP - previousHP, true, false);
+        }
     }
     public void AddStatus(StatusEffect status)
     {
         // Check if the status can be applied (e.g. if the character intercepts a given amount of negative statuses)
+        foreach (var relic in RunManager.Instance.relics)
+        {
+            if (!relic.CanApplyStatus(status, this))
+            {
+                return; // Status application is blocked by a relic
+            }
+        }
         foreach (var existingStatus in statusEffects)
         {
             if (!existingStatus.CanApply(status,this))
@@ -138,9 +167,13 @@ public class Character
     {
         return statusEffects.Any(s => s.Name == statusName);
     }
-    public void AfterAction()
+    public void AfterAction(Character actor,CardInstance card)
     {
         ExpireStatuses();
+        foreach (var status in statusEffects.ToList())
+        {
+            status.OnAnyCardPlayed(actor, card);
+        }
     }
     public void ExpireStatuses()
     {
@@ -232,6 +265,7 @@ public class Character
         {
             amount = resources.energy;
         }
+        combat.state.energySpentThisTurn += amount;
         resources.energy -= amount;
     }
     public CombatManager GetCombatManager()

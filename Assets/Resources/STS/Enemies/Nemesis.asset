@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Nemesis
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Nemesis
   enemyName: Nemesis
+  displayName: 
   maxHP: 67
   pattern:
   - {fileID: 11400000, guid: 63eef1034cdf61344b92f72fccf35325, type: 2}
@@ -27,3 +29,4 @@ MonoBehaviour:
   startingStatusDuration: 0
   startingStatusValue: 0
   startingStatusInfo: "Tungst\xE8ne"
+  startingStatusIndex: 0

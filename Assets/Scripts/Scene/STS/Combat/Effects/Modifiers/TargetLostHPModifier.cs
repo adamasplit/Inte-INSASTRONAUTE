@@ -17,6 +17,6 @@ public class TargetLostHPModifier : StatModifier
 
     public override string Describe()
     {
-        return $"+ {addedValue}% {StatTypeString.ToFrench(type)} par % de PV perdus de la cible";
+        return $"{StatTypeString.ToFrench(type, addedValue,modifierType)} par % de PV perdus de la cible";
     }
 }

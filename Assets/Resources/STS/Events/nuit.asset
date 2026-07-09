@@ -15,16 +15,99 @@ MonoBehaviour:
   title: 
   description: La nuit tombe...
   image: {fileID: 0}
+  weight: 3
   options:
-  - text: "R\xE9viser pendant la nuit"
+  - id: 
+    text: "S'entra\xEEner pendant la nuit"
     icon: {fileID: 0}
     entries:
     - type: 7
       value: 20
+      id: 
+      targetIds: []
+      replacementOptions: []
+      cardRewardProfile:
+        useSelectedCharacterBias: 1
+        useSpecificFavoredCharacter: 0
+        specificFavoredCharacter: 9
+        allowCreatedCards: 0
+        allowUnobtainableCards: 0
+        useExactRarity: 0
+        exactRarity: 0
+        useExactCost: 0
+        exactCost: 0
+        useCostRange: 0
+        minimumCost: 0
+        maximumCost: 0
+        useExactType: 0
+        exactType: 3
+        overrideDefaultWeights: 0
+        rarityWeights: []
+        requiredTags: 
+        excludedTags: 
+        choiceCount: 3
+      cardRewardProfiles: []
     - type: 5
       value: 10
-  - text: Se reposer
+      id: 
+      targetIds: []
+      replacementOptions: []
+      cardRewardProfile:
+        useSelectedCharacterBias: 1
+        useSpecificFavoredCharacter: 0
+        specificFavoredCharacter: 9
+        allowCreatedCards: 0
+        allowUnobtainableCards: 0
+        useExactRarity: 0
+        exactRarity: 0
+        useExactCost: 0
+        exactCost: 0
+        useCostRange: 0
+        minimumCost: 0
+        maximumCost: 0
+        useExactType: 0
+        exactType: 3
+        overrideDefaultWeights: 0
+        rarityWeights: []
+        requiredTags: 
+        excludedTags: 
+        choiceCount: 3
+      cardRewardProfiles: []
+    completionMessage: 
+    closePanel: 1
+    previewCardIds: []
+    runtimeIndex: -1
+  - id: 
+    text: Se reposer
     icon: {fileID: 0}
     entries:
     - type: 4
       value: 25
+      id: 
+      targetIds: []
+      replacementOptions: []
+      cardRewardProfile:
+        useSelectedCharacterBias: 1
+        useSpecificFavoredCharacter: 0
+        specificFavoredCharacter: 9
+        allowCreatedCards: 0
+        allowUnobtainableCards: 0
+        useExactRarity: 0
+        exactRarity: 0
+        useExactCost: 0
+        exactCost: 0
+        useCostRange: 0
+        minimumCost: 0
+        maximumCost: 0
+        useExactType: 0
+        exactType: 3
+        overrideDefaultWeights: 0
+        rarityWeights: []
+        requiredTags: 
+        excludedTags: 
+        choiceCount: 3
+      cardRewardProfiles: []
+    completionMessage: 
+    closePanel: 1
+    previewCardIds: []
+    runtimeIndex: -1

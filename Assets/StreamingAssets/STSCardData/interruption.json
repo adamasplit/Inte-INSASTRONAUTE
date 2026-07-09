@@ -7,10 +7,29 @@
   "xCost": false,
   "type": "Rien",
   "rarity": "Common",
-  "targetingMode": "Player",
+  "targetingMode": "Enemy",
   "effects": [
     {
       "type": "EndTurn",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    },
+    {
+      "type": "CutInTurn",
       "value": 0,
       "targetSelf": true,
       "targetOthers": false,
@@ -23,8 +42,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None"
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],
@@ -33,7 +54,7 @@
   "startingCount": 0,
   "tags": [
     "Exhaust",
-    "Curse",
-    "FollowUp"
+    "FollowUp",
+    "Unobtainable"
   ]
 }

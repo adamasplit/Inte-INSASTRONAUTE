@@ -49,8 +49,6 @@ public class EventRewardManager : MonoBehaviour, IRewardFlowHost
         {
             continueButton.SetActive(true);
         }
-
-        ArmContinueButtonFailSafe();
     }
 
     public void ShowContinue(Action completion)

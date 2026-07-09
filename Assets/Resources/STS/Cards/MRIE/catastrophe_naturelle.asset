@@ -19,7 +19,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: cd49ad737d070fc449bb5ba664b1fc1b, type: 3}
   cost: 0
   xCost: 1
-  type: 0
+  type: 1
   rarity: 4
   effects:
   - type: 19
@@ -30,6 +30,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +38,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 2
     value: 4
     targetSelf: 1
@@ -45,6 +47,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -52,6 +55,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 3
   modifiers: []
   favoredCharacter: 5

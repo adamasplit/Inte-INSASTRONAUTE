@@ -15,20 +15,12 @@ public class STSTutorialManager : MonoBehaviour
     Dictionary<string, TutorialNode> nodes = new Dictionary<string, TutorialNode>();
     public void Init()
     {
-        if (RunManager.Instance != null && !RunManager.Instance.forceTutorial)
+        bool tutorialEnabled = (combat != null && combat.forceTutorial) || (RunManager.Instance != null && RunManager.Instance.forceTutorial);
+        if (!tutorialEnabled)
         {
-            Debug.Log("RunManager présent mais forceTutorial à false, le tutoriel ne se lancera pas.");
+            Debug.Log("Tutorial mode disabled, hiding tutorial UI.");
             STSTutorialUI.Instance.Hide();
             return;
-        }
-        int value=0;
-        if (RunManager.Instance!=null&&RunManager.Instance.forceTutorial)
-        {
-            value=RunManager.Instance.act;
-        }
-        else
-        {
-            Debug.Log("RunManager absent ou forceTutorial à false, lancement du tutoriel par défaut.");
         }
         ui.SetOverlayAlpha(0.6f);
         InitializeFlags();
@@ -36,25 +28,7 @@ public class STSTutorialManager : MonoBehaviour
         BuildTutorialTimeline();
         BuildTutorialMap();
         BuildTutorialStatus();
-        Debug.Log($"Lancement du tutoriel avec value={value}");
-        switch (value)
-        {
-            case 0:
-                StartTutorial(nodes["intro"]);
-                break;
-            case 1:
-                StartTutorial(nodes["timeline"]);
-                break;
-            case 2:
-                StartTutorial(nodes["mapIntro"]);
-                break;
-            case 3:
-                StartTutorial(nodes["statuses"]);
-                break;
-            default:
-                StartTutorial(nodes["intro"]);
-                break;
-        }
+        StartTutorial(nodes["intro"]);
     }
     public void BuildTutorialBase()
     {
@@ -73,7 +47,7 @@ public class STSTutorialManager : MonoBehaviour
         };
         nodes["startCombat"] = new TutorialNode
         {
-            text = "Ce tutoriel couvrira les bases du combat.",
+            text = "Ce tutoriel couvrira les bases d'une partie.",
 
             onStart = () =>
             {
@@ -105,7 +79,7 @@ public class STSTutorialManager : MonoBehaviour
         };
         nodes["hand"] = new TutorialNode
         {
-            text = "Voici votre main. Au début de chaque tour, vous piochez 5 cartes. Vous pouvez sélectionner une carte et cliquer sur sa description pour la voir plus en détail.",
+            text = "Voici votre main. Au début de chaque tour, vous piochez 5 cartes. Vous pouvez sélectionner une carte ou la double-cliquer pour la voir en grand",
 
             onStart = () =>
             {
@@ -328,7 +302,7 @@ public class STSTutorialManager : MonoBehaviour
 
             condition = () => flags["pressed"],
 
-            next = () => nodes["globalExplanation"]
+            next = () => nodes["timeline"]
         };
         nodes["globalExplanation"] = new TutorialNode
         {
@@ -344,7 +318,6 @@ public class STSTutorialManager : MonoBehaviour
 
             onComplete = () =>
             {
-                STSSceneLoader.Instance.LoadScene("STS_Boot");
             },
             next = () => null
         };
@@ -475,7 +448,7 @@ public class STSTutorialManager : MonoBehaviour
         };
         nodes["globalMapExplanation"] = new TutorialNode
         {
-            text = "C'est tout pour le tutoriel de la carte ! Bon courage pour votre partie !",
+            text = "C'est tout pour le tutoriel  ! Bon courage !",
 
             onStart = () =>
             {
@@ -498,8 +471,7 @@ public class STSTutorialManager : MonoBehaviour
     {
         nodes["timeline"] = new TutorialNode
         {
-            text = "Bienvenue dans ce tutoriel sur la timeline !",
-
+            text = "Passons maintenant au système de tours.",
             onStart = () =>
             {
                 combat.allowTurn = true;
@@ -542,7 +514,7 @@ public class STSTutorialManager : MonoBehaviour
         };
         nodes["promptCardUse"] = new TutorialNode
         {
-            text = "Essayez de jouer ces cartes tout en regardant la timeline pour voir comment elles l'affectent !",
+            text = "Essayez de jouer ces cartes (Hâte et Délai) tout en regardant la timeline pour voir comment elles l'affectent !",
 
             onStart = () =>
             {
@@ -605,33 +577,27 @@ public class STSTutorialManager : MonoBehaviour
 
             condition = () => flags["pressed"],
 
-            next = () => nodes["timelineEnd"]
+            next = () => nodes["timelineWarning"]
         };
-        nodes["timelineEnd"] = new TutorialNode
+        nodes["timelineWarning"]=new TutorialNode
         {
-            text = "C'est tout pour ce tutoriel sur les tours !",
+            text = "Restez vigilant: elle n'est pas totalement fiable et peut totalement changer en fonction des actions effectuées.",
 
             onStart = () =>
             {
                 flags["pressed"] = false;
-                ui.ShowOverlay();
-                ui.Unhighlight();
             },
 
             condition = () => flags["pressed"],
 
-            onComplete = () =>
-            {
-                STSSceneLoader.Instance.LoadScene("STS_Boot");
-            },
-            next = () => null
+            next = () => nodes["statuses"]
         };
     }
     private void BuildTutorialStatus()
     {
         nodes["statuses"] = new TutorialNode
         {
-            text = "Bienvenue dans ce tutoriel sur les effets de statut !",
+            text = "Parlons maintenant des effets de statut .",
             onStart = () =>
             {
                 combat.allowTurn = true;
@@ -649,11 +615,21 @@ public class STSTutorialManager : MonoBehaviour
                 flags["pressed"] = false;
             },
             condition = () => flags["pressed"],
+            next = () => nodes["statusesIconExplanation"]
+        };
+        nodes["statusesIconExplanation"] = new TutorialNode
+        {
+            text = "Les effets de statut sont représentés par des icônes en-dessous de la barre de vie, dont la couleur dépend de sa nature positive ou négative. Vous pouvez appuyer sur une icône pour voir le nom et la description de l'effet.",
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+            },
+            condition = () => flags["pressed"],
             next = () => nodes["statusesEnemyDemoIntro"]
         };
         nodes["statusesEnemyDemoIntro"] = new TutorialNode
         {
-            text = "Regardez deux ennemis: leurs prochaines actions vont appliquer des effets de statut.",
+            text = "Regardez deux ennemis: leurs prochaines actions vont appliquer des effets de statut. Finissez votre tour pour voir quoi.",
             onStart = () =>
             {
                 flags["pressed"] = false;
@@ -727,15 +703,15 @@ public class STSTutorialManager : MonoBehaviour
                 combat.deck.AddCardToHand("Purification");
                 ui.HideOverlay();
             },
-            condition = () => flags["dispelPlayed"],
+            condition = () => flags["dispelPlayed"] || flags["cleansePlayed"],
             next = () =>
             {
                 if (flags["dispelSucceeded"])
                     return nodes["statusesWrapUp"];
-                if (flags["dispelPlayed"])
-                    return nodes["statusesDispelRetry"];
                 if (flags["cleanseSucceeded"])
                     return nodes["statusesWrapUp"];
+                if (flags["dispelPlayed"])
+                    return nodes["statusesDispelRetry"];
                 if (flags["cleansePlayed"])
                     return nodes["statusesCleanseRetry"];
 
@@ -802,11 +778,7 @@ public class STSTutorialManager : MonoBehaviour
                 ui.ShowOverlay();
             },
             condition = () => flags["pressed"],
-            onComplete = () =>
-            {
-                STSSceneLoader.Instance.LoadScene("STS_Boot");
-            },
-            next = () => null
+            next = () => nodes["mapIntro"]
         };
     }
 
@@ -900,14 +872,21 @@ public class STSTutorialManager : MonoBehaviour
                 break;
             }
         }
-        //if (buffedEnemy != null)
-        //{
-        //    buffedEnemy.AddStatus(StatusEffect.Factory(StatusType.Strength, 1, -1));
-        //}
-        //if (combat.player != null)
-        //{
-        //    combat.player.AddStatus(StatusEffect.Factory(StatusType.Weakness, 0, 2));
-        //}
+
+        if (buffedEnemy != null)
+        {
+            buffedEnemy.AddStatus(StatusEffect.Factory(StatusType.Strength, 1, -1));
+        }
+
+        if (combat.player != null)
+        {
+            combat.player.AddStatus(StatusEffect.Factory(StatusType.Weakness, 0, 2));
+        }
+
+        if (combat.ui != null)
+        {
+            combat.ui.RefreshUI(false);
+        }
     }
     
     void Update()

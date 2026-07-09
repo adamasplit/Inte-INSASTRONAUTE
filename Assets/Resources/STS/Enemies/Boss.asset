@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Boss
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Boss
   enemyName: Boss
   displayName: 
-  maxHP: 115
+  maxHP: 90
   pattern: []
   randomStart: 0
   movePattern:
@@ -22,13 +23,14 @@ MonoBehaviour:
     moveName: 
     effects:
     - type: 3
-      value: 0
-      targetSelf: 0
+      value: 3
+      targetSelf: 1
       targetOthers: 0
-      statusType: 2
-      duration: 2
+      statusType: 0
+      duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -36,14 +38,16 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     - type: 3
-      value: 0
-      targetSelf: 0
+      value: 1
+      targetSelf: 1
       targetOthers: 0
-      statusType: 1
-      duration: 2
+      statusType: 43
+      duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -51,23 +55,9 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
-    - type: 3
-      value: 0
-      targetSelf: 0
-      targetOthers: 0
-      statusType: 13
-      duration: 2
-      description: 
-      cardID: 
-      conditional: 0
-      conditionType: 0
-      conditionValue: 
-      trueEffect: 0
-      cardSelectionSource: 0
-      cardFilterTags: 
-      cardSelectionEffect: 0
-    nextMoveIndices: 
-    weight: 0
+      animationType: 0
+    nextMoveIndices: 01000000
+    weight: 1
   - card: {fileID: 0}
     moveName: 
     effects:
@@ -76,9 +66,10 @@ MonoBehaviour:
       targetSelf: 0
       targetOthers: 0
       statusType: 1
-      duration: 2
+      duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -86,14 +77,16 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
+      animationType: 0
     - type: 3
-      value: 0
+      value: 4
       targetSelf: 0
       targetOthers: 0
       statusType: 20
-      duration: 4
+      duration: 2
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -101,19 +94,38 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
-    nextMoveIndices: 
-    weight: 0
+      animationType: 0
+    nextMoveIndices: 02000000
+    weight: 1
   - card: {fileID: 0}
     moveName: 
     effects:
-    - type: 0
-      value: 8
+    - type: 3
+      value: 2
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 2
+      duration: 2
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 3
+      value: 2
       targetSelf: 0
       targetOthers: 0
       statusType: 1
       duration: 2
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -121,49 +133,38 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
-    - type: 3
-      value: 4
-      targetSelf: 1
-      targetOthers: 0
-      statusType: 42
-      duration: 4
-      description: 
-      cardID: 
-      conditional: 0
-      conditionType: 0
-      conditionValue: 
-      trueEffect: 0
-      cardSelectionSource: 0
-      cardFilterTags: 
-      cardSelectionEffect: 0
-    nextMoveIndices: 
-    weight: 0
+      animationType: 0
+    nextMoveIndices: 03000000
+    weight: 1
   - card: {fileID: 0}
     moveName: 
     effects:
+    - type: 1
+      value: 12
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 31
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
     - type: 3
       value: 3
       targetSelf: 1
       targetOthers: 0
-      statusType: 0
-      duration: 2
-      description: 
-      cardID: 
-      conditional: 0
-      conditionType: 0
-      conditionValue: 
-      trueEffect: 0
-      cardSelectionSource: 0
-      cardFilterTags: 
-      cardSelectionEffect: 0
-    - type: 3
-      value: 2
-      targetSelf: 1
-      targetOthers: 0
       statusType: 42
-      duration: 4
+      duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -171,8 +172,9 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
-    nextMoveIndices: 
-    weight: 0
+      animationType: 0
+    nextMoveIndices: 04000000
+    weight: 1
   - card: {fileID: 0}
     moveName: 
     effects:
@@ -181,9 +183,10 @@ MonoBehaviour:
       targetSelf: 0
       targetOthers: 0
       statusType: 0
-      duration: 2
+      duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -191,19 +194,16 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
-    nextMoveIndices: 
-    weight: 2
-  - card: {fileID: 0}
-    moveName: 
-    effects:
-    - type: 1
-      value: 10
+      animationType: 0
+    - type: 3
+      value: 2
       targetSelf: 1
       targetOthers: 0
       statusType: 0
-      duration: 2
+      duration: 0
       description: 
       cardID: 
+      index: 0
       conditional: 0
       conditionType: 0
       conditionValue: 
@@ -211,61 +211,13 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
-    - type: 6
-      value: 7
-      targetSelf: 0
-      targetOthers: 0
-      statusType: 0
-      duration: 2
-      description: 
-      cardID: 
-      conditional: 0
-      conditionType: 0
-      conditionValue: 
-      trueEffect: 0
-      cardSelectionSource: 0
-      cardFilterTags: 
-      cardSelectionEffect: 0
-    nextMoveIndices: 
-    weight: 0
-  - card: {fileID: 0}
-    moveName: 
-    effects:
-    - type: 5
-      value: 10
-      targetSelf: 1
-      targetOthers: 0
-      statusType: 0
-      duration: 2
-      description: 
-      cardID: 
-      conditional: 0
-      conditionType: 0
-      conditionValue: 
-      trueEffect: 0
-      cardSelectionSource: 0
-      cardFilterTags: 
-      cardSelectionEffect: 0
-    - type: 6
-      value: 3
-      targetSelf: 0
-      targetOthers: 0
-      statusType: 0
-      duration: 2
-      description: 
-      cardID: 
-      conditional: 0
-      conditionType: 0
-      conditionValue: 
-      trueEffect: 0
-      cardSelectionSource: 0
-      cardFilterTags: 
-      cardSelectionEffect: 0
-    nextMoveIndices: 
-    weight: 0
+      animationType: 0
+    nextMoveIndices: 01000000
+    weight: 1
   rewardCards:
   - {fileID: 11400000, guid: d1ea40f05d81b044db2fd8ad86c7bac7, type: 2}
   startingStatus: 33
   startingStatusDuration: 0
   startingStatusValue: 1
   startingStatusInfo: 
+  startingStatusIndex: 0

@@ -23,8 +23,10 @@
       "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "ExhaustPile",
+      "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "TopOfDrawPile"
+      "cardSelectionEffect": "TopOfDrawPile",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],
