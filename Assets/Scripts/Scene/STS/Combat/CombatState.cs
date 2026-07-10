@@ -10,7 +10,7 @@ public class CombatState
     }
 
     public int cardsDiscardedThisCombat;
-    
+    public int cardsExhausted;
     public int energySpentThisTurn;
     public int energyGainedThisTurn;
     public Dictionary<Character, int> damageDealtThisCombat = new();
@@ -26,6 +26,7 @@ public class CombatState
         killingBlow = false;
         armorBroken = false;
         damageDealtWithLastAction = 0;
+        cardsExhausted = 0;
     }
     public void ResetTurnStartFlags(Character character)
     {

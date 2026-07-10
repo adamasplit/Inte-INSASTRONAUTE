@@ -1,7 +1,7 @@
 {
   "id": "spectrometrie",
   "cardName": "Spectrométrie",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Debuff",
   "cost": 0,
   "xCost": false,

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,6 +24,8 @@ public class RetreatCardController : MonoBehaviour
         // cacher visuellement
         view.gameObject.SetActive(false);
         glow.SetActive(false);
+
+        ApplyCollectionCardGlowAsync();
     }
 
     public void Reveal()
@@ -50,11 +53,9 @@ public class RetreatCardController : MonoBehaviour
     IEnumerator TransformToReward()
     {
         view.gameObject.SetActive(false);
-        if (data.collectionCard != null)
+        if (!string.IsNullOrWhiteSpace(data != null ? data.GetCollectionCardId() : null))
         {
-            glow.GetComponent<Image>().sprite=data.collectionCard.sprite;
             glow.SetActive(true);
-            manager.AddCardToDatas(data.collectionCard);
         }
         else
         {
@@ -79,5 +80,29 @@ public class RetreatCardController : MonoBehaviour
             yield return null;
         }
         root.anchoredPosition = Vector2.zero;
+    }
+
+    private async void ApplyCollectionCardGlowAsync()
+    {
+        if (data == null || glow == null)
+            return;
+
+        string collectionCardId = data.GetCollectionCardId();
+        if (string.IsNullOrWhiteSpace(collectionCardId))
+            return;
+
+        try
+        {
+            Sprite sprite = await STSCardDatabase.GetCollectionCardSpriteAsync(collectionCardId);
+            if (data != null && string.Equals(data.GetCollectionCardId(), collectionCardId, StringComparison.Ordinal) && sprite != null && glow != null)
+            {
+                glow.GetComponent<Image>().sprite = sprite;
+                glow.SetActive(true);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Failed to load retreat glow art for '{collectionCardId}': {ex}");
+        }
     }
 }

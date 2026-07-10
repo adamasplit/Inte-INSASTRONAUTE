@@ -1,7 +1,7 @@
 {
   "id": "innovation",
   "cardName": "Innovation",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "creation",
   "cost": 3,
   "xCost": false,

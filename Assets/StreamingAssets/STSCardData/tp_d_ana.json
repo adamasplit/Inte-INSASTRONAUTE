@@ -1,7 +1,7 @@
 {
   "id": "tp_d_ana",
   "cardName": "TP d'Ana",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "vuln",
   "cost": 1,
   "xCost": false,

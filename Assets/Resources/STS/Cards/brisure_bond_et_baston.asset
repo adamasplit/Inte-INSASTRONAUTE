@@ -12,31 +12,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: brisure_bond_et_baston
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: brisure_bond_et_baston
   cardName: Brisure, Bond et Baston
-  collectionCard: {fileID: 11400000, guid: bda98898e661bd34ba6c7da2426ad04f, type: 2}
+  collectionCardId: 3B
+  icon: {fileID: 0}
   cost: 2
+  xCost: 0
   type: 0
   rarity: 3
   effects:
   - type: 0
     value: 5
     targetSelf: 0
+    targetOthers: 0
     statusType: 0
     duration: 0
     description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
   - type: 5
     value: 4
     targetSelf: 1
+    targetOthers: 0
     statusType: 0
     duration: 0
     description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
   - type: 3
     value: 0
     targetSelf: 0
+    targetOthers: 0
     statusType: 1
     duration: 3
     description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers: []
-  exhaust: 0
-  retain: 0
+  favoredCharacter: 9
+  animationSpeed: 1
+  startingCount: 0
+  tags: 

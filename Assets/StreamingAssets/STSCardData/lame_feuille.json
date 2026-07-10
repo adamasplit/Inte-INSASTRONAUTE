@@ -1,7 +1,7 @@
 {
   "id": "lame_feuille",
   "cardName": "Lame-Feuille",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "lame_feuille",
   "cost": 1,
   "xCost": false,

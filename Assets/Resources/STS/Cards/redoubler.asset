@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: redoubler
   cardName: Redoubler
-  collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: 3ea0a0a61a928f840ba75e2b69b3e644, type: 2}
+  collectionCardId: Rattrapages
   icon: {fileID: 0}
   cost: 1
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 2
     cardFilterTags: 
     cardSelectionEffect: 4
+    animationType: 0
   - type: 18
     value: 0
     targetSelf: 0
@@ -45,6 +46,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -52,6 +54,7 @@ MonoBehaviour:
     cardSelectionSource: 2
     cardFilterTags: 
     cardSelectionEffect: 4
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 9

@@ -1,7 +1,7 @@
 {
   "id": "interpolation",
   "cardName": "Interpolation",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "between",
   "cost": 2,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "turbine",
   "cardName": "Turbine",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Energie",
   "cost": 2,
   "xCost": false,

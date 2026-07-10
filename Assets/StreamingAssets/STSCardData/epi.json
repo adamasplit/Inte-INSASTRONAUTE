@@ -1,7 +1,7 @@
 {
   "id": "epi",
   "cardName": "EPI",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "gant",
   "cost": 1,
   "xCost": false,

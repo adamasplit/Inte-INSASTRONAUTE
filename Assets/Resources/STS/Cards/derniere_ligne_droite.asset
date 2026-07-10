@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: derniere_ligne_droite
   cardName: "Derni\xE8re ligne droite"
-  collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: 95bbccd27b1617f48b5a6eb0bfa4c174, type: 2}
+  collectionCardId: Purple Rouen
   icon: {fileID: 0}
   cost: 0
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,15 +37,14 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers:
   - type: 0
     kind: 2
     value: 3
-  exhaust: 0
-  retain: 0
-  innate: 0
-  infinite: 0
+    info: 
+    description: 
   favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0

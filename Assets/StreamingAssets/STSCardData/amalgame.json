@@ -1,7 +1,7 @@
 {
   "id": "amalgame",
   "cardName": "Amalgame",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "spirale2",
   "cost": 0,
   "xCost": false,

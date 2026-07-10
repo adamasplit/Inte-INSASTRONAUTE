@@ -1,7 +1,7 @@
 {
   "id": "chassis_adaptatif",
   "cardName": "Châssis adaptatif",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "protection",
   "cost": 1,
   "xCost": false,

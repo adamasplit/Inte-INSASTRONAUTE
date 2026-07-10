@@ -1,7 +1,7 @@
 {
   "id": "aerodynamique",
   "cardName": "Aérodynamique",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "aero",
   "cost": 2,
   "xCost": false,

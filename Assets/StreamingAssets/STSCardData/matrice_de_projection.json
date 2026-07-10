@@ -1,7 +1,7 @@
 {
   "id": "matrice_de_projection",
   "cardName": "Matrice de projection",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "naoya",
   "cost": 1,
   "xCost": false,

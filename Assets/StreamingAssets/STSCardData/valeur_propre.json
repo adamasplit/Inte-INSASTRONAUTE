@@ -1,7 +1,7 @@
 {
   "id": "valeur_propre",
   "cardName": "Valeur propre",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "spirale",
   "cost": 1,
   "xCost": false,

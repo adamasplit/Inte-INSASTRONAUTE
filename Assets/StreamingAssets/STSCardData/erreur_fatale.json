@@ -1,7 +1,7 @@
 {
   "id": "erreur_fatale",
   "cardName": "Erreur fatale",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "reboot",
   "cost": 2,
   "xCost": false,

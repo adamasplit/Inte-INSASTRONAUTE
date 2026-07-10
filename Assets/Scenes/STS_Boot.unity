@@ -3043,6 +3043,8 @@ MonoBehaviour:
   entranceOffset: 180
   enableEntranceAnimation: 0
   contentPadding: 150
+  normalizeCardDepth: 1
+  cardLocalZ: 0
 --- !u!225 &757525680
 CanvasGroup:
   m_ObjectHideFlags: 0

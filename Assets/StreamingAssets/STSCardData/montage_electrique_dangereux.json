@@ -1,7 +1,7 @@
 {
   "id": "montage_electrique_dangereux",
   "cardName": "Montage électrique dangereux",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Foudre",
   "cost": 4,
   "xCost": false,

@@ -1,4 +1,4 @@
-using UnityEngine;
+ using UnityEngine;
 using System.Collections.Generic;
 using System;
 [CreateAssetMenu]
@@ -7,7 +7,6 @@ public class STSCardData : ScriptableObject
     public string id;
     public string cardName;
     public string collectionCardId;
-    public CardData collectionCard;
     public Sprite icon;
     public int cost;
     public bool xCost=false;
@@ -20,15 +19,15 @@ public class STSCardData : ScriptableObject
     public float animationSpeed=1f;
     public int startingCount=0;
     public List<CardTag> tags = new();
-    #if UNITY_EDITOR
-    private void OnValidate()
-    {
-        id = name;
-    }
-    #endif
     public bool HasTag(CardTag tag)
     {
         return tags.Contains(tag);
+    }
+    public string GetCollectionCardId()
+    {
+        if (!string.IsNullOrWhiteSpace(collectionCardId))
+            return collectionCardId;
+        return null;
     }
     public STSCardDataDTO ToDTO()
     {
@@ -36,7 +35,7 @@ public class STSCardData : ScriptableObject
 
         dto.id = id;
         dto.cardName = cardName;
-        dto.collectionCardId = collectionCard != null ? collectionCard.cardId : collectionCardId;
+        dto.collectionCardId = GetCollectionCardId();
         dto.cost = cost;
         dto.iconId = icon != null ? icon.name : null;
         dto.type = type.ToString();
@@ -76,7 +75,6 @@ public class STSCardData : ScriptableObject
             card.cardName = dto.id;
         }
         card.collectionCardId = dto.collectionCardId;
-        card.collectionCard = (dto.collectionCardId==null||dto.collectionCardId=="") ? null : CardDatabase.Instance.Get(dto.collectionCardId);
         card.icon = (dto.iconId != null && dto.iconId != "") ? Resources.Load<Sprite>("STS/Icons/Cards/" + dto.iconId) : null;
         if (dto.iconId != null && dto.iconId != "" && card.icon == null)
         {

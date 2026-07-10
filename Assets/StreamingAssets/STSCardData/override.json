@@ -1,7 +1,7 @@
 {
   "id": "override",
   "cardName": "Override",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "override",
   "cost": 3,
   "xCost": false,

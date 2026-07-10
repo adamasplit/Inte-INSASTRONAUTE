@@ -1,7 +1,7 @@
 {
   "id": "tour_a_metaux",
   "cardName": "Tour à métaux",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "spirale2",
   "cost": 2,
   "xCost": false,

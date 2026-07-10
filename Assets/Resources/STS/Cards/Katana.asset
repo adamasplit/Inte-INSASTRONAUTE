@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: katana
   cardName: Frappe au katana
-  collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: 786841ea8e858bc4d9e21fff30db7161, type: 2}
+  collectionCardId: Insamourai
   icon: {fileID: 0}
   cost: 1
   xCost: 0

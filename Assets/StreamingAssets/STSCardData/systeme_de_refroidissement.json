@@ -1,7 +1,7 @@
 {
   "id": "systeme_de_refroidissement",
   "cardName": "Système de refroidissement",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Congélation",
   "cost": 0,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "dispersion_atmospherique",
   "cardName": "Dispersion atmosphérique",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Transfert",
   "cost": 1,
   "xCost": false,

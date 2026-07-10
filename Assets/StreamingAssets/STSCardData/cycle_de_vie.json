@@ -1,7 +1,7 @@
 {
   "id": "cycle_de_vie",
   "cardName": "Cycle de vie",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Buff",
   "cost": 1,
   "xCost": false,

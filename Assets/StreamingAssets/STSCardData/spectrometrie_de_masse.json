@@ -1,7 +1,7 @@
 {
   "id": "spectrometrie_de_masse",
   "cardName": "Spectrométrie de masse",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "lionheart",
   "cost": 3,
   "xCost": false,

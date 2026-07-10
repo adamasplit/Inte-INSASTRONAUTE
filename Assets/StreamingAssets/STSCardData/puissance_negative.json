@@ -1,7 +1,7 @@
 {
   "id": "puissance_negative",
   "cardName": "Puissance négative",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "DRK",
   "cost": 2,
   "xCost": false,

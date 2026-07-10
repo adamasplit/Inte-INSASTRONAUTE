@@ -1,7 +1,7 @@
 {
   "id": "coupe_transversale",
   "cardName": "Coupe transversale",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "cut",
   "cost": 1,
   "xCost": false,

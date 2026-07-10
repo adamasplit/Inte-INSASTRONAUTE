@@ -1,7 +1,7 @@
 {
   "id": "bilan_carbone",
   "cardName": "Bilan carbone",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Zone",
   "cost": 1,
   "xCost": false,

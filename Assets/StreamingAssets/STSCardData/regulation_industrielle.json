@@ -1,7 +1,7 @@
 {
   "id": "regulation_industrielle",
   "cardName": "Régulation industrielle",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Industrie",
   "cost": 2,
   "xCost": false,

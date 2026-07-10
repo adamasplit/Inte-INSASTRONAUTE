@@ -1,7 +1,7 @@
 {
   "id": "surconsommation_energetique",
   "cardName": "Surconsommation énergétique",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "renzokuken_alt",
   "cost": 2,
   "xCost": false,

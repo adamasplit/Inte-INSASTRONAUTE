@@ -1,7 +1,7 @@
 {
   "id": "elasticite",
   "cardName": "Élasticité",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Pouvoir2",
   "cost": 3,
   "xCost": false,

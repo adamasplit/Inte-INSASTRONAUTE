@@ -1,7 +1,7 @@
 {
   "id": "catapulte",
   "cardName": "Catapulte",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "rocks",
   "cost": 2,
   "xCost": false,

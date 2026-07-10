@@ -1,7 +1,7 @@
 {
   "id": "planification",
   "cardName": "Planification",
-  "collectionCardId": "GC",
+  "collectionCardId": null,
   "iconId": "Energie",
   "cost": 0,
   "xCost": false,

@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: inter_depart
   cardName: "Inter-d\xE9part"
-  collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: 1a3915f44d98bbc49a119e6b85f3094a, type: 2}
+  collectionCardId: Quartier Libre
   icon: {fileID: 0}
   cost: 0
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 1
     value: 1
     targetSelf: 1
@@ -45,6 +46,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -52,6 +54,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 2
     value: 1
     targetSelf: 1
@@ -60,6 +63,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -67,6 +71,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 3
     value: 0
     targetSelf: 0
@@ -75,6 +80,7 @@ MonoBehaviour:
     duration: 1
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -82,6 +88,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 5
     value: 1
     targetSelf: 1
@@ -90,6 +97,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -97,6 +105,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 6
     value: 1
     targetSelf: 0
@@ -105,6 +114,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -112,12 +122,9 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers: []
-  exhaust: 1
-  retain: 0
-  innate: 0
-  infinite: 0
   favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0

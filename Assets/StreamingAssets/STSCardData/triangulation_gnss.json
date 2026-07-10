@@ -1,7 +1,7 @@
 {
   "id": "triangulation_gnss",
   "cardName": "Triangulation GNSS",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "triangulation",
   "cost": 2,
   "xCost": false,

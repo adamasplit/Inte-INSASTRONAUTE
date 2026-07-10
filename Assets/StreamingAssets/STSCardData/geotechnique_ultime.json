@@ -1,7 +1,7 @@
 {
   "id": "geotechnique_ultime",
   "cardName": "Géo-technique ultime",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "quake",
   "cost": 2,
   "xCost": false,

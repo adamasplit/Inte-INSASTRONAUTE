@@ -1,7 +1,7 @@
 {
   "id": "raffinage",
   "cardName": "Raffinage",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "spirale2",
   "cost": 1,
   "xCost": false,

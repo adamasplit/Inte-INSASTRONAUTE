@@ -1,7 +1,7 @@
 {
   "id": "autodecomposition",
   "cardName": "Autodécomposition",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": null,
   "cost": 0,
   "xCost": false,

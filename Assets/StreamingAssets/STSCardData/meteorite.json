@@ -1,7 +1,7 @@
 {
   "id": "meteorite",
   "cardName": "Météorite",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Météorite",
   "cost": 2,
   "xCost": false,

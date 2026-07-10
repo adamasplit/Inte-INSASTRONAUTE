@@ -1,7 +1,7 @@
 {
   "id": "ultralaser",
   "cardName": "Ultralaser",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "laser",
   "cost": 2,
   "xCost": false,

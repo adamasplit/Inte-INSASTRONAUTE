@@ -1,7 +1,7 @@
 {
   "id": "mur_porteur",
   "cardName": "Mur porteur",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Dégâts et Armure",
   "cost": 2,
   "xCost": false,

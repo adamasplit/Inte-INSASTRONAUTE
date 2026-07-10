@@ -1,7 +1,7 @@
 {
   "id": "architecture",
   "cardName": "Architecture",
-  "collectionCardId": "AI",
+  "collectionCardId": null,
   "iconId": "Transfert",
   "cost": 0,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "eboulement",
   "cardName": "Éboulement",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "rocks",
   "cost": 0,
   "xCost": true,

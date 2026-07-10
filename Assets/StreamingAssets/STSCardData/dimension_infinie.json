@@ -1,7 +1,7 @@
 {
   "id": "dimension_infinie",
   "cardName": "Dimension infinie",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "dimension",
   "cost": 0,
   "xCost": false,

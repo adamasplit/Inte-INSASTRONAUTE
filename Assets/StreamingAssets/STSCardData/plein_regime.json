@@ -1,7 +1,7 @@
 {
   "id": "plein_regime",
   "cardName": "Plein régime",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "fury",
   "cost": 1,
   "xCost": false,

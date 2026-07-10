@@ -1,7 +1,7 @@
 {
   "id": "insa_cheval",
   "cardName": "",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": null,
   "cost": 0,
   "xCost": false,

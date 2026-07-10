@@ -1,7 +1,7 @@
 {
   "id": "soudure",
   "cardName": "Soudure",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "soudure",
   "cost": 0,
   "xCost": false,

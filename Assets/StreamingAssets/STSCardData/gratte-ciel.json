@@ -1,7 +1,7 @@
 {
   "id": "gratte-ciel",
   "cardName": "Gratte-ciel",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "ciel",
   "cost": 2,
   "xCost": false,

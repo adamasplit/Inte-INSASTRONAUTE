@@ -12,18 +12,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: rattrapages
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: 
   cardName: Rattrapages
-  collectionCard: {fileID: 11400000, guid: 3ea0a0a61a928f840ba75e2b69b3e644, type: 2}
+  collectionCardId: Rattrapages
+  icon: {fileID: 0}
   cost: 0
+  xCost: 0
   type: 1
   rarity: 2
   effects:
   - type: 6
     value: 5
     targetSelf: 0
+    targetOthers: 0
     statusType: 0
     duration: 0
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers: []
-  exhaust: 0
-  retain: 0
+  favoredCharacter: 9
+  animationSpeed: 1
+  startingCount: 0
+  tags: 

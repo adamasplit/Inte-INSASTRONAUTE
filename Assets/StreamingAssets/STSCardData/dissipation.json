@@ -1,7 +1,7 @@
 {
   "id": "dissipation",
   "cardName": "Dissipation",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Dissipation",
   "cost": 0,
   "xCost": false,

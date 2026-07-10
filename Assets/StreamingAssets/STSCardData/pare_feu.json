@@ -1,7 +1,7 @@
 {
   "id": "pare_feu",
   "cardName": "Pare-feu",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "barriere",
   "cost": 1,
   "xCost": false,

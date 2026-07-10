@@ -1,7 +1,7 @@
 {
   "id": "auto_conception",
   "cardName": "Auto-conception",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "ArmureSoin",
   "cost": 2,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "depollution",
   "cardName": "Dépollution",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "purge",
   "cost": 1,
   "xCost": false,

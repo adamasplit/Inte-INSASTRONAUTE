@@ -1,7 +1,7 @@
 {
   "id": "execution",
   "cardName": "Exécution",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Frappe",
   "cost": 2,
   "xCost": false,

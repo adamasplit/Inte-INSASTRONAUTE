@@ -1,7 +1,7 @@
 {
   "id": "suite_recurrente",
   "cardName": "Suite récurrente",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "iter",
   "cost": 2,
   "xCost": false,

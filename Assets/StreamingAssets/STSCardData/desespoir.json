@@ -1,7 +1,7 @@
 {
   "id": "desespoir",
   "cardName": "Désespoir",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Désespoir",
   "cost": 0,
   "xCost": false,

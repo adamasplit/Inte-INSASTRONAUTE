@@ -1,7 +1,7 @@
 {
   "id": "norme_infinie",
   "cardName": "Norme infinie",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "norme",
   "cost": 0,
   "xCost": true,

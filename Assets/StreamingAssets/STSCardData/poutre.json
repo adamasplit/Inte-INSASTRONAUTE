@@ -1,7 +1,7 @@
 {
   "id": "poutre",
   "cardName": "Poutre centrale",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "rudebuster",
   "cost": 2,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "tir_cadre",
   "cardName": "Tir cadré",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "blitz",
   "cost": 0,
   "xCost": false,

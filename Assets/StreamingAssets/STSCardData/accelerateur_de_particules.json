@@ -1,7 +1,7 @@
 {
   "id": "accelerateur_de_particules",
   "cardName": "Accélérateur de particules",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "holy",
   "cost": 0,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "turbomachine",
   "cardName": "Turbomachine",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "tenebres",
   "cost": 2,
   "xCost": false,

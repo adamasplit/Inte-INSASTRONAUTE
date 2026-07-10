@@ -1,7 +1,7 @@
 {
   "id": "ancrage",
   "cardName": "Ancrage",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "ancre",
   "cost": 0,
   "xCost": false,

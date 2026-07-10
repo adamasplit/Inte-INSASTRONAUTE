@@ -1,7 +1,7 @@
 {
   "id": "megagravitron",
   "cardName": "Mégagravitron",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Comète",
   "cost": 4,
   "xCost": false,

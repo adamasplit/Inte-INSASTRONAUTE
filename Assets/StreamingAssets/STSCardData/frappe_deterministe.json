@@ -1,7 +1,7 @@
 {
   "id": "frappe_deterministe",
   "cardName": "Frappe déterministe",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "forceofwill",
   "cost": 2,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "acceleration",
   "cardName": "Accélération",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Buff",
   "cost": 0,
   "xCost": false,

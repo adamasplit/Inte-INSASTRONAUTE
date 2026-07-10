@@ -1,7 +1,7 @@
 {
   "id": "surchauffe_machine",
   "cardName": "Surchauffe mécanique",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "feu",
   "cost": 1,
   "xCost": false,

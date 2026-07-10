@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 public class DelayedStunStatus : StatusEffect
 {
-    private bool mustApplyStun = false;
     public DelayedStunStatus(int duration)
     {
         Duration = duration;

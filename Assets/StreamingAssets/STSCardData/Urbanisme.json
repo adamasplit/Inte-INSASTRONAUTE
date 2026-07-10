@@ -1,7 +1,7 @@
 {
   "id": "urbanisme",
   "cardName": "Urbanisme",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Transfert2",
   "cost": 2,
   "xCost": false,

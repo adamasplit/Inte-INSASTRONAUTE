@@ -1,7 +1,7 @@
 {
   "id": "cataclysme",
   "cardName": "Cataclysme",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "meteor",
   "cost": 1,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "point_fixe",
   "cardName": "Point fixe",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Physique",
   "cost": 0,
   "xCost": false,

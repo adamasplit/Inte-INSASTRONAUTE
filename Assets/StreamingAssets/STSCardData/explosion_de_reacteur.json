@@ -1,7 +1,7 @@
 {
   "id": "explosion_de_reacteur",
   "cardName": "Explosion de réacteur",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "burn",
   "cost": 0,
   "xCost": false,

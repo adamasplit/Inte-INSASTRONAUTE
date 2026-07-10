@@ -1,7 +1,7 @@
 {
   "id": "carbone",
   "cardName": "Carbone",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Atome",
   "cost": 0,
   "xCost": false,

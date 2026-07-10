@@ -1,7 +1,7 @@
 {
   "id": "choc_thermique",
   "cardName": "Choc thermique",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "feu_glace",
   "cost": 2,
   "xCost": false,

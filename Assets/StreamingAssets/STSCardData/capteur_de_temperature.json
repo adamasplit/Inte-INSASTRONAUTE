@@ -1,7 +1,7 @@
 {
   "id": "capteur_de_temperature",
   "cardName": "Capteur de température",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Transfert",
   "cost": 1,
   "xCost": false,

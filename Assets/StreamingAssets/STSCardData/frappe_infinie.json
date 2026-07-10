@@ -1,7 +1,7 @@
 {
   "id": "frappe_infinie",
   "cardName": "Frappe infinie",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "cut",
   "cost": 0,
   "xCost": false,

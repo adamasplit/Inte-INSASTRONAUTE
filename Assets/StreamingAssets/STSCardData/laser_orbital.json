@@ -1,7 +1,7 @@
 {
   "id": "laser_orbital",
   "cardName": "Laser orbital",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "laser",
   "cost": 0,
   "xCost": false,

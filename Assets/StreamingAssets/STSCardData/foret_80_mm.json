@@ -1,7 +1,7 @@
 {
   "id": "foret_80_mm",
   "cardName": "Foret 80 mm",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "perceuse",
   "cost": 1,
   "xCost": false,

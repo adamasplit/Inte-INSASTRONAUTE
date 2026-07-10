@@ -1,7 +1,7 @@
 {
   "id": "contrepoids",
   "cardName": "Contrepoids",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "strike",
   "cost": 1,
   "xCost": false,

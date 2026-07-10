@@ -1,7 +1,7 @@
 {
   "id": "poncage",
   "cardName": "Ponçage",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "gant",
   "cost": 0,
   "xCost": false,

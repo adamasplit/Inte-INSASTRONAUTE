@@ -1,7 +1,7 @@
 {
   "id": "chute_d_etoile",
   "cardName": "Chute d'étoile",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Comète",
   "cost": 0,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "biomolecule",
   "cardName": "Biomolécules",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Transfert",
   "cost": 1,
   "xCost": false,

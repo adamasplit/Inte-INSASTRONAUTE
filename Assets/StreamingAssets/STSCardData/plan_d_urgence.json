@@ -1,7 +1,7 @@
 {
   "id": "plan_d_urgence",
   "cardName": "Plan d'urgence",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "holy",
   "cost": 0,
   "xCost": false,

@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: happy_hour
   cardName: Happy Hour
-  collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: 9e69766a85c515e4aa113a2ea35178b0, type: 2}
+  collectionCardId: Bar des Fleurs
   icon: {fileID: 0}
   cost: 1
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 3
     value: 0
     targetSelf: 1
@@ -45,6 +46,7 @@ MonoBehaviour:
     duration: 3
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -52,12 +54,9 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
-  exhaust: 1
-  retain: 0
-  innate: 0
-  infinite: 0
   favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0

@@ -1,7 +1,7 @@
 {
   "id": "vision_en_coupe",
   "cardName": "Vision en coupe",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "rudebuster",
   "cost": 2,
   "xCost": false,

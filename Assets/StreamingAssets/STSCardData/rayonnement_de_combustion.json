@@ -1,7 +1,7 @@
 {
   "id": "rayonnement_de_combustion",
   "cardName": "Rayonnement de combustion",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Pouvoir2",
   "cost": 0,
   "xCost": true,

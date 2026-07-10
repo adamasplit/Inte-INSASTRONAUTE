@@ -1,7 +1,7 @@
 {
   "id": "bouclier_organique",
   "cardName": "Bouclier organique",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "barriere",
   "cost": 2,
   "xCost": false,

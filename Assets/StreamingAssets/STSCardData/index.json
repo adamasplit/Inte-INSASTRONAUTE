@@ -1,5 +1,6 @@
 {
     "files": [
+        ".json",
         "accelerateur_de_particules.json",
         "acceleration.json",
         "acharnement.json",
@@ -223,6 +224,7 @@
         "plutonium.json",
         "point_critique.json",
         "point_fixe.json",
+        "poison 1.json",
         "poison.json",
         "polonium.json",
         "poncage.json",

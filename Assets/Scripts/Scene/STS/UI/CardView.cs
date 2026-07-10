@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -615,66 +616,82 @@ public class CardView : MonoBehaviour,IPointerClickHandler
 
     public void SetWithCollectionCard(CardInstance card)
     {
-        if (card.data.collectionCard==null||card.data.collectionCard.sprite==null)
+        if (card == null || card.data == null)
+            return;
+
+        cardImage.sprite = card.data.icon;
+        cardImage.preserveAspect = true;
+        imgBg.enabled = true;
+        imgOverlay.enabled = true;
+        collectionCardRoot.SetActive(false);
+        genericCardRoot.SetActive(true);
+        descriptionText.color = Color.white;
+        nameText.color = Color.white;
+        nameText.transform.localScale = Vector3.one;
+
+        string collectionCardId = card.data.GetCollectionCardId();
+        if (string.IsNullOrWhiteSpace(collectionCardId))
+            return;
+
+        ApplyCollectionCardVisualAsync(card, collectionCardId);
+    }
+
+    private async void ApplyCollectionCardVisualAsync(CardInstance card, string collectionCardId)
+    {
+        try
         {
-            cardImage.sprite = card.data.icon;
-            // Conserve aspect ratio
-            cardImage.preserveAspect = true;
-            imgBg.enabled = true;
-            imgOverlay.enabled = true;
-            collectionCardRoot.SetActive(false);
-            genericCardRoot.SetActive(true);
-            descriptionText.color = Color.white;
-            nameText.color = Color.white;
-            nameText.transform.localScale = Vector3.one;
+            Sprite sprite = await STSCardDatabase.GetCollectionCardSpriteAsync(collectionCardId);
+            if (sprite == null || cardInstance != card || !string.Equals(card.data.GetCollectionCardId(), collectionCardId, StringComparison.Ordinal))
+                return;
+
+            ApplyCollectionCardVisual(card, sprite);
         }
-        else
+        catch (Exception ex)
         {
-            //nameText.text+= "\n<i><color=grey>" + (card.data.collectionCard != null && card.data.collectionCard.cardName != card.data.cardName ? card.data.collectionCard.cardName : "")+ "</color></i>";
-            if (card.data.collectionCard.cardName==card.displayName)
+            Debug.LogError($"Failed to load collection card artwork for '{collectionCardId}': {ex}");
+        }
+    }
+
+    private void ApplyCollectionCardVisual(CardInstance card, Sprite sprite)
+    {
+        if (card == null || sprite == null)
+            return;
+
+        collectionCardImage.sprite = sprite;
+        imgBg.enabled = false;
+        imgOverlay.enabled = false;
+        cardImage.preserveAspect = false;
+        collectionCardRoot.SetActive(true);
+        genericCardRoot.SetActive(false);
+        nameText.transform.localScale = Vector3.one * 0.6f;
+
+        if (collectionCardImage != null && collectionCardImage.sprite != null)
+        {
+            Sprite s = collectionCardImage.sprite;
+            Texture2D tex = s.texture;
+            Rect rect = s.textureRect;
+            float px = rect.x + rect.width * 0.5f;
+            float py = rect.y + rect.height * 0.95f;
+
+            int ix = Mathf.Clamp(Mathf.RoundToInt(px), 0, tex.width - 1);
+            int iy = Mathf.Clamp(Mathf.RoundToInt(py), 0, tex.height - 1);
+
+            Color sample = Color.clear;
+            try
             {
-                nameText.text = "";
+                sample = tex.GetPixel(ix, iy);
             }
-            collectionCardImage.sprite = card.data.collectionCard.sprite;
-            imgBg.enabled = false;
-            imgOverlay.enabled = false;
-            cardImage.preserveAspect = false;
-            collectionCardRoot.SetActive(true);
-            genericCardRoot.SetActive(false);
-            nameText.transform.localScale = Vector3.one * 0.6f;
-            // Set the collection card description background color based on a pixel from the collection card's sprite
-            if (card.data.collectionCard != null && card.data.collectionCard.sprite != null)
+            catch (Exception e)
             {
-                Sprite s = card.data.collectionCard.sprite;
-                Texture2D tex = s.texture;
-
-                // Determine pixel coordinates: middle in width, 95% up in height within the sprite rect
-                Rect rect = s.textureRect;
-                float px = rect.x + rect.width * 0.5f;
-                float py = rect.y + rect.height * 0.95f;
-
-                int ix = Mathf.Clamp(Mathf.RoundToInt(px), 0, tex.width - 1);
-                int iy = Mathf.Clamp(Mathf.RoundToInt(py), 0, tex.height - 1);
-
-                Color sample = Color.clear;
-                try
-                {
-                    sample = tex.GetPixel(ix, iy);
-                }
-                catch (System.Exception e)
-                {
-                    Debug.LogError($"Error sampling pixel from texture: {e.Message}");
-                    // fallback to white if texture isn't readable or other error
-                    sample = Color.white;
-                }
-
-                collectionCardDescBg.color = sample;
-                // Adjust text color based on brightness of the sampled color
-                float brightness = (sample.r + sample.g + sample.b) / 3f;
-                Color textColor = brightness < 0.5f ? Color.white : Color.black;
-                descriptionText.color = textColor;
-                nameText.color = textColor;
+                Debug.LogError($"Error sampling pixel from texture: {e.Message}");
+                sample = Color.white;
             }
+
+            collectionCardDescBg.color = sample;
+            float brightness = (sample.r + sample.g + sample.b) / 3f;
+            Color textColor = brightness < 0.5f ? Color.white : Color.black;
+            descriptionText.color = textColor;
+            nameText.color = textColor;
         }
     }
 

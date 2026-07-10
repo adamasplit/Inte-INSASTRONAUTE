@@ -1,7 +1,7 @@
 {
   "id": "pluie_de_surins",
   "cardName": "Pluie de surins",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Magique",
   "cost": 0,
   "xCost": false,

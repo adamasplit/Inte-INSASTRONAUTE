@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: blou_blou
   cardName: Blou blou
-  collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: a30c34c86bb133446827dc763f43c350, type: 2}
+  collectionCardId: Sharks
   icon: {fileID: 0}
   cost: 1
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 4
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,13 +37,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers: []
-  exhaust: 0
-  retain: 0
-  innate: 0
-  infinite: 0
-  created: 0
   favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
+  tags: 

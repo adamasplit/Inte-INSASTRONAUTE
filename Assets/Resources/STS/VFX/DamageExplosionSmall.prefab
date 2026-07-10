@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1009506217335310549}
   - component: {fileID: 282032100658501685}
   m_Layer: 0
-  m_Name: Trap
+  m_Name: DamageExplosionSmall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

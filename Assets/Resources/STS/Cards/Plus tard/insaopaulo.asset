@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: insaopaulo
   cardName: INSAOPAULO
-  collectionCardId: 
-  collectionCard: {fileID: 0}
+  collectionCardId: Insao Paulo
   icon: {fileID: 0}
   cost: 0
   xCost: 0

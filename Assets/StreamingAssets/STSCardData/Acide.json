@@ -1,7 +1,7 @@
 {
   "id": "acide",
   "cardName": "Acide",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Debuff",
   "cost": 0,
   "xCost": false,

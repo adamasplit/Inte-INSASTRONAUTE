@@ -1,7 +1,7 @@
 {
   "id": "recharge",
   "cardName": "Recharge",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "thunderblade",
   "cost": 0,
   "xCost": false,

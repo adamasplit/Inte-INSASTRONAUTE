@@ -3,7 +3,7 @@
     {
       "id": "after_de_ouf",
       "cardName": "After de ouf",
-      "collectionCardId": "barouf",
+      "collectionCardId": "Bar'ouf",
       "iconId": null,
       "cost": 2,
       "xCost": false,
@@ -40,7 +40,7 @@
     {
       "id": "architecture",
       "cardName": "Architecture",
-      "collectionCardId": "AI",
+      "collectionCardId": null,
       "iconId": "Transfert",
       "cost": 0,
       "xCost": false,
@@ -98,7 +98,7 @@
     {
       "id": "champ_de_mines",
       "cardName": "Champ de mines",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Piège",
       "cost": 0,
       "xCost": true,
@@ -135,7 +135,7 @@
     {
       "id": "chantier_en_cours",
       "cardName": "Chantier en cours",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "tempo",
       "cost": 1,
       "xCost": false,
@@ -172,7 +172,7 @@
     {
       "id": "cle_de_voute",
       "cardName": "Clé de voûte",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "voute",
       "cost": 1,
       "xCost": false,
@@ -209,7 +209,7 @@
     {
       "id": "coupe_transversale",
       "cardName": "Coupe transversale",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "cut",
       "cost": 1,
       "xCost": false,
@@ -265,7 +265,7 @@
     {
       "id": "droit_des_sols",
       "cardName": "Droit des sols",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Zone2",
       "cost": 2,
       "xCost": false,
@@ -302,7 +302,7 @@
     {
       "id": "eboulement",
       "cardName": "Éboulement",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "rocks",
       "cost": 0,
       "xCost": true,
@@ -358,7 +358,7 @@
     {
       "id": "facade",
       "cardName": "Façade",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "wall",
       "cost": 2,
       "xCost": false,
@@ -397,7 +397,7 @@
     {
       "id": "frappe_directrice",
       "cardName": "Frappe directrice",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Night",
       "cost": 1,
       "xCost": false,
@@ -442,7 +442,7 @@
     {
       "id": "maquette",
       "cardName": "Maquette",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "batiment",
       "cost": 2,
       "xCost": false,
@@ -498,7 +498,7 @@
     {
       "id": "mur_porteur",
       "cardName": "Mur porteur",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Dégâts et Armure",
       "cost": 2,
       "xCost": false,
@@ -543,7 +543,7 @@
     {
       "id": "permis_de_construire",
       "cardName": "Permis de construire",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "megastrength",
       "cost": 1,
       "xCost": false,
@@ -580,7 +580,7 @@
     {
       "id": "realisation_d_esquisse",
       "cardName": "Réalisation d'esquisse",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "megaflare",
       "cost": 2,
       "xCost": false,
@@ -617,7 +617,7 @@
     {
       "id": "recalibrage",
       "cardName": "Recalibrage",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "delai",
       "cost": 0,
       "xCost": false,
@@ -675,7 +675,7 @@
     {
       "id": "urbanisme",
       "cardName": "Urbanisme",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Transfert2",
       "cost": 2,
       "xCost": false,
@@ -731,7 +731,7 @@
     {
       "id": "vision_en_coupe",
       "cardName": "Vision en coupe",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "rudebuster",
       "cost": 2,
       "xCost": false,
@@ -787,7 +787,7 @@
     {
       "id": "blocage_de_parking",
       "cardName": "Blocage de parking",
-      "collectionCardId": "parking_visiteur",
+      "collectionCardId": "Fermeture parking visiteur",
       "iconId": null,
       "cost": 2,
       "xCost": false,
@@ -843,7 +843,7 @@
     {
       "id": "blou_blou",
       "cardName": "Blou blou",
-      "collectionCardId": "sharks",
+      "collectionCardId": "Sharks",
       "iconId": null,
       "cost": 1,
       "xCost": false,
@@ -880,7 +880,7 @@
     {
       "id": "brisure_bond_et_baston",
       "cardName": "Brisure, Bond et Baston",
-      "collectionCardId": "3b",
+      "collectionCardId": "3B",
       "iconId": null,
       "cost": 2,
       "xCost": false,
@@ -896,10 +896,10 @@
           "statusType": "Strength",
           "duration": 0,
           "description": "",
-          "cardID": null,
+          "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -915,10 +915,10 @@
           "statusType": "Strength",
           "duration": 0,
           "description": "",
-          "cardID": null,
+          "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -934,10 +934,10 @@
           "statusType": "Vuln",
           "duration": 3,
           "description": "",
-          "cardID": null,
+          "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -955,7 +955,7 @@
     {
       "id": "biomolecule",
       "cardName": "Biomolécules",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Transfert",
       "cost": 1,
       "xCost": false,
@@ -1013,7 +1013,7 @@
     {
       "id": "bouclier_organique",
       "cardName": "Bouclier organique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "barriere",
       "cost": 2,
       "xCost": false,
@@ -1067,9 +1067,9 @@
       "tags": []
     },
     {
-      "id": "corrosion",
+      "id": null,
       "cardName": "Corrosion",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Affliction",
       "cost": 0,
       "xCost": true,
@@ -1125,7 +1125,7 @@
     {
       "id": "creation_de_matiere",
       "cardName": "Création de matière",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "creation",
       "cost": 0,
       "xCost": false,
@@ -1185,7 +1185,7 @@
     {
       "id": "cristallisation",
       "cardName": "Cristallisation",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Cristal",
       "cost": 1,
       "xCost": false,
@@ -1241,7 +1241,7 @@
     {
       "id": "distillation",
       "cardName": "Distillation",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "purge",
       "cost": 1,
       "xCost": false,
@@ -1278,7 +1278,7 @@
     {
       "id": "epi",
       "cardName": "EPI",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "gant",
       "cost": 1,
       "xCost": false,
@@ -1315,7 +1315,7 @@
     {
       "id": "fission",
       "cardName": "Fission",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Flare",
       "cost": 3,
       "xCost": false,
@@ -1326,6 +1326,27 @@
         {
           "type": "CardSelection",
           "value": -1,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "All",
+          "index": 0,
+          "cardFilterTags": [
+            "Atom"
+          ],
+          "cardSelectionEffect": "Exhaust",
+          "animationType": "Default"
+        },
+        {
+          "type": "Damage",
+          "value": 0,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -1341,11 +1362,19 @@
           "cardFilterTags": [
             "Atom"
           ],
-          "cardSelectionEffect": "ConsumeAndDealDamageToAll",
-          "animationType": "Default"
+          "cardSelectionEffect": "Exhaust",
+          "animationType": "ExplosionLarge"
         }
       ],
-      "modifiers": [],
+      "modifiers": [
+        {
+          "type": "Damage",
+          "kind": "ActionExhausted",
+          "value": 6,
+          "info": "",
+          "description": ""
+        }
+      ],
       "favoredCharacter": "CFI",
       "animationSpeed": 1.0,
       "startingCount": 0,
@@ -1356,7 +1385,7 @@
     {
       "id": "fusion_nucleaire",
       "cardName": "Fusion nucléaire",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Hollow",
       "cost": 1,
       "xCost": false,
@@ -1397,7 +1426,7 @@
     {
       "id": "generation_moleculaire",
       "cardName": "Génération moléculaire",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Matière",
       "cost": 1,
       "xCost": false,
@@ -1436,7 +1465,7 @@
     {
       "id": "generation_spontanee",
       "cardName": "Génération spontanée",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Matière",
       "cost": 1,
       "xCost": false,
@@ -1494,7 +1523,7 @@
     {
       "id": "maille_parfaite",
       "cardName": "Maille parfaite",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "maille",
       "cost": 2,
       "xCost": false,
@@ -1533,7 +1562,7 @@
     {
       "id": "raffinage",
       "cardName": "Raffinage",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "spirale2",
       "cost": 1,
       "xCost": false,
@@ -1591,7 +1620,7 @@
     {
       "id": "reaction_chimique",
       "cardName": "Réaction chimique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Matière2",
       "cost": 0,
       "xCost": false,
@@ -1628,7 +1657,7 @@
     {
       "id": "renforcement_de_maille",
       "cardName": "Renforcement de maille",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "cristal2",
       "cost": 0,
       "xCost": false,
@@ -1665,7 +1694,7 @@
     {
       "id": "spectrometrie",
       "cardName": "Spectrométrie",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Debuff",
       "cost": 0,
       "xCost": false,
@@ -1702,7 +1731,7 @@
     {
       "id": "spectrometrie_de_masse",
       "cardName": "Spectrométrie de masse",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "lionheart",
       "cost": 3,
       "xCost": false,
@@ -1760,7 +1789,7 @@
     {
       "id": "tp_d_ana",
       "cardName": "TP d'Ana",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "vuln",
       "cost": 1,
       "xCost": false,
@@ -1799,7 +1828,7 @@
     {
       "id": "chant_de_force",
       "cardName": "Chant de force",
-      "collectionCardId": "amir",
+      "collectionCardId": "Amir",
       "iconId": null,
       "cost": 1,
       "xCost": false,
@@ -1818,7 +1847,7 @@
           "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -1837,7 +1866,7 @@
           "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -1855,7 +1884,7 @@
     {
       "id": "chute_d_eau",
       "cardName": "Chute d'eau",
-      "collectionCardId": "degats_des_eaux",
+      "collectionCardId": "Dégât des eaux",
       "iconId": null,
       "cost": 2,
       "xCost": false,
@@ -1874,7 +1903,7 @@
           "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -1893,7 +1922,7 @@
           "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -1911,7 +1940,7 @@
     {
       "id": "cleanwalk",
       "cardName": "Cleanwalk",
-      "collectionCardId": "greensa",
+      "collectionCardId": "Greensa",
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -1946,9 +1975,9 @@
       "tags": []
     },
     {
-      "id": "controle_total",
+      "id": "",
       "cardName": "Contrôle total",
-      "collectionCardId": "controleur_astuce",
+      "collectionCardId": "Contrôleur Astuce",
       "iconId": null,
       "cost": 2,
       "xCost": false,
@@ -1985,7 +2014,7 @@
     {
       "id": "benzene",
       "cardName": "Benzène",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "purge",
       "cost": 1,
       "xCost": false,
@@ -2044,7 +2073,7 @@
     {
       "id": "carbone",
       "cardName": "Carbone",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Atome",
       "cost": 0,
       "xCost": false,
@@ -2085,7 +2114,7 @@
     {
       "id": "combustible",
       "cardName": "Combustible",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Energie2",
       "cost": 0,
       "xCost": false,
@@ -2144,7 +2173,7 @@
     {
       "id": "debogage",
       "cardName": "Débogage",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Affliction",
       "cost": 0,
       "xCost": false,
@@ -2203,7 +2232,7 @@
     {
       "id": "diamant",
       "cardName": "Diamant",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "diamant",
       "cost": 1,
       "xCost": false,
@@ -2263,7 +2292,7 @@
     {
       "id": "dioxygene",
       "cardName": "Dioxygène",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "purge",
       "cost": 1,
       "xCost": false,
@@ -2322,7 +2351,7 @@
     {
       "id": "eau",
       "cardName": "Eau",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "purge",
       "cost": 1,
       "xCost": false,
@@ -2389,7 +2418,7 @@
     {
       "id": "energie_renouvelable",
       "cardName": "Energie renouvelable",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Energie2",
       "cost": 0,
       "xCost": false,
@@ -2428,7 +2457,7 @@
     {
       "id": "ethanol",
       "cardName": "Ethanol",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "purge",
       "cost": 1,
       "xCost": false,
@@ -2506,7 +2535,7 @@
     {
       "id": "fer",
       "cardName": "Fer",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Atome",
       "cost": 0,
       "xCost": false,
@@ -2547,7 +2576,7 @@
     {
       "id": "frappe_industrielle",
       "cardName": "Frappe industrielle",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Industrie",
       "cost": 0,
       "xCost": false,
@@ -2607,7 +2636,7 @@
     {
       "id": "helium",
       "cardName": "Hélium",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Atome",
       "cost": 0,
       "xCost": false,
@@ -2648,7 +2677,7 @@
     {
       "id": "hydrogene",
       "cardName": "Hydrogène",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Atome",
       "cost": 0,
       "xCost": false,
@@ -2689,7 +2718,7 @@
     {
       "id": "laser_orbital",
       "cardName": "Laser orbital",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "laser",
       "cost": 0,
       "xCost": false,
@@ -2748,7 +2777,7 @@
     {
       "id": "norme_1",
       "cardName": "Norme 1",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "norme",
       "cost": 1,
       "xCost": false,
@@ -2804,7 +2833,7 @@
     {
       "id": "norme_2",
       "cardName": "Norme 2",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "norme",
       "cost": 1,
       "xCost": false,
@@ -2860,7 +2889,7 @@
     {
       "id": "norme_infinie",
       "cardName": "Norme infinie",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "norme",
       "cost": 0,
       "xCost": true,
@@ -2920,7 +2949,7 @@
     {
       "id": "oxygene",
       "cardName": "Oxygène",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Atome",
       "cost": 0,
       "xCost": false,
@@ -2961,7 +2990,7 @@
     {
       "id": "palladium",
       "cardName": "Palladium",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Atome",
       "cost": 0,
       "xCost": false,
@@ -3002,7 +3031,7 @@
     {
       "id": "plomb",
       "cardName": "Plomb",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Atome",
       "cost": 0,
       "xCost": false,
@@ -3043,7 +3072,7 @@
     {
       "id": "plutonium",
       "cardName": "Plutonium",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Atome",
       "cost": 0,
       "xCost": false,
@@ -3084,7 +3113,7 @@
     {
       "id": "polonium",
       "cardName": "Polonium",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Atome",
       "cost": 0,
       "xCost": false,
@@ -3125,7 +3154,7 @@
     {
       "id": "radon",
       "cardName": "Radon",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Atome",
       "cost": 0,
       "xCost": false,
@@ -3166,7 +3195,7 @@
     {
       "id": "reboot",
       "cardName": "Reboot",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "reboot",
       "cost": 0,
       "xCost": false,
@@ -3183,7 +3212,7 @@
     {
       "id": "secousse_localisee",
       "cardName": "Secousse localisée",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Zone2",
       "cost": 0,
       "xCost": false,
@@ -3224,7 +3253,7 @@
     {
       "id": "soufre",
       "cardName": "Soufre",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Atome",
       "cost": 0,
       "xCost": false,
@@ -3265,7 +3294,7 @@
     {
       "id": "surchauffe",
       "cardName": "Surchauffe",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "feu",
       "cost": 0,
       "xCost": false,
@@ -3326,7 +3355,7 @@
     {
       "id": "tungstene",
       "cardName": "Tungstène",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Atome",
       "cost": 0,
       "xCost": false,
@@ -3367,7 +3396,7 @@
     {
       "id": "uranium",
       "cardName": "Uranium",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Atome",
       "cost": 0,
       "xCost": false,
@@ -3408,7 +3437,7 @@
     {
       "id": "cul_sec",
       "cardName": "Cul sec",
-      "collectionCardId": "okallaghan",
+      "collectionCardId": "Khallaghan",
       "iconId": null,
       "cost": 0,
       "xCost": true,
@@ -3447,7 +3476,7 @@
     {
       "id": "dans_le_ring",
       "cardName": "Dans le ring",
-      "collectionCardId": "stadium",
+      "collectionCardId": "Stadium",
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -3503,7 +3532,7 @@
     {
       "id": "danse_regionale",
       "cardName": "Danse régionale",
-      "collectionCardId": "limousin",
+      "collectionCardId": "Limousin",
       "iconId": null,
       "cost": 3,
       "xCost": false,
@@ -3561,7 +3590,7 @@
     {
       "id": "demi_volee",
       "cardName": "Demi-volée",
-      "collectionCardId": "toss",
+      "collectionCardId": "TOSS",
       "iconId": null,
       "cost": 2,
       "xCost": false,
@@ -3598,7 +3627,7 @@
     {
       "id": "depart_en_sprint",
       "cardName": "Départ en sprint",
-      "collectionCardId": "purple_rouen",
+      "collectionCardId": "Purple Rouen",
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -3657,7 +3686,7 @@
     {
       "id": "derniere_ligne_droite",
       "cardName": "Dernière ligne droite",
-      "collectionCardId": "purple_rouen",
+      "collectionCardId": "Purple Rouen",
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -3690,8 +3719,8 @@
           "type": "Damage",
           "kind": "Played",
           "value": 3,
-          "info": null,
-          "description": null
+          "info": "",
+          "description": ""
         }
       ],
       "favoredCharacter": "Aucun",
@@ -3702,7 +3731,7 @@
     {
       "id": "accelerateur_de_particules",
       "cardName": "Accélérateur de particules",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "holy",
       "cost": 0,
       "xCost": false,
@@ -3743,7 +3772,7 @@
     {
       "id": "aerodynamique",
       "cardName": "Aérodynamique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "aero",
       "cost": 2,
       "xCost": false,
@@ -3780,7 +3809,7 @@
     {
       "id": "barriere_d_energie",
       "cardName": "Barrière d'énergie",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "barriere",
       "cost": 2,
       "xCost": false,
@@ -3817,7 +3846,7 @@
     {
       "id": "carboniser",
       "cardName": "Carboniser",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "fountain",
       "cost": 1,
       "xCost": false,
@@ -3881,7 +3910,7 @@
     {
       "id": "choc_thermique",
       "cardName": "Choc thermique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "feu_glace",
       "cost": 2,
       "xCost": false,
@@ -3937,7 +3966,7 @@
     {
       "id": "choc_thermique_ii",
       "cardName": "Choc thermique II",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "feu_glace_2",
       "cost": 1,
       "xCost": false,
@@ -3993,7 +4022,7 @@
     {
       "id": "combustion",
       "cardName": "Combustion",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Ténèbres",
       "cost": 0,
       "xCost": true,
@@ -4030,7 +4059,7 @@
     {
       "id": "decharge",
       "cardName": "Décharge",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "lightning",
       "cost": 0,
       "xCost": false,
@@ -4075,7 +4104,7 @@
     {
       "id": "echappement",
       "cardName": "Échappement",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "feu",
       "cost": 0,
       "xCost": false,
@@ -4120,7 +4149,7 @@
     {
       "id": "electromagnetisme",
       "cardName": "Electromagnétisme",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "thunder",
       "cost": 1,
       "xCost": false,
@@ -4195,7 +4224,7 @@
     {
       "id": "etude_d_impact",
       "cardName": "Étude d'impact",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Zone",
       "cost": 1,
       "xCost": false,
@@ -4232,7 +4261,7 @@
     {
       "id": "explosion_de_reacteur",
       "cardName": "Explosion de réacteur",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "burn",
       "cost": 0,
       "xCost": false,
@@ -4290,7 +4319,7 @@
     {
       "id": "frappe_thermique",
       "cardName": "Frappe thermique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "fireblade",
       "cost": 1,
       "xCost": false,
@@ -4346,7 +4375,7 @@
     {
       "id": "isolement_thermique",
       "cardName": "Isolement thermique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "vuln",
       "cost": 1,
       "xCost": false,
@@ -4383,7 +4412,7 @@
     {
       "id": "montage_electrique_dangereux",
       "cardName": "Montage électrique dangereux",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Foudre",
       "cost": 4,
       "xCost": false,
@@ -4441,7 +4470,7 @@
     {
       "id": "propulsion_hypersonique",
       "cardName": "Propulsion hypersonique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "perce",
       "cost": 3,
       "xCost": false,
@@ -4478,7 +4507,7 @@
     {
       "id": "puits_de_petrole",
       "cardName": "Puits de pétrole",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Frappe",
       "cost": 1,
       "xCost": false,
@@ -4534,7 +4563,7 @@
     {
       "id": "recharge",
       "cardName": "Recharge",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "thunderblade",
       "cost": 0,
       "xCost": false,
@@ -4592,7 +4621,7 @@
     {
       "id": "recombustion",
       "cardName": "Réaction atomique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "ark",
       "cost": 3,
       "xCost": false,
@@ -4629,7 +4658,7 @@
     {
       "id": "simulation_thermique",
       "cardName": "Simulation thermique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "batiment",
       "cost": 1,
       "xCost": false,
@@ -4685,7 +4714,7 @@
     {
       "id": "surconsommation_energetique",
       "cardName": "Surconsommation énergétique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "renzokuken_alt",
       "cost": 2,
       "xCost": false,
@@ -4760,7 +4789,7 @@
     {
       "id": "synchrotron",
       "cardName": "Synchrotron",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Cyclotron",
       "cost": 0,
       "xCost": false,
@@ -4835,7 +4864,7 @@
     {
       "id": "transfert_thermique",
       "cardName": "Transfert thermique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Darkness",
       "cost": 2,
       "xCost": false,
@@ -4880,7 +4909,7 @@
     {
       "id": "turbine",
       "cardName": "Turbine",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Energie",
       "cost": 2,
       "xCost": false,
@@ -4917,7 +4946,7 @@
     {
       "id": "turbomachine",
       "cardName": "Turbomachine",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "tenebres",
       "cost": 2,
       "xCost": false,
@@ -4954,7 +4983,7 @@
     {
       "id": "ultralaser",
       "cardName": "Ultralaser",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "laser",
       "cost": 2,
       "xCost": false,
@@ -5010,7 +5039,7 @@
     {
       "id": "vol",
       "cardName": "Vol",
-      "collectionCardId": "EP",
+      "collectionCardId": null,
       "iconId": "Saut",
       "cost": 3,
       "xCost": false,
@@ -5106,7 +5135,7 @@
     {
       "id": "equilibrage_d_emploi_du_temps",
       "cardName": "Équilibrage d'emploi du temps",
-      "collectionCardId": "ingenieur_humaniste",
+      "collectionCardId": "Ingénieur Humaniste",
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -5125,7 +5154,7 @@
           "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -5144,7 +5173,7 @@
           "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -5162,7 +5191,7 @@
     {
       "id": "fureur_du_meteore",
       "cardName": "Fureur du météore",
-      "collectionCardId": "fdm",
+      "collectionCardId": "FDM",
       "iconId": null,
       "cost": 0,
       "xCost": true,
@@ -5218,7 +5247,7 @@
     {
       "id": "ancrage",
       "cardName": "Ancrage",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "ancre",
       "cost": 0,
       "xCost": false,
@@ -5257,7 +5286,7 @@
     {
       "id": "bastion",
       "cardName": "Bastion",
-      "collectionCardId": "GC",
+      "collectionCardId": null,
       "iconId": "shield",
       "cost": 1,
       "xCost": false,
@@ -5313,7 +5342,7 @@
     {
       "id": "beton_arme",
       "cardName": "Béton armé",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "garde",
       "cost": 2,
       "xCost": false,
@@ -5369,7 +5398,7 @@
     {
       "id": "catapulte",
       "cardName": "Catapulte",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "rocks",
       "cost": 2,
       "xCost": false,
@@ -5444,7 +5473,7 @@
     {
       "id": "construction",
       "cardName": "Construction",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Dégâts et Armure",
       "cost": 1,
       "xCost": false,
@@ -5489,7 +5518,7 @@
     {
       "id": "contrepoids",
       "cardName": "Contrepoids",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "strike",
       "cost": 1,
       "xCost": false,
@@ -5545,7 +5574,7 @@
     {
       "id": "drainage",
       "cardName": "Drainage",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "inondation",
       "cost": 0,
       "xCost": false,
@@ -5601,7 +5630,7 @@
     {
       "id": "elasticite",
       "cardName": "Élasticité",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Pouvoir2",
       "cost": 3,
       "xCost": false,
@@ -5638,7 +5667,7 @@
     {
       "id": "fondation",
       "cardName": "Fondation",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Pouvoir",
       "cost": 1,
       "xCost": false,
@@ -5694,7 +5723,7 @@
     {
       "id": "forteresse",
       "cardName": "Forteresse mobile",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "ultimate_shield",
       "cost": 5,
       "xCost": false,
@@ -5731,7 +5760,7 @@
     {
       "id": "geotechnique_ultime",
       "cardName": "Géo-technique ultime",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "quake",
       "cost": 2,
       "xCost": false,
@@ -5808,7 +5837,7 @@
     {
       "id": "gratte-ciel",
       "cardName": "Gratte-ciel",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "ciel",
       "cost": 2,
       "xCost": false,
@@ -5853,7 +5882,7 @@
     {
       "id": "planification",
       "cardName": "Planification",
-      "collectionCardId": "GC",
+      "collectionCardId": null,
       "iconId": "Energie",
       "cost": 0,
       "xCost": false,
@@ -5909,7 +5938,7 @@
     {
       "id": "poutre",
       "cardName": "Poutre centrale",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "rudebuster",
       "cost": 2,
       "xCost": false,
@@ -5954,7 +5983,7 @@
     {
       "id": "resistance",
       "cardName": "Résistance",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Buff",
       "cost": 2,
       "xCost": false,
@@ -5991,7 +6020,7 @@
     {
       "id": "seisme",
       "cardName": "Séisme",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Zone",
       "cost": 1,
       "xCost": false,
@@ -6028,7 +6057,7 @@
     {
       "id": "tank",
       "cardName": "Tank",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "tank",
       "cost": 0,
       "xCost": false,
@@ -6084,7 +6113,7 @@
     {
       "id": "chaine_de_markov",
       "cardName": "Chaîne de Markov",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "iter2",
       "cost": 3,
       "xCost": false,
@@ -6140,7 +6169,7 @@
     {
       "id": "demonstration_triviale",
       "cardName": "Démonstration triviale",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "rdm",
       "cost": 3,
       "xCost": false,
@@ -6198,7 +6227,7 @@
     {
       "id": "dimension_infinie",
       "cardName": "Dimension infinie",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "dimension",
       "cost": 0,
       "xCost": false,
@@ -6254,7 +6283,7 @@
     {
       "id": "espace_vectoriel_norme",
       "cardName": "Espace vectoriel normé",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "triangulation",
       "cost": 1,
       "xCost": false,
@@ -6293,7 +6322,7 @@
     {
       "id": "fin_des_dimensions",
       "cardName": "Fin des dimensions",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "aura",
       "cost": 3,
       "xCost": false,
@@ -6349,7 +6378,7 @@
     {
       "id": "finance_experte",
       "cardName": "Finance experte",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Affliction",
       "cost": 2,
       "xCost": false,
@@ -6386,7 +6415,7 @@
     {
       "id": "fonction_de_repartition",
       "cardName": "Fonction de répartition",
-      "collectionCardId": "GM",
+      "collectionCardId": null,
       "iconId": "Repartition",
       "cost": 1,
       "xCost": false,
@@ -6442,7 +6471,7 @@
     {
       "id": "frappe_deterministe",
       "cardName": "Frappe déterministe",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "forceofwill",
       "cost": 2,
       "xCost": false,
@@ -6517,7 +6546,7 @@
     {
       "id": "frappe_temporelle",
       "cardName": "Frappe temporelle",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "time",
       "cost": 1,
       "xCost": false,
@@ -6573,7 +6602,7 @@
     {
       "id": "infini",
       "cardName": "Infini",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Vortex",
       "cost": 2,
       "xCost": false,
@@ -6610,7 +6639,7 @@
     {
       "id": "interpolation",
       "cardName": "Interpolation",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "between",
       "cost": 2,
       "xCost": false,
@@ -6647,7 +6676,7 @@
     {
       "id": "inversion_de_matrice",
       "cardName": "Inversion de matrice",
-      "collectionCardId": "GM",
+      "collectionCardId": null,
       "iconId": "Coups",
       "cost": 1,
       "xCost": false,
@@ -6703,7 +6732,7 @@
     {
       "id": "iteration",
       "cardName": "Itérateur",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "iter",
       "cost": 1,
       "xCost": false,
@@ -6742,7 +6771,7 @@
     {
       "id": "limit_break",
       "cardName": "Dépassement de limites",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "limit",
       "cost": 2,
       "xCost": false,
@@ -6787,7 +6816,7 @@
     {
       "id": "matrice_de_projection",
       "cardName": "Matrice de projection",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "naoya",
       "cost": 1,
       "xCost": false,
@@ -6843,7 +6872,7 @@
     {
       "id": "point_critique",
       "cardName": "Point critique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "critique",
       "cost": 1,
       "xCost": false,
@@ -6899,7 +6928,7 @@
     {
       "id": "prolongement",
       "cardName": "Prolongement",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "prolong",
       "cost": 2,
       "xCost": false,
@@ -6946,7 +6975,7 @@
     {
       "id": "rayon_spectral",
       "cardName": "Rayon spectral",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "spectral",
       "cost": 1,
       "xCost": false,
@@ -7002,7 +7031,7 @@
     {
       "id": "regression",
       "cardName": "Régression",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Affliction",
       "cost": 1,
       "xCost": false,
@@ -7058,7 +7087,7 @@
     {
       "id": "suite_recurrente",
       "cardName": "Suite récurrente",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "iter",
       "cost": 2,
       "xCost": false,
@@ -7095,7 +7124,7 @@
     {
       "id": "temporisation",
       "cardName": "Temporisation",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "tempo",
       "cost": 0,
       "xCost": false,
@@ -7151,7 +7180,7 @@
     {
       "id": "valeur_propre",
       "cardName": "Valeur propre",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "spirale",
       "cost": 1,
       "xCost": false,
@@ -7188,7 +7217,7 @@
     {
       "id": "gros_horloge",
       "cardName": "Gros Horloge",
-      "collectionCardId": "delirium",
+      "collectionCardId": "Délirium",
       "iconId": null,
       "cost": 2,
       "xCost": false,
@@ -7225,7 +7254,7 @@
     {
       "id": "happy_hour",
       "cardName": "Happy Hour",
-      "collectionCardId": "bar_des_fleurs",
+      "collectionCardId": "Bar des Fleurs",
       "iconId": null,
       "cost": 1,
       "xCost": false,
@@ -7283,7 +7312,7 @@
     {
       "id": "acceleration",
       "cardName": "Accélération",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Buff",
       "cost": 0,
       "xCost": false,
@@ -7323,7 +7352,7 @@
     {
       "id": "acharnement",
       "cardName": "Acharnement",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Physique",
       "cost": 0,
       "xCost": false,
@@ -7383,7 +7412,7 @@
     {
       "id": "acide",
       "cardName": "Acide",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Debuff",
       "cost": 0,
       "xCost": false,
@@ -7422,7 +7451,7 @@
     {
       "id": "amalgame",
       "cardName": "Amalgame",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "spirale2",
       "cost": 0,
       "xCost": false,
@@ -7459,7 +7488,7 @@
     {
       "id": "atterrissage",
       "cardName": "Atterrissage",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Choc",
       "cost": 0,
       "xCost": false,
@@ -7499,7 +7528,7 @@
     {
       "id": "autodecomposition",
       "cardName": "Autodécomposition",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -7538,7 +7567,7 @@
     {
       "id": "baba",
       "cardName": "Baba",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -7579,7 +7608,7 @@
     {
       "id": "bouclier",
       "cardName": "Bouclier",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Armure",
       "cost": 2,
       "xCost": false,
@@ -7656,7 +7685,7 @@
     {
       "id": "chute_d_etoile",
       "cardName": "Chute d'étoile",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Comète",
       "cost": 0,
       "xCost": false,
@@ -7731,7 +7760,7 @@
     {
       "id": "desespoir",
       "cardName": "Désespoir",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Désespoir",
       "cost": 0,
       "xCost": false,
@@ -7789,7 +7818,7 @@
     {
       "id": "execution",
       "cardName": "Exécution",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Frappe",
       "cost": 2,
       "xCost": false,
@@ -7866,7 +7895,7 @@
     {
       "id": "frappe_infinie",
       "cardName": "Frappe infinie",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "cut",
       "cost": 0,
       "xCost": false,
@@ -7905,7 +7934,7 @@
     {
       "id": "frappe_ultime",
       "cardName": "Frappe ultime",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Frappe ultime",
       "cost": 2,
       "xCost": false,
@@ -7964,7 +7993,7 @@
     {
       "id": "galaxie",
       "cardName": "Galaxie",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Galaxie",
       "cost": 3,
       "xCost": false,
@@ -8043,7 +8072,7 @@
     {
       "id": "hurlement",
       "cardName": "Hurlement",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "ArmureSoin",
       "cost": 0,
       "xCost": false,
@@ -8101,7 +8130,7 @@
     {
       "id": "interruption",
       "cardName": "Interruption",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -8161,7 +8190,7 @@
     {
       "id": "lionheart",
       "cardName": "Lionheart",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 3,
       "xCost": false,
@@ -8219,7 +8248,7 @@
     {
       "id": "malediction",
       "cardName": "Malédiction",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -8279,7 +8308,7 @@
     {
       "id": "meteorite",
       "cardName": "Météorite",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Météorite",
       "cost": 2,
       "xCost": false,
@@ -8339,7 +8368,7 @@
     {
       "id": "pluie_de_meteores",
       "cardName": "Pluie de météores",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "meteor",
       "cost": 2,
       "xCost": false,
@@ -8380,7 +8409,7 @@
     {
       "id": "pluie_de_surins",
       "cardName": "Pluie de surins",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Magique",
       "cost": 0,
       "xCost": false,
@@ -8417,7 +8446,7 @@
     {
       "id": "point_fixe",
       "cardName": "Point fixe",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Physique",
       "cost": 0,
       "xCost": false,
@@ -8476,7 +8505,7 @@
     {
       "id": "pulsar_a_ondes",
       "cardName": "Pulsar à ondes",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Vortex",
       "cost": 2,
       "xCost": false,
@@ -8523,7 +8552,7 @@
     {
       "id": "recristallisation",
       "cardName": "Recristallisation",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Cristal",
       "cost": 0,
       "xCost": false,
@@ -8583,7 +8612,7 @@
     {
       "id": "recurrence",
       "cardName": "Récurrence",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "iter",
       "cost": 0,
       "xCost": false,
@@ -8622,7 +8651,7 @@
     {
       "id": "renforcement",
       "cardName": "Renforcement",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Buff",
       "cost": 0,
       "xCost": false,
@@ -8660,9 +8689,9 @@
       ]
     },
     {
-      "id": "sadisme_et_marque",
+      "id": null,
       "cardName": "Sadisme et Marque",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -8718,7 +8747,7 @@
     {
       "id": "tir_cadre",
       "cardName": "Tir cadré",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "blitz",
       "cost": 0,
       "xCost": false,
@@ -8777,7 +8806,7 @@
     {
       "id": "inter_depart",
       "cardName": "Inter-départ",
-      "collectionCardId": "quartier_libre",
+      "collectionCardId": "Quartier Libre",
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -8911,7 +8940,7 @@
     {
       "id": "__init__",
       "cardName": "__init__",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "ArmureSoin",
       "cost": 0,
       "xCost": false,
@@ -8951,7 +8980,7 @@
     {
       "id": "asservissement",
       "cardName": "Asservissement",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "vuln",
       "cost": 1,
       "xCost": false,
@@ -9007,7 +9036,7 @@
     {
       "id": "autodecomposer",
       "cardName": "Autodécomposer",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Magique",
       "cost": 1,
       "xCost": false,
@@ -9044,7 +9073,7 @@
     {
       "id": "bonne_pratique",
       "cardName": "Bonne pratique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Armure",
       "cost": 0,
       "xCost": false,
@@ -9081,7 +9110,7 @@
     {
       "id": "capteur_de_mouvement",
       "cardName": "Capteur de mouvement",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "prescience",
       "cost": 1,
       "xCost": false,
@@ -9118,7 +9147,7 @@
     {
       "id": "capteur_de_temperature",
       "cardName": "Capteur de température",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Transfert",
       "cost": 1,
       "xCost": false,
@@ -9174,7 +9203,7 @@
     {
       "id": "condensateur",
       "cardName": "Condensateur",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "batterie",
       "cost": 0,
       "xCost": false,
@@ -9211,7 +9240,7 @@
     {
       "id": "convertisseur_analogique",
       "cardName": "Convertisseur analogique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Cartes",
       "cost": 1,
       "xCost": false,
@@ -9267,7 +9296,7 @@
     {
       "id": "copier_coller",
       "cardName": "Copier-coller",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "copy",
       "cost": 1,
       "xCost": false,
@@ -9333,7 +9362,7 @@
     {
       "id": "court_circuit",
       "cardName": "Court-circuit",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "thunder",
       "cost": 0,
       "xCost": true,
@@ -9389,7 +9418,7 @@
     {
       "id": "cryptage",
       "cardName": "Cryptage",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "lock",
       "cost": 1,
       "xCost": false,
@@ -9445,7 +9474,7 @@
     {
       "id": "erreur_fatale",
       "cardName": "Erreur fatale",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "reboot",
       "cost": 2,
       "xCost": false,
@@ -9484,7 +9513,7 @@
     {
       "id": "faille_systeme",
       "cardName": "Faille système",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "critique",
       "cost": 2,
       "xCost": false,
@@ -9521,7 +9550,7 @@
     {
       "id": "filtre",
       "cardName": "Filtre",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "signal",
       "cost": 1,
       "xCost": false,
@@ -9558,7 +9587,7 @@
     {
       "id": "frappe_electrique",
       "cardName": "Frappe électrique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "thunderblade",
       "cost": 1,
       "xCost": false,
@@ -9614,7 +9643,7 @@
     {
       "id": "hotfix",
       "cardName": "Hotfix",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "iter",
       "cost": 1,
       "xCost": false,
@@ -9651,7 +9680,7 @@
     {
       "id": "labyrinthe",
       "cardName": "Labyrinthe",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "delai",
       "cost": 3,
       "xCost": false,
@@ -9690,7 +9719,7 @@
     {
       "id": "make_clean",
       "cardName": "Makefile",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Cartes",
       "cost": 1,
       "xCost": false,
@@ -9765,7 +9794,7 @@
     {
       "id": "optimisation_offensive",
       "cardName": "Optimisation offensive",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Pouvoir",
       "cost": 2,
       "xCost": false,
@@ -9821,7 +9850,7 @@
     {
       "id": "override",
       "cardName": "Override",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "override",
       "cost": 3,
       "xCost": false,
@@ -9860,7 +9889,7 @@
     {
       "id": "pare_feu",
       "cardName": "Pare-feu",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "barriere",
       "cost": 1,
       "xCost": false,
@@ -9916,7 +9945,7 @@
     {
       "id": "piratage",
       "cardName": "Piratage",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Foudre",
       "cost": 2,
       "xCost": false,
@@ -9955,7 +9984,7 @@
     {
       "id": "robot_autoguide",
       "cardName": "Robot autoguidé",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "robot",
       "cost": 1,
       "xCost": false,
@@ -9992,7 +10021,7 @@
     {
       "id": "soutien_satellite",
       "cardName": "Soutien de satellite",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "satellite",
       "cost": 1,
       "xCost": false,
@@ -10029,7 +10058,7 @@
     {
       "id": "triangulation_gnss",
       "cardName": "Triangulation GNSS",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "triangulation",
       "cost": 2,
       "xCost": false,
@@ -10068,7 +10097,7 @@
     {
       "id": "katana",
       "cardName": "Frappe au katana",
-      "collectionCardId": "insamourai",
+      "collectionCardId": "Insamourai",
       "iconId": null,
       "cost": 1,
       "xCost": false,
@@ -10105,7 +10134,7 @@
     {
       "id": "auto_conception",
       "cardName": "Auto-conception",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "ArmureSoin",
       "cost": 2,
       "xCost": false,
@@ -10163,7 +10192,7 @@
     {
       "id": "bras_mecatronique",
       "cardName": "Bras mécatronique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Pouvoir2",
       "cost": 3,
       "xCost": false,
@@ -10200,7 +10229,7 @@
     {
       "id": "burn_out_et_bore_out",
       "cardName": "Burn-out / Bore-out",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "burn",
       "cost": 0,
       "xCost": false,
@@ -10258,7 +10287,7 @@
     {
       "id": "chassis_adaptatif",
       "cardName": "Châssis adaptatif",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "protection",
       "cost": 1,
       "xCost": false,
@@ -10303,7 +10332,7 @@
     {
       "id": "destruction_de_materiel",
       "cardName": "Destruction de matériel",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "destruction",
       "cost": 2,
       "xCost": false,
@@ -10361,7 +10390,7 @@
     {
       "id": "foret_80_mm",
       "cardName": "Foret 80 mm",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "perceuse",
       "cost": 1,
       "xCost": false,
@@ -10425,7 +10454,7 @@
     {
       "id": "gravitron",
       "cardName": "Gravitron",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Gravité",
       "cost": 2,
       "xCost": false,
@@ -10464,7 +10493,7 @@
     {
       "id": "huile_de_machine",
       "cardName": "Huile de machine",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "tempo",
       "cost": 1,
       "xCost": false,
@@ -10522,7 +10551,7 @@
     {
       "id": "megagravitron",
       "cardName": "Mégagravitron",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Comète",
       "cost": 4,
       "xCost": false,
@@ -10581,7 +10610,7 @@
     {
       "id": "milieu_continu",
       "cardName": "Milieu continu",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Affliction",
       "cost": 2,
       "xCost": false,
@@ -10618,7 +10647,7 @@
     {
       "id": "pieces_de_rechange",
       "cardName": "Pièces de rechange",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "engrenages",
       "cost": 1,
       "xCost": false,
@@ -10674,7 +10703,7 @@
     {
       "id": "plein_regime",
       "cardName": "Plein régime",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "fury",
       "cost": 1,
       "xCost": false,
@@ -10711,7 +10740,7 @@
     {
       "id": "poncage",
       "cardName": "Ponçage",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "gant",
       "cost": 0,
       "xCost": false,
@@ -10767,7 +10796,7 @@
     {
       "id": "puissance_negative",
       "cardName": "Puissance négative",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "DRK",
       "cost": 2,
       "xCost": false,
@@ -10812,7 +10841,7 @@
     {
       "id": "remise_en_etat",
       "cardName": "Remise en état",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "engrenages",
       "cost": 1,
       "xCost": false,
@@ -10851,7 +10880,7 @@
     {
       "id": "resserrage_de_vis",
       "cardName": "Resserrage de vis",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "torsion",
       "cost": 1,
       "xCost": false,
@@ -10909,7 +10938,7 @@
     {
       "id": "soudure",
       "cardName": "Soudure",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "soudure",
       "cost": 0,
       "xCost": false,
@@ -10965,7 +10994,7 @@
     {
       "id": "surchauffe_machine",
       "cardName": "Surchauffe mécanique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "feu",
       "cost": 1,
       "xCost": false,
@@ -11021,7 +11050,7 @@
     {
       "id": "systeme_de_refroidissement",
       "cardName": "Système de refroidissement",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Congélation",
       "cost": 0,
       "xCost": false,
@@ -11096,7 +11125,7 @@
     {
       "id": "taraud",
       "cardName": "Taraud",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "foreuse",
       "cost": 1,
       "xCost": false,
@@ -11133,7 +11162,7 @@
     {
       "id": "torsion",
       "cardName": "Torsion",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "torsion",
       "cost": 1,
       "xCost": false,
@@ -11178,7 +11207,7 @@
     {
       "id": "tour_a_metaux",
       "cardName": "Tour à métaux",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "spirale2",
       "cost": 2,
       "xCost": false,
@@ -11255,7 +11284,7 @@
     {
       "id": "ultravibration",
       "cardName": "Ultravibration",
-      "collectionCardId": "MECA",
+      "collectionCardId": null,
       "iconId": "ultravibration",
       "cost": 0,
       "xCost": false,
@@ -11311,7 +11340,7 @@
     {
       "id": "vibration",
       "cardName": "Vibration",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Choc",
       "cost": 0,
       "xCost": false,
@@ -11386,7 +11415,7 @@
     {
       "id": "mise_en_cage",
       "cardName": "Mise en cage",
-      "collectionCardId": "la_suite",
+      "collectionCardId": "La Suite",
       "iconId": null,
       "cost": 1,
       "xCost": false,
@@ -11402,10 +11431,10 @@
           "statusType": "Slow",
           "duration": 2,
           "description": "",
-          "cardID": null,
+          "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -11421,10 +11450,10 @@
           "statusType": "Slow",
           "duration": 2,
           "description": "",
-          "cardID": null,
+          "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -11442,7 +11471,7 @@
     {
       "id": "bilan_carbone",
       "cardName": "Bilan carbone",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Zone",
       "cost": 1,
       "xCost": false,
@@ -11487,7 +11516,7 @@
     {
       "id": "cataclysme",
       "cardName": "Cataclysme",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "meteor",
       "cost": 1,
       "xCost": false,
@@ -11524,7 +11553,7 @@
     {
       "id": "catastrophe_naturelle",
       "cardName": "Catastrophe naturelle",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Nova",
       "cost": 0,
       "xCost": true,
@@ -11580,7 +11609,7 @@
     {
       "id": "confinement",
       "cardName": "Confinement",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "wall",
       "cost": 1,
       "xCost": false,
@@ -11636,7 +11665,7 @@
     {
       "id": "cycle_de_vie",
       "cardName": "Cycle de vie",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Buff",
       "cost": 1,
       "xCost": false,
@@ -11673,7 +11702,7 @@
     {
       "id": "decontamination_totale",
       "cardName": "Décontamination totale",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Esuna",
       "cost": 2,
       "xCost": false,
@@ -11712,7 +11741,7 @@
     {
       "id": "depollution",
       "cardName": "Dépollution",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "purge",
       "cost": 1,
       "xCost": false,
@@ -11787,7 +11816,7 @@
     {
       "id": "dispersion_atmospherique",
       "cardName": "Dispersion atmosphérique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Transfert",
       "cost": 1,
       "xCost": false,
@@ -11843,7 +11872,7 @@
     {
       "id": "economie_d_energie",
       "cardName": "Économie d'énergie",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "batterie",
       "cost": 2,
       "xCost": false,
@@ -11880,7 +11909,7 @@
     {
       "id": "fureur_de_la_planete",
       "cardName": "Fureur de la planète",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "halo",
       "cost": 3,
       "xCost": false,
@@ -11936,7 +11965,7 @@
     {
       "id": "gestion_du_risque",
       "cardName": "Gestion du risque",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Pouvoir",
       "cost": 1,
       "xCost": false,
@@ -11973,7 +12002,7 @@
     {
       "id": "inondation",
       "cardName": "Inondation",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "inondation",
       "cost": 0,
       "xCost": false,
@@ -12029,7 +12058,7 @@
     {
       "id": "lame_feuille",
       "cardName": "Lame-Feuille",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "lame_feuille",
       "cost": 1,
       "xCost": false,
@@ -12085,7 +12114,7 @@
     {
       "id": "plan_d_urgence",
       "cardName": "Plan d'urgence",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "holy",
       "cost": 0,
       "xCost": false,
@@ -12141,7 +12170,7 @@
     {
       "id": "preservation",
       "cardName": "Préservation",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "protection",
       "cost": 1,
       "xCost": false,
@@ -12197,7 +12226,7 @@
     {
       "id": "protecteur_de_la_planete",
       "cardName": "Protecteur de la planète",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "sigil",
       "cost": 2,
       "xCost": false,
@@ -12236,7 +12265,7 @@
     {
       "id": "rayonnement_de_combustion",
       "cardName": "Rayonnement de combustion",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Pouvoir2",
       "cost": 0,
       "xCost": true,
@@ -12273,7 +12302,7 @@
     {
       "id": "rehabilitation",
       "cardName": "Recyclage",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "cycle",
       "cost": 1,
       "xCost": false,
@@ -12331,7 +12360,7 @@
     {
       "id": "resilience",
       "cardName": "Résilience",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "wall",
       "cost": 2,
       "xCost": false,
@@ -12368,7 +12397,7 @@
     {
       "id": "securite",
       "cardName": "Sécurité",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "lock",
       "cost": 1,
       "xCost": false,
@@ -12424,9 +12453,9 @@
       ]
     },
     {
-      "id": "octogone",
+      "id": "",
       "cardName": "Octogone",
-      "collectionCardId": "stadium",
+      "collectionCardId": "Stadium",
       "iconId": null,
       "cost": 1,
       "xCost": false,
@@ -12445,7 +12474,7 @@
           "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -12464,7 +12493,7 @@
           "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -12483,7 +12512,7 @@
           "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -12501,7 +12530,7 @@
     {
       "id": "industrialisation",
       "cardName": "Industrialisation",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Industrie",
       "cost": 2,
       "xCost": false,
@@ -12557,7 +12586,7 @@
     {
       "id": "innovation",
       "cardName": "Innovation",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "creation",
       "cost": 3,
       "xCost": false,
@@ -12594,7 +12623,7 @@
     {
       "id": "perf_e",
       "cardName": "Performance énergétique",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -12650,7 +12679,7 @@
     {
       "id": "regulation_industrielle",
       "cardName": "Régulation industrielle",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Industrie",
       "cost": 2,
       "xCost": false,
@@ -12687,7 +12716,7 @@
     {
       "id": "pinte_de_trop",
       "cardName": "Pinte de trop",
-      "collectionCardId": "paix_dieu",
+      "collectionCardId": "Paix Dieu",
       "iconId": null,
       "cost": 1,
       "xCost": false,
@@ -12745,7 +12774,7 @@
     {
       "id": "apogee",
       "cardName": "Apogée",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 1,
       "xCost": false,
@@ -12820,7 +12849,7 @@
     {
       "id": "archi",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -12837,7 +12866,7 @@
     {
       "id": "avire",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -12854,7 +12883,7 @@
     {
       "id": "campinsa",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -12871,7 +12900,7 @@
     {
       "id": "cartes",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -12888,7 +12917,7 @@
     {
       "id": "cfi",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -12905,7 +12934,7 @@
     {
       "id": "com",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -12922,7 +12951,7 @@
     {
       "id": "compte_rendu",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -12939,7 +12968,7 @@
     {
       "id": "cycle_conference_et_conscience",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -12956,7 +12985,7 @@
     {
       "id": "deco",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -12973,7 +13002,7 @@
     {
       "id": "defis",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -12990,7 +13019,7 @@
     {
       "id": "divination",
       "cardName": "Divination",
-      "collectionCardId": "chacharlatan",
+      "collectionCardId": "Chacharlatante",
       "iconId": null,
       "cost": 3,
       "xCost": false,
@@ -13046,7 +13075,7 @@
     {
       "id": "dodo_bu",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13063,7 +13092,7 @@
     {
       "id": "ep",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13080,7 +13109,7 @@
     {
       "id": "esf",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13097,7 +13126,7 @@
     {
       "id": "eveil",
       "cardName": "Éveil",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 1,
       "xCost": false,
@@ -13134,7 +13163,7 @@
     {
       "id": "galanterie",
       "cardName": "Galanterie",
-      "collectionCardId": "gala",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13190,7 +13219,7 @@
     {
       "id": "gcu",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13207,7 +13236,7 @@
     {
       "id": "gm",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13224,7 +13253,7 @@
     {
       "id": "gsf",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13241,7 +13270,7 @@
     {
       "id": "insa_cheval",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13258,7 +13287,7 @@
     {
       "id": "insa_racing",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13275,7 +13304,7 @@
     {
       "id": "insagent_secret",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13292,7 +13321,7 @@
     {
       "id": "insaloon",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13309,7 +13338,7 @@
     {
       "id": "insaopaulo",
       "cardName": "INSAOPAULO",
-      "collectionCardId": "",
+      "collectionCardId": "Insao Paulo",
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13326,7 +13355,7 @@
     {
       "id": "insastronaute",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13343,7 +13372,7 @@
     {
       "id": "iti",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13360,7 +13389,7 @@
     {
       "id": "logistique",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13377,7 +13406,7 @@
     {
       "id": "meca",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13394,7 +13423,7 @@
     {
       "id": "mrie",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13411,7 +13440,7 @@
     {
       "id": "octobre_rose",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13428,7 +13457,7 @@
     {
       "id": "pleine_lune",
       "cardName": "Pleine lune",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 2,
       "xCost": false,
@@ -13465,7 +13494,7 @@
     {
       "id": "pres",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13482,7 +13511,7 @@
     {
       "id": "radium",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13499,7 +13528,7 @@
     {
       "id": "revision_model_text",
       "cardName": "Révision Model Text",
-      "collectionCardId": "souillard",
+      "collectionCardId": "Souillard",
       "iconId": null,
       "cost": 1,
       "xCost": false,
@@ -13536,7 +13565,7 @@
     {
       "id": "site",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13553,7 +13582,7 @@
     {
       "id": "talent_show",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13570,7 +13599,7 @@
     {
       "id": "tms",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13587,7 +13616,7 @@
     {
       "id": "treso_goodies",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13604,7 +13633,7 @@
     {
       "id": "wei",
       "cardName": "",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13619,9 +13648,9 @@
       "tags": []
     },
     {
-      "id": "rattrapages",
+      "id": "",
       "cardName": "Rattrapages",
-      "collectionCardId": "rattrapages",
+      "collectionCardId": "Rattrapages",
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13636,11 +13665,11 @@
           "targetOthers": false,
           "statusType": "Strength",
           "duration": 0,
-          "description": null,
-          "cardID": null,
+          "description": "",
+          "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -13658,7 +13687,7 @@
     {
       "id": "redoubler",
       "cardName": "Redoubler",
-      "collectionCardId": "rattrapages",
+      "collectionCardId": "Rattrapages",
       "iconId": null,
       "cost": 1,
       "xCost": false,
@@ -13712,9 +13741,9 @@
       "tags": []
     },
     {
-      "id": "rush_du_matin",
+      "id": "",
       "cardName": "Rush du matin",
-      "collectionCardId": "cafe",
+      "collectionCardId": "Café Court",
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -13729,11 +13758,11 @@
           "targetOthers": false,
           "statusType": "Strength",
           "duration": 0,
-          "description": null,
-          "cardID": null,
+          "description": "",
+          "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -13751,7 +13780,7 @@
     {
       "id": "soutien_du_bde",
       "cardName": "Soutien du BDE",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 1,
       "xCost": false,
@@ -13788,7 +13817,7 @@
     {
       "id": "terre_brulee",
       "cardName": "Terre brûlée...",
-      "collectionCardId": "baf",
+      "collectionCardId": "BAF",
       "iconId": null,
       "cost": 3,
       "xCost": false,
@@ -13844,14 +13873,14 @@
       ]
     },
     {
-      "id": "tournee_generale",
+      "id": "",
       "cardName": "Tournée générale",
-      "collectionCardId": "quartier_libre",
+      "collectionCardId": "Quartier Libre",
       "iconId": null,
-      "cost": 1,
+      "cost": 0,
       "xCost": false,
       "type": "Compétence",
-      "rarity": "Uncommon",
+      "rarity": "Epic",
       "targetingMode": "Player",
       "effects": [
         {
@@ -13865,7 +13894,7 @@
           "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -13881,9 +13910,9 @@
       "tags": []
     },
     {
-      "id": "troisieme_mi_temps",
+      "id": "",
       "cardName": "Troisième mi-temps",
-      "collectionCardId": "toss",
+      "collectionCardId": "TOSS",
       "iconId": null,
       "cost": 2,
       "xCost": false,
@@ -13902,7 +13931,7 @@
           "cardID": "",
           "conditional": false,
           "conditionType": "KillingBlow",
-          "conditionValue": null,
+          "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
           "index": 0,
@@ -13920,7 +13949,7 @@
     {
       "id": "defense",
       "cardName": "Défense",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Armure",
       "cost": 1,
       "xCost": false,
@@ -13957,7 +13986,7 @@
     {
       "id": "delai",
       "cardName": "Délai",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Frappe",
       "cost": 0,
       "xCost": false,
@@ -14013,7 +14042,7 @@
     {
       "id": "dissipation",
       "cardName": "Dissipation",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Dissipation",
       "cost": 0,
       "xCost": false,
@@ -14048,9 +14077,9 @@
       "tags": []
     },
     {
-      "id": "force",
+      "id": "poison 1",
       "cardName": "Force",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -14087,7 +14116,7 @@
     {
       "id": "frappe",
       "cardName": "Frappe",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Physique",
       "cost": 1,
       "xCost": false,
@@ -14124,7 +14153,7 @@
     {
       "id": "hate",
       "cardName": "Hâte",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "ArmureSoin",
       "cost": 0,
       "xCost": false,
@@ -14180,7 +14209,7 @@
     {
       "id": "poison",
       "cardName": "Poison",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -14217,7 +14246,7 @@
     {
       "id": "purification",
       "cardName": "Purification",
-      "collectionCardId": "",
+      "collectionCardId": null,
       "iconId": "Esuna",
       "cost": 0,
       "xCost": false,

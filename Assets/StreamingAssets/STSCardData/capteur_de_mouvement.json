@@ -1,7 +1,7 @@
 {
   "id": "capteur_de_mouvement",
   "cardName": "Capteur de mouvement",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "prescience",
   "cost": 1,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "galaxie",
   "cardName": "Galaxie",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Galaxie",
   "cost": 3,
   "xCost": false,

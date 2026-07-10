@@ -1,7 +1,7 @@
 {
   "id": "labyrinthe",
   "cardName": "Labyrinthe",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "delai",
   "cost": 3,
   "xCost": false,

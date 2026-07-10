@@ -1,7 +1,7 @@
 {
   "id": "finance_experte",
   "cardName": "Finance experte",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Affliction",
   "cost": 2,
   "xCost": false,

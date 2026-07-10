@@ -1,7 +1,7 @@
 {
   "id": "fer",
   "cardName": "Fer",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Atome",
   "cost": 0,
   "xCost": false,

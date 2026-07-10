@@ -1,7 +1,7 @@
 {
   "id": "huile_de_machine",
   "cardName": "Huile de machine",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "tempo",
   "cost": 1,
   "xCost": false,

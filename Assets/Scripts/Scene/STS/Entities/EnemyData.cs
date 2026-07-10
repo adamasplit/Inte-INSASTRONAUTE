@@ -21,7 +21,6 @@ public class EnemyMoveEntry
             ? moveName
             : (card != null && !string.IsNullOrEmpty(card.cardName) ? card.cardName : runtimeCard.name);
         runtimeCard.collectionCardId = null;
-        runtimeCard.collectionCard = null;
         runtimeCard.icon = card != null ? card.icon : null;
         runtimeCard.cost = 0;
         runtimeCard.xCost = false;

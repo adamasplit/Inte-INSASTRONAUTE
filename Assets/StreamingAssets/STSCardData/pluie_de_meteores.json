@@ -1,7 +1,7 @@
 {
   "id": "pluie_de_meteores",
   "cardName": "Pluie de météores",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "meteor",
   "cost": 2,
   "xCost": false,

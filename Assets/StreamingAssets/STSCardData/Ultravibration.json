@@ -1,7 +1,7 @@
 {
   "id": "ultravibration",
   "cardName": "Ultravibration",
-  "collectionCardId": "MECA",
+  "collectionCardId": null,
   "iconId": "ultravibration",
   "cost": 0,
   "xCost": false,

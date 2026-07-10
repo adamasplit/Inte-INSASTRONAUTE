@@ -1,7 +1,7 @@
 {
   "id": "propulsion_hypersonique",
   "cardName": "Propulsion hypersonique",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "perce",
   "cost": 3,
   "xCost": false,

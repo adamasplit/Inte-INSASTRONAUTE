@@ -1,7 +1,7 @@
 {
   "id": "pulsar_a_ondes",
   "cardName": "Pulsar à ondes",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Vortex",
   "cost": 2,
   "xCost": false,

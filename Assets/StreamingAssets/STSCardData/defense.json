@@ -1,7 +1,7 @@
 {
   "id": "defense",
   "cardName": "Défense",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Armure",
   "cost": 1,
   "xCost": false,

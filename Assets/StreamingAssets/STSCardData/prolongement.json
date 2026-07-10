@@ -1,7 +1,7 @@
 {
   "id": "prolongement",
   "cardName": "Prolongement",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "prolong",
   "cost": 2,
   "xCost": false,

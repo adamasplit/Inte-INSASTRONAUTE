@@ -1,7 +1,7 @@
 {
   "id": "pleine_lune",
   "cardName": "Pleine lune",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": null,
   "cost": 2,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "frappe_directrice",
   "cardName": "Frappe directrice",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Night",
   "cost": 1,
   "xCost": false,

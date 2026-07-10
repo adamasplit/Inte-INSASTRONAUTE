@@ -1,7 +1,7 @@
 {
   "id": "maille_parfaite",
   "cardName": "Maille parfaite",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "maille",
   "cost": 2,
   "xCost": false,

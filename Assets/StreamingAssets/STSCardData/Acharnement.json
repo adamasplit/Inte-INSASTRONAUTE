@@ -1,7 +1,7 @@
 {
   "id": "acharnement",
   "cardName": "Acharnement",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Physique",
   "cost": 0,
   "xCost": false,

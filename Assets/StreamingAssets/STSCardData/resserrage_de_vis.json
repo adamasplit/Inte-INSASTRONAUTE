@@ -1,7 +1,7 @@
 {
   "id": "resserrage_de_vis",
   "cardName": "Resserrage de vis",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "torsion",
   "cost": 1,
   "xCost": false,

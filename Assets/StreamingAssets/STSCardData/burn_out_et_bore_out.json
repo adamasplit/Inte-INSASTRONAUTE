@@ -1,7 +1,7 @@
 {
   "id": "burn_out_et_bore_out",
   "cardName": "Burn-out / Bore-out",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "burn",
   "cost": 0,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "fin_des_dimensions",
   "cardName": "Fin des dimensions",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "aura",
   "cost": 3,
   "xCost": false,

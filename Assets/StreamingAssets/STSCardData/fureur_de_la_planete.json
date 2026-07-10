@@ -1,7 +1,7 @@
 {
   "id": "fureur_de_la_planete",
   "cardName": "Fureur de la planète",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "halo",
   "cost": 3,
   "xCost": false,

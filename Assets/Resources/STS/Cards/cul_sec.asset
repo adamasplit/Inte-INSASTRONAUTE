@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: cul_sec
   cardName: Cul sec
-  collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: 0ad0a58facc207c4b9432ea28cb67317, type: 2}
+  collectionCardId: Khallaghan
   icon: {fileID: 0}
   cost: 0
   xCost: 1
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,12 +37,9 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
-  exhaust: 1
-  retain: 0
-  innate: 0
-  infinite: 0
   favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0

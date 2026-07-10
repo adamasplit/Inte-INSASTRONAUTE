@@ -1,7 +1,7 @@
 {
   "id": "fission",
   "cardName": "Fission",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Flare",
   "cost": 3,
   "xCost": false,
@@ -12,6 +12,27 @@
     {
       "type": "CardSelection",
       "value": -1,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "All",
+      "index": 0,
+      "cardFilterTags": [
+        "Atom"
+      ],
+      "cardSelectionEffect": "Exhaust",
+      "animationType": "Default"
+    },
+    {
+      "type": "Damage",
+      "value": 0,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -27,11 +48,19 @@
       "cardFilterTags": [
         "Atom"
       ],
-      "cardSelectionEffect": "ConsumeAndDealDamageToAll",
-      "animationType": "Default"
+      "cardSelectionEffect": "Exhaust",
+      "animationType": "ExplosionLarge"
     }
   ],
-  "modifiers": [],
+  "modifiers": [
+    {
+      "type": "Damage",
+      "kind": "ActionExhausted",
+      "value": 6,
+      "info": "",
+      "description": ""
+    }
+  ],
   "favoredCharacter": "CFI",
   "animationSpeed": 1.0,
   "startingCount": 0,

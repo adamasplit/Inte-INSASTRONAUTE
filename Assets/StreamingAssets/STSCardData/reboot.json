@@ -1,7 +1,7 @@
 {
   "id": "reboot",
   "cardName": "Reboot",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "reboot",
   "cost": 0,
   "xCost": false,

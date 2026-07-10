@@ -1,7 +1,7 @@
 {
   "id": "regression",
   "cardName": "Régression",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Affliction",
   "cost": 1,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "frappe_thermique",
   "cardName": "Frappe thermique",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "fireblade",
   "cost": 1,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "norme_1",
   "cardName": "Norme 1",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "norme",
   "cost": 1,
   "xCost": false,

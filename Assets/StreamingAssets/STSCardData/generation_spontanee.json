@@ -1,7 +1,7 @@
 {
   "id": "generation_spontanee",
   "cardName": "Génération spontanée",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Matière",
   "cost": 1,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "iteration",
   "cardName": "Itérateur",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "iter",
   "cost": 1,
   "xCost": false,

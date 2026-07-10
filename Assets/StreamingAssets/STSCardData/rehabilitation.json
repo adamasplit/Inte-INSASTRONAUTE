@@ -1,7 +1,7 @@
 {
   "id": "rehabilitation",
   "cardName": "Recyclage",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "cycle",
   "cost": 1,
   "xCost": false,

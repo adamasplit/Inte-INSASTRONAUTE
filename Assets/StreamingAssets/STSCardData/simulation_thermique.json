@@ -1,7 +1,7 @@
 {
   "id": "simulation_thermique",
   "cardName": "Simulation thermique",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "batiment",
   "cost": 1,
   "xCost": false,

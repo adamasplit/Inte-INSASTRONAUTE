@@ -1,7 +1,7 @@
 {
   "id": "robot_autoguide",
   "cardName": "Robot autoguidé",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "robot",
   "cost": 1,
   "xCost": false,

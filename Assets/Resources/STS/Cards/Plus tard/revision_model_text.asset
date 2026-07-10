@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: revision_model_text
   cardName: "R\xE9vision Model Text"
-  collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: f4aa7a24b7e4116488e45d3ac1275e04, type: 2}
+  collectionCardId: Souillard
   icon: {fileID: 0}
   cost: 1
   xCost: 0
@@ -38,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 11

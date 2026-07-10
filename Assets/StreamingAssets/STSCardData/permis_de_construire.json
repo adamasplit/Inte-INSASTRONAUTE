@@ -1,7 +1,7 @@
 {
   "id": "permis_de_construire",
   "cardName": "Permis de construire",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "megastrength",
   "cost": 1,
   "xCost": false,

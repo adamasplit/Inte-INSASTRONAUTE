@@ -1,7 +1,7 @@
 {
   "id": "catastrophe_naturelle",
   "cardName": "Catastrophe naturelle",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Nova",
   "cost": 0,
   "xCost": true,

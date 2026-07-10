@@ -1,7 +1,7 @@
 {
   "id": "electromagnetisme",
   "cardName": "Electromagnétisme",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "thunder",
   "cost": 1,
   "xCost": false,

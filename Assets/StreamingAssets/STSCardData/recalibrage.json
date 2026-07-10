@@ -1,7 +1,7 @@
 {
   "id": "recalibrage",
   "cardName": "Recalibrage",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "delai",
   "cost": 0,
   "xCost": false,

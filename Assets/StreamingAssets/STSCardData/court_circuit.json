@@ -1,7 +1,7 @@
 {
   "id": "court_circuit",
   "cardName": "Court-circuit",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "thunder",
   "cost": 0,
   "xCost": true,

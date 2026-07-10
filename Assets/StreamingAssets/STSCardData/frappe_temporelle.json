@@ -1,7 +1,7 @@
 {
   "id": "frappe_temporelle",
   "cardName": "Frappe temporelle",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "time",
   "cost": 1,
   "xCost": false,

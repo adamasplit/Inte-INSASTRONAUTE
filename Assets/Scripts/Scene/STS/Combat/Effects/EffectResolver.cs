@@ -532,7 +532,7 @@ public static class EffectResolver
                         {
                             CardSelectionSource.DiscardPile => "Défausse",
                             CardSelectionSource.DrawPile => "Pioche",
-                            CardSelectionSource.ExhaustPile => "Exil",
+                            CardSelectionSource.ExhaustPile => "Epuisement",
                             CardSelectionSource.All => "Toutes les piles",
                             CardSelectionSource.AllExceptExhaustPile => "Main, Pioche et Défausse",
                             _ => "Cartes"
@@ -605,6 +605,7 @@ public static class EffectResolver
                             {
                                 case CardSelectionEffect.Exhaust:
                                     deck.Exhaust(card);
+                                    ctx.state.cardsExhausted++;
                                     break;
                                 case CardSelectionEffect.Discard:
                                     if (deck.hand.Contains(card)) deck.Discard(card);

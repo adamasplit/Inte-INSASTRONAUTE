@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: cleanwalk
   cardName: Cleanwalk
-  collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: 53feeae6b13bcb741b7a89640350e4d6, type: 2}
+  collectionCardId: Greensa
   icon: {fileID: 0}
   cost: 0
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,13 +37,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
-  exhaust: 0
-  retain: 0
-  innate: 0
-  infinite: 0
-  created: 0
   favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
+  tags: 

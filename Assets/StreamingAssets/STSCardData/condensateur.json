@@ -1,7 +1,7 @@
 {
   "id": "condensateur",
   "cardName": "Condensateur",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "batterie",
   "cost": 0,
   "xCost": false,

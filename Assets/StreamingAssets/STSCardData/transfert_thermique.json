@@ -1,7 +1,7 @@
 {
   "id": "transfert_thermique",
   "cardName": "Transfert thermique",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Darkness",
   "cost": 2,
   "xCost": false,

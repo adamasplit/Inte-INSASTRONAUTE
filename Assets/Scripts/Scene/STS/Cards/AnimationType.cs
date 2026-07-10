@@ -7,5 +7,6 @@ public enum AnimationType
     Ice,
     Thunder,
     Light,
-    Explosion
+    ExplosionSmall,
+    ExplosionLarge
 }

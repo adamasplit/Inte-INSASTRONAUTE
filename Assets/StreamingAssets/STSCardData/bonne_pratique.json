@@ -1,7 +1,7 @@
 {
   "id": "bonne_pratique",
   "cardName": "Bonne pratique",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Armure",
   "cost": 0,
   "xCost": false,

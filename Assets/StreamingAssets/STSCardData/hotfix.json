@@ -1,7 +1,7 @@
 {
   "id": "hotfix",
   "cardName": "Hotfix",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "iter",
   "cost": 1,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "filtre",
   "cardName": "Filtre",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "signal",
   "cost": 1,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "infini",
   "cardName": "Infini",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Vortex",
   "cost": 2,
   "xCost": false,

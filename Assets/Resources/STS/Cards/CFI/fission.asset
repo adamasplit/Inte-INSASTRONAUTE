@@ -27,18 +27,42 @@ MonoBehaviour:
     targetSelf: 0
     targetOthers: 0
     statusType: 0
-    duration: 6
+    duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
     trueEffect: 0
     cardSelectionSource: 4
     cardFilterTags: 0b000000
-    cardSelectionEffect: 9
+    cardSelectionEffect: 1
+    animationType: 0
+  - type: 0
+    value: 0
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 0
+    duration: 6
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 4
+    cardFilterTags: 0b000000
+    cardSelectionEffect: 1
+    animationType: 8
   targetingMode: 2
-  modifiers: []
+  modifiers:
+  - type: 0
+    kind: 20
+    value: 6
+    info: 
+    description: 
   favoredCharacter: 4
   animationSpeed: 1
   startingCount: 0

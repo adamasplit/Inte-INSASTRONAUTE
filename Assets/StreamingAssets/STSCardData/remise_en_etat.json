@@ -1,7 +1,7 @@
 {
   "id": "remise_en_etat",
   "cardName": "Remise en état",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "engrenages",
   "cost": 1,
   "xCost": false,

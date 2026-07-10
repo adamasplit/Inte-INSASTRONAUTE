@@ -12,8 +12,11 @@ public static class STSCardDatabase
     }
 
     static Dictionary<string, STSCardData> cardDict;
+    static Dictionary<string, Sprite> collectionCardSpriteById;
     static bool isLoaded;
     static Task loadTask;
+    static Task collectionCardSpriteLoadTask;
+    static bool collectionSpritesInitialized;
 
     public static List<STSCardData> allCards;
 
@@ -36,6 +39,8 @@ public static class STSCardDatabase
 
         cardDict = new();
         allCards = new();
+        collectionCardSpriteById = new();
+        collectionSpritesInitialized = false;
 
         string combinedJson = await StreamingAssetsLoader.ReadAllTextAsync("STSCardData/cards.json");
         if (!string.IsNullOrEmpty(combinedJson))
@@ -107,6 +112,10 @@ public static class STSCardDatabase
             cardDict = null;
             allCards = null;
         }
+        else
+        {
+            await EnsureCollectionCardSpritesLoadedAsync();
+        }
 
         loadTask = null;
     }
@@ -129,11 +138,11 @@ public static class STSCardDatabase
 
     public static void Load()
     {
-#if UNITY_ANDROID || UNITY_WEBGL
-        Debug.LogError("STSCardDatabase.Load() is not supported on Android/WebGL. Use LoadAsync() and await it.");
-#else
-        LoadAsync().GetAwaiter().GetResult();
-#endif
+        #if UNITY_ANDROID || UNITY_WEBGL
+                Debug.LogError("STSCardDatabase.Load() is not supported on Android/WebGL. Use LoadAsync() and await it.");
+        #else
+                LoadAsync().GetAwaiter().GetResult();
+        #endif
     }
 
     public static async Task EnsureLoadedAsync()
@@ -143,6 +152,95 @@ public static class STSCardDatabase
 
         isLoaded = false;
         await LoadAsync();
+    }
+
+    public static bool TryGetCollectionCardSprite(string collectionCardId, out Sprite sprite)
+    {
+        sprite = null;
+        if (string.IsNullOrWhiteSpace(collectionCardId) || collectionCardSpriteById == null)
+            return false;
+
+        return collectionCardSpriteById.TryGetValue(collectionCardId, out sprite);
+    }
+
+    public static async Task<Sprite> GetCollectionCardSpriteAsync(string collectionCardId)
+    {
+        if (string.IsNullOrWhiteSpace(collectionCardId))
+            return null;
+
+        if (TryGetCollectionCardSprite(collectionCardId, out Sprite cached))
+            return cached;
+
+        await EnsureCollectionCardSpritesLoadedAsync();
+        if (TryGetCollectionCardSprite(collectionCardId, out cached))
+            return cached;
+
+        Sprite sprite = await STSCollectionCardApi.LoadSpriteAsync(collectionCardId);
+        if (sprite != null)
+        {
+            collectionCardSpriteById ??= new Dictionary<string, Sprite>();
+            collectionCardSpriteById[collectionCardId] = sprite;
+        }
+
+        return sprite;
+    }
+
+    public static async Task EnsureCollectionCardSpritesLoadedAsync()
+    {
+        if (collectionSpritesInitialized)
+            return;
+
+        if (allCards == null || allCards.Count == 0)
+            return;
+
+        if (collectionCardSpriteLoadTask != null)
+        {
+            await collectionCardSpriteLoadTask;
+            return;
+        }
+
+        collectionCardSpriteLoadTask = LoadCollectionCardSpritesInternalAsync();
+        try
+        {
+            await collectionCardSpriteLoadTask;
+        }
+        finally
+        {
+            collectionCardSpriteLoadTask = null;
+        }
+    }
+
+    static async Task LoadCollectionCardSpritesInternalAsync()
+    {
+        collectionCardSpriteById ??= new Dictionary<string, Sprite>();
+
+        HashSet<string> uniqueCollectionCardIds = new HashSet<string>();
+        foreach (STSCardData card in allCards)
+        {
+            if (card == null)
+                continue;
+
+            string collectionCardId = card.GetCollectionCardId();
+            if (!string.IsNullOrWhiteSpace(collectionCardId))
+            {
+                uniqueCollectionCardIds.Add(collectionCardId);
+            }
+        }
+
+        foreach (string collectionCardId in uniqueCollectionCardIds)
+        {
+            if (collectionCardSpriteById.ContainsKey(collectionCardId))
+                continue;
+
+            Sprite sprite = await STSCollectionCardApi.LoadSpriteAsync(collectionCardId);
+            if (sprite != null)
+            {
+                collectionCardSpriteById[collectionCardId] = sprite;
+            }
+        }
+
+        collectionSpritesInitialized = true;
+        Debug.Log($"STSCardDatabase cached {collectionCardSpriteById.Count} collection card sprites.");
     }
 
     public static STSCardData Get(string id)

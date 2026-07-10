@@ -1,7 +1,7 @@
 {
   "id": "taraud",
   "cardName": "Taraud",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "foreuse",
   "cost": 1,
   "xCost": false,

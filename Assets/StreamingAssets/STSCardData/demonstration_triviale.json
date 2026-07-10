@@ -1,7 +1,7 @@
 {
   "id": "demonstration_triviale",
   "cardName": "Démonstration triviale",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "rdm",
   "cost": 3,
   "xCost": false,

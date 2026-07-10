@@ -1,7 +1,7 @@
 {
   "id": "confinement",
   "cardName": "Confinement",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "wall",
   "cost": 1,
   "xCost": false,

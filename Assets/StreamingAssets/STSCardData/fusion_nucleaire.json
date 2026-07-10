@@ -1,7 +1,7 @@
 {
   "id": "fusion_nucleaire",
   "cardName": "Fusion nucléaire",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Hollow",
   "cost": 1,
   "xCost": false,

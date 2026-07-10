@@ -1,7 +1,7 @@
 {
   "id": "realisation_d_esquisse",
   "cardName": "Réalisation d'esquisse",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "megaflare",
   "cost": 2,
   "xCost": false,

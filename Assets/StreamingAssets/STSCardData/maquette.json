@@ -1,7 +1,7 @@
 {
   "id": "maquette",
   "cardName": "Maquette",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "batiment",
   "cost": 2,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "asservissement",
   "cardName": "Asservissement",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "vuln",
   "cost": 1,
   "xCost": false,

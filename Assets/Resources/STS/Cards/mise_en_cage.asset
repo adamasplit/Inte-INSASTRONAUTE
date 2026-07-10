@@ -12,25 +12,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: mise_en_cage
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: mise_en_cage
   cardName: Mise en cage
-  collectionCard: {fileID: 11400000, guid: 39dc671fbed4cc440870eece0b34b201, type: 2}
+  collectionCardId: La Suite
+  icon: {fileID: 0}
   cost: 1
+  xCost: 0
   type: 0
   rarity: 3
   effects:
   - type: 0
     value: 4
     targetSelf: 0
+    targetOthers: 0
     statusType: 8
     duration: 2
     description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
   - type: 3
     value: 0
     targetSelf: 0
+    targetOthers: 0
     statusType: 8
     duration: 2
     description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers: []
-  exhaust: 0
-  retain: 0
+  favoredCharacter: 9
+  animationSpeed: 1
+  startingCount: 0
+  tags: 

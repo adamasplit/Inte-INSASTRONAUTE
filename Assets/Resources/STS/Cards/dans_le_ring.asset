@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: dans_le_ring
   cardName: Dans le ring
-  collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: 23354d9c89348ef4db37c59bb46e7f4a, type: 2}
+  collectionCardId: Stadium
   icon: {fileID: 0}
   cost: 0
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 3
     value: 0
     targetSelf: 0
@@ -45,6 +46,7 @@ MonoBehaviour:
     duration: 1
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -52,6 +54,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers: []
   favoredCharacter: 9

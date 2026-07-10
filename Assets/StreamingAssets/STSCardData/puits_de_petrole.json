@@ -1,7 +1,7 @@
 {
   "id": "puits_de_petrole",
   "cardName": "Puits de pétrole",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Frappe",
   "cost": 1,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "etude_d_impact",
   "cardName": "Étude d'impact",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Zone",
   "cost": 1,
   "xCost": false,

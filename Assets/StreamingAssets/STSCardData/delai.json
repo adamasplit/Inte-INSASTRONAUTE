@@ -1,7 +1,7 @@
 {
   "id": "delai",
   "cardName": "Délai",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Frappe",
   "cost": 0,
   "xCost": false,

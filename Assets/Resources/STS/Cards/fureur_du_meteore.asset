@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: fureur_du_meteore
   cardName: "Fureur du m\xE9t\xE9ore"
-  collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: 3faa5f537f9ea9047a4a93eae0c40431, type: 2}
+  collectionCardId: FDM
   icon: {fileID: 0}
   cost: 0
   xCost: 1
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 6
     value: 3
     targetSelf: 0
@@ -45,6 +46,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -52,6 +54,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 2
   modifiers: []
   favoredCharacter: 9

@@ -1,7 +1,7 @@
 {
   "id": "gestion_du_risque",
   "cardName": "Gestion du risque",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Pouvoir",
   "cost": 1,
   "xCost": false,

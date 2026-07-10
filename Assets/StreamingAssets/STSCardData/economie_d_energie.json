@@ -1,7 +1,7 @@
 {
   "id": "economie_d_energie",
   "cardName": "Économie d'énergie",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "batterie",
   "cost": 2,
   "xCost": false,

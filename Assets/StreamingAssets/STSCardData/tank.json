@@ -1,7 +1,7 @@
 {
   "id": "tank",
   "cardName": "Tank",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "tank",
   "cost": 0,
   "xCost": false,

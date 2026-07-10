@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: divination
   cardName: Divination
-  collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: b41b90a6059adf940acbe10aabcc998d, type: 2}
+  collectionCardId: Chacharlatante
   icon: {fileID: 0}
   cost: 3
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 3
     value: 2
     targetSelf: 0
@@ -45,6 +46,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: "Mal\xE9diction"
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -52,6 +54,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers: []
   favoredCharacter: 11

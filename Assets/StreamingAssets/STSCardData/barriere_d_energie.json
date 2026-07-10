@@ -1,7 +1,7 @@
 {
   "id": "barriere_d_energie",
   "cardName": "Barrière d'énergie",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "barriere",
   "cost": 2,
   "xCost": false,

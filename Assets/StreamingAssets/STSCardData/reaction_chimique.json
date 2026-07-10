@@ -1,7 +1,7 @@
 {
   "id": "reaction_chimique",
   "cardName": "Réaction chimique",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Matière2",
   "cost": 0,
   "xCost": false,

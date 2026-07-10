@@ -1,7 +1,7 @@
 {
   "id": "rayon_spectral",
   "cardName": "Rayon spectral",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "spectral",
   "cost": 1,
   "xCost": false,

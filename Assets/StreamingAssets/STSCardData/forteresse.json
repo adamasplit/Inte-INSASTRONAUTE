@@ -1,7 +1,7 @@
 {
   "id": "forteresse",
   "cardName": "Forteresse mobile",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "ultimate_shield",
   "cost": 5,
   "xCost": false,

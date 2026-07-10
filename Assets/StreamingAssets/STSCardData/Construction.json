@@ -1,7 +1,7 @@
 {
   "id": "construction",
   "cardName": "Construction",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Dégâts et Armure",
   "cost": 1,
   "xCost": false,

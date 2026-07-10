@@ -1,7 +1,7 @@
 {
   "id": "milieu_continu",
   "cardName": "Milieu continu",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Affliction",
   "cost": 2,
   "xCost": false,

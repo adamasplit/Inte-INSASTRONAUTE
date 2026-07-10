@@ -1,7 +1,7 @@
 {
   "id": "bouclier",
   "cardName": "Bouclier",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Armure",
   "cost": 2,
   "xCost": false,

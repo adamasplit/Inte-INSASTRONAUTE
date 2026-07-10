@@ -1,7 +1,7 @@
 {
   "id": "cristallisation",
   "cardName": "Cristallisation",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Cristal",
   "cost": 1,
   "xCost": false,

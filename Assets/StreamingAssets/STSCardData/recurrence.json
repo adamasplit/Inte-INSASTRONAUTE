@@ -1,7 +1,7 @@
 {
   "id": "recurrence",
   "cardName": "Récurrence",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "iter",
   "cost": 0,
   "xCost": false,

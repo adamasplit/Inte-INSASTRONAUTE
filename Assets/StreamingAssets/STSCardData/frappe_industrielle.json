@@ -1,7 +1,7 @@
 {
   "id": "frappe_industrielle",
   "cardName": "Frappe industrielle",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Industrie",
   "cost": 0,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "limit_break",
   "cardName": "Dépassement de limites",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "limit",
   "cost": 2,
   "xCost": false,

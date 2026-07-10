@@ -1,7 +1,7 @@
 {
   "id": "diamant",
   "cardName": "Diamant",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "diamant",
   "cost": 1,
   "xCost": false,

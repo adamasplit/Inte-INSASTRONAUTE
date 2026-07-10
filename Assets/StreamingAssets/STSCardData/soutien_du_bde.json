@@ -1,7 +1,7 @@
 {
   "id": "soutien_du_bde",
   "cardName": "Soutien du BDE",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": null,
   "cost": 1,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "cle_de_voute",
   "cardName": "Clé de voûte",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "voute",
   "cost": 1,
   "xCost": false,

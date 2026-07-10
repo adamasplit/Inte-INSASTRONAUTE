@@ -1,7 +1,7 @@
 {
   "id": "creation_de_matiere",
   "cardName": "Création de matière",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "creation",
   "cost": 0,
   "xCost": false,

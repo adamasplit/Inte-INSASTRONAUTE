@@ -1,7 +1,7 @@
 {
   "id": "recombustion",
   "cardName": "Réaction atomique",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "ark",
   "cost": 3,
   "xCost": false,

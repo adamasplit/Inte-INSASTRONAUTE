@@ -1,7 +1,7 @@
 {
   "id": "frappe",
   "cardName": "Frappe",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Physique",
   "cost": 1,
   "xCost": false,

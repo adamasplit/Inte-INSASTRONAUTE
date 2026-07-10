@@ -1,7 +1,7 @@
 {
   "id": "autodecomposer",
   "cardName": "Autodécomposer",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Magique",
   "cost": 1,
   "xCost": false,

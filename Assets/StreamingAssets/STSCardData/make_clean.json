@@ -1,7 +1,7 @@
 {
   "id": "make_clean",
   "cardName": "Makefile",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Cartes",
   "cost": 1,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "lionheart",
   "cardName": "Lionheart",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": null,
   "cost": 3,
   "xCost": false,

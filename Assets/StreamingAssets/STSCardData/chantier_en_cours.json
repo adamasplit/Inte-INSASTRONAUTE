@@ -1,7 +1,7 @@
 {
   "id": "chantier_en_cours",
   "cardName": "Chantier en cours",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "tempo",
   "cost": 1,
   "xCost": false,

@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: demi_volee
   cardName: "Demi-vol\xE9e"
-  collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: b46b0e25dac032342b72180dfc574819, type: 2}
+  collectionCardId: TOSS
   icon: {fileID: 0}
   cost: 2
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 3
     description: 
     cardID: "Tir cadr\xE9"
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 9

@@ -1,7 +1,7 @@
 {
   "id": "industrialisation",
   "cardName": "Industrialisation",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Industrie",
   "cost": 2,
   "xCost": false,

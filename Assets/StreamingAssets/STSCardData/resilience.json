@@ -1,7 +1,7 @@
 {
   "id": "resilience",
   "cardName": "Résilience",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "wall",
   "cost": 2,
   "xCost": false,

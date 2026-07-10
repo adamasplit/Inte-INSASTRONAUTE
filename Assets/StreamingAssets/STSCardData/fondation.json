@@ -1,7 +1,7 @@
 {
   "id": "fondation",
   "cardName": "Fondation",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Pouvoir",
   "cost": 1,
   "xCost": false,

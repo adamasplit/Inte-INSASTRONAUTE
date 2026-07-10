@@ -1,7 +1,7 @@
 {
   "id": "seisme",
   "cardName": "Séisme",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Zone",
   "cost": 1,
   "xCost": false,

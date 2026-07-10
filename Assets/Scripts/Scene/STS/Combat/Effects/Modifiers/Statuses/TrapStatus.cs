@@ -22,6 +22,6 @@ public class TrapStatus : StatusEffect
     {
         base.OnTurnEnd(target);
         target.TakeDamage(Value);
-        VFXManager.Instance.PlayEffect("Trap", target);
+        VFXManager.Instance.PlayEffect("DamageExplosionSmall", target);
     }
 }

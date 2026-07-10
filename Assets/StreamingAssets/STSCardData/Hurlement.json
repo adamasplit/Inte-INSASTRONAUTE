@@ -1,7 +1,7 @@
 {
   "id": "hurlement",
   "cardName": "Hurlement",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "ArmureSoin",
   "cost": 0,
   "xCost": false,

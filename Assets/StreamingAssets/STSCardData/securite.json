@@ -1,7 +1,7 @@
 {
   "id": "securite",
   "cardName": "Sécurité",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "lock",
   "cost": 1,
   "xCost": false,

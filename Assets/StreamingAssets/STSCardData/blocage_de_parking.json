@@ -1,7 +1,7 @@
 {
   "id": "blocage_de_parking",
   "cardName": "Blocage de parking",
-  "collectionCardId": "parking_visiteur",
+  "collectionCardId": "Fermeture parking visiteur",
   "iconId": null,
   "cost": 2,
   "xCost": false,

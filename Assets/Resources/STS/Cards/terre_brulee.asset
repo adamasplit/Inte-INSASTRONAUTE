@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: terre_brulee
   cardName: "Terre br\xFBl\xE9e..."
-  collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: 9dc988728499cc4478d3c92e5b00155c, type: 2}
+  collectionCardId: BAF
   icon: {fileID: 0}
   cost: 3
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 3
     value: -2
     targetSelf: 0
@@ -45,6 +46,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -52,6 +54,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 2
   modifiers: []
   favoredCharacter: 9

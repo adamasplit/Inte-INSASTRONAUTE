@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: delai
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
+  id: delai
   cardName: "D\xE9lai"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: e7c84acf50fa33946a7f2b4741049b19, type: 3}
   cost: 0
   xCost: 0
@@ -29,10 +29,15 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
   - type: 6
     value: 4
     targetSelf: 0
@@ -41,15 +46,18 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
     trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers: []
-  exhaust: 0
-  retain: 0
-  innate: 0
   favoredCharacter: 11
   animationSpeed: 1
   startingCount: 0
+  tags: 

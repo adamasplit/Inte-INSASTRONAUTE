@@ -1,7 +1,7 @@
 {
   "id": "combustion",
   "cardName": "Combustion",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Ténèbres",
   "cost": 0,
   "xCost": true,

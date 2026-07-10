@@ -1,7 +1,7 @@
 {
   "id": "inondation",
   "cardName": "Inondation",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "inondation",
   "cost": 0,
   "xCost": false,

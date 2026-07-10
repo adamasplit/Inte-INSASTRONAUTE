@@ -1,7 +1,7 @@
 {
   "id": "soutien_satellite",
   "cardName": "Soutien de satellite",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "satellite",
   "cost": 1,
   "xCost": false,

@@ -1,7 +1,7 @@
 {
   "id": "frappe_ultime",
   "cardName": "Frappe ultime",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Frappe ultime",
   "cost": 2,
   "xCost": false,

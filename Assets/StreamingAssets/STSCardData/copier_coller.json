@@ -1,7 +1,7 @@
 {
   "id": "copier_coller",
   "cardName": "Copier-coller",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "copy",
   "cost": 1,
   "xCost": false,

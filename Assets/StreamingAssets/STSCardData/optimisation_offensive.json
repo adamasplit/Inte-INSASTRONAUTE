@@ -1,7 +1,7 @@
 {
   "id": "optimisation_offensive",
   "cardName": "Optimisation offensive",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Pouvoir",
   "cost": 2,
   "xCost": false,

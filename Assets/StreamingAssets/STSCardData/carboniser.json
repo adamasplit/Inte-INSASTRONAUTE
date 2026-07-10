@@ -1,7 +1,7 @@
 {
   "id": "carboniser",
   "cardName": "Carboniser",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "fountain",
   "cost": 1,
   "xCost": false,

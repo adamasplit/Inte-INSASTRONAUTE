@@ -1,7 +1,7 @@
 {
   "id": "faille_systeme",
   "cardName": "Faille système",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "critique",
   "cost": 2,
   "xCost": false,

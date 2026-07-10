@@ -1,7 +1,7 @@
 {
   "id": "gravitron",
   "cardName": "Gravitron",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Gravité",
   "cost": 2,
   "xCost": false,

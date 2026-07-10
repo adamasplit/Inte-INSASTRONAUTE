@@ -1,7 +1,7 @@
 {
   "id": "atterrissage",
   "cardName": "Atterrissage",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Choc",
   "cost": 0,
   "xCost": false,

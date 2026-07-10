@@ -1,7 +1,7 @@
 {
   "id": "purification",
   "cardName": "Purification",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Esuna",
   "cost": 0,
   "xCost": false,

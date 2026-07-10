@@ -1,7 +1,7 @@
 {
   "id": "vol",
   "cardName": "Vol",
-  "collectionCardId": "EP",
+  "collectionCardId": null,
   "iconId": "Saut",
   "cost": 3,
   "xCost": false,

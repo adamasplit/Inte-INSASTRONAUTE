@@ -1,7 +1,7 @@
 {
   "id": "renforcement",
   "cardName": "Renforcement",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Buff",
   "cost": 0,
   "xCost": false,

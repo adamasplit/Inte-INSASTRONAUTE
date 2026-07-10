@@ -1,7 +1,7 @@
 {
   "id": "derniere_ligne_droite",
   "cardName": "Dernière ligne droite",
-  "collectionCardId": "purple_rouen",
+  "collectionCardId": "Purple Rouen",
   "iconId": null,
   "cost": 0,
   "xCost": false,
@@ -34,8 +34,8 @@
       "type": "Damage",
       "kind": "Played",
       "value": 3,
-      "info": null,
-      "description": null
+      "info": "",
+      "description": ""
     }
   ],
   "favoredCharacter": "Aucun",

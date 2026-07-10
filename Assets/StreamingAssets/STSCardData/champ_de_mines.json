@@ -1,7 +1,7 @@
 {
   "id": "champ_de_mines",
   "cardName": "Champ de mines",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Piège",
   "cost": 0,
   "xCost": true,
