@@ -27,6 +27,13 @@ test('React API bridge receives responses on the WebBridge GameObject', () => {
   assert.match(reactApiBridgeSource, /gameObject\.name = WebBridgeGameObjectName/)
 })
 
+test('React API bridge bootstraps its Unity receiver before requests', () => {
+  assert.match(reactApiBridgeSource, /private static ReactApiBridge EnsureInstance\(\)/)
+  assert.match(reactApiBridgeSource, /new GameObject\(WebBridgeGameObjectName\)/)
+  assert.match(reactApiBridgeSource, /DontDestroyOnLoad\(bridgeObject\)/)
+  assert.match(reactApiBridgeSource, /instance = EnsureInstance\(\)/)
+})
+
 test('Unity unwraps React bridge envelopes before parsing card lists', () => {
   assert.match(collectionCardApiSource, /class ReactBridgeResponse/)
   assert.match(collectionCardApiSource, /JsonConvert\.DeserializeObject<ReactBridgeResponse>/)

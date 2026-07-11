@@ -16,6 +16,21 @@ public class ReactApiBridge : MonoBehaviour
     private static TaskCompletionSource<string> pendingAdminCardsResponse;
     private static string pendingAdminCardsRequestId;
 
+    private static ReactApiBridge EnsureInstance()
+    {
+        if (instance != null)
+            return instance;
+
+        instance = FindFirstObjectByType<ReactApiBridge>();
+        if (instance != null)
+            return instance;
+
+        var bridgeObject = new GameObject(WebBridgeGameObjectName);
+        DontDestroyOnLoad(bridgeObject);
+        instance = bridgeObject.AddComponent<ReactApiBridge>();
+        return instance;
+    }
+
     private void Awake()
     {
         gameObject.name = WebBridgeGameObjectName;
@@ -33,6 +48,7 @@ public class ReactApiBridge : MonoBehaviour
     public static async Task<string> RequestAdminCardsAsync(int timeoutMs = 5000)
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
+        instance = EnsureInstance();
         if (instance == null)
         {
             Debug.LogError("React bridge is not ready");
