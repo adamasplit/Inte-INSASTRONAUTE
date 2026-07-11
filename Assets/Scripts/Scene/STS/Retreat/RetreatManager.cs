@@ -76,6 +76,7 @@ public class RetreatManager : MonoBehaviour
             await RunManager.Instance.StartRunAsync("aa", 100, new List<Relic>(), false);
         }
 
+        STSRunAuditSystem.RecordNodeEntered(RunManager.Instance, RunManager.Instance.currentNode, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, "retreat_init");
         STSSceneLoader.Instance?.EndLoading();
         STSSceneLoader.Instance?.SceneReady();
     }
@@ -124,6 +125,7 @@ public class RetreatManager : MonoBehaviour
     public async void OnContinuePressed()
     {
         await EnsureTokenRewardAppliedAsync();
+        STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Map", "retreat_continue");
         RunManager.Instance.RegenerateMap = true;
         RunManager.Instance.act++;
         STSSceneLoader.Instance.LoadScene("STS_Map");
@@ -143,6 +145,7 @@ public class RetreatManager : MonoBehaviour
         goingToMenu = true;
 
         await EnsureTokenRewardAppliedAsync();
+        STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Boot", "retreat_menu");
         RunManager.Instance.OnRunEnd();
         STSSceneLoader.Instance.LoadScene("STS_Boot");
     }

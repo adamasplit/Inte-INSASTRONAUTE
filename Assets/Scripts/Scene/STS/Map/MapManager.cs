@@ -62,6 +62,10 @@ public class MapManager : MonoBehaviour
         // Wait a couple frames to ensure all spawned UI elements complete their Awake/Start/OnEnable
         yield return null;
         yield return null;
+        if (RunManager.Instance != null)
+        {
+            STSRunAuditSystem.RecordNodeEntered(RunManager.Instance, currentNode, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, "map_ready");
+        }
         STSSceneLoader.Instance?.SceneReady();
         RunManager.Instance?.SaveRunState();
     }
@@ -85,16 +89,17 @@ public class MapManager : MonoBehaviour
             return;
         }
 
+        MapNode sourceNode = currentNode;
         currentNode = node;
         RunManager.Instance.currentNode = currentNode;
         node.visited = true;
 
-        StartCoroutine(ResolveNode(node));
+        StartCoroutine(ResolveNode(sourceNode, node));
 
         view.RefreshView();
     }
 
-    IEnumerator ResolveNode(MapNode node)
+    IEnumerator ResolveNode(MapNode sourceNode, MapNode node)
     {
         string sceneName="STS_Map";
         switch (node.type)
@@ -139,6 +144,7 @@ public class MapManager : MonoBehaviour
         yield return StartCoroutine(FadeToBlack(0.5f));
         node.visited = true;
         RunManager.Instance.currentFloor+=1;
+        STSRunAuditSystem.RecordNodeExited(RunManager.Instance, sourceNode, node, sceneName, "map_transition");
         STSSceneLoader.Instance.LoadScene(sceneName);
     }
 

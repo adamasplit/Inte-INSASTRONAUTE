@@ -112,6 +112,7 @@ public class CombatManager : MonoBehaviour
         if (RunManager.Instance!=null)
         {
             RunManager.Instance.inCombat=true;
+            STSRunAuditSystem.RecordNodeEntered(RunManager.Instance, RunManager.Instance.currentNode, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, "combat_init");
         }
 
         STSSceneLoader.Instance?.SceneReady();
@@ -623,6 +624,7 @@ public class CombatManager : MonoBehaviour
             };
             //Debug.Log("Generating rewards for combat result: floor " + result.floor + ", elite: " + result.elite + ", boss: " + result.boss);
             RunManager.Instance.pendingReward = RewardGenerator.GenerateReward(result);
+            STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Reward", "combat_complete");
             STSSceneLoader.Instance.LoadScene("STS_Reward");
         }
         else if (outcome == TeamOutcome.Defeat)

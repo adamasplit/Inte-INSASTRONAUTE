@@ -9,6 +9,7 @@ using UnityEngine;
 public class STSRunSaveData
 {
     public int version = 1;
+    public string runId;
     public string selectedCharacter;
     public bool forceTutorial;
     public int act;
@@ -185,6 +186,7 @@ public static class STSRunSaveSystem
     {
         var data = new STSRunSaveData
         {
+            runId = run.runId,
             selectedCharacter = run.selectedCharacter.ToString(),
             forceTutorial = run.forceTutorial,
             act = run.act,
@@ -375,6 +377,8 @@ public static class STSRunSaveSystem
         {
             run.selectedCharacter = SelectableCharacter.Aucun;
         }
+
+        run.runId = string.IsNullOrWhiteSpace(data.runId) ? Guid.NewGuid().ToString("N") : data.runId;
 
         run.player = RestorePlayer(data.player);
         run.deck = RestoreDeck(data.deck);

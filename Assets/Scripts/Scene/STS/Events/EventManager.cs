@@ -41,6 +41,7 @@ public class EventManager : MonoBehaviour
             }
             DeckSelectionPanel.Instance=this.deckSelectionPanel;
             await LoadRandomEventAsync();
+            STSRunAuditSystem.RecordNodeEntered(RunManager.Instance, RunManager.Instance.currentNode, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, "event_init");
         }
         finally
         {
@@ -166,6 +167,7 @@ public class EventManager : MonoBehaviour
 
     public void ReturnToMap()
     {
+        STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Map", "event_return");
         STSSceneLoader.Instance.LoadScene("STS_Map");
     }
 

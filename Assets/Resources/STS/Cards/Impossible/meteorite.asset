@@ -15,7 +15,6 @@ MonoBehaviour:
   id: meteorite
   cardName: "M\xE9t\xE9orite"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 3a5fe83e3a17d9349a1a8fbedce45557, type: 3}
   cost: 2
   xCost: 0
@@ -38,7 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-    animationType: 2
+    animationType: 8
   - type: 3
     value: 0
     targetSelf: 1

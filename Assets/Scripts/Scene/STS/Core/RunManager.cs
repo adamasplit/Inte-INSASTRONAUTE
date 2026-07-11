@@ -7,6 +7,7 @@ public class RunManager : MonoBehaviour
 {
     public static RunManager Instance;
 
+    public string runId;
     public Player player;
     public SelectableCharacter selectedCharacter;
     public int currentFloor;
@@ -126,6 +127,8 @@ public class RunManager : MonoBehaviour
                 STSSceneLoader.Instance?.LoadScene(nextSceneName);
                 loadedScene = true;
             }
+
+            STSRunAuditSystem.RecordRunStarted(this);
         }
         finally
         {
@@ -149,6 +152,8 @@ public class RunManager : MonoBehaviour
 
     public void OnRunEnd(bool clearSave)
     {
+        STSRunAuditSystem.RecordRunEnded(this, clearSave ? "clear_save" : "preserve_save");
+
         if (clearSave)
         {
             STSRunSaveSystem.ClearSave();
@@ -178,6 +183,11 @@ public class RunManager : MonoBehaviour
         if (loaded && ui != null)
         {
             ui.gameObject.SetActive(true);
+        }
+
+        if (loaded)
+        {
+            STSRunAuditSystem.EnsureRunId(this);
         }
 
         return loaded;

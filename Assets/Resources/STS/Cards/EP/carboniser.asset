@@ -15,7 +15,6 @@ MonoBehaviour:
   id: carboniser
   cardName: Carboniser
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 5185460d034785c4e836806c6f9fcd69, type: 3}
   cost: 1
   xCost: 0
@@ -38,7 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-    animationType: 3
+    animationType: 7
   - type: 31
     value: 1
     targetSelf: 0

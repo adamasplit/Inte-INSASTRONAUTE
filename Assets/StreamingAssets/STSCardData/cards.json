@@ -3600,11 +3600,11 @@
       "effects": [
         {
           "type": "Status",
-          "value": 1,
+          "value": 3,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "CardFollowUp",
-          "duration": 3,
+          "duration": 0,
           "description": "",
           "cardID": "Tir cadré",
           "conditional": false,
@@ -3612,7 +3612,7 @@
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
-          "index": 0,
+          "index": 1,
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
           "animationType": "Default"
@@ -3871,7 +3871,7 @@
           "index": 0,
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
-          "animationType": "Fire"
+          "animationType": "ExplosionSmall"
         },
         {
           "type": "DispelSpecificStatus",
@@ -4646,7 +4646,7 @@
           "index": 0,
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
-          "animationType": "Fire"
+          "animationType": "ExplosionLarge"
         }
       ],
       "modifiers": [],
@@ -7710,7 +7710,7 @@
           "index": 0,
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
-          "animationType": "Default"
+          "animationType": "Magic"
         },
         {
           "type": "Status",
@@ -8333,7 +8333,7 @@
           "index": 0,
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
-          "animationType": "Magic"
+          "animationType": "ExplosionLarge"
         },
         {
           "type": "Status",
@@ -8393,7 +8393,7 @@
           "index": 0,
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
-          "animationType": "Magic"
+          "animationType": "ExplosionSmall"
         }
       ],
       "modifiers": [],

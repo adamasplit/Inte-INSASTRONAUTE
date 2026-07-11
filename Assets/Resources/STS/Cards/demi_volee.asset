@@ -22,14 +22,14 @@ MonoBehaviour:
   rarity: 2
   effects:
   - type: 3
-    value: 1
+    value: 3
     targetSelf: 1
     targetOthers: 0
     statusType: 39
-    duration: 3
+    duration: 0
     description: 
     cardID: "Tir cadr\xE9"
-    index: 0
+    index: 1
     conditional: 0
     conditionType: 0
     conditionValue: 

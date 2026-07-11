@@ -32,6 +32,7 @@ public class RestManager : MonoBehaviour
         }
         BuildDeck();
         UpdateChargesDisplay();
+        STSRunAuditSystem.RecordNodeEntered(RunManager.Instance, RunManager.Instance.currentNode, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, "rest_init");
         STSSceneLoader.Instance?.EndLoading();
         STSSceneLoader.Instance?.SceneReady();
     }
@@ -198,6 +199,7 @@ public class RestManager : MonoBehaviour
     }
     public void ReturnToMap()
     {
+        STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Map", "rest_return");
         STSSceneLoader.Instance.LoadScene("STS_Map");
     }
 
