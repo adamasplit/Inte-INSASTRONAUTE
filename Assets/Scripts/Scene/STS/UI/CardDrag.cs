@@ -30,6 +30,11 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (cardView == null || cardView.isAnimating)
+        {
+            return;
+        }
+
         cardView.isDragging = true;
         cardView.OnPointerClick(eventData); // Ensure the card is selected 
         startPos = rect.anchoredPosition;
@@ -61,6 +66,11 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (cardView == null || cardView.isAnimating)
+        {
+            return;
+        }
+
         Vector2 start = RectTransformUtility.WorldToScreenPoint(
             eventData.pressEventCamera,
             cardView.GetComponent<RectTransform>().TransformPoint(cardView.GetComponent<RectTransform>().rect.center)
@@ -88,6 +98,11 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (cardView == null || cardView.isAnimating)
+        {
+            return;
+        }
+
         group.blocksRaycasts = true;
         rect.anchoredPosition = startPos;
         timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));

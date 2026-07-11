@@ -29,6 +29,31 @@ public static class BattleCalculator
                     applyingModifiers.Add(effect);
             }
         }
+        bool shouldApplyRelicModifiers = (ctx.source != null && ctx.source.isPlayer) || (ctx.target != null && ctx.target.isPlayer);
+        if (shouldApplyRelicModifiers && RunManager.Instance != null)
+        {
+            foreach (var relic in RunManager.Instance.relics)
+            {
+                if (relic == null)
+                {
+                    continue;
+                }
+
+                var relicModifiers = relic.GetStatModifiers(ctx);
+                if (relicModifiers == null)
+                {
+                    continue;
+                }
+
+                foreach (var relicModifier in relicModifiers)
+                {
+                    if (relicModifier != null && relicModifier.AppliesTo(type, ctx))
+                    {
+                        applyingModifiers.Add(relicModifier);
+                    }
+                }
+            }
+        }
         // Apply modifiers in the correct order: Additive first, then Multiplicative, then Override
 
         applyingModifiers.Sort((a, b) => a.modifierType.CompareTo(b.modifierType));

@@ -24,6 +24,8 @@ public abstract class Relic
     public virtual void OnAnyArmorGain(Character target, int amount) {}
     public virtual void OnDeath(Character target) {}
     public virtual bool CanApplyStatus(StatusEffect status, Character target) { return true; }
+    public virtual bool CanTurnBeMoved(Character target, bool isAdvance, bool isCutIn) { return true; }
+    public virtual List<StatModifier> GetStatModifiers(EffectContext ctx) { return null; }
     public string Describe()
     {
         if (description==""||description==null)

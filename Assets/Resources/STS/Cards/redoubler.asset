@@ -40,7 +40,7 @@ MonoBehaviour:
     animationType: 0
   - type: 18
     value: 0
-    targetSelf: 0
+    targetSelf: 1
     targetOthers: 0
     statusType: 14
     duration: 0

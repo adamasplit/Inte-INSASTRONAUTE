@@ -31,7 +31,7 @@
     {
       "type": "EndTurn",
       "value": 0,
-      "targetSelf": false,
+      "targetSelf": true,
       "targetOthers": false,
       "statusType": "Speed",
       "duration": 0,

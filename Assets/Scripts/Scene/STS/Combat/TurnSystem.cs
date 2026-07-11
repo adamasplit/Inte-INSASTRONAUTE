@@ -479,8 +479,31 @@ public class TurnSystem : MonoBehaviour
         list.Sort((a, b) => a.time.CompareTo(b.time));
     }
 
+    bool CanMoveTurn(Character target, bool isAdvance, bool isCutIn)
+    {
+        if (target == null || !target.isPlayer || RunManager.Instance == null)
+        {
+            return true;
+        }
+
+        foreach (var relic in RunManager.Instance.relics)
+        {
+            if (relic != null && !relic.CanTurnBeMoved(target, isAdvance, isCutIn))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public List<TurnEntry> AdvanceAllTurns(List<TurnEntry> source, Character target, float amount)
     {
+        if (!CanMoveTurn(target, true, false))
+        {
+            return Clone(source);
+        }
+
         var sim = Clone(source);
 
         foreach (var entry in sim)
@@ -496,6 +519,11 @@ public class TurnSystem : MonoBehaviour
 
     public List<TurnEntry> DelayAllTurns(List<TurnEntry> source, Character target, float amount)
     {
+        if (!CanMoveTurn(target, false, false))
+        {
+            return Clone(source);
+        }
+
         var sim = Clone(source);
 
         foreach (var entry in sim)
@@ -512,6 +540,11 @@ public class TurnSystem : MonoBehaviour
 
     public void ApplyAdvanceAllTurns(Character target, float amount)
     {
+        if (!CanMoveTurn(target, true, false))
+        {
+            return;
+        }
+
         foreach (var entry in timeline)
         {
             if (entry.character != target)
@@ -533,6 +566,11 @@ public class TurnSystem : MonoBehaviour
 
     public void ApplyDelayAllTurns(Character target, float amount)
     {
+        if (!CanMoveTurn(target, false, false))
+        {
+            return;
+        }
+
         foreach (var entry in timeline)
         {
             if (entry.character != target)
@@ -601,6 +639,13 @@ public class TurnSystem : MonoBehaviour
             Debug.LogWarning("CutInTurn called with no targets.");
             return timeline;
         }
+        if (targetSelf)
+        {
+            if (!CanMoveTurn(source, true, true))
+            {
+                return Clone(timeline);
+            }
+        }
         Debug.Log($"CutInTurn: source={source.name}, targetSelf={targetSelf}, targets={string.Join(", ", targets.Select(t => t.name))}");
         var sim = Clone(timeline);
         if (targetSelf)
@@ -615,6 +660,10 @@ public class TurnSystem : MonoBehaviour
         {
             foreach (var target in targets)
             {
+                if (!CanMoveTurn(target, true, true))
+                {
+                    continue;
+                }
                 float currentTime = sim.Where(t => t.character == target).Min(t => t.time);
                 float nextTime = sim.Where(t => t.character != target).Min(t => t.time);
                 float earliestTargetTime = sim.Where(t => t.character == source).Min(t => t.time);
@@ -629,6 +678,13 @@ public class TurnSystem : MonoBehaviour
         {
             Debug.LogWarning("ApplyCutInTurn called with no targets.");
             return;
+        }
+        if (targetSelf)
+        {
+            if (!CanMoveTurn(source, true, true))
+            {
+                return;
+            }
         }
         Debug.Log($"Applying CutInTurn: source={source.name}, targetSelf={targetSelf}, targets={string.Join(", ", targets.Select(t => t.name))}");
         if (targetSelf)
@@ -647,6 +703,10 @@ public class TurnSystem : MonoBehaviour
         {
             foreach (var target in targets)
             {
+                if (!CanMoveTurn(target, true, true))
+                {
+                    continue;
+                }
                 float currentTime = timeline.Where(t => t.character == target).Min(t => t.time);
                 float nextTime = timeline.Where(t => t.character != target).Min(t => t.time);
                 float earliestTargetTime = timeline.Where(t => t.character == source).Min(t => t.time);

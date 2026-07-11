@@ -30,6 +30,12 @@ public static class RelicDatabase
             new ShatterPulseRelic(),
             new ArtifactCharmRelic(),
             new MeditativeFocusRelic(),
+            new SpeedCadenceRelic(),
+            new StrengthCadenceRelic(),
+            new DexterityCadenceRelic(),
+            new CounterStanceRelic(),
+            new ScholarSequenceRelic(),
+            new SurgeSequenceRelic(),
             new UltimateStrengthRelic(),
             new UltimateDexterityRelic(),
             new MoraleRelic(),
@@ -43,6 +49,9 @@ public static class RelicDatabase
             new TempoHourglassRelic(),
             new StrongbackRelic(),
             new FortifiedMomentumRelic(),
+            new TwelfthStrikeRelic(),
+            new NineSkillsBatteryRelic(),
+            new PowerCompletionRelic(),
             new CrownOfAshesRelic(),
             new InfernalContractRelic(),
             new TitanHeartRelic(),
@@ -58,6 +67,8 @@ public static class RelicDatabase
             new ImmutableSpineRelic(),
             new FrenziedIdolRelic(),
             new BrutalConvictionRelic(),
+            new StatusNullificationRelic(),
+            new TemporalAnchorRelic(),
             new JuryRelic()
         };
     }
