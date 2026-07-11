@@ -3,10 +3,16 @@ mergeInto(LibraryManager.library, {
     var json = UTF8ToString(jsonPtr);
 
     try {
-      if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
-        window.dispatchEvent(new CustomEvent('insastral-request', { detail: json }));
+      if (
+        typeof window === 'undefined' ||
+        !window.insastralUnityBridge ||
+        typeof window.insastralUnityBridge.request !== 'function'
+      ) {
+        console.error('[InsastralBridge] React bridge is not ready');
+        return 0;
       }
 
+      window.insastralUnityBridge.request(json);
       return 1;
     } catch (error) {
       console.error('Insastral_Request bridge failed:', error);

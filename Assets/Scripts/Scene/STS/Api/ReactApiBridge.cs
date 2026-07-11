@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ReactApiBridge : MonoBehaviour
 {
+    private const string WebBridgeGameObjectName = "WebBridge";
+
 #if UNITY_WEBGL && !UNITY_EDITOR
     [DllImport("__Internal")]
     private static extern int Insastral_Request(string json);
@@ -16,6 +18,7 @@ public class ReactApiBridge : MonoBehaviour
 
     private void Awake()
     {
+        gameObject.name = WebBridgeGameObjectName;
         instance = this;
     }
 

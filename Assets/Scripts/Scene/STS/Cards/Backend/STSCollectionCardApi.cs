@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 public static class STSCollectionCardApi
@@ -15,6 +16,22 @@ public static class STSCollectionCardApi
         public string name;
         public string imageUrl;
         public string thumbnailUrl;
+    }
+
+    [Serializable]
+    private class ReactBridgeError
+    {
+        public string code;
+        public string message;
+    }
+
+    [Serializable]
+    private class ReactBridgeResponse
+    {
+        public string id;
+        public bool ok;
+        public JToken data;
+        public ReactBridgeError error;
     }
 
     private static readonly Dictionary<string, CollectionCardApiEntry> cardsById = new();
@@ -63,10 +80,44 @@ public static class STSCollectionCardApi
         if (string.IsNullOrWhiteSpace(json))
             return false;
 
-        return TryParseCardsJson(json, "React bridge");
+        return TryParseReactBridgeCardsJson(json);
 #else
         return false;
 #endif
+    }
+
+    private static bool TryParseReactBridgeCardsJson(string json)
+    {
+        ReactBridgeResponse response;
+        try
+        {
+            response = JsonConvert.DeserializeObject<ReactBridgeResponse>(json);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"Failed to parse React bridge response: {ex.Message}");
+            return false;
+        }
+
+        if (response == null)
+            return false;
+
+        if (!response.ok)
+        {
+            string message = response.error != null
+                ? $"{response.error.code}: {response.error.message}"
+                : "Unknown React bridge error";
+            Debug.LogWarning($"React bridge returned an error while loading cards: {message}");
+            return false;
+        }
+
+        if (response.data == null || response.data.Type == JTokenType.Null)
+        {
+            Debug.LogWarning("React bridge returned an empty card payload.");
+            return false;
+        }
+
+        return TryParseCardsJson(response.data.ToString(Formatting.None), "React bridge");
     }
 
     private static async Task<bool> TryLoadLocalManifestAsync()
