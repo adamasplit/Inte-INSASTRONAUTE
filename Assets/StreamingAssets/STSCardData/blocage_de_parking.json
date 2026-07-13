@@ -30,7 +30,7 @@
     },
     {
       "type": "Status",
-      "value": -2,
+      "value": -3,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Speed",

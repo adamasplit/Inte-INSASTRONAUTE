@@ -125,7 +125,6 @@ public class DeckManager
             card.RemoveTemporaryModifiers();
             if (card.HasEnchantment("Mécanique"))
             {
-                Debug.Log("Card has Mécanique enchantment, playing instead of discarding.");
                 combatManager.PlayCard(combatManager.player, card, new List<Character> { combatManager.enemies[UnityEngine.Random.Range(0, combatManager.enemies.Count)] },true);
                 continue;
             }

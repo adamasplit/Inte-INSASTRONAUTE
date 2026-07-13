@@ -7,7 +7,7 @@ using UnityEngine;
 
 public static class EnemyPoolDatabase
 {
-    private static readonly string CombinedJsonPath = "EnemyData/EnemyPool.json";
+    private static readonly string CombinedJsonPath = "EnemyPool/EnemyPool.json";
 
     static List<EncounterEntry> allEncounters;
     static bool isLoaded;
@@ -64,7 +64,7 @@ public static class EnemyPoolDatabase
         isLoaded = allEncounters.Count > 0;
         if (!isLoaded)
         {
-            Debug.LogError("EnemyPoolDatabase loaded zero encounter entries. Check StreamingAssets/EnemyData/EnemyPool.json.");
+            Debug.LogError("EnemyPoolDatabase loaded zero encounter entries. Check StreamingAssets/EnemyPool/EnemyPool.json.");
             allEncounters = null;
         }
 

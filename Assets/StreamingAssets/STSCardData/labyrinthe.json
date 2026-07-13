@@ -11,7 +11,7 @@
   "effects": [
     {
       "type": "DelayTurn",
-      "value": 25,
+      "value": 120,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",

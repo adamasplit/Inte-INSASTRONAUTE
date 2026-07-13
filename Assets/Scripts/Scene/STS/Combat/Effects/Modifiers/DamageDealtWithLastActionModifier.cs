@@ -13,10 +13,8 @@ public class DamageDealtWithLastActionModifier : StatModifier
     }
     public override int Modify(int value, EffectContext ctx)
     {
-        Debug.Log("DamageDealtWithLastActionModifier modifying " + value + " with addedValue " + addedValue + " and damageDealtWithLastAction " + ctx.combat.state.damageDealtWithLastAction);
         if (ctx.target == null)
             return value;
-        Debug.Log("DamageDealtWithLastActionModifier modifying " + value + " with addedValue " + addedValue + " and damageDealtWithLastAction " + ctx.combat.state.damageDealtWithLastAction);
         return value + ctx.combat.state.damageDealtWithLastAction;
     }
 

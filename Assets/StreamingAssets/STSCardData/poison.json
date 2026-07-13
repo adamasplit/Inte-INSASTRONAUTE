@@ -2,7 +2,7 @@
   "id": "poison",
   "cardName": "Poison",
   "collectionCardId": null,
-  "iconId": null,
+  "iconId": "vuln",
   "cost": 0,
   "xCost": false,
   "type": "Compétence",

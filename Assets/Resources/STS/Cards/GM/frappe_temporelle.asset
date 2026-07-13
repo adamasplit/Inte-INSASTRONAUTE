@@ -15,7 +15,6 @@ MonoBehaviour:
   id: frappe_temporelle
   cardName: Frappe temporelle
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: a740dbcca7e40fb4d82fc064fcf703c5, type: 3}
   cost: 1
   xCost: 0
@@ -40,7 +39,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 1
   - type: 6
-    value: 4
+    value: 20
     targetSelf: 0
     targetOthers: 0
     statusType: 0

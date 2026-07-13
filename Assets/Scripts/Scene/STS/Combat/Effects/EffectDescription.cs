@@ -176,16 +176,16 @@ public static class EffectDescription
             {
                 string turns = BattleCalculator.GetModifiedDescription(effect.value, StatType.TurnManipulationAdvance, ctx);
                 if (effect.targetSelf)
-                    return $"Avancez votre prochain tour ({turns})";
-                return (multipleTargets?"Avancez les prochains tours de toutes les cibles":"Avancez le prochain tour de la cible") + $" ({turns})";
+                    return $"Avancez votre prochain tour ({turns}%)";
+                return (multipleTargets?"Avancez les prochains tours de toutes les cibles":"Avancez le prochain tour de la cible") + $" ({turns}%)";
             }
 
             case EffectType.DelayTurn:
             {
                 string turns = BattleCalculator.GetModifiedDescription(effect.value, StatType.TurnManipulationDelay, ctx);
                 if (effect.targetSelf)
-                    return $"Retardez votre prochain tour ({turns})";
-                return (multipleTargets?"Retardez les prochains tours de toutes les cibles":"Retardez le prochain tour de la cible") + $" ({turns})";
+                    return $"Retardez votre prochain tour ({turns}%)";
+                return (multipleTargets?"Retardez les prochains tours de toutes les cibles":"Retardez le prochain tour de la cible") + $" ({turns}%)";
             }
             case EffectType.CutInTurn:
             {

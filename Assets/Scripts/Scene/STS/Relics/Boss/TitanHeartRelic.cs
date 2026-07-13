@@ -5,7 +5,7 @@ public class TitanHeartRelic : Relic
     public TitanHeartRelic()
     {
         rarity = RelicRarity.Boss;
-        name = "Cœur de titan";
+        name = "Ceinture d'astéroïdes";
         description = "Au début du combat, gagnez 20 d'Armure, 1 de Force et 1 de Dextérité, mais vous êtes Fragilisé pendant tout le combat.";
     }
 

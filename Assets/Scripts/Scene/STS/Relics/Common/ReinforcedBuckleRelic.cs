@@ -7,8 +7,8 @@ public class ReinforcedBuckleRelic : Relic
     public ReinforcedBuckleRelic()
     {
         rarity = RelicRarity.Common;
-        name = "Boucle renforcée";
-        description = "La première fois par combat que vous gagnez de l'Armure, vous en gagnez 2 de plus.";
+        name = "Gants de protection";
+        description = "La première fois par combat que vous gagnez de l'Armure, gagnez 5 d'Armure supplémentaire.";
     }
 
     public override void OnCombatStart(Character player)
@@ -24,6 +24,6 @@ public class ReinforcedBuckleRelic : Relic
         }
 
         triggered = true;
-        target.AddArmor(2);
+        target.AddArmor(5);
     }
 }

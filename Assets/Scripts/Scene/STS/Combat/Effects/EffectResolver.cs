@@ -43,19 +43,21 @@ public static class EffectResolver
             case EffectType.AdvanceTurn:
             {
                 int advanceAmount = BattleCalculator.GetModifiedValue(effect.value, StatType.TurnManipulationAdvance, ctx);
+                float turnDelay = ctx.target != null ? Mathf.Max(1f, ctx.target.turnDelay(turnSystem.baseDelay)) : turnSystem.baseDelay;
+                float advanceDelay = turnDelay * advanceAmount / 100f;
                 if (ctx.isPreview)
                 {
                     ctx.timeline = turnSystem.AdvanceAllTurns(
                         ctx.timeline,
                         ctx.target,
-                        advanceAmount
+                        advanceDelay
                     );
                 }
                 else
                 {
                     turnSystem.ApplyAdvanceAllTurns(
                         ctx.target,
-                        advanceAmount
+                        advanceDelay
                     );
                 }
                 break;
@@ -63,19 +65,21 @@ public static class EffectResolver
             case EffectType.DelayTurn:
             {
                 int delayAmount = BattleCalculator.GetModifiedValue(effect.value, StatType.TurnManipulationDelay, ctx);
+                float turnDelay = ctx.target != null ? Mathf.Max(1f, ctx.target.turnDelay(turnSystem.baseDelay)) : turnSystem.baseDelay;
+                float delayDelay = turnDelay * delayAmount / 100f;
                 if (ctx.isPreview)
                 {
                     ctx.timeline = turnSystem.DelayAllTurns(
                         ctx.timeline,
                         ctx.target,
-                        delayAmount
+                        delayDelay
                     );
                 }
                 else
                 {
                     turnSystem.ApplyDelayAllTurns(
                         ctx.target,
-                        delayAmount
+                        delayDelay
                     );
                 }
                 break;
@@ -235,19 +239,21 @@ public static class EffectResolver
             case EffectType.AdvanceTurn:
             {
                 int advanceAmount = BattleCalculator.GetModifiedValue(effect.value, StatType.TurnManipulationAdvance, ctx);
+                float turnDelay = ctx.target != null ? Mathf.Max(1f, ctx.target.turnDelay(turnSystem.baseDelay)) : turnSystem.baseDelay;
+                float advanceDelay = turnDelay * advanceAmount / 100f;
                 if (ctx.isPreview)
                 {
                     ctx.timeline = turnSystem.AdvanceAllTurns(
                         ctx.timeline,
                         ctx.target,
-                        advanceAmount
+                        advanceDelay
                     );
                 }
                 else
                 {
                     turnSystem.ApplyAdvanceAllTurns(
                         ctx.target,
-                        advanceAmount
+                        advanceDelay
                     );
                 }
                 yield break;
@@ -255,19 +261,21 @@ public static class EffectResolver
             case EffectType.DelayTurn:
             {
                 int delayAmount = BattleCalculator.GetModifiedValue(effect.value, StatType.TurnManipulationDelay, ctx);
+                float turnDelay = ctx.target != null ? Mathf.Max(1f, ctx.target.turnDelay(turnSystem.baseDelay)) : turnSystem.baseDelay;
+                float delayDelay = turnDelay * delayAmount / 100f;
                 if (ctx.isPreview)
                 {
                     ctx.timeline = turnSystem.DelayAllTurns(
                         ctx.timeline,
                         ctx.target,
-                        delayAmount
+                        delayDelay
                     );
                 }
                 else
                 {
                     turnSystem.ApplyDelayAllTurns(
                         ctx.target,
-                        delayAmount
+                        delayDelay
                     );
                 }
                 yield break;
@@ -499,8 +507,6 @@ public static class EffectResolver
                         CardSelectionSource.AllExceptExhaustPile => deck.hand.Concat(deck.discardPile).Concat(deck.drawPile).Where(c => predicate(c)).ToList(),
                         _ => new List<CardInstance>()
                     };
-                    Debug.Log($"Card selection candidates: {string.Join(", ", candidates.Select(c => c.data.cardName))}");
-
                     if (candidates.Count == 0)
                         yield break;
 
@@ -919,7 +925,6 @@ public static class EffectResolver
     }
     public static bool VerifyCondition(ConditionType type, string strValue, EffectContext ctx)
     {
-        Debug.Log($"Vérification de la condition {type} avec la valeur {strValue}");
         switch (type)
         {
             case ConditionType.KillingBlow:
@@ -991,13 +996,10 @@ public static class EffectResolver
                     return false;
                 foreach (var target in ctx.targets)
                 {
-                    Debug.Log($"Vérification si l'ennemi {target.name} va attaquer");
                     if (target is Enemy enemy&&enemy.PeekNextAction() != null)
                     {
-                        Debug.Log($"L'ennemi {enemy.name} va attaquer. Prochaine action : {enemy.PeekNextAction()?.type}");
                         if (enemy.PeekNextAction()?.type == CardType.Attaque)
                         {
-                            Debug.Log($"L'ennemi {enemy.name} va attaquer. Prochaine action : {enemy.PeekNextAction()?.type}");
                             return true;
                         }
                     }
@@ -1010,7 +1012,6 @@ public static class EffectResolver
                 {
                     if (target is Enemy enemy2&&enemy2.PeekNextAction() != null)
                     {
-                        Debug.Log($"Vérification si l'ennemi {enemy2.name} ne va pas attaquer. Prochaine action : {enemy2.PeekNextAction()?.type}");
                         if (enemy2.PeekNextAction()?.type == CardType.Attaque)
                         {
                             return false; // If any enemy is going to attack, return false

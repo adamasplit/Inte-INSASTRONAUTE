@@ -11,7 +11,7 @@ public class TurnSystem : MonoBehaviour
 
     public List<TurnEntry> timeline = new();
 
-    public int baseDelay = 10;
+    public int baseDelay = 25;
     public Button endTurnButton;
     public TurnEntry currentTurnEntry;
 
@@ -244,6 +244,8 @@ public class TurnSystem : MonoBehaviour
     // -------------------------
     public void PlayerEndTurn()
     {
+        if (SelectionManager.Instance.selectionMode)
+            return;
         endTurnButton.interactable = false;
         combat.deck.DiscardHand();
         combat.NotifyTurnEnded();

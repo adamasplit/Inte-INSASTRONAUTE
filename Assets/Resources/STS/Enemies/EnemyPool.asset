@@ -35,6 +35,17 @@ MonoBehaviour:
     weight: 1
     elite: 1
     boss: 0
+  - displayName: Boucliers et spectres
+    enemies:
+    - {fileID: 11400000, guid: cd6d3998007ee2a4fa40288240d496fc, type: 2}
+    - {fileID: 11400000, guid: 030305c5255494040b1aa2598d91e63d, type: 2}
+    minFloor: 2
+    maxFloor: 6
+    minAct: 0
+    maxAct: 1
+    weight: 1.1
+    elite: 0
+    boss: 0
   - displayName: 2 armures
     enemies:
     - {fileID: 11400000, guid: cd6d3998007ee2a4fa40288240d496fc, type: 2}
@@ -144,7 +155,7 @@ MonoBehaviour:
     maxFloor: -1
     minAct: -1
     maxAct: -1
-    weight: 0.7
+    weight: 0.95
     elite: 0
     boss: 0
   - displayName: Soldat2 (acte 2)
@@ -205,7 +216,7 @@ MonoBehaviour:
     maxFloor: 6
     minAct: 1
     maxAct: -1
-    weight: 0.531
+    weight: 0.9
     elite: 0
     boss: 0
   - displayName: Invaders
@@ -216,7 +227,7 @@ MonoBehaviour:
     maxFloor: 6
     minAct: -1
     maxAct: 0
-    weight: 0.515
+    weight: 0.9
     elite: 0
     boss: 0
   - displayName: Soldat
@@ -271,6 +282,17 @@ MonoBehaviour:
     weight: 1
     elite: 0
     boss: 0
+  - displayName: "Pression crois\xE9e"
+    enemies:
+    - {fileID: 11400000, guid: cd6d3998007ee2a4fa40288240d496fc, type: 2}
+    - {fileID: 11400000, guid: 931c0fae846614e41adfb2bda056c8c7, type: 2}
+    minFloor: 5
+    maxFloor: -1
+    minAct: 0
+    maxAct: -1
+    weight: 0.85
+    elite: 0
+    boss: 0
   - displayName: Mime
     enemies:
     - {fileID: 11400000, guid: 335f1893a53b9b74fae50c8cf1fc9228, type: 2}
@@ -311,7 +333,7 @@ MonoBehaviour:
     maxFloor: -1
     minAct: 0
     maxAct: -1
-    weight: 1
+    weight: 1.1
     elite: 0
     boss: 0
   - displayName: Bloom Cluster
@@ -322,7 +344,7 @@ MonoBehaviour:
     maxFloor: -1
     minAct: 1
     maxAct: -1
-    weight: 1
+    weight: 1.05
     elite: 0
     boss: 0
   - displayName: Mirror Rift
@@ -333,7 +355,18 @@ MonoBehaviour:
     maxFloor: -1
     minAct: 1
     maxAct: -1
-    weight: 0
+    weight: 0.8
+    elite: 0
+    boss: 0
+  - displayName: "Barrage blind\xE9"
+    enemies:
+    - {fileID: 11400000, guid: 32beb350830d4ea4080266b5e66083b2, type: 2}
+    - {fileID: 11400000, guid: 845a5b5209525f6478d6a650c1e11882, type: 2}
+    minFloor: 7
+    maxFloor: -1
+    minAct: 1
+    maxAct: -1
+    weight: 0.75
     elite: 0
     boss: 0
   - displayName: Forge Defenders
@@ -344,7 +377,7 @@ MonoBehaviour:
     maxFloor: -1
     minAct: 2
     maxAct: -1
-    weight: 0
+    weight: 0.9
     elite: 1
     boss: 0
   - displayName: Feathered Static
@@ -355,7 +388,7 @@ MonoBehaviour:
     maxFloor: -1
     minAct: 2
     maxAct: -1
-    weight: 1
+    weight: 0.95
     elite: 0
     boss: 0
   - displayName: Glass Harrier solo

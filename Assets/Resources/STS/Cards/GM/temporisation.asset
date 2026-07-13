@@ -15,7 +15,6 @@ MonoBehaviour:
   id: temporisation
   cardName: Temporisation
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: ec60b092f26f2c04885bf10540892765, type: 3}
   cost: 0
   xCost: 0
@@ -40,7 +39,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   - type: 6
-    value: 3
+    value: 12
     targetSelf: 1
     targetOthers: 0
     statusType: 0

@@ -2,7 +2,7 @@
   "id": "Enemy 4",
   "enemyName": "Enemy 4",
   "displayName": "",
-  "maxHP": 32,
+  "maxHP": 36,
   "randomStart": false,
   "patternCardIds": [
     "renforcement",
@@ -52,7 +52,7 @@
       "effects": [
         {
           "type": "Armor",
-          "value": 6,
+          "value": 8,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strengthen",
@@ -101,7 +101,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 7,
+          "value": 8,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strengthen",
@@ -135,7 +135,7 @@
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strengthen",
-          "duration": 3,
+          "duration": 4,
           "description": "",
           "cardID": "",
           "conditional": false,

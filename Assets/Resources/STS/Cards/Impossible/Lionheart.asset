@@ -15,7 +15,6 @@ MonoBehaviour:
   id: lionheart
   cardName: Lionheart
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 0}
   cost: 3
   xCost: 0
@@ -23,13 +22,14 @@ MonoBehaviour:
   rarity: 5
   effects:
   - type: 6
-    value: 6
+    value: 100
     targetSelf: 1
     targetOthers: 0
     statusType: 0
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 3
     value: 10
     targetSelf: 1
@@ -45,6 +46,7 @@ MonoBehaviour:
     duration: -1
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -52,6 +54,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 10

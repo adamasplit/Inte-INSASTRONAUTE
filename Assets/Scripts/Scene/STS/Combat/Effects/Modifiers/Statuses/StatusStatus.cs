@@ -13,7 +13,6 @@ public class StatusStatus : StatusEffect
     public override void OnTurnEnd(Character target)
     {
         base.OnTurnEnd(target);
-        Debug.Log("StatusStatus OnTurnEnd triggered");
         switch (Random.Range(0, 3))
         {
             case 0:

@@ -7,7 +7,7 @@ public class NineSkillsBatteryRelic : Relic
     public NineSkillsBatteryRelic()
     {
         rarity = RelicRarity.Rare;
-        name = "Batterie méthodique";
+        name = "Seau d'eau";
         description = "Toutes les 9 Compétences jouées, gagnez 1 énergie.";
     }
 

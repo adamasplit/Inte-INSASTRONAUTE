@@ -53,7 +53,6 @@ public class RewardManager : MonoBehaviour, IRewardFlowHost
         }
         else if (item is RelicReward)
         {   
-            Debug.Log("Spawning relic reward: " + ((RelicReward)item).relic.name);
             prefab = relicRewardPrefab;
         }
         else if (item is GoldReward)

@@ -8,7 +8,7 @@ using UnityEngine;
 public static class EnemyPoolJsonExporter
 {
     private const string SourceAssetPath = "Assets/Resources/STS/Enemies/EnemyPool.asset";
-    private const string TargetJsonPath = "Assets/StreamingAssets/EnemyData/EnemyPool.json";
+    private const string TargetJsonPath = "Assets/StreamingAssets/EnemyPool/EnemyPool.json";
 
     [MenuItem("Tools/Export STS Enemy Pool to JSON")] 
     public static void ExportEnemyPoolToJson()

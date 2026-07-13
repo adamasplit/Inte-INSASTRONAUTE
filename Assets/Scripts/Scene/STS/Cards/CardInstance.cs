@@ -37,7 +37,6 @@ public class CardInstance
         {
             foreach (var modData in data.modifiers)
             {
-                Debug.Log($"Adding base modifier from card data: {modData.type} {modData.value}");
                 baseModifiers.Add(modData.CreateModifier());
             }
         }

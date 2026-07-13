@@ -68,7 +68,7 @@
     },
     {
       "type": "DelayTurn",
-      "value": 24,
+      "value": 99,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Targeting",

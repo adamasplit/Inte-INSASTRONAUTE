@@ -24,7 +24,6 @@ public class DivinationStatus : StatusEffect
     }
     public override int Modify(int damage, EffectContext ctx)
     {
-        Debug.Log($"activation pour {ctx.card.data.cardName}");
         if (damage<=ctx.target.armor)
         {
             return damage;

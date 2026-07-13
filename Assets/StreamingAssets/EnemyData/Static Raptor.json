@@ -2,7 +2,7 @@
   "id": "Static Raptor",
   "enemyName": "Static Raptor",
   "displayName": "Électrosaure",
-  "maxHP": 20,
+  "maxHP": 22,
   "randomStart": false,
   "patternCardIds": [],
   "movePattern": [
@@ -108,7 +108,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 5,
+          "value": 6,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Speed",

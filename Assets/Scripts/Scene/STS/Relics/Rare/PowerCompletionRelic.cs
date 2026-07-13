@@ -10,7 +10,7 @@ public class PowerCompletionRelic : Relic
     public PowerCompletionRelic()
     {
         rarity = RelicRarity.Rare;
-        name = "Superpouvoirs";
+        name = "Dossier complet";
         description = "Pendant un combat, si vous jouez tous les Pouvoirs de votre deck, gagnez autant de Vitesse.";
     }
 

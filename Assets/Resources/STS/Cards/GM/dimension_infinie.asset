@@ -15,7 +15,6 @@ MonoBehaviour:
   id: dimension_infinie
   cardName: Dimension infinie
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 4ddd901862b6df248a6f6c679291d892, type: 3}
   cost: 0
   xCost: 0
@@ -23,7 +22,7 @@ MonoBehaviour:
   rarity: 1
   effects:
   - type: 6
-    value: 4
+    value: 15
     targetSelf: 0
     targetOthers: 0
     statusType: 0
@@ -38,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 1
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 32
     value: 1
     targetSelf: 1
@@ -54,6 +54,7 @@ MonoBehaviour:
     cardSelectionSource: 1
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers: []
   favoredCharacter: 2

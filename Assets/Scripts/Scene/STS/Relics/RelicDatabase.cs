@@ -36,8 +36,6 @@ public static class RelicDatabase
             new CounterStanceRelic(),
             new ScholarSequenceRelic(),
             new SurgeSequenceRelic(),
-            new UltimateStrengthRelic(),
-            new UltimateDexterityRelic(),
             new MoraleRelic(),
             new ThornsRelic(),
             new ISRelic(),
@@ -69,7 +67,8 @@ public static class RelicDatabase
             new BrutalConvictionRelic(),
             new StatusNullificationRelic(),
             new TemporalAnchorRelic(),
-            new JuryRelic()
+            new JuryRelic(),
+            new FireRelic()
         };
     }
     public static List<Relic> GetRelicsByRarity(RelicRarity rarity)

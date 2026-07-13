@@ -6,7 +6,7 @@ public class FortifiedMomentumRelic : Relic
     {
         rarity = RelicRarity.Rare;
         name = "Élan victorieux";
-        description = "La première fois que vous brisez l'Armure d'un ennemi, gagnez 1 de Force et 1 de Dextérité.";
+        description = "La première fois du combat que vous brisez l'Armure d'un ennemi, gagnez 1 de Force et 1 de Dextérité.";
     }
     private bool triggered = false;
     public override void OnCombatStart(Character player)

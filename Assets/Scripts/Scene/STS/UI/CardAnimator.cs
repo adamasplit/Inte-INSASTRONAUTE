@@ -25,9 +25,21 @@ public class CardAnimator : MonoBehaviour
     )
     {
         CardView cardView = rect != null ? rect.GetComponent<CardView>() : null;
+        CanvasGroup canvasGroup = rect != null ? rect.GetComponent<CanvasGroup>() : null;
+        bool restoreBlocksRaycasts = false;
+        bool restoreInteractable = false;
+
         if (cardView != null)
         {
             cardView.isAnimating = true;
+        }
+
+        if (canvasGroup != null)
+        {
+            restoreBlocksRaycasts = canvasGroup.blocksRaycasts;
+            restoreInteractable = canvasGroup.interactable;
+            canvasGroup.blocksRaycasts = false;
+            canvasGroup.interactable = false;
         }
 
         try
@@ -89,6 +101,12 @@ public class CardAnimator : MonoBehaviour
         }
         finally
         {
+            if (canvasGroup != null)
+            {
+                canvasGroup.blocksRaycasts = restoreBlocksRaycasts;
+                canvasGroup.interactable = restoreInteractable;
+            }
+
             if (cardView != null)
             {
                 cardView.isAnimating = false;

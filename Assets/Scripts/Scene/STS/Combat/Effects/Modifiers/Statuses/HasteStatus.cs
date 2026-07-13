@@ -16,10 +16,10 @@ public class HasteStatus : StatusEffect
 
     public override int Modify(int turnDelay, EffectContext ctx)
     {
-        return (turnDelay * (100 - 35)) / 100;
+        return (turnDelay * (100 - 20)) / 100;
     }
     public override string Desc(bool isPlayer)
     {
-        return $"+{35}% de vitesse";
+        return $"+{20}% de vitesse";
     }
 }

@@ -108,7 +108,6 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
         timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
         if (cardView != null)
         {
-            Debug.Log("Deselecting card and refreshing description for card: " + cardView.cardInstance?.displayName);
             cardView.Deselect();
             cardView.RefreshDescription(null, false, null);
             cardView.isDragging = false;

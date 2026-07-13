@@ -2,7 +2,7 @@
   "id": "poison 1",
   "cardName": "Force",
   "collectionCardId": null,
-  "iconId": null,
+  "iconId": "Buff",
   "cost": 0,
   "xCost": false,
   "type": "Compétence",

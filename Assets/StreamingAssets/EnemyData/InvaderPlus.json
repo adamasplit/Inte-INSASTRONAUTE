@@ -2,7 +2,7 @@
   "id": "InvaderPlus",
   "enemyName": "InvaderPlus",
   "displayName": "",
-  "maxHP": 13,
+  "maxHP": 15,
   "randomStart": false,
   "patternCardIds": [
     "acide",
@@ -15,7 +15,7 @@
       "effects": [
         {
           "type": "Status",
-          "value": 2,
+          "value": 3,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Speed",
@@ -34,7 +34,7 @@
         },
         {
           "type": "Armor",
-          "value": 3,
+          "value": 4,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Shielding",
@@ -63,7 +63,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 5,
+          "value": 6,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Poison",
@@ -111,7 +111,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 8,
+          "value": 9,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Fragile",

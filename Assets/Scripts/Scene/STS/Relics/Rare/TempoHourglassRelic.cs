@@ -8,7 +8,7 @@ public class TempoHourglassRelic : Relic
     public TempoHourglassRelic()
     {
         rarity = RelicRarity.Rare;
-        name = "200 BPM";
+        name = "240 BPM";
         description = "Après avoir joué 5 cartes dans un tour, gagnez 2 de Célérité.";
     }
 

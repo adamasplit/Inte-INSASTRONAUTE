@@ -5,7 +5,7 @@ public class StrongbackRelic : Relic
     public StrongbackRelic()
     {
         rarity = RelicRarity.Rare;
-        name = "Dos solide";
+        name = "Sac à dos";
         description = "À la fin de votre tour, si vous avez au moins 15 d'Armure, vous piocherez 1 carte et gagnez 1 de Dextérité au tour suivant.";
     }
 

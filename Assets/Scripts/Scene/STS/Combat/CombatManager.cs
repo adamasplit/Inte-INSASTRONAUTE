@@ -156,7 +156,9 @@ public class CombatManager : MonoBehaviour
                 targets = targets
             };
 
-        if (source==null||source.resources.energy < card.Cost(ctxTarget)&&source.isPlayer&&!ignoreEnergy)
+        int resolvedCost = card.Cost(ctxTarget);
+
+        if (source==null||source.resources.energy < resolvedCost&&source.isPlayer&&!ignoreEnergy)
         {
             ui.StartCoroutine(ui.EnergyTextGlowRed());
             yield break;
@@ -201,7 +203,7 @@ public class CombatManager : MonoBehaviour
             }
             if (!ignoreEnergy)
             {
-                source.SpendEnergy(card.Cost(ctxTarget));
+                source.SpendEnergy(resolvedCost);
             }
         }
         StartCoroutine(ui.GetView(source).GetComponent<DropZone>().FlashWhite());

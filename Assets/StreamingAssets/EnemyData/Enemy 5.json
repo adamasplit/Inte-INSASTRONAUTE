@@ -2,7 +2,7 @@
   "id": "Enemy 5",
   "enemyName": "Enemy 5",
   "displayName": "",
-  "maxHP": 28,
+  "maxHP": 30,
   "randomStart": false,
   "patternCardIds": [],
   "movePattern": [
@@ -23,7 +23,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 6,
+          "value": 7,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -54,7 +54,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 11,
+          "value": 12,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",

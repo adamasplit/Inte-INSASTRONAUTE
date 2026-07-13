@@ -30,7 +30,7 @@
     },
     {
       "type": "AdvanceTurn",
-      "value": 4,
+      "value": 15,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",

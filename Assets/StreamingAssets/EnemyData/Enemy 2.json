@@ -2,7 +2,7 @@
   "id": "Enemy 2",
   "enemyName": "Enemy 2",
   "displayName": "Spectre",
-  "maxHP": 8,
+  "maxHP": 10,
   "randomStart": false,
   "patternCardIds": [
     "lame_feuille",
@@ -16,7 +16,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 3,
+          "value": 4,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -35,7 +35,7 @@
         },
         {
           "type": "Armor",
-          "value": 3,
+          "value": 4,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",

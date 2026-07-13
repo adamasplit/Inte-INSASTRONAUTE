@@ -43,7 +43,6 @@ public class Enemy : Character
         maxHP = Mathf.RoundToInt(maxHP * multiplier);
         maxHP+=Random.Range(1,5); // Add a random value between 1 and 5 to maxHP
         currentHP = maxHP;
-        Debug.Log($"Initialized enemy {name} with {maxHP} HP. Adding starting status: {d.startingStatus} with value {d.startingStatusValue} and duration {d.startingStatusDuration}");
         if (d.startingStatusValue != 0 || d.startingStatusDuration != 0)
         {
             AddStatus(StatusEffect.Factory(d.startingStatus, d.startingStatusValue, d.startingStatusDuration,d.startingStatusInfo,d.startingStatusIndex));

@@ -4,7 +4,7 @@ public class TemporalAnchorRelic : Relic
     {
         rarity = RelicRarity.Boss;
         name = "Ancre temporelle";
-        description = "Le tour du porteur ne peut pas être déplacé.";
+        description = "Votre tour ne peut pas être déplacé.";
     }
 
     public override bool CanTurnBeMoved(Character target, bool isAdvance, bool isCutIn)

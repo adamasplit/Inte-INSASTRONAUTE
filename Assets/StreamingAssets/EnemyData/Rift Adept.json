@@ -2,7 +2,7 @@
   "id": "Rift Adept",
   "enemyName": "Rift Adept",
   "displayName": "Mage de l'espace",
-  "maxHP": 24,
+  "maxHP": 26,
   "randomStart": false,
   "patternCardIds": [],
   "movePattern": [
@@ -12,7 +12,7 @@
       "effects": [
         {
           "type": "Status",
-          "value": 2,
+          "value": 3,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Speed",
@@ -60,7 +60,7 @@
       "effects": [
         {
           "type": "AdvanceTurn",
-          "value": 2,
+          "value": 20,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Speed",
@@ -108,7 +108,7 @@
       "effects": [
         {
           "type": "DelayTurn",
-          "value": 2,
+          "value": 20,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",

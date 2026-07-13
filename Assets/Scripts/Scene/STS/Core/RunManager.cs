@@ -111,7 +111,6 @@ public class RunManager : MonoBehaviour
                 {
                     for (int i = 0; i < (addAllCardsToDeck ? 1 : card.startingCount); i++)
                     {
-                        Debug.Log($"Adding starting card: {card.name}");
                         deck.Add(new CardInstance(card));
                     }
                 }

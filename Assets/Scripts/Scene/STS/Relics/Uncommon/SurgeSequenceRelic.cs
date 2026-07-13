@@ -7,7 +7,7 @@ public class SurgeSequenceRelic : Relic
     public SurgeSequenceRelic()
     {
         rarity = RelicRarity.Uncommon;
-        name = "Séquence de surcharge";
+        name = "Séquençage";
         description = "Quand vous jouez une Attaque juste après un Pouvoir, gagnez 1 énergie.";
     }
 

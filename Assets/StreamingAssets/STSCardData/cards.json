@@ -627,7 +627,7 @@
       "effects": [
         {
           "type": "AdvanceTurn",
-          "value": 6,
+          "value": 25,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -816,7 +816,7 @@
         },
         {
           "type": "Status",
-          "value": -2,
+          "value": -3,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Speed",
@@ -909,7 +909,7 @@
         },
         {
           "type": "AdvanceTurn",
-          "value": 4,
+          "value": 15,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -5106,7 +5106,7 @@
         },
         {
           "type": "DelayTurn",
-          "value": 24,
+          "value": 99,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Targeting",
@@ -5145,7 +5145,7 @@
       "effects": [
         {
           "type": "DelayTurn",
-          "value": 4,
+          "value": 20,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -5164,7 +5164,7 @@
         },
         {
           "type": "AdvanceTurn",
-          "value": 4,
+          "value": 20,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -5315,7 +5315,7 @@
         },
         {
           "type": "DelayTurn",
-          "value": 4,
+          "value": 20,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -5427,7 +5427,7 @@
         },
         {
           "type": "DelayTurn",
-          "value": 7,
+          "value": 35,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -5446,7 +5446,7 @@
         },
         {
           "type": "DelayTurn",
-          "value": 7,
+          "value": 35,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -6030,7 +6030,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 8,
+          "value": 5,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -6086,7 +6086,7 @@
         },
         {
           "type": "DelayTurn",
-          "value": 20,
+          "value": 85,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -6198,7 +6198,7 @@
         },
         {
           "type": "AdvanceTurn",
-          "value": 4,
+          "value": 50,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -6237,7 +6237,7 @@
       "effects": [
         {
           "type": "DelayTurn",
-          "value": 4,
+          "value": 15,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -6575,7 +6575,7 @@
         },
         {
           "type": "DelayTurn",
-          "value": 4,
+          "value": 20,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -6960,7 +6960,7 @@
         {
           "type": "TurnManipulationDelay",
           "kind": "TimeUntilNextTurn",
-          "value": 2,
+          "value": 8,
           "info": "",
           "description": ""
         }
@@ -7153,7 +7153,7 @@
         },
         {
           "type": "DelayTurn",
-          "value": 3,
+          "value": 12,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -7381,7 +7381,7 @@
         },
         {
           "type": "DelayTurn",
-          "value": 1,
+          "value": 4,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -8022,7 +8022,7 @@
         },
         {
           "type": "DelayTurn",
-          "value": 7,
+          "value": 30,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -8200,7 +8200,7 @@
       "effects": [
         {
           "type": "DelayTurn",
-          "value": 6,
+          "value": 100,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -8258,7 +8258,7 @@
       "effects": [
         {
           "type": "DelayTurn",
-          "value": 6,
+          "value": 25,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -8333,7 +8333,7 @@
           "index": 0,
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
-          "animationType": "ExplosionLarge"
+          "animationType": "ExplosionSmall"
         },
         {
           "type": "Status",
@@ -8475,7 +8475,7 @@
         },
         {
           "type": "DelayTurn",
-          "value": 1,
+          "value": 5,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -8622,7 +8622,7 @@
       "effects": [
         {
           "type": "DelayTurn",
-          "value": 4,
+          "value": 20,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -9690,7 +9690,7 @@
       "effects": [
         {
           "type": "DelayTurn",
-          "value": 25,
+          "value": 120,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -13353,6 +13353,23 @@
       "tags": []
     },
     {
+      "id": "",
+      "cardName": "",
+      "collectionCardId": null,
+      "iconId": null,
+      "cost": 0,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Common",
+      "targetingMode": "Player",
+      "effects": [],
+      "modifiers": [],
+      "favoredCharacter": "Starting",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": []
+    },
+    {
       "id": "insastronaute",
       "cardName": "",
       "collectionCardId": null,
@@ -13660,7 +13677,7 @@
       "effects": [
         {
           "type": "DelayTurn",
-          "value": 5,
+          "value": 25,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -13753,7 +13770,7 @@
       "effects": [
         {
           "type": "AdvanceTurn",
-          "value": 4,
+          "value": 25,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -14015,7 +14032,7 @@
         },
         {
           "type": "DelayTurn",
-          "value": 4,
+          "value": 50,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -14080,7 +14097,7 @@
       "id": "poison 1",
       "cardName": "Force",
       "collectionCardId": null,
-      "iconId": null,
+      "iconId": "Buff",
       "cost": 0,
       "xCost": false,
       "type": "Compétence",
@@ -14182,7 +14199,7 @@
         },
         {
           "type": "AdvanceTurn",
-          "value": 6,
+          "value": 40,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -14210,7 +14227,7 @@
       "id": "poison",
       "cardName": "Poison",
       "collectionCardId": null,
-      "iconId": null,
+      "iconId": "vuln",
       "cost": 0,
       "xCost": false,
       "type": "Compétence",

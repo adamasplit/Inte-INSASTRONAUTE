@@ -2,7 +2,7 @@
   "id": "Mirror Imp",
   "enemyName": "Mirror Imp",
   "displayName": "Mirror Imp",
-  "maxHP": 26,
+  "maxHP": 28,
   "randomStart": false,
   "patternCardIds": [],
   "movePattern": [
@@ -60,7 +60,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 5,
+          "value": 6,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Vuln",
@@ -108,7 +108,7 @@
       "effects": [
         {
           "type": "Armor",
-          "value": 4,
+          "value": 5,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Shielding",

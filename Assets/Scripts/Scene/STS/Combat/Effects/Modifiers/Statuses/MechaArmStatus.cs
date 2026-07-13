@@ -11,7 +11,6 @@ public class MechaArmStatus : StatusEffect
     }
     public override void OnTurnEnd(Character target)
     {
-        Debug.Log("MechaArmStatus OnTurnEnd triggered");
         switch (Random.Range(0, 3))
         {
             case 0:

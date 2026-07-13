@@ -5,7 +5,7 @@ public class LastStandRelic : Relic
     public LastStandRelic()
     {
         rarity = RelicRarity.Rare;
-        name = "Dernier rempart";
+        name = "Mur cassé";
         description = "Au début de votre tour, si vous avez moins de la moitié de vos PV, gagnez 5 d'Armure et 1 de Force.";
     }
 

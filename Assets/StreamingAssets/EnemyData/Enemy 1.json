@@ -2,7 +2,7 @@
   "id": "Enemy 1",
   "enemyName": "Enemy 1",
   "displayName": "Armure",
-  "maxHP": 12,
+  "maxHP": 14,
   "randomStart": false,
   "patternCardIds": [],
   "movePattern": [
@@ -12,7 +12,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 5,
+          "value": 6,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -39,7 +39,7 @@
       "effects": [
         {
           "type": "Armor",
-          "value": 8,
+          "value": 10,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -85,7 +85,7 @@
       "effects": [
         {
           "type": "Armor",
-          "value": 8,
+          "value": 10,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -104,7 +104,7 @@
         },
         {
           "type": "Status",
-          "value": 3,
+          "value": 4,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -131,7 +131,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 11,
+          "value": 10,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -158,7 +158,7 @@
       "effects": [
         {
           "type": "Armor",
-          "value": 12,
+          "value": 14,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",

@@ -16,7 +16,6 @@ public class AreaDmgReductionStatus : StatusEffect
     }
     public override int Modify(int value, EffectContext ctx)
     {
-        Debug.Log($"AreaDmgReductionStatus: value={value}, Value={Value}, ctx.targets.Count={ctx.targets?.Count}");
         if (ctx.targets == null||ctx.targets.Count<=1)
             return value;
         return value - (value * Value / 100);

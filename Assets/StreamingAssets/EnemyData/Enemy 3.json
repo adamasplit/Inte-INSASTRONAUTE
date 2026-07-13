@@ -2,7 +2,7 @@
   "id": "Enemy 3",
   "enemyName": "Enemy 3",
   "displayName": "",
-  "maxHP": 10,
+  "maxHP": 12,
   "randomStart": false,
   "patternCardIds": [],
   "movePattern": [
@@ -16,7 +16,7 @@
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
-          "duration": 4,
+          "duration": 3,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -85,7 +85,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 4,
+          "value": 5,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Weakness",
@@ -135,7 +135,7 @@
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Fragile",
-          "duration": 5,
+          "duration": 4,
           "description": "",
           "cardID": "",
           "conditional": false,

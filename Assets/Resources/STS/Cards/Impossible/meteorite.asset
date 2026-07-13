@@ -37,7 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-    animationType: 8
+    animationType: 7
   - type: 3
     value: 0
     targetSelf: 1

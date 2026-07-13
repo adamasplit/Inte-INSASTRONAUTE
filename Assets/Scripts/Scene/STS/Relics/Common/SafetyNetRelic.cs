@@ -8,7 +8,7 @@ public class SafetyNetRelic : Relic
     {
         rarity = RelicRarity.Common;
         name = "Batterie de réserve";
-        description = "Une fois par combat, si vos PV passent sous la moitié, soignez 4 PV.";
+        description = "Une fois par combat, si vos PV passent sous la moitié, regagnez 4 PV.";
     }
 
     public override void OnCombatStart(Character player)

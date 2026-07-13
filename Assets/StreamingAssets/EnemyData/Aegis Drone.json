@@ -2,7 +2,7 @@
   "id": "Aegis Drone",
   "enemyName": "Aegis Drone",
   "displayName": "Robogarde",
-  "maxHP": 22,
+  "maxHP": 24,
   "randomStart": false,
   "patternCardIds": [],
   "movePattern": [
@@ -12,7 +12,7 @@
       "effects": [
         {
           "type": "Armor",
-          "value": 6,
+          "value": 8,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Shielding",
@@ -60,7 +60,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 6,
+          "value": 7,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Vuln",

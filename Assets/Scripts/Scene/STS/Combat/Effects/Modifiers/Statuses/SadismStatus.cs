@@ -16,7 +16,6 @@ public class SadismStatus:StatusEffect
         {
             if (character.currentHP <= character.maxHP *0.8f)
             {
-                Debug.Log("Sadism evolved because " + character.name + " is below 80% HP (" + character.currentHP + "/" + character.maxHP + ")");
                 target.AddStatus(new SadismIIStatus());
                 this.mustExpire=true;
             }

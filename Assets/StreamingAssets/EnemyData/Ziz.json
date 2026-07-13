@@ -2,7 +2,7 @@
   "id": "Ziz",
   "enemyName": "Ziz",
   "displayName": "",
-  "maxHP": 20,
+  "maxHP": 24,
   "randomStart": false,
   "patternCardIds": [],
   "movePattern": [
@@ -12,7 +12,7 @@
       "effects": [
         {
           "type": "AdvanceTurn",
-          "value": 4,
+          "value": 40,
           "targetSelf": false,
           "targetOthers": true,
           "statusType": "Strength",
@@ -93,7 +93,7 @@
       "effects": [
         {
           "type": "Armor",
-          "value": 7,
+          "value": 9,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Speed",
@@ -120,7 +120,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 5,
+          "value": 6,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Speed",

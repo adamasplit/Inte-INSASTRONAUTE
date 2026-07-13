@@ -3,8 +3,8 @@ public class StatusNullificationRelic : Relic
     public StatusNullificationRelic()
     {
         rarity = RelicRarity.Boss;
-        name = "Nullifieur d'état";
-        description = "Le porteur ne peut recevoir aucun effet de statut (positif ou négatif).";
+        name = "Dépression";
+        description = "Vous êtes immunisé contre tous les effets de statut (positifs ou négatifs).";
     }
 
     public override bool CanApplyStatus(StatusEffect status, Character target)

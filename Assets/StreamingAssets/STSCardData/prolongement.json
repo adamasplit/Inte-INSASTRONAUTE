@@ -33,7 +33,7 @@
     {
       "type": "TurnManipulationDelay",
       "kind": "TimeUntilNextTurn",
-      "value": 2,
+      "value": 8,
       "info": "",
       "description": ""
     }

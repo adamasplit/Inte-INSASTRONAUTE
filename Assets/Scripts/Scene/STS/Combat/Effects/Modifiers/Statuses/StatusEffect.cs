@@ -38,7 +38,6 @@ public abstract class StatusEffect : StatModifier
             dispelled.Duration = Duration>0 ? Mathf.CeilToInt(Duration * (remainingPercentage / 100f)) : -1;
             this.Duration -= dispelled.Duration<0 ? 0 : dispelled.Duration;
             
-            Debug.Log($"Dispelled {dispelled.Name} with value {dispelled.Value} and duration {dispelled.Duration}. Remaining: {this.Value} value, {this.Duration} duration.");
             return dispelled;
         }
         owner.RemoveStatus(this);

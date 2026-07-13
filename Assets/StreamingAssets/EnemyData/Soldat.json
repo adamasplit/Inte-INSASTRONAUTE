@@ -2,7 +2,7 @@
   "id": "Soldat",
   "enemyName": "Soldat",
   "displayName": "",
-  "maxHP": 24,
+  "maxHP": 26,
   "randomStart": false,
   "patternCardIds": [
     "delai",
@@ -154,7 +154,7 @@
       "effects": [
         {
           "type": "AdvanceTurn",
-          "value": 6,
+          "value": 60,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",

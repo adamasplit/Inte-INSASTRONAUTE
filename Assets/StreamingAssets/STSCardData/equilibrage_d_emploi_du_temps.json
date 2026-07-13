@@ -11,7 +11,7 @@
   "effects": [
     {
       "type": "DelayTurn",
-      "value": 4,
+      "value": 20,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -30,7 +30,7 @@
     },
     {
       "type": "AdvanceTurn",
-      "value": 4,
+      "value": 20,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",

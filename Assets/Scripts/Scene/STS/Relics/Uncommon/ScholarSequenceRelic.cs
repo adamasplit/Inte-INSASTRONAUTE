@@ -7,7 +7,7 @@ public class ScholarSequenceRelic : Relic
     public ScholarSequenceRelic()
     {
         rarity = RelicRarity.Uncommon;
-        name = "Séquence savante";
+        name = "Suite logique";
         description = "Quand vous jouez un Pouvoir juste après une Compétence, piochez 2 cartes.";
     }
 

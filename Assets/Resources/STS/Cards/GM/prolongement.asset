@@ -15,7 +15,6 @@ MonoBehaviour:
   id: prolongement
   cardName: Prolongement
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: fb38a727a9faf1f4ea32d894dc39962f, type: 3}
   cost: 2
   xCost: 0
@@ -38,11 +37,12 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers:
   - type: 9
     kind: 12
-    value: 2
+    value: 8
     info: 
     description: 
   favoredCharacter: 2

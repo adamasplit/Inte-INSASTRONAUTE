@@ -7,8 +7,8 @@ public class ImmutableSpineRelic : Relic
     public ImmutableSpineRelic()
     {
         rarity = RelicRarity.Boss;
-        name = "Colonne immuable";
-        description = "La première fois que vous devriez recevoir un debuff à chaque combat, il est annulé.";
+        name = "Apéro";
+        description = "La première fois que vous devriez recevoir un debuff à chaque combat, il est annulé et vous récupérez 2 PV.";
     }
 
     public override void OnCombatStart(Character player)
@@ -21,6 +21,7 @@ public class ImmutableSpineRelic : Relic
         if (!blocked && target != null && target.isPlayer && status.debuff)
         {
             blocked = true;
+            target.Heal(2);
             return false;
         }
 

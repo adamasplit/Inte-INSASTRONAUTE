@@ -51,6 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ArrowUI
   dashPrefab: {fileID: 2382396055786295017, guid: d15f137173f86f24486e31544eadfe58, type: 3}
   head: {fileID: 9149647954288660075}
+  cardDrag: {fileID: 0}
   dashCount: 20
   curveHeight: 500
   container: {fileID: 3928658084529184988}
@@ -119,7 +120,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c98762bfac4046749bdf1709e28b0109, type: 3}
+  m_Sprite: {fileID: -765150924802650856, guid: fa1f243facaf6cc498a00ac84e3b8543, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

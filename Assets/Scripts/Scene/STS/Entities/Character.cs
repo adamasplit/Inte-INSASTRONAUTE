@@ -42,7 +42,6 @@ public class Character
         var info = new DamageInfo();
         if (combat!=null&& combat.state!=null)
         {
-            Debug.Log($"{name} is taking {amount} damage. Current HP: {currentHP}, Armor: {armor}, Ignore Armor: {ignoreArmor}");
             combat.state.damageDealtWithLastAction+= amount;
         }
         if (ignoreArmor)

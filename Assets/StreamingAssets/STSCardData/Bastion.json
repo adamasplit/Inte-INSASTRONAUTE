@@ -30,7 +30,7 @@
     },
     {
       "type": "DelayTurn",
-      "value": 4,
+      "value": 20,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",

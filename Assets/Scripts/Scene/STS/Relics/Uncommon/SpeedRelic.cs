@@ -2,7 +2,7 @@ public class SpeedRelic : Relic
 {
     public SpeedRelic()
     {
-        name = "Vitesse";
+        name = "Propulseur";
         description = "Au début du combat, gagnez 1 de Vitesse.";
         rarity=RelicRarity.Uncommon;
     }

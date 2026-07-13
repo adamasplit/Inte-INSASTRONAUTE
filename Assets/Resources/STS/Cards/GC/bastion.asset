@@ -15,7 +15,6 @@ MonoBehaviour:
   id: bastion
   cardName: Bastion
   collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: 668413857164f0a4bb942813ad0192fc, type: 2}
   icon: {fileID: 21300000, guid: d65c7034b7fd62947a1d286932518179, type: 3}
   cost: 1
   xCost: 0
@@ -38,8 +37,9 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 6
-    value: 4
+    value: 20
     targetSelf: 1
     targetOthers: 0
     statusType: 0
@@ -54,6 +54,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 6

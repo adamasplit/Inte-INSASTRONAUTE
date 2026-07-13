@@ -240,7 +240,21 @@ public static class STSCardDatabase
         }
 
         collectionSpritesInitialized = true;
-        Debug.Log($"STSCardDatabase cached {collectionCardSpriteById.Count} collection card sprites.");
+        if (collectionCardSpriteById.Count == uniqueCollectionCardIds.Count)
+        {
+            Debug.Log($"STSCardDatabase cached all {collectionCardSpriteById.Count} collection card sprites.");
+        }
+        else
+        {
+            List<string> missingSprites = new List<string>();
+            foreach (string collectionCardId in uniqueCollectionCardIds)
+            {
+                if (!collectionCardSpriteById.ContainsKey(collectionCardId))
+                    missingSprites.Add(collectionCardId);
+            }
+
+            Debug.LogWarning($"STSCardDatabase cached {collectionCardSpriteById.Count}/{uniqueCollectionCardIds.Count} collection card sprites. Missing: {string.Join(", ", missingSprites)}");
+        }
     }
 
     public static STSCardData Get(string id)
