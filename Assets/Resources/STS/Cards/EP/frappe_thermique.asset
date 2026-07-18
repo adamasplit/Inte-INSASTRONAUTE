@@ -15,7 +15,6 @@ MonoBehaviour:
   id: frappe_thermique
   cardName: Frappe thermique
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: d58f638fe50664a46ad981675262fed3, type: 3}
   cost: 1
   xCost: 0

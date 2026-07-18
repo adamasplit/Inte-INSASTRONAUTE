@@ -15,7 +15,6 @@ MonoBehaviour:
   id: interpolation
   cardName: Interpolation
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 89909b16e55134440b2b64f42b32c704, type: 3}
   cost: 2
   xCost: 0

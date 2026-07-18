@@ -32,6 +32,8 @@
   "modifiers": [],
   "favoredCharacter": "ITI",
   "animationSpeed": 1.0,
-  "startingCount": 1,
-  "tags": []
+  "startingCount": 0,
+  "tags": [
+    "Exhaust"
+  ]
 }

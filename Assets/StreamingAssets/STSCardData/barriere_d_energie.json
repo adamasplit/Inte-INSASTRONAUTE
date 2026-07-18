@@ -11,7 +11,7 @@
   "effects": [
     {
       "type": "Armor",
-      "value": 18,
+      "value": 16,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
@@ -32,6 +32,6 @@
   "modifiers": [],
   "favoredCharacter": "EP",
   "animationSpeed": 1.0,
-  "startingCount": 0,
+  "startingCount": 1,
   "tags": []
 }

@@ -1,7 +1,7 @@
 {
   "id": "troisieme_mi_temps",
   "cardName": "Troisième mi-temps",
-  "collectionCardId": "toss",
+  "collectionCardId": "TOSS",
   "iconId": null,
   "cost": 2,
   "xCost": false,
@@ -20,7 +20,7 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "index": 0,

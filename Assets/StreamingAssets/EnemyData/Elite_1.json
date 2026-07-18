@@ -1,0 +1,22 @@
+{
+  "id": "Elite_1",
+  "enemyName": "Elite_1",
+  "displayName": "Mage dimensionnel",
+  "maxHP": 70,
+  "randomStart": false,
+  "patternCardIds": [
+    "cristallisation",
+    "frappe_ultime",
+    "blou_blou",
+    "auto_conception",
+    "regression"
+  ],
+  "movePattern": [],
+  "rewardCardIds": [
+    "execution"
+  ],
+  "startingStatus": "MechaArm",
+  "startingStatusDuration": 0,
+  "startingStatusValue": 1,
+  "startingStatusInfo": ""
+}

@@ -15,7 +15,6 @@ MonoBehaviour:
   id: taraud
   cardName: Taraud
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 1561a78fc481afd4dac19de416fd38d5, type: 3}
   cost: 1
   xCost: 0
@@ -38,9 +37,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 1
   animationSpeed: 1
-  startingCount: 1
+  startingCount: 0
   tags: 

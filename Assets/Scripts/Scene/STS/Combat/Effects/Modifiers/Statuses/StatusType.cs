@@ -57,5 +57,6 @@ public enum StatusType
     FullThrottle,
     Fatigue,
     DamageReduction,
-    AnyCardFollowUp
+    AnyCardFollowUp,
+    Regulator
 }

@@ -40,6 +40,14 @@ public class RestCardController : MonoBehaviour
             view.SetCard(card);
     }
 
+    private void PlayPresentationCue(string cueName, Vector3 position)
+    {
+        if (VFXManager.Instance != null)
+            VFXManager.Instance.PlayEffect(cueName, position);
+
+        SFXManager.Instance?.PlaySound(cueName);
+    }
+
     public IEnumerator PlayEnchantExitAnimation(
         float holdDuration,
         float duration,
@@ -79,6 +87,8 @@ public class RestCardController : MonoBehaviour
         animatedRoot.anchoredPosition = startPosition;
         animatedRoot.localScale = startScale;
         animatedRoot.localRotation = startRotation;
+
+        PlayPresentationCue("Enchant", animatedRoot.position);
 
         if (holdDuration > 0f)
             yield return new WaitForSeconds(holdDuration);

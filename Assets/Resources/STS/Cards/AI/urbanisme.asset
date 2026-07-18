@@ -15,7 +15,6 @@ MonoBehaviour:
   id: urbanisme
   cardName: Urbanisme
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: f20fa3bb2c3f00148ad3737aac4eb20f, type: 3}
   cost: 2
   xCost: 0
@@ -38,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 1
     value: 8
     targetSelf: 1
@@ -54,10 +54,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 2
   modifiers: []
   favoredCharacter: 7
   animationSpeed: 1
   startingCount: 0
   tags: 
-  animationType: 0

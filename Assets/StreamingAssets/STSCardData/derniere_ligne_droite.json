@@ -1,9 +1,9 @@
 {
   "id": "derniere_ligne_droite",
   "cardName": "Dernière ligne droite",
-  "collectionCardId": "Purple Rouen",
+  "collectionCardId": "Insa'cheval",
   "iconId": null,
-  "cost": 0,
+  "cost": 1,
   "xCost": false,
   "type": "Attaque",
   "rarity": "Epic",

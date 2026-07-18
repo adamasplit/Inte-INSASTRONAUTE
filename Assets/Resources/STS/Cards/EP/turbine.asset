@@ -15,7 +15,6 @@ MonoBehaviour:
   id: turbine
   cardName: Turbine
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 52553f205294bd345a454e5176d7d819, type: 3}
   cost: 2
   xCost: 0
@@ -38,10 +37,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 0
   animationSpeed: 1
   startingCount: 0
   tags: 
-  animationType: 0

@@ -15,7 +15,6 @@ MonoBehaviour:
   id: maille_parfaite
   cardName: Maille parfaite
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: ff2be062b75b4bc45a771c60784a66bd, type: 3}
   cost: 2
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 6
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 5
     cardFilterTags: 0b000000
     cardSelectionEffect: 10
+    animationType: 0
   targetingMode: 2
   modifiers: []
   favoredCharacter: 4

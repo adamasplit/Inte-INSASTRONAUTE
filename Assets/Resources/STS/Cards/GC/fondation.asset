@@ -15,7 +15,6 @@ MonoBehaviour:
   id: fondation
   cardName: Fondation
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: f27db0a47743d9844ada44e83c57576f, type: 3}
   cost: 1
   xCost: 0

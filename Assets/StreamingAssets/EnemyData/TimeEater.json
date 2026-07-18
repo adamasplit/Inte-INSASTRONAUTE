@@ -2,7 +2,7 @@
   "id": "TimeEater",
   "enemyName": "TimeEater",
   "displayName": "Dévoreur de temps",
-  "maxHP": 40,
+  "maxHP": 34,
   "randomStart": false,
   "patternCardIds": [],
   "movePattern": [
@@ -12,7 +12,7 @@
       "effects": [
         {
           "type": "Status",
-          "value": 3,
+          "value": 2,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -108,7 +108,7 @@
       "effects": [
         {
           "type": "AdvanceTurn",
-          "value": 20,
+          "value": 2,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Speed",
@@ -154,6 +154,6 @@
   "rewardCardIds": [],
   "startingStatus": "AnyCardFollowUp",
   "startingStatusDuration": 0,
-  "startingStatusValue": 10,
+  "startingStatusValue": 8,
   "startingStatusInfo": "Interruption"
 }

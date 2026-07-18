@@ -191,56 +191,98 @@ public class CharacterUI : MonoBehaviour
         if (next == null)
         {
             intentText.text = "";
+            foreach (Transform child in intentContainer)
+            {
+                IntentUI intentUI = child.GetComponent<IntentUI>();
+                if (intentUI != null)
+                    intentUI.PlayRemoveAnimationAndDestroy();
+                else
+                    Destroy(child.gameObject);
+            }
             return;
         }
+
+        List<IntentUI> activeIntentUIs = new List<IntentUI>();
         foreach (Transform child in intentContainer)
-            Destroy(child.gameObject);
-        intentText.text = next.name; 
-        foreach (EffectEntry effect in next.effects)
         {
-            IntentUI effectUIObj = Instantiate(intentUIPrefab, intentContainer).GetComponent<IntentUI>();
-                effectUIObj.SetEffect(effect, uiManager);
-            if (effect.type == EffectType.Damage)
-            {
-                CombatManager cm = FindObjectOfType<CombatManager>();
-                int val = BattleCalculator.GetModifiedValue(effect.value, StatType.Damage, new EffectContext
-                {
-                    source = enemy,
-                    target = RunManager.Instance.player,
-                    combat = cm,
-                    state = cm.state,
-                    card = new CardInstance(next),
-                    isPreview=true
-                });
-                effectUIObj.SetValue(val);
-            }
-            else if (effect.type==EffectType.Armor)
-            {
-                CombatManager cm = FindObjectOfType<CombatManager>();
-                int val = BattleCalculator.GetModifiedValue(effect.value, StatType.Armor, new EffectContext
-                {
-                    source = enemy,
-                    target = RunManager.Instance.player,
-                    combat = cm,
-                    state = cm.state,
-                    card = new CardInstance(next)
-                });
-                effectUIObj.SetValue(val);
-            }
-            else if (effect.type == EffectType.Multihit)
-            {
-                CombatManager cm = FindObjectOfType<CombatManager>();
-                int val = BattleCalculator.GetModifiedValue(effect.value, StatType.Damage, new EffectContext
-                {
-                    source = enemy,
-                    target = RunManager.Instance.player,
-                    combat = cm,
-                    state = cm.state,
-                    card = new CardInstance(next)
-                });
-                effectUIObj.SetText($"{val}x{effect.duration}");
-            }
+            IntentUI intentUI = child.GetComponent<IntentUI>();
+            if (intentUI != null)
+                activeIntentUIs.Add(intentUI);
+            else
+                Destroy(child.gameObject);
         }
+
+        intentText.text = next.name; 
+        for (int i = 0; i < next.effects.Count; i++)
+        {
+            EffectEntry effect = next.effects[i];
+            string displayText = GetIntentDisplayText(enemy, next, effect);
+
+            IntentUI effectUIObj;
+            if (i < activeIntentUIs.Count && activeIntentUIs[i] != null)
+            {
+                effectUIObj = activeIntentUIs[i];
+            }
+            else
+            {
+                effectUIObj = Instantiate(intentUIPrefab, intentContainer).GetComponent<IntentUI>();
+            }
+
+            effectUIObj.transform.SetSiblingIndex(i);
+            effectUIObj.SetEffect(effect, uiManager, displayText, true);
+        }
+
+        for (int i = next.effects.Count; i < activeIntentUIs.Count; i++)
+        {
+            if (activeIntentUIs[i] != null)
+                activeIntentUIs[i].PlayRemoveAnimationAndDestroy();
+        }
+    }
+
+    private string GetIntentDisplayText(Enemy enemy, STSCardData next, EffectEntry effect)
+    {
+        if (effect.type == EffectType.Damage)
+        {
+            CombatManager cm = FindObjectOfType<CombatManager>();
+            int val = BattleCalculator.GetModifiedValue(effect.value, StatType.Damage, new EffectContext
+            {
+                source = enemy,
+                target = RunManager.Instance.player,
+                combat = cm,
+                state = cm.state,
+                card = new CardInstance(next),
+                isPreview=true
+            });
+            return val > 0 ? $"{val}" : "";
+        }
+        else if (effect.type==EffectType.Armor)
+        {
+            CombatManager cm = FindObjectOfType<CombatManager>();
+            int val = BattleCalculator.GetModifiedValue(effect.value, StatType.Armor, new EffectContext
+            {
+                source = enemy,
+                target = RunManager.Instance.player,
+                combat = cm,
+                state = cm.state,
+                card = new CardInstance(next)
+            });
+            return val > 0 ? $"{val}" : "";
+        }
+        else if (effect.type == EffectType.Multihit)
+        {
+            CombatManager cm = FindObjectOfType<CombatManager>();
+            int val = BattleCalculator.GetModifiedValue(effect.value, StatType.Damage, new EffectContext
+            {
+                source = enemy,
+                target = RunManager.Instance.player,
+                combat = cm,
+                state = cm.state,
+                card = new CardInstance(next)
+            });
+            return $"{val}x{effect.duration}";
+        }
+
+        return effect.value > 0 ? $"{effect.value}" : "";
     }
 
     public IEnumerator PlayDeathAnimation(float duration = 0.65f)

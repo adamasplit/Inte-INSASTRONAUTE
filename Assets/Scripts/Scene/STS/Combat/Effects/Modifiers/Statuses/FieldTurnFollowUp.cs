@@ -9,6 +9,10 @@ public class FieldTurnFollowUpStatus:FollowUpStatus
     {
         string maxValueStr = maxValue > 1 ? $"{maxValue} " : "";
         string endStr=Duration>0?$" (s'active {Duration} fois)":"";
+        if (Duration==1)
+        {
+            return $"Dans {maxValue-Value} tour(s), déclenchez {Name}{endStr}.";
+        }
         switch (moveIndex)
         {
             case 1: // End of own turn

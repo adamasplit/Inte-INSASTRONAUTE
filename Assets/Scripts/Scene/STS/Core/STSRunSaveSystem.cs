@@ -42,6 +42,7 @@ public class PlayerSaveData
 [Serializable]
 public class CardSaveData
 {
+    public string instanceId;
     public string cardId;
     public string targetingMode;
     public string lastDescription;
@@ -83,6 +84,7 @@ public class MapNodeSaveData
     public int x;
     public float posX;
     public bool visited;
+    public bool completed;
     public List<int> nextIds = new();
     public List<int> prevIds = new();
 }
@@ -273,6 +275,7 @@ public static class STSRunSaveSystem
     {
         var data = new CardSaveData
         {
+            instanceId = card.instanceId,
             cardId = card.data != null ? card.data.cardName : null,
             targetingMode = card.targetingMode.ToString(),
             lastDescription = card.lastDescription
@@ -339,7 +342,8 @@ public static class STSRunSaveSystem
             type = node.type.ToString(),
             x = node.x,
             posX = node.posX,
-            visited = node.visited
+            visited = node.visited,
+            completed = node.completed
         };
 
         foreach (MapNode next in node.next)
@@ -460,6 +464,7 @@ public static class STSRunSaveSystem
             return null;
 
         var card = new CardInstance(cardData);
+        card.instanceId = string.IsNullOrWhiteSpace(data.instanceId) ? Guid.NewGuid().ToString("N") : data.instanceId;
 
         if (Enum.TryParse(data.targetingMode, out TargetingMode targetingMode))
         {
@@ -621,6 +626,7 @@ public static class STSRunSaveSystem
                 x = nodeData.x,
                 posX = nodeData.posX,
                 visited = nodeData.visited,
+                completed = nodeData.completed,
                 next = new List<MapNode>(),
                 prev = new List<MapNode>()
             };

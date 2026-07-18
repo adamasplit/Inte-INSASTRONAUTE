@@ -15,7 +15,6 @@ MonoBehaviour:
   id: remise_en_etat
   cardName: "Remise en \xE9tat"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: ffddda2768ba9e0458a8514e69c29eb3, type: 3}
   cost: 1
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 3
     cardFilterTags: 
     cardSelectionEffect: 8
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 1

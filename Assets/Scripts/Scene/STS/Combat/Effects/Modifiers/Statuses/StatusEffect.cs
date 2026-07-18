@@ -110,6 +110,7 @@ public abstract class StatusEffect : StatModifier
     public virtual void OnTargetedByCard(Character source,Character target, CardInstance card) { }
     public virtual void OnCardDrawn(Character target, CardInstance card) { }
     public virtual int ArmorOnTurnStart(int previousArmor, Character character) { return 0; }
+    public virtual int ValidateHPLoss(int damage, Character target) { return damage; }
     public virtual bool CanApply(StatusEffect newStatus, Character target)
     {
         return true;
@@ -189,6 +190,7 @@ public abstract class StatusEffect : StatModifier
             StatusType.Fatigue=>new FatigueStatus(),
             StatusType.DamageReduction=>new DamageReductionStatus(value,duration),
             StatusType.AnyCardFollowUp=>new AnyCardFollowUpStatus(value,duration,effectInfo,index),
+            StatusType.Regulator=>new RegulatorStatus(value),
             _ => null
         };
         stat.statusType = type;

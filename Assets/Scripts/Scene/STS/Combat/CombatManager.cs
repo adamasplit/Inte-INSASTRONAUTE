@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Threading.Tasks;
 public enum TeamOutcome
 {
     None,
@@ -80,6 +81,7 @@ public class CombatManager : MonoBehaviour
     public bool allowTurn = false; 
     public void Init()
     {
+        EnsureEncounterEnemies();
         ui.Init(this);          // inject
         ui.InitCharacters();    // spawn UI
         ui.RefreshUI();
@@ -116,6 +118,59 @@ public class CombatManager : MonoBehaviour
         }
 
         STSSceneLoader.Instance?.SceneReady();
+    }
+
+    private void EnsureEncounterEnemies()
+    {
+        if (enemies != null && enemies.Count > 0)
+            return;
+
+        if (RunManager.Instance != null && RunManager.Instance.activeEncounter != null && RunManager.Instance.activeEncounter.enemyIds != null && RunManager.Instance.activeEncounter.enemyIds.Count > 0)
+        {
+            enemies = new List<Character>();
+            foreach (string enemyId in RunManager.Instance.activeEncounter.enemyIds)
+            {
+                if (string.IsNullOrWhiteSpace(enemyId))
+                    continue;
+
+                enemies.Add(new Enemy(enemyId));
+            }
+
+            if (enemies.Count > 0)
+            {
+                return;
+            }
+        }
+
+        Debug.LogWarning("Combat started with no enemies. Spawning a fallback Ironclad enemy so combat can continue.");
+        enemies = new List<Character> { CreateFallbackIroncladEnemy() };
+    }
+
+    private Enemy CreateFallbackIroncladEnemy()
+    {
+        EnemyData ironcladData = EnemyDataDatabase.Get("Ironclad")
+            ?? Resources.Load<EnemyData>("STS/Enemies/Ironclad");
+
+        if (ironcladData != null)
+        {
+            return new Enemy(ironcladData);
+        }
+
+        Debug.LogWarning("Ironclad enemy data was not found. Creating a minimal runtime Ironclad fallback.");
+
+        EnemyData runtimeData = ScriptableObject.CreateInstance<EnemyData>();
+        runtimeData.name = "Ironclad";
+        runtimeData.id = "Ironclad";
+        runtimeData.enemyName = "Ironclad";
+        runtimeData.displayName = "Ironclad";
+        runtimeData.maxHP = 30;
+        runtimeData.randomStart = false;
+        runtimeData.pattern = new List<STSCardData>();
+        runtimeData.movePattern = new List<EnemyMoveEntry>();
+        runtimeData.rewardCards = new List<STSCardData>();
+        runtimeData.startingStatusInfo = string.Empty;
+
+        return new Enemy(runtimeData);
     }
 
     public void FieldTurnEnd()
@@ -626,12 +681,41 @@ public class CombatManager : MonoBehaviour
             };
             //Debug.Log("Generating rewards for combat result: floor " + result.floor + ", elite: " + result.elite + ", boss: " + result.boss);
             RunManager.Instance.pendingReward = RewardGenerator.GenerateReward(result);
+            _ = SubmitCombatResultAsync("victory");
             STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Reward", "combat_complete");
             STSSceneLoader.Instance.LoadScene("STS_Reward");
         }
         else if (outcome == TeamOutcome.Defeat)
         {
+            _ = SubmitCombatResultAsync("defeat");
             ui.ShowGameOver(enemies.FirstOrDefault());
+        }
+    }
+
+    private async Task SubmitCombatResultAsync(string result)
+    {
+        if (RunManager.Instance == null || string.IsNullOrWhiteSpace(RunManager.Instance.runId) || RunManager.Instance.activeEncounter == null)
+            return;
+
+        var request = new STSApiNodeCompleteRequest
+        {
+            encounterInstanceId = RunManager.Instance.activeEncounter.encounterInstanceId,
+            result = result,
+            turnCount = state.turnCount,
+            playerHpAfter = player != null ? player.currentHP : 0,
+            damageTaken = RunManager.Instance.activeEncounter != null ? Mathf.Max(0, RunManager.Instance.activeEncounter.playerHpBefore - (player != null ? player.currentHP : 0)) : 0,
+            enemiesDefeated = enemies.Where(e => e != null && !e.IsAlive).Select(e => e is Enemy enemy ? (enemy.data != null && !string.IsNullOrWhiteSpace(enemy.data.id) ? enemy.data.id : enemy.name) : e.name).ToList(),
+            deckHash = STSApiClient.ComputeDeckHash(RunManager.Instance.deck)
+        };
+
+        try
+        {
+            STSApiNodeCompleteResponse response = await STSApiClient.CompleteNodeAsync(RunManager.Instance.runId, RunManager.Instance.currentNode != null ? RunManager.Instance.currentNode.id : -1, request);
+            RunManager.Instance.ApplyNodeCompleteResponse(response);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"Failed to submit combat result to STS API: {ex.Message}");
         }
     }
 }

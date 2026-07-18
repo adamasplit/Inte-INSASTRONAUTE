@@ -15,7 +15,6 @@ MonoBehaviour:
   id: recharge
   cardName: Recharge
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 07f75f9738f32ab4cb350933f7909c28, type: 3}
   cost: 0
   xCost: 0
@@ -60,5 +59,5 @@ MonoBehaviour:
   modifiers: []
   favoredCharacter: 0
   animationSpeed: 1
-  startingCount: 1
+  startingCount: 0
   tags: 09000000

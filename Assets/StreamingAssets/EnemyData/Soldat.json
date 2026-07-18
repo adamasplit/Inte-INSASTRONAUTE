@@ -2,7 +2,7 @@
   "id": "Soldat",
   "enemyName": "Soldat",
   "displayName": "",
-  "maxHP": 26,
+  "maxHP": 24,
   "randomStart": false,
   "patternCardIds": [
     "delai",
@@ -16,7 +16,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 5,
+          "value": 7,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -62,7 +62,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 4,
+          "value": 9,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -154,7 +154,7 @@
       "effects": [
         {
           "type": "AdvanceTurn",
-          "value": 60,
+          "value": 6,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -173,7 +173,7 @@
         },
         {
           "type": "Armor",
-          "value": 4,
+          "value": 10,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",

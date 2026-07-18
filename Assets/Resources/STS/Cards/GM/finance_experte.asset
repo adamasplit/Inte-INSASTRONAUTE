@@ -15,7 +15,6 @@ MonoBehaviour:
   id: finance_experte
   cardName: Finance experte
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: ff7453f7bfc858743b96a22d1a9cf0fe, type: 3}
   cost: 2
   xCost: 0
@@ -38,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers: []
   favoredCharacter: 2

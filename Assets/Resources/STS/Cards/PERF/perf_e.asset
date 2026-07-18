@@ -15,7 +15,6 @@ MonoBehaviour:
   id: perf_e
   cardName: "Performance \xE9nerg\xE9tique"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 0}
   cost: 0
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 1
+    animationType: 0
   - type: 12
     value: 2
     targetSelf: 1
@@ -45,6 +46,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -52,9 +54,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 8
   animationSpeed: 1
-  startingCount: 1
+  startingCount: 0
   tags: 

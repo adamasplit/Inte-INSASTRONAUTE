@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
+  m_Name: Elite_3
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Elite_3
+  enemyName: Elite_3
+  displayName: "Robot g\xE9ant"
+  maxHP: 45
+  pattern:
+  - {fileID: 11400000, guid: 6246dcd0d58203c4ab020d1b25cdde07, type: 2}
+  - {fileID: 11400000, guid: c81fe9c9fcbafbc4196a821088811f19, type: 2}
+  - {fileID: 11400000, guid: 3746bd040a2bae743abad70f31212e3b, type: 2}
+  - {fileID: 11400000, guid: 9050fa5b55e517842aa6b728b0c04bc4, type: 2}
+  - {fileID: 11400000, guid: 9f428fb64ea62914f96f28340ffafb71, type: 2}
+  - {fileID: 11400000, guid: 3746bd040a2bae743abad70f31212e3b, type: 2}
+  randomStart: 0
+  movePattern: []
+  rewardCards: []
+  startingStatus: 28
+  startingStatusDuration: 0
+  startingStatusValue: 0
+  startingStatusInfo: 
+  startingStatusIndex: 0

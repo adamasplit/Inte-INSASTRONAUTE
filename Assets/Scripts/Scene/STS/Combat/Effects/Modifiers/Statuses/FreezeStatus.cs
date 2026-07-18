@@ -20,6 +20,6 @@ public class FreezeStatus:StatusEffect
     }
     public override int Modify(int value, EffectContext ctx)
     {
-        return Mathf.RoundToInt(value * 0.5f);
+        return Mathf.CeilToInt(value * 0.5f);
     }
 }

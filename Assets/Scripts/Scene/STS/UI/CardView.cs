@@ -307,14 +307,22 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         {
             foreach (Transform child in enchantTooltipContainer)
             {
-                Destroy(child.gameObject);
+                Tooltip tooltip = child.GetComponent<Tooltip>();
+                if (tooltip != null)
+                    tooltip.Hide();
+                else
+                    Destroy(child.gameObject);
             }
         }
         if (enchantTooltipContainerLeft != null)
         {
             foreach (Transform child in enchantTooltipContainerLeft)
             {
-                Destroy(child.gameObject);
+                Tooltip tooltip = child.GetComponent<Tooltip>();
+                if (tooltip != null)
+                    tooltip.Hide();
+                else
+                    Destroy(child.gameObject);
             }
         }
         if (cardInstance == null) return;
@@ -372,23 +380,37 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         {
             foreach (Transform child in enchantTooltipContainer)
             {
-                Destroy(child.gameObject);
+                Tooltip tooltip = child.GetComponent<Tooltip>();
+                if (tooltip != null)
+                    Destroy(tooltip.gameObject);
+                else
+                    Destroy(child.gameObject);
             }
         }
         if (enchantTooltipContainerLeft != null)
         {
             foreach (Transform child in enchantTooltipContainerLeft)
             {
-                Destroy(child.gameObject);
+                Tooltip tooltip = child.GetComponent<Tooltip>();
+                if (tooltip != null)
+                    Destroy(tooltip.gameObject);
+                else
+                    Destroy(child.gameObject);
             }
         }
         if (rewardTooltipContainerBelow != null)
         {
             foreach (Transform child in rewardTooltipContainerBelow)
             {
-                Destroy(child.gameObject);
+                Tooltip tooltip = child.GetComponent<Tooltip>();
+                if (tooltip != null)
+                    Destroy(tooltip.gameObject);
+                else
+                    Destroy(child.gameObject);
             }
         }
+        if (TooltipManager.Instance != null)
+            TooltipManager.Instance.HideTooltip();
     }
 
     public void ShowRewardCardTooltips()
@@ -402,7 +424,11 @@ public class CardView : MonoBehaviour,IPointerClickHandler
 
         foreach (Transform child in rewardTooltipContainerBelow)
         {
-            Destroy(child.gameObject);
+            Tooltip tooltip = child.GetComponent<Tooltip>();
+            if (tooltip != null)
+                Destroy(tooltip.gameObject);
+            else
+                Destroy(child.gameObject);
         }
 
         List<TooltipData> tooltips = new();

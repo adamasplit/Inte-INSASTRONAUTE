@@ -537,7 +537,7 @@
       ],
       "favoredCharacter": "AI",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -589,8 +589,8 @@
       "targetingMode": "Enemy",
       "effects": [
         {
-          "type": "DispelDebuffsIntoDamage",
-          "value": 2,
+          "type": "DispelDebuff",
+          "value": -1,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -600,15 +600,42 @@
           "conditional": false,
           "conditionType": "KillingBlow",
           "conditionValue": "",
-          "trueEffect": false,
+          "trueEffect": true,
           "cardSelectionSource": "Hand",
           "index": 0,
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
           "animationType": "Default"
+        },
+        {
+          "type": "Damage",
+          "value": 0,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": true,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Light"
         }
       ],
-      "modifiers": [],
+      "modifiers": [
+        {
+          "type": "Damage",
+          "kind": "ActionDispelled",
+          "value": 4,
+          "info": "",
+          "description": ""
+        }
+      ],
       "favoredCharacter": "AI",
       "animationSpeed": 1.0,
       "startingCount": 0,
@@ -667,7 +694,7 @@
       "modifiers": [],
       "favoredCharacter": "AI",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": [
         "Exhaust"
       ]
@@ -1063,11 +1090,11 @@
       "modifiers": [],
       "favoredCharacter": "CFI",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
-      "id": null,
+      "id": "corrosion",
       "cardName": "Corrosion",
       "collectionCardId": null,
       "iconId": "Affliction",
@@ -1235,7 +1262,7 @@
       "modifiers": [],
       "favoredCharacter": "CFI",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -1272,7 +1299,7 @@
       "modifiers": [],
       "favoredCharacter": "CFI",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -1309,7 +1336,7 @@
       "modifiers": [],
       "favoredCharacter": "CFI",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -1725,7 +1752,7 @@
       "modifiers": [],
       "favoredCharacter": "CFI",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -1828,7 +1855,7 @@
     {
       "id": "chant_de_force",
       "cardName": "Chant de force",
-      "collectionCardId": "Amir",
+      "collectionCardId": "Amir (campagne)",
       "iconId": null,
       "cost": 1,
       "xCost": false,
@@ -1883,7 +1910,7 @@
     },
     {
       "id": "chute_d_eau",
-      "cardName": "Chute d'eau",
+      "cardName": "Seau mal placé",
       "collectionCardId": "Dégât des eaux",
       "iconId": null,
       "cost": 2,
@@ -1940,7 +1967,7 @@
     {
       "id": "cleanwalk",
       "cardName": "Cleanwalk",
-      "collectionCardId": "Greensa",
+      "collectionCardId": "Greensa (campagne)",
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -1975,7 +2002,65 @@
       "tags": []
     },
     {
-      "id": "",
+      "id": "compte_rendu",
+      "cardName": "Retard 364 j + 4 h",
+      "collectionCardId": "Compte rendu",
+      "iconId": null,
+      "cost": 3,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Epic",
+      "targetingMode": "Enemy",
+      "effects": [
+        {
+          "type": "DelayTurn",
+          "value": 365,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "Status",
+          "value": -3,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Aucun",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "None"
+      ]
+    },
+    {
+      "id": "controle_total",
       "cardName": "Contrôle total",
       "collectionCardId": "Contrôleur Astuce",
       "iconId": null,
@@ -2068,6 +2153,28 @@
       "tags": [
         "Molecule",
         "Created"
+      ]
+    },
+    {
+      "id": "brouillage",
+      "cardName": "Brouillage",
+      "collectionCardId": null,
+      "iconId": "kaleid",
+      "cost": 1,
+      "xCost": false,
+      "type": "Rien",
+      "rarity": "Common",
+      "targetingMode": "Player",
+      "effects": [],
+      "modifiers": [],
+      "favoredCharacter": "PERF",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Created",
+        "FollowUp",
+        "Exhaust",
+        "Status"
       ]
     },
     {
@@ -2171,62 +2278,25 @@
       ]
     },
     {
-      "id": "debogage",
-      "cardName": "Débogage",
+      "id": "debris_cosmique",
+      "cardName": "Débris cosmique",
       "collectionCardId": null,
-      "iconId": "Affliction",
-      "cost": 0,
+      "iconId": "Météorite",
+      "cost": 1,
       "xCost": false,
-      "type": "Compétence",
-      "rarity": "Special",
-      "targetingMode": "RandomEnemy",
-      "effects": [
-        {
-          "type": "Armor",
-          "value": 1,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "Vuln",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        },
-        {
-          "type": "Status",
-          "value": 0,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Weakness",
-          "duration": 1,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        }
-      ],
+      "type": "Rien",
+      "rarity": "Common",
+      "targetingMode": "Player",
+      "effects": [],
       "modifiers": [],
-      "favoredCharacter": "ITI",
+      "favoredCharacter": "PERF",
       "animationSpeed": 1.0,
       "startingCount": 0,
       "tags": [
+        "Created",
         "FollowUp",
-        "Exhaust"
+        "Exhaust",
+        "Status"
       ]
     },
     {
@@ -2574,66 +2644,6 @@
       ]
     },
     {
-      "id": "frappe_industrielle",
-      "cardName": "Frappe industrielle",
-      "collectionCardId": null,
-      "iconId": "Industrie",
-      "cost": 0,
-      "xCost": false,
-      "type": "Attaque",
-      "rarity": "Special",
-      "targetingMode": "RandomEnemy",
-      "effects": [
-        {
-          "type": "Damage",
-          "value": 6,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Slash"
-        },
-        {
-          "type": "DelayTurn",
-          "value": 3,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        }
-      ],
-      "modifiers": [],
-      "favoredCharacter": "PERF",
-      "animationSpeed": 1.0,
-      "startingCount": 0,
-      "tags": [
-        "Created",
-        "FollowUp",
-        "Exhaust"
-      ]
-    },
-    {
       "id": "helium",
       "cardName": "Hélium",
       "collectionCardId": null,
@@ -2713,65 +2723,6 @@
         "Created",
         "Exhaust",
         "Atom"
-      ]
-    },
-    {
-      "id": "laser_orbital",
-      "cardName": "Laser orbital",
-      "collectionCardId": null,
-      "iconId": "laser",
-      "cost": 0,
-      "xCost": false,
-      "type": "Attaque",
-      "rarity": "Special",
-      "targetingMode": "RandomEnemy",
-      "effects": [
-        {
-          "type": "Damage",
-          "value": 12,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Light"
-        },
-        {
-          "type": "Status",
-          "value": 1,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Vuln",
-          "duration": 1,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        }
-      ],
-      "modifiers": [],
-      "favoredCharacter": "ITI",
-      "animationSpeed": 1.0,
-      "startingCount": 0,
-      "tags": [
-        "FollowUp",
-        "Exhaust"
       ]
     },
     {
@@ -3210,47 +3161,6 @@
       "tags": []
     },
     {
-      "id": "secousse_localisee",
-      "cardName": "Secousse localisée",
-      "collectionCardId": null,
-      "iconId": "Zone2",
-      "cost": 0,
-      "xCost": false,
-      "type": "Attaque",
-      "rarity": "Special",
-      "targetingMode": "AllEnemies",
-      "effects": [
-        {
-          "type": "Damage",
-          "value": 3,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        }
-      ],
-      "modifiers": [],
-      "favoredCharacter": "AI",
-      "animationSpeed": 1.0,
-      "startingCount": 0,
-      "tags": [
-        "Created",
-        "FollowUp",
-        "Exhaust"
-      ]
-    },
-    {
       "id": "soufre",
       "cardName": "Soufre",
       "collectionCardId": null,
@@ -3289,67 +3199,6 @@
         "Created",
         "Exhaust",
         "Atom"
-      ]
-    },
-    {
-      "id": "surchauffe",
-      "cardName": "Surchauffe",
-      "collectionCardId": null,
-      "iconId": "feu",
-      "cost": 0,
-      "xCost": false,
-      "type": "Compétence",
-      "rarity": "Common",
-      "targetingMode": "Player",
-      "effects": [
-        {
-          "type": "LoseHP",
-          "value": 3,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        },
-        {
-          "type": "Status",
-          "value": -1,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "Speed",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        }
-      ],
-      "modifiers": [],
-      "favoredCharacter": "PERF",
-      "animationSpeed": 1.0,
-      "startingCount": 0,
-      "tags": [
-        "Created",
-        "FollowUp",
-        "Exhaust",
-        "Status"
       ]
     },
     {
@@ -3524,7 +3373,7 @@
         }
       ],
       "modifiers": [],
-      "favoredCharacter": "Aucun",
+      "favoredCharacter": "Starting",
       "animationSpeed": 1.0,
       "startingCount": 0,
       "tags": []
@@ -3588,46 +3437,9 @@
       ]
     },
     {
-      "id": "demi_volee",
-      "cardName": "Demi-volée",
-      "collectionCardId": "TOSS",
-      "iconId": null,
-      "cost": 2,
-      "xCost": false,
-      "type": "Pouvoir",
-      "rarity": "Rare",
-      "targetingMode": "Player",
-      "effects": [
-        {
-          "type": "Status",
-          "value": 3,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "CardFollowUp",
-          "duration": 0,
-          "description": "",
-          "cardID": "Tir cadré",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 1,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        }
-      ],
-      "modifiers": [],
-      "favoredCharacter": "Aucun",
-      "animationSpeed": 1.0,
-      "startingCount": 0,
-      "tags": []
-    },
-    {
       "id": "depart_en_sprint",
       "cardName": "Départ en sprint",
-      "collectionCardId": "Purple Rouen",
+      "collectionCardId": "Purple ",
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -3686,9 +3498,9 @@
     {
       "id": "derniere_ligne_droite",
       "cardName": "Dernière ligne droite",
-      "collectionCardId": "Purple Rouen",
+      "collectionCardId": "Insa'cheval",
       "iconId": null,
-      "cost": 0,
+      "cost": 1,
       "xCost": false,
       "type": "Attaque",
       "rarity": "Epic",
@@ -3819,7 +3631,7 @@
       "effects": [
         {
           "type": "Armor",
-          "value": 18,
+          "value": 16,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -3840,7 +3652,7 @@
       "modifiers": [],
       "favoredCharacter": "EP",
       "animationSpeed": 1.0,
-      "startingCount": 0,
+      "startingCount": 1,
       "tags": []
     },
     {
@@ -4613,7 +4425,7 @@
       "modifiers": [],
       "favoredCharacter": "EP",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": [
         "Exhaust"
       ]
@@ -5189,9 +5001,879 @@
       "tags": []
     },
     {
+      "id": "acharnement",
+      "cardName": "Acharnement",
+      "collectionCardId": null,
+      "iconId": "Physique",
+      "cost": 0,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Special",
+      "targetingMode": "AllEnemies",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 1,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "DelayTurn",
+          "value": 4,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "FollowUp",
+        "Exhaust",
+        "Unobtainable"
+      ]
+    },
+    {
+      "id": "atterrissage",
+      "cardName": "Atterrissage",
+      "collectionCardId": null,
+      "iconId": "Choc",
+      "cost": 0,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Special",
+      "targetingMode": "Enemy",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 15,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 2.0,
+      "startingCount": 0,
+      "tags": [
+        "Exhaust",
+        "Unobtainable"
+      ]
+    },
+    {
+      "id": "chute_d_etoile",
+      "cardName": "Chute d'étoile",
+      "collectionCardId": null,
+      "iconId": "Comète",
+      "cost": 0,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Common",
+      "targetingMode": "Enemy",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 7,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Magic"
+        },
+        {
+          "type": "Status",
+          "value": 7,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Vuln",
+          "duration": 1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "Status",
+          "value": 7,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Weakness",
+          "duration": 1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": []
+    },
+    {
+      "id": "debogage",
+      "cardName": "Débogage",
+      "collectionCardId": null,
+      "iconId": "Affliction",
+      "cost": 0,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Special",
+      "targetingMode": "RandomEnemy",
+      "effects": [
+        {
+          "type": "Armor",
+          "value": 1,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Vuln",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Weakness",
+          "duration": 1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "ITI",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "FollowUp",
+        "Exhaust"
+      ]
+    },
+    {
+      "id": "frappe_industrielle",
+      "cardName": "Frappe industrielle",
+      "collectionCardId": null,
+      "iconId": "Industrie",
+      "cost": 0,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Special",
+      "targetingMode": "RandomEnemy",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 6,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Slash"
+        },
+        {
+          "type": "DelayTurn",
+          "value": 3,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "PERF",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Created",
+        "FollowUp",
+        "Exhaust"
+      ]
+    },
+    {
+      "id": "interruption",
+      "cardName": "Interruption",
+      "collectionCardId": null,
+      "iconId": null,
+      "cost": 0,
+      "xCost": false,
+      "type": "Rien",
+      "rarity": "Common",
+      "targetingMode": "Enemy",
+      "effects": [
+        {
+          "type": "EndTurn",
+          "value": 0,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "CutInTurn",
+          "value": 0,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Exhaust",
+        "FollowUp",
+        "Unobtainable"
+      ]
+    },
+    {
+      "id": "laser_orbital",
+      "cardName": "Laser orbital",
+      "collectionCardId": null,
+      "iconId": "laser",
+      "cost": 0,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Special",
+      "targetingMode": "RandomEnemy",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 12,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Light"
+        },
+        {
+          "type": "Status",
+          "value": 1,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Vuln",
+          "duration": 1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "ITI",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "FollowUp",
+        "Exhaust"
+      ]
+    },
+    {
+      "id": "malediction",
+      "cardName": "Malédiction",
+      "collectionCardId": null,
+      "iconId": null,
+      "cost": 0,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Special",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "DelayTurn",
+          "value": 25,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "Status",
+          "value": -1,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "FollowUp",
+        "Exhaust",
+        "Curse"
+      ]
+    },
+    {
+      "id": "orbe_glacial",
+      "cardName": "Orbe glacial",
+      "collectionCardId": null,
+      "iconId": null,
+      "cost": 0,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Common",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "Armor",
+          "value": 3,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Thunder"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Unobtainable"
+      ]
+    },
+    {
+      "id": "orbe_keraunique",
+      "cardName": "Orbe kéraunique",
+      "collectionCardId": null,
+      "iconId": null,
+      "cost": 0,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Common",
+      "targetingMode": "Enemy",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 3,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Thunder"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Unobtainable"
+      ]
+    },
+    {
+      "id": "point_fixe",
+      "cardName": "Point fixe",
+      "collectionCardId": null,
+      "iconId": "Physique",
+      "cost": 0,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Special",
+      "targetingMode": "RandomEnemy",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 3,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "DelayTurn",
+          "value": 5,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "FollowUp",
+        "Exhaust"
+      ]
+    },
+    {
+      "id": "recristallisation",
+      "cardName": "Recristallisation",
+      "collectionCardId": null,
+      "iconId": "Cristal",
+      "cost": 0,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Special",
+      "targetingMode": "Enemy",
+      "effects": [
+        {
+          "type": "DispelBuff",
+          "value": 1,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 50,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "Damage",
+          "value": 5,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Ice"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 0.1,
+      "startingCount": 0,
+      "tags": [
+        "FollowUp",
+        "Exhaust",
+        "Unobtainable"
+      ]
+    },
+    {
+      "id": "recurrence",
+      "cardName": "Récurrence",
+      "collectionCardId": null,
+      "iconId": "iter",
+      "cost": 0,
+      "xCost": false,
+      "type": "Rien",
+      "rarity": "Common",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "DelayTurn",
+          "value": 20,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Curse"
+      ]
+    },
+    {
+      "id": "secousse_localisee",
+      "cardName": "Secousse localisée",
+      "collectionCardId": null,
+      "iconId": "Zone2",
+      "cost": 0,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Special",
+      "targetingMode": "AllEnemies",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 3,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "AI",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Created",
+        "FollowUp",
+        "Exhaust"
+      ]
+    },
+    {
+      "id": "surchauffe",
+      "cardName": "Surchauffe",
+      "collectionCardId": null,
+      "iconId": "feu",
+      "cost": 0,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Common",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "LoseHP",
+          "value": 3,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "Status",
+          "value": -1,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Speed",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "PERF",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Created",
+        "FollowUp",
+        "Exhaust",
+        "Status"
+      ]
+    },
+    {
+      "id": "tir_cadre",
+      "cardName": "Tir cadré",
+      "collectionCardId": null,
+      "iconId": "blitz",
+      "cost": 0,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Rare",
+      "targetingMode": "Enemy",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 2,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Weakness",
+          "duration": 1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "FollowUp",
+        "Exhaust"
+      ]
+    },
+    {
       "id": "fureur_du_meteore",
-      "cardName": "Fureur du météore",
-      "collectionCardId": "FDM",
+      "cardName": "Fureur de météore",
+      "collectionCardId": "FDM (campagne)",
       "iconId": null,
       "cost": 0,
       "xCost": true,
@@ -5568,7 +6250,7 @@
       "modifiers": [],
       "favoredCharacter": "GC",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -5624,7 +6306,7 @@
       "modifiers": [],
       "favoredCharacter": "GC",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -5932,7 +6614,7 @@
       "modifiers": [],
       "favoredCharacter": "GC",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -6051,7 +6733,7 @@
       "modifiers": [],
       "favoredCharacter": "GC",
       "animationSpeed": 1.0,
-      "startingCount": 0,
+      "startingCount": 1,
       "tags": []
     },
     {
@@ -6726,7 +7408,7 @@
       "modifiers": [],
       "favoredCharacter": "GM",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -7025,7 +7707,7 @@
       "modifiers": [],
       "favoredCharacter": "GM",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -7081,7 +7763,7 @@
       "modifiers": [],
       "favoredCharacter": "GM",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -7254,7 +7936,7 @@
     {
       "id": "happy_hour",
       "cardName": "Happy Hour",
-      "collectionCardId": "Bar des Fleurs",
+      "collectionCardId": "Bar des Fleurs (campagne)",
       "iconId": null,
       "cost": 1,
       "xCost": false,
@@ -7350,66 +8032,6 @@
       ]
     },
     {
-      "id": "acharnement",
-      "cardName": "Acharnement",
-      "collectionCardId": null,
-      "iconId": "Physique",
-      "cost": 0,
-      "xCost": false,
-      "type": "Attaque",
-      "rarity": "Special",
-      "targetingMode": "AllEnemies",
-      "effects": [
-        {
-          "type": "Damage",
-          "value": 1,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        },
-        {
-          "type": "DelayTurn",
-          "value": 4,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        }
-      ],
-      "modifiers": [],
-      "favoredCharacter": "Impossible",
-      "animationSpeed": 1.0,
-      "startingCount": 0,
-      "tags": [
-        "FollowUp",
-        "Exhaust",
-        "Unobtainable"
-      ]
-    },
-    {
       "id": "acide",
       "cardName": "Acide",
       "collectionCardId": null,
@@ -7484,46 +8106,6 @@
       "animationSpeed": 1.0,
       "startingCount": 0,
       "tags": []
-    },
-    {
-      "id": "atterrissage",
-      "cardName": "Atterrissage",
-      "collectionCardId": null,
-      "iconId": "Choc",
-      "cost": 0,
-      "xCost": false,
-      "type": "Attaque",
-      "rarity": "Special",
-      "targetingMode": "Enemy",
-      "effects": [
-        {
-          "type": "Damage",
-          "value": 15,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        }
-      ],
-      "modifiers": [],
-      "favoredCharacter": "Impossible",
-      "animationSpeed": 2.0,
-      "startingCount": 0,
-      "tags": [
-        "Exhaust",
-        "Unobtainable"
-      ]
     },
     {
       "id": "autodecomposition",
@@ -7681,81 +8263,6 @@
       "tags": [
         "Unobtainable"
       ]
-    },
-    {
-      "id": "chute_d_etoile",
-      "cardName": "Chute d'étoile",
-      "collectionCardId": null,
-      "iconId": "Comète",
-      "cost": 0,
-      "xCost": false,
-      "type": "Attaque",
-      "rarity": "Common",
-      "targetingMode": "Enemy",
-      "effects": [
-        {
-          "type": "Damage",
-          "value": 7,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Magic"
-        },
-        {
-          "type": "Status",
-          "value": 7,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Vuln",
-          "duration": 1,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        },
-        {
-          "type": "Status",
-          "value": 7,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Weakness",
-          "duration": 1,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        }
-      ],
-      "modifiers": [],
-      "favoredCharacter": "Impossible",
-      "animationSpeed": 1.0,
-      "startingCount": 0,
-      "tags": []
     },
     {
       "id": "desespoir",
@@ -8128,66 +8635,6 @@
       ]
     },
     {
-      "id": "interruption",
-      "cardName": "Interruption",
-      "collectionCardId": null,
-      "iconId": null,
-      "cost": 0,
-      "xCost": false,
-      "type": "Rien",
-      "rarity": "Common",
-      "targetingMode": "Enemy",
-      "effects": [
-        {
-          "type": "EndTurn",
-          "value": 0,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        },
-        {
-          "type": "CutInTurn",
-          "value": 0,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        }
-      ],
-      "modifiers": [],
-      "favoredCharacter": "Impossible",
-      "animationSpeed": 1.0,
-      "startingCount": 0,
-      "tags": [
-        "Exhaust",
-        "FollowUp",
-        "Unobtainable"
-      ]
-    },
-    {
       "id": "lionheart",
       "cardName": "Lionheart",
       "collectionCardId": null,
@@ -8243,66 +8690,6 @@
       "startingCount": 0,
       "tags": [
         "Unobtainable"
-      ]
-    },
-    {
-      "id": "malediction",
-      "cardName": "Malédiction",
-      "collectionCardId": null,
-      "iconId": null,
-      "cost": 0,
-      "xCost": false,
-      "type": "Compétence",
-      "rarity": "Special",
-      "targetingMode": "Player",
-      "effects": [
-        {
-          "type": "DelayTurn",
-          "value": 25,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        },
-        {
-          "type": "Status",
-          "value": -1,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        }
-      ],
-      "modifiers": [],
-      "favoredCharacter": "Impossible",
-      "animationSpeed": 1.0,
-      "startingCount": 0,
-      "tags": [
-        "FollowUp",
-        "Exhaust",
-        "Curse"
       ]
     },
     {
@@ -8444,65 +8831,6 @@
       "tags": []
     },
     {
-      "id": "point_fixe",
-      "cardName": "Point fixe",
-      "collectionCardId": null,
-      "iconId": "Physique",
-      "cost": 0,
-      "xCost": false,
-      "type": "Attaque",
-      "rarity": "Special",
-      "targetingMode": "RandomEnemy",
-      "effects": [
-        {
-          "type": "Damage",
-          "value": 3,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        },
-        {
-          "type": "DelayTurn",
-          "value": 5,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        }
-      ],
-      "modifiers": [],
-      "favoredCharacter": "Impossible",
-      "animationSpeed": 1.0,
-      "startingCount": 0,
-      "tags": [
-        "FollowUp",
-        "Exhaust"
-      ]
-    },
-    {
       "id": "pulsar_a_ondes",
       "cardName": "Pulsar à ondes",
       "collectionCardId": null,
@@ -8550,105 +8878,6 @@
       ]
     },
     {
-      "id": "recristallisation",
-      "cardName": "Recristallisation",
-      "collectionCardId": null,
-      "iconId": "Cristal",
-      "cost": 0,
-      "xCost": false,
-      "type": "Attaque",
-      "rarity": "Special",
-      "targetingMode": "Enemy",
-      "effects": [
-        {
-          "type": "DispelBuff",
-          "value": 1,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 50,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        },
-        {
-          "type": "Damage",
-          "value": 5,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Ice"
-        }
-      ],
-      "modifiers": [],
-      "favoredCharacter": "Impossible",
-      "animationSpeed": 0.1,
-      "startingCount": 0,
-      "tags": [
-        "FollowUp",
-        "Exhaust",
-        "Unobtainable"
-      ]
-    },
-    {
-      "id": "recurrence",
-      "cardName": "Récurrence",
-      "collectionCardId": null,
-      "iconId": "iter",
-      "cost": 0,
-      "xCost": false,
-      "type": "Rien",
-      "rarity": "Common",
-      "targetingMode": "Player",
-      "effects": [
-        {
-          "type": "DelayTurn",
-          "value": 20,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        }
-      ],
-      "modifiers": [],
-      "favoredCharacter": "Impossible",
-      "animationSpeed": 1.0,
-      "startingCount": 0,
-      "tags": [
-        "Curse"
-      ]
-    },
-    {
       "id": "renforcement",
       "cardName": "Renforcement",
       "collectionCardId": null,
@@ -8689,7 +8918,7 @@
       ]
     },
     {
-      "id": null,
+      "id": "sadisme_et_marque",
       "cardName": "Sadisme et Marque",
       "collectionCardId": null,
       "iconId": null,
@@ -8745,63 +8974,41 @@
       "tags": []
     },
     {
-      "id": "tir_cadre",
-      "cardName": "Tir cadré",
-      "collectionCardId": null,
-      "iconId": "blitz",
-      "cost": 0,
+      "id": "insaopaulo",
+      "cardName": "DO BRAZIIIIL",
+      "collectionCardId": "Insao Paulo",
+      "iconId": null,
+      "cost": 1,
       "xCost": false,
-      "type": "Attaque",
+      "type": "Pouvoir",
       "rarity": "Rare",
-      "targetingMode": "Enemy",
+      "targetingMode": "Player",
       "effects": [
         {
-          "type": "Damage",
-          "value": 2,
+          "type": "Status",
+          "value": 3,
           "targetSelf": false,
           "targetOthers": false,
-          "statusType": "Strength",
+          "statusType": "CardFollowUp",
           "duration": 0,
           "description": "",
-          "cardID": "",
+          "cardID": "Tir cadré",
           "conditional": false,
           "conditionType": "KillingBlow",
           "conditionValue": "",
           "trueEffect": false,
           "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        },
-        {
-          "type": "Status",
-          "value": 0,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Weakness",
-          "duration": 1,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
+          "index": 1,
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
           "animationType": "Default"
         }
       ],
       "modifiers": [],
-      "favoredCharacter": "Impossible",
+      "favoredCharacter": "Aucun",
       "animationSpeed": 1.0,
       "startingCount": 0,
-      "tags": [
-        "FollowUp",
-        "Exhaust"
-      ]
+      "tags": []
     },
     {
       "id": "inter_depart",
@@ -8811,7 +9018,7 @@
       "cost": 0,
       "xCost": false,
       "type": "Attaque",
-      "rarity": "Common",
+      "rarity": "Epic",
       "targetingMode": "Enemy",
       "effects": [
         {
@@ -8913,6 +9120,25 @@
           "type": "DelayTurn",
           "value": 1,
           "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "Draw",
+          "value": 1,
+          "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
           "duration": 0,
@@ -9104,7 +9330,7 @@
       "modifiers": [],
       "favoredCharacter": "ITI",
       "animationSpeed": 1.0,
-      "startingCount": 0,
+      "startingCount": 1,
       "tags": []
     },
     {
@@ -9354,7 +9580,7 @@
       ],
       "favoredCharacter": "ITI",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": [
         "Exhaust"
       ]
@@ -9505,7 +9731,7 @@
       "modifiers": [],
       "favoredCharacter": "ITI",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": [
         "Exhaust"
       ]
@@ -9940,7 +10166,9 @@
       "favoredCharacter": "ITI",
       "animationSpeed": 1.0,
       "startingCount": 0,
-      "tags": []
+      "tags": [
+        "Exhaust"
+      ]
     },
     {
       "id": "piratage",
@@ -10015,8 +10243,10 @@
       "modifiers": [],
       "favoredCharacter": "ITI",
       "animationSpeed": 1.0,
-      "startingCount": 1,
-      "tags": []
+      "startingCount": 0,
+      "tags": [
+        "Exhaust"
+      ]
     },
     {
       "id": "soutien_satellite",
@@ -10035,7 +10265,7 @@
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "FieldTurnFollowUp",
-          "duration": 1,
+          "duration": 2,
           "description": "",
           "cardID": "Laser orbital",
           "conditional": false,
@@ -10835,7 +11065,7 @@
       ],
       "favoredCharacter": "MECA",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -11059,25 +11289,6 @@
       "targetingMode": "Player",
       "effects": [
         {
-          "type": "Status",
-          "value": 0,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "Freeze",
-          "duration": 2,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        },
-        {
           "type": "DispelDebuff",
           "value": -1,
           "targetSelf": true,
@@ -11114,12 +11325,31 @@
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
           "animationType": "Default"
+        },
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Freeze",
+          "duration": 2,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         }
       ],
       "modifiers": [],
       "favoredCharacter": "MECA",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -11156,7 +11386,7 @@
       "modifiers": [],
       "favoredCharacter": "MECA",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -11510,7 +11740,7 @@
       ],
       "favoredCharacter": "MRIE",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -11903,7 +12133,7 @@
       "modifiers": [],
       "favoredCharacter": "MRIE",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -12052,7 +12282,7 @@
       "modifiers": [],
       "favoredCharacter": "MRIE",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -12108,7 +12338,7 @@
       "modifiers": [],
       "favoredCharacter": "MRIE",
       "animationSpeed": 1.0,
-      "startingCount": 0,
+      "startingCount": 1,
       "tags": []
     },
     {
@@ -12447,13 +12677,13 @@
       "modifiers": [],
       "favoredCharacter": "MRIE",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": [
         "Retain"
       ]
     },
     {
-      "id": "",
+      "id": "octogone",
       "cardName": "Octogone",
       "collectionCardId": "Stadium",
       "iconId": null,
@@ -12617,7 +12847,7 @@
       "modifiers": [],
       "favoredCharacter": "PERF",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -12673,7 +12903,7 @@
       "modifiers": [],
       "favoredCharacter": "PERF",
       "animationSpeed": 1.0,
-      "startingCount": 1,
+      "startingCount": 0,
       "tags": []
     },
     {
@@ -12933,23 +13163,6 @@
     },
     {
       "id": "com",
-      "cardName": "",
-      "collectionCardId": null,
-      "iconId": null,
-      "cost": 0,
-      "xCost": false,
-      "type": "Attaque",
-      "rarity": "Common",
-      "targetingMode": "Player",
-      "effects": [],
-      "modifiers": [],
-      "favoredCharacter": "Starting",
-      "animationSpeed": 1.0,
-      "startingCount": 0,
-      "tags": []
-    },
-    {
-      "id": "compte_rendu",
       "cardName": "",
       "collectionCardId": null,
       "iconId": null,
@@ -13268,23 +13481,6 @@
       "tags": []
     },
     {
-      "id": "insa_cheval",
-      "cardName": "",
-      "collectionCardId": null,
-      "iconId": null,
-      "cost": 0,
-      "xCost": false,
-      "type": "Attaque",
-      "rarity": "Common",
-      "targetingMode": "Player",
-      "effects": [],
-      "modifiers": [],
-      "favoredCharacter": "Starting",
-      "animationSpeed": 1.0,
-      "startingCount": 0,
-      "tags": []
-    },
-    {
       "id": "insa_racing",
       "cardName": "",
       "collectionCardId": null,
@@ -13336,24 +13532,7 @@
       "tags": []
     },
     {
-      "id": "insaopaulo",
-      "cardName": "INSAOPAULO",
-      "collectionCardId": "Insao Paulo",
-      "iconId": null,
-      "cost": 0,
-      "xCost": false,
-      "type": "Attaque",
-      "rarity": "Common",
-      "targetingMode": "Player",
-      "effects": [],
-      "modifiers": [],
-      "favoredCharacter": "Starting",
-      "animationSpeed": 1.0,
-      "startingCount": 0,
-      "tags": []
-    },
-    {
-      "id": "",
+      "id": "insaristocrate",
       "cardName": "",
       "collectionCardId": null,
       "iconId": null,
@@ -13665,7 +13844,7 @@
       "tags": []
     },
     {
-      "id": "",
+      "id": "rattrapages",
       "cardName": "Rattrapages",
       "collectionCardId": "Rattrapages",
       "iconId": null,
@@ -13752,13 +13931,13 @@
         }
       ],
       "modifiers": [],
-      "favoredCharacter": "Aucun",
+      "favoredCharacter": "Starting",
       "animationSpeed": 1.0,
       "startingCount": 0,
       "tags": []
     },
     {
-      "id": "",
+      "id": "rush_du_matin",
       "cardName": "Rush du matin",
       "collectionCardId": "Café Court",
       "iconId": null,
@@ -13834,7 +14013,7 @@
     {
       "id": "terre_brulee",
       "cardName": "Terre brûlée...",
-      "collectionCardId": "BAF",
+      "collectionCardId": "BAF (campagne)",
       "iconId": null,
       "cost": 3,
       "xCost": false,
@@ -13890,7 +14069,7 @@
       ]
     },
     {
-      "id": "",
+      "id": "tournee_generale",
       "cardName": "Tournée générale",
       "collectionCardId": "Quartier Libre",
       "iconId": null,
@@ -13927,7 +14106,7 @@
       "tags": []
     },
     {
-      "id": "",
+      "id": "troisieme_mi_temps",
       "cardName": "Troisième mi-temps",
       "collectionCardId": "TOSS",
       "iconId": null,
@@ -14094,7 +14273,7 @@
       "tags": []
     },
     {
-      "id": "poison 1",
+      "id": "force",
       "cardName": "Force",
       "collectionCardId": null,
       "iconId": "Buff",

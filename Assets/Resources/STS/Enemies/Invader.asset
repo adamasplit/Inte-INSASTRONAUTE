@@ -16,10 +16,8 @@ MonoBehaviour:
   enemyName: Invader
   displayName: Space Invader
   maxHP: 6
-  pattern:
-  - {fileID: 11400000, guid: 1c9b5117112e64d42a126561722bf83b, type: 2}
-  - {fileID: 11400000, guid: dd3a81fb1eb2a134e9cbfd9ffb897664, type: 2}
-  randomStart: 0
+  pattern: []
+  randomStart: 1
   movePattern:
   - card: {fileID: 0}
     moveName: 
@@ -29,7 +27,7 @@ MonoBehaviour:
       targetSelf: 0
       targetOthers: 0
       statusType: 2
-      duration: 2
+      duration: 1
       description: 
       cardID: 
       index: 0
@@ -41,7 +39,24 @@ MonoBehaviour:
       cardFilterTags: 
       cardSelectionEffect: 0
       animationType: 0
-    nextMoveIndices: 
+    - type: 23
+      value: 1
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 2
+      duration: 1
+      description: 
+      cardID: Brouillage
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 0200000003000000
     weight: 1
   - card: {fileID: 0}
     moveName: 
@@ -63,7 +78,7 @@ MonoBehaviour:
       cardFilterTags: 
       cardSelectionEffect: 0
       animationType: 0
-    nextMoveIndices: 
+    nextMoveIndices: 0200000003000000
     weight: 1
   - card: {fileID: 0}
     moveName: 
@@ -102,7 +117,7 @@ MonoBehaviour:
       cardFilterTags: 
       cardSelectionEffect: 0
       animationType: 0
-    nextMoveIndices: 
+    nextMoveIndices: 0000000001000000
     weight: 1
   - card: {fileID: 0}
     moveName: 
@@ -124,7 +139,7 @@ MonoBehaviour:
       cardFilterTags: 
       cardSelectionEffect: 0
       animationType: 0
-    nextMoveIndices: 
+    nextMoveIndices: 0000000001000000
     weight: 1
   rewardCards: []
   startingStatus: 0

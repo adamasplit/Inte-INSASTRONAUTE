@@ -15,7 +15,6 @@ MonoBehaviour:
   id: contrepoids
   cardName: Contrepoids
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: c3d6669401af4c64d96303688b42343a, type: 3}
   cost: 1
   xCost: 0
@@ -38,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 1
+    animationType: 0
   - type: 0
     value: 9
     targetSelf: 0
@@ -54,9 +54,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers: []
   favoredCharacter: 6
   animationSpeed: 1
-  startingCount: 1
+  startingCount: 0
   tags: 

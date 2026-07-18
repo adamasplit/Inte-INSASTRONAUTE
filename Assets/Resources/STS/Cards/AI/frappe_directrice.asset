@@ -15,7 +15,6 @@ MonoBehaviour:
   id: frappe_directrice
   cardName: Frappe directrice
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 33bf8384efc214642af3e69950c61eba, type: 3}
   cost: 1
   xCost: 0

@@ -21,7 +21,7 @@ MonoBehaviour:
     minFloor: 7
     maxFloor: -1
     minAct: 1
-    maxAct: -1
+    maxAct: 1
     weight: 1
     elite: 0
     boss: 0
@@ -42,7 +42,7 @@ MonoBehaviour:
     minFloor: 2
     maxFloor: 6
     minAct: 0
-    maxAct: 1
+    maxAct: 0
     weight: 1.1
     elite: 0
     boss: 0
@@ -53,30 +53,10 @@ MonoBehaviour:
     minFloor: 7
     maxFloor: -1
     minAct: -1
-    maxAct: -1
-    weight: 1
-    elite: 0
-    boss: 0
-  - displayName: Dragon
-    enemies:
-    - {fileID: 11400000, guid: 32beb350830d4ea4080266b5e66083b2, type: 2}
-    minFloor: 7
-    maxFloor: -1
-    minAct: -1
-    maxAct: -1
-    weight: 1
-    elite: 0
-    boss: 0
-  - displayName: TestBoss
-    enemies:
-    - {fileID: 11400000, guid: b9089d6d4d15dea4887c882b4866b068, type: 2}
-    minFloor: 0
-    maxFloor: 50
-    minAct: 0
     maxAct: 0
     weight: 1
     elite: 0
-    boss: 1
+    boss: 0
   - displayName: Leo
     enemies:
     - {fileID: 11400000, guid: d016aeed86060b343a1748f46c58f50b, type: 2}
@@ -107,16 +87,6 @@ MonoBehaviour:
     weight: 1
     elite: 1
     boss: 0
-  - displayName: Dark
-    enemies:
-    - {fileID: 11400000, guid: 199b8eed905aa69418145b8654584d75, type: 2}
-    minFloor: -1
-    maxFloor: -1
-    minAct: 1
-    maxAct: 1
-    weight: 1
-    elite: 0
-    boss: 1
   - displayName: Act2 elite1
     enemies:
     - {fileID: 11400000, guid: 62d448cb3ca46b544a44a03f015d553a, type: 2}
@@ -154,7 +124,7 @@ MonoBehaviour:
     minFloor: 5
     maxFloor: -1
     minAct: -1
-    maxAct: -1
+    maxAct: 0
     weight: 0.95
     elite: 0
     boss: 0
@@ -234,7 +204,7 @@ MonoBehaviour:
     enemies:
     - {fileID: 11400000, guid: 608eaf8a8bf48ba4eba40360729054f7, type: 2}
     minFloor: 0
-    maxFloor: 6
+    maxFloor: 3
     minAct: 0
     maxAct: 0
     weight: 1
@@ -278,7 +248,7 @@ MonoBehaviour:
     minFloor: 4
     maxFloor: 9
     minAct: 0
-    maxAct: -1
+    maxAct: 0
     weight: 1
     elite: 0
     boss: 0
@@ -289,7 +259,7 @@ MonoBehaviour:
     minFloor: 5
     maxFloor: -1
     minAct: 0
-    maxAct: -1
+    maxAct: 0
     weight: 0.85
     elite: 0
     boss: 0
@@ -312,7 +282,7 @@ MonoBehaviour:
     maxFloor: -1
     minAct: 2
     maxAct: -1
-    weight: 1
+    weight: 2
     elite: 1
     boss: 0
   - displayName: Time Eater
@@ -364,7 +334,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 845a5b5209525f6478d6a650c1e11882, type: 2}
     minFloor: 7
     maxFloor: -1
-    minAct: 1
+    minAct: 2
     maxAct: -1
     weight: 0.75
     elite: 0
@@ -397,7 +367,7 @@ MonoBehaviour:
     minFloor: 6
     maxFloor: -1
     minAct: 2
-    maxAct: -1
+    maxAct: 2
     weight: 0.4
     elite: 0
     boss: 0
@@ -407,7 +377,7 @@ MonoBehaviour:
     minFloor: 6
     maxFloor: -1
     minAct: 2
-    maxAct: -1
+    maxAct: 2
     weight: 0.4
     elite: 0
     boss: 0
@@ -417,7 +387,7 @@ MonoBehaviour:
     minFloor: 0
     maxFloor: -1
     minAct: 0
-    maxAct: -1
+    maxAct: 0
     weight: 0.55
     elite: 0
     boss: 0
@@ -427,7 +397,7 @@ MonoBehaviour:
     minFloor: 0
     maxFloor: -1
     minAct: 0
-    maxAct: -1
+    maxAct: 0
     weight: 0.55
     elite: 0
     boss: 0
@@ -447,7 +417,7 @@ MonoBehaviour:
     minFloor: 0
     maxFloor: 8
     minAct: 2
-    maxAct: -1
+    maxAct: 2
     weight: 0.35
     elite: 1
     boss: 0
@@ -457,7 +427,7 @@ MonoBehaviour:
     minFloor: 4
     maxFloor: -1
     minAct: 1
-    maxAct: -1
+    maxAct: 1
     weight: 0.45
     elite: 0
     boss: 0
@@ -467,7 +437,7 @@ MonoBehaviour:
     minFloor: 4
     maxFloor: -1
     minAct: 1
-    maxAct: -1
+    maxAct: 1
     weight: 0
     elite: 0
     boss: 0
@@ -477,7 +447,7 @@ MonoBehaviour:
     minFloor: 1
     maxFloor: -1
     minAct: 1
-    maxAct: -1
+    maxAct: 1
     weight: 0.45
     elite: 0
     boss: 0
@@ -487,7 +457,98 @@ MonoBehaviour:
     minFloor: 1
     maxFloor: -1
     minAct: 1
-    maxAct: -1
+    maxAct: 1
     weight: 0.45
+    elite: 0
+    boss: 0
+  - displayName: White cloak
+    enemies:
+    - {fileID: 11400000, guid: fe62939fc406e6d44bd3b4c86bf90724, type: 2}
+    minFloor: 1
+    maxFloor: 5
+    minAct: 0
+    maxAct: 0
+    weight: 0.55
+    elite: 0
+    boss: 0
+  - displayName: Coeurl
+    enemies:
+    - {fileID: 11400000, guid: aab42b48b8457a741a9955ba5b39a729, type: 2}
+    minFloor: 1
+    maxFloor: 5
+    minAct: 0
+    maxAct: 0
+    weight: 0.55
+    elite: 0
+    boss: 0
+  - displayName: Coeurl&white cloak
+    enemies:
+    - {fileID: 11400000, guid: aab42b48b8457a741a9955ba5b39a729, type: 2}
+    - {fileID: 11400000, guid: fe62939fc406e6d44bd3b4c86bf90724, type: 2}
+    minFloor: 6
+    maxFloor: -1
+    minAct: 0
+    maxAct: 0
+    weight: 0.75
+    elite: 1
+    boss: 0
+  - displayName: TestBoss
+    enemies:
+    - {fileID: 11400000, guid: b9089d6d4d15dea4887c882b4866b068, type: 2}
+    minFloor: 0
+    maxFloor: 50
+    minAct: 0
+    maxAct: 0
+    weight: 1
+    elite: 0
+    boss: 1
+  - displayName: TestBoss2
+    enemies:
+    - {fileID: 11400000, guid: fa7c848cc43c19340b417e0e4eb273d6, type: 2}
+    minFloor: 0
+    maxFloor: 50
+    minAct: 0
+    maxAct: 0
+    weight: 1
+    elite: 0
+    boss: 1
+  - displayName: Dark
+    enemies:
+    - {fileID: 11400000, guid: 199b8eed905aa69418145b8654584d75, type: 2}
+    minFloor: -1
+    maxFloor: -1
+    minAct: 1
+    maxAct: 1
+    weight: 1
+    elite: 0
+    boss: 1
+  - displayName: DeathAngel
+    enemies:
+    - {fileID: 11400000, guid: 44830ac4c83901e498dea9055ab4fc2b, type: 2}
+    minFloor: -1
+    maxFloor: -1
+    minAct: 1
+    maxAct: 1
+    weight: 1
+    elite: 0
+    boss: 1
+  - displayName: Dragon
+    enemies:
+    - {fileID: 11400000, guid: 32beb350830d4ea4080266b5e66083b2, type: 2}
+    minFloor: 7
+    maxFloor: -1
+    minAct: -1
+    maxAct: 0
+    weight: 1
+    elite: 0
+    boss: 0
+  - displayName: Dragon2
+    enemies:
+    - {fileID: 11400000, guid: 32beb350830d4ea4080266b5e66083b2, type: 2}
+    minFloor: 0
+    maxFloor: -1
+    minAct: -1
+    maxAct: 0
+    weight: 1
     elite: 0
     boss: 0

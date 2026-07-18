@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: derniere_ligne_droite
   cardName: "Derni\xE8re ligne droite"
-  collectionCardId: Purple Rouen
+  collectionCardId: Insa'cheval
   icon: {fileID: 0}
-  cost: 0
+  cost: 1
   xCost: 0
   type: 0
   rarity: 3

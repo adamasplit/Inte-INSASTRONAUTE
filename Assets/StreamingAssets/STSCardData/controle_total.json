@@ -1,7 +1,7 @@
 {
   "id": "controle_total",
   "cardName": "Contrôle total",
-  "collectionCardId": "controleur_astuce",
+  "collectionCardId": "Contrôleur Astuce",
   "iconId": null,
   "cost": 2,
   "xCost": false,

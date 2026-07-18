@@ -9,4 +9,5 @@ public class MapNode
     public List<MapNode> next = new();
     public List<MapNode> prev = new(); // important pour debug + affichage
     public bool visited = false; // important pour debug + affichage
+    public bool completed = false;
 }

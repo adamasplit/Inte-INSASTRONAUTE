@@ -15,7 +15,6 @@ MonoBehaviour:
   id: iteration
   cardName: "It\xE9rateur"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 95a6ed189e5b9594cbb4caded70ec9ae, type: 3}
   cost: 1
   xCost: 0
@@ -38,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 2

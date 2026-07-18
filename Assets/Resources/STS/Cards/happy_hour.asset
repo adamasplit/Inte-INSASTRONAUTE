@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: happy_hour
   cardName: Happy Hour
-  collectionCardId: Bar des Fleurs
+  collectionCardId: Bar des Fleurs (campagne)
   icon: {fileID: 0}
   cost: 1
   xCost: 0

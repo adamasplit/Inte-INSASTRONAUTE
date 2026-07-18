@@ -15,7 +15,6 @@ MonoBehaviour:
   id: maquette
   cardName: Maquette
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 6f6c59b5791d72445b28f9358494bf69, type: 3}
   cost: 2
   xCost: 0
@@ -38,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 24
     value: 2
     targetSelf: 1
@@ -54,10 +54,10 @@ MonoBehaviour:
     cardSelectionSource: 1
     cardFilterTags: 
     cardSelectionEffect: 8
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 7
   animationSpeed: 1
   startingCount: 0
   tags: 
-  animationType: 0

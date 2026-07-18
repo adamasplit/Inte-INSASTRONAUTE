@@ -15,7 +15,6 @@ MonoBehaviour:
   id: pluie_de_surins
   cardName: Pluie de surins
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: bfab4b172435f9046b1d279bd5dba190, type: 3}
   cost: 0
   xCost: 0

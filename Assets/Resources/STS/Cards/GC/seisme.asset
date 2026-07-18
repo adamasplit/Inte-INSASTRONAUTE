@@ -42,5 +42,5 @@ MonoBehaviour:
   modifiers: []
   favoredCharacter: 6
   animationSpeed: 1
-  startingCount: 0
+  startingCount: 1
   tags: 

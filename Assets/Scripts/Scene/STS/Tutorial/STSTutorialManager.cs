@@ -444,9 +444,39 @@ public class STSTutorialManager : MonoBehaviour
 
             condition = () => flags["pressed"],
 
-            next = () => nodes["globalMapExplanation"]
+            next = () => nodes["startingCharacters"]
         };
-        nodes["globalMapExplanation"] = new TutorialNode
+        nodes["startingCharacters"]=new TutorialNode
+        {
+            text = "Avant de commencer une partie, vous pouvez choisir un personnage de départ, représentant un département.",
+
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                ui.HideDummyMapPreview();
+                ui.Unhighlight();
+            },
+
+            condition = () => flags["pressed"],
+
+            next = () => nodes["startingCharacters2"]
+        };
+        nodes["startingCharacters2"]=new TutorialNode
+        {
+            text = "Chaque personnage commence avec un effet passif dont lui seul peut bénéficier, et chacun a aussi accès à une sélection de cartes qui lui correspond. Testez et choisissez ce qui vous convient le mieux!",
+
+            onStart = () =>
+            {
+                flags["pressed"] = false;
+                ui.HideDummyMapPreview();
+                ui.Unhighlight();
+            },
+
+            condition = () => flags["pressed"],
+
+            next = () => nodes["tutorialEnd"]
+        };
+        nodes["tutorialEnd"] = new TutorialNode
         {
             text = "C'est tout pour le tutoriel  ! Bon courage !",
 

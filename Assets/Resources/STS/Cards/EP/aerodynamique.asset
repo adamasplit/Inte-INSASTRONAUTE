@@ -15,7 +15,6 @@ MonoBehaviour:
   id: aerodynamique
   cardName: "A\xE9rodynamique"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 484860e22487c72409e7df55306c3b3d, type: 3}
   cost: 2
   xCost: 0
@@ -38,10 +37,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 0
   animationSpeed: 1
   startingCount: 0
   tags: 
-  animationType: 0

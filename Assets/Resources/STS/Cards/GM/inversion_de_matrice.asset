@@ -15,7 +15,6 @@ MonoBehaviour:
   id: inversion_de_matrice
   cardName: Inversion de matrice
   collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: 9c002dd119d6cd54d8ad94b6254784ef, type: 2}
   icon: {fileID: 21300000, guid: 53770f7c52348c641bb46c1fb020948c, type: 3}
   cost: 1
   xCost: 0
@@ -38,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 1
     value: 6
     targetSelf: 0
@@ -54,9 +54,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers: []
   favoredCharacter: 2
   animationSpeed: 1
-  startingCount: 1
+  startingCount: 0
   tags: 

@@ -15,7 +15,6 @@ MonoBehaviour:
   id: capteur_de_mouvement
   cardName: Capteur de mouvement
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: c95223e52921ca644a1457e22b9878a6, type: 3}
   cost: 1
   xCost: 0

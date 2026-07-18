@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: depart_en_sprint
   cardName: "D\xE9part en sprint"
-  collectionCardId: Purple Rouen
+  collectionCardId: 'Purple '
   icon: {fileID: 0}
   cost: 0
   xCost: 0

@@ -246,6 +246,7 @@ public class TurnSystem : MonoBehaviour
     {
         if (SelectionManager.Instance.selectionMode)
             return;
+        ui.HideAllTooltips();
         endTurnButton.interactable = false;
         combat.deck.DiscardHand();
         combat.NotifyTurnEnded();

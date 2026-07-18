@@ -16,5 +16,6 @@ public enum CardTag
     Infinite,
     Atom,
     Molecule,
-    Norm
+    Norm,
+    Developer
 }

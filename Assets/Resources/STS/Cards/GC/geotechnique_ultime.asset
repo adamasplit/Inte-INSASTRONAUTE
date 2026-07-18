@@ -15,7 +15,6 @@ MonoBehaviour:
   id: geotechnique_ultime
   cardName: "G\xE9o-technique ultime"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 54a5da500e5b740429e6acfab50a4857, type: 3}
   cost: 2
   xCost: 0

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   id: Ophiucus
   enemyName: Ophiucus
-  displayName: 
+  displayName: Soldat O-X013
   maxHP: 34
   pattern:
   - {fileID: 11400000, guid: 79543af691dd8ad4ebf4ae8c812f53c6, type: 2}

@@ -15,7 +15,6 @@ MonoBehaviour:
   id: robot_autoguide
   cardName: "Robot autoguid\xE9"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: e66adab7f4caa7241adba9fbd24b6b12, type: 3}
   cost: 1
   xCost: 0
@@ -38,9 +37,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers: []
   favoredCharacter: 3
   animationSpeed: 1
-  startingCount: 1
-  tags: 
+  startingCount: 0
+  tags: 09000000

@@ -1,7 +1,7 @@
 {
   "id": "Leo",
   "enemyName": "Leo",
-  "displayName": "",
+  "displayName": "Soldat L-X05",
   "maxHP": 45,
   "randomStart": true,
   "patternCardIds": [],

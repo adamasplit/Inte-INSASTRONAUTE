@@ -15,7 +15,6 @@ MonoBehaviour:
   id: coupe_transversale
   cardName: Coupe transversale
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 536616779aceca04184dc8ef91627ced, type: 3}
   cost: 1
   xCost: 0

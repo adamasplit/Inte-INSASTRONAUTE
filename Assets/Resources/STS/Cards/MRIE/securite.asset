@@ -15,7 +15,6 @@ MonoBehaviour:
   id: securite
   cardName: "S\xE9curit\xE9"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: f3b9ab33dc393a54695f7c6dab20968b, type: 3}
   cost: 1
   xCost: 0
@@ -38,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 8
     value: 1
     targetSelf: 1
@@ -54,10 +54,10 @@ MonoBehaviour:
     cardSelectionSource: 3
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 5
   animationSpeed: 1
-  startingCount: 1
+  startingCount: 0
   tags: 0a000000
-  animationType: 0

@@ -15,7 +15,6 @@ MonoBehaviour:
   id: limit_break
   cardName: "D\xE9passement de limites"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 6a10bcdff4700f744aaa17ebfe348393, type: 3}
   cost: 2
   xCost: 0

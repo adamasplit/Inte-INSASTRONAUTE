@@ -13,10 +13,12 @@ public class TurnIcon : MonoBehaviour
     Vector3 targetPosition;
 
     public float moveSpeed = 100f;
+    private float usedMoveSpeed ;
     public bool preview = false;
 
     public void Set(Character character)
     {
+        usedMoveSpeed = moveSpeed * UIAdaptiveScale.GetScreenScale();
         portrait.sprite = character.portrait;
 
         portrait.gameObject.SetActive(portrait.sprite != null);
@@ -33,7 +35,7 @@ public class TurnIcon : MonoBehaviour
         transform.localPosition = Vector3.MoveTowards(
             transform.localPosition,
             new Vector3(targetPosition.x, transform.localPosition.y, targetPosition.z),
-            moveSpeed * Time.deltaTime
+            usedMoveSpeed * Time.deltaTime
         );
         if (preview)
         {

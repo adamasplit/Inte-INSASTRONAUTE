@@ -15,7 +15,6 @@ MonoBehaviour:
   id: rehabilitation
   cardName: Recyclage
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 127f14f22caf1e44c853d6b66d5fc452, type: 3}
   cost: 1
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 1
     cardFilterTags: 
     cardSelectionEffect: 3
+    animationType: 0
   - type: 24
     value: 1
     targetSelf: 1
@@ -45,6 +46,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -52,6 +54,7 @@ MonoBehaviour:
     cardSelectionSource: 1
     cardFilterTags: 
     cardSelectionEffect: 3
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 5

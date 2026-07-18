@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using System.Linq;
 using System.Collections;
 using UnityEngine.UI;
+using System.Threading.Tasks;
 
 public class MapManager : MonoBehaviour
 {
@@ -145,6 +146,25 @@ public class MapManager : MonoBehaviour
         node.visited = true;
         RunManager.Instance.currentFloor+=1;
         STSRunAuditSystem.RecordNodeExited(RunManager.Instance, sourceNode, node, sceneName, "map_transition");
+
+        if (RunManager.Instance != null && !string.IsNullOrWhiteSpace(RunManager.Instance.runId))
+        {
+            Task<STSApiNodeEnterResponse> enterTask = STSApiClient.EnterNodeAsync(RunManager.Instance.runId, node.id);
+            while (!enterTask.IsCompleted)
+            {
+                yield return null;
+            }
+
+            if (enterTask.IsCompleted && !enterTask.IsFaulted && !enterTask.IsCanceled)
+            {
+                RunManager.Instance.ApplyNodeEnterResponse(enterTask.Result);
+            }
+            else if (enterTask.IsFaulted)
+            {
+                Debug.LogWarning($"Node enter request failed for node {node.id}: {enterTask.Exception?.GetBaseException().Message}");
+            }
+        }
+
         STSSceneLoader.Instance.LoadScene(sceneName);
     }
 

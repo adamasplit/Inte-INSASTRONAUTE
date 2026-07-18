@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   id: Leo
   enemyName: Leo
-  displayName: 
+  displayName: Soldat L-X05
   maxHP: 45
   pattern: []
   randomStart: 1

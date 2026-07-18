@@ -1,8 +1,8 @@
 {
   "enemies": [
     {
-      "id": "Aegis Drone",
-      "enemyName": "Aegis Drone",
+      "id": "Aegis_Drone",
+      "enemyName": "Aegis_Drone",
       "displayName": "Robogarde",
       "maxHP": 22,
       "randomStart": false,
@@ -77,7 +77,7 @@
               "index": 0,
               "cardFilterTags": [],
               "cardSelectionEffect": "None",
-              "animationType": "Default"
+              "animationType": "Magic"
             },
             {
               "type": "Status",
@@ -284,7 +284,7 @@
               "index": 0,
               "cardFilterTags": [],
               "cardSelectionEffect": "None",
-              "animationType": "Default"
+              "animationType": "Slash"
             },
             {
               "type": "Status",
@@ -332,26 +332,7 @@
               "index": 0,
               "cardFilterTags": [],
               "cardSelectionEffect": "None",
-              "animationType": "Default"
-            },
-            {
-              "type": "Armor",
-              "value": 6,
-              "targetSelf": true,
-              "targetOthers": false,
-              "statusType": "Shielding",
-              "duration": 0,
-              "description": "",
-              "cardID": "",
-              "conditional": false,
-              "conditionType": "KillingBlow",
-              "conditionValue": "",
-              "trueEffect": false,
-              "cardSelectionSource": "Hand",
-              "index": 0,
-              "cardFilterTags": [],
-              "cardSelectionEffect": "None",
-              "animationType": "Default"
+              "animationType": "Slash"
             }
           ],
           "nextMoveIndices": [
@@ -367,8 +348,8 @@
       "startingStatusInfo": ""
     },
     {
-      "id": "Bloom Parasite",
-      "enemyName": "Bloom Parasite",
+      "id": "Bloom_Parasite",
+      "enemyName": "Bloom_Parasite",
       "displayName": "Plante spatiale",
       "maxHP": 18,
       "randomStart": false,
@@ -602,7 +583,7 @@
               "index": 0,
               "cardFilterTags": [],
               "cardSelectionEffect": "None",
-              "animationType": "Default"
+              "animationType": "ExplosionSmall"
             },
             {
               "type": "Status",
@@ -780,6 +761,263 @@
       "startingStatus": "DelayImmunity",
       "startingStatusDuration": 0,
       "startingStatusValue": 1,
+      "startingStatusInfo": ""
+    },
+    {
+      "id": "Boss2",
+      "enemyName": "Boss2",
+      "displayName": "Calamité du ciel",
+      "maxHP": 80,
+      "randomStart": false,
+      "patternCardIds": [],
+      "movePattern": [
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Status",
+              "value": 0,
+              "targetSelf": true,
+              "targetOthers": false,
+              "statusType": "Shielding",
+              "duration": 8,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            },
+            {
+              "type": "AddCardToDiscardPile",
+              "value": 3,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Shielding",
+              "duration": 8,
+              "description": "",
+              "cardID": "Débris cosmique",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [],
+          "weight": 0
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Damage",
+              "value": 14,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Shielding",
+              "duration": 8,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Slash"
+            }
+          ],
+          "nextMoveIndices": [
+            2,
+            3,
+            4
+          ],
+          "weight": 0
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Multihit",
+              "value": 2,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Shielding",
+              "duration": 4,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Slash"
+            }
+          ],
+          "nextMoveIndices": [
+            1,
+            3,
+            4
+          ],
+          "weight": 0
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "AdvanceTurn",
+              "value": 50,
+              "targetSelf": true,
+              "targetOthers": false,
+              "statusType": "Shielding",
+              "duration": 4,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Slash"
+            }
+          ],
+          "nextMoveIndices": [
+            2,
+            1,
+            4
+          ],
+          "weight": 0
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Damage",
+              "value": 8,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Shielding",
+              "duration": 4,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Slash"
+            },
+            {
+              "type": "DelayTurn",
+              "value": 30,
+              "targetSelf": true,
+              "targetOthers": false,
+              "statusType": "Shielding",
+              "duration": 4,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Slash"
+            }
+          ],
+          "nextMoveIndices": [
+            2,
+            1,
+            3
+          ],
+          "weight": 0
+        }
+      ],
+      "rewardCardIds": [
+        "meteorite"
+      ],
+      "startingStatus": "Strength",
+      "startingStatusDuration": 0,
+      "startingStatusValue": 2,
+      "startingStatusInfo": ""
+    },
+    {
+      "id": "Coeurl",
+      "enemyName": "Coeurl",
+      "displayName": "Chasseur robotique",
+      "maxHP": 33,
+      "randomStart": false,
+      "patternCardIds": [],
+      "movePattern": [
+        {
+          "cardId": "recharge",
+          "moveName": "",
+          "effects": [],
+          "nextMoveIndices": [
+            1
+          ],
+          "weight": 1
+        },
+        {
+          "cardId": "coupe_transversale",
+          "moveName": "",
+          "effects": [],
+          "nextMoveIndices": [
+            2
+          ],
+          "weight": 1
+        },
+        {
+          "cardId": "brisure_bond_et_baston",
+          "moveName": "",
+          "effects": [],
+          "nextMoveIndices": [
+            3
+          ],
+          "weight": 1
+        },
+        {
+          "cardId": "vision_en_coupe",
+          "moveName": "",
+          "effects": [],
+          "nextMoveIndices": [
+            0
+          ],
+          "weight": 1
+        }
+      ],
+      "rewardCardIds": [],
+      "startingStatus": "Strength",
+      "startingStatusDuration": 0,
+      "startingStatusValue": 0,
       "startingStatusInfo": ""
     },
     {
@@ -1022,7 +1260,7 @@
               "index": 0,
               "cardFilterTags": [],
               "cardSelectionEffect": "None",
-              "animationType": "Default"
+              "animationType": "Slash"
             },
             {
               "type": "Status",
@@ -1070,7 +1308,7 @@
               "index": 0,
               "cardFilterTags": [],
               "cardSelectionEffect": "None",
-              "animationType": "Default"
+              "animationType": "Slash"
             },
             {
               "type": "Heal",
@@ -1090,6 +1328,227 @@
               "cardFilterTags": [],
               "cardSelectionEffect": "None",
               "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [
+            0
+          ],
+          "weight": 1
+        }
+      ],
+      "rewardCardIds": [
+        "frappe_ultime"
+      ],
+      "startingStatus": "Strength",
+      "startingStatusDuration": 0,
+      "startingStatusValue": 0,
+      "startingStatusInfo": ""
+    },
+    {
+      "id": "DeathAngel",
+      "enemyName": "DeathAngel",
+      "displayName": "Ange de la mort",
+      "maxHP": 75,
+      "randomStart": false,
+      "patternCardIds": [
+        "frappe_ultime"
+      ],
+      "movePattern": [
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Status",
+              "value": 4,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Fragile",
+              "duration": 0,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            },
+            {
+              "type": "StealBuff",
+              "value": 1,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Vigor",
+              "duration": 0,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [
+            1
+          ],
+          "weight": 1
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Damage",
+              "value": 8,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Burn",
+              "duration": 0,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Light"
+            },
+            {
+              "type": "Status",
+              "value": 2,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "FullBreak",
+              "duration": 2,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [
+            2
+          ],
+          "weight": 1
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Damage",
+              "value": 8,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Strength",
+              "duration": 0,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Light"
+            }
+          ],
+          "nextMoveIndices": [
+            0
+          ],
+          "weight": 1
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "DelayTurn",
+              "value": 60,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Strength",
+              "duration": 0,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Light"
+            },
+            {
+              "type": "Status",
+              "value": 1,
+              "targetSelf": true,
+              "targetOthers": false,
+              "statusType": "Strength",
+              "duration": 0,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Light"
+            }
+          ],
+          "nextMoveIndices": [
+            0
+          ],
+          "weight": 1
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Damage",
+              "value": 8,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Strength",
+              "duration": 0,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Light"
             }
           ],
           "nextMoveIndices": [
@@ -1173,25 +1632,6 @@
           "moveName": "",
           "effects": [
             {
-              "type": "Armor",
-              "value": 8,
-              "targetSelf": true,
-              "targetOthers": false,
-              "statusType": "Strength",
-              "duration": 2,
-              "description": "",
-              "cardID": "",
-              "conditional": false,
-              "conditionType": "KillingBlow",
-              "conditionValue": "",
-              "trueEffect": false,
-              "cardSelectionSource": "Hand",
-              "index": 0,
-              "cardFilterTags": [],
-              "cardSelectionEffect": "None",
-              "animationType": "Default"
-            },
-            {
               "type": "Status",
               "value": 3,
               "targetSelf": true,
@@ -1222,6 +1662,209 @@
       "startingStatusInfo": ""
     },
     {
+      "id": "Defect",
+      "enemyName": "Defect",
+      "displayName": "Robot défectueux",
+      "maxHP": 40,
+      "randomStart": false,
+      "patternCardIds": [],
+      "movePattern": [
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Status",
+              "value": 0,
+              "targetSelf": true,
+              "targetOthers": false,
+              "statusType": "FieldTurnFollowUp",
+              "duration": 0,
+              "description": "",
+              "cardID": "Orbe kéraunique",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 1,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            },
+            {
+              "type": "Status",
+              "value": 0,
+              "targetSelf": true,
+              "targetOthers": false,
+              "statusType": "FieldTurnFollowUp",
+              "duration": 0,
+              "description": "",
+              "cardID": "Orbe glaciaire",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 1,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [
+            1,
+            2
+          ],
+          "weight": 0
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Multihit",
+              "value": 5,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "FieldTurnFollowUp",
+              "duration": 2,
+              "description": "",
+              "cardID": "Orbe kéraunique",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 1,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [
+            3,
+            2
+          ],
+          "weight": 0
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Damage",
+              "value": 6,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "FieldTurnFollowUp",
+              "duration": 2,
+              "description": "",
+              "cardID": "Orbe kéraunique",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 1,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            },
+            {
+              "type": "DelayTurn",
+              "value": 30,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "FieldTurnFollowUp",
+              "duration": 2,
+              "description": "",
+              "cardID": "Orbe kéraunique",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 1,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [
+            3,
+            4
+          ],
+          "weight": 0
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Heal",
+              "value": 7,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "FieldTurnFollowUp",
+              "duration": 2,
+              "description": "",
+              "cardID": "Orbe kéraunique",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 1,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [
+            1,
+            4
+          ],
+          "weight": 0
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "AddCardToDrawPile",
+              "value": 2,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "FieldTurnFollowUp",
+              "duration": 2,
+              "description": "",
+              "cardID": "Surchauffe",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 1,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [
+            1,
+            2
+          ],
+          "weight": 0
+        }
+      ],
+      "rewardCardIds": [],
+      "startingStatus": "Strength",
+      "startingStatusDuration": 0,
+      "startingStatusValue": 0,
+      "startingStatusInfo": ""
+    },
+    {
       "id": "Donu",
       "enemyName": "Donu",
       "displayName": "Donu",
@@ -1233,25 +1876,6 @@
           "cardId": null,
           "moveName": "",
           "effects": [
-            {
-              "type": "Armor",
-              "value": 8,
-              "targetSelf": true,
-              "targetOthers": false,
-              "statusType": "Strength",
-              "duration": 2,
-              "description": "",
-              "cardID": "",
-              "conditional": false,
-              "conditionType": "KillingBlow",
-              "conditionValue": "",
-              "trueEffect": false,
-              "cardSelectionSource": "Hand",
-              "index": 0,
-              "cardFilterTags": [],
-              "cardSelectionEffect": "None",
-              "animationType": "Default"
-            },
             {
               "type": "Status",
               "value": 3,
@@ -1337,6 +1961,160 @@
       "startingStatusInfo": ""
     },
     {
+      "id": "Dragon",
+      "enemyName": "Dragon",
+      "displayName": "",
+      "maxHP": 25,
+      "randomStart": false,
+      "patternCardIds": [],
+      "movePattern": [
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Damage",
+              "value": 3,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Strengthen",
+              "duration": 0,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Slash"
+            },
+            {
+              "type": "Status",
+              "value": 2,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Burn",
+              "duration": 5,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [
+            1,
+            2
+          ],
+          "weight": 0
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Damage",
+              "value": 7,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Strengthen",
+              "duration": 0,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [
+            2,
+            3
+          ],
+          "weight": 0
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Multihit",
+              "value": 1,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Strengthen",
+              "duration": 3,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [
+            1,
+            3
+          ],
+          "weight": 0
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Multihit",
+              "value": 2,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Strengthen",
+              "duration": 2,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [
+            1,
+            0
+          ],
+          "weight": 0
+        }
+      ],
+      "rewardCardIds": [],
+      "startingStatus": "Plating",
+      "startingStatusDuration": 4,
+      "startingStatusValue": 0,
+      "startingStatusInfo": ""
+    },
+    {
       "id": "Dummy",
       "enemyName": "Dummy",
       "displayName": "",
@@ -1348,70 +2126,6 @@
       "movePattern": [],
       "rewardCardIds": [],
       "startingStatus": "Strength",
-      "startingStatusDuration": 0,
-      "startingStatusValue": 0,
-      "startingStatusInfo": ""
-    },
-    {
-      "id": "Elite 1",
-      "enemyName": "Elite 1",
-      "displayName": "Golbez",
-      "maxHP": 70,
-      "randomStart": false,
-      "patternCardIds": [
-        "cristallisation",
-        "frappe_ultime",
-        "blou_blou",
-        "auto_conception",
-        "regression"
-      ],
-      "movePattern": [],
-      "rewardCardIds": [
-        "execution"
-      ],
-      "startingStatus": "MechaArm",
-      "startingStatusDuration": 0,
-      "startingStatusValue": 1,
-      "startingStatusInfo": ""
-    },
-    {
-      "id": "Elite 2",
-      "enemyName": "Elite 2",
-      "displayName": "",
-      "maxHP": 40,
-      "randomStart": false,
-      "patternCardIds": [
-        "geotechnique_ultime",
-        "megagravitron",
-        "aerodynamique",
-        "vol",
-        "dans_le_ring",
-        "terre_brulee"
-      ],
-      "movePattern": [],
-      "rewardCardIds": [],
-      "startingStatus": "Strength",
-      "startingStatusDuration": 0,
-      "startingStatusValue": 0,
-      "startingStatusInfo": ""
-    },
-    {
-      "id": "Elite 3",
-      "enemyName": "Elite 3",
-      "displayName": "",
-      "maxHP": 45,
-      "randomStart": false,
-      "patternCardIds": [
-        "spectrometrie",
-        "hurlement",
-        "gravitron",
-        "blou_blou",
-        "gravitron",
-        "gravitron"
-      ],
-      "movePattern": [],
-      "rewardCardIds": [],
-      "startingStatus": "RiskManagement",
       "startingStatusDuration": 0,
       "startingStatusValue": 0,
       "startingStatusInfo": ""
@@ -1503,7 +2217,7 @@
             },
             {
               "type": "Heal",
-              "value": 15,
+              "value": 8,
               "targetSelf": true,
               "targetOthers": false,
               "statusType": "Strength",
@@ -1530,26 +2244,7 @@
           "effects": [
             {
               "type": "Heal",
-              "value": 4,
-              "targetSelf": true,
-              "targetOthers": false,
-              "statusType": "Strength",
-              "duration": 0,
-              "description": "",
-              "cardID": "",
-              "conditional": false,
-              "conditionType": "KillingBlow",
-              "conditionValue": "",
-              "trueEffect": false,
-              "cardSelectionSource": "Hand",
-              "index": 0,
-              "cardFilterTags": [],
-              "cardSelectionEffect": "None",
-              "animationType": "Default"
-            },
-            {
-              "type": "Armor",
-              "value": 4,
+              "value": 6,
               "targetSelf": true,
               "targetOthers": false,
               "statusType": "Strength",
@@ -1577,7 +2272,7 @@
             {
               "type": "Armor",
               "value": 12,
-              "targetSelf": false,
+              "targetSelf": true,
               "targetOthers": false,
               "statusType": "Strength",
               "duration": 0,
@@ -1607,8 +2302,72 @@
       "startingStatusInfo": ""
     },
     {
-      "id": "Enemy 1",
-      "enemyName": "Enemy 1",
+      "id": "Elite_1",
+      "enemyName": "Elite_1",
+      "displayName": "Mage dimensionnel",
+      "maxHP": 70,
+      "randomStart": false,
+      "patternCardIds": [
+        "cristallisation",
+        "frappe_ultime",
+        "blou_blou",
+        "auto_conception",
+        "regression"
+      ],
+      "movePattern": [],
+      "rewardCardIds": [
+        "execution"
+      ],
+      "startingStatus": "MechaArm",
+      "startingStatusDuration": 0,
+      "startingStatusValue": 1,
+      "startingStatusInfo": ""
+    },
+    {
+      "id": "Elite_2",
+      "enemyName": "Elite_2",
+      "displayName": "Vaisseau abandonné",
+      "maxHP": 40,
+      "randomStart": false,
+      "patternCardIds": [
+        "seisme",
+        "megagravitron",
+        "aerodynamique",
+        "vol",
+        "dans_le_ring",
+        "terre_brulee"
+      ],
+      "movePattern": [],
+      "rewardCardIds": [],
+      "startingStatus": "Strength",
+      "startingStatusDuration": 0,
+      "startingStatusValue": 0,
+      "startingStatusInfo": ""
+    },
+    {
+      "id": "Elite_3",
+      "enemyName": "Elite_3",
+      "displayName": "Robot géant",
+      "maxHP": 45,
+      "randomStart": false,
+      "patternCardIds": [
+        "spectrometrie",
+        "hurlement",
+        "gravitron",
+        "blou_blou",
+        "gravitron",
+        "gravitron"
+      ],
+      "movePattern": [],
+      "rewardCardIds": [],
+      "startingStatus": "RiskManagement",
+      "startingStatusDuration": 0,
+      "startingStatusValue": 0,
+      "startingStatusInfo": ""
+    },
+    {
+      "id": "Enemy_1",
+      "enemyName": "Enemy_1",
       "displayName": "Armure",
       "maxHP": 12,
       "randomStart": false,
@@ -1635,7 +2394,7 @@
               "index": 0,
               "cardFilterTags": [],
               "cardSelectionEffect": "None",
-              "animationType": "Default"
+              "animationType": "Slash"
             }
           ],
           "nextMoveIndices": [],
@@ -1645,25 +2404,6 @@
           "cardId": null,
           "moveName": "",
           "effects": [
-            {
-              "type": "Armor",
-              "value": 8,
-              "targetSelf": true,
-              "targetOthers": false,
-              "statusType": "Strength",
-              "duration": 0,
-              "description": "",
-              "cardID": "",
-              "conditional": false,
-              "conditionType": "KillingBlow",
-              "conditionValue": "",
-              "trueEffect": false,
-              "cardSelectionSource": "Hand",
-              "index": 0,
-              "cardFilterTags": [],
-              "cardSelectionEffect": "None",
-              "animationType": "Default"
-            },
             {
               "type": "Damage",
               "value": 7,
@@ -1681,7 +2421,7 @@
               "index": 0,
               "cardFilterTags": [],
               "cardSelectionEffect": "None",
-              "animationType": "Default"
+              "animationType": "Slash"
             }
           ],
           "nextMoveIndices": [],
@@ -1754,7 +2494,7 @@
               "index": 0,
               "cardFilterTags": [],
               "cardSelectionEffect": "None",
-              "animationType": "Default"
+              "animationType": "Slash"
             }
           ],
           "nextMoveIndices": [],
@@ -1766,7 +2506,7 @@
           "effects": [
             {
               "type": "Armor",
-              "value": 12,
+              "value": 6,
               "targetSelf": true,
               "targetOthers": false,
               "statusType": "Strength",
@@ -1795,8 +2535,8 @@
       "startingStatusInfo": "Baba"
     },
     {
-      "id": "Enemy 2",
-      "enemyName": "Enemy 2",
+      "id": "Enemy_2",
+      "enemyName": "Enemy_2",
       "displayName": "Spectre",
       "maxHP": 8,
       "randomStart": false,
@@ -1828,11 +2568,38 @@
               "cardFilterTags": [],
               "cardSelectionEffect": "None",
               "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [],
+          "weight": 0
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Damage",
+              "value": 5,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Strength",
+              "duration": 0,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Magic"
             },
             {
-              "type": "Armor",
-              "value": 3,
-              "targetSelf": true,
+              "type": "DelayTurn",
+              "value": 25,
+              "targetSelf": false,
               "targetOthers": false,
               "statusType": "Strength",
               "duration": 0,
@@ -1860,9 +2627,9 @@
       "startingStatusInfo": ""
     },
     {
-      "id": "Enemy 3",
-      "enemyName": "Enemy 3",
-      "displayName": "",
+      "id": "Enemy_3",
+      "enemyName": "Enemy_3",
+      "displayName": "Serpent",
       "maxHP": 10,
       "randomStart": false,
       "patternCardIds": [],
@@ -1961,7 +2728,7 @@
               "index": 0,
               "cardFilterTags": [],
               "cardSelectionEffect": "None",
-              "animationType": "Default"
+              "animationType": "Slash"
             },
             {
               "type": "Status",
@@ -2023,22 +2790,12 @@
       "startingStatusInfo": ""
     },
     {
-      "id": "Enemy 4",
-      "enemyName": "Enemy 4",
-      "displayName": "",
+      "id": "Enemy_4",
+      "enemyName": "Enemy_4",
+      "displayName": "Dragon lumineux",
       "maxHP": 32,
       "randomStart": false,
-      "patternCardIds": [
-        "renforcement",
-        "eveil",
-        "dans_le_ring",
-        "blou_blou",
-        "brisure_bond_et_baston",
-        "lame_feuille",
-        "chute_d_eau",
-        "chute_d_eau",
-        "katana"
-      ],
+      "patternCardIds": [],
       "movePattern": [
         {
           "cardId": null,
@@ -2075,12 +2832,12 @@
           "moveName": "",
           "effects": [
             {
-              "type": "Armor",
-              "value": 6,
-              "targetSelf": true,
+              "type": "Damage",
+              "value": 2,
+              "targetSelf": false,
               "targetOthers": false,
-              "statusType": "Strengthen",
-              "duration": 0,
+              "statusType": "Weakness",
+              "duration": 2,
               "description": "",
               "cardID": "",
               "conditional": false,
@@ -2189,9 +2946,9 @@
       "startingStatusInfo": ""
     },
     {
-      "id": "Enemy 5",
-      "enemyName": "Enemy 5",
-      "displayName": "",
+      "id": "Enemy_5",
+      "enemyName": "Enemy_5",
+      "displayName": "???",
       "maxHP": 28,
       "randomStart": false,
       "patternCardIds": [],
@@ -2310,8 +3067,8 @@
       "startingStatusInfo": ""
     },
     {
-      "id": "Forge Warden",
-      "enemyName": "Forge Warden",
+      "id": "Forge_Warden",
+      "enemyName": "Forge_Warden",
       "displayName": "Garde",
       "maxHP": 40,
       "randomStart": false,
@@ -2463,14 +3220,14 @@
         }
       ],
       "rewardCardIds": [],
-      "startingStatus": "MechaArm",
+      "startingStatus": "Regulator",
       "startingStatusDuration": 0,
-      "startingStatusValue": 1,
+      "startingStatusValue": 15,
       "startingStatusInfo": ""
     },
     {
-      "id": "Glass Harrier",
-      "enemyName": "Glass Harrier",
+      "id": "Glass_Harrier",
+      "enemyName": "Glass_Harrier",
       "displayName": "Oiseau transparent",
       "maxHP": 16,
       "randomStart": false,
@@ -2957,11 +3714,8 @@
       "enemyName": "Invader",
       "displayName": "Space Invader",
       "maxHP": 6,
-      "randomStart": false,
-      "patternCardIds": [
-        "acide",
-        "tir_cadre"
-      ],
+      "randomStart": true,
+      "patternCardIds": [],
       "movePattern": [
         {
           "cardId": null,
@@ -2973,7 +3727,7 @@
               "targetSelf": false,
               "targetOthers": false,
               "statusType": "Weakness",
-              "duration": 2,
+              "duration": 1,
               "description": "",
               "cardID": "",
               "conditional": false,
@@ -2985,9 +3739,31 @@
               "cardFilterTags": [],
               "cardSelectionEffect": "None",
               "animationType": "Default"
+            },
+            {
+              "type": "AddCardToDiscardPile",
+              "value": 1,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Weakness",
+              "duration": 1,
+              "description": "",
+              "cardID": "Brouillage",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
             }
           ],
-          "nextMoveIndices": [],
+          "nextMoveIndices": [
+            2,
+            3
+          ],
           "weight": 1
         },
         {
@@ -3014,7 +3790,10 @@
               "animationType": "Default"
             }
           ],
-          "nextMoveIndices": [],
+          "nextMoveIndices": [
+            2,
+            3
+          ],
           "weight": 1
         },
         {
@@ -3060,7 +3839,10 @@
               "animationType": "Default"
             }
           ],
-          "nextMoveIndices": [],
+          "nextMoveIndices": [
+            0,
+            1
+          ],
           "weight": 1
         },
         {
@@ -3087,7 +3869,10 @@
               "animationType": "Default"
             }
           ],
-          "nextMoveIndices": [],
+          "nextMoveIndices": [
+            0,
+            1
+          ],
           "weight": 1
         }
       ],
@@ -3260,8 +4045,148 @@
       "startingStatusInfo": ""
     },
     {
-      "id": "Leech Queen",
-      "enemyName": "Leech Queen",
+      "id": "Ironclad",
+      "enemyName": "Ironclad",
+      "displayName": "Soldat de Fer",
+      "maxHP": 30,
+      "randomStart": false,
+      "patternCardIds": [],
+      "movePattern": [
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Status",
+              "value": 2,
+              "targetSelf": true,
+              "targetOthers": false,
+              "statusType": "Strength",
+              "duration": 0,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [
+            1
+          ],
+          "weight": 1
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Multihit",
+              "value": 3,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Strength",
+              "duration": 2,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Slash"
+            },
+            {
+              "type": "Status",
+              "value": 1,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Weakness",
+              "duration": 1,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [
+            2
+          ],
+          "weight": 1
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Damage",
+              "value": 5,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Speed",
+              "duration": 0,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Fire"
+            },
+            {
+              "type": "Status",
+              "value": 2,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Burn",
+              "duration": 2,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [
+            0
+          ],
+          "weight": 1
+        }
+      ],
+      "rewardCardIds": [],
+      "startingStatus": "Weakness",
+      "startingStatusDuration": 2,
+      "startingStatusValue": 0,
+      "startingStatusInfo": ""
+    },
+    {
+      "id": "Leech_Queen",
+      "enemyName": "Leech_Queen",
       "displayName": "Roi dragon",
       "maxHP": 32,
       "randomStart": false,
@@ -3421,7 +4346,7 @@
     {
       "id": "Leo",
       "enemyName": "Leo",
-      "displayName": "",
+      "displayName": "Soldat L-X05",
       "maxHP": 45,
       "randomStart": true,
       "patternCardIds": [],
@@ -4009,8 +4934,8 @@
       "startingStatusInfo": ""
     },
     {
-      "id": "Mirror Imp",
-      "enemyName": "Mirror Imp",
+      "id": "Mirror_Imp",
+      "enemyName": "Mirror_Imp",
       "displayName": "Mirror Imp",
       "maxHP": 26,
       "randomStart": false,
@@ -4191,7 +5116,7 @@
     {
       "id": "Ophiucus",
       "enemyName": "Ophiucus",
-      "displayName": "",
+      "displayName": "Soldat O-X013",
       "maxHP": 34,
       "randomStart": false,
       "patternCardIds": [
@@ -4233,8 +5158,8 @@
       "startingStatusInfo": "Chute d'étoile"
     },
     {
-      "id": "Rift Adept",
-      "enemyName": "Rift Adept",
+      "id": "Rift_Adept",
+      "enemyName": "Rift_Adept",
       "displayName": "Mage de l'espace",
       "maxHP": 24,
       "randomStart": false,
@@ -4373,8 +5298,8 @@
       "startingStatusInfo": "Pulse"
     },
     {
-      "id": "Rune Bulwark",
-      "enemyName": "Rune Bulwark",
+      "id": "Rune_Bulwark",
+      "enemyName": "Rune_Bulwark",
       "displayName": "Rune Bulwark",
       "maxHP": 38,
       "randomStart": false,
@@ -4549,7 +5474,7 @@
           "effects": [
             {
               "type": "Damage",
-              "value": 5,
+              "value": 7,
               "targetSelf": false,
               "targetOthers": false,
               "statusType": "Strength",
@@ -4595,7 +5520,7 @@
           "effects": [
             {
               "type": "Damage",
-              "value": 4,
+              "value": 9,
               "targetSelf": false,
               "targetOthers": false,
               "statusType": "Strength",
@@ -4706,7 +5631,7 @@
             },
             {
               "type": "Armor",
-              "value": 4,
+              "value": 10,
               "targetSelf": true,
               "targetOthers": false,
               "statusType": "Strength",
@@ -4755,8 +5680,8 @@
       "startingStatusInfo": ""
     },
     {
-      "id": "Static Raptor",
-      "enemyName": "Static Raptor",
+      "id": "Static_Raptor",
+      "enemyName": "Static_Raptor",
       "displayName": "Électrosaure",
       "maxHP": 20,
       "randomStart": false,
@@ -4788,10 +5713,10 @@
             {
               "type": "Status",
               "value": 1,
-              "targetSelf": true,
+              "targetSelf": false,
               "targetOthers": false,
-              "statusType": "Artifact",
-              "duration": 0,
+              "statusType": "Continuous",
+              "duration": 10,
               "description": "",
               "cardID": "",
               "conditional": false,
@@ -4831,7 +5756,7 @@
               "index": 0,
               "cardFilterTags": [],
               "cardSelectionEffect": "None",
-              "animationType": "Default"
+              "animationType": "Thunder"
             },
             {
               "type": "Status",
@@ -4879,7 +5804,7 @@
               "index": 0,
               "cardFilterTags": [],
               "cardSelectionEffect": "None",
-              "animationType": "Default"
+              "animationType": "Thunder"
             },
             {
               "type": "Status",
@@ -5073,6 +5998,117 @@
       "startingStatusInfo": "Interruption"
     },
     {
+      "id": "White_Cloak",
+      "enemyName": "White_Cloak",
+      "displayName": "Mage de glace",
+      "maxHP": 20,
+      "randomStart": false,
+      "patternCardIds": [],
+      "movePattern": [
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Status",
+              "value": 0,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Freeze",
+              "duration": -1,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Default"
+            }
+          ],
+          "nextMoveIndices": [
+            1
+          ],
+          "weight": 1
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Damage",
+              "value": 9,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Strength",
+              "duration": 0,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Ice"
+            }
+          ],
+          "nextMoveIndices": [
+            2
+          ],
+          "weight": 1
+        },
+        {
+          "cardId": null,
+          "moveName": "",
+          "effects": [
+            {
+              "type": "Damage",
+              "value": 4,
+              "targetSelf": false,
+              "targetOthers": false,
+              "statusType": "Strength",
+              "duration": 0,
+              "description": "",
+              "cardID": "",
+              "conditional": false,
+              "conditionType": "KillingBlow",
+              "conditionValue": "",
+              "trueEffect": false,
+              "cardSelectionSource": "Hand",
+              "index": 0,
+              "cardFilterTags": [],
+              "cardSelectionEffect": "None",
+              "animationType": "Ice"
+            }
+          ],
+          "nextMoveIndices": [
+            3
+          ],
+          "weight": 1
+        },
+        {
+          "cardId": "coupe_transversale",
+          "moveName": "",
+          "effects": [],
+          "nextMoveIndices": [
+            1
+          ],
+          "weight": 1
+        }
+      ],
+      "rewardCardIds": [],
+      "startingStatus": "Strength",
+      "startingStatusDuration": 0,
+      "startingStatusValue": 0,
+      "startingStatusInfo": ""
+    },
+    {
       "id": "Ziz",
       "enemyName": "Ziz",
       "displayName": "",
@@ -5086,7 +6122,7 @@
           "effects": [
             {
               "type": "AdvanceTurn",
-              "value": 4,
+              "value": 20,
               "targetSelf": false,
               "targetOthers": true,
               "statusType": "Strength",

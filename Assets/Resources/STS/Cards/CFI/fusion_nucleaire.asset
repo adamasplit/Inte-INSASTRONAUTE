@@ -15,7 +15,6 @@ MonoBehaviour:
   id: fusion_nucleaire
   cardName: "Fusion nucl\xE9aire"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 8e77f7dedd24c67449e077edba862ed9, type: 3}
   cost: 1
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 7
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 4

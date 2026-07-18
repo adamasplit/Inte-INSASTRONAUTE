@@ -15,7 +15,6 @@ MonoBehaviour:
   id: etude_d_impact
   cardName: "\xC9tude d'impact"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 35c6220a57e736e448a6ff87de6e98f5, type: 3}
   cost: 1
   xCost: 0
@@ -38,10 +37,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 0
   animationSpeed: 1
   startingCount: 0
   tags: 
-  animationType: 0

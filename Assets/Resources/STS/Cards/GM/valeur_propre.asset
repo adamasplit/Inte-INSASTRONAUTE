@@ -15,7 +15,6 @@ MonoBehaviour:
   id: valeur_propre
   cardName: Valeur propre
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: b7229f65ea8c9884bb3d8510943827f7, type: 3}
   cost: 1
   xCost: 0
@@ -38,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 2

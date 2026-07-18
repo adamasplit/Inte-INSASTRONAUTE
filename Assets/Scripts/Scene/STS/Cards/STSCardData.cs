@@ -29,6 +29,12 @@ public class STSCardData : ScriptableObject
             return collectionCardId;
         return null;
     }
+    #if UNITY_EDITOR
+    public void OnValidate()
+    {
+        id = name;
+    }
+    #endif
     public STSCardDataDTO ToDTO()
     {
         STSCardDataDTO dto = new();

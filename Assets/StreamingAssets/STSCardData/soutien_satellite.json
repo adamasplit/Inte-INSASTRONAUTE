@@ -15,7 +15,7 @@
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "FieldTurnFollowUp",
-      "duration": 1,
+      "duration": 2,
       "description": "",
       "cardID": "Laser orbital",
       "conditional": false,

@@ -15,7 +15,6 @@ MonoBehaviour:
   id: transfert_thermique
   cardName: Transfert thermique
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 5495b4e2783f4bf4d885035611c71ad6, type: 3}
   cost: 2
   xCost: 0

@@ -15,7 +15,6 @@ MonoBehaviour:
   id: droit_des_sols
   cardName: Droit des sols
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 1c1fc06e219a558458eab6757b4e8e28, type: 3}
   cost: 2
   xCost: 0
@@ -38,10 +37,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 7
   animationSpeed: 1
   startingCount: 0
   tags: 
-  animationType: 0

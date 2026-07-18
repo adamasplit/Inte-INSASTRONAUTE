@@ -25,18 +25,22 @@ public class VFXManager : MonoBehaviour
             StartCoroutine(DestroyAfterDuration(vfxInstance, 2f)); // Adjust duration as needed
         }
     }
+    public void PlayEffect(string effectName, Vector3 position)
+    {
+        GameObject prefab = Resources.Load<GameObject>($"STS/VFX/{effectName}");
+        if (prefab != null)
+        {
+            Vector3 RandomVector = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), 0);
+            GameObject vfxInstance = Instantiate(prefab, position+RandomVector, Quaternion.identity, vfxCanvas.transform);
+            StartCoroutine(DestroyAfterDuration(vfxInstance, 2f)); // Adjust duration as needed
+        }
+    }
     public void PlayEffect(string effectName, Character character)
     {
         if (character == null) return;
         if (uiManager.GetView(character) == null) return;
         Vector3 position =uiManager.GetView(character).position;
-        GameObject prefab = Resources.Load<GameObject>($"STS/VFX/{effectName}");
-        if (prefab != null)
-        {
-            Vector3 RandomVector = Vector3.zero;//new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), 0);
-            GameObject vfxInstance = Instantiate(prefab, position+RandomVector, Quaternion.identity, vfxCanvas.transform);
-            StartCoroutine(DestroyAfterDuration(vfxInstance, 2f)); // Adjust duration as needed
-        }
+        PlayEffect(effectName, position);
     }
     public void AnimateEnergyGain()
     {

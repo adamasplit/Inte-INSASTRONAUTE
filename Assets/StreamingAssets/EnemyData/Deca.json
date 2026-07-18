@@ -65,25 +65,6 @@
       "moveName": "",
       "effects": [
         {
-          "type": "Armor",
-          "value": 8,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 2,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        },
-        {
           "type": "Status",
           "value": 3,
           "targetSelf": true,

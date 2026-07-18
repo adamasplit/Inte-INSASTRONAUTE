@@ -10,8 +10,8 @@
   "targetingMode": "Enemy",
   "effects": [
     {
-      "type": "DispelDebuffsIntoDamage",
-      "value": 2,
+      "type": "DispelDebuff",
+      "value": -1,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -21,15 +21,42 @@
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
-      "trueEffect": false,
+      "trueEffect": true,
       "cardSelectionSource": "Hand",
       "index": 0,
       "cardFilterTags": [],
       "cardSelectionEffect": "None",
       "animationType": "Default"
+    },
+    {
+      "type": "Damage",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": true,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Light"
     }
   ],
-  "modifiers": [],
+  "modifiers": [
+    {
+      "type": "Damage",
+      "kind": "ActionDispelled",
+      "value": 4,
+      "info": "",
+      "description": ""
+    }
+  ],
   "favoredCharacter": "AI",
   "animationSpeed": 1.0,
   "startingCount": 0,

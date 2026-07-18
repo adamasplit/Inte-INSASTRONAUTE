@@ -9,6 +9,11 @@ public class MECARelic:BaseRelic
         descriptionsByStage[0] = $"Emmagasine les PV soignés. Lorsque vos PV atteignent 0, ces PV sont restitués et tous les ennemis en subissent la moitié. (Valeur actuelle : {value})";
         Upgrade(0);
     }
+    private bool usedThisCombat=false;
+    public override void OnCombatStart(Character target)
+    {
+        usedThisCombat=false;
+    }
     public override int OnHeal(Character target, int amount)
     {
         // Annule le soin et stocke les PV à restituer
@@ -19,8 +24,8 @@ public class MECARelic:BaseRelic
     }
     public override void OnDeath(Character target)
     {
-        if (target.currentHP > 0)
-            return; // Ne s'active que si le personnage meurt
+        if (target.currentHP > 0 || usedThisCombat)
+            return; // Ne s'active que si le personnage meurt et n'a pas déjà été utilisé ce combat
 
         if (value <= 0)
             return; // Ne s'active que s'il y a des PV à restituer
@@ -37,6 +42,6 @@ public class MECARelic:BaseRelic
         VFXManager.Instance.PlayEffect("MECARelicActivate", target);
         descriptionsByStage[0] = $"Emmagasine les PV soignés. Lorsque vos PV atteignent 0, ces PV sont restitués et tous les ennemis en subissent la moitié. (Valeur actuelle : {value})";
         Upgrade(stage); // Met à jour le nom et la description en fonction de la valeur actuelle
-        
+        usedThisCombat = true;
     }
 }

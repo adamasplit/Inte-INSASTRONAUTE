@@ -1,12 +1,12 @@
 {
   "id": "tournee_generale",
   "cardName": "Tournée générale",
-  "collectionCardId": "quartier_libre",
+  "collectionCardId": "Quartier Libre",
   "iconId": null,
-  "cost": 1,
+  "cost": 0,
   "xCost": false,
   "type": "Compétence",
-  "rarity": "Uncommon",
+  "rarity": "Epic",
   "targetingMode": "Player",
   "effects": [
     {
@@ -20,7 +20,7 @@
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
-      "conditionValue": null,
+      "conditionValue": "",
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "index": 0,

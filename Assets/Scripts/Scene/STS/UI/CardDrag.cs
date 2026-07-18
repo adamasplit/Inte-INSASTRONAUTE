@@ -98,13 +98,20 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (cardView == null || cardView.isAnimating)
+        if (cardView == null)
         {
             return;
         }
 
         group.blocksRaycasts = true;
-        rect.anchoredPosition = startPos;
+
+        // If the card was played, it may already be animating in the animation layer.
+        // In that case, avoid snapping it back to the hand position.
+        if (!cardView.isAnimating)
+        {
+            rect.anchoredPosition = startPos;
+        }
+
         timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
         if (cardView != null)
         {

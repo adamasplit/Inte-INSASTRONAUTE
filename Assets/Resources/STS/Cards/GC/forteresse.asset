@@ -15,7 +15,6 @@ MonoBehaviour:
   id: forteresse
   cardName: Forteresse mobile
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 676990e99bad5d543bd06b1048e61a9b, type: 3}
   cost: 5
   xCost: 0
@@ -38,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 6

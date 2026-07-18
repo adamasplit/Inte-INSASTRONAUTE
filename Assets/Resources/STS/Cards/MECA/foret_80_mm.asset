@@ -15,7 +15,6 @@ MonoBehaviour:
   id: foret_80_mm
   cardName: Foret 80 mm
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 81cdc84da2e3d7a4fb501430cfc253a1, type: 3}
   cost: 1
   xCost: 0

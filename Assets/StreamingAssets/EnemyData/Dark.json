@@ -77,7 +77,7 @@
           "index": 0,
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
-          "animationType": "Default"
+          "animationType": "Slash"
         },
         {
           "type": "Status",
@@ -125,7 +125,7 @@
           "index": 0,
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
-          "animationType": "Default"
+          "animationType": "Slash"
         },
         {
           "type": "Heal",

@@ -15,7 +15,6 @@ MonoBehaviour:
   id: synchrotron
   cardName: Synchrotron
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 4ab8197107962c948b56475a99197704, type: 3}
   cost: 0
   xCost: 0
@@ -38,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 12
     value: 3
     targetSelf: 1
@@ -54,6 +54,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 8
     value: 3
     targetSelf: 0
@@ -70,10 +71,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 0
   animationSpeed: 1
   startingCount: 0
   tags: 
-  animationType: 0

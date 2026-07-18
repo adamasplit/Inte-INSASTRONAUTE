@@ -15,29 +15,12 @@ MonoBehaviour:
   id: systeme_de_refroidissement
   cardName: "Syst\xE8me de refroidissement"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: bb2c5eefbb29a2e439a70286e59fc272, type: 3}
   cost: 0
   xCost: 0
   type: 1
   rarity: 0
   effects:
-  - type: 3
-    value: 0
-    targetSelf: 1
-    targetOthers: 0
-    statusType: 47
-    duration: 2
-    description: 
-    cardID: 
-    index: 0
-    conditional: 0
-    conditionType: 0
-    conditionValue: 
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 0
   - type: 17
     value: -1
     targetSelf: 1
@@ -54,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 2
     value: 7
     targetSelf: 1
@@ -70,9 +54,27 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 0
+    targetSelf: 1
+    targetOthers: 0
+    statusType: 47
+    duration: 2
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 1
   animationSpeed: 1
-  startingCount: 1
+  startingCount: 0
   tags: 

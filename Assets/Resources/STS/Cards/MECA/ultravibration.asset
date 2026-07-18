@@ -15,7 +15,6 @@ MonoBehaviour:
   id: ultravibration
   cardName: Ultravibration
   collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: cbc74e4d59119fa47adf459be71db12d, type: 2}
   icon: {fileID: 21300000, guid: d9055ca2f7c8a7945ab45a7c7d6d45fa, type: 3}
   cost: 0
   xCost: 0

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: chant_de_force
   cardName: Chant de force
-  collectionCardId: Amir
+  collectionCardId: Amir (campagne)
   icon: {fileID: 0}
   cost: 1
   xCost: 0

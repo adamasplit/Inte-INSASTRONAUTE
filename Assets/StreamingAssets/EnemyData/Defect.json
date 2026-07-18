@@ -1,0 +1,203 @@
+{
+  "id": "Defect",
+  "enemyName": "Defect",
+  "displayName": "Robot défectueux",
+  "maxHP": 40,
+  "randomStart": false,
+  "patternCardIds": [],
+  "movePattern": [
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "FieldTurnFollowUp",
+          "duration": 0,
+          "description": "",
+          "cardID": "Orbe kéraunique",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 1,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "FieldTurnFollowUp",
+          "duration": 0,
+          "description": "",
+          "cardID": "Orbe glaciaire",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 1,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "nextMoveIndices": [
+        1,
+        2
+      ],
+      "weight": 0
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Multihit",
+          "value": 5,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "FieldTurnFollowUp",
+          "duration": 2,
+          "description": "",
+          "cardID": "Orbe kéraunique",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 1,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "nextMoveIndices": [
+        3,
+        2
+      ],
+      "weight": 0
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 6,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "FieldTurnFollowUp",
+          "duration": 2,
+          "description": "",
+          "cardID": "Orbe kéraunique",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 1,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "DelayTurn",
+          "value": 30,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "FieldTurnFollowUp",
+          "duration": 2,
+          "description": "",
+          "cardID": "Orbe kéraunique",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 1,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "nextMoveIndices": [
+        3,
+        4
+      ],
+      "weight": 0
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Heal",
+          "value": 7,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "FieldTurnFollowUp",
+          "duration": 2,
+          "description": "",
+          "cardID": "Orbe kéraunique",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 1,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "nextMoveIndices": [
+        1,
+        4
+      ],
+      "weight": 0
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "AddCardToDrawPile",
+          "value": 2,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "FieldTurnFollowUp",
+          "duration": 2,
+          "description": "",
+          "cardID": "Surchauffe",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 1,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "nextMoveIndices": [
+        1,
+        2
+      ],
+      "weight": 0
+    }
+  ],
+  "rewardCardIds": [],
+  "startingStatus": "Strength",
+  "startingStatusDuration": 0,
+  "startingStatusValue": 0,
+  "startingStatusInfo": ""
+}

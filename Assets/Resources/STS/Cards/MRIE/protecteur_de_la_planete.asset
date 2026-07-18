@@ -15,7 +15,6 @@ MonoBehaviour:
   id: protecteur_de_la_planete
   cardName: "Protecteur de la plan\xE8te"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 9c63fc666db1c6b4ebdcbc0e6308958b, type: 3}
   cost: 2
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 5

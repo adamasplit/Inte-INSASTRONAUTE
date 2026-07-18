@@ -3,11 +3,8 @@
   "enemyName": "Invader",
   "displayName": "Space Invader",
   "maxHP": 6,
-  "randomStart": false,
-  "patternCardIds": [
-    "acide",
-    "tir_cadre"
-  ],
+  "randomStart": true,
+  "patternCardIds": [],
   "movePattern": [
     {
       "cardId": null,
@@ -19,7 +16,7 @@
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Weakness",
-          "duration": 2,
+          "duration": 1,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -31,9 +28,31 @@
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
           "animationType": "Default"
+        },
+        {
+          "type": "AddCardToDiscardPile",
+          "value": 1,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Weakness",
+          "duration": 1,
+          "description": "",
+          "cardID": "Brouillage",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
         }
       ],
-      "nextMoveIndices": [],
+      "nextMoveIndices": [
+        2,
+        3
+      ],
       "weight": 1
     },
     {
@@ -60,7 +79,10 @@
           "animationType": "Default"
         }
       ],
-      "nextMoveIndices": [],
+      "nextMoveIndices": [
+        2,
+        3
+      ],
       "weight": 1
     },
     {
@@ -106,7 +128,10 @@
           "animationType": "Default"
         }
       ],
-      "nextMoveIndices": [],
+      "nextMoveIndices": [
+        0,
+        1
+      ],
       "weight": 1
     },
     {
@@ -133,7 +158,10 @@
           "animationType": "Default"
         }
       ],
-      "nextMoveIndices": [],
+      "nextMoveIndices": [
+        0,
+        1
+      ],
       "weight": 1
     }
   ],

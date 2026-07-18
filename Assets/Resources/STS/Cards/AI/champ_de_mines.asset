@@ -15,7 +15,6 @@ MonoBehaviour:
   id: champ_de_mines
   cardName: Champ de mines
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 4216630697adf1f41a92f57699e6208c, type: 3}
   cost: 0
   xCost: 1
@@ -38,10 +37,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 5
   modifiers: []
   favoredCharacter: 7
   animationSpeed: 1
   startingCount: 0
   tags: 
-  animationType: 0

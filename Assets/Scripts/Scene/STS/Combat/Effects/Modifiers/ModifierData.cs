@@ -60,6 +60,8 @@ public class ModifierData
                 return new EnergyGainedModifier(type, value);
             case ModifierKind.ActionExhausted:
                 return new ActionExhaustedModifier(type, value);
+            case ModifierKind.ActionDispelled:
+                return new ActionDispelledModifier(type, value);
             default:
                 throw new System.Exception("Unknown modifier kind: " + kind);
         }

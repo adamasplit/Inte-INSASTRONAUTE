@@ -1,0 +1,132 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
+  m_Name: Dragon
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Dragon
+  enemyName: Dragon
+  displayName: 
+  maxHP: 25
+  pattern: []
+  randomStart: 0
+  movePattern:
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 3
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 17
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 1
+    - type: 3
+      value: 2
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 20
+      duration: 5
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 0100000002000000
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 7
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 17
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 0200000003000000
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 7
+      value: 1
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 17
+      duration: 3
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 0100000003000000
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 7
+      value: 2
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 17
+      duration: 2
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 0100000000000000
+    weight: 0
+  rewardCards: []
+  startingStatus: 32
+  startingStatusDuration: 4
+  startingStatusValue: 0
+  startingStatusInfo: 
+  startingStatusIndex: 0

@@ -1,7 +1,7 @@
 {
   "id": "corrosion",
   "cardName": "Corrosion",
-  "collectionCardId": "",
+  "collectionCardId": null,
   "iconId": "Affliction",
   "cost": 0,
   "xCost": true,

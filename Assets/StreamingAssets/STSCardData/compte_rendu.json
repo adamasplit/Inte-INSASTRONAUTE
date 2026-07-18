@@ -1,17 +1,58 @@
 {
   "id": "compte_rendu",
-  "cardName": "",
-  "collectionCardId": null,
+  "cardName": "Retard 364 j + 4 h",
+  "collectionCardId": "Compte rendu",
   "iconId": null,
-  "cost": 0,
+  "cost": 3,
   "xCost": false,
-  "type": "Attaque",
-  "rarity": "Common",
-  "targetingMode": "Player",
-  "effects": [],
+  "type": "Compétence",
+  "rarity": "Epic",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "DelayTurn",
+      "value": 365,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    },
+    {
+      "type": "Status",
+      "value": -3,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
   "modifiers": [],
-  "favoredCharacter": "Starting",
+  "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": []
+  "tags": [
+    "None"
+  ]
 }

@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
+using System;
 
 public static class STSCardDatabase
 {
+
     [System.Serializable]
     private class CardDatabaseWrapper
     {
@@ -29,7 +32,14 @@ public static class STSCardDatabase
         }
 
         loadTask = LoadInternalAsync();
-        await loadTask;
+        try
+        {
+            await loadTask;
+        }
+        finally
+        {
+            loadTask = null;
+        }
     }
 
     static async Task LoadInternalAsync()
@@ -41,6 +51,29 @@ public static class STSCardDatabase
         allCards = new();
         collectionCardSpriteById = new();
         collectionSpritesInitialized = false;
+
+        Debug.Log("STSCardDatabase loading remote card catalog through React bridge first.");
+        if (!await TryLoadFromRemoteApiAsync())
+        {
+            await LoadFromStreamingAssetsAsync();
+        }
+
+        isLoaded = allCards.Count > 0;
+        if (!isLoaded)
+        {
+            Debug.LogError("STSCardDatabase loaded zero cards. Check the remote card API and StreamingAssets/STSCardData contents.");
+            cardDict = null;
+            allCards = null;
+        }
+        else
+        {
+            await EnsureCollectionCardSpritesLoadedAsync();
+        }
+    }
+
+    static async Task LoadFromStreamingAssetsAsync()
+    {
+        Debug.Log("STSCardDatabase falling back to StreamingAssets/STSCardData.");
 
         string combinedJson = await StreamingAssetsLoader.ReadAllTextAsync("STSCardData/cards.json");
         if (!string.IsNullOrEmpty(combinedJson))
@@ -55,6 +88,7 @@ public static class STSCardDatabase
                     {
                         if (dto == null)
                         {
+                            Debug.LogWarning("STSCardDatabase encountered a null card DTO in cards.json.");
                             continue;
                         }
 
@@ -62,7 +96,12 @@ public static class STSCardDatabase
                         RegisterCard(card);
                         allCards.Add(card);
                     }
+
+                    Debug.Log($"STSCardDatabase streaming-assets combined file load completed with {allCards.Count} cards.");
+                    return;
                 }
+
+                Debug.LogWarning("STSCardDatabase combined cards.json did not contain a cards array.");
             }
             catch (System.Exception ex)
             {
@@ -71,53 +110,148 @@ public static class STSCardDatabase
         }
         else
         {
-            List<string> files = await StreamingAssetsLoader.ListJsonFilesAsync("STSCardData");
-            Debug.Log($"STSCardDatabase found {files.Count} card JSON files.");
+            Debug.LogWarning("STSCardDatabase could not read StreamingAssets/STSCardData/cards.json; falling back to per-file loading.");
+        }
 
-            foreach (string file in files)
+        List<string> files = await StreamingAssetsLoader.ListJsonFilesAsync("STSCardData");
+        Debug.Log($"STSCardDatabase found {files.Count} card JSON files.");
+
+        foreach (string file in files)
+        {
+            try
             {
+                string json = await StreamingAssetsLoader.ReadAllTextAsync(file);
+                if (string.IsNullOrEmpty(json))
+                    continue;
+
+                STSCardDataDTO dto = JsonConvert.DeserializeObject<STSCardDataDTO>(json);
+
+                if (dto == null)
+                {
+                    Debug.LogWarning($"Invalid card JSON in '{file}'.");
+                    continue;
+                }
+
+                STSCardData card = STSCardData.FromDTO(dto);
+                RegisterCard(card);
+                allCards.Add(card);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Failed to load card '{file}': {ex}");
+            }
+        }
+
+        Debug.Log($"STSCardDatabase per-file StreamingAssets load completed with {allCards.Count} cards.");
+    }
+
+    static async Task<bool> TryLoadFromRemoteApiAsync()
+    {
+        Debug.Log("STSCardDatabase requesting card catalog (api/sts/catalog/cards) through React bridge.");
+        string json = await ReactApiBridge.RequestStsCatalogCardsAsync();
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            Debug.LogWarning("STSCardDatabase did not receive a card catalog payload from the React bridge.");
+            return false;
+        }
+
+        Debug.Log($"STSCardDatabase received card catalog payload from React bridge ({json.Length} chars).");
+
+        try
+        {
+            List<STSCardDataDTO> remoteCards = ParseRemoteCards(json);
+            if (remoteCards == null || remoteCards.Count == 0)
+            {
+                Debug.LogWarning("STSCardDatabase could not find a cards array in the React bridge payload.");
+                return false;
+            }
+
+            Debug.Log($"STSCardDatabase loaded {remoteCards.Count} cards from remote API.");
+            foreach (STSCardDataDTO dto in remoteCards)
+            {
+                if (dto == null)
+                {
+                    Debug.LogWarning("STSCardDatabase encountered a null card DTO in the remote payload.");
+                    continue;
+                }
+
+                if (string.IsNullOrWhiteSpace(dto.id) && string.IsNullOrWhiteSpace(dto.cardName))
+                {
+                    Debug.LogWarning("STSCardDatabase encountered a card DTO without id or cardName in the remote payload.");
+                }
+
                 try
                 {
-                    string json = await StreamingAssetsLoader.ReadAllTextAsync(file);
-                    if (string.IsNullOrEmpty(json))
-                        continue;
-
-                    STSCardDataDTO dto =
-                        JsonConvert.DeserializeObject<STSCardDataDTO>(json);
-
-                    if (dto == null)
-                    {
-                        Debug.LogWarning($"Invalid card JSON in '{file}'.");
-                        continue;
-                    }
-
-                    STSCardData card =
-                        STSCardData.FromDTO(dto);
-
+                    STSCardData card = STSCardData.FromDTO(dto);
                     RegisterCard(card);
-
                     allCards.Add(card);
                 }
                 catch (System.Exception ex)
                 {
-                    Debug.LogError($"Failed to load card '{file}': {ex}");
+                    Debug.LogWarning($"STSCardDatabase skipped remote card '{dto.id ?? dto.cardName ?? "<unknown>"}' because it could not be converted: {ex.Message}");
+                }
+            }
+
+            Debug.Log($"STSCardDatabase remote load completed with {allCards.Count} cards.");
+            return allCards.Count > 0;
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"Failed to load cards through the React bridge: {ex}");
+            return false;
+        }
+    }
+
+    static List<STSCardDataDTO> ParseRemoteCards(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return null;
+
+        JToken root = JToken.Parse(json);
+        return ParseRemoteCards(root);
+    }
+
+    static List<STSCardDataDTO> ParseRemoteCards(JToken token)
+    {
+        if (token == null)
+            return null;
+
+        if (token.Type == JTokenType.Array)
+        {
+            return token.ToObject<List<STSCardDataDTO>>();
+        }
+
+        if (token.Type != JTokenType.Object)
+            return null;
+
+        JObject rootObject = (JObject)token;
+        string[] candidateKeys = new[] { "cards", "data", "items", "result", "payload" };
+
+        foreach (string key in candidateKeys)
+        {
+            if (rootObject.TryGetValue(key, StringComparison.OrdinalIgnoreCase, out JToken nestedToken))
+            {
+                List<STSCardDataDTO> nestedCards = ParseRemoteCards(nestedToken);
+                if (nestedCards != null && nestedCards.Count > 0)
+                {
+                    return nestedCards;
                 }
             }
         }
 
-        isLoaded = allCards.Count > 0;
-        if (!isLoaded)
+        foreach (JProperty property in rootObject.Properties())
         {
-            Debug.LogError("STSCardDatabase loaded zero cards. Check StreamingAssets/STSCardData and its JSON contents.");
-            cardDict = null;
-            allCards = null;
-        }
-        else
-        {
-            await EnsureCollectionCardSpritesLoadedAsync();
+            if (property.Value.Type != JTokenType.Object && property.Value.Type != JTokenType.Array)
+                continue;
+
+            List<STSCardDataDTO> nestedCards = ParseRemoteCards(property.Value);
+            if (nestedCards != null && nestedCards.Count > 0)
+            {
+                return nestedCards;
+            }
         }
 
-        loadTask = null;
+        return null;
     }
 
     static void RegisterCard(STSCardData card)

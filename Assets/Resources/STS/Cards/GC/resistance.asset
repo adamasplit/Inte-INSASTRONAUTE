@@ -15,7 +15,6 @@ MonoBehaviour:
   id: resistance
   cardName: "R\xE9sistance"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 2fa03572ca677d745b26c24845436c26, type: 3}
   cost: 2
   xCost: 0
@@ -38,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 6

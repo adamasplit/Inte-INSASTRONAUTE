@@ -123,7 +123,7 @@
           "index": 0,
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
-          "animationType": "Default"
+          "animationType": "Slash"
         },
         {
           "type": "Status",
@@ -171,26 +171,7 @@
           "index": 0,
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
-          "animationType": "Default"
-        },
-        {
-          "type": "Armor",
-          "value": 6,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "Shielding",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
+          "animationType": "Slash"
         }
       ],
       "nextMoveIndices": [

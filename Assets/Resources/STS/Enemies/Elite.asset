@@ -84,7 +84,7 @@ MonoBehaviour:
       cardSelectionEffect: 0
       animationType: 0
     - type: 2
-      value: 15
+      value: 8
       targetSelf: 1
       targetOthers: 0
       statusType: 0
@@ -106,24 +106,7 @@ MonoBehaviour:
     moveName: 
     effects:
     - type: 2
-      value: 4
-      targetSelf: 1
-      targetOthers: 0
-      statusType: 0
-      duration: 0
-      description: 
-      cardID: 
-      index: 0
-      conditional: 0
-      conditionType: 0
-      conditionValue: 
-      trueEffect: 0
-      cardSelectionSource: 0
-      cardFilterTags: 
-      cardSelectionEffect: 0
-      animationType: 0
-    - type: 1
-      value: 4
+      value: 6
       targetSelf: 1
       targetOthers: 0
       statusType: 0
@@ -146,7 +129,7 @@ MonoBehaviour:
     effects:
     - type: 1
       value: 12
-      targetSelf: 0
+      targetSelf: 1
       targetOthers: 0
       statusType: 0
       duration: 0

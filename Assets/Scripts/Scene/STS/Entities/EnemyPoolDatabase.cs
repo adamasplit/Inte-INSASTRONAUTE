@@ -120,7 +120,10 @@ public static class EnemyPoolDatabase
         {
             current += entry.weight;
             if (roll <= current)
+            {
+                Debug.Log($"Selected encounter: {entry.displayName} (Floor {floor}, Elite: {elite}, Boss: {boss})");
                 return entry.enemies;
+            }
         }
 
         return candidates[0].enemies;

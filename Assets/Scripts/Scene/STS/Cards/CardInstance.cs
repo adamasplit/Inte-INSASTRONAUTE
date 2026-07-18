@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 public class CardInstance
 {
+    public string instanceId;
     public string displayName ;
     public STSCardData data;
     public List<StatModifier> baseModifiers = new();
@@ -26,6 +28,7 @@ public class CardInstance
     public CardInstance(STSCardData data)
     {
         this.data = data;
+        this.instanceId = Guid.NewGuid().ToString("N");
         if (data==null)
         {
             Debug.LogError("Card data is null for card instance.");
@@ -228,6 +231,7 @@ public class CardInstance
     public CardInstance Clone()
     {
         CardInstance clone = new CardInstance(data);
+        clone.instanceId = instanceId;
         foreach (var mod in addedModifiers)
         {
             clone.addedModifiers.Add(mod.Clone());

@@ -15,7 +15,6 @@ MonoBehaviour:
   id: resilience
   cardName: "R\xE9silience"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 25d4df1f36be07c46870be8a25825e19, type: 3}
   cost: 2
   xCost: 0
@@ -30,6 +29,7 @@ MonoBehaviour:
     duration: 4
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 5

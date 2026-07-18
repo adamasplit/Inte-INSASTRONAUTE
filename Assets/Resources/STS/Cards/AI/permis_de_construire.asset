@@ -15,7 +15,6 @@ MonoBehaviour:
   id: permis_de_construire
   cardName: Permis de construire
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 16c3cd4341e519849a18e65438237d7b, type: 3}
   cost: 1
   xCost: 0

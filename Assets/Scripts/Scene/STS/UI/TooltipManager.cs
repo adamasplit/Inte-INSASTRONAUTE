@@ -21,7 +21,11 @@ public class TooltipManager:MonoBehaviour
         {
             foreach (Transform child in tooltipLayer)
             {
-                Destroy(child.gameObject);
+                Tooltip presentTooltip = child.GetComponent<Tooltip>();
+                if (presentTooltip != null)
+                    presentTooltip.Hide();
+                else
+                    Destroy(child.gameObject);
             }
         }
         Debug.Log($"Showing tooltip: {name} - {description} at position {position}");
@@ -32,8 +36,16 @@ public class TooltipManager:MonoBehaviour
     }
     public void HideTooltip()
     {
+        if (tooltipLayer == null)
+            return;
+
         foreach (Transform child in tooltipLayer)
         {
+            if (child == null)
+                continue;
+
+            // Hide immediately to avoid one-frame lingering text during card exits.
+            child.gameObject.SetActive(false);
             Destroy(child.gameObject);
         }
     }

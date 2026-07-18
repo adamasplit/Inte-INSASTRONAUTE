@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: cleanwalk
   cardName: Cleanwalk
-  collectionCardId: Greensa
+  collectionCardId: Greensa (campagne)
   icon: {fileID: 0}
   cost: 0
   xCost: 0

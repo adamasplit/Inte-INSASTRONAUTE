@@ -15,7 +15,6 @@ MonoBehaviour:
   id: decharge
   cardName: "D\xE9charge"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: a9105946d1ebb3d4abcfe366fdc30cee, type: 3}
   cost: 0
   xCost: 0

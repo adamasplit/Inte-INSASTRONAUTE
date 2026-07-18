@@ -15,7 +15,6 @@ MonoBehaviour:
   id: accelerateur_de_particules
   cardName: "Acc\xE9l\xE9rateur de particules"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 5b6bfcfb460c44d42b42d7e613dbe9da, type: 3}
   cost: 0
   xCost: 0
@@ -38,10 +37,10 @@ MonoBehaviour:
     cardSelectionSource: 2
     cardFilterTags: 06000000
     cardSelectionEffect: 4
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 0
   animationSpeed: 1
   startingCount: 0
   tags: 09000000
-  animationType: 0

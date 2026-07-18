@@ -19,7 +19,7 @@ MonoBehaviour:
   cost: 0
   xCost: 0
   type: 0
-  rarity: 0
+  rarity: 3
   effects:
   - type: 0
     value: 1
@@ -109,6 +109,23 @@ MonoBehaviour:
   - type: 6
     value: 1
     targetSelf: 0
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 8
+    value: 1
+    targetSelf: 1
     targetOthers: 0
     statusType: 0
     duration: 0

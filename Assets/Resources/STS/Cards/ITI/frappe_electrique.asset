@@ -15,7 +15,6 @@ MonoBehaviour:
   id: frappe_electrique
   cardName: "Frappe \xE9lectrique"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 07f75f9738f32ab4cb350933f7909c28, type: 3}
   cost: 1
   xCost: 0

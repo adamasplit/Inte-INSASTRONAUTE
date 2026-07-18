@@ -15,7 +15,6 @@ MonoBehaviour:
   id: infini
   cardName: Infini
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: bdb7dfce7b820de46b55c9c2e865cb2b, type: 3}
   cost: 2
   xCost: 0
@@ -38,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 2

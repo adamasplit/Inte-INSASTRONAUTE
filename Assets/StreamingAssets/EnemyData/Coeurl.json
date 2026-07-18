@@ -1,0 +1,51 @@
+{
+  "id": "Coeurl",
+  "enemyName": "Coeurl",
+  "displayName": "Chasseur robotique",
+  "maxHP": 33,
+  "randomStart": false,
+  "patternCardIds": [],
+  "movePattern": [
+    {
+      "cardId": "recharge",
+      "moveName": "",
+      "effects": [],
+      "nextMoveIndices": [
+        1
+      ],
+      "weight": 1
+    },
+    {
+      "cardId": "coupe_transversale",
+      "moveName": "",
+      "effects": [],
+      "nextMoveIndices": [
+        2
+      ],
+      "weight": 1
+    },
+    {
+      "cardId": "brisure_bond_et_baston",
+      "moveName": "",
+      "effects": [],
+      "nextMoveIndices": [
+        3
+      ],
+      "weight": 1
+    },
+    {
+      "cardId": "vision_en_coupe",
+      "moveName": "",
+      "effects": [],
+      "nextMoveIndices": [
+        0
+      ],
+      "weight": 1
+    }
+  ],
+  "rewardCardIds": [],
+  "startingStatus": "Strength",
+  "startingStatusDuration": 0,
+  "startingStatusValue": 0,
+  "startingStatusInfo": ""
+}

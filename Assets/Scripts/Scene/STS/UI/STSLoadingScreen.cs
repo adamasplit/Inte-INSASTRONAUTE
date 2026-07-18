@@ -24,7 +24,7 @@ public class STSLoadingScreen : MonoBehaviour
         }
         if (loadingText != null)
         {
-            loadingText.text = $"Loading... {Mathf.RoundToInt(clampedProgress * 100)}%"; // Update the loading text
+            loadingText.text = $"Chargement... {Mathf.RoundToInt(clampedProgress * 100)}%"; // Update the loading text
         }
     }
 

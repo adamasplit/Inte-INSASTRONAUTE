@@ -15,15 +15,14 @@ MonoBehaviour:
   id: realisation_d_esquisse
   cardName: "R\xE9alisation d'esquisse"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 8e75c4be14b3e0b4a82dabb4199da94d, type: 3}
   cost: 2
   xCost: 0
   type: 0
   rarity: 4
   effects:
-  - type: 29
-    value: 2
+  - type: 17
+    value: -1
     targetSelf: 0
     targetOthers: 0
     statusType: 0
@@ -34,13 +33,35 @@ MonoBehaviour:
     conditional: 0
     conditionType: 0
     conditionValue: 
-    trueEffect: 0
+    trueEffect: 1
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
+  - type: 0
+    value: 0
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 1
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 6
   targetingMode: 1
-  modifiers: []
+  modifiers:
+  - type: 0
+    kind: 21
+    value: 4
+    info: 
+    description: 
   favoredCharacter: 7
   animationSpeed: 1
   startingCount: 0

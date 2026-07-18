@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
@@ -18,8 +19,16 @@ public class CharacterSelectUI : MonoBehaviour
     public TextMeshProUGUI relicDescriptionText;
     public Relic relic;
     public RectTransform boxContainer;
+    public STSMainMenuIntroSequence introSequence;
+    public float backgroundColorTransitionDuration = 0.28f;
+    Coroutine backgroundColorTransitionRoutine;
     async void Awake()
     {
+        if (introSequence == null)
+        {
+            introSequence = FindObjectOfType<STSMainMenuIntroSequence>(true);
+        }
+
         STSSceneLoader.Instance?.BeginLoading();
 
         try
@@ -80,7 +89,8 @@ public class CharacterSelectUI : MonoBehaviour
         relicDescriptionText.text = $"<color=yellow>{relic.name}</color>\n";
         relicDescriptionText.text += relic.Describe();
         Color col=SelectableCharacterUtils.getCharacterColor(character);
-        backgroundImage.color= new Color(col.r*0.4f, col.g*0.4f, col.b*0.4f, 1f);
+        StartBackgroundColorTransition(new Color(col.r * 0.4f, col.g * 0.4f, col.b * 0.4f, 1f));
+        EnsureButtonGoldGlow(confirmButton);
         confirmButton.onClick.RemoveAllListeners();
         confirmButton.onClick.AddListener(() => OnCharacterConfirm(character));
     }
@@ -91,6 +101,7 @@ public class CharacterSelectUI : MonoBehaviour
             Debug.LogError($"No relic assigned for character {character}. Cannot start run.");
             return;
         }
+        introSequence?.HideTitleLine();
         RunManager.Instance.forceTutorial = false;
         int hp = PlayersDatabase.Get(character)?.hp ?? 100;
         RunManager.Instance.StartRun(character.ToString(), hp, new List<Relic>() {relic});
@@ -105,5 +116,59 @@ public class CharacterSelectUI : MonoBehaviour
     {
         string result=PlayersDatabase.Get(character)?.characterName ?? "Inconnu";
         return $"<color=yellow>{result}</color>\n";
+    }
+
+    void EnsureButtonGoldGlow(Button button)
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        if (button.GetComponent<STSButtonGoldGlow>() == null)
+        {
+            button.gameObject.AddComponent<STSButtonGoldGlow>();
+        }
+    }
+
+    void StartBackgroundColorTransition(Color targetColor)
+    {
+        if (backgroundImage == null)
+        {
+            return;
+        }
+
+        if (backgroundColorTransitionRoutine != null)
+        {
+            StopCoroutine(backgroundColorTransitionRoutine);
+            backgroundColorTransitionRoutine = null;
+        }
+
+        if (backgroundColorTransitionDuration <= 0f)
+        {
+            backgroundImage.color = targetColor;
+            return;
+        }
+
+        backgroundColorTransitionRoutine = StartCoroutine(AnimateBackgroundColor(targetColor));
+    }
+
+    IEnumerator AnimateBackgroundColor(Color targetColor)
+    {
+        Color startColor = backgroundImage.color;
+        float elapsed = 0f;
+        float duration = Mathf.Max(0.0001f, backgroundColorTransitionDuration);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float eased = Mathf.SmoothStep(0f, 1f, t);
+            backgroundImage.color = Color.Lerp(startColor, targetColor, eased);
+            yield return null;
+        }
+
+        backgroundImage.color = targetColor;
+        backgroundColorTransitionRoutine = null;
     }
 }

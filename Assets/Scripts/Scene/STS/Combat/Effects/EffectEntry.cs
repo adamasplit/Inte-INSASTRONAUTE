@@ -56,33 +56,98 @@ public class EffectEntry
     public static EffectEntry FromDTO(EffectEntryDTO dto)
     {
         List<CardFilterTag> cft = new();
-        foreach (var tag in dto.cardFilterTags)        {
-            cft.Add(Enum.Parse<CardFilterTag>(tag));
+        if (dto.cardFilterTags != null)
+        {
+            foreach (var tag in dto.cardFilterTags)
+            {
+                if (TryParseEnum(tag, out CardFilterTag parsedTag))
+                {
+                    cft.Add(parsedTag);
+                }
+            }
         }
+
         return new EffectEntry
         {
-            type = Enum.Parse<EffectType>(dto.type),
+            type = ParseEffectType(dto.type),
 
             value = dto.value,
 
             targetSelf = dto.targetSelf,
 
-            statusType = Enum.Parse<StatusType>(dto.statusType),
+            statusType = ParseStatusType(dto.statusType),
             targetOthers = dto.targetOthers,
             duration = dto.duration,
 
             description = dto.description,
             cardID = dto.cardID,
             conditional = dto.conditional,
-            conditionType = Enum.Parse<ConditionType>(dto.conditionType),
+            conditionType = ParseConditionType(dto.conditionType),
             conditionValue = dto.conditionValue,
             trueEffect = dto.trueEffect,
-            cardSelectionSource = Enum.Parse<CardSelectionSource>(dto.cardSelectionSource),
+            cardSelectionSource = ParseCardSelectionSource(dto.cardSelectionSource),
             cardFilterTags = cft,
             index = dto.index,
-            cardSelectionEffect = Enum.Parse<CardSelectionEffect>(dto.cardSelectionEffect),
-            animationType = Enum.Parse<AnimationType>(dto.animationType)
+            cardSelectionEffect = ParseCardSelectionEffect(dto.cardSelectionEffect),
+            animationType = ParseAnimationType(dto.animationType)
         };
+    }
+
+    private static bool TryParseEnum<T>(string value, out T parsed) where T : struct, Enum
+    {
+        parsed = default;
+        if (string.IsNullOrWhiteSpace(value))
+            return false;
+
+        return Enum.TryParse(value, true, out parsed);
+    }
+
+    private static EffectType ParseEffectType(string value)
+    {
+        if (TryParseEnum(value, out EffectType parsed))
+            return parsed;
+
+        return EffectType.Status;
+    }
+
+    private static StatusType ParseStatusType(string value)
+    {
+        if (TryParseEnum(value, out StatusType parsed))
+            return parsed;
+
+        return StatusType.Status;
+    }
+
+    private static ConditionType ParseConditionType(string value)
+    {
+        if (TryParseEnum(value, out ConditionType parsed))
+            return parsed;
+
+        return ConditionType.KillingBlow;
+    }
+
+    private static CardSelectionSource ParseCardSelectionSource(string value)
+    {
+        if (TryParseEnum(value, out CardSelectionSource parsed))
+            return parsed;
+
+        return CardSelectionSource.Hand;
+    }
+
+    private static CardSelectionEffect ParseCardSelectionEffect(string value)
+    {
+        if (TryParseEnum(value, out CardSelectionEffect parsed))
+            return parsed;
+
+        return CardSelectionEffect.None;
+    }
+
+    private static AnimationType ParseAnimationType(string value)
+    {
+        if (TryParseEnum(value, out AnimationType parsed))
+            return parsed;
+
+        return AnimationType.Default;
     }
     public string GetEffectName()
     {

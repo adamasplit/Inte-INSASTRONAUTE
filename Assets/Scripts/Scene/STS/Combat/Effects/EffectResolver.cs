@@ -338,9 +338,9 @@ public static class EffectResolver
             }
             case EffectType.AddCardToHand:
             {
-                if (ctx.isPreview)
+                if (ctx.isPreview||!ctx.target.isPlayer)
                     yield break;
-                ctx.source.GetCombatManager().deck.AddCardToHand(effect.cardID);
+                ctx.target.GetCombatManager().deck.AddCardToHand(effect.cardID);
                 yield break;
             }
             case EffectType.StealBuff: // Steal non-framed buffs from target and give them to source
@@ -353,6 +353,7 @@ public static class EffectResolver
                     StatusEffect buff = buffsToSteal[0];
                     buffsToSteal.RemoveAt(0);
                     StatusEffect dispelled=buff.Dispel(effect.duration);
+                    ctx.state.effectsDispelled++;
                     ctx.source.AddStatus(dispelled);
                 }
                 yield break;
@@ -367,6 +368,7 @@ public static class EffectResolver
                     StatusEffect debuff = debuffsToTransfer[0];
                     debuffsToTransfer.RemoveAt(0);
                     StatusEffect dispelled=debuff.Dispel(effect.duration);
+                    ctx.state.effectsDispelled++;
                     ctx.target.AddStatus(dispelled);
                 }
                 yield break;
@@ -382,6 +384,7 @@ public static class EffectResolver
                     StatusEffect buff = buffsToDispel[0];
                     buffsToDispel.RemoveAt(0);
                     buff.Dispel(effect.duration);
+                    ctx.state.effectsDispelled++;
                     removedAny = true;
                 }
                 ctx.combat?.tutorial?.NotifyDispelResult(ctx.card?.data?.cardName, removedAny);
@@ -398,6 +401,7 @@ public static class EffectResolver
                     StatusEffect debuff = debuffsToDispel[0];
                     debuffsToDispel.RemoveAt(0);
                     debuff.Dispel(effect.duration);
+                    ctx.state.effectsDispelled++;
                     removedAny = true;
                 }
                 ctx.combat?.tutorial?.NotifyDispelResult(ctx.card?.data?.cardName, removedAny);
@@ -878,6 +882,7 @@ public static class EffectResolver
                     foreach (var status in statusesToDispel)
                     {
                         status.Dispel(effect.duration);
+                        ctx.state.effectsDispelled++;
                     }
                     yield break;
                 }

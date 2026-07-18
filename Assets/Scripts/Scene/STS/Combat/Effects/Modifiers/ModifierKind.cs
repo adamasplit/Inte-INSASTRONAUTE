@@ -20,5 +20,6 @@ public enum ModifierKind
     SpecificStatusOnTarget,
     EnergySpent,
     EnergyGained,
-    ActionExhausted
+    ActionExhausted,
+    ActionDispelled
 }

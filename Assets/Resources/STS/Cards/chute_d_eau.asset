@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: chute_d_eau
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: chute_d_eau
-  cardName: Chute d'eau
+  cardName: "Seau mal plac\xE9"
   collectionCardId: "D\xE9g\xE2t des eaux"
   icon: {fileID: 0}
   cost: 2

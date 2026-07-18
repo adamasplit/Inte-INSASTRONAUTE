@@ -15,7 +15,6 @@ MonoBehaviour:
   id: regulation_industrielle
   cardName: "R\xE9gulation industrielle"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 13d4146e8e89e3c46870a648ca5b38be, type: 3}
   cost: 2
   xCost: 0
@@ -38,6 +37,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers: []
   favoredCharacter: 8

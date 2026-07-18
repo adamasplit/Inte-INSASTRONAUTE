@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: fureur_du_meteore
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: fureur_du_meteore
-  cardName: "Fureur du m\xE9t\xE9ore"
-  collectionCardId: FDM
+  cardName: "Fureur de m\xE9t\xE9ore"
+  collectionCardId: FDM (campagne)
   icon: {fileID: 0}
   cost: 0
   xCost: 1

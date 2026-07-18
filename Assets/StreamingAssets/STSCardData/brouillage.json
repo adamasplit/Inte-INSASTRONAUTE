@@ -1,0 +1,22 @@
+{
+  "id": "brouillage",
+  "cardName": "Brouillage",
+  "collectionCardId": null,
+  "iconId": "kaleid",
+  "cost": 1,
+  "xCost": false,
+  "type": "Rien",
+  "rarity": "Common",
+  "targetingMode": "Player",
+  "effects": [],
+  "modifiers": [],
+  "favoredCharacter": "PERF",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": [
+    "Created",
+    "FollowUp",
+    "Exhaust",
+    "Status"
+  ]
+}

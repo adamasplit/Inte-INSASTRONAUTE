@@ -3,14 +3,14 @@
     {
       "displayName": "3 ennemis différents",
       "enemyIds": [
-        "Enemy 1",
-        "Enemy 2",
-        "Enemy 3"
+        "Enemy_1",
+        "Enemy_2",
+        "Enemy_3"
       ],
       "minFloor": 7,
       "maxFloor": -1,
       "minAct": 1,
-      "maxAct": -1,
+      "maxAct": 1,
       "weight": 1.0,
       "elite": false,
       "boss": false
@@ -31,13 +31,13 @@
     {
       "displayName": "Boucliers et spectres",
       "enemyIds": [
-        "Enemy 1",
-        "Enemy 2"
+        "Enemy_1",
+        "Enemy_2"
       ],
       "minFloor": 2,
       "maxFloor": 6,
       "minAct": 0,
-      "maxAct": 1,
+      "maxAct": 0,
       "weight": 1.1,
       "elite": false,
       "boss": false
@@ -45,42 +45,16 @@
     {
       "displayName": "2 armures",
       "enemyIds": [
-        "Enemy 1",
-        "Enemy 1"
+        "Enemy_1",
+        "Enemy_1"
       ],
       "minFloor": 7,
       "maxFloor": -1,
       "minAct": -1,
-      "maxAct": -1,
-      "weight": 1.0,
-      "elite": false,
-      "boss": false
-    },
-    {
-      "displayName": "Dragon",
-      "enemyIds": [
-        "Enemy 4"
-      ],
-      "minFloor": 7,
-      "maxFloor": -1,
-      "minAct": -1,
-      "maxAct": -1,
-      "weight": 1.0,
-      "elite": false,
-      "boss": false
-    },
-    {
-      "displayName": "TestBoss",
-      "enemyIds": [
-        "Boss"
-      ],
-      "minFloor": 0,
-      "maxFloor": 50,
-      "minAct": 0,
       "maxAct": 0,
       "weight": 1.0,
       "elite": false,
-      "boss": true
+      "boss": false
     },
     {
       "displayName": "Leo",
@@ -111,7 +85,7 @@
     {
       "displayName": "5",
       "enemyIds": [
-        "Enemy 5"
+        "Enemy_5"
       ],
       "minFloor": -1,
       "maxFloor": -1,
@@ -122,22 +96,9 @@
       "boss": false
     },
     {
-      "displayName": "Dark",
-      "enemyIds": [
-        "Dark"
-      ],
-      "minFloor": -1,
-      "maxFloor": -1,
-      "minAct": 1,
-      "maxAct": 1,
-      "weight": 1.0,
-      "elite": false,
-      "boss": true
-    },
-    {
       "displayName": "Act2 elite1",
       "enemyIds": [
-        "Elite 1"
+        "Elite_1"
       ],
       "minFloor": 0,
       "maxFloor": 50,
@@ -150,7 +111,7 @@
     {
       "displayName": "Act2 elite2",
       "enemyIds": [
-        "Elite 2"
+        "Elite_2"
       ],
       "minFloor": 0,
       "maxFloor": -1,
@@ -163,7 +124,7 @@
     {
       "displayName": "Act2 elite3",
       "enemyIds": [
-        "Elite 3"
+        "Elite_3"
       ],
       "minFloor": 0,
       "maxFloor": -1,
@@ -182,7 +143,7 @@
       "minFloor": 5,
       "maxFloor": -1,
       "minAct": -1,
-      "maxAct": -1,
+      "maxAct": 0,
       "weight": 0.95,
       "elite": false,
       "boss": false
@@ -286,7 +247,7 @@
         "Soldat"
       ],
       "minFloor": 0,
-      "maxFloor": 6,
+      "maxFloor": 3,
       "minAct": 0,
       "maxAct": 0,
       "weight": 1.0,
@@ -336,13 +297,13 @@
     {
       "displayName": "2 ennemis différents",
       "enemyIds": [
-        "Enemy 2",
-        "Enemy 3"
+        "Enemy_2",
+        "Enemy_3"
       ],
       "minFloor": 4,
       "maxFloor": 9,
       "minAct": 0,
-      "maxAct": -1,
+      "maxAct": 0,
       "weight": 1.0,
       "elite": false,
       "boss": false
@@ -350,13 +311,13 @@
     {
       "displayName": "Pression croisée",
       "enemyIds": [
-        "Enemy 1",
-        "Enemy 3"
+        "Enemy_1",
+        "Enemy_3"
       ],
       "minFloor": 5,
       "maxFloor": -1,
       "minAct": 0,
-      "maxAct": -1,
+      "maxAct": 0,
       "weight": 0.85,
       "elite": false,
       "boss": false
@@ -385,7 +346,7 @@
       "maxFloor": -1,
       "minAct": 2,
       "maxAct": -1,
-      "weight": 1.0,
+      "weight": 2.0,
       "elite": true,
       "boss": false
     },
@@ -405,8 +366,8 @@
     {
       "displayName": "Autonomous Duo",
       "enemyIds": [
-        "Aegis Drone",
-        "Static Raptor"
+        "Aegis_Drone",
+        "Static_Raptor"
       ],
       "minFloor": 7,
       "maxFloor": -1,
@@ -419,8 +380,8 @@
     {
       "displayName": "Bloom Cluster",
       "enemyIds": [
-        "Bloom Parasite",
-        "Leech Queen"
+        "Bloom_Parasite",
+        "Leech_Queen"
       ],
       "minFloor": 7,
       "maxFloor": -1,
@@ -433,8 +394,8 @@
     {
       "displayName": "Mirror Rift",
       "enemyIds": [
-        "Mirror Imp",
-        "Rift Adept"
+        "Mirror_Imp",
+        "Rift_Adept"
       ],
       "minFloor": 5,
       "maxFloor": -1,
@@ -447,12 +408,12 @@
     {
       "displayName": "Barrage blindé",
       "enemyIds": [
-        "Enemy 4",
-        "Enemy 5"
+        "Enemy_4",
+        "Enemy_5"
       ],
       "minFloor": 7,
       "maxFloor": -1,
-      "minAct": 1,
+      "minAct": 2,
       "maxAct": -1,
       "weight": 0.75,
       "elite": false,
@@ -461,8 +422,8 @@
     {
       "displayName": "Forge Defenders",
       "enemyIds": [
-        "Forge Warden",
-        "Rune Bulwark"
+        "Forge_Warden",
+        "Rune_Bulwark"
       ],
       "minFloor": 8,
       "maxFloor": -1,
@@ -475,7 +436,7 @@
     {
       "displayName": "Feathered Static",
       "enemyIds": [
-        "Glass Harrier",
+        "Glass_Harrier",
         "Gravemoth"
       ],
       "minFloor": 7,
@@ -489,12 +450,12 @@
     {
       "displayName": "Glass Harrier solo",
       "enemyIds": [
-        "Glass Harrier"
+        "Glass_Harrier"
       ],
       "minFloor": 6,
       "maxFloor": -1,
       "minAct": 2,
-      "maxAct": -1,
+      "maxAct": 2,
       "weight": 0.4,
       "elite": false,
       "boss": false
@@ -507,7 +468,7 @@
       "minFloor": 6,
       "maxFloor": -1,
       "minAct": 2,
-      "maxAct": -1,
+      "maxAct": 2,
       "weight": 0.4,
       "elite": false,
       "boss": false
@@ -515,12 +476,12 @@
     {
       "displayName": "Static Raptor solo",
       "enemyIds": [
-        "Static Raptor"
+        "Static_Raptor"
       ],
       "minFloor": 0,
       "maxFloor": -1,
       "minAct": 0,
-      "maxAct": -1,
+      "maxAct": 0,
       "weight": 0.55,
       "elite": false,
       "boss": false
@@ -528,12 +489,12 @@
     {
       "displayName": "Aegis Drone solo",
       "enemyIds": [
-        "Aegis Drone"
+        "Aegis_Drone"
       ],
       "minFloor": 0,
       "maxFloor": -1,
       "minAct": 0,
-      "maxAct": -1,
+      "maxAct": 0,
       "weight": 0.55,
       "elite": false,
       "boss": false
@@ -541,7 +502,7 @@
     {
       "displayName": "Rune Bulwark solo",
       "enemyIds": [
-        "Rune Bulwark"
+        "Rune_Bulwark"
       ],
       "minFloor": 0,
       "maxFloor": 8,
@@ -554,12 +515,12 @@
     {
       "displayName": "Forge Warden solo",
       "enemyIds": [
-        "Forge Warden"
+        "Forge_Warden"
       ],
       "minFloor": 0,
       "maxFloor": 8,
       "minAct": 2,
-      "maxAct": -1,
+      "maxAct": 2,
       "weight": 0.35,
       "elite": true,
       "boss": false
@@ -567,12 +528,12 @@
     {
       "displayName": "Rift Adept solo",
       "enemyIds": [
-        "Rift Adept"
+        "Rift_Adept"
       ],
       "minFloor": 4,
       "maxFloor": -1,
       "minAct": 1,
-      "maxAct": -1,
+      "maxAct": 1,
       "weight": 0.45,
       "elite": false,
       "boss": false
@@ -580,12 +541,12 @@
     {
       "displayName": "Mirror Imp solo",
       "enemyIds": [
-        "Mirror Imp"
+        "Mirror_Imp"
       ],
       "minFloor": 4,
       "maxFloor": -1,
       "minAct": 1,
-      "maxAct": -1,
+      "maxAct": 1,
       "weight": 0.0,
       "elite": false,
       "boss": false
@@ -593,12 +554,12 @@
     {
       "displayName": "Leech Queen solo",
       "enemyIds": [
-        "Leech Queen"
+        "Leech_Queen"
       ],
       "minFloor": 1,
       "maxFloor": -1,
       "minAct": 1,
-      "maxAct": -1,
+      "maxAct": 1,
       "weight": 0.45,
       "elite": false,
       "boss": false
@@ -606,13 +567,131 @@
     {
       "displayName": "Bloom Parasite solo",
       "enemyIds": [
-        "Bloom Parasite"
+        "Bloom_Parasite"
       ],
       "minFloor": 1,
       "maxFloor": -1,
       "minAct": 1,
-      "maxAct": -1,
+      "maxAct": 1,
       "weight": 0.45,
+      "elite": false,
+      "boss": false
+    },
+    {
+      "displayName": "White cloak",
+      "enemyIds": [
+        "White_Cloak"
+      ],
+      "minFloor": 1,
+      "maxFloor": 5,
+      "minAct": 0,
+      "maxAct": 0,
+      "weight": 0.55,
+      "elite": false,
+      "boss": false
+    },
+    {
+      "displayName": "Coeurl",
+      "enemyIds": [
+        "Coeurl"
+      ],
+      "minFloor": 1,
+      "maxFloor": 5,
+      "minAct": 0,
+      "maxAct": 0,
+      "weight": 0.55,
+      "elite": false,
+      "boss": false
+    },
+    {
+      "displayName": "Coeurl&white cloak",
+      "enemyIds": [
+        "Coeurl",
+        "White_Cloak"
+      ],
+      "minFloor": 6,
+      "maxFloor": -1,
+      "minAct": 0,
+      "maxAct": 0,
+      "weight": 0.75,
+      "elite": true,
+      "boss": false
+    },
+    {
+      "displayName": "TestBoss",
+      "enemyIds": [
+        "Boss"
+      ],
+      "minFloor": 0,
+      "maxFloor": 50,
+      "minAct": 0,
+      "maxAct": 0,
+      "weight": 1.0,
+      "elite": false,
+      "boss": true
+    },
+    {
+      "displayName": "TestBoss2",
+      "enemyIds": [
+        "Boss2"
+      ],
+      "minFloor": 0,
+      "maxFloor": 50,
+      "minAct": 0,
+      "maxAct": 0,
+      "weight": 1.0,
+      "elite": false,
+      "boss": true
+    },
+    {
+      "displayName": "Dark",
+      "enemyIds": [
+        "Dark"
+      ],
+      "minFloor": -1,
+      "maxFloor": -1,
+      "minAct": 1,
+      "maxAct": 1,
+      "weight": 1.0,
+      "elite": false,
+      "boss": true
+    },
+    {
+      "displayName": "DeathAngel",
+      "enemyIds": [
+        "DeathAngel"
+      ],
+      "minFloor": -1,
+      "maxFloor": -1,
+      "minAct": 1,
+      "maxAct": 1,
+      "weight": 1.0,
+      "elite": false,
+      "boss": true
+    },
+    {
+      "displayName": "Dragon",
+      "enemyIds": [
+        "Enemy_4"
+      ],
+      "minFloor": 7,
+      "maxFloor": -1,
+      "minAct": -1,
+      "maxAct": 0,
+      "weight": 1.0,
+      "elite": false,
+      "boss": false
+    },
+    {
+      "displayName": "Dragon2",
+      "enemyIds": [
+        "Enemy_4"
+      ],
+      "minFloor": 0,
+      "maxFloor": -1,
+      "minAct": -1,
+      "maxAct": 0,
+      "weight": 1.0,
       "elite": false,
       "boss": false
     }

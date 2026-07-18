@@ -15,7 +15,6 @@ MonoBehaviour:
   id: eboulement
   cardName: "\xC9boulement"
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: e7037837f2cf95e40ab6cd5c6814df57, type: 3}
   cost: 0
   xCost: 1

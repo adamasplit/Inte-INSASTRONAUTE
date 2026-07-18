@@ -21,7 +21,9 @@ public class CardAnimator : MonoBehaviour
         GameObject trailSource = null,
         float trailSpawnInterval = 0.03f,
         float trailAlpha = 0.35f,
-        float trailLifetime = 0.18f
+        float trailLifetime = 0.18f,
+        bool arcAwayFromTarget = false,
+        float arcAwayDistance = 150f
     )
     {
         CardView cardView = rect != null ? rect.GetComponent<CardView>() : null;
@@ -53,24 +55,47 @@ public class CardAnimator : MonoBehaviour
             float trailTimer = 0f;
 
 
-            Vector3 control =
-                (start + end) / 2
-                + Vector3.up * curveHeight;
-
-            if (!curved)
-                control = (start + end) / 2;
+            Vector3 control = start;
+            Vector3 bezierStart = start;
+            Vector3 bezierEnd = end;
+            
+            if (arcAwayFromTarget)
+            {
+                // Calculate direction away from target for arc
+                Vector3 towardTarget = end - start;
+                Vector3 awayDirection = towardTarget.sqrMagnitude > 0.001f ? -towardTarget.normalized : Vector3.left;
+                
+                // Control point placed away from target to create the arc
+                // Bezier starts at actual start position, curves through control point, ends at target
+                control = start + awayDirection * arcAwayDistance;
+            }
+            else
+            {
+                control = (start + end) / 2 + Vector3.up * curveHeight;
+                if (!curved)
+                    control = (start + end) / 2;
+            }
+            
             while (t < 1f)
             {
                 t += Time.deltaTime / duration * speedMultiplier;
                 trailTimer += Time.deltaTime;
 
-                float eased =
-                    Mathf.SmoothStep(0, 1, t);
+                float eased;
+                if (arcAwayFromTarget)
+                {
+                    // SmoothStep: starts average, slows at the away point, accelerates back
+                    eased = Mathf.SmoothStep(0, 1, t);
+                }
+                else
+                {
+                    eased = Mathf.SmoothStep(0, 1, t);
+                }
 
                 Vector3 pos =
-                    Mathf.Pow(1 - eased, 2) * start
+                    Mathf.Pow(1 - eased, 2) * bezierStart
                     + 2 * (1 - eased) * eased * control
-                    + Mathf.Pow(eased, 2) * end;
+                    + Mathf.Pow(eased, 2) * bezierEnd;
 
                 rect.position = pos;
                 rect.localScale = Vector3.Lerp(initialScale, finalScale, eased);

@@ -23,7 +23,7 @@ MonoBehaviour:
     moveName: 
     effects:
     - type: 5
-      value: 4
+      value: 20
       targetSelf: 0
       targetOthers: 1
       statusType: 0

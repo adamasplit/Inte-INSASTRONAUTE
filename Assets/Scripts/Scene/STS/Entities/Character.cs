@@ -46,15 +46,7 @@ public class Character
         }
         if (ignoreArmor)
         {
-            currentHP = Mathf.Max(0, currentHP - amount);
-            if (combat != null && combat.state != null)
-            {
-                if (!combat.state.hpLostSinceLastTurn.ContainsKey(this))
-                {
-                    combat.state.hpLostSinceLastTurn[this] = 0;
-                }
-                combat.state.hpLostSinceLastTurn[this] += amount;
-            }
+            LoseHP(amount);
             info.amount = amount;
             if (currentHP == 0)
             {
@@ -72,18 +64,7 @@ public class Character
             int startingArmor = armor;
             int damageAfterArmor = Mathf.Max(0, amount - armor);
             armor = Mathf.Max(0, armor - amount);
-            if (combat != null && combat.state != null)
-            {
-                if (combat.state.hpLostSinceLastTurn.ContainsKey(this))
-                {
-                    combat.state.hpLostSinceLastTurn[this] += damageAfterArmor;
-                }
-                else
-                {
-                    combat.state.hpLostSinceLastTurn[this] = damageAfterArmor;
-                }
-            }
-            currentHP = Mathf.Max(0, currentHP - damageAfterArmor);
+            LoseHP(damageAfterArmor);
             if (currentHP == 0)
             {
                 info.killingBlow = true;
@@ -96,6 +77,29 @@ public class Character
                 combat.ui.ShowDamagePopup(this, info.unblocked ? damageAfterArmor : amount, false, !info.unblocked);
             }
             return info;
+        }
+    }
+    public void LoseHP(int amount)
+    {
+        foreach (var status in statusEffects.ToList())
+        {
+            amount = status.ValidateHPLoss(amount, this);
+        }
+        currentHP = Mathf.Max(0, currentHP - amount);
+        if (combat != null && combat.state != null)
+        {
+            if (combat.state.hpLostSinceLastTurn.ContainsKey(this))
+            {
+                combat.state.hpLostSinceLastTurn[this] += amount;
+            }
+            else
+            {
+                combat.state.hpLostSinceLastTurn[this] = amount;
+            }
+        }
+        foreach (var status in statusEffects.ToList())
+        {
+            status.OnHPLoss(this, amount);
         }
     }
 
@@ -324,7 +328,6 @@ public class Character
         foreach (var status in statusEffects.ToList())
         {
             status.OnDamageTaken(source, this, ref damage);
-            status.OnHPLoss(this, damage);
         }
         if (isPlayer)
         {

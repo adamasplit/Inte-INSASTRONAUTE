@@ -80,6 +80,19 @@ public class UIManager : MonoBehaviour
 
         RefreshHandLayout();
     }
+    public void HideAllTooltips()
+    {
+        foreach (var view in currentHandViews)
+        {
+            if (view != null)
+                view.HideCardTooltips();
+        }
+
+        if (selectedCard != null)
+            selectedCard.HideCardTooltips();
+
+        TooltipManager.Instance?.HideTooltip();
+    }
     public void SelectCard(CardView card, bool force = false)
     {
         if (!force && selectedCard == card&&!card.isDragging)
@@ -87,6 +100,7 @@ public class UIManager : MonoBehaviour
             Deselect();
             return;
         }
+        HideAllTooltips();
         HideCombatCardPreview();
         if (selectedCard != null&&!selectedCard.isDragging) selectedCard.Deselect();
         selectedCard = card;
@@ -207,6 +221,7 @@ public class UIManager : MonoBehaviour
     public void Deselect()
     {
         Debug.Log("Deselecting card {" + selectedCard?.cardInstance?.displayName + "}");
+        HideAllTooltips();
         if (selectedCard != null)
         {
             selectedCard.Deselect();
@@ -465,15 +480,16 @@ public class UIManager : MonoBehaviour
         rect.SetParent(animator.animationLayer, false);
         ReparentKeepScreenPosition(rect, animator.animationLayer);
 
-        rect.position = deckAnchor.position;
+        Vector3 startPosition = deckAnchor.position;
+        rect.position = startPosition;
 
         view.isAnimating = true;
 
         int staggerIndex = pendingDrawAnimations++;
-        StartCoroutine(AnimateDrawWithStagger(view, staggerIndex));
+        StartCoroutine(AnimateDrawWithStagger(view, startPosition, staggerIndex, 1f, false));
     }
 
-    IEnumerator AnimateDraw(CardView view)
+    IEnumerator AnimateDraw(CardView view, Vector3 startPosition, float speedMultiplier, bool arcAwayFromTarget)
     {
         RectTransform rect =
             view.rootRect;
@@ -494,17 +510,19 @@ public class UIManager : MonoBehaviour
         rect.SetParent(animator.animationLayer, true);
         ReparentKeepScreenPosition(rect, animator.animationLayer);
 
-        rect.position = deckAnchor.position;
+        rect.position = startPosition;
 
         yield return animator.MoveCard(
             rect,
-            rect.position,
+            startPosition,
             target,
-            1f,
+            speedMultiplier,
             true,
             true,
             startScale: new Vector3(0.4f, 0.4f, 1f),
-            endScale: new Vector3(1f, 1f, 1f)
+            endScale: new Vector3(1f, 1f, 1f),
+            arcAwayFromTarget: arcAwayFromTarget,
+            arcAwayDistance: 4f
         );
 
         rect.SetParent(handPanel, true);
@@ -716,16 +734,18 @@ public IEnumerator AnimateCardToCenter(CardView view)
             _ => deckAnchor.position
         };
 
-        yield return animator.MoveCard(
+        yield return StartCoroutine(animator.MoveCard(
             rect,
-            rect.position,
+            startWorldPosition,
             targetPosition,
-            0.8f,
-            true,
-            true,
-            startScale: new Vector3(0.8f, 0.8f, 1f),
-            endScale: new Vector3(0.4f, 0.4f, 1f)
-        );
+            speedMultiplier: 0.6f,
+            curved: true,
+            forceRotation: false,
+            startScale: new Vector3(2.5f, 2.5f, 1f),
+            endScale: new Vector3(0.4f, 0.4f, 1f),
+            arcAwayFromTarget: true,
+            arcAwayDistance: 4f
+        ));
 
         Destroy(view.gameObject);
     }
@@ -745,10 +765,10 @@ public IEnumerator AnimateCardToCenter(CardView view)
         view.isAnimating = true;
 
         int staggerIndex = pendingDrawAnimations++;
-        StartCoroutine(AnimateDrawWithStagger(view, staggerIndex));
+        StartCoroutine(AnimateDrawWithStagger(view, center, staggerIndex, 0.8f, true));
     }
 
-    IEnumerator AnimateDrawWithStagger(CardView view, int staggerIndex)
+    IEnumerator AnimateDrawWithStagger(CardView view, Vector3 startPosition, int staggerIndex, float speedMultiplier, bool arcAwayFromTarget)
     {
         if (staggerIndex > 0)
         {
@@ -756,7 +776,7 @@ public IEnumerator AnimateCardToCenter(CardView view)
         }
         SFXManager.Instance.PlaySound("Draw");
 
-        yield return AnimateDraw(view);
+        yield return AnimateDraw(view, startPosition, speedMultiplier, arcAwayFromTarget);
 
         pendingDrawAnimations = Mathf.Max(0, pendingDrawAnimations - 1);
     }

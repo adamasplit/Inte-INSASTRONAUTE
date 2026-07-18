@@ -1,0 +1,22 @@
+{
+  "id": "debris_cosmique",
+  "cardName": "Débris cosmique",
+  "collectionCardId": null,
+  "iconId": "Météorite",
+  "cost": 1,
+  "xCost": false,
+  "type": "Rien",
+  "rarity": "Common",
+  "targetingMode": "Player",
+  "effects": [],
+  "modifiers": [],
+  "favoredCharacter": "PERF",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": [
+    "Created",
+    "FollowUp",
+    "Exhaust",
+    "Status"
+  ]
+}

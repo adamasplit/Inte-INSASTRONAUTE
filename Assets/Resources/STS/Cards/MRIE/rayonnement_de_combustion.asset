@@ -15,7 +15,6 @@ MonoBehaviour:
   id: rayonnement_de_combustion
   cardName: Rayonnement de combustion
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 16dbd985910e55247b50d2dd760cdf08, type: 3}
   cost: 0
   xCost: 1

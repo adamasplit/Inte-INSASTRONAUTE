@@ -58,8 +58,6 @@ public class HandLayoutController : MonoBehaviour
         {
             var cardView = cards[i];
             RectTransform card = cardView.rootRect;
-            if (cardView.isAnimating) continue;
-
             if (!states.ContainsKey(cardView))
                 states[cardView] = new CardLayoutState();
 

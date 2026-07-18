@@ -15,7 +15,6 @@ MonoBehaviour:
   id: choc_thermique
   cardName: Choc thermique
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: d3d4e00174c39dd44b8d3be2d348d17d, type: 3}
   cost: 2
   xCost: 0

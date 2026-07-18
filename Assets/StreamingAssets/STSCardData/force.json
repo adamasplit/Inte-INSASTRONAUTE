@@ -1,8 +1,8 @@
 {
   "id": "force",
   "cardName": "Force",
-  "collectionCardId": "",
-  "iconId": null,
+  "collectionCardId": null,
+  "iconId": "Buff",
   "cost": 0,
   "xCost": false,
   "type": "Compétence",

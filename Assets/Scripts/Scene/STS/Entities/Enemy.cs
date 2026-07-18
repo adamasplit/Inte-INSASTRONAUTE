@@ -19,6 +19,19 @@ public class Enemy : Character
             Debug.LogError($"Enemy data for {name} not found in Resources/STS/Enemies/");
         }
     }
+
+    public Enemy(EnemyData data) : base(data != null ? (!string.IsNullOrEmpty(data.enemyName) ? data.enemyName : data.name) : "Ironclad", 0)
+    {
+        this.isPlayer = false;
+        if (data != null)
+        {
+            Init(data);
+        }
+        else
+        {
+            Debug.LogError("Enemy created with null EnemyData.");
+        }
+    }
     public EnemyData data;
 
     private int patternIndex = 0;

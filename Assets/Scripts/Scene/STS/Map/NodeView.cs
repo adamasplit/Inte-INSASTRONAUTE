@@ -7,8 +7,11 @@ public class NodeView : MonoBehaviour
     public Button button;
     public Image icon;
     public Image outline;
+    public CanvasGroup canvasGroup;
 
-    public void Init(MapNode node, MapManager manager, Action onClick = null)
+    private Vector3 baseScale = Vector3.one;
+
+    public void Init(MapNode node, MapManager manager, float scaleMultiplier, Action onClick = null)
     {
         this.node = node;
 
@@ -34,6 +37,13 @@ public class NodeView : MonoBehaviour
             icon = GetComponent<Image>();
         }
 
+        if (canvasGroup == null)
+        {
+            canvasGroup = GetComponent<CanvasGroup>();
+            if (canvasGroup == null)
+                canvasGroup = gameObject.AddComponent<CanvasGroup>();
+        }
+
         if (icon == null)
         {
             Debug.LogWarning($"No Image found for node view '{name}'. Icon will not be set.", this);
@@ -46,7 +56,8 @@ public class NodeView : MonoBehaviour
             manager.MoveToNode(node);
             onClick?.Invoke();
         });
-        SetIcon();
+        SetIcon(scaleMultiplier);
+        baseScale = transform.localScale;
         if (icon.sprite == null)
         {
             Debug.LogWarning($"Icon sprite not set for node view '{name}'.", this);
@@ -54,18 +65,42 @@ public class NodeView : MonoBehaviour
         outline.enabled=node.visited;
     }
 
-    void SetIcon()
+    void SetIcon(float scaleMultiplier)
     {
         var spritePath = $"STS/Map/NodeNeon{((int)node.type) + 1}";
         icon.sprite = Resources.Load<Sprite>(spritePath);
-        if (node.type==NodeType.Boss)
-        {
-            transform.localScale = Vector3.one * 1.5f; // Scale up boss nodes
-        }
+        transform.localScale = Vector3.one * scaleMultiplier;
         if (icon.sprite == null)
         {
             Debug.LogWarning($"Icon sprite not found for node type {node.type} at path '{spritePath}'.");
         }
         //icon.sprite=Resources.Load<Sprite>("STS/Map/" + node.type.ToString());
+    }
+
+    public void SetAccessibilityState(bool accessible, float pulse = 1f)
+    {
+        if (canvasGroup == null)
+        {
+            canvasGroup = GetComponent<CanvasGroup>();
+            if (canvasGroup == null)
+                canvasGroup = gameObject.AddComponent<CanvasGroup>();
+        }
+
+        if (accessible)
+        {
+            transform.localScale = baseScale * pulse;
+            canvasGroup.alpha = Mathf.Lerp(0.82f, 1f, Mathf.InverseLerp(0.97f, 1.05f, pulse));
+        }
+        else
+        {
+            transform.localScale = baseScale;
+            canvasGroup.alpha = 0.45f;
+        }
+
+        if (button != null)
+            button.interactable = accessible;
+
+        if (outline != null)
+            outline.enabled = node != null && node.visited;
     }
 }

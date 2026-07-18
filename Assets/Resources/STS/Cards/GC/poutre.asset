@@ -15,7 +15,6 @@ MonoBehaviour:
   id: poutre
   cardName: Poutre centrale
   collectionCardId: 
-  collectionCard: {fileID: 0}
   icon: {fileID: 21300000, guid: 508321d4544cea7459f4f8b09956f6ea, type: 3}
   cost: 2
   xCost: 0
