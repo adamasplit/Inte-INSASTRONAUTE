@@ -241,6 +241,10 @@ public class CharacterUI : MonoBehaviour
 
     private string GetIntentDisplayText(Enemy enemy, STSCardData next, EffectEntry effect)
     {
+        if (effect.type!=EffectType.Damage && effect.type!=EffectType.Armor && effect.type!=EffectType.Multihit)
+        {
+            return "";
+        }
         if (effect.type == EffectType.Damage)
         {
             CombatManager cm = FindObjectOfType<CombatManager>();

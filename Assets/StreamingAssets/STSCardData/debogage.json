@@ -11,7 +11,7 @@
   "effects": [
     {
       "type": "Armor",
-      "value": 1,
+      "value": 3,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Vuln",

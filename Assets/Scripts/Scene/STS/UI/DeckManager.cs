@@ -123,12 +123,12 @@ public class DeckManager
         {
             CardInstance card = hand[i];
             card.RemoveTemporaryModifiers();
-            if (card.HasEnchantment("Mécanique"))
+            if (card.HasEnchantment("Mécanique")||card.HasTag(CardTag.Automatic))
             {
                 combatManager.PlayCard(combatManager.player, card, new List<Character> { combatManager.enemies[UnityEngine.Random.Range(0, combatManager.enemies.Count)] },true);
                 continue;
             }
-            if (card.data.HasTag(CardTag.Retain))
+            if (card.HasTag(CardTag.Retain))
                 continue;
 
             hand.RemoveAt(i);

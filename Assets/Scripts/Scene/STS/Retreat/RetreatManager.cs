@@ -31,6 +31,12 @@ public class RetreatManager : MonoBehaviour
     private RunScoreResult scoreResult;
     private bool tokenGrantStarted;
     private Task tokenGrantTask;
+    private bool retireRequestStarted;
+    private Task retireRequestTask;
+    private STSApiRunRetireResponse retireResponse;
+    private bool previewRequestStarted;
+    private Task previewRequestTask;
+    private STSApiRetreatPreviewResponse retreatPreviewResponse;
 
     private class ScoreLine
     {
@@ -63,7 +69,8 @@ public class RetreatManager : MonoBehaviour
 
     async void Start()
     {
-        choicePanel.SetActive(true);
+        bool finalActCompleted = RunManager.Instance != null && RunManager.Instance.completedFinalAct;
+        choicePanel.SetActive(!finalActCompleted);
         if (scorePanel != null)
         {
             scorePanel.SetActive(false);
@@ -77,6 +84,12 @@ public class RetreatManager : MonoBehaviour
         }
 
         STSRunAuditSystem.RecordNodeEntered(RunManager.Instance, RunManager.Instance.currentNode, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, "retreat_init");
+
+        if (finalActCompleted)
+        {
+            Begin();
+        }
+
         STSSceneLoader.Instance?.EndLoading();
         STSSceneLoader.Instance?.SceneReady();
     }
@@ -85,7 +98,15 @@ public class RetreatManager : MonoBehaviour
     {
         scoreResult = CalculateRunScore();
         RenderScore(scoreResult);
-        _ = EnsureTokenRewardAppliedAsync();
+        if (RunManager.Instance != null && RunManager.Instance.completedFinalAct)
+        {
+            _ = EnsureFinalActRetireAppliedAsync();
+        }
+        else
+        {
+            _ = EnsureRetreatPreviewLoadedAsync();
+            _ = EnsureTokenRewardAppliedAsync();
+        }
 
         if (scorePanel != null)
         {
@@ -124,7 +145,23 @@ public class RetreatManager : MonoBehaviour
 
     public async void OnContinuePressed()
     {
-        await EnsureTokenRewardAppliedAsync();
+        if (RunManager.Instance != null && RunManager.Instance.completedFinalAct)
+        {
+            await EnsureFinalActRetireAppliedAsync();
+        }
+        else
+        {
+            await EnsureTokenRewardAppliedAsync();
+        }
+
+        if (RunManager.Instance != null && RunManager.Instance.completedFinalAct)
+        {
+            STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Boot", "final_act_continue");
+            RunManager.Instance.OnRunEnd(true, false);
+            STSSceneLoader.Instance.LoadScene("STS_Boot");
+            return;
+        }
+
         STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Map", "retreat_continue");
         RunManager.Instance.RegenerateMap = true;
         RunManager.Instance.act++;
@@ -144,9 +181,16 @@ public class RetreatManager : MonoBehaviour
         if (goingToMenu) return;
         goingToMenu = true;
 
-        await EnsureTokenRewardAppliedAsync();
+        if (RunManager.Instance != null && RunManager.Instance.completedFinalAct)
+        {
+            await EnsureFinalActRetireAppliedAsync();
+        }
+        else
+        {
+            await EnsureTokenRewardAppliedAsync();
+        }
         STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Boot", "retreat_menu");
-        RunManager.Instance.OnRunEnd();
+        RunManager.Instance.OnRunEnd(true, !(RunManager.Instance != null && RunManager.Instance.completedFinalAct));
         STSSceneLoader.Instance.LoadScene("STS_Boot");
     }
 
@@ -227,12 +271,16 @@ public class RetreatManager : MonoBehaviour
 
         if (scoreTitleText != null)
         {
-            scoreTitleText.text = "Score de la partie";
+            scoreTitleText.text = RunManager.Instance != null && RunManager.Instance.completedFinalAct
+                ? "Dernier acte terminé"
+                : "Score de la partie";
         }
 
         if (scoreDetailsText != null)
         {
-            scoreDetailsText.text = breakdownText;
+            scoreDetailsText.text = RunManager.Instance != null && RunManager.Instance.completedFinalAct
+                ? "Vous avez fini le dernier acte. Pour aller plus loin, revenez la semaine prochaine !\n\n" + breakdownText
+                : breakdownText;
         }
 
         if (tokenRewardText != null)
@@ -245,6 +293,12 @@ public class RetreatManager : MonoBehaviour
 
     private async Task EnsureTokenRewardAppliedAsync()
     {
+        if (RunManager.Instance != null && RunManager.Instance.completedFinalAct)
+        {
+            await EnsureFinalActRetireAppliedAsync();
+            return;
+        }
+
         if (tokenGrantStarted)
         {
             if (tokenGrantTask != null)
@@ -267,7 +321,12 @@ public class RetreatManager : MonoBehaviour
             RenderScore(scoreResult);
         }
 
-        int tokens = Mathf.Max(0, scoreResult.tokenReward);
+        await EnsureRetreatPreviewLoadedAsync();
+
+        long tokens = retreatPreviewResponse != null && retreatPreviewResponse.accepted
+            ? Math.Max(0, retreatPreviewResponse.tokensPreview)
+            : Mathf.Max(0, scoreResult.tokenReward);
+
         if (tokens <= 0)
             return;
 
@@ -285,7 +344,205 @@ public class RetreatManager : MonoBehaviour
         }
     }
 
-    private async Task<bool> TryGrantTokensWithReflectionAsync(int amount)
+    private async Task EnsureRetreatPreviewLoadedAsync()
+    {
+        if (RunManager.Instance == null
+            || RunManager.Instance.completedFinalAct
+            || string.IsNullOrWhiteSpace(RunManager.Instance.runId)
+            || RunManager.Instance.unrestrictedMode)
+        {
+            return;
+        }
+
+        if (previewRequestStarted)
+        {
+            if (previewRequestTask != null)
+            {
+                await previewRequestTask;
+            }
+            return;
+        }
+
+        previewRequestStarted = true;
+        previewRequestTask = LoadRetreatPreviewAsync();
+        await previewRequestTask;
+    }
+
+    private async Task LoadRetreatPreviewAsync()
+    {
+        try
+        {
+            retreatPreviewResponse = await STSApiClient.RetreatPreviewAsync(RunManager.Instance.runId);
+            if (retreatPreviewResponse == null || !retreatPreviewResponse.accepted)
+            {
+                Debug.LogWarning("Retreat preview request did not return an accepted response. Keeping local retreat summary.");
+                return;
+            }
+
+            RunManager.Instance.apiStatus = retreatPreviewResponse.status;
+            RenderServerPreviewSummary(retreatPreviewResponse);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"Failed to load retreat preview through API, keeping local summary: {ex.Message}");
+        }
+    }
+
+    private async Task EnsureFinalActRetireAppliedAsync()
+    {
+        if (retireRequestStarted)
+        {
+            if (retireRequestTask != null)
+            {
+                await retireRequestTask;
+            }
+            return;
+        }
+
+        retireRequestStarted = true;
+        retireRequestTask = ApplyFinalActRetireAsync();
+        await retireRequestTask;
+    }
+
+    private async Task ApplyFinalActRetireAsync()
+    {
+        if (RunManager.Instance == null || string.IsNullOrWhiteSpace(RunManager.Instance.runId) || RunManager.Instance.unrestrictedMode)
+            return;
+
+        try
+        {
+            retireResponse = await STSApiClient.RetireRunAsync(RunManager.Instance.runId);
+            if (retireResponse == null || !retireResponse.accepted)
+            {
+                Debug.LogWarning("Final-act retire request did not return an accepted response. Falling back to local score display.");
+                return;
+            }
+
+            RunManager.Instance.apiStatus = retireResponse.status;
+            RenderServerRetireSummary(retireResponse);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"Failed to retire run through API, keeping local summary as fallback: {ex.Message}");
+        }
+    }
+
+    private void RenderServerRetireSummary(STSApiRunRetireResponse response)
+    {
+        if (response == null)
+            return;
+
+        if (scoreTitleText != null)
+        {
+            scoreTitleText.text = "Dernier acte terminé";
+        }
+
+        if (scoreDetailsText != null)
+        {
+            scoreDetailsText.text = BuildServerBreakdownText(
+                "Vous avez vaincu le boss final. Les recompenses de fin de run ont ete calculees par le serveur.",
+                response.status,
+                response.score,
+                response.visitedNodeScore,
+                response.combatVictoryScore,
+                response.eliteVictoryScore,
+                response.eventVisitedScore,
+                response.actReachedScore,
+                response.relicOwnedScore,
+                response.deckCardScore,
+                response.goldOwnedScore,
+                response.remainingHpPercentScore,
+                response.scorePerToken,
+                response.rounding,
+                response.minimumReward
+            );
+        }
+
+        if (tokenRewardText != null)
+        {
+            tokenRewardText.text = $"Tokens accordes: +{response.tokensGranted} (solde: {response.tokenBalance})";
+        }
+    }
+
+    private void RenderServerPreviewSummary(STSApiRetreatPreviewResponse response)
+    {
+        if (response == null)
+            return;
+
+        if (scoreTitleText != null)
+        {
+            scoreTitleText.text = "Score de la partie";
+        }
+
+        if (scoreDetailsText != null)
+        {
+            scoreDetailsText.text = BuildServerBreakdownText(
+                "Apercu serveur pour cette fin d'acte (sans retrait de run).",
+                response.status,
+                response.score,
+                response.visitedNodeScore,
+                response.combatVictoryScore,
+                response.eliteVictoryScore,
+                response.eventVisitedScore,
+                response.actReachedScore,
+                response.relicOwnedScore,
+                response.deckCardScore,
+                response.goldOwnedScore,
+                response.remainingHpPercentScore,
+                response.scorePerToken,
+                response.rounding,
+                response.minimumReward
+            );
+        }
+
+        if (tokenRewardText != null)
+        {
+            tokenRewardText.text = $"Tokens prevus: +{response.tokensPreview} (solde projete: {response.projectedTokenBalance})";
+        }
+    }
+
+    private string BuildServerBreakdownText(
+        string intro,
+        string status,
+        long score,
+        long visitedNodeScore,
+        long combatVictoryScore,
+        long eliteVictoryScore,
+        long eventVisitedScore,
+        long actReachedScore,
+        long relicOwnedScore,
+        long deckCardScore,
+        long goldOwnedScore,
+        long remainingHpPercentScore,
+        long scorePerToken,
+        string rounding,
+        long minimumReward
+    )
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine(intro);
+        sb.AppendLine();
+        sb.AppendLine($"Etages parcourus: +{visitedNodeScore}");
+        sb.AppendLine($"Combats gagnes: +{combatVictoryScore}");
+        sb.AppendLine($"Elites vaincues: +{eliteVictoryScore}");
+        sb.AppendLine($"Evenements visites: +{eventVisitedScore}");
+        sb.AppendLine($"Actes atteints: +{actReachedScore}");
+        sb.AppendLine($"Reliques possedees: +{relicOwnedScore}");
+        sb.AppendLine($"Taille du deck: +{deckCardScore}");
+        sb.AppendLine($"Or transporte: +{goldOwnedScore}");
+        sb.AppendLine($"PV restants: +{remainingHpPercentScore}");
+        sb.AppendLine();
+        sb.AppendLine($"Score serveur: {score}");
+        sb.AppendLine($"Statut run: {status}");
+        if (scorePerToken > 0)
+        {
+            sb.AppendLine($"Conversion: {rounding} ({scorePerToken} score par token, minimum {minimumReward})");
+        }
+
+        return sb.ToString();
+    }
+
+    private async Task<bool> TryGrantTokensWithReflectionAsync(long amount)
     {
         Type storeType = typeof(PlayerProfileStore);
 
@@ -314,13 +571,15 @@ public class RetreatManager : MonoBehaviour
         return false;
     }
 
-    private static bool TryConvertNumeric(int value, Type targetType, out object convertedValue)
+    private static bool TryConvertNumeric(long value, Type targetType, out object convertedValue)
     {
         convertedValue = null;
 
         if (targetType == typeof(int))
         {
-            convertedValue = value;
+            if (value < int.MinValue || value > int.MaxValue)
+                return false;
+            convertedValue = (int)value;
             return true;
         }
 

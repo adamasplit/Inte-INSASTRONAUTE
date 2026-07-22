@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
 public class GameOverController : MonoBehaviour
 {
     public TextMeshProUGUI titleText;
@@ -14,11 +15,16 @@ public class GameOverController : MonoBehaviour
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
     }
-    public void Show(Character enemy)
+    public void Show(List<Character> enemies)
     {
-        
+        string enemyNames="";
+        foreach (var enemy in enemies)
+        {
+            if (enemyNames != "") enemyNames += (enemies.IndexOf(enemy) == enemies.Count - 1 ? " et " : ", ");
+            enemyNames += enemy.name;
+        }
         titleText.text = "Game over...";
-        reasonText.text = $"Vous avez été vaincu par {enemy.name} !";
+        reasonText.text = $"Vous avez été vaincu par {enemyNames} ...";
         StartCoroutine(FadeIn());
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;

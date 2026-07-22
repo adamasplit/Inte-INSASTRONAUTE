@@ -18,5 +18,8 @@ public class EncounterEntryDTO
 [Serializable]
 public class EnemyPoolDTO
 {
+    public int maxAct = -1;
+    public float baseHpScaling = 1f;
+    public List<float> actHpScaling = new();
     public List<EncounterEntryDTO> enemies = new();
 }

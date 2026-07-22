@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Enemy_5
   enemyName: Enemy_5
   displayName: ???
-  maxHP: 28
+  maxHP: 40
   pattern: []
   randomStart: 0
   movePattern:

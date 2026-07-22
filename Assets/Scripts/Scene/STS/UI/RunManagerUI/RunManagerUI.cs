@@ -24,6 +24,7 @@ public class RunManagerUI : MonoBehaviour
 
     [Header("Run Session")]
     public Button saveAndReturnToMenuButton;
+    public GameObject unrestrictedRoot;
 
     public Image redOrGreenOverlay;
     
@@ -40,7 +41,6 @@ public class RunManagerUI : MonoBehaviour
         var es = UnityEngine.EventSystems.EventSystem.current;
         if (es == null)
         {
-            Debug.Log("EventSystem not found in scene - creating one at runtime.");
             var go = new GameObject("EventSystem");
             go.AddComponent<UnityEngine.EventSystems.EventSystem>();
             go.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
@@ -53,11 +53,12 @@ public class RunManagerUI : MonoBehaviour
             var gr = canvas.GetComponent<UnityEngine.UI.GraphicRaycaster>();
             if (gr == null)
             {
-                Debug.Log("GraphicRaycaster missing on Canvas - adding one so UI can receive clicks.");
                 canvas.gameObject.AddComponent<UnityEngine.UI.GraphicRaycaster>();
             }
             
         }
+
+        SyncUnrestrictedState();
     }
 
     
@@ -85,11 +86,28 @@ public class RunManagerUI : MonoBehaviour
         {
             canvas.worldCamera = Camera.main;
         }
+
+        SyncUnrestrictedState();
+    }
+
+    public void SetUnrestrictedMode(bool enabled)
+    {
+        if (unrestrictedRoot != null)
+        {
+            unrestrictedRoot.SetActive(enabled);
+        }
+    }
+
+    private void SyncUnrestrictedState()
+    {
+        if (unrestrictedRoot == null || RunManager.Instance == null)
+            return;
+
+        unrestrictedRoot.SetActive(RunManager.Instance.unrestrictedMode);
     }
     
     void ShowRelics()
     {
-        Debug.Log("ShowRelics called");
         if (relicListPanel != null)
             relicListPanel.Show(RunManager.Instance.relics);
     }

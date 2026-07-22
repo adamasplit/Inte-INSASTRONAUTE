@@ -60,7 +60,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 5,
+          "value": 10,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -112,7 +112,7 @@
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Thorns",
-          "duration": 0,
+          "duration": 1,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -127,7 +127,7 @@
         },
         {
           "type": "Damage",
-          "value": 8,
+          "value": 12,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",

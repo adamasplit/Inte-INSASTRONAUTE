@@ -191,6 +191,9 @@ public abstract class StatusEffect : StatModifier
             StatusType.DamageReduction=>new DamageReductionStatus(value,duration),
             StatusType.AnyCardFollowUp=>new AnyCardFollowUpStatus(value,duration,effectInfo,index),
             StatusType.Regulator=>new RegulatorStatus(value),
+            StatusType.Blind=>new BlindStatus(duration),
+            StatusType.Link=>new LinkStatus(value,duration,effectInfo,index),
+            StatusType.Hide=>new HideStatus(value,duration),
             _ => null
         };
         stat.statusType = type;

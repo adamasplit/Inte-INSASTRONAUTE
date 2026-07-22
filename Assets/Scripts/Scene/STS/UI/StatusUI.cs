@@ -86,6 +86,10 @@ public class StatusUI : MonoBehaviour
         }
         if (icon.sprite == null)
         {
+            icon.sprite = Resources.Load<Sprite>($"STS/Characters/{status.IconPath()}");
+        }
+        if (icon.sprite == null)
+        {
             icon.enabled = false;
         }
         statusName = status.Name;

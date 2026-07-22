@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Rune_Bulwark
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  id: Rune Bulwark
-  enemyName: Rune Bulwark
+  id: Rune_Bulwark
+  enemyName: Rune_Bulwark
   displayName: Rune Bulwark
   maxHP: 38
   pattern: []
@@ -62,7 +62,7 @@ MonoBehaviour:
     moveName: 
     effects:
     - type: 0
-      value: 5
+      value: 10
       targetSelf: 0
       targetOthers: 0
       statusType: 0
@@ -105,7 +105,7 @@ MonoBehaviour:
       targetSelf: 1
       targetOthers: 0
       statusType: 35
-      duration: 0
+      duration: 1
       description: 
       cardID: 
       index: 0
@@ -118,7 +118,7 @@ MonoBehaviour:
       cardSelectionEffect: 0
       animationType: 0
     - type: 0
-      value: 8
+      value: 12
       targetSelf: 0
       targetOthers: 0
       statusType: 0

@@ -11,7 +11,7 @@
   "effects": [
     {
       "type": "Status",
-      "value": 0,
+      "value": 3,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "FieldTurnFollowUp",

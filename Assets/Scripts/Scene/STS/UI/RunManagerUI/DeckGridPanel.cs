@@ -146,7 +146,6 @@ public class DeckGridPanel : MonoBehaviour
         //Hide previously selected card's preview if any
         if (selectedItemView != null && selectedItemView != itemView)
         {
-            Debug.Log($"DeckGridPanel: Hiding previous selection for card {selectedItemView?.cardView?.cardInstance?.data?.cardName}");
             selectedItemView.gameObject.SetActive(true);
             HidePreview();
         }

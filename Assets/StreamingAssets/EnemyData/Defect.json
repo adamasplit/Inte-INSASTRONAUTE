@@ -37,7 +37,7 @@
           "statusType": "FieldTurnFollowUp",
           "duration": 0,
           "description": "",
-          "cardID": "Orbe glaciaire",
+          "cardID": "Orbe glacial",
           "conditional": false,
           "conditionType": "KillingBlow",
           "conditionValue": "",

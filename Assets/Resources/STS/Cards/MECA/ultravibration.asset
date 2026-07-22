@@ -16,13 +16,13 @@ MonoBehaviour:
   cardName: Ultravibration
   collectionCardId: 
   icon: {fileID: 21300000, guid: d9055ca2f7c8a7945ab45a7c7d6d45fa, type: 3}
-  cost: 0
+  cost: 1
   xCost: 0
   type: 0
   rarity: 1
   effects:
   - type: 0
-    value: 15
+    value: 12
     targetSelf: 0
     targetOthers: 0
     statusType: 0

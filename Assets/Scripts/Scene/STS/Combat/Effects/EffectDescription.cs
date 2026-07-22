@@ -134,7 +134,7 @@ public static class EffectDescription
                     }
                     else
                     {
-                        return $"Appliquez {usedValueText} de {stat.Name}";
+                        return $"Appliquez {usedValueText} d{(stat.Name[0]=='A' || stat.Name[0]=='E'|| stat.Name[0]=='I' || stat.Name[0]=='O' || stat.Name[0]=='U'||stat.Name[0]=='É' ? "'" : "e")} {stat.Name}";
                     }
                 }
                 else if (effect.statusType==StatusType.Strength||effect.statusType==StatusType.Dexterity||effect.statusType==StatusType.Speed)

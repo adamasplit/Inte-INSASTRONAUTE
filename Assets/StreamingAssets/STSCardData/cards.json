@@ -870,7 +870,7 @@
     {
       "id": "blou_blou",
       "cardName": "Blou blou",
-      "collectionCardId": "Sharks",
+      "collectionCardId": "Sharks (campagne)",
       "iconId": null,
       "cost": 1,
       "xCost": false,
@@ -907,7 +907,7 @@
     {
       "id": "brisure_bond_et_baston",
       "cardName": "Brisure, Bond et Baston",
-      "collectionCardId": "3B",
+      "collectionCardId": "3B (campagne)",
       "iconId": null,
       "cost": 2,
       "xCost": false,
@@ -1454,7 +1454,7 @@
       "id": "generation_moleculaire",
       "cardName": "Génération moléculaire",
       "collectionCardId": null,
-      "iconId": "Matière",
+      "iconId": "Matière3",
       "cost": 1,
       "xCost": false,
       "type": "Compétence",
@@ -2174,7 +2174,9 @@
         "Created",
         "FollowUp",
         "Exhaust",
-        "Status"
+        "Status",
+        "Automatic",
+        "Unplayable"
       ]
     },
     {
@@ -2730,7 +2732,7 @@
       "cardName": "Norme 1",
       "collectionCardId": null,
       "iconId": "norme",
-      "cost": 1,
+      "cost": 0,
       "xCost": false,
       "type": "Attaque",
       "rarity": "Common",
@@ -2786,7 +2788,7 @@
       "cardName": "Norme 2",
       "collectionCardId": null,
       "iconId": "norme",
-      "cost": 1,
+      "cost": 0,
       "xCost": false,
       "type": "Attaque",
       "rarity": "Common",
@@ -3032,8 +3034,8 @@
       "targetingMode": "Enemy",
       "effects": [
         {
-          "type": "DeleteNextTurn",
-          "value": 0,
+          "type": "DelayTurn",
+          "value": 33,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -3119,7 +3121,7 @@
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Poison",
-          "duration": 6,
+          "duration": 3,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -3439,7 +3441,7 @@
     {
       "id": "depart_en_sprint",
       "cardName": "Départ en sprint",
-      "collectionCardId": "Purple ",
+      "collectionCardId": "Purple",
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -3541,6 +3543,237 @@
       "tags": []
     },
     {
+      "id": "aveugler",
+      "cardName": "Aveugler",
+      "collectionCardId": null,
+      "iconId": "feu",
+      "cost": 2,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Rare",
+      "targetingMode": "Enemy",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 5,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "Status",
+          "value": 5,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Blind",
+          "duration": 1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Exhaust",
+        "Unobtainable"
+      ]
+    },
+    {
+      "id": "blueprint",
+      "cardName": "(Carte indisponible)",
+      "collectionCardId": null,
+      "iconId": null,
+      "cost": 0,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Special",
+      "targetingMode": "Player",
+      "effects": [],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Unobtainable"
+      ]
+    },
+    {
+      "id": "cachette",
+      "cardName": "Cachette",
+      "collectionCardId": null,
+      "iconId": "Buff",
+      "cost": 0,
+      "xCost": false,
+      "type": "Pouvoir",
+      "rarity": "Special",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 5,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Hide",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Unobtainable"
+      ]
+    },
+    {
+      "id": "chatiment",
+      "cardName": "Mort",
+      "collectionCardId": null,
+      "iconId": "Esuna",
+      "cost": 3,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Epic",
+      "targetingMode": "AllEnemies",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "DelayedDeath",
+          "duration": 10,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "Status",
+          "value": -5,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Speed",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "AllExceptExhaustPile",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": []
+    },
+    {
+      "id": "souffle_de_feu",
+      "cardName": "Pyrosouffle",
+      "collectionCardId": null,
+      "iconId": "Ténèbres",
+      "cost": 2,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Uncommon",
+      "targetingMode": "AllEnemies",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 9,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Fire"
+        },
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Burn",
+          "duration": 3,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Fire"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Unobtainable"
+      ]
+    },
+    {
       "id": "accelerateur_de_particules",
       "cardName": "Accélérateur de particules",
       "collectionCardId": null,
@@ -3586,7 +3819,7 @@
       "cardName": "Aérodynamique",
       "collectionCardId": null,
       "iconId": "aero",
-      "cost": 2,
+      "cost": 1,
       "xCost": false,
       "type": "Pouvoir",
       "rarity": "Uncommon",
@@ -3594,7 +3827,7 @@
       "effects": [
         {
           "type": "Status",
-          "value": 3,
+          "value": 1,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Speed",
@@ -3631,7 +3864,7 @@
       "effects": [
         {
           "type": "Armor",
-          "value": 16,
+          "value": 11,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -3751,7 +3984,7 @@
         },
         {
           "type": "Damage",
-          "value": 13,
+          "value": 9,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -3792,7 +4025,7 @@
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Burn",
-          "duration": 6,
+          "duration": 5,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -3903,7 +4136,7 @@
         {
           "type": "Damage",
           "kind": "EnergyGained",
-          "value": 5,
+          "value": 4,
           "info": "",
           "description": ""
         }
@@ -4141,7 +4374,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 5,
+          "value": 4,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -4201,7 +4434,7 @@
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "DebuffHalt",
-          "duration": 3,
+          "duration": 2,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -4219,7 +4452,9 @@
       "favoredCharacter": "EP",
       "animationSpeed": 1.0,
       "startingCount": 0,
-      "tags": []
+      "tags": [
+        "Exhaust"
+      ]
     },
     {
       "id": "montage_electrique_dangereux",
@@ -4234,7 +4469,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 38,
+          "value": 12,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -4284,7 +4519,7 @@
       "cardName": "Propulsion hypersonique",
       "collectionCardId": null,
       "iconId": "perce",
-      "cost": 3,
+      "cost": 2,
       "xCost": false,
       "type": "Pouvoir",
       "rarity": "Rare",
@@ -4292,7 +4527,7 @@
       "effects": [
         {
           "type": "Status",
-          "value": 5,
+          "value": 3,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Speed",
@@ -4385,7 +4620,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 3,
+          "value": 1,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -4439,11 +4674,11 @@
       "xCost": false,
       "type": "Attaque",
       "rarity": "Legendary",
-      "targetingMode": "AllEnemies",
+      "targetingMode": "Enemy",
       "effects": [
         {
           "type": "Damage",
-          "value": 50,
+          "value": 45,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -4484,7 +4719,7 @@
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Burn",
-          "duration": 6,
+          "duration": 4,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -4499,7 +4734,7 @@
         },
         {
           "type": "AdvanceTurn",
-          "value": 6,
+          "value": 30,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Burn",
@@ -4708,7 +4943,7 @@
         {
           "type": "Damage",
           "kind": "DebuffOnSelf",
-          "value": 10,
+          "value": 8,
           "info": "",
           "description": ""
         }
@@ -4805,7 +5040,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 30,
+          "value": 16,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -4947,7 +5182,7 @@
     {
       "id": "equilibrage_d_emploi_du_temps",
       "cardName": "Équilibrage d'emploi du temps",
-      "collectionCardId": "Ingénieur Humaniste",
+      "collectionCardId": "Ingénieur Humaniste (campagne)",
       "iconId": null,
       "cost": 0,
       "xCost": false,
@@ -5188,7 +5423,7 @@
       "effects": [
         {
           "type": "Armor",
-          "value": 1,
+          "value": 3,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Vuln",
@@ -5233,6 +5468,62 @@
         "FollowUp",
         "Exhaust"
       ]
+    },
+    {
+      "id": "frappe_de_debris",
+      "cardName": "Frappe de débris",
+      "collectionCardId": null,
+      "iconId": "Comète",
+      "cost": 0,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Common",
+      "targetingMode": "Enemy",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 5,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Magic"
+        },
+        {
+          "type": "Status",
+          "value": 7,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Weakness",
+          "duration": 1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Impossible",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": []
     },
     {
       "id": "frappe_industrielle",
@@ -5902,7 +6193,7 @@
         },
         {
           "type": "DelayTurn",
-          "value": 3,
+          "value": 20,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -8987,7 +9278,7 @@
         {
           "type": "Status",
           "value": 3,
-          "targetSelf": false,
+          "targetSelf": true,
           "targetOthers": false,
           "statusType": "CardFollowUp",
           "duration": 0,
@@ -9823,11 +10114,11 @@
       "effects": [
         {
           "type": "Multihit",
-          "value": 2,
+          "value": 3,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
-          "duration": 3,
+          "duration": 2,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -9879,7 +10170,7 @@
       "effects": [
         {
           "type": "Status",
-          "value": 0,
+          "value": 3,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "FieldTurnFollowUp",
@@ -10030,7 +10321,7 @@
       "effects": [
         {
           "type": "Status",
-          "value": 6,
+          "value": 5,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -11516,7 +11807,7 @@
       "cardName": "Ultravibration",
       "collectionCardId": null,
       "iconId": "ultravibration",
-      "cost": 0,
+      "cost": 1,
       "xCost": false,
       "type": "Attaque",
       "rarity": "Uncommon",
@@ -11524,7 +11815,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 15,
+          "value": 12,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -12946,7 +13237,7 @@
     {
       "id": "pinte_de_trop",
       "cardName": "Pinte de trop",
-      "collectionCardId": "Paix Dieu",
+      "collectionCardId": "Paix Dieu (campagne)",
       "iconId": null,
       "cost": 1,
       "xCost": false,
@@ -12975,7 +13266,7 @@
         },
         {
           "type": "Status",
-          "value": 5,
+          "value": 3,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -13724,7 +14015,7 @@
     {
       "id": "revision_model_text",
       "cardName": "Révision Model Text",
-      "collectionCardId": "Souillard",
+      "collectionCardId": "Souillard (campagne)",
       "iconId": null,
       "cost": 1,
       "xCost": false,

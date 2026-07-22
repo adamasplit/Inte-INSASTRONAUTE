@@ -432,8 +432,22 @@ public static class EnemyDataDatabase
 
     public static EnemyData Get(string id)
     {
+        if (string.IsNullOrWhiteSpace(id))
+            return null;
+
         if (enemyDict != null && enemyDict.TryGetValue(id, out var enemy))
             return enemy;
+
+        if (enemyDict != null)
+        {
+            foreach (var pair in enemyDict)
+            {
+                if (string.Equals(pair.Key, id, StringComparison.OrdinalIgnoreCase))
+                {
+                    return pair.Value;
+                }
+            }
+        }
 
         return null;
     }

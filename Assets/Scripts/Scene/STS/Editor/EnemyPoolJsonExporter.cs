@@ -20,7 +20,12 @@ public static class EnemyPoolJsonExporter
             return;
         }
 
-        var wrapper = new EnemyPoolDTO();
+        var wrapper = new EnemyPoolDTO
+        {
+            maxAct = pool.maxAct,
+            baseHpScaling = pool.baseHpScaling,
+            actHpScaling = pool.actHpScaling != null ? new List<float>(pool.actHpScaling) : new List<float>()
+        };
         if (pool.enemies != null)
         {
             foreach (var entry in pool.enemies)
@@ -48,7 +53,7 @@ public static class EnemyPoolJsonExporter
 
         string json = File.ReadAllText(TargetJsonPath);
         EnemyPoolDTO wrapper = JsonConvert.DeserializeObject<EnemyPoolDTO>(json);
-        if (wrapper == null || wrapper.enemies == null)
+        if (wrapper == null)
         {
             Debug.LogError("Failed to deserialize enemy pool JSON.");
             return;
@@ -62,15 +67,21 @@ public static class EnemyPoolJsonExporter
             pool = ScriptableObject.CreateInstance<EnemyPool>();
         }
 
+        pool.maxAct = wrapper.maxAct;
+        pool.baseHpScaling = wrapper.baseHpScaling;
+        pool.actHpScaling = wrapper.actHpScaling != null ? new List<float>(wrapper.actHpScaling) : new List<float>();
         pool.enemies = new List<EncounterEntry>();
-        foreach (EncounterEntryDTO dto in wrapper.enemies)
+        if (wrapper.enemies != null)
         {
-            if (dto == null)
+            foreach (EncounterEntryDTO dto in wrapper.enemies)
             {
-                continue;
-            }
+                if (dto == null)
+                {
+                    continue;
+                }
 
-            pool.enemies.Add(ResolveEncounterEntry(dto, enemyLookup));
+                pool.enemies.Add(ResolveEncounterEntry(dto, enemyLookup));
+            }
         }
 
         if (isNewAsset)

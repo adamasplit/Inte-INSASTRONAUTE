@@ -36,6 +36,9 @@ public class RunManager : MonoBehaviour
     public JToken serverAccountInventoryPatch;
     public List<JToken> serverPendingRewards = new();
     public STSApiMapPatchState serverMapPatch;
+    public bool completedFinalAct;
+    public bool unrestrictedMode;
+    public string unrestrictedModeReason;
     void Update()
     {
         if (SceneManager.GetActiveScene().name != "STS_Combat" && player != null && player.currentHP <= 0)
@@ -73,6 +76,7 @@ public class RunManager : MonoBehaviour
     private bool startingRun = false;
     public async Task StartRunAsync(string character, int maxHP, List<Relic> startingRelics, bool startOnMap = true, bool forceTutorial = false, int tutorialStage = 0, string nextSceneName = null)
     {
+        Debug.Log($"[STS-RUN] StartRunAsync requested character={character} forceTutorial={forceTutorial} startOnMap={startOnMap} existingRunId={runId}");
         // First end other executions of StartRun to prevent multiple runs from starting at the same time
         if (startingRun)
         {
@@ -81,38 +85,52 @@ public class RunManager : MonoBehaviour
         }
         startingRun = true;
         STSSceneLoader.Instance?.BeginLoading();
+        STSSceneLoader.Instance?.SetBackgroundProgress(0.05f);
 
         bool loadedScene = false;
 
         try
         {
             OnRunEnd(true, false);
+            SetUnrestrictedMode(false, null);
             this.forceTutorial = forceTutorial;
+            completedFinalAct = false;
             act = tutorialStage;
             if (ui != null)
             {
                 ui.gameObject.SetActive(true);
             }
 
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.12f);
             await STSCardDatabase.LoadAsync();
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.36f);
+            await PlayersDatabase.LoadAsync();
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.44f);
             await EnemyDataDatabase.LoadAsync();
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.56f);
             await EnemyPoolDatabase.LoadAsync();
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.68f);
 
             STSApiRunCreateResponse remoteRun = null;
             if (!forceTutorial)
             {
                 try
                 {
+                    STSSceneLoader.Instance?.SetBackgroundProgress(0.76f);
                     remoteRun = await STSApiClient.CreateRunAsync(character, Application.version);
+                    Debug.Log($"[STS-RUN] CreateRunAsync returned runId={remoteRun?.runId} status={remoteRun?.status}");
                 }
                 catch (Exception ex)
                 {
                     Debug.LogWarning($"Remote STS run creation failed, falling back to local run setup: {ex.Message}");
+                    EnableUnrestrictedMode($"run creation failed: {ex.Message}");
                 }
             }
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.84f);
 
             if (!forceTutorial && ApplyRemoteRunIfAvailable(remoteRun))
             {
+                STSSceneLoader.Instance?.SetBackgroundProgress(0.90f);
                 if (startOnMap)
                 {
                     STSSceneLoader.Instance?.LoadScene("STS_Map");
@@ -129,6 +147,10 @@ public class RunManager : MonoBehaviour
             }
 
             gold = 0;
+            if (!forceTutorial && !unrestrictedMode)
+            {
+                EnableUnrestrictedMode("remote run could not be initialized");
+            }
             if (Enum.TryParse(character, out SelectableCharacter parsedCharacter))
             {
                 selectedCharacter = parsedCharacter;
@@ -157,6 +179,8 @@ public class RunManager : MonoBehaviour
                     }
                 }
             }
+
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.92f);
 
             if (startOnMap)
             {
@@ -198,9 +222,11 @@ public class RunManager : MonoBehaviour
 
     public void OnRunEnd(bool clearSave, bool resetRemoteRun)
     {
+        string currentScene = SceneManager.GetActiveScene().name;
+        Debug.Log($"[STS-RUN] OnRunEnd(clearSave={clearSave}, resetRemoteRun={resetRemoteRun}, runId={runId}, scene={currentScene}, completedFinalAct={completedFinalAct})");
         STSRunAuditSystem.RecordRunEnded(this, clearSave ? "clear_save" : "preserve_save");
 
-        if (resetRemoteRun && clearSave && !string.IsNullOrWhiteSpace(runId))
+        if (resetRemoteRun && clearSave && !string.IsNullOrWhiteSpace(runId) && !unrestrictedMode)
         {
             _ = STSApiClient.ResetRunAsync(runId);
         }
@@ -222,6 +248,8 @@ public class RunManager : MonoBehaviour
         currentNode = null;
         map = null;
         activeEncounter = null;
+        completedFinalAct = false;
+        SetUnrestrictedMode(false, null);
         if (clearSave)
         {
             runId = null;
@@ -295,9 +323,36 @@ public class RunManager : MonoBehaviour
         return true;
     }
 
+    public void EnableUnrestrictedMode(string reason)
+    {
+        SetUnrestrictedMode(true, reason);
+    }
+
+    public void SetUnrestrictedMode(bool enabled, string reason)
+    {
+        unrestrictedMode = enabled;
+        unrestrictedModeReason = enabled ? reason : null;
+
+        if (enabled)
+        {
+            apiStatus = "Unrestricted";
+            Debug.LogWarning(string.IsNullOrWhiteSpace(reason)
+                ? "[STS-RUN] Switching to unrestricted mode."
+                : $"[STS-RUN] Switching to unrestricted mode: {reason}");
+        }
+
+        if (ui != null)
+        {
+            ui.SetUnrestrictedMode(enabled);
+        }
+    }
+
     public void ApplyNodeEnterResponse(STSApiNodeEnterResponse response)
     {
         if (response == null)
+            return;
+
+        if (!response.accepted)
             return;
 
         if (!string.IsNullOrWhiteSpace(response.runId))
@@ -322,7 +377,7 @@ public class RunManager : MonoBehaviour
 
     public void ApplyNodeCompleteResponse(STSApiNodeCompleteResponse response)
     {
-        if (response == null)
+        if (response == null || !response.accepted)
             return;
 
         if (!string.IsNullOrWhiteSpace(response.runId))
@@ -340,6 +395,7 @@ public class RunManager : MonoBehaviour
         serverAccountInventoryPatch = response.accountInventoryPatch;
         serverPendingRewards = response.pendingRewards ?? new List<JToken>();
         serverMapPatch = response.mapPatch;
+        activeEncounter = null;
 
         if (response.mapPatch != null && map != null)
         {
@@ -361,9 +417,23 @@ public class RunManager : MonoBehaviour
                 }
             }
 
-            if (response.mapPatch.currentNodeId >= 0)
+            int authoritativeNodeId = response.mapPatch.currentNodeId;
+
+            if (authoritativeNodeId >= 0)
             {
-                currentNode = map.Find(n => n != null && n.id == response.mapPatch.currentNodeId) ?? currentNode;
+                MapNode serverCurrent = map.Find(n => n != null && n.id == authoritativeNodeId);
+                if (serverCurrent != null)
+                {
+                    bool regressing = currentNode != null && serverCurrent.floor < currentNode.floor;
+                    if (!regressing)
+                    {
+                        currentNode = serverCurrent;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Ignoring regressive mapPatch authoritativeNodeId={authoritativeNodeId} (floor {serverCurrent.floor}) while local node is floor {currentNode.floor}.");
+                    }
+                }
             }
         }
     }
@@ -375,6 +445,13 @@ public class RunManager : MonoBehaviour
     public void StartTutorialRun(int stage)
     {
         StartTutorialRun();
+    }
+    public void HideUI()
+    {
+        if (ui != null)
+        {
+            ui.gameObject.SetActive(false);
+        }
     }
 
     private async Task StartTutorialRunAsync()

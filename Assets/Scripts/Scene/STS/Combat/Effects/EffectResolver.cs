@@ -644,6 +644,17 @@ public static class EffectResolver
                                     STSCardData data = STSCardDatabase.GetRandomCard(RunManager.Instance.selectedCharacter);
                                     CardInstance newCard = new CardInstance(data);
                                     ctx.combat.ui.TransformCard(card, newCard);
+                                    if (ui != null)
+                                    {
+                                        if (effect.cardSelectionSource == CardSelectionSource.DrawPile)
+                                        {
+                                            yield return ui.AnimateCardToPile(newCard, CardSelectionSource.DrawPile);
+                                        }
+                                        else if (effect.cardSelectionSource == CardSelectionSource.DiscardPile)
+                                        {
+                                            yield return ui.AnimateCardToPile(newCard, CardSelectionSource.DiscardPile);
+                                        }
+                                    }
                                     break;
                                 case CardSelectionEffect.TopOfDrawPile:
                                     deck.drawPile.Remove(card);
@@ -915,7 +926,7 @@ public static class EffectResolver
 
                     for (int i = 0; i < effect.value; i++)
                     {
-                        CardInstance newCard = new CardInstance(ctx.card.data);
+                        CardInstance newCard = ctx.card.Clone();
                         AddCardToPile(deck, effect.cardSelectionSource, newCard);
                         if (ui != null && effect.cardSelectionSource != CardSelectionSource.Hand)
                         {

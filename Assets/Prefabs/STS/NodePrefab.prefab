@@ -131,6 +131,7 @@ MonoBehaviour:
   button: {fileID: 5281593023718810533}
   icon: {fileID: 1050223212300356847}
   outline: {fileID: 5688779975045615064}
+  canvasGroup: {fileID: 0}
 --- !u!114 &5281593023718810533
 MonoBehaviour:
   m_ObjectHideFlags: 0

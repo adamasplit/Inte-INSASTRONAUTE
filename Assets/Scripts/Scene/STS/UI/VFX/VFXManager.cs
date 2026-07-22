@@ -5,6 +5,7 @@ public class VFXManager : MonoBehaviour
     public Canvas vfxCanvas;
     public UIManager uiManager;
     public RectTransform energyRoot;
+    [Range(0f, 180f)] public float damageSlashAngleRandomRange = 25f;
     public int activeEffectsCount = 0;
     public bool activeEffects => activeEffectsCount > 0;
     void Awake()
@@ -21,7 +22,8 @@ public class VFXManager : MonoBehaviour
         GameObject prefab= entry.GetVFXPrefab();
         if (prefab != null)        {
             Vector3 RandomVector = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), 0);
-            GameObject vfxInstance = Instantiate(prefab, position+RandomVector, Quaternion.identity, vfxCanvas.transform);
+            Quaternion rotation = GetSpawnRotation(entry != null ? entry.GetEffectName() : null);
+            GameObject vfxInstance = Instantiate(prefab, position+RandomVector, rotation, vfxCanvas.transform);
             StartCoroutine(DestroyAfterDuration(vfxInstance, 2f)); // Adjust duration as needed
         }
     }
@@ -31,7 +33,8 @@ public class VFXManager : MonoBehaviour
         if (prefab != null)
         {
             Vector3 RandomVector = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), 0);
-            GameObject vfxInstance = Instantiate(prefab, position+RandomVector, Quaternion.identity, vfxCanvas.transform);
+            Quaternion rotation = GetSpawnRotation(effectName);
+            GameObject vfxInstance = Instantiate(prefab, position+RandomVector, rotation, vfxCanvas.transform);
             StartCoroutine(DestroyAfterDuration(vfxInstance, 2f)); // Adjust duration as needed
         }
     }
@@ -52,6 +55,18 @@ public class VFXManager : MonoBehaviour
             StartCoroutine(DestroyAfterDuration(vfxInstance, 2f)); // Adjust duration as needed
         }
     }
+
+    private Quaternion GetSpawnRotation(string effectName)
+    {
+        if (string.Equals(effectName, "DamageSlash", System.StringComparison.OrdinalIgnoreCase))
+        {
+            float angle = Random.Range(-damageSlashAngleRandomRange, damageSlashAngleRandomRange);
+            return Quaternion.Euler(0f, 0f, angle);
+        }
+
+        return Quaternion.identity;
+    }
+
     private System.Collections.IEnumerator DestroyAfterDuration(GameObject obj, float duration)
     {
         activeEffectsCount++;

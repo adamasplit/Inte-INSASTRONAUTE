@@ -17,6 +17,7 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
     public CombatManager combat;
     public GameObject arrowPrefab;
     private ArrowUI arrow;
+    bool cardPlayedByDrop;
     void Awake()
     {
         rect = GetComponent<RectTransform>();
@@ -34,6 +35,9 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
         {
             return;
         }
+
+        cardPlayedByDrop = false;
+        DropZone.hoveredCharacter = null;
 
         cardView.isDragging = true;
         cardView.OnPointerClick(eventData); // Ensure the card is selected 
@@ -71,24 +75,27 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
             return;
         }
 
+        if (cardView.cardInstance == null)
+        {
+            Debug.LogError("CardView has no card instance");
+            return;
+        }
+
+        var target = GetHoveredTarget(eventData);
+
         Vector2 start = RectTransformUtility.WorldToScreenPoint(
             eventData.pressEventCamera,
             cardView.GetComponent<RectTransform>().TransformPoint(cardView.GetComponent<RectTransform>().rect.center)
         );
         Vector2 end = eventData.position;
+
         if (arrow == null)
         {
             Debug.LogError("ArrowUI component not found!");
             return;
         }
         arrow.UpdateArrow(start, end);
-        if (cardView.cardInstance == null)
-        {
-            Debug.LogError("CardView has no card instance");
-            return;
-        }
-        
-        var target = GetHoveredTarget();
+
         var sim = turnSystem.SimulateCard(turnSystem.timeline, cardView.cardInstance, GetDisplayTargets(target));
         var future = turnSystem.GetFuture(sim,10);
         ui.HighlightTargets(cardView.cardInstance.targetingMode, target);
@@ -104,6 +111,31 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
         }
 
         group.blocksRaycasts = true;
+
+        if (!cardPlayedByDrop && cardView.cardInstance != null)
+        {
+            Character target = GetHoveredTarget(eventData);
+            TargetingMode mode = cardView.cardInstance.targetingMode;
+            bool canPlayFromDropArea = IsInAllowedDropArea(mode, eventData);
+
+            if (!canPlayFromDropArea)
+            {
+                // Released outside an allowed drop area for this targeting mode.
+            }
+            else if (RequiresExplicitTarget(mode) && target == null)
+            {
+                // No valid selected target at release time: do not auto-play.
+            }
+            else
+            {
+                List<Character> targets = combat.GetDisplayTargets(mode, target);
+                if (targets.Count > 0)
+                {
+                    combat.PlayCard(combat.player, cardView.cardInstance, targets);
+                    cardPlayedByDrop = true;
+                }
+            }
+        }
 
         // If the card was played, it may already be animating in the animation layer.
         // In that case, avoid snapping it back to the hand position.
@@ -128,9 +160,46 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         if (arrow != null) Destroy(arrow.gameObject);
     }
-    Character GetHoveredTarget()
+
+    public void NotifyCardPlayedFromDrop()
     {
-        return DropZone.hoveredCharacter;
+        cardPlayedByDrop = true;
+    }
+
+    Character GetHoveredTarget(PointerEventData eventData)
+    {
+        if (eventData == null || cardView == null || cardView.cardInstance == null)
+            return DropZone.GetCurrentHoveredCharacter();
+
+        Character autoTarget = DropZone.GetAutoTarget(eventData.position, cardView.cardInstance.targetingMode, eventData.pressEventCamera);
+        if (autoTarget != null)
+            return autoTarget;
+
+        return DropZone.GetCurrentHoveredCharacter();
+    }
+
+    static bool RequiresExplicitTarget(TargetingMode mode)
+    {
+        return mode == TargetingMode.Player ||
+               mode == TargetingMode.Enemy;
+    }
+
+    static bool IsInAllowedDropArea(TargetingMode mode, PointerEventData eventData)
+    {
+        if (eventData == null || Screen.height <= 0)
+            return false;
+
+        float normalizedHeight = eventData.position.y / Screen.height;
+        bool inEnemyThreshold = normalizedHeight >= 0.5f;
+        bool inPlayerThreshold = normalizedHeight <= 0.3f;
+
+        if (mode == TargetingMode.AllEnemies)
+            return inEnemyThreshold;
+
+        if (mode == TargetingMode.AllCharacters)
+            return inEnemyThreshold || inPlayerThreshold;
+
+        return true;
     }
     List<Character> GetDisplayTargets(Character target)
     {

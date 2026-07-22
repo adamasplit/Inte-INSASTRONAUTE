@@ -3,7 +3,7 @@
   "cardName": "Norme 1",
   "collectionCardId": null,
   "iconId": "norme",
-  "cost": 1,
+  "cost": 0,
   "xCost": false,
   "type": "Attaque",
   "rarity": "Common",

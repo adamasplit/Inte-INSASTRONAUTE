@@ -491,6 +491,7 @@ public class STSTutorialManager : MonoBehaviour
 
             onComplete = () =>
             {
+                RunManager.Instance.HideUI();
                 STSSceneLoader.Instance.LoadScene("STS_Boot");
             },
             next = () => null

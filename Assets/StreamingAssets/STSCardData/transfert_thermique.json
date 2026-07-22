@@ -33,7 +33,7 @@
     {
       "type": "Damage",
       "kind": "DebuffOnSelf",
-      "value": 10,
+      "value": 8,
       "info": "",
       "description": ""
     }

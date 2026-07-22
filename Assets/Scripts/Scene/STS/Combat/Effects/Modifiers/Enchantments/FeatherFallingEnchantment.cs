@@ -2,11 +2,11 @@ using UnityEngine;
 using System.Collections.Generic;
 public class FeatherFallingEnchantment : EnchantmentData
 {
-    public float delayPerLevel = 0.5f;
+    public float delayPerLevel = 2f;
 
     public FeatherFallingEnchantment()
     {
-        name = "Feather Falling";
+        name = "Légèreté";
         description = $"Avance le tour du joueur en fonction du niveau.";
         maxLevel=100;
     }

@@ -4,4 +4,5 @@ public class PlayerInfoDTO
     public string characterName;
     public int hp;
     public string description;
+    public float hpAdditionalMultiplier = 0f;
 }

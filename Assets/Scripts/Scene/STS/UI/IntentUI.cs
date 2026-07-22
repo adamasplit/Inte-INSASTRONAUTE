@@ -98,19 +98,25 @@ public class IntentUI : MonoBehaviour
                 case EffectType.Multihit:
                 {
                     name = "Multi-coup";
-                    description = $"L'ennemi va attaquer {effect.duration} fois pour {effect.value} dégâts.";
+                    description = $"L'ennemi va attaquer {effect.duration} fois.";
                     break;
                 }
                 case EffectType.Armor:
                 {
                     name = "Armure";
-                    description = $"L'ennemi va recevoir {effect.value} d'Armure.";
+                    description = $"L'ennemi va recevoir de l'Armure.";
                     break;
                 }
                 case EffectType.Damage:
                 {
                     name = "Dégâts";
-                    description = $"L'ennemi va infliger {effect.value} dégâts.";
+                    description = $"L'ennemi va infliger des dégâts.";
+                    break;
+                }
+                case EffectType.Heal:
+                {
+                    name = "Soin";
+                    description = $"L'ennemi va se soigner.";
                     break;
                 }
                 default:

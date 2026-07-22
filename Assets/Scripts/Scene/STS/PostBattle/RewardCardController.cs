@@ -94,8 +94,6 @@ public class RewardCardController : MonoBehaviour, IPointerEnterHandler, IPointe
 
         Vector3 startScale = baseScale * 0.92f;
         Vector3 endScale = baseScale;
-        Debug.Log($"Playing spawn arc animation from {startPosition} to {endPosition} with control point {controlPoint} and arc height {arcHeight}, startScale {startScale}, endScale {endScale}, duration {duration}");
-
         rect.anchoredPosition = startPosition;
         rect.localScale = startScale;
         if (canvasGroup != null)
@@ -229,7 +227,6 @@ public class RewardCardController : MonoBehaviour, IPointerEnterHandler, IPointe
         Vector3 startScale = baseline; // Start at holder's scale, no multiplier
         Vector3 endScale = baseline; // End at holder's scale
 
-        Debug.Log($"[SelectAnim] animatedRootSize={animatedRoot.sizeDelta} animatedRootScale={animatedRoot.localScale} baseline={baseline} startScale={startScale} endScale={endScale} startPos={startPosition} endPos={endPosition}");
         float startAlpha = canvasGroup.alpha;
 
         float aspect = (float)Screen.width / Mathf.Max(Screen.height, 1f);

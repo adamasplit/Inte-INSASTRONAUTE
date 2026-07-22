@@ -153,6 +153,52 @@ public class STSApiMapPatchState
     public int? enteredNodeId;
 }
 
+[Serializable]
+public class STSApiRunRetireResponse
+{
+    public bool accepted;
+    public string runId;
+    public string status;
+    public long score;
+    public long tokensGranted;
+    public long tokenBalance;
+    public long visitedNodeScore;
+    public long combatVictoryScore;
+    public long eliteVictoryScore;
+    public long eventVisitedScore;
+    public long actReachedScore;
+    public long relicOwnedScore;
+    public long deckCardScore;
+    public long goldOwnedScore;
+    public long remainingHpPercentScore;
+    public long scorePerToken;
+    public string rounding;
+    public long minimumReward;
+}
+
+[Serializable]
+public class STSApiRetreatPreviewResponse
+{
+    public bool accepted;
+    public string runId;
+    public string status;
+    public long score;
+    public long tokensPreview;
+    public long projectedTokenBalance;
+    public long visitedNodeScore;
+    public long combatVictoryScore;
+    public long eliteVictoryScore;
+    public long eventVisitedScore;
+    public long actReachedScore;
+    public long relicOwnedScore;
+    public long deckCardScore;
+    public long goldOwnedScore;
+    public long remainingHpPercentScore;
+    public long scorePerToken;
+    public string rounding;
+    public long minimumReward;
+}
+
 public static class STSApiClient
 {
     public static async Task<STSApiRunCreateResponse> CreateRunAsync(string character, string clientVersion)
@@ -183,6 +229,32 @@ public static class STSApiClient
             return true;
 
         return token.Type != JTokenType.Boolean || token.Value<bool>();
+    }
+
+    public static async Task<STSApiRunRetireResponse> RetireRunAsync(string runId)
+    {
+        if (string.IsNullOrWhiteSpace(runId))
+            return null;
+
+        string json = await ReactApiBridge.RequestAsync("sts.runs.retire", new { runId });
+        return ParseResponse<STSApiRunRetireResponse>(json);
+    }
+
+    public static async Task<STSApiRetreatPreviewResponse> RetreatPreviewAsync(string runId)
+    {
+        if (string.IsNullOrWhiteSpace(runId))
+            return null;
+
+        string json = await ReactApiBridge.RequestWithAliasesAsync(
+            new[]
+            {
+                $"sts.runs.{runId}.retreat-preview",
+                "sts.runs.retreat-preview"
+            },
+            new { runId }
+        );
+
+        return ParseResponse<STSApiRetreatPreviewResponse>(json);
     }
 
     public static async Task<STSApiNodeEnterResponse> EnterNodeAsync(string runId, int nodeId)
@@ -394,7 +466,7 @@ public static class STSApiClient
         {
             JToken token = ParseEnvelope(json);
             if (token == null)
-                return JsonConvert.DeserializeObject<T>(json);
+                return null;
 
             if (token.Type == JTokenType.Object)
                 return token.ToObject<T>();
@@ -420,6 +492,30 @@ public static class STSApiClient
                 return root;
 
             JObject obj = (JObject)root;
+
+            // React bridge envelope shape: { id, ok, data?, error? }
+            if (obj.TryGetValue("ok", StringComparison.OrdinalIgnoreCase, out JToken okToken)
+                && okToken != null
+                && okToken.Type == JTokenType.Boolean)
+            {
+                bool ok = okToken.Value<bool>();
+                if (!ok)
+                {
+                    string errorText = obj.TryGetValue("error", StringComparison.OrdinalIgnoreCase, out JToken errorToken)
+                        ? errorToken?.ToString(Formatting.None)
+                        : "unknown bridge error";
+                    Debug.LogWarning($"Bridge request returned ok=false: {errorText}");
+                    return null;
+                }
+
+                if (obj.TryGetValue("data", StringComparison.OrdinalIgnoreCase, out JToken bridgeData)
+                    && bridgeData != null
+                    && bridgeData.Type != JTokenType.Null)
+                {
+                    return bridgeData;
+                }
+            }
+
             foreach (string key in new[] { "data", "result", "payload" })
             {
                 if (obj.TryGetValue(key, StringComparison.OrdinalIgnoreCase, out JToken nested) && nested != null && nested.Type != JTokenType.Null)

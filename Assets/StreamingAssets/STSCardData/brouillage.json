@@ -17,6 +17,8 @@
     "Created",
     "FollowUp",
     "Exhaust",
-    "Status"
+    "Status",
+    "Automatic",
+    "Unplayable"
   ]
 }

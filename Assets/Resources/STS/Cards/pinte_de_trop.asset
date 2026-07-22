@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: pinte_de_trop
   cardName: Pinte de trop
-  collectionCardId: Paix Dieu
+  collectionCardId: Paix Dieu (campagne)
   icon: {fileID: 0}
   cost: 1
   xCost: 0
@@ -39,7 +39,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   - type: 3
-    value: 5
+    value: 3
     targetSelf: 1
     targetOthers: 0
     statusType: 0

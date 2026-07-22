@@ -125,8 +125,6 @@ public class CardRewardEntryView : RewardEntryView
                 RectTransform srcViewRect = sourceController.view != null && sourceController.view.rootRect != null
                     ? sourceController.view.rootRect
                     : sourceController.view.GetComponent<RectTransform>();
-                Debug.Log($"[SelectCloneSetup] source={sourceController.name} holderSize={srcRect.rect.size} holderScale={srcRect.localScale} viewSize={(srcViewRect!=null?srcViewRect.rect.size:Vector2.zero)} animatedRootSize={animatedRoot.sizeDelta} animatedRootScale={animatedRoot.localScale}");
-
                 GameObject animatedCardViewObject = Instantiate(sourceController.view.gameObject, animatedRoot);
                 animatedCardViewObject.transform.SetAsLastSibling();
                 RectTransform animatedCardViewRect = animatedCardViewObject.GetComponent<RectTransform>();
@@ -165,8 +163,6 @@ public class CardRewardEntryView : RewardEntryView
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, startScreenPosition, uiCamera, out Vector2 startLocalPos);
                 // Place the animated root at the start position immediately so it doesn't jump when the selection animation begins.
                 animatedRoot.anchoredPosition = startLocalPos;
-                Debug.Log($"[SelectCloneStartPos] startScreen={startScreenPosition} startLocal={startLocalPos} animatedRootSize={animatedRoot.sizeDelta} animatedRootScale={animatedRoot.localScale}");
-
                 sourceController.SetVisualVisible(false);
 
                 yield return StartCoroutine(sourceController.PlayRewardSelectionAnimation(holdDuration, exitDuration, startScreenPosition, endScreenPosition, animatedRoot));
@@ -234,8 +230,6 @@ public class CardRewardEntryView : RewardEntryView
                 ? controller.view.rootRect
                 : controller.view != null ? controller.view.GetComponent<RectTransform>() : null;
             Vector2 sourceViewSize = sourceViewRect != null ? sourceViewRect.rect.size : Vector2.zero;
-            Debug.Log($"[RewardSpawnLayout] controller={controller.name} holderSize={cardRect.rect.size} holderScale={cardRect.localScale} viewSize={sourceViewSize}");
-
             // Compute the controller's center in canvas-local coordinates so the clone lands exactly on it.
             GetRectCenterAndSizeInCanvas(cardRect, canvas, out Vector2 targetLocalPosition, out Vector2 _);
             spawnCards.Add((controller, targetLocalPosition, Random.Range(0f, 0.12f)));
@@ -287,8 +281,6 @@ public class CardRewardEntryView : RewardEntryView
         }
         // Log computed animated root vs source sizes/scales at animation start
         RectTransform sourceRect = controller.transform as RectTransform;
-        Debug.Log($"[SpawnCloneStart] controller={controller.name} sourceHolderSize={sourceRect.rect.size} sourceHolderScale={sourceRect.localScale} sourceViewSize={(sourceViewRect2!=null?sourceViewRect2.rect.size:Vector2.zero)} animatedRootSize={animatedRoot.sizeDelta} animatedRootScale={animatedRoot.localScale}");
-
         GameObject animatedCardViewObject = Instantiate(controller.view.gameObject, animatedRoot);
         animatedCardViewObject.transform.SetAsLastSibling();
             RectTransform animatedCardViewRect = animatedCardViewObject.GetComponent<RectTransform>();
@@ -313,13 +305,6 @@ public class CardRewardEntryView : RewardEntryView
         {
             animatedCardView.SetCard(controller.instance);
         }
-
-        // Log instantiated card view sizing
-        if (animatedCardViewRect != null)
-        {
-            Debug.Log($"[SpawnCloneView] controller={controller.name} viewSize={animatedCardViewRect.sizeDelta} viewScale={animatedCardViewRect.localScale}");
-        }
-
         CanvasGroup animatedGroup = animatedCardObject.GetComponent<CanvasGroup>();
         if (animatedGroup != null)
         {

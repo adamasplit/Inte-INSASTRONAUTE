@@ -12,18 +12,25 @@ public class GameManager : MonoBehaviour
     async void Start()
     {
         STSSceneLoader.Instance?.BeginLoading();
+        STSSceneLoader.Instance?.SetBackgroundProgress(0.05f);
 
         try
         {
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.12f);
             await STSCardDatabase.LoadAsync();
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.40f);
             await EnemyDataDatabase.LoadAsync();
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.62f);
             await EnemyPoolDatabase.LoadAsync();
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.78f);
             TestDatabase.Init();
             SetupGame();
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.90f);
             ui.Init(combat);
             turnSystem.Begin();
             ui.RefreshUI();
             combat.Init();
+            STSSceneLoader.Instance?.SetBackgroundProgress(1f);
         }
         finally
         {

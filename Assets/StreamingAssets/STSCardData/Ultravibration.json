@@ -3,7 +3,7 @@
   "cardName": "Ultravibration",
   "collectionCardId": null,
   "iconId": "ultravibration",
-  "cost": 0,
+  "cost": 1,
   "xCost": false,
   "type": "Attaque",
   "rarity": "Uncommon",
@@ -11,7 +11,7 @@
   "effects": [
     {
       "type": "Damage",
-      "value": 15,
+      "value": 12,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",

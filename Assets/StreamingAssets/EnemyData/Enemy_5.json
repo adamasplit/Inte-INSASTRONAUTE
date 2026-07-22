@@ -2,7 +2,7 @@
   "id": "Enemy_5",
   "enemyName": "Enemy_5",
   "displayName": "???",
-  "maxHP": 28,
+  "maxHP": 40,
   "randomStart": false,
   "patternCardIds": [],
   "movePattern": [

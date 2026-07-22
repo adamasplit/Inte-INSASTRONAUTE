@@ -7,11 +7,11 @@
   "xCost": false,
   "type": "Attaque",
   "rarity": "Legendary",
-  "targetingMode": "AllEnemies",
+  "targetingMode": "Enemy",
   "effects": [
     {
       "type": "Damage",
-      "value": 50,
+      "value": 45,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",

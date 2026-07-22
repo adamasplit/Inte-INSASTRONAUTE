@@ -58,5 +58,8 @@ public enum StatusType
     Fatigue,
     DamageReduction,
     AnyCardFollowUp,
-    Regulator
+    Regulator,
+    Blind,
+    Link,
+    Hide
 }

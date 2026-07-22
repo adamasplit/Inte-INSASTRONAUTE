@@ -23,7 +23,7 @@ MonoBehaviour:
   effects:
   - type: 3
     value: 3
-    targetSelf: 0
+    targetSelf: 1
     targetOthers: 0
     statusType: 39
     duration: 0

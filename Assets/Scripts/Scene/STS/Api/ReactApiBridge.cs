@@ -236,6 +236,11 @@ public class ReactApiBridge : MonoBehaviour
         return RequestAsync("sts.catalog.enemies", null, timeoutMs);
     }
 
+    public static Task<string> RequestStsCatalogEnemyPoolAsync(int timeoutMs = 5000)
+    {
+        return RequestAsync("sts.catalog.enemy-pool", null, timeoutMs);
+    }
+
     public void RequestDeck()
     {
         _ = RequestAsync("cards.deck", new { collectionType = "VIRTUAL" });
@@ -307,5 +312,10 @@ public class ReactApiBridge : MonoBehaviour
     public void RequestStsCatalogEnemies()
     {
         _ = RequestStsCatalogEnemiesAsync();
+    }
+
+    public void RequestStsCatalogEnemyPool()
+    {
+        _ = RequestStsCatalogEnemyPoolAsync();
     }
 }

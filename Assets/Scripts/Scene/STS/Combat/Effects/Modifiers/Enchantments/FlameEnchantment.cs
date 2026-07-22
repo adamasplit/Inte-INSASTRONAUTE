@@ -16,7 +16,7 @@ public class FlameEnchantment : EnchantmentData
             {
                 type = EffectType.Status,
                 statusType = StatusType.Burn,
-                duration=level*2,
+                duration=level,
                 value=5
             }
         };

@@ -649,14 +649,12 @@ public class TurnSystem : MonoBehaviour
                 return Clone(timeline);
             }
         }
-        Debug.Log($"CutInTurn: source={source.name}, targetSelf={targetSelf}, targets={string.Join(", ", targets.Select(t => t.name))}");
         var sim = Clone(timeline);
         if (targetSelf)
         {
             float currentTime = sim[0].time;
             float nextTime = currentTime+GetTimeUntilNextTurn(source,false);
             float earliestTargetTime = sim.Where(t => targets.Contains(t.character)&& t.character != source).Min(t => t.time);
-            Debug.Log($"CutInTurn: source={source.name}, targetSelf={targetSelf}, targets={string.Join(", ", targets.Select(t => t.name))}, currentTime={currentTime}, nextTime={nextTime}, earliestTargetTime={earliestTargetTime}, advancing by {nextTime - earliestTargetTime + 0.1f}");
             sim=AdvanceAllTurns(sim, source, nextTime - earliestTargetTime - 0.1f);
         }
         else
@@ -689,7 +687,6 @@ public class TurnSystem : MonoBehaviour
                 return;
             }
         }
-        Debug.Log($"Applying CutInTurn: source={source.name}, targetSelf={targetSelf}, targets={string.Join(", ", targets.Select(t => t.name))}");
         if (targetSelf)
         {
             float currentTime = timeline[0].time;
@@ -699,7 +696,6 @@ public class TurnSystem : MonoBehaviour
                 nextTime=timeline.Where(t => t.character == source).Min(t => t.time);
             }
             float earliestTargetTime = timeline.Where(t => targets.Contains(t.character)&& t.character != source).Min(t => t.time);
-            Debug.Log($"Applying CutInTurn: source={source.name}, targetSelf={targetSelf}, targets={string.Join(", ", targets.Select(t => t.name))}, currentTime={currentTime}, nextTime={nextTime}, earliestTargetTime={earliestTargetTime}, advancing by {nextTime - earliestTargetTime + 0.1f}");
             ApplyAdvanceAllTurns(source, nextTime - earliestTargetTime - 0.1f);
         }
         else

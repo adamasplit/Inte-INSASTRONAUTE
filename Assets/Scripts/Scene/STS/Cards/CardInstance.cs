@@ -113,6 +113,10 @@ public class CardInstance
                 }
             }
         }
+        if (HasTag(CardTag.Unplayable))
+            text += "<color=orange>[Injouable]</color>\n";
+        if (HasTag(CardTag.Automatic))
+            text += "<color=red>[Automatique]</color>\n";
         if (HasTag(CardTag.Exhaust))
             text += "<color=orange>[Épuisement]</color>\n";
         if (HasTag(CardTag.Retain))

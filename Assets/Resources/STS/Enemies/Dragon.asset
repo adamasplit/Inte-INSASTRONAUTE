@@ -124,7 +124,8 @@ MonoBehaviour:
       animationType: 0
     nextMoveIndices: 0100000000000000
     weight: 0
-  rewardCards: []
+  rewardCards:
+  - {fileID: 11400000, guid: 1fe9170181f95234ea6b5e38c421ec5f, type: 2}
   startingStatus: 32
   startingStatusDuration: 4
   startingStatusValue: 0

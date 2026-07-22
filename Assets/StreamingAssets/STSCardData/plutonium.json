@@ -10,8 +10,8 @@
   "targetingMode": "Enemy",
   "effects": [
     {
-      "type": "DeleteNextTurn",
-      "value": 0,
+      "type": "DelayTurn",
+      "value": 33,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",

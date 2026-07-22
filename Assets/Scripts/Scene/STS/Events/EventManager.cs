@@ -165,10 +165,59 @@ public class EventManager : MonoBehaviour
         panel.Show(ev.title, options);
     }
 
-    public void ReturnToMap()
+    public async void ReturnToMap()
     {
+        if (!await TryCompleteCurrentNodeAsync("event"))
+        {
+            return;
+        }
+
         STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Map", "event_return");
         STSSceneLoader.Instance.LoadScene("STS_Map");
+    }
+
+    private async Task<bool> TryCompleteCurrentNodeAsync(string result)
+    {
+        if (RunManager.Instance == null || string.IsNullOrWhiteSpace(RunManager.Instance.runId) || RunManager.Instance.currentNode == null)
+        {
+            return true;
+        }
+
+        var request = new STSApiNodeCompleteRequest
+        {
+            encounterInstanceId = null,
+            result = result,
+            turnCount = 0,
+            playerHpAfter = RunManager.Instance.player != null ? RunManager.Instance.player.currentHP : 0,
+            damageTaken = 0,
+            enemiesDefeated = new List<string>(),
+            deckHash = STSApiClient.ComputeDeckHash(RunManager.Instance.deck)
+        };
+
+        try
+        {
+            int nodeId = RunManager.Instance.currentNode.id;
+            Debug.Log($"[STS-RUN] CompleteNode request (event) runId={RunManager.Instance.runId} nodeId={nodeId}");
+            STSApiNodeCompleteResponse response = await STSApiClient.CompleteNodeAsync(RunManager.Instance.runId, nodeId, request);
+            if (response != null && response.accepted)
+            {
+                Debug.Log($"[STS-RUN] CompleteNode response (event) accepted=true runId={response.runId} currentNodeId={response.currentNodeId}");
+                RunManager.Instance.ApplyNodeCompleteResponse(response);
+                if (RunManager.Instance.currentNode != null)
+                {
+                    RunManager.Instance.currentNode.completed = true;
+                }
+                return true;
+            }
+
+            Debug.LogWarning("[STS-RUN] CompleteNode response (event) was null or rejected. Staying in event scene to avoid desync.");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[STS-RUN] CompleteNode request (event) failed: {ex.Message}");
+            return false;
+        }
     }
 
     public void ShowEventContinue(System.Action onComplete)

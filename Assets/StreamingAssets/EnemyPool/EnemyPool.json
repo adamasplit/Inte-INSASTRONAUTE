@@ -1,4 +1,12 @@
 {
+  "maxAct": 3,
+  "baseHpScaling": 1.2,
+  "actHpScaling": [
+    0.5,
+    1.2,
+    2.0,
+    3.0
+  ],
   "enemies": [
     {
       "displayName": "3 ennemis différents",
@@ -103,7 +111,7 @@
       "minFloor": 0,
       "maxFloor": 50,
       "minAct": 1,
-      "maxAct": -1,
+      "maxAct": 1,
       "weight": 1.0,
       "elite": true,
       "boss": false
@@ -116,7 +124,7 @@
       "minFloor": 0,
       "maxFloor": -1,
       "minAct": 1,
-      "maxAct": -1,
+      "maxAct": 1,
       "weight": 1.0,
       "elite": true,
       "boss": false
@@ -129,7 +137,7 @@
       "minFloor": 0,
       "maxFloor": -1,
       "minAct": 1,
-      "maxAct": -1,
+      "maxAct": 1,
       "weight": 1.0,
       "elite": true,
       "boss": false
@@ -156,7 +164,7 @@
       "minFloor": 0,
       "maxFloor": -1,
       "minAct": 1,
-      "maxAct": -1,
+      "maxAct": 1,
       "weight": 1.0,
       "elite": false,
       "boss": false
@@ -169,7 +177,7 @@
       "minFloor": 0,
       "maxFloor": -1,
       "minAct": 1,
-      "maxAct": -1,
+      "maxAct": 2,
       "weight": 1.0,
       "elite": true,
       "boss": false
@@ -222,7 +230,7 @@
       "minFloor": 0,
       "maxFloor": 6,
       "minAct": 1,
-      "maxAct": -1,
+      "maxAct": 1,
       "weight": 0.9,
       "elite": false,
       "boss": false
@@ -275,7 +283,7 @@
       "minFloor": 0,
       "maxFloor": 6,
       "minAct": 0,
-      "maxAct": -1,
+      "maxAct": 0,
       "weight": 1.0,
       "elite": false,
       "boss": false
@@ -346,7 +354,7 @@
       "maxFloor": -1,
       "minAct": 2,
       "maxAct": -1,
-      "weight": 2.0,
+      "weight": 1.0,
       "elite": true,
       "boss": false
     },
@@ -359,7 +367,7 @@
       "maxFloor": -1,
       "minAct": 2,
       "maxAct": -1,
-      "weight": 0.2,
+      "weight": 0.4,
       "elite": false,
       "boss": false
     },
@@ -372,7 +380,7 @@
       "minFloor": 7,
       "maxFloor": -1,
       "minAct": 0,
-      "maxAct": -1,
+      "maxAct": 1,
       "weight": 1.1,
       "elite": false,
       "boss": false
@@ -452,8 +460,8 @@
       "enemyIds": [
         "Glass_Harrier"
       ],
-      "minFloor": 6,
-      "maxFloor": -1,
+      "minFloor": 0,
+      "maxFloor": 6,
       "minAct": 2,
       "maxAct": 2,
       "weight": 0.4,
@@ -465,8 +473,8 @@
       "enemyIds": [
         "Gravemoth"
       ],
-      "minFloor": 6,
-      "maxFloor": -1,
+      "minFloor": 0,
+      "maxFloor": 6,
       "minAct": 2,
       "maxAct": 2,
       "weight": 0.4,
@@ -508,7 +516,7 @@
       "maxFloor": 8,
       "minAct": 2,
       "maxAct": -1,
-      "weight": 0.0,
+      "weight": 0.4,
       "elite": true,
       "boss": false
     },
@@ -521,7 +529,7 @@
       "maxFloor": 8,
       "minAct": 2,
       "maxAct": 2,
-      "weight": 0.35,
+      "weight": 0.65,
       "elite": true,
       "boss": false
     },
@@ -685,7 +693,7 @@
     {
       "displayName": "Dragon2",
       "enemyIds": [
-        "Enemy_4"
+        "Dragon"
       ],
       "minFloor": 0,
       "maxFloor": -1,
@@ -693,6 +701,142 @@
       "maxAct": 0,
       "weight": 1.0,
       "elite": false,
+      "boss": false
+    },
+    {
+      "displayName": "Light",
+      "enemyIds": [
+        "Light_Elemental"
+      ],
+      "minFloor": 0,
+      "maxFloor": 4,
+      "minAct": -1,
+      "maxAct": 0,
+      "weight": 0.7,
+      "elite": false,
+      "boss": false
+    },
+    {
+      "displayName": "Emissary",
+      "enemyIds": [
+        "Emissary"
+      ],
+      "minFloor": 8,
+      "maxFloor": -1,
+      "minAct": -1,
+      "maxAct": 0,
+      "weight": 1.2,
+      "elite": false,
+      "boss": false
+    },
+    {
+      "displayName": "Aster",
+      "enemyIds": [
+        "Asteroid_Adept"
+      ],
+      "minFloor": 0,
+      "maxFloor": 5,
+      "minAct": -1,
+      "maxAct": 0,
+      "weight": 1.0,
+      "elite": false,
+      "boss": false
+    },
+    {
+      "displayName": "Defect",
+      "enemyIds": [
+        "Defect"
+      ],
+      "minFloor": 6,
+      "maxFloor": -1,
+      "minAct": -1,
+      "maxAct": 0,
+      "weight": 0.8,
+      "elite": true,
+      "boss": false
+    },
+    {
+      "displayName": "Aster+Light",
+      "enemyIds": [
+        "Asteroid_Adept",
+        "Light_Elemental"
+      ],
+      "minFloor": 7,
+      "maxFloor": -1,
+      "minAct": -1,
+      "maxAct": 0,
+      "weight": 0.8,
+      "elite": false,
+      "boss": false
+    },
+    {
+      "displayName": "The Devourer of Gods",
+      "enemyIds": [
+        "Dimensional_Tear",
+        "Devourer",
+        "Dimensional_Tear"
+      ],
+      "minFloor": 0,
+      "maxFloor": -1,
+      "minAct": 2,
+      "maxAct": -1,
+      "weight": 1.0,
+      "elite": true,
+      "boss": false
+    },
+    {
+      "displayName": "Scourge 2",
+      "enemyIds": [
+        "Scourge",
+        "Scourge"
+      ],
+      "minFloor": 5,
+      "maxFloor": 8,
+      "minAct": 0,
+      "maxAct": 0,
+      "weight": 0.8,
+      "elite": false,
+      "boss": false
+    },
+    {
+      "displayName": "Scourge 1",
+      "enemyIds": [
+        "Scourge"
+      ],
+      "minFloor": 0,
+      "maxFloor": 4,
+      "minAct": 0,
+      "maxAct": 0,
+      "weight": 0.3,
+      "elite": false,
+      "boss": false
+    },
+    {
+      "displayName": "Scourge 3",
+      "enemyIds": [
+        "Scourge",
+        "Scourge",
+        "Scourge"
+      ],
+      "minFloor": -1,
+      "maxFloor": -1,
+      "minAct": 0,
+      "maxAct": 0,
+      "weight": 0.7,
+      "elite": true,
+      "boss": false
+    },
+    {
+      "displayName": "Astrum Aureus",
+      "enemyIds": [
+        "Astrum"
+      ],
+      "minFloor": -1,
+      "maxFloor": -1,
+      "minAct": 2,
+      "maxAct": 2,
+      "weight": 1.0,
+      "elite": true,
       "boss": false
     }
   ]

@@ -26,7 +26,7 @@ MonoBehaviour:
     targetSelf: 0
     targetOthers: 0
     statusType: 20
-    duration: 6
+    duration: 5
     description: 
     cardID: 
     index: 0

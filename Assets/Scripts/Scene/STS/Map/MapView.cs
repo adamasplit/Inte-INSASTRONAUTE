@@ -141,8 +141,6 @@ public class MapView : MonoBehaviour
                 source = "mapPanel";
             }
         }
-
-        Debug.Log($"[MapView] GetAvailableMapWidth: {result} (source: {source}, viewport={scrollRect?.viewport?.rect.width ?? -1}, parent={mapPanel?.parent?.GetComponent<RectTransform>()?.rect.width ?? -1}, map={mapPanel?.GetComponent<RectTransform>()?.rect.width ?? -1})");
         return result;
     }
 

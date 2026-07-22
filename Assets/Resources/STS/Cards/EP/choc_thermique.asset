@@ -39,7 +39,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   - type: 0
-    value: 13
+    value: 9
     targetSelf: 0
     targetOthers: 0
     statusType: 0

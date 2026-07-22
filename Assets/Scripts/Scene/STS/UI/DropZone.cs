@@ -2,9 +2,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    static readonly List<DropZone> ActiveDropZones = new();
+
     public CombatManager combat;
     public Character target;
 
@@ -32,6 +35,19 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     LayoutElement deathSizeLock;
     bool deathSizeLockCreated;
     bool deathSizeLockOriginalIgnoreLayout;
+
+    void OnEnable()
+    {
+        if (!ActiveDropZones.Contains(this))
+            ActiveDropZones.Add(this);
+    }
+
+    void OnDisable()
+    {
+        ActiveDropZones.Remove(this);
+        if (hoveredCharacter == target)
+            hoveredCharacter = null;
+    }
 
     public void Init(CombatManager cm, Character t, bool acceptsEnemy)
     {
@@ -190,8 +206,123 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     public void OnPointerExit(PointerEventData eventData)
     {
         SetHighlight(false);
-        hoveredCharacter = null;
+        if (hoveredCharacter == target)
+            hoveredCharacter = null;
         isHovered = false;
+    }
+
+    public static Character GetAutoTarget(Vector2 pointerScreenPosition, TargetingMode mode, Camera eventCamera)
+    {
+        float normalizedHeight = Screen.height <= 0 ? 0.5f : pointerScreenPosition.y / Screen.height;
+
+        if (normalizedHeight >= 0.5f && CanTargetEnemies(mode))
+        {
+            DropZone nearestEnemy = GetNearestDropZone(pointerScreenPosition, zone =>
+                zone != null &&
+                zone.isActiveAndEnabled &&
+                zone.target != null &&
+                !zone.target.isPlayer,
+                eventCamera);
+
+            return nearestEnemy != null ? nearestEnemy.target : null;
+        }
+
+        if (normalizedHeight <= 0.3f && CanTargetPlayer(mode))
+        {
+            DropZone playerZone = GetNearestDropZone(pointerScreenPosition, zone =>
+                zone != null &&
+                zone.isActiveAndEnabled &&
+                zone.target != null &&
+                zone.target.isPlayer,
+                eventCamera);
+
+            return playerZone != null ? playerZone.target : null;
+        }
+
+        return null;
+    }
+
+    public static bool TryGetTargetScreenCenter(Character character, Camera eventCamera, out Vector2 screenCenter)
+    {
+        screenCenter = default;
+        if (character == null)
+            return false;
+
+        DropZone zone = GetDropZoneForCharacter(character);
+        if (zone == null)
+            return false;
+
+        RectTransform targetRect = zone.imageRect != null ? zone.imageRect : zone.transform as RectTransform;
+        if (targetRect == null)
+            return false;
+
+        screenCenter = RectTransformUtility.WorldToScreenPoint(eventCamera, targetRect.TransformPoint(targetRect.rect.center));
+        return true;
+    }
+
+    public static Character GetCurrentHoveredCharacter()
+    {
+        for (int i = 0; i < ActiveDropZones.Count; i++)
+        {
+            DropZone zone = ActiveDropZones[i];
+            if (zone != null && zone.isActiveAndEnabled && zone.isHovered && zone.target != null)
+                return zone.target;
+        }
+
+        return null;
+    }
+
+    static DropZone GetDropZoneForCharacter(Character character)
+    {
+        for (int i = 0; i < ActiveDropZones.Count; i++)
+        {
+            DropZone zone = ActiveDropZones[i];
+            if (zone != null && zone.target == character)
+                return zone;
+        }
+
+        return null;
+    }
+
+    static DropZone GetNearestDropZone(Vector2 pointerScreenPosition, System.Predicate<DropZone> predicate, Camera eventCamera)
+    {
+        DropZone nearest = null;
+        float nearestDistance = float.MaxValue;
+
+        for (int i = 0; i < ActiveDropZones.Count; i++)
+        {
+            DropZone zone = ActiveDropZones[i];
+            if (zone == null || !predicate(zone))
+                continue;
+
+            RectTransform targetRect = zone.imageRect != null ? zone.imageRect : zone.transform as RectTransform;
+            if (targetRect == null)
+                continue;
+
+            Vector2 center = RectTransformUtility.WorldToScreenPoint(eventCamera, targetRect.TransformPoint(targetRect.rect.center));
+            float sqrDistance = (center - pointerScreenPosition).sqrMagnitude;
+            if (sqrDistance < nearestDistance)
+            {
+                nearestDistance = sqrDistance;
+                nearest = zone;
+            }
+        }
+
+        return nearest;
+    }
+
+    static bool CanTargetEnemies(TargetingMode mode)
+    {
+        return mode == TargetingMode.Enemy ||
+               mode == TargetingMode.AllEnemies ||
+               mode == TargetingMode.AllCharacters ||
+               mode == TargetingMode.RandomEnemy;
+    }
+
+    static bool CanTargetPlayer(TargetingMode mode)
+    {
+        return mode == TargetingMode.Player ||
+               mode == TargetingMode.AllCharacters;
     }
 
     public void SetHighlight(bool highlight)
@@ -225,6 +356,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             return;
 
         Vector2 discardPos = combat.animator.animationLayer.InverseTransformPoint(combat.ui.discardAnchor.position);
+        drag?.NotifyCardPlayedFromDrop();
         combat.PlayCard(combat.player, cardView.cardInstance, targets);
     }
 
@@ -306,7 +438,6 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         deathAnimationPlayed = true;
 
         bool useFallbackAnimation = Application.platform == RuntimePlatform.WebGLPlayer;
-        Debug.Log($"[DropZone] PlayDeathAnimation: platform={Application.platform}, useFallback={useFallbackAnimation}");
 
         Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate(image.rectTransform);
@@ -320,12 +451,10 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         if (!useFallbackAnimation)
         {
             textureCreated = EnsureDeathDisintegrationTexture();
-            Debug.Log($"[DropZone] EnsureDeathDisintegrationTexture result: {textureCreated}");
         }
         
         if (useFallbackAnimation || !textureCreated)
         {
-            Debug.Log($"[DropZone] Using fallback death animation (fallback={useFallbackAnimation}, textureFailed={!textureCreated})");
             UnlockDeathAnimationSize();
             yield return PlayFallbackDeathAnimation(duration);
             yield break;

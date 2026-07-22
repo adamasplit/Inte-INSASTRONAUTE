@@ -51,7 +51,6 @@ public class MapManager : MonoBehaviour
             RunManager.Instance.currentFloor=1;
         }
         allNodes = map;
-        Debug.Log($"Generated map with {allNodes.Count} nodes");
         currentNode = generator.startNode;
 
         view.GenerateView(allNodes);
@@ -115,17 +114,10 @@ public class MapManager : MonoBehaviour
                 break;
 
             case NodeType.Event:
-                //50% chance to trigger an event, 50% chance to trigger a combat encounter instead
-                if (Random.value < 0.5f)
-                {
-                    sceneName = "STS_Combat";
-                    break;
-                }
-                else
-                {
-                    sceneName = "STS_Event";
-                    break;
-                }
+                // In API-backed runs, authoritative routing comes from enter-node response.
+                // Keep local fallback routing as event when no backend run is active.
+                sceneName = "STS_Event";
+                break;
             case NodeType.Elite:
                 RunManager.Instance.eliteEncounter = true;
                 sceneName = "STS_Combat";
@@ -149,19 +141,63 @@ public class MapManager : MonoBehaviour
 
         if (RunManager.Instance != null && !string.IsNullOrWhiteSpace(RunManager.Instance.runId))
         {
+            if (RunManager.Instance.unrestrictedMode)
+            {
+                STSSceneLoader.Instance.LoadScene(sceneName);
+                yield break;
+            }
+
+            Debug.Log($"[STS-RUN] EnterNode request runId={RunManager.Instance.runId} nodeId={node.id} scene={sceneName} floor={RunManager.Instance.currentFloor}");
             Task<STSApiNodeEnterResponse> enterTask = STSApiClient.EnterNodeAsync(RunManager.Instance.runId, node.id);
             while (!enterTask.IsCompleted)
             {
                 yield return null;
             }
 
+            STSApiNodeEnterResponse enterResponse = null;
             if (enterTask.IsCompleted && !enterTask.IsFaulted && !enterTask.IsCanceled)
             {
-                RunManager.Instance.ApplyNodeEnterResponse(enterTask.Result);
+                enterResponse = enterTask.Result;
+                Debug.Log($"[STS-RUN] EnterNode response runId={RunManager.Instance.runId} nodeId={node.id} accepted={enterResponse != null && enterResponse.accepted} encounterId={enterResponse?.activeEncounter?.encounterInstanceId}");
+                RunManager.Instance.ApplyNodeEnterResponse(enterResponse);
+
+                if (enterResponse != null && enterResponse.accepted)
+                {
+                    bool hasEncounterPayload = enterResponse.activeEncounter != null
+                        && enterResponse.activeEncounter.enemyIds != null
+                        && enterResponse.activeEncounter.enemyIds.Count > 0;
+                    if (hasEncounterPayload)
+                    {
+                        sceneName = "STS_Combat";
+                    }
+                    else if (!string.IsNullOrWhiteSpace(enterResponse.nodeType)
+                             && enterResponse.nodeType.Equals("Event", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        sceneName = "STS_Event";
+                    }
+                    else if (!string.IsNullOrWhiteSpace(enterResponse.nodeType)
+                             && enterResponse.nodeType.Equals("Rest", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        sceneName = "STS_Rest";
+                    }
+                }
             }
             else if (enterTask.IsFaulted)
             {
                 Debug.LogWarning($"Node enter request failed for node {node.id}: {enterTask.Exception?.GetBaseException().Message}");
+            }
+
+            bool accepted = enterResponse != null && enterResponse.accepted;
+            bool hasEncounter = enterResponse != null && enterResponse.activeEncounter != null && enterResponse.activeEncounter.enemyIds != null && enterResponse.activeEncounter.enemyIds.Count > 0;
+
+            bool mustBlock = !accepted || (sceneName == "STS_Combat" && !hasEncounter);
+            if (mustBlock)
+            {
+                string failureReason = !accepted
+                    ? $"node enter rejected for node {node.id}"
+                    : $"node enter missing encounter payload for node {node.id}";
+                Debug.LogWarning($"{failureReason}. scene={sceneName} localNodeType={node.type} serverNodeType={enterResponse?.nodeType} runId={RunManager.Instance.runId}. Switching to unrestricted mode and continuing locally.");
+                RunManager.Instance.EnableUnrestrictedMode(failureReason);
             }
         }
 

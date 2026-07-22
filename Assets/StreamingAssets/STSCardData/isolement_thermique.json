@@ -15,7 +15,7 @@
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "DebuffHalt",
-      "duration": 3,
+      "duration": 2,
       "description": "",
       "cardID": "",
       "conditional": false,
@@ -33,5 +33,7 @@
   "favoredCharacter": "EP",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": []
+  "tags": [
+    "Exhaust"
+  ]
 }

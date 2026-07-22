@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
+  m_Name: Scourge
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  id: Scourge
+  enemyName: Scourge
+  displayName: "Ver d'ast\xE9ro\xEFde"
+  maxHP: 14
+  pattern: []
+  randomStart: 1
+  movePattern:
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 5
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 02000000
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 7
+      value: 1
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 0
+      duration: 3
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 02000000
+    weight: 0
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 3
+      value: 1
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 0
+      duration: 3
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 0000000001000000
+    weight: 0
+  rewardCards:
+  - {fileID: 11400000, guid: 39cf1f36c48e0e04eb742b233c7a2904, type: 2}
+  startingStatus: 61
+  startingStatusDuration: -1
+  startingStatusValue: 4
+  startingStatusInfo: 
+  startingStatusIndex: 0

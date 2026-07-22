@@ -2,7 +2,7 @@
   "id": "Coeurl",
   "enemyName": "Coeurl",
   "displayName": "Chasseur robotique",
-  "maxHP": 33,
+  "maxHP": 25,
   "randomStart": false,
   "patternCardIds": [],
   "movePattern": [

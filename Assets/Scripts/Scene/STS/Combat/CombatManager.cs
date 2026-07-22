@@ -55,9 +55,11 @@ public class CombatManager : MonoBehaviour
     }
 #endif
 
-    // Tracks the number of active PlayCard coroutines
+    // Tracks running and queued card-play coroutines so turn flow can wait reliably.
     private int activeCardPlays = 0;
-    public bool CardPlaysRunning => activeCardPlays > 0;
+    private int queuedCardPlays = 0;
+    private int activeEffectResolutions = 0;
+    public bool CardPlaysRunning => activeCardPlays > 0 || queuedCardPlays > 0;
     private bool resolvingCombatCleanup = false;
 
     public Player player => allies.FirstOrDefault();
@@ -79,8 +81,10 @@ public class CombatManager : MonoBehaviour
     private bool tutorialMode;
     public bool forceTutorial = false;
     public bool allowTurn = false; 
+    private bool turnSystemInitialized;
     public void Init()
     {
+        EnsureAllies();
         EnsureEncounterEnemies();
         ui.Init(this);          // inject
         ui.InitCharacters();    // spawn UI
@@ -117,14 +121,41 @@ public class CombatManager : MonoBehaviour
             STSRunAuditSystem.RecordNodeEntered(RunManager.Instance, RunManager.Instance.currentNode, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, "combat_init");
         }
 
+        // Build the timeline only after allies/enemies are fully hydrated from API state.
+        if (!turnSystemInitialized && turnSystem != null)
+        {
+            turnSystem.Begin();
+            turnSystemInitialized = true;
+        }
+
         STSSceneLoader.Instance?.SceneReady();
+    }
+
+    private void EnsureAllies()
+    {
+        allies ??= new List<Player>();
+        allies.RemoveAll(a => a == null);
+
+        if (allies.Count > 0)
+            return;
+
+        if (RunManager.Instance != null && RunManager.Instance.player != null)
+        {
+            allies.Add(RunManager.Instance.player);
+            return;
+        }
+
+        Debug.LogWarning("Combat started without a player ally. Creating a fallback player to keep turn flow valid.");
+        Player fallbackPlayer = new Player("Player", 100);
+        allies.Add(fallbackPlayer);
+        if (RunManager.Instance != null)
+        {
+            RunManager.Instance.player = fallbackPlayer;
+        }
     }
 
     private void EnsureEncounterEnemies()
     {
-        if (enemies != null && enemies.Count > 0)
-            return;
-
         if (RunManager.Instance != null && RunManager.Instance.activeEncounter != null && RunManager.Instance.activeEncounter.enemyIds != null && RunManager.Instance.activeEncounter.enemyIds.Count > 0)
         {
             enemies = new List<Character>();
@@ -133,7 +164,15 @@ public class CombatManager : MonoBehaviour
                 if (string.IsNullOrWhiteSpace(enemyId))
                     continue;
 
-                enemies.Add(new Enemy(enemyId));
+                Enemy enemy = new Enemy(enemyId);
+                if (enemy != null && enemy.data != null && enemy.IsAlive)
+                {
+                    enemies.Add(enemy);
+                }
+                else
+                {
+                    Debug.LogWarning($"Encounter enemy '{enemyId}' could not be initialized from local data.");
+                }
             }
 
             if (enemies.Count > 0)
@@ -141,6 +180,9 @@ public class CombatManager : MonoBehaviour
                 return;
             }
         }
+
+        if (enemies != null && enemies.Count > 0)
+            return;
 
         Debug.LogWarning("Combat started with no enemies. Spawning a fallback Ironclad enemy so combat can continue.");
         enemies = new List<Character> { CreateFallbackIroncladEnemy() };
@@ -184,11 +226,17 @@ public class CombatManager : MonoBehaviour
 
     public void PlayCard(Character source, CardInstance card, List<Character> targets, bool ignoreEnergy = false, bool createView = false)
     {
+        queuedCardPlays++;
         StartCoroutine(PlayCardRoutine(source, card, targets, ignoreEnergy, createView));
     }
 
     IEnumerator PlayCardRoutine(Character source, CardInstance card, List<Character> targets, bool ignoreEnergy = false, bool createView = false)
     {
+        activeCardPlays++; // Mark this request as running immediately.
+        queuedCardPlays = Mathf.Max(0, queuedCardPlays - 1); // Request has started.
+
+        try
+        {
         
         EffectContext ctxSelf=new EffectContext
             {
@@ -262,12 +310,38 @@ public class CombatManager : MonoBehaviour
             }
         }
         StartCoroutine(ui.GetView(source).GetComponent<DropZone>().FlashWhite());
-        while (CardPlaysRunning) // Wait for other card plays to finish to avoid overlapping effects and ensure proper sequencing
+
+        bool exhausted = false;
+        Coroutine exitAnimation = null;
+
+        if (source != null && source.isPlayer)
+        {
+            if (card.data.HasTag(CardTag.Exhaust))
+            {
+                float exhaustChance = BattleCalculator.GetModifiedValue(100, StatType.ExhaustChance, ctxSelf) / 100f;
+                exhausted = UnityEngine.Random.value < exhaustChance;
+            }
+        }
+
+        while (activeEffectResolutions > 0)
         {
             yield return null;
         }
-        activeCardPlays++; // Increment active card plays counter
+
+        activeEffectResolutions++;
+
+        try
+        {
         currentCard = card; // Set current card for animation purposes
+        if (playedView != null && playedView.rootRect != null)
+        {
+            playedView.rootRect.SetAsLastSibling();
+        }
+        if (source != null && source.isPlayer && playedView != null)
+        {
+            // Effects should begin exactly when this card starts leaving the center.
+            exitAnimation = StartCoroutine(ui.AnimateCardToDiscard(playedView, exhausted));
+        }
 
         // Actually apply effects
         for (int j=0;j<replayCount;j++)
@@ -285,7 +359,6 @@ public class CombatManager : MonoBehaviour
                     ctxTarget.targets = new List<Character> { newTarget };
                     ctxTarget.target = newTarget;
                     targets = new List<Character> { newTarget };
-                    Debug.Log($"Randomly re-targeted card effects to {newTarget.name} (current HP: {newTarget.currentHP}) due to targeting mode.");
                 }
             }
 
@@ -388,10 +461,14 @@ public class CombatManager : MonoBehaviour
                 character.AfterAction(source, card);
             }
         }
+        }
+        finally
+        {
+            activeEffectResolutions = Mathf.Max(0, activeEffectResolutions - 1);
+        }
 
         if (source != null && source.isPlayer)
         {
-            bool exhausted = false;
             if (card.HasEnchantment("Infinity")||card.data.HasTag(CardTag.Infinite))
             {
                 deck.AddToHand(card);
@@ -408,11 +485,9 @@ public class CombatManager : MonoBehaviour
                 {
                     if (card.data.HasTag(CardTag.Exhaust))
                     {
-                        float exhaustChance = BattleCalculator.GetModifiedValue(100, StatType.ExhaustChance, ctxSelf) / 100f;
-                        if (UnityEngine.Random.value < exhaustChance)
+                        if (exhausted)
                         {
                             deck.Exhaust(card);
-                            exhausted = true;
                         }
                         else
                         {
@@ -426,18 +501,14 @@ public class CombatManager : MonoBehaviour
                 }
             }
 
-            if (playedView != null)
+            if (exitAnimation != null)
             {
-                yield return ui.AnimateCardToDiscard(
-                    playedView,
-                    exhausted
-                );
+                yield return exitAnimation;
             }
         }
 
         state.ResetActionFlags();
         yield return new WaitForSeconds(0.2f * card.data.animationSpeed); // Delay after effects for better readability
-        activeCardPlays--; // Decrement active card plays counter
         // Check for end of combat
         bool combatOver = TryEndCombatIfNeeded();
         ui.HighlightTargets(TargetingMode.None, null);
@@ -455,11 +526,15 @@ public class CombatManager : MonoBehaviour
                 tutorial.NotifyEnemyCardPlayed(source as Enemy, card);
             }
         }
+        }
+        finally
+        {
+            activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
+        }
     }
 
     public void FollowUpCard(bool randomCard, string cardName, Character source,Character target)
     {
-        Debug.Log($"Follow-up card triggered: {(randomCard ? "Random card" : cardName)} from {source.name} targeting {target.name}");
         STSCardData data;
         if (randomCard)
         {
@@ -671,6 +746,17 @@ public class CombatManager : MonoBehaviour
             {
                 relic.OnCombatEnd(player);
             }
+
+            if (RunManager.Instance != null && RunManager.Instance.currentNode != null)
+            {
+                RunManager.Instance.currentNode.completed = true;
+                RunManager.Instance.currentNode.visited = true;
+            }
+
+            bool finishedLastActBoss = RunManager.Instance != null
+                && RunManager.Instance.bossEncounter
+                && EnemyPoolDatabase.IsLastAct(RunManager.Instance.act);
+
             var result = new CombatResult
             {
                 enemies = currentEnemiesData,
@@ -679,23 +765,62 @@ public class CombatManager : MonoBehaviour
                 boss = RunManager.Instance.bossEncounter,
                 act = RunManager.Instance.act
             };
-            //Debug.Log("Generating rewards for combat result: floor " + result.floor + ", elite: " + result.elite + ", boss: " + result.boss);
+            Task<bool> completeTask = SubmitCombatResultAsync("victory");
+            while (!completeTask.IsCompleted)
+            {
+                yield return null;
+            }
+
+            bool completionAccepted = completeTask.Status == TaskStatus.RanToCompletion && completeTask.Result;
+            if (!completionAccepted)
+            {
+                if (RunManager.Instance != null && RunManager.Instance.unrestrictedMode)
+                {
+                    Debug.LogWarning("[STS-RUN] Combat completion was not accepted, but unrestricted mode is active. Continuing locally.");
+                }
+                else
+                {
+                    Debug.LogWarning("[STS-RUN] Combat completion was not accepted. Staying in combat scene to avoid run desync.");
+                    yield break;
+                }
+            }
+
+            if (finishedLastActBoss)
+            {
+                RunManager.Instance.completedFinalAct = true;
+                RunManager.Instance.pendingReward = null;
+                STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Retreat", "final_act_complete");
+                STSSceneLoader.Instance.LoadScene("STS_Retreat");
+                yield break;
+            }
             RunManager.Instance.pendingReward = RewardGenerator.GenerateReward(result);
-            _ = SubmitCombatResultAsync("victory");
             STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Reward", "combat_complete");
             STSSceneLoader.Instance.LoadScene("STS_Reward");
         }
         else if (outcome == TeamOutcome.Defeat)
         {
-            _ = SubmitCombatResultAsync("defeat");
-            ui.ShowGameOver(enemies.FirstOrDefault());
+            Task<bool> completeTask = SubmitCombatResultAsync("defeat");
+            while (!completeTask.IsCompleted)
+            {
+                yield return null;
+            }
+
+            bool completionAccepted = completeTask.Status == TaskStatus.RanToCompletion && completeTask.Result;
+            if (!completionAccepted)
+            {
+                Debug.LogWarning("[STS-RUN] Defeat completion was not accepted by server. Showing local game-over anyway.");
+            }
+            ui.ShowGameOver(enemies);
         }
     }
 
-    private async Task SubmitCombatResultAsync(string result)
+    private async Task<bool> SubmitCombatResultAsync(string result)
     {
         if (RunManager.Instance == null || string.IsNullOrWhiteSpace(RunManager.Instance.runId) || RunManager.Instance.activeEncounter == null)
-            return;
+            return true;
+
+        if (RunManager.Instance.unrestrictedMode)
+            return true;
 
         var request = new STSApiNodeCompleteRequest
         {
@@ -704,18 +829,32 @@ public class CombatManager : MonoBehaviour
             turnCount = state.turnCount,
             playerHpAfter = player != null ? player.currentHP : 0,
             damageTaken = RunManager.Instance.activeEncounter != null ? Mathf.Max(0, RunManager.Instance.activeEncounter.playerHpBefore - (player != null ? player.currentHP : 0)) : 0,
-            enemiesDefeated = enemies.Where(e => e != null && !e.IsAlive).Select(e => e is Enemy enemy ? (enemy.data != null && !string.IsNullOrWhiteSpace(enemy.data.id) ? enemy.data.id : enemy.name) : e.name).ToList(),
+            enemiesDefeated = string.Equals(result, "victory", StringComparison.OrdinalIgnoreCase)
+                ? new List<string>(RunManager.Instance.activeEncounter.enemyIds ?? new List<string>())
+                : enemies.Where(e => e != null && !e.IsAlive).Select(e => e is Enemy enemy ? (enemy.data != null && !string.IsNullOrWhiteSpace(enemy.data.id) ? enemy.data.id : enemy.name) : e.name).ToList(),
             deckHash = STSApiClient.ComputeDeckHash(RunManager.Instance.deck)
         };
 
         try
         {
+            Debug.Log($"[STS-RUN] CompleteNode request (combat) runId={RunManager.Instance.runId} nodeId={(RunManager.Instance.currentNode != null ? RunManager.Instance.currentNode.id : -1)} result={request.result} encounterId={request.encounterInstanceId}");
             STSApiNodeCompleteResponse response = await STSApiClient.CompleteNodeAsync(RunManager.Instance.runId, RunManager.Instance.currentNode != null ? RunManager.Instance.currentNode.id : -1, request);
-            RunManager.Instance.ApplyNodeCompleteResponse(response);
+            if (response != null && response.accepted)
+            {
+                Debug.Log($"[STS-RUN] CompleteNode response (combat) accepted=true runId={response.runId} currentNodeId={response.currentNodeId} result={request.result}");
+                RunManager.Instance.ApplyNodeCompleteResponse(response);
+                return true;
+            }
+
+            Debug.LogWarning($"[STS-RUN] CompleteNode response (combat) was null or rejected for result={request.result}.");
+            RunManager.Instance.EnableUnrestrictedMode($"combat completion rejected for result={request.result}");
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"Failed to submit combat result to STS API: {ex.Message}");
+            Debug.LogWarning($"[STS-RUN] CompleteNode request (combat) failed for result={request.result}: {ex.Message}");
+            RunManager.Instance.EnableUnrestrictedMode($"combat completion failed for result={request.result}: {ex.Message}");
         }
+
+        return false;
     }
 }

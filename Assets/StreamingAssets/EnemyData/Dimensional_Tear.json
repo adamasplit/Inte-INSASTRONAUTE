@@ -1,0 +1,139 @@
+{
+  "id": "Dimensional_Tear",
+  "enemyName": "Dimensional_Tear",
+  "displayName": "Faille dimensionnelle",
+  "maxHP": 1,
+  "randomStart": false,
+  "patternCardIds": [],
+  "movePattern": [
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Armor",
+          "value": 3,
+          "targetSelf": false,
+          "targetOthers": true,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "nextMoveIndices": [
+        1,
+        2,
+        3
+      ],
+      "weight": 0
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Heal",
+          "value": 3,
+          "targetSelf": false,
+          "targetOthers": true,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "nextMoveIndices": [
+        0,
+        2,
+        3
+      ],
+      "weight": 0
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 1,
+          "targetSelf": false,
+          "targetOthers": true,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "nextMoveIndices": [
+        0,
+        1,
+        3
+      ],
+      "weight": 0
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 1,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Weakness",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "nextMoveIndices": [
+        0,
+        1,
+        2
+      ],
+      "weight": 0
+    }
+  ],
+  "rewardCardIds": [],
+  "startingStatus": "Link",
+  "startingStatusDuration": 0,
+  "startingStatusValue": 1,
+  "startingStatusInfo": "Dévoreur de planètes"
+}

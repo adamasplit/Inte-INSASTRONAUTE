@@ -22,7 +22,7 @@ public class GMRelic:BaseRelic
                 source.combat.turnSystem.ApplyDelayAllTurns(target, 10);
                 break;
             case 1:
-                target.TakeDamage(10);
+                target.TakeDamage(10,true);
                 break;
             case 2:
                 source.combat.turnSystem.ApplyDelayAllTurns(target, 25);

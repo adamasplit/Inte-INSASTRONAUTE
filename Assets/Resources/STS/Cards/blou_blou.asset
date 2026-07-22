@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: blou_blou
   cardName: Blou blou
-  collectionCardId: Sharks
+  collectionCardId: Sharks (campagne)
   icon: {fileID: 0}
   cost: 1
   xCost: 0

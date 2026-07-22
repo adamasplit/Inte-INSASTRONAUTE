@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Coeurl
   enemyName: Coeurl
   displayName: Chasseur robotique
-  maxHP: 33
+  maxHP: 25
   pattern: []
   randomStart: 0
   movePattern:

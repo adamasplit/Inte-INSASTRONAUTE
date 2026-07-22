@@ -33,7 +33,7 @@
     {
       "type": "Damage",
       "kind": "EnergyGained",
-      "value": 5,
+      "value": 4,
       "info": "",
       "description": ""
     }

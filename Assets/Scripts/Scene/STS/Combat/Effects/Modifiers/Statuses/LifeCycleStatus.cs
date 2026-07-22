@@ -12,9 +12,9 @@ public class LifeCycleStatus : StatusEffect
     {
         return $"Quand vous perdez des PV, gagnez {Value} énergie.";
     }
-    public override void OnDamageTaken(Character source,Character target, ref int damage)
+    public override void OnHPLoss(Character target, int damage)
     {
-        if (target.isPlayer)
+        if (damage>0&&target.isPlayer)
         {
             if (target.onTurn)
             {

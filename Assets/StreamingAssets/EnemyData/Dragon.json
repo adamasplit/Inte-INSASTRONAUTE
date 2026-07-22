@@ -146,7 +146,9 @@
       "weight": 0
     }
   ],
-  "rewardCardIds": [],
+  "rewardCardIds": [
+    "souffle_de_feu"
+  ],
   "startingStatus": "Plating",
   "startingStatusDuration": 4,
   "startingStatusValue": 0,

@@ -26,7 +26,7 @@ MonoBehaviour:
     targetSelf: 0
     targetOthers: 0
     statusType: 20
-    duration: 6
+    duration: 4
     description: 
     cardID: 
     index: 0
@@ -39,7 +39,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   - type: 5
-    value: 6
+    value: 30
     targetSelf: 1
     targetOthers: 0
     statusType: 20

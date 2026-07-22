@@ -8,6 +8,9 @@ public class STSSceneLoader : MonoBehaviour
     public STSLoadingScreen loadingScreen;
     private int backgroundLoadingCount = 0;
     private bool sceneTransitionPending = false;
+    private float backgroundProgress = 0f;
+    private float sceneTransitionProgress = 0f;
+    private float sceneStartProgress = 0f;
 
     private void Awake()
     {
@@ -24,21 +27,39 @@ public class STSSceneLoader : MonoBehaviour
 
     public void BeginLoading()
     {
+        if (backgroundLoadingCount == 0)
+        {
+            backgroundProgress = 0f;
+        }
+
         backgroundLoadingCount++;
         if (loadingScreen != null)
         {
             loadingScreen.gameObject.SetActive(true);
+            ApplyProgressToScreen();
         }
+    }
+
+    public void SetBackgroundProgress(float progress)
+    {
+        // Keep loading progression monotonic to avoid visible regressions.
+        backgroundProgress = Mathf.Max(backgroundProgress, Mathf.Clamp01(progress));
+        ApplyProgressToScreen();
     }
 
     public void LoadScene(string sceneName)
     {
         // Start async loading and update the loading screen progress.
         sceneTransitionPending = true;
+        sceneTransitionProgress = 0f;
+        sceneStartProgress = backgroundLoadingCount > 0
+            ? Mathf.Clamp01(backgroundProgress)
+            : 0f;
+
         if (loadingScreen != null)
         {
             loadingScreen.gameObject.SetActive(true);
-            loadingScreen.SetProgress(0f);
+            ApplyProgressToScreen();
         }
         StartCoroutine(LoadSceneAsyncRoutine(sceneName));
     }
@@ -51,19 +72,14 @@ public class STSSceneLoader : MonoBehaviour
         {
             // op.progress is 0..0.9 while loading, then becomes 1 when done
             float progress = op.progress;
-            float normalized = Mathf.Clamp01(progress / 0.9f);
-            if (loadingScreen != null)
-            {
-                loadingScreen.SetProgress(normalized);
-            }
+            sceneTransitionProgress = Mathf.Clamp01(progress / 0.9f);
+            ApplyProgressToScreen();
             yield return null;
         }
 
         // Ensure progress reaches 100%
-        if (loadingScreen != null)
-        {
-            loadingScreen.SetProgress(1f);
-        }
+        sceneTransitionProgress = 1f;
+        ApplyProgressToScreen();
     }
 
     public void EndLoading()
@@ -73,13 +89,46 @@ public class STSSceneLoader : MonoBehaviour
             backgroundLoadingCount--;
         }
 
+        if (backgroundLoadingCount == 0 && !sceneTransitionPending)
+        {
+            backgroundProgress = 1f;
+            ApplyProgressToScreen();
+        }
+
         TryHideLoadingScreen();
     }
 
     public void SceneReady()
     {
         sceneTransitionPending = false;
+        sceneTransitionProgress = 1f;
+        ApplyProgressToScreen();
         TryHideLoadingScreen();
+    }
+
+    private float GetCurrentProgress()
+    {
+        if (sceneTransitionPending)
+        {
+            return Mathf.Lerp(sceneStartProgress, 1f, sceneTransitionProgress);
+        }
+
+        if (backgroundLoadingCount > 0)
+        {
+            return backgroundProgress;
+        }
+
+        return 1f;
+    }
+
+    private void ApplyProgressToScreen()
+    {
+        if (loadingScreen == null)
+        {
+            return;
+        }
+
+        loadingScreen.SetProgress(GetCurrentProgress());
     }
 
     private void TryHideLoadingScreen()

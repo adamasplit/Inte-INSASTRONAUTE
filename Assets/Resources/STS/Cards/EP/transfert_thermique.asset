@@ -42,7 +42,7 @@ MonoBehaviour:
   modifiers:
   - type: 0
     kind: 3
-    value: 10
+    value: 8
     info: 
     description: 
   favoredCharacter: 0

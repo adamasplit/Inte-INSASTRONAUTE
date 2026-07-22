@@ -220,7 +220,6 @@ public class UIManager : MonoBehaviour
 
     public void Deselect()
     {
-        Debug.Log("Deselecting card {" + selectedCard?.cardInstance?.displayName + "}");
         HideAllTooltips();
         if (selectedCard != null)
         {
@@ -369,7 +368,6 @@ public class UIManager : MonoBehaviour
     }
     public void RefreshUI(bool refreshHand = true)
     {
-        Debug.Log("Refreshing UI");
         selectedCard = null;
         foreach (var ui in characterUIs)
         {
@@ -620,7 +618,7 @@ public class UIManager : MonoBehaviour
 
 
 
-    public void ShowGameOver(Character enemy)
+    public void ShowGameOver(List<Character> enemy)
     {
         gameOverController.Show(enemy);
     }
@@ -786,6 +784,7 @@ public IEnumerator AnimateCardToCenter(CardView view)
             return;
 
         oldCard.data = newCard.data;
+        oldCard.displayName = newCard.displayName;
         oldCard.targetingMode = newCard.targetingMode;
         oldCard.baseModifiers.Clear();
         oldCard.addedModifiers.Clear();
@@ -801,7 +800,6 @@ public IEnumerator AnimateCardToCenter(CardView view)
     }
     public void RemoveView(CardView view)
     {
-        Debug.Log("Removing card view: " + view.cardInstance?.displayName);
         currentHandViews.Remove(view);
 
         if (selectedCard == view)

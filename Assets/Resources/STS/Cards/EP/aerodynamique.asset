@@ -16,13 +16,13 @@ MonoBehaviour:
   cardName: "A\xE9rodynamique"
   collectionCardId: 
   icon: {fileID: 21300000, guid: 484860e22487c72409e7df55306c3b3d, type: 3}
-  cost: 2
+  cost: 1
   xCost: 0
   type: 2
   rarity: 1
   effects:
   - type: 3
-    value: 3
+    value: 1
     targetSelf: 1
     targetOthers: 0
     statusType: 14

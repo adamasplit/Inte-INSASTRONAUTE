@@ -1,3 +1,4 @@
+using UnityEngine;
 public class RelicRewardEntryView : RewardEntryView
 {
     public TMPro.TextMeshProUGUI relicName;
@@ -10,7 +11,7 @@ public class RelicRewardEntryView : RewardEntryView
 
         reward = rewardItem as RelicReward;
 
-        relicName.text = "Équipement: " + reward.relic.name+$"\n<size={relicName.fontSize/2}>"+reward.relic.description+"</size>";
+        relicName.text = "Équipement: " + reward.relic.name+$"\n<size={Mathf.RoundToInt(relicName.fontSize/1.5f)}>"+reward.relic.description+"</size>";
 
         UILayoutHelper.ApplyChildActualSizeAfterFrame(this, transform as UnityEngine.RectTransform, extraWidth: 20f, extraHeight: 12f);
     }

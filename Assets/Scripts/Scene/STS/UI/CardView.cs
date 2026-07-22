@@ -495,6 +495,10 @@ public class CardView : MonoBehaviour,IPointerClickHandler
                 return ("Infinie", "Cette carte peut être jouée un nombre illimité de fois dans un tour.");
             case CardTag.Innate:
                 return ("Innée", "Cette carte est toujours dans votre main au début du combat.");
+            case CardTag.Unplayable:
+                return ("Injouable", "Vous ne pouvez pas jouer cette carte.");
+            case CardTag.Automatic:
+                return ("Automatique", "Cette carte se joue automatiquement à la fin du tour.");
             // Add more cases for other tags as needed
             default:
                 return ("", "");

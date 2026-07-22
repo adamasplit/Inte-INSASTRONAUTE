@@ -7,14 +7,41 @@ public class STSLoadingScreen : MonoBehaviour
 {
     public Image loadingImage;
     public TextMeshProUGUI loadingText;
+    [SerializeField] float fillLerpSpeed = 1.6f;
+
+    float displayedProgress;
+    float targetProgress;
+
+    void OnEnable()
+    {
+        displayedProgress = 0f;
+        targetProgress = 0f;
+        RenderProgress(0f);
+    }
+
+    void Update()
+    {
+        if (!gameObject.activeInHierarchy)
+            return;
+
+        if (displayedProgress >= targetProgress)
+            return;
+
+        displayedProgress = Mathf.MoveTowards(displayedProgress, targetProgress, fillLerpSpeed * Time.unscaledDeltaTime);
+        RenderProgress(displayedProgress);
+    }
 
     // Public API to set progress from external loaders
     public void SetProgress(float progress)
     {
-        UpdateLoadingScreen(progress);
+        targetProgress = Mathf.Max(targetProgress, Mathf.Clamp01(progress));
+        if (targetProgress > displayedProgress)
+        {
+            RenderProgress(displayedProgress);
+        }
     }
 
-    private void UpdateLoadingScreen(float progress)
+    private void RenderProgress(float progress)
     {
         float clampedProgress = Mathf.Clamp01(progress);
 

@@ -22,7 +22,7 @@ MonoBehaviour:
   rarity: 4
   effects:
   - type: 0
-    value: 50
+    value: 45
     targetSelf: 0
     targetOthers: 0
     statusType: 0
@@ -38,7 +38,7 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 8
-  targetingMode: 2
+  targetingMode: 1
   modifiers: []
   favoredCharacter: 0
   animationSpeed: 1

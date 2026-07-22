@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Griever
   enemyName: Griever
   displayName: 
-  maxHP: 99
+  maxHP: 60
   pattern:
   - {fileID: 11400000, guid: 3746bd040a2bae743abad70f31212e3b, type: 2}
   - {fileID: 11400000, guid: 947f6155c4106314fbc1b7371ce37c70, type: 2}
@@ -109,7 +109,7 @@ MonoBehaviour:
       targetSelf: 0
       targetOthers: 0
       statusType: 2
-      duration: 0
+      duration: 2
       description: 
       cardID: 
       index: 0
@@ -138,6 +138,28 @@ MonoBehaviour:
       cardFilterTags: 
       cardSelectionEffect: 0
       animationType: 0
+    nextMoveIndices: 03000000
+    weight: 1
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 20
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 2
+      duration: 2
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 6
     nextMoveIndices: 00000000
     weight: 1
   rewardCards:

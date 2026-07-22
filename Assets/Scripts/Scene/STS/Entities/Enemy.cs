@@ -44,14 +44,21 @@ public class Enemy : Character
         {
             name = d.enemyName;
         }
-        Debug.Log($"Initializing enemy {name} with data: {d.name} and displayName: {d.displayName}");
         data = d;
-        patternIndex = 0;
+        patternIndex = d.randomStart ? d.PickRandomActionIndex() : 0;
         maxHP = d.maxHP;
-        float multiplier = 1.3f;
+        float multiplier = EnemyPoolDatabase.BaseHpScaling;
         if (RunManager.Instance != null)
         {
-            multiplier+= RunManager.Instance.act*0.5f;
+            if (EnemyPoolDatabase.ActHpScaling != null && EnemyPoolDatabase.ActHpScaling.Count > 0)
+            {
+                multiplier += EnemyPoolDatabase.ActHpScaling[Mathf.Min(RunManager.Instance.act, EnemyPoolDatabase.ActHpScaling.Count - 1)];
+            }
+
+            if (PlayersDatabase.TryGet(RunManager.Instance.selectedCharacter, out PlayerInfoDTO selectedCharacterData))
+            {
+                multiplier += selectedCharacterData.hpAdditionalMultiplier;
+            }
         }
         maxHP = Mathf.RoundToInt(maxHP * multiplier);
         maxHP+=Random.Range(1,5); // Add a random value between 1 and 5 to maxHP

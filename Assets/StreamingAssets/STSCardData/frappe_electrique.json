@@ -11,11 +11,11 @@
   "effects": [
     {
       "type": "Multihit",
-      "value": 2,
+      "value": 3,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
-      "duration": 3,
+      "duration": 2,
       "description": "",
       "cardID": "",
       "conditional": false,

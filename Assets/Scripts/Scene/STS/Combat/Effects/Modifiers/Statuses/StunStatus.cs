@@ -7,11 +7,13 @@ public class StunStatus : StatusEffect
         Duration = duration;
         Name = "Étourdissement";
         framed=true;
+        debuff=true;
+        goldFrame=true;
         generic=true;
         inextendable=true;
     }
     public override string Desc(bool isPlayer)
     {
-        return $"Ce personnage est étourdi et ne peut pas agir.";
+        return $"Un personnage étourdi ne peut pas agir.";
     }
 }

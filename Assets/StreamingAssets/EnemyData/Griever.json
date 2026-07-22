@@ -2,7 +2,7 @@
   "id": "Griever",
   "enemyName": "Griever",
   "displayName": "",
-  "maxHP": 99,
+  "maxHP": 60,
   "randomStart": false,
   "patternCardIds": [
     "gravitron",
@@ -117,7 +117,7 @@
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Weakness",
-          "duration": 0,
+          "duration": 2,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -148,6 +148,35 @@
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
           "animationType": "Default"
+        }
+      ],
+      "nextMoveIndices": [
+        3
+      ],
+      "weight": 1
+    },
+    {
+      "cardId": null,
+      "moveName": "",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 20,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Weakness",
+          "duration": 2,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Light"
         }
       ],
       "nextMoveIndices": [

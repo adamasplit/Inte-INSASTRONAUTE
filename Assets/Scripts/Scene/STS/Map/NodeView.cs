@@ -57,7 +57,7 @@ public class NodeView : MonoBehaviour
             onClick?.Invoke();
         });
         SetIcon(scaleMultiplier);
-        baseScale = transform.localScale;
+        baseScale = transform.localScale*UIAdaptiveScale.GetScreenScale();
         if (icon.sprite == null)
         {
             Debug.LogWarning($"Icon sprite not set for node view '{name}'.", this);

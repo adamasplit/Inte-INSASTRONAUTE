@@ -22,7 +22,7 @@ MonoBehaviour:
   rarity: 0
   effects:
   - type: 0
-    value: 3
+    value: 1
     targetSelf: 0
     targetOthers: 0
     statusType: 0

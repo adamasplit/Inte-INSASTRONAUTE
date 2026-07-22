@@ -17,5 +17,7 @@ public enum CardTag
     Atom,
     Molecule,
     Norm,
-    Developer
+    Developer,
+    Automatic,
+    Unplayable
 }

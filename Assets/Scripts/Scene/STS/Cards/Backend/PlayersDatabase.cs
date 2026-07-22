@@ -217,9 +217,15 @@ public static class PlayersDatabase
         isLoaded = false;
         await LoadAsync();
     }
+
+    public static bool TryGet(SelectableCharacter character, out PlayerInfoDTO player)
+    {
+        return players.TryGetValue(character, out player);
+    }
+
     public static PlayerInfoDTO Get(SelectableCharacter character)
     {
-        if (players.TryGetValue(character, out var player))
+        if (TryGet(character, out var player))
             return player;
 
         Debug.LogError($"Player {character} not found!");

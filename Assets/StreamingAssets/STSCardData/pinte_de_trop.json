@@ -1,7 +1,7 @@
 {
   "id": "pinte_de_trop",
   "cardName": "Pinte de trop",
-  "collectionCardId": "Paix Dieu",
+  "collectionCardId": "Paix Dieu (campagne)",
   "iconId": null,
   "cost": 1,
   "xCost": false,
@@ -30,7 +30,7 @@
     },
     {
       "type": "Status",
-      "value": 5,
+      "value": 3,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
