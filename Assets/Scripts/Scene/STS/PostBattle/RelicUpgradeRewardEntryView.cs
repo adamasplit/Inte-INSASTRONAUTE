@@ -16,8 +16,13 @@ public class RelicUpgradeRewardEntryView : RewardEntryView
 
         UILayoutHelper.ApplyChildActualSizeAfterFrame(this, transform as UnityEngine.RectTransform, extraWidth: 20f, extraHeight: 12f);
     }
-    public void ClaimRelicUpgrade()
+    public async void ClaimRelicUpgrade()
     {
+        if (manager != null && !await manager.TryClaimServerRewardAsync(reward))
+        {
+            return;
+        }
+
         reward.Claim();
         StartCoroutine(Collapse());
         foreach (var entry in FindObjectsOfType<RelicUpgradeRewardEntryView>())

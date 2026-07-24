@@ -199,6 +199,27 @@ public class STSApiRetreatPreviewResponse
     public long minimumReward;
 }
 
+[Serializable]
+public class STSApiCurrentRunResponse
+{
+    public bool hasRun;
+    public STSApiRunCreateResponse run;
+}
+
+[Serializable]
+public class STSApiClaimRewardRequest
+{
+    public string selectedCardId;
+}
+
+[Serializable]
+public class STSApiClaimRewardResponse
+{
+    public bool accepted;
+    public JToken runInventory;
+    public List<JToken> pendingRewards = new();
+}
+
 public static class STSApiClient
 {
     public static async Task<STSApiRunCreateResponse> CreateRunAsync(string character, string clientVersion)
@@ -212,11 +233,17 @@ public static class STSApiClient
             }
         );
 
-        return ParseResponse<STSApiRunCreateResponse>(json);
+        STSApiRunCreateResponse response = ParseResponse<STSApiRunCreateResponse>(json);
+        if (response != null)
+        {
+            response.runId = NormalizeRunId(response.runId);
+        }
+        return response;
     }
 
     public static async Task<bool> ResetRunAsync(string runId)
     {
+        runId = NormalizeRunId(runId);
         if (string.IsNullOrWhiteSpace(runId))
             return false;
 
@@ -233,32 +260,212 @@ public static class STSApiClient
 
     public static async Task<STSApiRunRetireResponse> RetireRunAsync(string runId)
     {
+        runId = NormalizeRunId(runId);
         if (string.IsNullOrWhiteSpace(runId))
             return null;
 
         string json = await ReactApiBridge.RequestAsync("sts.runs.retire", new { runId });
-        return ParseResponse<STSApiRunRetireResponse>(json);
+        STSApiRunRetireResponse response = ParseResponse<STSApiRunRetireResponse>(json);
+        if (response != null)
+        {
+            response.runId = NormalizeRunId(response.runId);
+        }
+        return response;
+    }
+
+    public static async Task<STSApiCurrentRunResponse> CurrentRunAsync()
+    {
+        string json = await ReactApiBridge.RequestWithAliasesAsync(
+            new[]
+            {
+                "sts.runs.current",
+                "sts.current-run"
+            },
+            new { }
+        );
+
+        JToken token = ParseEnvelope(json);
+        if (token == null)
+        {
+            return null;
+        }
+
+        STSApiCurrentRunResponse response = null;
+
+        // Preferred shape: { hasRun, run }
+        if (token.Type == JTokenType.Object)
+        {
+            JObject obj = (JObject)token;
+
+            if (obj.TryGetValue("hasRun", StringComparison.OrdinalIgnoreCase, out _))
+            {
+                response = obj.ToObject<STSApiCurrentRunResponse>();
+            }
+            else
+            {
+                // Compatibility: some bridge handlers return the run object directly.
+                STSApiRunCreateResponse directRun = obj.ToObject<STSApiRunCreateResponse>();
+                if (directRun != null && !string.IsNullOrWhiteSpace(directRun.runId))
+                {
+                    response = new STSApiCurrentRunResponse
+                    {
+                        hasRun = true,
+                        run = directRun
+                    };
+                }
+                else if (obj.TryGetValue("run", StringComparison.OrdinalIgnoreCase, out JToken runToken)
+                    && runToken != null
+                    && runToken.Type == JTokenType.Object)
+                {
+                    STSApiRunCreateResponse nestedRun = runToken.ToObject<STSApiRunCreateResponse>();
+                    response = new STSApiCurrentRunResponse
+                    {
+                        hasRun = nestedRun != null && !string.IsNullOrWhiteSpace(nestedRun.runId),
+                        run = nestedRun
+                    };
+                }
+                else
+                {
+                    foreach (string key in new[] { "activeRun", "currentRun", "runState", "state" })
+                    {
+                        if (obj.TryGetValue(key, StringComparison.OrdinalIgnoreCase, out JToken altRunToken)
+                            && altRunToken != null
+                            && altRunToken.Type == JTokenType.Object)
+                        {
+                            STSApiRunCreateResponse altRun = altRunToken.ToObject<STSApiRunCreateResponse>();
+                            response = new STSApiCurrentRunResponse
+                            {
+                                hasRun = altRun != null && !string.IsNullOrWhiteSpace(altRun.runId),
+                                run = altRun
+                            };
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (response == null)
+        {
+            response = ParseResponse<STSApiCurrentRunResponse>(json);
+        }
+
+        if (response != null && response.run != null)
+        {
+            response.run.runId = NormalizeRunId(response.run.runId);
+            if (string.IsNullOrWhiteSpace(response.run.runId))
+            {
+                response.hasRun = false;
+                response.run = null;
+            }
+            else
+            {
+                response.hasRun = true;
+            }
+        }
+
+        return response;
+    }
+
+    public static async Task<STSApiClaimRewardResponse> ClaimRewardAsync(string runId, string rewardId, string selectedCardId = null)
+    {
+        runId = NormalizeRunId(runId);
+        if (string.IsNullOrWhiteSpace(runId) || string.IsNullOrWhiteSpace(rewardId))
+            return null;
+
+        var request = new STSApiClaimRewardRequest
+        {
+            selectedCardId = selectedCardId
+        };
+
+        string json = await ReactApiBridge.RequestWithAliasesAsync(
+            new[]
+            {
+                $"sts.runs.{runId}.rewards.{rewardId}.claim",
+                $"sts.runs.{runId}.reward.{rewardId}.claim"
+            },
+            request,
+            1200
+        );
+
+        STSApiClaimRewardResponse response = ParseResponse<STSApiClaimRewardResponse>(json);
+        if (response == null)
+            return null;
+
+        response.pendingRewards ??= new List<JToken>();
+        return response;
     }
 
     public static async Task<STSApiRetreatPreviewResponse> RetreatPreviewAsync(string runId)
     {
+        runId = NormalizeRunId(runId);
         if (string.IsNullOrWhiteSpace(runId))
             return null;
 
         string json = await ReactApiBridge.RequestWithAliasesAsync(
             new[]
             {
-                $"sts.runs.{runId}.retreat-preview",
-                "sts.runs.retreat-preview"
+                "sts.runs.retreat-preview",
+                $"sts.runs.{runId}.retreat-preview"
             },
             new { runId }
         );
 
-        return ParseResponse<STSApiRetreatPreviewResponse>(json);
+        STSApiRetreatPreviewResponse response = ParseResponse<STSApiRetreatPreviewResponse>(json);
+        if (response != null)
+        {
+            response.runId = NormalizeRunId(response.runId);
+        }
+        return response;
+    }
+
+    public static async Task<STSApiRunState> RetreatContinueAsync(string runId)
+    {
+        runId = NormalizeRunId(runId);
+        if (string.IsNullOrWhiteSpace(runId))
+            return null;
+
+        string json = await ReactApiBridge.RequestWithAliasesAsync(
+            new[]
+            {
+                "sts.runs.retreat.continue",
+                $"sts.runs.{runId}.retreat.continue",
+                $"sts.runs.{runId}.retreat-continue",
+                "sts.runs.retreat-continue"
+            },
+            new { runId }
+        );
+
+        JToken token = ParseEnvelope(json);
+        STSApiRunState response = null;
+
+        if (token != null && token.Type == JTokenType.Object)
+        {
+            JObject obj = (JObject)token;
+            if (obj.TryGetValue("runInventory", StringComparison.OrdinalIgnoreCase, out _)
+                || obj.TryGetValue("player", StringComparison.OrdinalIgnoreCase, out _)
+                || obj.TryGetValue("map", StringComparison.OrdinalIgnoreCase, out _))
+            {
+                STSApiRunCreateResponse runDto = obj.ToObject<STSApiRunCreateResponse>();
+                response = ConvertToRunState(runDto);
+            }
+            else
+            {
+                response = obj.ToObject<STSApiRunState>();
+            }
+        }
+
+        response ??= ParseResponse<STSApiRunState>(json);
+        if (response != null)
+        {
+            response.runId = NormalizeRunId(response.runId);
+        }
+        return response;
     }
 
     public static async Task<STSApiNodeEnterResponse> EnterNodeAsync(string runId, int nodeId)
     {
+        runId = NormalizeRunId(runId);
         string json = await ReactApiBridge.RequestAsync(
             $"sts.runs.{runId}.nodes.{nodeId}.enter",
             new STSApiNodeEnterRequest
@@ -268,17 +475,28 @@ public static class STSApiClient
             }
         );
 
-        return ParseResponse<STSApiNodeEnterResponse>(json);
+        STSApiNodeEnterResponse response = ParseResponse<STSApiNodeEnterResponse>(json);
+        if (response != null)
+        {
+            response.runId = NormalizeRunId(response.runId);
+        }
+        return response;
     }
 
     public static async Task<STSApiNodeCompleteResponse> CompleteNodeAsync(string runId, int nodeId, STSApiNodeCompleteRequest request)
     {
+        runId = NormalizeRunId(runId);
         string json = await ReactApiBridge.RequestAsync(
             $"sts.runs.{runId}.nodes.{nodeId}.complete",
             request
         );
 
-        return ParseResponse<STSApiNodeCompleteResponse>(json);
+        STSApiNodeCompleteResponse response = ParseResponse<STSApiNodeCompleteResponse>(json);
+        if (response != null)
+        {
+            response.runId = NormalizeRunId(response.runId);
+        }
+        return response;
     }
 
     public static STSApiRunState ConvertToRunState(STSApiRunCreateResponse response)
@@ -288,7 +506,7 @@ public static class STSApiClient
 
         var state = new STSApiRunState
         {
-            runId = response.runId,
+            runId = NormalizeRunId(response.runId),
             status = response.status,
             dataVersion = response.dataVersion,
             selectedCharacter = response.selectedCharacter,
@@ -305,6 +523,25 @@ public static class STSApiClient
         };
 
         return state;
+    }
+
+    private static string NormalizeRunId(string runId)
+    {
+        if (string.IsNullOrWhiteSpace(runId))
+            return runId;
+
+        string trimmed = runId.Trim();
+        if (Guid.TryParse(trimmed, out Guid parsed))
+        {
+            return parsed.ToString("D");
+        }
+
+        if (Guid.TryParseExact(trimmed, "N", out parsed))
+        {
+            return parsed.ToString("D");
+        }
+
+        return trimmed;
     }
 
     public static List<MapNode> ConvertMap(List<STSApiMapNodeState> nodes)
@@ -455,6 +692,11 @@ public static class STSApiClient
         using SHA256 sha256 = SHA256.Create();
         byte[] hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(builder.ToString()));
         return BitConverter.ToString(hash).Replace("-", string.Empty).ToLowerInvariant();
+    }
+
+    public static Relic CreateRelicFromId(string relicId)
+    {
+        return CreateRelic(relicId);
     }
 
     private static T ParseResponse<T>(string json) where T : class

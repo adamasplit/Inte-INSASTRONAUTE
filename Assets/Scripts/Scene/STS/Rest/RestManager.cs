@@ -60,7 +60,7 @@ public class RestManager : MonoBehaviour
     {
         while (RunManager.Instance.restCharges > 0&&RunManager.Instance.player.currentHP<RunManager.Instance.player.maxHP)
         {
-            RunManager.Instance.player.Heal(Mathf.FloorToInt(RunManager.Instance.player.maxHP/10f));
+            RunManager.Instance.player.Heal(Mathf.FloorToInt(RunManager.Instance.player.maxHP/12f));
             RunManager.Instance.restCharges--;
         }
         UpdateChargesDisplay();

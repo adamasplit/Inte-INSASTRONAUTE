@@ -119,6 +119,18 @@ public class IntentUI : MonoBehaviour
                     description = $"L'ennemi va se soigner.";
                     break;
                 }
+                case EffectType.AddCardToDiscardPile:
+                {
+                    name = "Ajout de carte";
+                    description = $"L'ennemi va ajouter une carte à votre défausse.";
+                    break;
+                }
+                case EffectType.AddCardToDrawPile:
+                {
+                    name = "Ajout de carte";
+                    description = $"L'ennemi va ajouter une carte à votre pioche.";
+                    break;
+                }
                 default:
                 {
                     name = "???";

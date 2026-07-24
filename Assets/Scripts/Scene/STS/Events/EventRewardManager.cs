@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class EventRewardManager : MonoBehaviour, IRewardFlowHost
@@ -119,6 +120,11 @@ public class EventRewardManager : MonoBehaviour, IRewardFlowHost
 
         onComplete?.Invoke();
         onComplete = null;
+    }
+
+    public Task<bool> TryClaimServerRewardAsync(RewardItem rewardItem, string selectedCardId = null)
+    {
+        return Task.FromResult(true);
     }
 
     private void ArmContinueButtonFailSafe()

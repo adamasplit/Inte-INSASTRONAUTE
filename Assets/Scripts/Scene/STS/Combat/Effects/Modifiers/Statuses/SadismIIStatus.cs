@@ -27,10 +27,10 @@ public class SadismIIStatus:StatusEffect
     }
     public override int Modify(int damage, EffectContext ctx)
     {
-        return Mathf.FloorToInt(damage + (damage * 30) / 100);
+        return Mathf.FloorToInt(damage + (damage * 20) / 100);
     }
     public override string Desc(bool isPlayer)
     {
-        return $"{30}% dégâts supplémentaires subis et +{30}% d'Armure gagnée. Cet effet évolue lorsqu'un adversaire passe en-dessous de 50% de sa vie.";
+        return $"+{20}% dégâts supplémentaires subis et +{20}% d'Armure gagnée. Cet effet évolue lorsqu'un adversaire passe en-dessous de 50% de sa vie.";
     }
 }

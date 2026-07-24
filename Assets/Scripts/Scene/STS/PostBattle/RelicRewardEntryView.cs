@@ -16,8 +16,13 @@ public class RelicRewardEntryView : RewardEntryView
         UILayoutHelper.ApplyChildActualSizeAfterFrame(this, transform as UnityEngine.RectTransform, extraWidth: 20f, extraHeight: 12f);
     }
 
-    public void ClaimRelic()
+    public async void ClaimRelic()
     {
+        if (manager != null && !await manager.TryClaimServerRewardAsync(reward))
+        {
+            return;
+        }
+
         reward.Claim();
 
         StartCoroutine(Collapse());

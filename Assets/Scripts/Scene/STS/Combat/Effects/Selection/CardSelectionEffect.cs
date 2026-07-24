@@ -10,5 +10,9 @@ public enum CardSelectionEffect
     Merge,
     TopOfDrawPile,
     ConsumeAndDealDamageToAll,
-    ConsumeAndGainArmor
+    ConsumeAndGainArmor,
+    ReduceCost,
+    ReduceCostTemp,
+    IncreaseDamage,
+    IncreaseDamageTemp
 }

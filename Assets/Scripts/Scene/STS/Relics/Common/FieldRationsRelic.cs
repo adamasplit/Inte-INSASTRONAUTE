@@ -6,11 +6,11 @@ public class FieldRationsRelic : Relic
     {
         rarity = RelicRarity.Common;
         name = "Rations de campagne";
-        description = "Vous soigne de 6 PV lorsque vous entrez dans un site de repos.";
+        description = "Vous regagnez 4 PV lorsque vous entrez dans un site de repos.";
     }
 
     public override void OnEnterRestSite(Character player)
     {
-        player.Heal(6);
+        player.Heal(4);
     }
 }

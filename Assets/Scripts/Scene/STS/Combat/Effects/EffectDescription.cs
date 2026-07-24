@@ -134,7 +134,7 @@ public static class EffectDescription
                     }
                     else
                     {
-                        return $"Appliquez {usedValueText} d{(stat.Name[0]=='A' || stat.Name[0]=='E'|| stat.Name[0]=='I' || stat.Name[0]=='O' || stat.Name[0]=='U'||stat.Name[0]=='É' ? "'" : "e")} {stat.Name}";
+                        return $"Appliquez {usedValueText} d{(stat.Name[0]=='A' || stat.Name[0]=='E'|| stat.Name[0]=='I' || stat.Name[0]=='O' || stat.Name[0]=='U'||stat.Name[0]=='É' ? "'" : "e ")}{stat.Name}";
                     }
                 }
                 else if (effect.statusType==StatusType.Strength||effect.statusType==StatusType.Dexterity||effect.statusType==StatusType.Speed)
@@ -286,6 +286,10 @@ public static class EffectDescription
                             : $"Placez toutes les cartes{filterSuffix} sur le dessus de votre pioche depuis {source}",
                         CardSelectionEffect.ConsumeAndDealDamageToAll=> $"Consommez toutes les cartes{filterSuffix} de {source} et infligez {effect.duration} dégâts à toutes les cibles pour chaque carte consommée",
                         CardSelectionEffect.ConsumeAndGainArmor=> $"Consommez toutes les cartes{filterSuffix} de {source} et gagnez {effect.duration} d'Armure pour chaque carte consommée",
+                        CardSelectionEffect.ReduceCost => $"Réduisez le coût de toutes les cartes{filterSuffix} de {source} de {effect.duration}",
+                        CardSelectionEffect.ReduceCostTemp => $"Réduisez temporairement le coût de toutes les cartes{filterSuffix} de {source} de {effect.duration}",
+                        CardSelectionEffect.IncreaseDamage => $"Augmentez les dégâts de toutes les cartes{filterSuffix} de {source} de {effect.duration}",
+                        CardSelectionEffect.IncreaseDamageTemp => $"Augmentez temporairement les dégâts de toutes les cartes{filterSuffix} de {source} de {effect.duration}",
                         _ => $"Appliquez l'effet {effect.cardSelectionEffect} à toutes les cartes{filterSuffix} de {source}",
                         
                     };
@@ -302,6 +306,10 @@ public static class EffectDescription
                     CardSelectionEffect.Enchant => "enchantez-"+pl,
                     CardSelectionEffect.Unenchant => "désenchantez-"+pl,
                     CardSelectionEffect.TopOfDrawPile => "placez-"+pl+" sur le dessus de votre pioche",
+                    CardSelectionEffect.ReduceCost => $"réduisez {(effect.value!=1?"leur":"son")} coût de {effect.duration}",
+                    CardSelectionEffect.ReduceCostTemp => $"réduisez temporairement {(effect.value!=1?"leur":"son")} coût de {effect.duration}",
+                    CardSelectionEffect.IncreaseDamage => $"augmentez {(effect.value!=1?"leur":"son")} dégâts de {effect.duration}",
+                    CardSelectionEffect.IncreaseDamageTemp => $"augmentez temporairement {(effect.value!=1?"leur":"son")} dégâts de {effect.duration}",
                     _ => effect.cardSelectionEffect.ToString()
                 };
                 string cardStr = effect.value!=-1? $"Choisissez {effect.value.ToString()}" : "Prenez toutes les";

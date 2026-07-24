@@ -121,6 +121,29 @@ public static class STSRunSaveSystem
         }
     }
 
+    public static bool TryGetSavedRunId(out string runId)
+    {
+        runId = null;
+
+        if (!File.Exists(SavePath))
+            return false;
+
+        try
+        {
+            STSRunSaveData data = JsonConvert.DeserializeObject<STSRunSaveData>(File.ReadAllText(SavePath));
+            if (data == null || string.IsNullOrWhiteSpace(data.runId))
+                return false;
+
+            runId = data.runId;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"Failed to read saved run id from '{SavePath}': {ex.Message}");
+            return false;
+        }
+    }
+
     public static bool SaveRun(RunManager run)
     {
         if (run == null || run.player == null || run.map == null || run.map.Count == 0)

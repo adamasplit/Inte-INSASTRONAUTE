@@ -37,6 +37,7 @@ public class RetreatManager : MonoBehaviour
     private bool previewRequestStarted;
     private Task previewRequestTask;
     private STSApiRetreatPreviewResponse retreatPreviewResponse;
+    private bool leavingRetreat;
 
     private class ScoreLine
     {
@@ -60,6 +61,24 @@ public class RetreatManager : MonoBehaviour
         "AddSoftCurrency",
         "GrantTokens"
     };
+
+    private static readonly string[] TokenBalanceMethodCandidates =
+    {
+        "GetTokens",
+        "GetTokenBalance",
+        "GetCurrency",
+        "GetCoins",
+        "GetSoftCurrency"
+    };
+
+    private static readonly string[] TokenBalanceMemberCandidates =
+    {
+        "Tokens",
+        "TokenBalance",
+        "Currency",
+        "Coins",
+        "SoftCurrency"
+    };
     void Awake()
     {
         scoreTitleText.text = "";
@@ -69,6 +88,12 @@ public class RetreatManager : MonoBehaviour
 
     async void Start()
     {
+        if (RunManager.Instance != null && RunManager.Instance.completedFinalAct && !EnemyPoolDatabase.IsLastAct(RunManager.Instance.act))
+        {
+            Debug.LogWarning($"[STS-RUN] completedFinalAct was true outside last act (act={RunManager.Instance.act}). Resetting flag for retreat flow.");
+            RunManager.Instance.completedFinalAct = false;
+        }
+
         bool finalActCompleted = RunManager.Instance != null && RunManager.Instance.completedFinalAct;
         choicePanel.SetActive(!finalActCompleted);
         if (scorePanel != null)
@@ -105,7 +130,6 @@ public class RetreatManager : MonoBehaviour
         else
         {
             _ = EnsureRetreatPreviewLoadedAsync();
-            _ = EnsureTokenRewardAppliedAsync();
         }
 
         if (scorePanel != null)
@@ -145,6 +169,23 @@ public class RetreatManager : MonoBehaviour
 
     public async void OnContinuePressed()
     {
+        if (leavingRetreat)
+            return;
+
+        leavingRetreat = true;
+        STSSceneLoader.Instance?.BeginLoading();
+
+        if (choicePanel != null)
+            choicePanel.SetActive(false);
+        if (scorePanel != null)
+            scorePanel.SetActive(false);
+        if (buttonCanvasGroup != null)
+        {
+            buttonCanvasGroup.alpha = 0f;
+            buttonCanvasGroup.interactable = false;
+            buttonCanvasGroup.blocksRaycasts = false;
+        }
+
         if (RunManager.Instance != null && RunManager.Instance.completedFinalAct)
         {
             await EnsureFinalActRetireAppliedAsync();
@@ -158,13 +199,30 @@ public class RetreatManager : MonoBehaviour
         {
             STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Boot", "final_act_continue");
             RunManager.Instance.OnRunEnd(true, false);
+            STSSceneLoader.Instance?.EndLoading();
             STSSceneLoader.Instance.LoadScene("STS_Boot");
             return;
         }
 
+        if (!await ContinueRunAfterRetreatAsync())
+        {
+            STSSceneLoader.Instance?.EndLoading();
+            if (choicePanel != null)
+                choicePanel.SetActive(true);
+            if (scorePanel != null)
+                scorePanel.SetActive(true);
+            if (buttonCanvasGroup != null)
+            {
+                buttonCanvasGroup.alpha = 1f;
+                buttonCanvasGroup.interactable = true;
+                buttonCanvasGroup.blocksRaycasts = true;
+            }
+            leavingRetreat = false;
+            return;
+        }
+
         STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Map", "retreat_continue");
-        RunManager.Instance.RegenerateMap = true;
-        RunManager.Instance.act++;
+        STSSceneLoader.Instance?.EndLoading();
         STSSceneLoader.Instance.LoadScene("STS_Map");
     }
 
@@ -180,6 +238,8 @@ public class RetreatManager : MonoBehaviour
     {
         if (goingToMenu) return;
         goingToMenu = true;
+        leavingRetreat = true;
+        STSSceneLoader.Instance?.BeginLoading();
 
         if (RunManager.Instance != null && RunManager.Instance.completedFinalAct)
         {
@@ -191,6 +251,7 @@ public class RetreatManager : MonoBehaviour
         }
         STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Boot", "retreat_menu");
         RunManager.Instance.OnRunEnd(true, !(RunManager.Instance != null && RunManager.Instance.completedFinalAct));
+        STSSceneLoader.Instance?.EndLoading();
         STSSceneLoader.Instance.LoadScene("STS_Boot");
     }
 
@@ -239,7 +300,6 @@ public class RetreatManager : MonoBehaviour
         result.lines.Add(new ScoreLine { label = "Actes atteints", value = run.act * 120 });
         result.lines.Add(new ScoreLine { label = "Reliques possédées", value = relicCount * 40 });
         result.lines.Add(new ScoreLine { label = "Taille du deck", value = deckCount * 5 });
-        result.lines.Add(new ScoreLine { label = "Or transporté", value = Mathf.Max(0, run.gold) });
         result.lines.Add(new ScoreLine { label = "PV restants", value = hpPercent * 2 });
 
         result.totalScore = result.lines.Sum(l => l.value);
@@ -285,7 +345,14 @@ public class RetreatManager : MonoBehaviour
 
         if (tokenRewardText != null)
         {
-            tokenRewardText.text = $"Récompenses en tokens: +{result.tokenReward}";
+            if (ShouldUseServerTokenPreview())
+            {
+                tokenRewardText.text = "Récompenses en tokens: calcul serveur...";
+            }
+            else
+            {
+                tokenRewardText.text = $"Récompenses en tokens: +{result.tokenReward}";
+            }
         }
 
         Debug.Log($"Retreat score details:\n{breakdownText}\nToken reward: +{result.tokenReward}");
@@ -323,24 +390,114 @@ public class RetreatManager : MonoBehaviour
 
         await EnsureRetreatPreviewLoadedAsync();
 
-        long tokens = retreatPreviewResponse != null && retreatPreviewResponse.accepted
+        long requestedTokens = retreatPreviewResponse != null && retreatPreviewResponse.accepted
             ? Math.Max(0, retreatPreviewResponse.tokensPreview)
             : Mathf.Max(0, scoreResult.tokenReward);
 
-        if (tokens <= 0)
+        if (requestedTokens <= 0)
             return;
 
         try
         {
-            bool granted = await TryGrantTokensWithReflectionAsync(tokens);
+            bool hadBeforeBalance = TryReadTokenBalance(out long beforeBalance);
+            bool granted = await TryGrantTokensWithReflectionAsync(requestedTokens);
             if (!granted)
             {
                 Debug.LogWarning($"Retreat token reward could not be applied. No compatible method found on {nameof(PlayerProfileStore)}.");
+                return;
+            }
+
+            long effectiveGranted = requestedTokens;
+            if (hadBeforeBalance && TryReadTokenBalance(out long afterBalance))
+            {
+                effectiveGranted = Math.Max(0, afterBalance - beforeBalance);
+            }
+
+            if (tokenRewardText != null)
+            {
+                tokenRewardText.text = $"Tokens accordés: +{effectiveGranted}";
+            }
+
+            if (effectiveGranted != requestedTokens)
+            {
+                Debug.LogWarning($"Retreat token grant amount differed from requested preview. requested={requestedTokens} effective={effectiveGranted}");
             }
         }
         catch (Exception ex)
         {
             Debug.LogError($"Error while granting retreat token reward: {ex}");
+        }
+    }
+
+    private bool ShouldUseServerTokenPreview()
+    {
+        return RunManager.Instance != null
+            && !RunManager.Instance.completedFinalAct
+            && !RunManager.Instance.unrestrictedMode
+            && !string.IsNullOrWhiteSpace(RunManager.Instance.runId);
+    }
+
+    private async Task<bool> ContinueRunAfterRetreatAsync()
+    {
+        if (RunManager.Instance == null)
+            return false;
+
+        if (string.IsNullOrWhiteSpace(RunManager.Instance.runId) || RunManager.Instance.unrestrictedMode)
+        {
+            RunManager.Instance?.ActAndRegenerateLocally();
+            return true;
+        }
+
+        try
+        {
+            STSApiRunState nextState = await STSApiClient.RetreatContinueAsync(RunManager.Instance.runId);
+            if (nextState == null)
+            {
+                Debug.LogWarning("Retreat continue request returned no state. Attempting to recover authoritative current run state.");
+                STSApiCurrentRunResponse currentRun = await STSApiClient.CurrentRunAsync();
+                if (currentRun != null && currentRun.hasRun && currentRun.run != null)
+                {
+                    STSApiRunState recoveredState = STSApiClient.ConvertToRunState(currentRun.run);
+                    if (recoveredState != null && recoveredState.runId == RunManager.Instance.runId && recoveredState.act >= RunManager.Instance.act)
+                    {
+                        RunManager.Instance.ApplyRemoteRunState(recoveredState);
+                        return true;
+                    }
+                }
+
+                Debug.LogWarning("Retreat continue recovery did not produce a usable authoritative run state. Staying on retreat screen to avoid desync.");
+                RunManager.Instance.EnableUnrestrictedMode("retreat continue unavailable, applying local continue fallback");
+                RunManager.Instance.ActAndRegenerateLocally();
+                return true;
+            }
+
+            RunManager.Instance.ApplyRemoteRunState(nextState);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"Failed to continue run through API after retreat: {ex.Message}. Attempting authoritative current-run recovery.");
+            try
+            {
+                STSApiCurrentRunResponse currentRun = await STSApiClient.CurrentRunAsync();
+                if (currentRun != null && currentRun.hasRun && currentRun.run != null)
+                {
+                    STSApiRunState recoveredState = STSApiClient.ConvertToRunState(currentRun.run);
+                    if (recoveredState != null && recoveredState.runId == RunManager.Instance.runId && recoveredState.act >= RunManager.Instance.act)
+                    {
+                        RunManager.Instance.ApplyRemoteRunState(recoveredState);
+                        return true;
+                    }
+                }
+            }
+            catch (Exception recoveryEx)
+            {
+                Debug.LogWarning($"Failed to recover current run after retreat continue failure: {recoveryEx.Message}");
+            }
+
+            RunManager.Instance.EnableUnrestrictedMode($"retreat continue failed: {ex.Message}");
+            RunManager.Instance.ActAndRegenerateLocally();
+            return true;
         }
     }
 
@@ -360,12 +517,28 @@ public class RetreatManager : MonoBehaviour
             {
                 await previewRequestTask;
             }
+
+            EnsureLocalTokenFallbackIfPreviewMissing();
             return;
         }
 
         previewRequestStarted = true;
         previewRequestTask = LoadRetreatPreviewAsync();
         await previewRequestTask;
+        EnsureLocalTokenFallbackIfPreviewMissing();
+    }
+
+    private void EnsureLocalTokenFallbackIfPreviewMissing()
+    {
+        if (retreatPreviewResponse != null && retreatPreviewResponse.accepted)
+        {
+            return;
+        }
+
+        if (tokenRewardText != null && scoreResult != null)
+        {
+            tokenRewardText.text = $"Récompenses en tokens: +{Mathf.Max(0, scoreResult.tokenReward)}";
+        }
     }
 
     private async Task LoadRetreatPreviewAsync()
@@ -373,9 +546,17 @@ public class RetreatManager : MonoBehaviour
         try
         {
             retreatPreviewResponse = await STSApiClient.RetreatPreviewAsync(RunManager.Instance.runId);
+            if (leavingRetreat)
+            {
+                return;
+            }
             if (retreatPreviewResponse == null || !retreatPreviewResponse.accepted)
             {
                 Debug.LogWarning("Retreat preview request did not return an accepted response. Keeping local retreat summary.");
+                if (tokenRewardText != null && scoreResult != null)
+                {
+                    tokenRewardText.text = $"Récompenses en tokens: +{Mathf.Max(0, scoreResult.tokenReward)}";
+                }
                 return;
             }
 
@@ -385,6 +566,10 @@ public class RetreatManager : MonoBehaviour
         catch (Exception ex)
         {
             Debug.LogWarning($"Failed to load retreat preview through API, keeping local summary: {ex.Message}");
+            if (tokenRewardText != null && scoreResult != null)
+            {
+                tokenRewardText.text = $"Récompenses en tokens: +{Mathf.Max(0, scoreResult.tokenReward)}";
+            }
         }
     }
 
@@ -412,6 +597,10 @@ public class RetreatManager : MonoBehaviour
         try
         {
             retireResponse = await STSApiClient.RetireRunAsync(RunManager.Instance.runId);
+            if (leavingRetreat)
+            {
+                return;
+            }
             if (retireResponse == null || !retireResponse.accepted)
             {
                 Debug.LogWarning("Final-act retire request did not return an accepted response. Falling back to local score display.");
@@ -429,7 +618,7 @@ public class RetreatManager : MonoBehaviour
 
     private void RenderServerRetireSummary(STSApiRunRetireResponse response)
     {
-        if (response == null)
+        if (response == null || leavingRetreat)
             return;
 
         if (scoreTitleText != null)
@@ -440,7 +629,7 @@ public class RetreatManager : MonoBehaviour
         if (scoreDetailsText != null)
         {
             scoreDetailsText.text = BuildServerBreakdownText(
-                "Vous avez vaincu le boss final. Les recompenses de fin de run ont ete calculees par le serveur.",
+                "Vous avez passé le dernier acte. Revenez plus tard pour pouvoir aller plus loin!",
                 response.status,
                 response.score,
                 response.visitedNodeScore,
@@ -460,13 +649,13 @@ public class RetreatManager : MonoBehaviour
 
         if (tokenRewardText != null)
         {
-            tokenRewardText.text = $"Tokens accordes: +{response.tokensGranted} (solde: {response.tokenBalance})";
+            tokenRewardText.text = $"Tokens accordés: +{response.tokensGranted} (solde: {response.tokenBalance})";
         }
     }
 
     private void RenderServerPreviewSummary(STSApiRetreatPreviewResponse response)
     {
-        if (response == null)
+        if (response == null || leavingRetreat)
             return;
 
         if (scoreTitleText != null)
@@ -477,7 +666,7 @@ public class RetreatManager : MonoBehaviour
         if (scoreDetailsText != null)
         {
             scoreDetailsText.text = BuildServerBreakdownText(
-                "Apercu serveur pour cette fin d'acte (sans retrait de run).",
+                "Aperçu serveur pour cette fin d'acte",
                 response.status,
                 response.score,
                 response.visitedNodeScore,
@@ -497,7 +686,7 @@ public class RetreatManager : MonoBehaviour
 
         if (tokenRewardText != null)
         {
-            tokenRewardText.text = $"Tokens prevus: +{response.tokensPreview} (solde projete: {response.projectedTokenBalance})";
+            tokenRewardText.text = $"Tokens prévus: +{response.tokensPreview} (solde projete: {response.projectedTokenBalance})";
         }
     }
 
@@ -522,22 +711,16 @@ public class RetreatManager : MonoBehaviour
         var sb = new StringBuilder();
         sb.AppendLine(intro);
         sb.AppendLine();
-        sb.AppendLine($"Etages parcourus: +{visitedNodeScore}");
-        sb.AppendLine($"Combats gagnes: +{combatVictoryScore}");
+        sb.AppendLine($"Étages parcourus: +{visitedNodeScore}");
+        sb.AppendLine($"Combats gagnés: +{combatVictoryScore}");
         sb.AppendLine($"Elites vaincues: +{eliteVictoryScore}");
-        sb.AppendLine($"Evenements visites: +{eventVisitedScore}");
+        sb.AppendLine($"Événements visités: +{eventVisitedScore}");
         sb.AppendLine($"Actes atteints: +{actReachedScore}");
-        sb.AppendLine($"Reliques possedees: +{relicOwnedScore}");
+        sb.AppendLine($"Reliques possédées: +{relicOwnedScore}");
         sb.AppendLine($"Taille du deck: +{deckCardScore}");
-        sb.AppendLine($"Or transporte: +{goldOwnedScore}");
         sb.AppendLine($"PV restants: +{remainingHpPercentScore}");
         sb.AppendLine();
         sb.AppendLine($"Score serveur: {score}");
-        sb.AppendLine($"Statut run: {status}");
-        if (scorePerToken > 0)
-        {
-            sb.AppendLine($"Conversion: {rounding} ({scorePerToken} score par token, minimum {minimumReward})");
-        }
 
         return sb.ToString();
     }
@@ -569,6 +752,90 @@ public class RetreatManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    private bool TryReadTokenBalance(out long balance)
+    {
+        balance = 0;
+        Type storeType = typeof(PlayerProfileStore);
+
+        foreach (string methodName in TokenBalanceMethodCandidates)
+        {
+            MethodInfo method = storeType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static);
+            if (method == null || method.GetParameters().Length != 0)
+                continue;
+
+            object result = method.Invoke(null, null);
+            if (TryConvertToLong(result, out balance))
+                return true;
+        }
+
+        foreach (string memberName in TokenBalanceMemberCandidates)
+        {
+            PropertyInfo property = storeType.GetProperty(memberName, BindingFlags.Public | BindingFlags.Static);
+            if (property != null)
+            {
+                object value = property.GetValue(null);
+                if (TryConvertToLong(value, out balance))
+                    return true;
+            }
+
+            FieldInfo field = storeType.GetField(memberName, BindingFlags.Public | BindingFlags.Static);
+            if (field != null)
+            {
+                object value = field.GetValue(null);
+                if (TryConvertToLong(value, out balance))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool TryConvertToLong(object value, out long converted)
+    {
+        converted = 0;
+        if (value == null)
+            return false;
+
+        switch (value)
+        {
+            case byte byteValue:
+                converted = byteValue;
+                return true;
+            case sbyte sbyteValue:
+                converted = sbyteValue;
+                return true;
+            case short shortValue:
+                converted = shortValue;
+                return true;
+            case ushort ushortValue:
+                converted = ushortValue;
+                return true;
+            case int intValue:
+                converted = intValue;
+                return true;
+            case uint uintValue:
+                converted = uintValue;
+                return true;
+            case long longValue:
+                converted = longValue;
+                return true;
+            case ulong ulongValue:
+                converted = ulongValue > long.MaxValue ? long.MaxValue : (long)ulongValue;
+                return true;
+            case float floatValue:
+                converted = (long)floatValue;
+                return true;
+            case double doubleValue:
+                converted = (long)doubleValue;
+                return true;
+            case decimal decimalValue:
+                converted = (long)decimalValue;
+                return true;
+            default:
+                return false;
+        }
     }
 
     private static bool TryConvertNumeric(long value, Type targetType, out object convertedValue)

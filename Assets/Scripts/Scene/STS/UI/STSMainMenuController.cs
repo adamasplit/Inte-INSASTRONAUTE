@@ -23,6 +23,7 @@ public class STSMainMenuController : MonoBehaviour
     GameObject tutorialPromptRoot;
     bool transitionInProgress;
     int overlayFadeVersion;
+    int loadButtonRefreshVersion;
 
     void Awake()
     {
@@ -45,6 +46,12 @@ public class STSMainMenuController : MonoBehaviour
         transitionInProgress = true;
         await FadeBlackOverlayToAsync(1f, blackFadeInDuration, keepVisibleAtEnd: true);
 
+        if (await TryContinueExistingRunAsync())
+        {
+            transitionInProgress = false;
+            return;
+        }
+
         if (!forceShowTutorialPrompt && HasSeenNewGameTutorialPrompt())
         {
             characterSelectUI?.Show();
@@ -54,12 +61,57 @@ public class STSMainMenuController : MonoBehaviour
         }
 
         ShowTutorialPrompt(
-            "Voulez-vous lancer le tutoriel avant de commencer une nouvelle partie ?",
+            "Voulez-vous lancer le tutoriel avant de commencer ou reprendre une partie ?",
             StartTutorialFromNewGame,
             HandleDeclineTutorialPrompt
         );
 
         transitionInProgress = false;
+    }
+
+    async Task<bool> TryContinueExistingRunAsync()
+    {
+        try
+        {
+            STSApiCurrentRunResponse currentRun = await STSApiClient.CurrentRunAsync();
+            if (currentRun == null || !currentRun.hasRun || currentRun.run == null)
+            {
+                return false;
+            }
+
+            introSequence?.HideTitleLine();
+
+            if (RunManager.Instance == null)
+            {
+                new GameObject("RunManager").AddComponent<RunManager>();
+            }
+
+            RunManager.Instance.OnRunEnd(true, false);
+
+            await STSCardDatabase.LoadAsync();
+            await PlayersDatabase.LoadAsync();
+            await EnemyDataDatabase.LoadAsync();
+            await EnemyPoolDatabase.LoadAsync();
+
+            if (!RunManager.Instance.ApplyRemoteRunIfAvailable(currentRun.run))
+            {
+                return false;
+            }
+
+            if (RunManager.Instance.ui != null)
+            {
+                RunManager.Instance.ui.gameObject.SetActive(true);
+            }
+
+            STSRunAuditSystem.RecordRunStarted(RunManager.Instance);
+            STSSceneLoader.Instance?.LoadScene(resumeSceneName);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"Failed to continue existing run from main menu: {ex.Message}");
+            return false;
+        }
     }
 
     void Start()
@@ -80,44 +132,114 @@ public class STSMainMenuController : MonoBehaviour
         EnsureButtonGoldGlow(loadButton);
     }
 
-    public void RefreshLoadButtonState()
+    public async void RefreshLoadButtonState()
     {
-        if (loadButton != null)
+        if (loadButton == null)
         {
-            loadButton.gameObject.SetActive(STSRunSaveSystem.HasLoadableSave());
+            return;
         }
+
+        int refreshVersion = ++loadButtonRefreshVersion;
+
+        bool hasCurrentRun = false;
+
+        if (RunManager.Instance != null && !string.IsNullOrWhiteSpace(RunManager.Instance.runId))
+        {
+            hasCurrentRun = true;
+        }
+        else if (STSRunSaveSystem.TryGetSavedRunId(out _))
+        {
+            hasCurrentRun = true;
+        }
+        else
+        {
+            try
+            {
+                STSApiCurrentRunResponse currentRun = await STSApiClient.CurrentRunAsync();
+                if (currentRun == null)
+                {
+                    hasCurrentRun = false;
+                }
+                else
+                {
+                    hasCurrentRun = currentRun.hasRun && currentRun.run != null && !string.IsNullOrWhiteSpace(currentRun.run.runId);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"Failed to refresh Give Up button state from API: {ex.Message}");
+                hasCurrentRun = false;
+            }
+        }
+
+        if (refreshVersion != loadButtonRefreshVersion)
+        {
+            return;
+        }
+
+        loadButton.gameObject.SetActive(hasCurrentRun);
     }
 
     public async void LoadSavedRun()
+    {
+        await AbandonCurrentRunAsync();
+    }
+
+    public async Task AbandonCurrentRunAsync()
     {
         if (transitionInProgress)
         {
             return;
         }
 
-        if (!STSRunSaveSystem.HasLoadableSave())
-            return;
-
         transitionInProgress = true;
         await FadeBlackOverlayToAsync(1f, blackFadeInDuration, keepVisibleAtEnd: true);
 
         introSequence?.HideTitleLine();
+
+        string runId = null;
+        if (RunManager.Instance != null && !string.IsNullOrWhiteSpace(RunManager.Instance.runId))
+        {
+            runId = RunManager.Instance.runId;
+        }
+        else if (STSRunSaveSystem.TryGetSavedRunId(out string savedRunId))
+        {
+            runId = savedRunId;
+        }
+        else
+        {
+            try
+            {
+                STSApiCurrentRunResponse currentRun = await STSApiClient.CurrentRunAsync();
+                runId = currentRun != null && currentRun.hasRun ? currentRun.run?.runId : null;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"Failed to query current run before abandon: {ex.Message}");
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(runId))
+        {
+            try
+            {
+                await STSApiClient.ResetRunAsync(runId);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"Failed to reset remote run during abandon: {ex.Message}");
+            }
+        }
 
         if (RunManager.Instance == null)
         {
             new GameObject("RunManager").AddComponent<RunManager>();
         }
 
-        await STSCardDatabase.LoadAsync();
+        RunManager.Instance.OnRunEnd(true, false);
+        RefreshLoadButtonState();
 
-        if (!RunManager.Instance.LoadSavedRun())
-        {
-            await FadeBlackOverlayToAsync(0f, blackFadeOutDuration);
-            transitionInProgress = false;
-            return;
-        }
-
-        STSSceneLoader.Instance?.LoadScene(resumeSceneName);
+        await FadeBlackOverlayToAsync(0f, blackFadeOutDuration);
         transitionInProgress = false;
     }
 

@@ -160,6 +160,11 @@ public static class RewardGenerator
                 seenCardIds.Add(card.data.id);
             }
 
+            if (result != null && result.elite && card.enchantments != null && card.enchantments.Count == 0)
+            {
+                EnchantManager.ApplyEnchant(card, 1, includeTreasureEnchants: true);
+            }
+
             choices.Add(card);
         }
 

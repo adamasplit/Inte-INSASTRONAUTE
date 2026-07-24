@@ -1,9 +1,11 @@
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 public interface IRewardFlowHost
 {
     void NotifyClaimed(RewardEntryView entry);
+    Task<bool> TryClaimServerRewardAsync(RewardItem rewardItem, string selectedCardId = null);
 }
 
 public abstract class RewardEntryView : MonoBehaviour

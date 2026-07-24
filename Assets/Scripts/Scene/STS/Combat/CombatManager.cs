@@ -742,6 +742,9 @@ public class CombatManager : MonoBehaviour
         }
         if (outcome == TeamOutcome.Victory)
         {
+            STSSceneLoader.Instance?.BeginLoading();
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.08f);
+
             foreach (var relic in RunManager.Instance.relics)
             {
                 relic.OnCombatEnd(player);
@@ -771,6 +774,8 @@ public class CombatManager : MonoBehaviour
                 yield return null;
             }
 
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.42f);
+
             bool completionAccepted = completeTask.Status == TaskStatus.RanToCompletion && completeTask.Result;
             if (!completionAccepted)
             {
@@ -781,6 +786,7 @@ public class CombatManager : MonoBehaviour
                 else
                 {
                     Debug.LogWarning("[STS-RUN] Combat completion was not accepted. Staying in combat scene to avoid run desync.");
+                    STSSceneLoader.Instance?.EndLoading();
                     yield break;
                 }
             }
@@ -791,11 +797,13 @@ public class CombatManager : MonoBehaviour
                 RunManager.Instance.pendingReward = null;
                 STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Retreat", "final_act_complete");
                 STSSceneLoader.Instance.LoadScene("STS_Retreat");
+                STSSceneLoader.Instance?.EndLoading();
                 yield break;
             }
             RunManager.Instance.pendingReward = RewardGenerator.GenerateReward(result);
             STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Reward", "combat_complete");
             STSSceneLoader.Instance.LoadScene("STS_Reward");
+            STSSceneLoader.Instance?.EndLoading();
         }
         else if (outcome == TeamOutcome.Defeat)
         {
@@ -846,15 +854,63 @@ public class CombatManager : MonoBehaviour
                 return true;
             }
 
+            if (await TryRecoverCompletedNodeStateAsync(result, "rejected_or_null_response"))
+            {
+                return true;
+            }
+
             Debug.LogWarning($"[STS-RUN] CompleteNode response (combat) was null or rejected for result={request.result}.");
             RunManager.Instance.EnableUnrestrictedMode($"combat completion rejected for result={request.result}");
         }
         catch (Exception ex)
         {
+            if (await TryRecoverCompletedNodeStateAsync(result, $"exception:{ex.Message}"))
+            {
+                return true;
+            }
+
             Debug.LogWarning($"[STS-RUN] CompleteNode request (combat) failed for result={request.result}: {ex.Message}");
             RunManager.Instance.EnableUnrestrictedMode($"combat completion failed for result={request.result}: {ex.Message}");
         }
 
         return false;
+    }
+
+    private async Task<bool> TryRecoverCompletedNodeStateAsync(string result, string cause)
+    {
+        if (RunManager.Instance == null || string.IsNullOrWhiteSpace(RunManager.Instance.runId))
+            return false;
+
+        try
+        {
+            STSApiCurrentRunResponse currentRun = await STSApiClient.CurrentRunAsync();
+            if (currentRun == null || !currentRun.hasRun || currentRun.run == null)
+                return false;
+
+            STSApiRunState recoveredState = STSApiClient.ConvertToRunState(currentRun.run);
+            if (recoveredState == null)
+                return false;
+
+            int localNodeId = RunManager.Instance.currentNode != null ? RunManager.Instance.currentNode.id : -1;
+            bool nodeMarkedCompleted = recoveredState.map != null && recoveredState.map.Exists(n => n != null && n.id == localNodeId && n.completed);
+            bool runProgressed = localNodeId >= 0 && recoveredState.currentNodeId != localNodeId;
+            bool encounterCleared = recoveredState.activeEncounter == null;
+
+            bool canTreatAsAccepted = nodeMarkedCompleted
+                || runProgressed
+                || (string.Equals(result, "victory", StringComparison.OrdinalIgnoreCase) && encounterCleared);
+
+            if (!canTreatAsAccepted)
+                return false;
+
+            RunManager.Instance.ApplyRemoteRunState(recoveredState, currentRun.run.pendingRewards);
+            Debug.LogWarning($"[STS-RUN] CompleteNode recovered from authoritative current-run state after {cause}. localNodeId={localNodeId} serverCurrentNodeId={recoveredState.currentNodeId} serverCompleted={nodeMarkedCompleted}");
+            return true;
+        }
+        catch (Exception recoveryEx)
+        {
+            Debug.LogWarning($"[STS-RUN] Current-run recovery after complete-node failure also failed: {recoveryEx.Message}");
+            return false;
+        }
     }
 }

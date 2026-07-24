@@ -502,7 +502,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Continuer
+  m_text: Abandonner la partie
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4608b5d5a3b19b949b3f88561ceaefd6, type: 2}
   m_sharedMaterial: {fileID: -3726976100977417776, guid: 4608b5d5a3b19b949b3f88561ceaefd6, type: 2}
@@ -529,7 +529,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 65.7
+  m_fontSize: 61.55
   m_fontSizeBase: 35
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3997,7 +3997,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Mode sans restrictions
+  m_text: '! Erreur !'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2f6278bca8316ac428b36a059cd5f7a4, type: 2}
   m_sharedMaterial: {fileID: -7481209980691822337, guid: 2f6278bca8316ac428b36a059cd5f7a4, type: 2}
@@ -17978,7 +17978,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Nouvelle partie
+  m_text: Nouvelle partie / Continuer
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4608b5d5a3b19b949b3f88561ceaefd6, type: 2}
   m_sharedMaterial: {fileID: -3726976100977417776, guid: 4608b5d5a3b19b949b3f88561ceaefd6, type: 2}
@@ -18005,7 +18005,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 47.55
   m_fontSizeBase: 35
   m_fontWeight: 400
   m_enableAutoSizing: 1

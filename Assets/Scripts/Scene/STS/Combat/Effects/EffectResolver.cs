@@ -662,6 +662,22 @@ public static class EffectResolver
                                     break;
                                 case CardSelectionEffect.None:
                                     break;
+                                case CardSelectionEffect.ReduceCost:
+                                    card.AddModifier(new FlatModifier(StatType.Cost, -1));
+                                    break;
+                                case CardSelectionEffect.ReduceCostTemp:
+                                    StatModifier mod=new FlatModifier(StatType.Cost, 1);
+                                    mod.temporary=true;
+                                    card.AddModifier(mod);
+                                    break;
+                                case CardSelectionEffect.IncreaseDamage:
+                                    card.AddModifier(new FlatModifier(StatType.Damage, effect.duration));
+                                    break;
+                                case CardSelectionEffect.IncreaseDamageTemp:
+                                    StatModifier mod2=new FlatModifier(StatType.Damage, effect.duration);
+                                    mod2.temporary=true;
+                                    card.AddModifier(mod2);
+                                    break;
                                 default:
                                     break;
                             }

@@ -75,49 +75,19 @@ public static class STSCardDatabase
     {
         Debug.Log("STSCardDatabase falling back to StreamingAssets/STSCardData.");
 
-        string combinedJson = await StreamingAssetsLoader.ReadAllTextAsync("STSCardData/cards.json");
-        if (!string.IsNullOrEmpty(combinedJson))
-        {
-            try
-            {
-                CardDatabaseWrapper wrapper = JsonConvert.DeserializeObject<CardDatabaseWrapper>(combinedJson);
-                if (wrapper != null && wrapper.cards != null)
-                {
-                    Debug.Log($"STSCardDatabase loaded {wrapper.cards.Count} cards from cards.json.");
-                    foreach (STSCardDataDTO dto in wrapper.cards)
-                    {
-                        if (dto == null)
-                        {
-                            Debug.LogWarning("STSCardDatabase encountered a null card DTO in cards.json.");
-                            continue;
-                        }
-
-                        STSCardData card = STSCardData.FromDTO(dto);
-                        RegisterCard(card);
-                        allCards.Add(card);
-                    }
-
-                    Debug.Log($"STSCardDatabase streaming-assets combined file load completed with {allCards.Count} cards.");
-                    return;
-                }
-
-                Debug.LogWarning("STSCardDatabase combined cards.json did not contain a cards array.");
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError($"Failed to load combined cards.json: {ex}");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("STSCardDatabase could not read StreamingAssets/STSCardData/cards.json; falling back to per-file loading.");
-        }
-
         List<string> files = await StreamingAssetsLoader.ListJsonFilesAsync("STSCardData");
         Debug.Log($"STSCardDatabase found {files.Count} card JSON files.");
 
+        int perFileLoaded = 0;
         foreach (string file in files)
         {
+            if (string.Equals(file, "STSCardData/cards.json", StringComparison.OrdinalIgnoreCase)
+                || file.EndsWith("/cards.json", StringComparison.OrdinalIgnoreCase)
+                || file.EndsWith("\\cards.json", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
             try
             {
                 string json = await StreamingAssetsLoader.ReadAllTextAsync(file);
@@ -133,8 +103,10 @@ public static class STSCardDatabase
                 }
 
                 STSCardData card = STSCardData.FromDTO(dto);
-                RegisterCard(card);
-                allCards.Add(card);
+                if (UpsertCard(card, true))
+                {
+                    perFileLoaded++;
+                }
             }
             catch (System.Exception ex)
             {
@@ -142,7 +114,54 @@ public static class STSCardDatabase
             }
         }
 
-        Debug.Log($"STSCardDatabase per-file StreamingAssets load completed with {allCards.Count} cards.");
+        Debug.Log($"STSCardDatabase per-file StreamingAssets load completed with {perFileLoaded} cards.");
+
+        string combinedJson = await StreamingAssetsLoader.ReadAllTextAsync("STSCardData/cards.json");
+        if (!string.IsNullOrEmpty(combinedJson))
+        {
+            try
+            {
+                CardDatabaseWrapper wrapper = JsonConvert.DeserializeObject<CardDatabaseWrapper>(combinedJson);
+                if (wrapper != null && wrapper.cards != null)
+                {
+                    int combinedAdded = 0;
+                    int combinedSkipped = 0;
+                    foreach (STSCardDataDTO dto in wrapper.cards)
+                    {
+                        if (dto == null)
+                        {
+                            continue;
+                        }
+
+                        STSCardData card = STSCardData.FromDTO(dto);
+                        if (UpsertCard(card, false))
+                        {
+                            combinedAdded++;
+                        }
+                        else
+                        {
+                            combinedSkipped++;
+                        }
+                    }
+
+                    Debug.Log($"STSCardDatabase merged cards.json as fallback: added={combinedAdded}, skipped_existing={combinedSkipped}, total={allCards.Count}.");
+                }
+                else
+                {
+                    Debug.LogWarning("STSCardDatabase combined cards.json did not contain a cards array.");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Failed to load combined cards.json: {ex}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("STSCardDatabase could not read StreamingAssets/STSCardData/cards.json.");
+        }
+
+        Debug.Log($"STSCardDatabase StreamingAssets load completed with {allCards.Count} cards.");
     }
 
     static async Task<bool> TryLoadFromRemoteApiAsync()
@@ -183,8 +202,7 @@ public static class STSCardDatabase
                 try
                 {
                     STSCardData card = STSCardData.FromDTO(dto);
-                    RegisterCard(card);
-                    allCards.Add(card);
+                    UpsertCard(card, true);
                 }
                 catch (System.Exception ex)
                 {
@@ -268,6 +286,57 @@ public static class STSCardDatabase
         {
             cardDict[card.id] = card;
         }
+    }
+
+    static bool UpsertCard(STSCardData card, bool overwriteExisting)
+    {
+        if (card == null)
+            return false;
+
+        string key = GetCardKey(card);
+        if (string.IsNullOrWhiteSpace(key))
+        {
+            Debug.LogWarning("STSCardDatabase encountered a card without id/cardName and skipped it.");
+            return false;
+        }
+
+        int existingIndex = allCards.FindIndex(existing => IsSameCard(existing, key));
+        if (existingIndex >= 0)
+        {
+            if (!overwriteExisting)
+                return false;
+
+            allCards[existingIndex] = card;
+            RegisterCard(card);
+            return true;
+        }
+
+        RegisterCard(card);
+        allCards.Add(card);
+        return true;
+    }
+
+    static bool IsSameCard(STSCardData card, string key)
+    {
+        if (card == null || string.IsNullOrWhiteSpace(key))
+            return false;
+
+        return string.Equals(card.id, key, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(card.cardName, key, StringComparison.OrdinalIgnoreCase);
+    }
+
+    static string GetCardKey(STSCardData card)
+    {
+        if (card == null)
+            return null;
+
+        if (!string.IsNullOrWhiteSpace(card.id))
+            return card.id.Trim();
+
+        if (!string.IsNullOrWhiteSpace(card.cardName))
+            return card.cardName.Trim();
+
+        return null;
     }
 
     public static void Load()

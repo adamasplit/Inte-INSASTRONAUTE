@@ -104,7 +104,7 @@ public class CharacterSelectUI : MonoBehaviour
         introSequence?.HideTitleLine();
         RunManager.Instance.forceTutorial = false;
         int hp = PlayersDatabase.Get(character)?.hp ?? 100;
-        RunManager.Instance.StartRun(character.ToString(), hp, new List<Relic>() {relic});
+        RunManager.Instance.StartRun(character.ToString(), hp, new List<Relic>() {relic}, preferFreshRun: true);
     }
 
     public string CharacterDescription(SelectableCharacter character)

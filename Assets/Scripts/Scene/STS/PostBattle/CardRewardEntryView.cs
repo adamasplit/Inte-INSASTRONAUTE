@@ -79,6 +79,28 @@ public class CardRewardEntryView : RewardEntryView
 
     private IEnumerator SelectCardRoutine(CardInstance card, RewardCardController sourceController)
     {
+        if (manager != null)
+        {
+            string selectedCardId = card != null && card.data != null ? card.data.id : null;
+            var claimTask = manager.TryClaimServerRewardAsync(reward, selectedCardId);
+            while (!claimTask.IsCompleted)
+            {
+                yield return null;
+            }
+
+            if (claimTask.IsFaulted || claimTask.IsCanceled || !claimTask.Result)
+            {
+                selectionLocked = false;
+                selectedController = null;
+                foreach (var controller in controllers)
+                {
+                    if (controller != null)
+                        controller.SetSelectable(true);
+                }
+                yield break;
+            }
+        }
+
         RunManager.Instance.deck.Add(card);
 
         reward.Claim();

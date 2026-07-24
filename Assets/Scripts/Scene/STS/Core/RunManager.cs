@@ -36,6 +36,7 @@ public class RunManager : MonoBehaviour
     public JToken serverAccountInventoryPatch;
     public List<JToken> serverPendingRewards = new();
     public STSApiMapPatchState serverMapPatch;
+    public bool backendRewardClaimUnavailable;
     public bool completedFinalAct;
     public bool unrestrictedMode;
     public string unrestrictedModeReason;
@@ -74,7 +75,7 @@ public class RunManager : MonoBehaviour
         relic.OnAcquire(player);
     }
     private bool startingRun = false;
-    public async Task StartRunAsync(string character, int maxHP, List<Relic> startingRelics, bool startOnMap = true, bool forceTutorial = false, int tutorialStage = 0, string nextSceneName = null)
+    public async Task StartRunAsync(string character, int maxHP, List<Relic> startingRelics, bool startOnMap = true, bool forceTutorial = false, int tutorialStage = 0, string nextSceneName = null, bool preferFreshRun = false)
     {
         Debug.Log($"[STS-RUN] StartRunAsync requested character={character} forceTutorial={forceTutorial} startOnMap={startOnMap} existingRunId={runId}");
         // First end other executions of StartRun to prevent multiple runs from starting at the same time
@@ -119,11 +120,48 @@ public class RunManager : MonoBehaviour
                     STSSceneLoader.Instance?.SetBackgroundProgress(0.76f);
                     remoteRun = await STSApiClient.CreateRunAsync(character, Application.version);
                     Debug.Log($"[STS-RUN] CreateRunAsync returned runId={remoteRun?.runId} status={remoteRun?.status}");
+
+                    if (preferFreshRun
+                        && remoteRun != null
+                        && !string.IsNullOrWhiteSpace(remoteRun.runId)
+                        && ShouldRestartForFreshCharacter(remoteRun, character))
+                    {
+                        Debug.LogWarning($"[STS-RUN] CreateRunAsync resumed an existing run while a fresh run was requested. Resetting runId={remoteRun.runId} and recreating.");
+                        try
+                        {
+                            await STSApiClient.ResetRunAsync(remoteRun.runId);
+                        }
+                        catch (Exception resetEx)
+                        {
+                            Debug.LogWarning($"[STS-RUN] Failed to reset resumed run before fresh start: {resetEx.Message}");
+                        }
+
+                        remoteRun = await STSApiClient.CreateRunAsync(character, Application.version);
+                        Debug.Log($"[STS-RUN] Recreate after reset returned runId={remoteRun?.runId} status={remoteRun?.status}");
+                    }
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogWarning($"Remote STS run creation failed, falling back to local run setup: {ex.Message}");
-                    EnableUnrestrictedMode($"run creation failed: {ex.Message}");
+                    Debug.LogWarning($"Remote STS run creation failed, attempting active-run recovery before local fallback: {ex.Message}");
+
+                    try
+                    {
+                        STSApiCurrentRunResponse currentRun = await STSApiClient.CurrentRunAsync();
+                        if (currentRun != null && currentRun.hasRun && currentRun.run != null)
+                        {
+                            remoteRun = currentRun.run;
+                            Debug.Log($"[STS-RUN] Recovered active run after create failure runId={remoteRun.runId} status={remoteRun.status}");
+                        }
+                        else
+                        {
+                            EnableUnrestrictedMode($"run creation failed: {ex.Message}");
+                        }
+                    }
+                    catch (Exception recoveryEx)
+                    {
+                        Debug.LogWarning($"[STS-RUN] Active-run recovery also failed: {recoveryEx.Message}");
+                        EnableUnrestrictedMode($"run creation failed: {ex.Message}");
+                    }
                 }
             }
             STSSceneLoader.Instance?.SetBackgroundProgress(0.84f);
@@ -205,9 +243,9 @@ public class RunManager : MonoBehaviour
         }
     }
 
-    public async void StartRun(string character, int maxHP, List<Relic> startingRelics, bool startOnMap = true, bool forceTutorial = false, int tutorialStage = 0)
+    public async void StartRun(string character, int maxHP, List<Relic> startingRelics, bool startOnMap = true, bool forceTutorial = false, int tutorialStage = 0, bool preferFreshRun = false)
     {
-        await StartRunAsync(character, maxHP, startingRelics, startOnMap, forceTutorial, tutorialStage);
+        await StartRunAsync(character, maxHP, startingRelics, startOnMap, forceTutorial, tutorialStage, null, preferFreshRun);
     }
 
     public void OnRunEnd()
@@ -249,6 +287,7 @@ public class RunManager : MonoBehaviour
         map = null;
         activeEncounter = null;
         completedFinalAct = false;
+        backendRewardClaimUnavailable = false;
         SetUnrestrictedMode(false, null);
         if (clearSave)
         {
@@ -320,7 +359,66 @@ public class RunManager : MonoBehaviour
         RegenerateMap = false;
         activeEncounter = remoteState.activeEncounter;
         pendingReward = null;
+        serverPendingRewards = remoteRun.pendingRewards != null
+            ? new List<JToken>(remoteRun.pendingRewards)
+            : new List<JToken>();
         return true;
+    }
+
+    public void ApplyRemoteRunState(STSApiRunState remoteState, List<JToken> pendingRewards = null)
+    {
+        if (remoteState == null)
+            return;
+
+        runId = remoteState.runId;
+        apiStatus = remoteState.status;
+        dataVersion = remoteState.dataVersion;
+
+        if (Enum.TryParse(remoteState.selectedCharacter, out SelectableCharacter parsedCharacter))
+        {
+            selectedCharacter = parsedCharacter;
+        }
+
+        act = remoteState.act;
+        currentFloor = remoteState.currentFloor;
+        gold = remoteState.gold;
+        player = new Player(remoteState.selectedCharacter, Mathf.Max(1, remoteState.playerMaxHp))
+        {
+            currentHP = remoteState.playerCurrentHp
+        };
+        deck = remoteState.deck ?? new List<CardInstance>();
+        relics = remoteState.relics ?? new List<Relic>();
+        map = remoteState.map ?? new List<MapNode>();
+        currentNode = map != null ? map.Find(n => n != null && n.id == remoteState.currentNodeId) : null;
+        if (currentNode == null && map != null && map.Count > 0)
+        {
+            currentNode = map[0];
+        }
+
+        RegenerateMap = false;
+        activeEncounter = remoteState.activeEncounter;
+        pendingReward = null;
+        serverPendingRewards = pendingRewards != null
+            ? new List<JToken>(pendingRewards)
+            : new List<JToken>();
+    }
+
+    public List<JToken> ConsumeServerPendingRewards()
+    {
+        if (serverPendingRewards == null || serverPendingRewards.Count == 0)
+        {
+            return new List<JToken>();
+        }
+
+        List<JToken> consumed = new List<JToken>(serverPendingRewards);
+        serverPendingRewards.Clear();
+        return consumed;
+    }
+
+    public void ActAndRegenerateLocally()
+    {
+        RegenerateMap = true;
+        act++;
     }
 
     public void EnableUnrestrictedMode(string reason)
@@ -345,6 +443,27 @@ public class RunManager : MonoBehaviour
         {
             ui.SetUnrestrictedMode(enabled);
         }
+    }
+
+    bool ShouldRestartForFreshCharacter(STSApiRunCreateResponse remoteRun, string requestedCharacter)
+    {
+        if (remoteRun == null)
+            return false;
+
+        if (!string.IsNullOrWhiteSpace(remoteRun.selectedCharacter)
+            && !string.IsNullOrWhiteSpace(requestedCharacter)
+            && !string.Equals(remoteRun.selectedCharacter, requestedCharacter, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        // If run already progressed beyond the entry node, this is clearly not a fresh run.
+        if (remoteRun.currentFloor > 0 || remoteRun.currentNodeId > 0)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public void ApplyNodeEnterResponse(STSApiNodeEnterResponse response)
