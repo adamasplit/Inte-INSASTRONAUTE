@@ -56,6 +56,25 @@ public class STSRunResumeResolverTests
         Assert.That(STSHealing.Apply(currentHp: 40, maxHp: 70, amount: 35), Is.EqualTo(70));
     }
 
+    [Test]
+    public void CompletionGateRejectsASecondConcurrentAttempt()
+    {
+        var gate = new STSCompletionGate();
+
+        Assert.That(gate.TryBegin(), Is.True);
+        Assert.That(gate.TryBegin(), Is.False);
+    }
+
+    [Test]
+    public void CompletionGateAllowsRetryAfterReset()
+    {
+        var gate = new STSCompletionGate();
+
+        Assert.That(gate.TryBegin(), Is.True);
+        gate.Reset();
+        Assert.That(gate.TryBegin(), Is.True);
+    }
+
     private static STSRunResumePhase Resolve(
         bool hasActiveEncounter = false,
         bool hasActiveEvent = false,

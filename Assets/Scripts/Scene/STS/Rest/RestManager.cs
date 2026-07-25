@@ -18,6 +18,7 @@ public class RestManager : MonoBehaviour
     CardInstance selectedCard;
     RestCardController selectedController;
     bool isEnchanting;
+    readonly STSCompletionGate completionGate = new STSCompletionGate();
 
     async void Start()
     {
@@ -206,8 +207,14 @@ public class RestManager : MonoBehaviour
     }
     public async void ReturnToMap()
     {
+        if (!completionGate.TryBegin())
+        {
+            return;
+        }
+
         if (!await TryCompleteCurrentNodeAsync("rest"))
         {
+            completionGate.Reset();
             return;
         }
 
@@ -254,15 +261,13 @@ public class RestManager : MonoBehaviour
                 return true;
             }
 
-            Debug.LogWarning("[STS-RUN] CompleteNode response (rest) was null or rejected. Switching to unrestricted mode and continuing locally.");
-            RunManager.Instance.EnableUnrestrictedMode("rest completion rejected");
-            return true;
+            Debug.LogWarning("[STS-RUN] CompleteNode response (rest) was null or rejected. Staying in rest scene so completion can be retried.");
+            return false;
         }
         catch (Exception ex)
         {
             Debug.LogWarning($"[STS-RUN] CompleteNode request (rest) failed: {ex.Message}");
-            RunManager.Instance.EnableUnrestrictedMode($"rest completion failed: {ex.Message}");
-            return true;
+            return false;
         }
     }
 

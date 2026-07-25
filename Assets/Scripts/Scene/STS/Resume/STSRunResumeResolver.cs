@@ -53,3 +53,22 @@ public static class STSHealing
         return System.Math.Min(maxHp, currentHp + amount);
     }
 }
+
+public sealed class STSCompletionGate
+{
+    private bool isRunning;
+
+    public bool TryBegin()
+    {
+        if (isRunning)
+            return false;
+
+        isRunning = true;
+        return true;
+    }
+
+    public void Reset()
+    {
+        isRunning = false;
+    }
+}
