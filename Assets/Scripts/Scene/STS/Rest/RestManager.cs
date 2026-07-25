@@ -27,6 +27,12 @@ public class RestManager : MonoBehaviour
             newRunManager.AddComponent<RunManager>();
             await RunManager.Instance.StartRunAsync("",50,new List<Relic>{},false);
         }
+        RunManager.Instance.restCharges = STSRestState.InitialCharges(
+            RunManager.Instance.enteredNodeId.HasValue
+                && RunManager.Instance.currentNode != null
+                && RunManager.Instance.currentNode.type == NodeType.Rest,
+            RunManager.Instance.restCharges,
+            RunManager.Instance.maxRestCharges);
         foreach (var relic in RunManager.Instance.relics)
         {
             relic.OnEnterRestSite(RunManager.Instance.player);

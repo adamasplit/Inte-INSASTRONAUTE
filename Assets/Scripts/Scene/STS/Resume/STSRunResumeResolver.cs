@@ -37,3 +37,19 @@ public static class STSRunResumeResolver
         return STSRunResumePhase.Map;
     }
 }
+
+public static class STSRestState
+{
+    public static int InitialCharges(bool isEnteredRest, int currentCharges, int maxCharges)
+    {
+        return isEnteredRest ? System.Math.Max(0, maxCharges) : System.Math.Max(0, currentCharges);
+    }
+}
+
+public static class STSHealing
+{
+    public static int Apply(int currentHp, int maxHp, int amount)
+    {
+        return System.Math.Min(maxHp, currentHp + amount);
+    }
+}

@@ -38,6 +38,24 @@ public class STSRunResumeResolverTests
         Assert.That(Resolve(), Is.EqualTo(STSRunResumePhase.Map));
     }
 
+    [Test]
+    public void ResumedRestStartsWithAllCharges()
+    {
+        Assert.That(STSRestState.InitialCharges(isEnteredRest: true, currentCharges: 0, maxCharges: 15), Is.EqualTo(15));
+    }
+
+    [Test]
+    public void OrdinarySceneKeepsExistingRestCharges()
+    {
+        Assert.That(STSRestState.InitialCharges(isEnteredRest: false, currentCharges: 2, maxCharges: 15), Is.EqualTo(2));
+    }
+
+    [Test]
+    public void HealingIsClampedToMaximumHp()
+    {
+        Assert.That(STSHealing.Apply(currentHp: 40, maxHp: 70, amount: 35), Is.EqualTo(70));
+    }
+
     private static STSRunResumePhase Resolve(
         bool hasActiveEncounter = false,
         bool hasActiveEvent = false,
