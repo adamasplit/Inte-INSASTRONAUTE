@@ -104,7 +104,7 @@ public class STSMainMenuController : MonoBehaviour
             }
 
             STSRunAuditSystem.RecordRunStarted(RunManager.Instance);
-            STSSceneLoader.Instance?.LoadScene(resumeSceneName);
+            STSSceneLoader.Instance?.LoadScene(RunManager.Instance.ResolveRemoteResumeScene());
             return true;
         }
         catch (Exception ex)

@@ -21,6 +21,7 @@ public class RunManager : MonoBehaviour
     public bool bossEncounter;
     public List<MapNode> map=null;
     public MapNode currentNode;
+    public int? enteredNodeId;
     public bool RegenerateMap = false;
     public int act=0;
     public int restCharges=3;
@@ -32,6 +33,7 @@ public class RunManager : MonoBehaviour
     public List<string> debugCards=new List<string>();//Debug option to specify which cards to add to the deck when addAllCardsToDeck is true
     [HideInInspector] public bool inCombat=false;
     public STSApiActiveEncounterState activeEncounter;
+    public JToken activeEvent;
     public JToken serverRunInventoryPatch;
     public JToken serverAccountInventoryPatch;
     public List<JToken> serverPendingRewards = new();
@@ -171,7 +173,7 @@ public class RunManager : MonoBehaviour
                 STSSceneLoader.Instance?.SetBackgroundProgress(0.90f);
                 if (startOnMap)
                 {
-                    STSSceneLoader.Instance?.LoadScene("STS_Map");
+                    STSSceneLoader.Instance?.LoadScene(ResolveRemoteResumeScene());
                     loadedScene = true;
                 }
                 else if (!string.IsNullOrEmpty(nextSceneName))
@@ -286,6 +288,8 @@ public class RunManager : MonoBehaviour
         currentNode = null;
         map = null;
         activeEncounter = null;
+        activeEvent = null;
+        enteredNodeId = null;
         completedFinalAct = false;
         backendRewardClaimUnavailable = false;
         SetUnrestrictedMode(false, null);
@@ -350,7 +354,9 @@ public class RunManager : MonoBehaviour
         deck = remoteState.deck ?? new List<CardInstance>();
         relics = remoteState.relics ?? new List<Relic>();
         map = remoteState.map ?? new List<MapNode>();
-        currentNode = map != null ? map.Find(n => n != null && n.id == remoteState.currentNodeId) : null;
+        enteredNodeId = remoteState.enteredNodeId;
+        int resumeNodeId = enteredNodeId ?? remoteState.currentNodeId;
+        currentNode = map != null ? map.Find(n => n != null && n.id == resumeNodeId) : null;
         if (currentNode == null && map != null && map.Count > 0)
         {
             currentNode = map[0];
@@ -358,6 +364,7 @@ public class RunManager : MonoBehaviour
 
         RegenerateMap = false;
         activeEncounter = remoteState.activeEncounter;
+        activeEvent = remoteState.activeEvent;
         pendingReward = null;
         serverPendingRewards = remoteRun.pendingRewards != null
             ? new List<JToken>(remoteRun.pendingRewards)
@@ -389,7 +396,9 @@ public class RunManager : MonoBehaviour
         deck = remoteState.deck ?? new List<CardInstance>();
         relics = remoteState.relics ?? new List<Relic>();
         map = remoteState.map ?? new List<MapNode>();
-        currentNode = map != null ? map.Find(n => n != null && n.id == remoteState.currentNodeId) : null;
+        enteredNodeId = remoteState.enteredNodeId;
+        int resumeNodeId = enteredNodeId ?? remoteState.currentNodeId;
+        currentNode = map != null ? map.Find(n => n != null && n.id == resumeNodeId) : null;
         if (currentNode == null && map != null && map.Count > 0)
         {
             currentNode = map[0];
@@ -397,10 +406,44 @@ public class RunManager : MonoBehaviour
 
         RegenerateMap = false;
         activeEncounter = remoteState.activeEncounter;
+        activeEvent = remoteState.activeEvent;
         pendingReward = null;
         serverPendingRewards = pendingRewards != null
             ? new List<JToken>(pendingRewards)
             : new List<JToken>();
+    }
+
+    public string ResolveRemoteResumeScene()
+    {
+        string enteredNodeType = enteredNodeId.HasValue && currentNode != null
+            ? currentNode.type.ToString()
+            : null;
+        string currentNodeType = currentNode != null ? currentNode.type.ToString() : null;
+        bool hasPendingRewards = serverPendingRewards != null && serverPendingRewards.Count > 0;
+
+        STSRunResumePhase phase = STSRunResumeResolver.Resolve(
+            activeEncounter != null,
+            activeEvent != null,
+            enteredNodeType,
+            hasPendingRewards,
+            currentNodeType,
+            currentNode != null && currentNode.completed);
+
+        bossEncounter = currentNode != null && currentNode.type == NodeType.Boss;
+        eliteEncounter = currentNode != null && currentNode.type == NodeType.Elite;
+        completedFinalAct = bossEncounter
+            && currentNode.completed
+            && EnemyPoolDatabase.IsLastAct(act);
+
+        return phase switch
+        {
+            STSRunResumePhase.Combat => "STS_Combat",
+            STSRunResumePhase.Event => "STS_Event",
+            STSRunResumePhase.Rest => "STS_Rest",
+            STSRunResumePhase.Reward => "STS_Reward",
+            STSRunResumePhase.Retreat => "STS_Retreat",
+            _ => "STS_Map"
+        };
     }
 
     public List<JToken> ConsumeServerPendingRewards()
@@ -483,6 +526,8 @@ public class RunManager : MonoBehaviour
         {
             activeEncounter = response.activeEncounter;
         }
+        activeEvent = response.activeEvent;
+        enteredNodeId = response.nodeId;
 
         if (map != null)
         {
@@ -515,6 +560,8 @@ public class RunManager : MonoBehaviour
         serverPendingRewards = response.pendingRewards ?? new List<JToken>();
         serverMapPatch = response.mapPatch;
         activeEncounter = null;
+        activeEvent = null;
+        enteredNodeId = response.mapPatch != null ? response.mapPatch.enteredNodeId : null;
 
         if (response.mapPatch != null && map != null)
         {
