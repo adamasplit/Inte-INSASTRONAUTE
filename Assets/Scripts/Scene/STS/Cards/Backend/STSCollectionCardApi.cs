@@ -15,6 +15,8 @@ public static class STSCollectionCardApi
     {
         public string id;
         public string name;
+        public string typeId;
+        public string type;
         public string imageUrl;
         public string thumbnailUrl;
     }

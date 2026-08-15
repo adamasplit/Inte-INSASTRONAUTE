@@ -36,6 +36,13 @@ test('React API bridge bootstraps its Unity receiver before requests', () => {
 
 test('Unity unwraps React bridge envelopes before parsing card lists', () => {
   assert.match(collectionCardApiSource, /class ReactBridgeResponse/)
-  assert.match(collectionCardApiSource, /JsonConvert\.DeserializeObject<ReactBridgeResponse>/)
-  assert.match(collectionCardApiSource, /TryParseCardsJson\(response\.data\.ToString\(Formatting\.None\)/)
+  assert.match(collectionCardApiSource, /root\.ToObject<ReactBridgeResponse>/)
+  assert.match(collectionCardApiSource, /payload\.ToString\(Formatting\.None\)/)
+})
+
+test('Unity accepts optional card type metadata without changing image lookup', () => {
+  assert.match(collectionCardApiSource, /public string typeId;/)
+  assert.match(collectionCardApiSource, /public string type;/)
+  assert.match(collectionCardApiSource, /cardsByName\[card\.name\] = card/)
+  assert.match(collectionCardApiSource, /GetPreferredImageUrl\(card\)/)
 })

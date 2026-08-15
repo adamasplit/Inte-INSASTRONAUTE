@@ -30,6 +30,7 @@ public class STSApiRunCreateResponse
     public STSApiRunInventoryState runInventory;
     public STSApiMapState map;
     public List<JToken> pendingRewards = new();
+    public STSApiActiveEncounterState activeEncounter;
     public JToken activeEvent;
 }
 
@@ -428,7 +429,7 @@ public static class STSApiClient
         return response;
     }
 
-    public static async Task<STSApiRunState> RetreatContinueAsync(string runId)
+    public static async Task<STSApiRunState> RetreatContinueAsync(string runId, int expectedAct)
     {
         runId = NormalizeRunId(runId);
         if (string.IsNullOrWhiteSpace(runId))
@@ -442,7 +443,7 @@ public static class STSApiClient
                 $"sts.runs.{runId}.retreat-continue",
                 "sts.runs.retreat-continue"
             },
-            new { runId }
+            new { runId, expectedAct }
         );
 
         JToken token = ParseEnvelope(json);
@@ -666,7 +667,9 @@ public static class STSApiClient
             gold = response.runInventory != null ? response.runInventory.gold : 0,
             deck = ConvertDeck(response.runInventory != null ? response.runInventory.deck : null),
             relics = ConvertRelics(response.runInventory != null ? response.runInventory.relics : null),
-            map = ConvertMap(response.map != null ? response.map.nodes : null)
+            map = ConvertMap(response.map != null ? response.map.nodes : null),
+            activeEncounter = response.activeEncounter,
+            activeEvent = response.activeEvent
         };
 
         return state;

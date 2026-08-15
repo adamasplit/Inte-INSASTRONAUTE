@@ -131,7 +131,7 @@ public class Character
     public void Heal(int amount)
     {
         int previousHP = currentHP;
-        if (RunManager.Instance != null && !RunManager.Instance.inCombat)
+        if (RunManager.Instance != null && !RunManager.Instance.inCombat && RunManager.Instance.ui != null)
         {
             RunManager.Instance.ui.FlashGreenOverlay();
         }
@@ -142,7 +142,7 @@ public class Character
                 amount = relic.OnHeal(this, amount);
             }
         }
-        currentHP = Mathf.Min(maxHP, currentHP + amount);
+        currentHP = STSHealing.Apply(currentHP, maxHP, amount);
         if (combat != null && combat.ui != null)
         {
             combat.ui.ShowDamagePopup(this, currentHP - previousHP, true, false);

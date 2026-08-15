@@ -32,7 +32,7 @@ public class RetreatManager : MonoBehaviour
     private bool tokenGrantStarted;
     private Task tokenGrantTask;
     private bool retireRequestStarted;
-    private Task retireRequestTask;
+    private Task<bool> retireRequestTask;
     private STSApiRunRetireResponse retireResponse;
     private bool previewRequestStarted;
     private Task previewRequestTask;
@@ -188,7 +188,11 @@ public class RetreatManager : MonoBehaviour
 
         if (RunManager.Instance != null && RunManager.Instance.completedFinalAct)
         {
-            await EnsureFinalActRetireAppliedAsync();
+            if (!await EnsureFinalActRetireAppliedAsync())
+            {
+                RestoreRetreatControls();
+                return;
+            }
         }
         else
         {
@@ -206,18 +210,7 @@ public class RetreatManager : MonoBehaviour
 
         if (!await ContinueRunAfterRetreatAsync())
         {
-            STSSceneLoader.Instance?.EndLoading();
-            if (choicePanel != null)
-                choicePanel.SetActive(true);
-            if (scorePanel != null)
-                scorePanel.SetActive(true);
-            if (buttonCanvasGroup != null)
-            {
-                buttonCanvasGroup.alpha = 1f;
-                buttonCanvasGroup.interactable = true;
-                buttonCanvasGroup.blocksRaycasts = true;
-            }
-            leavingRetreat = false;
+            RestoreRetreatControls();
             return;
         }
 
@@ -241,16 +234,24 @@ public class RetreatManager : MonoBehaviour
         leavingRetreat = true;
         STSSceneLoader.Instance?.BeginLoading();
 
-        if (RunManager.Instance != null && RunManager.Instance.completedFinalAct)
+        bool remoteRun = RunManager.Instance != null
+            && !string.IsNullOrWhiteSpace(RunManager.Instance.runId)
+            && !RunManager.Instance.unrestrictedMode;
+        if (remoteRun)
         {
-            await EnsureFinalActRetireAppliedAsync();
+            if (!await EnsureFinalActRetireAppliedAsync())
+            {
+                goingToMenu = false;
+                RestoreRetreatControls();
+                return;
+            }
         }
         else
         {
             await EnsureTokenRewardAppliedAsync();
         }
         STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Boot", "retreat_menu");
-        RunManager.Instance.OnRunEnd(true, !(RunManager.Instance != null && RunManager.Instance.completedFinalAct));
+        RunManager.Instance.OnRunEnd(true, false);
         STSSceneLoader.Instance?.EndLoading();
         STSSceneLoader.Instance.LoadScene("STS_Boot");
     }
@@ -450,7 +451,8 @@ public class RetreatManager : MonoBehaviour
 
         try
         {
-            STSApiRunState nextState = await STSApiClient.RetreatContinueAsync(RunManager.Instance.runId);
+            int expectedAct = RunManager.Instance.act;
+            STSApiRunState nextState = await STSApiClient.RetreatContinueAsync(RunManager.Instance.runId, expectedAct);
             if (nextState == null)
             {
                 Debug.LogWarning("Retreat continue request returned no state. Attempting to recover authoritative current run state.");
@@ -458,7 +460,7 @@ public class RetreatManager : MonoBehaviour
                 if (currentRun != null && currentRun.hasRun && currentRun.run != null)
                 {
                     STSApiRunState recoveredState = STSApiClient.ConvertToRunState(currentRun.run);
-                    if (recoveredState != null && recoveredState.runId == RunManager.Instance.runId && recoveredState.act >= RunManager.Instance.act)
+                    if (recoveredState != null && recoveredState.runId == RunManager.Instance.runId && recoveredState.act > expectedAct)
                     {
                         RunManager.Instance.ApplyRemoteRunState(recoveredState);
                         return true;
@@ -466,11 +468,16 @@ public class RetreatManager : MonoBehaviour
                 }
 
                 Debug.LogWarning("Retreat continue recovery did not produce a usable authoritative run state. Staying on retreat screen to avoid desync.");
-                RunManager.Instance.EnableUnrestrictedMode("retreat continue unavailable, applying local continue fallback");
-                RunManager.Instance.ActAndRegenerateLocally();
-                return true;
+                return false;
             }
 
+            if (nextState.runId != RunManager.Instance.runId
+                || !string.Equals(nextState.status, "Active", StringComparison.OrdinalIgnoreCase)
+                || nextState.act <= expectedAct)
+            {
+                Debug.LogWarning("Retreat continue returned a stale or invalid run state.");
+                return false;
+            }
             RunManager.Instance.ApplyRemoteRunState(nextState);
             return true;
         }
@@ -483,7 +490,7 @@ public class RetreatManager : MonoBehaviour
                 if (currentRun != null && currentRun.hasRun && currentRun.run != null)
                 {
                     STSApiRunState recoveredState = STSApiClient.ConvertToRunState(currentRun.run);
-                    if (recoveredState != null && recoveredState.runId == RunManager.Instance.runId && recoveredState.act >= RunManager.Instance.act)
+                    if (recoveredState != null && recoveredState.runId == RunManager.Instance.runId && recoveredState.act > RunManager.Instance.act)
                     {
                         RunManager.Instance.ApplyRemoteRunState(recoveredState);
                         return true;
@@ -495,9 +502,7 @@ public class RetreatManager : MonoBehaviour
                 Debug.LogWarning($"Failed to recover current run after retreat continue failure: {recoveryEx.Message}");
             }
 
-            RunManager.Instance.EnableUnrestrictedMode($"retreat continue failed: {ex.Message}");
-            RunManager.Instance.ActAndRegenerateLocally();
-            return true;
+            return false;
         }
     }
 
@@ -573,47 +578,72 @@ public class RetreatManager : MonoBehaviour
         }
     }
 
-    private async Task EnsureFinalActRetireAppliedAsync()
+    private async Task<bool> EnsureFinalActRetireAppliedAsync()
     {
         if (retireRequestStarted)
         {
             if (retireRequestTask != null)
             {
-                await retireRequestTask;
+                return await retireRequestTask;
             }
-            return;
+            return retireResponse != null
+                && retireResponse.accepted
+                && string.Equals(retireResponse.status, "Retired", StringComparison.OrdinalIgnoreCase);
         }
 
         retireRequestStarted = true;
         retireRequestTask = ApplyFinalActRetireAsync();
-        await retireRequestTask;
+        bool confirmed = await retireRequestTask;
+        if (!confirmed)
+        {
+            retireRequestStarted = false;
+            retireRequestTask = null;
+        }
+        return confirmed;
     }
 
-    private async Task ApplyFinalActRetireAsync()
+    private async Task<bool> ApplyFinalActRetireAsync()
     {
         if (RunManager.Instance == null || string.IsNullOrWhiteSpace(RunManager.Instance.runId) || RunManager.Instance.unrestrictedMode)
-            return;
+            return false;
 
         try
         {
             retireResponse = await STSApiClient.RetireRunAsync(RunManager.Instance.runId);
-            if (leavingRetreat)
+            if (retireResponse == null
+                || !retireResponse.accepted
+                || !string.Equals(retireResponse.status, "Retired", StringComparison.OrdinalIgnoreCase))
             {
-                return;
-            }
-            if (retireResponse == null || !retireResponse.accepted)
-            {
-                Debug.LogWarning("Final-act retire request did not return an accepted response. Falling back to local score display.");
-                return;
+                Debug.LogWarning("Retire request did not return a confirmed Retired state.");
+                return false;
             }
 
             RunManager.Instance.apiStatus = retireResponse.status;
-            RenderServerRetireSummary(retireResponse);
+            if (!leavingRetreat)
+                RenderServerRetireSummary(retireResponse);
+            return true;
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"Failed to retire run through API, keeping local summary as fallback: {ex.Message}");
+            Debug.LogWarning($"Failed to retire run through API: {ex.Message}");
+            return false;
         }
+    }
+
+    private void RestoreRetreatControls()
+    {
+        STSSceneLoader.Instance?.EndLoading();
+        if (choicePanel != null)
+            choicePanel.SetActive(true);
+        if (scorePanel != null)
+            scorePanel.SetActive(true);
+        if (buttonCanvasGroup != null)
+        {
+            buttonCanvasGroup.alpha = 1f;
+            buttonCanvasGroup.interactable = true;
+            buttonCanvasGroup.blocksRaycasts = true;
+        }
+        leavingRetreat = false;
     }
 
     private void RenderServerRetireSummary(STSApiRunRetireResponse response)
