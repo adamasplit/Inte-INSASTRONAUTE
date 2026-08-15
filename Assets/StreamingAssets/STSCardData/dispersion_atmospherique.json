@@ -2,6 +2,8 @@
   "id": "dispersion_atmospherique",
   "cardName": "Dispersion atmosphérique",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Transfert",
   "cost": 1,
   "xCost": false,

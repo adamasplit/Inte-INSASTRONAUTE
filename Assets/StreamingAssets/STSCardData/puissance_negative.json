@@ -2,6 +2,8 @@
   "id": "puissance_negative",
   "cardName": "Puissance négative",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "DRK",
   "cost": 2,
   "xCost": false,

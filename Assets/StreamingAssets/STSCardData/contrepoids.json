@@ -2,6 +2,8 @@
   "id": "contrepoids",
   "cardName": "Contrepoids",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "strike",
   "cost": 1,
   "xCost": false,

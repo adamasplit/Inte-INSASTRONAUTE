@@ -2,6 +2,8 @@
   "id": "labyrinthe",
   "cardName": "Labyrinthe",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "delai",
   "cost": 3,
   "xCost": false,

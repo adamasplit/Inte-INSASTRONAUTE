@@ -2,6 +2,8 @@
   "id": "huile_de_machine",
   "cardName": "Huile de machine",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "tempo",
   "cost": 1,
   "xCost": false,

@@ -2,6 +2,8 @@
   "id": "construction",
   "cardName": "Construction",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Dégâts et Armure",
   "cost": 1,
   "xCost": false,

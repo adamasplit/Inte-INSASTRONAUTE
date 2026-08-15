@@ -2,6 +2,8 @@
   "id": "inversion_de_matrice",
   "cardName": "Inversion de matrice",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Coups",
   "cost": 1,
   "xCost": false,

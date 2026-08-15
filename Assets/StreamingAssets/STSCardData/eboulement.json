@@ -2,6 +2,8 @@
   "id": "eboulement",
   "cardName": "Éboulement",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "rocks",
   "cost": 0,
   "xCost": true,

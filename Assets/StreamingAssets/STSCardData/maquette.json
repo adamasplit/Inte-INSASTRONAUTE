@@ -2,6 +2,8 @@
   "id": "maquette",
   "cardName": "Maquette",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "batiment",
   "cost": 2,
   "xCost": false,

@@ -2,6 +2,8 @@
   "id": "frappe",
   "cardName": "Frappe",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Physique",
   "cost": 1,
   "xCost": false,

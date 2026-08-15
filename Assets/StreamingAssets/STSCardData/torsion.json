@@ -2,6 +2,8 @@
   "id": "torsion",
   "cardName": "Torsion",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "torsion",
   "cost": 1,
   "xCost": false,

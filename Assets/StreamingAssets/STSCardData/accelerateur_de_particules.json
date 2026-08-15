@@ -2,6 +2,8 @@
   "id": "accelerateur_de_particules",
   "cardName": "Accélérateur de particules",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "holy",
   "cost": 0,
   "xCost": false,

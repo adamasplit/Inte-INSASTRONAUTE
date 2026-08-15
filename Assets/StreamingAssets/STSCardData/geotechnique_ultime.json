@@ -2,6 +2,8 @@
   "id": "geotechnique_ultime",
   "cardName": "Géo-technique ultime",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "quake",
   "cost": 2,
   "xCost": false,

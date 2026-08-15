@@ -2,6 +2,8 @@
   "id": "make_clean",
   "cardName": "Makefile",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Cartes",
   "cost": 1,
   "xCost": false,

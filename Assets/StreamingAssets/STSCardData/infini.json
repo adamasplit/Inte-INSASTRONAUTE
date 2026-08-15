@@ -2,6 +2,8 @@
   "id": "infini",
   "cardName": "Infini",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Vortex",
   "cost": 2,
   "xCost": false,

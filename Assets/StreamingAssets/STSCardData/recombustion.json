@@ -2,6 +2,8 @@
   "id": "recombustion",
   "cardName": "Réaction atomique",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "ark",
   "cost": 3,
   "xCost": false,

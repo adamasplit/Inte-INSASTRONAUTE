@@ -2,6 +2,8 @@
   "id": "purification",
   "cardName": "Purification",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Esuna",
   "cost": 0,
   "xCost": false,

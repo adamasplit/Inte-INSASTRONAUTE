@@ -2,6 +2,8 @@
   "id": "systeme_de_refroidissement",
   "cardName": "Système de refroidissement",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Congélation",
   "cost": 0,
   "xCost": false,

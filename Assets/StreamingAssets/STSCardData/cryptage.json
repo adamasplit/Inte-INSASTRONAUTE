@@ -2,6 +2,8 @@
   "id": "cryptage",
   "cardName": "Cryptage",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "lock",
   "cost": 1,
   "xCost": false,

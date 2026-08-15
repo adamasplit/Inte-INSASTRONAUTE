@@ -2,6 +2,8 @@
   "id": "override",
   "cardName": "Override",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "override",
   "cost": 3,
   "xCost": false,

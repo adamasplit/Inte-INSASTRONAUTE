@@ -2,6 +2,8 @@
   "id": "lame_feuille",
   "cardName": "Lame-Feuille",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "lame_feuille",
   "cost": 1,
   "xCost": false,

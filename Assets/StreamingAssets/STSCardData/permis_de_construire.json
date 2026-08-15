@@ -2,6 +2,8 @@
   "id": "permis_de_construire",
   "cardName": "Permis de construire",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "megastrength",
   "cost": 1,
   "xCost": false,

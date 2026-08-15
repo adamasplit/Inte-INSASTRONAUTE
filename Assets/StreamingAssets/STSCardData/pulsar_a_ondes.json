@@ -2,6 +2,8 @@
   "id": "pulsar_a_ondes",
   "cardName": "Pulsar à ondes",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Vortex",
   "cost": 2,
   "xCost": false,

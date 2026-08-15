@@ -2,6 +2,8 @@
   "id": "bonne_pratique",
   "cardName": "Bonne pratique",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Armure",
   "cost": 0,
   "xCost": false,

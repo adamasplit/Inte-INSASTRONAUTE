@@ -2,6 +2,8 @@
   "id": "revision_model_text",
   "cardName": "Révision Model Text",
   "collectionCardId": "Souillard (campagne)",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 1,
   "xCost": false,

@@ -2,6 +2,8 @@
   "id": "frappe_temporelle",
   "cardName": "Frappe temporelle",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "time",
   "cost": 1,
   "xCost": false,

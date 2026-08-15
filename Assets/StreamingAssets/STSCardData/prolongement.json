@@ -2,6 +2,8 @@
   "id": "prolongement",
   "cardName": "Prolongement",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "prolong",
   "cost": 2,
   "xCost": false,

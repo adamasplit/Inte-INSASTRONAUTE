@@ -2,6 +2,8 @@
   "id": "pare_feu",
   "cardName": "Pare-feu",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "barriere",
   "cost": 1,
   "xCost": false,

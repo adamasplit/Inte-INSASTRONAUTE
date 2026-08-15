@@ -2,6 +2,8 @@
   "id": "execution",
   "cardName": "Exécution",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Frappe",
   "cost": 2,
   "xCost": false,

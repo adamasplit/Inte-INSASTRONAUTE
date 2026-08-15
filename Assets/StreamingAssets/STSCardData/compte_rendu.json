@@ -2,6 +2,8 @@
   "id": "compte_rendu",
   "cardName": "Retard 364 j + 4 h",
   "collectionCardId": "Compte rendu",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 3,
   "xCost": false,

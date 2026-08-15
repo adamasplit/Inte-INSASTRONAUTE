@@ -2,6 +2,8 @@
   "id": "poncage",
   "cardName": "Ponçage",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "gant",
   "cost": 0,
   "xCost": false,

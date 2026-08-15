@@ -2,6 +2,8 @@
   "id": "gros_horloge",
   "cardName": "Gros Horloge",
   "collectionCardId": "Délirium",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 2,
   "xCost": false,

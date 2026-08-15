@@ -2,6 +2,8 @@
   "id": "auto_conception",
   "cardName": "Auto-conception",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "ArmureSoin",
   "cost": 2,
   "xCost": false,

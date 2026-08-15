@@ -2,6 +2,8 @@
   "id": "capteur_de_mouvement",
   "cardName": "Capteur de mouvement",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "prescience",
   "cost": 1,
   "xCost": false,

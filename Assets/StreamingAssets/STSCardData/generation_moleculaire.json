@@ -2,6 +2,8 @@
   "id": "generation_moleculaire",
   "cardName": "Génération moléculaire",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Matière3",
   "cost": 1,
   "xCost": false,

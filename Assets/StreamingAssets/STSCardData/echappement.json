@@ -2,6 +2,8 @@
   "id": "echappement",
   "cardName": "Échappement",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "feu",
   "cost": 0,
   "xCost": false,

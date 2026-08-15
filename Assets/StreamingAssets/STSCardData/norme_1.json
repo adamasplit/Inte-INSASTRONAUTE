@@ -2,6 +2,8 @@
   "id": "norme_1",
   "cardName": "Norme 1",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "norme",
   "cost": 0,
   "xCost": false,

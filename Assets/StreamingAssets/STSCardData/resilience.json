@@ -2,6 +2,8 @@
   "id": "resilience",
   "cardName": "Résilience",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "wall",
   "cost": 2,
   "xCost": false,

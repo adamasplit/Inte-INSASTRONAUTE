@@ -2,6 +2,8 @@
   "id": "cul_sec",
   "cardName": "Cul sec",
   "collectionCardId": "Khallaghan",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 0,
   "xCost": true,

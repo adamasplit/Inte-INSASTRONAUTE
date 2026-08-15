@@ -2,6 +2,8 @@
   "id": "treso_goodies",
   "cardName": "",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 0,
   "xCost": false,

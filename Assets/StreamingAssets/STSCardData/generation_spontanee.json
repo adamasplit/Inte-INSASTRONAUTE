@@ -2,6 +2,8 @@
   "id": "generation_spontanee",
   "cardName": "Génération spontanée",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Matière",
   "cost": 1,
   "xCost": false,

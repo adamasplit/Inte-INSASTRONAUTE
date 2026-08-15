@@ -2,6 +2,8 @@
   "id": "fureur_du_meteore",
   "cardName": "Fureur de météore",
   "collectionCardId": "FDM (campagne)",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 0,
   "xCost": true,

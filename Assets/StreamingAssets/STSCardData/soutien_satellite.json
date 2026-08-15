@@ -2,6 +2,8 @@
   "id": "soutien_satellite",
   "cardName": "Soutien de satellite",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "satellite",
   "cost": 1,
   "xCost": false,

@@ -2,6 +2,8 @@
   "id": "beton_arme",
   "cardName": "Béton armé",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "garde",
   "cost": 2,
   "xCost": false,

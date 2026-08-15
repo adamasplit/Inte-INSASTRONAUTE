@@ -2,6 +2,8 @@
   "id": "capteur_de_temperature",
   "cardName": "Capteur de température",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Transfert",
   "cost": 1,
   "xCost": false,

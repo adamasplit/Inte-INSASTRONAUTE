@@ -2,6 +2,8 @@
   "id": "cleanwalk",
   "cardName": "Cleanwalk",
   "collectionCardId": "Greensa (campagne)",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 0,
   "xCost": false,

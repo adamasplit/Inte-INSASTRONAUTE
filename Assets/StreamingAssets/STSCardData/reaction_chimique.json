@@ -2,6 +2,8 @@
   "id": "reaction_chimique",
   "cardName": "Réaction chimique",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Matière2",
   "cost": 0,
   "xCost": false,

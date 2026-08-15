@@ -2,6 +2,8 @@
   "id": "surconsommation_energetique",
   "cardName": "Surconsommation énergétique",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "renzokuken_alt",
   "cost": 2,
   "xCost": false,

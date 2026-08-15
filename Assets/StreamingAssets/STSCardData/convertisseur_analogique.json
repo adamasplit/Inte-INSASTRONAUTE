@@ -2,6 +2,8 @@
   "id": "convertisseur_analogique",
   "cardName": "Convertisseur analogique",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Cartes",
   "cost": 1,
   "xCost": false,

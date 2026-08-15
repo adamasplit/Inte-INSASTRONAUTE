@@ -5,6 +5,8 @@ public class Enemy : Character
     public Enemy(string name) : base(name, 0)
     {
         this.isPlayer = false;
+        this.isAlly = false;
+        this.isLocalPlayer = false;
         data = EnemyDataDatabase.Get(name);
         if (data == null)
         {
@@ -23,6 +25,8 @@ public class Enemy : Character
     public Enemy(EnemyData data) : base(data != null ? (!string.IsNullOrEmpty(data.enemyName) ? data.enemyName : data.name) : "Ironclad", 0)
     {
         this.isPlayer = false;
+        this.isAlly = false;
+        this.isLocalPlayer = false;
         if (data != null)
         {
             Init(data);

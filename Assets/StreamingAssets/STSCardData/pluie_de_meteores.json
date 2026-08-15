@@ -2,6 +2,8 @@
   "id": "pluie_de_meteores",
   "cardName": "Pluie de météores",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "meteor",
   "cost": 2,
   "xCost": false,

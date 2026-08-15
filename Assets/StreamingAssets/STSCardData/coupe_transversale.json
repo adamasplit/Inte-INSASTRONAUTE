@@ -2,6 +2,8 @@
   "id": "coupe_transversale",
   "cardName": "Coupe transversale",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "cut",
   "cost": 1,
   "xCost": false,

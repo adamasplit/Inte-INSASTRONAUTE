@@ -2,6 +2,8 @@
   "id": "ancrage",
   "cardName": "Ancrage",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "ancre",
   "cost": 0,
   "xCost": false,

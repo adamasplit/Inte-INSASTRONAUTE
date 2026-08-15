@@ -2,6 +2,8 @@
   "id": "burn_out_et_bore_out",
   "cardName": "Burn-out / Bore-out",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "burn",
   "cost": 0,
   "xCost": false,

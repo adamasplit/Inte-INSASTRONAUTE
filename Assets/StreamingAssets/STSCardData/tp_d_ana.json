@@ -2,6 +2,8 @@
   "id": "tp_d_ana",
   "cardName": "TP d'Ana",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "vuln",
   "cost": 1,
   "xCost": false,

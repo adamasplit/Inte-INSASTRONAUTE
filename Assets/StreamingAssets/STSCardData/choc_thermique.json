@@ -2,6 +2,8 @@
   "id": "choc_thermique",
   "cardName": "Choc thermique",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "feu_glace",
   "cost": 2,
   "xCost": false,

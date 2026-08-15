@@ -2,6 +2,8 @@
   "id": "finance_experte",
   "cardName": "Finance experte",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Affliction",
   "cost": 2,
   "xCost": false,

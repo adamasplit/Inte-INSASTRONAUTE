@@ -2,6 +2,8 @@
   "id": "optimisation_offensive",
   "cardName": "Optimisation offensive",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Pouvoir",
   "cost": 2,
   "xCost": false,

@@ -2,6 +2,8 @@
   "id": "epi",
   "cardName": "EPI",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "gant",
   "cost": 1,
   "xCost": false,

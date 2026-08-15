@@ -2,6 +2,8 @@
   "id": "chaine_de_markov",
   "cardName": "Chaîne de Markov",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "iter2",
   "cost": 3,
   "xCost": false,

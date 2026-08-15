@@ -222,6 +222,15 @@ public class STSApiClaimRewardResponse
 
 public static class STSApiClient
 {
+    public sealed class StsPvpParticipantSnapshot
+    {
+        public string userId;
+        public string displayName;
+        public string selectedCharacter;
+        public int teamIndex;
+        public int slotIndex;
+    }
+
     public static async Task<STSApiRunCreateResponse> CreateRunAsync(string character, string clientVersion)
     {
         string json = await ReactApiBridge.RequestAsync(
@@ -497,6 +506,144 @@ public static class STSApiClient
             response.runId = NormalizeRunId(response.runId);
         }
         return response;
+    }
+
+    public static async Task<JToken> GetPvpProfileAsync()
+    {
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.profile.get");
+        return ParseEnvelope(json);
+    }
+
+    public static async Task<JToken> UpdatePvpProfileAsync(JToken profilePatch)
+    {
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.profile.update", profilePatch ?? new JObject());
+        return ParseEnvelope(json);
+    }
+
+    public static async Task<JToken> GetPvpCollectionAsync()
+    {
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.collection.get");
+        return ParseEnvelope(json);
+    }
+
+    public static async Task<JToken> GetVirtualCollectionDeckAsync()
+    {
+        string json = await ReactApiBridge.RequestAsync(
+            "cards.deck",
+            new
+            {
+                collectionType = "VIRTUAL"
+            }
+        );
+        return ParseEnvelope(json);
+    }
+
+    public static async Task<JToken> ListPvpDecksAsync()
+    {
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.deck.list");
+        return ParseEnvelope(json);
+    }
+
+    public static async Task<JToken> SavePvpDeckAsync(JToken deckConfig)
+    {
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.deck.save", deckConfig ?? new JObject());
+        return ParseEnvelope(json);
+    }
+
+    public static async Task<JToken> LoadPvpDeckAsync(string deckId)
+    {
+        if (string.IsNullOrWhiteSpace(deckId))
+            return null;
+
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.deck.load", new { deckId });
+        return ParseEnvelope(json);
+    }
+
+    public static async Task<JToken> QuickMatchPvpAsync(JToken request = null)
+    {
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.matchmaking.quick", request ?? new JObject());
+        return ParseEnvelope(json);
+    }
+
+    public static async Task<JToken> SendPvpChallengeAsync(JToken request = null)
+    {
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.challenge.send", request ?? new JObject());
+        return ParseEnvelope(json);
+    }
+
+    public static async Task<JToken> ListPvpNotificationsAsync()
+    {
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.notifications.list");
+        return ParseEnvelope(json);
+    }
+
+    public static async Task<JToken> AcknowledgePvpNotificationAsync(string notificationId)
+    {
+        if (string.IsNullOrWhiteSpace(notificationId))
+            return null;
+
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.notifications.ack", new { notificationId });
+        return ParseEnvelope(json);
+    }
+
+    public static async Task<JToken> GetPvpBattleStateAsync(string battleId)
+    {
+        if (string.IsNullOrWhiteSpace(battleId))
+            return null;
+
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.battle.state", new { battleId });
+        return ParseEnvelope(json);
+    }
+
+    public static async Task<JToken> SendPvpBattleActionAsync(string battleId, JToken action)
+    {
+        if (string.IsNullOrWhiteSpace(battleId))
+            return null;
+
+        JObject payload = action != null ? (action as JObject) ?? JObject.FromObject(action) : new JObject();
+        payload["battleId"] = battleId;
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.battle.action", payload);
+        return ParseEnvelope(json);
+    }
+
+    public static List<StsPvpParticipantSnapshot> ExtractPvpParticipants(JToken battleState)
+    {
+        var participants = new List<StsPvpParticipantSnapshot>();
+        if (battleState == null)
+            return participants;
+
+        JToken teams = battleState["teams"];
+        if (teams == null || teams.Type != JTokenType.Array)
+            return participants;
+
+        for (int teamIndex = 0; teamIndex < teams.Count(); teamIndex++)
+        {
+            JToken team = teams[teamIndex];
+            if (team == null || team.Type != JTokenType.Array)
+                continue;
+
+            for (int slotIndex = 0; slotIndex < team.Count(); slotIndex++)
+            {
+                JToken participant = team[slotIndex];
+                if (participant == null || participant.Type != JTokenType.Object)
+                    continue;
+
+                string userId = participant.Value<string>("userId");
+                string displayName = participant.Value<string>("displayName");
+                string selectedCharacter = participant.Value<string>("selectedCharacter");
+
+                participants.Add(new StsPvpParticipantSnapshot
+                {
+                    userId = userId,
+                    displayName = displayName,
+                    selectedCharacter = selectedCharacter,
+                    teamIndex = teamIndex,
+                    slotIndex = slotIndex
+                });
+            }
+        }
+
+        return participants;
     }
 
     public static STSApiRunState ConvertToRunState(STSApiRunCreateResponse response)

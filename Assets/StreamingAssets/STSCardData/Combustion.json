@@ -2,6 +2,8 @@
   "id": "combustion",
   "cardName": "Combustion",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Ténèbres",
   "cost": 0,
   "xCost": true,

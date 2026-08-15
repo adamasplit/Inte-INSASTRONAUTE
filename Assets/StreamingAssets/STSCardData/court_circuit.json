@@ -2,6 +2,8 @@
   "id": "court_circuit",
   "cardName": "Court-circuit",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "thunder",
   "cost": 0,
   "xCost": true,

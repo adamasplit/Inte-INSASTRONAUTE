@@ -2,6 +2,8 @@
   "id": "destruction_de_materiel",
   "cardName": "Destruction de matériel",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "destruction",
   "cost": 2,
   "xCost": false,

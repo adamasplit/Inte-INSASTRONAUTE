@@ -2,6 +2,8 @@
   "id": "renforcement_de_maille",
   "cardName": "Renforcement de maille",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "cristal2",
   "cost": 0,
   "xCost": false,

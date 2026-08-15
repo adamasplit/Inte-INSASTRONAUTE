@@ -2,6 +2,8 @@
   "id": "dimension_infinie",
   "cardName": "Dimension infinie",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "dimension",
   "cost": 0,
   "xCost": false,

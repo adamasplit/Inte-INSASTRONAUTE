@@ -2,6 +2,8 @@
   "id": "realisation_d_esquisse",
   "cardName": "Réalisation d'esquisse",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "megaflare",
   "cost": 2,
   "xCost": false,

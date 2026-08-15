@@ -2,6 +2,8 @@
   "id": "recalibrage",
   "cardName": "Recalibrage",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "delai",
   "cost": 0,
   "xCost": false,

@@ -2,6 +2,8 @@
   "id": "after_de_ouf",
   "cardName": "After de ouf",
   "collectionCardId": "Bar'ouf",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 2,
   "xCost": false,

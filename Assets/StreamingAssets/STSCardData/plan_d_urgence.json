@@ -2,6 +2,8 @@
   "id": "plan_d_urgence",
   "cardName": "Plan d'urgence",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "holy",
   "cost": 0,
   "xCost": false,

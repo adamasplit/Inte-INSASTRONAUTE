@@ -8,6 +8,8 @@ public class ActionDispelledModifier : StatModifier
     }
     public override int Modify(int value, EffectContext ctx)
     {
+        if (ctx==null||ctx.state == null|| ctx.state.effectsDispelled == 0)
+            return value;
         return value + ctx.state.effectsDispelled * perDispel;
     }
 

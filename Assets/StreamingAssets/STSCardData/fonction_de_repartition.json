@@ -2,6 +2,8 @@
   "id": "fonction_de_repartition",
   "cardName": "Fonction de répartition",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Repartition",
   "cost": 1,
   "xCost": false,

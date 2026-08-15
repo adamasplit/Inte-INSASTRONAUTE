@@ -2,6 +2,8 @@
   "id": "milieu_continu",
   "cardName": "Milieu continu",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Affliction",
   "cost": 2,
   "xCost": false,

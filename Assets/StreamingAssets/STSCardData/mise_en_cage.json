@@ -2,6 +2,8 @@
   "id": "mise_en_cage",
   "cardName": "Mise en cage",
   "collectionCardId": "La Suite",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 1,
   "xCost": false,

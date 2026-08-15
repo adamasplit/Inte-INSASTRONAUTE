@@ -2,6 +2,8 @@
   "id": "insaopaulo",
   "cardName": "DO BRAZIIIIL",
   "collectionCardId": "Insao Paulo",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 1,
   "xCost": false,

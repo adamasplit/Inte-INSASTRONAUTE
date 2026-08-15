@@ -40,6 +40,9 @@ public class RunManager : MonoBehaviour
     public bool completedFinalAct;
     public bool unrestrictedMode;
     public string unrestrictedModeReason;
+    public string pvpLocalUserId;
+    public string pvpBattleId;
+    public List<STSApiClient.StsPvpParticipantSnapshot> pvpParticipants = new();
     void Update()
     {
         if (SceneManager.GetActiveScene().name != "STS_Combat" && player != null && player.currentHP <= 0)
@@ -288,6 +291,8 @@ public class RunManager : MonoBehaviour
         activeEncounter = null;
         completedFinalAct = false;
         backendRewardClaimUnavailable = false;
+        pvpLocalUserId = null;
+        ClearPvpBattleParticipants();
         SetUnrestrictedMode(false, null);
         if (clearSave)
         {
@@ -578,5 +583,74 @@ public class RunManager : MonoBehaviour
         await StartRunAsync("", 50, new List<Relic>(), false, true, 0, "STS_Combat");
         forceTutorial = true;
         act = 0;
+    }
+
+    public void CachePvpBattleParticipants(string battleId, List<STSApiClient.StsPvpParticipantSnapshot> participants)
+    {
+        pvpBattleId = string.IsNullOrWhiteSpace(battleId) ? null : battleId.Trim();
+        pvpParticipants = participants != null
+            ? new List<STSApiClient.StsPvpParticipantSnapshot>(participants)
+            : new List<STSApiClient.StsPvpParticipantSnapshot>();
+    }
+
+    public void ClearPvpBattleParticipants()
+    {
+        pvpBattleId = null;
+        pvpParticipants = new List<STSApiClient.StsPvpParticipantSnapshot>();
+    }
+
+    public void ApplyPvpParticipantDisplayNames(List<Player> allies, List<Character> enemies)
+    {
+        if (string.IsNullOrWhiteSpace(pvpBattleId) || pvpParticipants == null || pvpParticipants.Count == 0)
+            return;
+
+        STSApiClient.StsPvpParticipantSnapshot localParticipant = null;
+        if (!string.IsNullOrWhiteSpace(pvpLocalUserId))
+        {
+            localParticipant = pvpParticipants.Find(p =>
+                p != null
+                && !string.IsNullOrWhiteSpace(p.userId)
+                && string.Equals(p.userId, pvpLocalUserId, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (localParticipant == null)
+        {
+            localParticipant = pvpParticipants.Find(p => p != null && p.teamIndex == 0 && p.slotIndex == 0)
+                ?? pvpParticipants.Find(p => p != null);
+        }
+
+        STSApiClient.StsPvpParticipantSnapshot opponentParticipant = pvpParticipants.Find(p =>
+            p != null
+            && p != localParticipant
+            && (localParticipant == null || p.teamIndex != localParticipant.teamIndex));
+
+        if (opponentParticipant == null)
+        {
+            opponentParticipant = pvpParticipants.Find(p => p != null && p != localParticipant);
+        }
+
+        if (allies != null && allies.Count > 0)
+        {
+            Player ally = allies[0];
+            if (ally != null && localParticipant != null)
+            {
+                if (!string.IsNullOrWhiteSpace(localParticipant.displayName))
+                    ally.playerDisplayName = localParticipant.displayName;
+                if (!string.IsNullOrWhiteSpace(localParticipant.userId))
+                    ally.playerUserId = localParticipant.userId;
+            }
+        }
+
+        if (enemies != null && enemies.Count > 0)
+        {
+            Character enemy = enemies[0];
+            if (enemy != null && opponentParticipant != null)
+            {
+                if (!string.IsNullOrWhiteSpace(opponentParticipant.displayName))
+                    enemy.playerDisplayName = opponentParticipant.displayName;
+                if (!string.IsNullOrWhiteSpace(opponentParticipant.userId))
+                    enemy.playerUserId = opponentParticipant.userId;
+            }
+        }
     }
 }

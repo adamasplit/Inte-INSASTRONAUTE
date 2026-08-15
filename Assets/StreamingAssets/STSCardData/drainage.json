@@ -2,6 +2,8 @@
   "id": "drainage",
   "cardName": "Drainage",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "inondation",
   "cost": 0,
   "xCost": false,

@@ -2,6 +2,8 @@
   "id": "benzene",
   "cardName": "Benzène",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "purge",
   "cost": 1,
   "xCost": false,

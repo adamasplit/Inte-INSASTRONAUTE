@@ -2,6 +2,8 @@
   "id": "megagravitron",
   "cardName": "Mégagravitron",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Comète",
   "cost": 4,
   "xCost": false,

@@ -2,6 +2,8 @@
   "id": "turbomachine",
   "cardName": "Turbomachine",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "tenebres",
   "cost": 2,
   "xCost": false,

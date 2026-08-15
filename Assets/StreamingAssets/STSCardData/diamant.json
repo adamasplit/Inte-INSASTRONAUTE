@@ -2,6 +2,8 @@
   "id": "diamant",
   "cardName": "Diamant",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "diamant",
   "cost": 1,
   "xCost": false,

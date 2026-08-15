@@ -2,6 +2,8 @@
   "id": "fin_des_dimensions",
   "cardName": "Fin des dimensions",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "aura",
   "cost": 3,
   "xCost": false,

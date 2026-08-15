@@ -2,6 +2,8 @@
   "id": "montage_electrique_dangereux",
   "cardName": "Montage électrique dangereux",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Foudre",
   "cost": 4,
   "xCost": false,

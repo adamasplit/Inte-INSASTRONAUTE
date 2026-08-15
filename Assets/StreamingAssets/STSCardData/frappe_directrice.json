@@ -2,6 +2,8 @@
   "id": "frappe_directrice",
   "cardName": "Frappe directrice",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Night",
   "cost": 1,
   "xCost": false,

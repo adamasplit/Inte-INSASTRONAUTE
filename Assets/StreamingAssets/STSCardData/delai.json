@@ -2,6 +2,8 @@
   "id": "delai",
   "cardName": "Délai",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Frappe",
   "cost": 0,
   "xCost": false,

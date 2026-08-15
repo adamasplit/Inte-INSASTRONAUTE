@@ -2,6 +2,8 @@
   "id": "derniere_ligne_droite",
   "cardName": "Dernière ligne droite",
   "collectionCardId": "Insa'cheval",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 1,
   "xCost": false,

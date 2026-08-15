@@ -1,0 +1,972 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class MultiplayerDeckPanel : MonoBehaviour
+{
+    [Serializable]
+    private class DeckViewModel
+    {
+        public string id;
+        public string name;
+        public List<string> cardIds = new();
+    }
+
+    private sealed class CardEntry
+    {
+        public STSCardData card;
+        public string key;
+        public bool owned;
+        public bool unlocked;
+        public bool characterCompatible;
+    }
+
+    [Header("Data")]
+    [SerializeField] private int minDeckSize = 10;
+    [SerializeField] private int maxDeckSize = 30;
+
+    [Header("Grid")]
+    [SerializeField] private Transform gridContainer;
+    [SerializeField] private GameObject cardItemPrefab;
+
+    [Header("Editor Preview")]
+    [SerializeField] private bool spawnEditorPlaceholdersWhenApiUnavailable = true;
+    [SerializeField] private int editorPlaceholderMinCount = 12;
+    [SerializeField] private int editorPlaceholderMaxCount = 28;
+
+    [Header("Filters")]
+    [SerializeField] private TMP_Dropdown rarityDropdown;
+    [SerializeField] private TMP_Dropdown characterDropdown;
+    [SerializeField] private TMP_Dropdown unlockStateDropdown;
+    [SerializeField] private TMP_InputField searchInput;
+
+    [Header("Deck Actions")]
+    [SerializeField] private Button addAllButton;
+    [SerializeField] private Button validateButton;
+    [SerializeField] private Button closeButton;
+    [SerializeField] private Button refreshButton;
+
+    [Header("Deck Presets")]
+    [SerializeField] private TMP_Dropdown savedDecksDropdown;
+    [SerializeField] private TMP_InputField deckNameInput;
+    [SerializeField] private Button saveDeckButton;
+    [SerializeField] private Button loadDeckButton;
+
+    [Header("Labels")]
+    [SerializeField] private TextMeshProUGUI counterText;
+    [SerializeField] private TextMeshProUGUI statusText;
+
+    private readonly List<CardEntry> allEntries = new();
+    private readonly List<CardEntry> visibleEntries = new();
+    private readonly HashSet<string> selectedCardKeys = new(StringComparer.OrdinalIgnoreCase);
+    private readonly List<DeckViewModel> savedDecks = new();
+    private readonly HashSet<string> ownedCardIds = new(StringComparer.OrdinalIgnoreCase);
+
+    private MultiplayerMenuController host;
+    private SelectableCharacter selectedCharacter = SelectableCharacter.EP;
+    private int selectedCharacterLevel;
+    private bool missingApiResponses;
+
+    private bool suppressFilterCallbacks;
+
+    public void SetHost(MultiplayerMenuController controller)
+    {
+        host = controller;
+    }
+
+    private void Awake()
+    {
+        WireListeners();
+        BuildStaticFilterOptions();
+        SetStatus(string.Empty);
+        RefreshDeckCounter();
+    }
+
+    public void OpenForCharacter(SelectableCharacter character)
+    {
+        selectedCharacter = character;
+        gameObject.SetActive(true);
+        _ = RefreshAsync();
+    }
+
+    private void WireListeners()
+    {
+        if (rarityDropdown != null)
+        {
+            rarityDropdown.onValueChanged.RemoveAllListeners();
+            rarityDropdown.onValueChanged.AddListener(_ => RefreshGrid());
+        }
+
+        if (characterDropdown != null)
+        {
+            characterDropdown.onValueChanged.RemoveAllListeners();
+            characterDropdown.onValueChanged.AddListener(_ => RefreshGrid());
+        }
+
+        if (unlockStateDropdown != null)
+        {
+            unlockStateDropdown.onValueChanged.RemoveAllListeners();
+            unlockStateDropdown.onValueChanged.AddListener(_ => RefreshGrid());
+        }
+
+        if (searchInput != null)
+        {
+            searchInput.onValueChanged.RemoveAllListeners();
+            searchInput.onValueChanged.AddListener(_ => RefreshGrid());
+        }
+
+        if (addAllButton != null)
+        {
+            addAllButton.onClick.RemoveAllListeners();
+            addAllButton.onClick.AddListener(AddAllVisibleCards);
+        }
+
+        if (validateButton != null)
+        {
+            validateButton.onClick.RemoveAllListeners();
+            validateButton.onClick.AddListener(() => _ = ValidateDeckAsync());
+        }
+
+        if (closeButton != null)
+        {
+            closeButton.onClick.RemoveAllListeners();
+            closeButton.onClick.AddListener(ClosePanel);
+        }
+
+        if (refreshButton != null)
+        {
+            refreshButton.onClick.RemoveAllListeners();
+            refreshButton.onClick.AddListener(() => _ = RefreshAsync());
+        }
+
+        if (saveDeckButton != null)
+        {
+            saveDeckButton.onClick.RemoveAllListeners();
+            saveDeckButton.onClick.AddListener(() => _ = SaveDeckPresetAsync());
+        }
+
+        if (loadDeckButton != null)
+        {
+            loadDeckButton.onClick.RemoveAllListeners();
+            loadDeckButton.onClick.AddListener(() => _ = LoadSelectedDeckPresetAsync());
+        }
+    }
+
+    private async Task RefreshAsync()
+    {
+        SetStatus("Chargement des cartes...");
+        missingApiResponses = false;
+
+        await STSCardDatabase.EnsureLoadedAsync();
+
+        JToken profile = await STSApiClient.GetPvpProfileAsync();
+        if (profile == null)
+        {
+            missingApiResponses = true;
+        }
+        selectedCharacterLevel = ResolveCharacterLevel(profile, selectedCharacter);
+
+        ownedCardIds.Clear();
+        JToken collection = await STSApiClient.GetPvpCollectionAsync();
+        if (collection == null)
+        {
+            collection = await STSApiClient.GetVirtualCollectionDeckAsync();
+        }
+
+        if (collection == null)
+        {
+            missingApiResponses = true;
+        }
+
+        CollectOwnedCardIds(collection, ownedCardIds);
+
+        RebuildEntries();
+        await RefreshSavedDecksAsync();
+        RefreshGrid();
+        SetStatus($"Cartes disponibles: {allEntries.Count}");
+    }
+
+    private void BuildStaticFilterOptions()
+    {
+        suppressFilterCallbacks = true;
+
+        if (rarityDropdown != null)
+        {
+            rarityDropdown.ClearOptions();
+            List<string> rarityOptions = new() { "Toutes raretés" };
+            rarityOptions.AddRange(Enum.GetNames(typeof(CardRarity)));
+            rarityDropdown.AddOptions(rarityOptions);
+            rarityDropdown.value = 0;
+        }
+
+        if (characterDropdown != null)
+        {
+            characterDropdown.ClearOptions();
+            List<string> characterOptions = new() { "Tous persos" };
+            foreach (SelectableCharacter character in Enum.GetValues(typeof(SelectableCharacter)))
+            {
+                if (character == SelectableCharacter.Aucun
+                    || character == SelectableCharacter.Impossible
+                    || character == SelectableCharacter.Starting)
+                {
+                    continue;
+                }
+
+                characterOptions.Add(character.ToString());
+            }
+
+            characterDropdown.AddOptions(characterOptions);
+            characterDropdown.value = 0;
+        }
+
+        if (unlockStateDropdown != null)
+        {
+            unlockStateDropdown.ClearOptions();
+            unlockStateDropdown.AddOptions(new List<string>
+            {
+                "Toutes",
+                "Débloquées",
+                "Non débloquées"
+            });
+            unlockStateDropdown.value = 1;
+        }
+
+        suppressFilterCallbacks = false;
+    }
+
+    private void RebuildEntries()
+    {
+        allEntries.Clear();
+
+        if (STSCardDatabase.allCards == null)
+        {
+            return;
+        }
+
+        foreach (STSCardData card in STSCardDatabase.allCards)
+        {
+            if (card == null)
+                continue;
+
+            string key = GetCardKey(card);
+            if (string.IsNullOrWhiteSpace(key))
+                continue;
+
+            bool owned = IsOwnedCard(card);
+            bool unlocked = IsUnlocked(card, owned);
+            bool compatible = IsCompatibleWithCurrentCharacter(card);
+
+            allEntries.Add(new CardEntry
+            {
+                card = card,
+                key = key,
+                owned = owned,
+                unlocked = unlocked,
+                characterCompatible = compatible
+            });
+        }
+
+        allEntries.Sort((a, b) => string.Compare(a.card.cardName, b.card.cardName, StringComparison.OrdinalIgnoreCase));
+
+        selectedCardKeys.RemoveWhere(key => allEntries.All(entry => !string.Equals(entry.key, key, StringComparison.OrdinalIgnoreCase)));
+    }
+
+    private bool IsOwnedCard(STSCardData card)
+    {
+        string key = GetCardKey(card);
+        if (!string.IsNullOrWhiteSpace(key) && ownedCardIds.Contains(key))
+            return true;
+
+        if (!string.IsNullOrWhiteSpace(card.cardName) && ownedCardIds.Contains(card.cardName))
+            return true;
+
+        string collectionId = card.GetCollectionCardId();
+        if (!string.IsNullOrWhiteSpace(collectionId) && ownedCardIds.Contains(collectionId))
+            return true;
+
+        return false;
+    }
+
+    private bool IsUnlocked(STSCardData card, bool owned)
+    {
+        if (card.multiplayerExclusive)
+        {
+            return selectedCharacterLevel >= card.characterLevel;
+        }
+
+        return owned;
+    }
+
+    private bool IsCompatibleWithCurrentCharacter(STSCardData card)
+    {
+        if (card == null)
+            return false;
+
+        return card.favoredCharacter == SelectableCharacter.Aucun
+            || card.favoredCharacter == SelectableCharacter.Starting
+            || card.favoredCharacter == selectedCharacter;
+    }
+
+    private void RefreshGrid()
+    {
+        if (suppressFilterCallbacks)
+            return;
+
+        visibleEntries.Clear();
+        ClearGrid();
+
+        foreach (CardEntry entry in allEntries)
+        {
+            if (!PassesFilters(entry))
+                continue;
+
+            visibleEntries.Add(entry);
+
+            GameObject itemObject = Instantiate(cardItemPrefab, gridContainer);
+            MultiplayerDeckCardItem item = itemObject.GetComponent<MultiplayerDeckCardItem>();
+            if (item == null)
+            {
+                item = itemObject.GetComponentInChildren<MultiplayerDeckCardItem>();
+            }
+
+            if (item == null)
+            {
+                Debug.LogWarning("MultiplayerDeckCardItem component missing on deck item prefab.");
+                continue;
+            }
+
+            bool isSelected = selectedCardKeys.Contains(entry.key);
+            bool canSelect = entry.unlocked && entry.characterCompatible;
+            string lockReason = BuildLockReason(entry);
+
+            item.Bind(entry.card, entry.key, isSelected, canSelect, lockReason, HandleCardToggleChanged);
+        }
+
+        if (visibleEntries.Count == 0 && ShouldSpawnEditorPlaceholders())
+        {
+            SpawnEditorPlaceholders();
+            SetStatus("Aucune réponse API en éditeur: aperçu de layout avec placeholders.");
+        }
+
+        RefreshDeckCounter();
+    }
+
+    private void ClearGrid()
+    {
+        if (gridContainer == null)
+            return;
+
+        foreach (Transform child in gridContainer)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    private bool ShouldSpawnEditorPlaceholders()
+    {
+        if (!Application.isEditor)
+            return false;
+
+        if (!spawnEditorPlaceholdersWhenApiUnavailable)
+            return false;
+
+        if (!missingApiResponses)
+            return false;
+
+        if (gridContainer == null || cardItemPrefab == null)
+            return false;
+
+        return true;
+    }
+
+    private void SpawnEditorPlaceholders()
+    {
+        int min = Mathf.Max(1, editorPlaceholderMinCount);
+        int max = Mathf.Max(min, editorPlaceholderMaxCount);
+        int count = UnityEngine.Random.Range(min, max + 1);
+
+        for (int i = 0; i < count; i++)
+        {
+            Instantiate(cardItemPrefab, gridContainer);
+        }
+    }
+
+    private bool PassesFilters(CardEntry entry)
+    {
+        if (entry == null || entry.card == null)
+            return false;
+
+        if (!PassesRarityFilter(entry.card))
+            return false;
+
+        if (!PassesCharacterFilter(entry.card))
+            return false;
+
+        if (!PassesUnlockFilter(entry))
+            return false;
+
+        if (!PassesSearchFilter(entry.card))
+            return false;
+
+        return true;
+    }
+
+    private bool PassesRarityFilter(STSCardData card)
+    {
+        if (rarityDropdown == null || rarityDropdown.value <= 0)
+            return true;
+
+        int rarityIndex = rarityDropdown.value - 1;
+        CardRarity selectedRarity = (CardRarity)rarityIndex;
+        return card.rarity == selectedRarity;
+    }
+
+    private bool PassesCharacterFilter(STSCardData card)
+    {
+        if (characterDropdown == null || characterDropdown.value <= 0)
+            return true;
+
+        int enumOffset = 0;
+        List<SelectableCharacter> list = new();
+        foreach (SelectableCharacter character in Enum.GetValues(typeof(SelectableCharacter)))
+        {
+            if (character == SelectableCharacter.Aucun
+                || character == SelectableCharacter.Impossible
+                || character == SelectableCharacter.Starting)
+            {
+                continue;
+            }
+
+            list.Add(character);
+        }
+
+        int index = characterDropdown.value - 1 - enumOffset;
+        if (index < 0 || index >= list.Count)
+            return true;
+
+        SelectableCharacter filterCharacter = list[index];
+
+        return card.favoredCharacter == SelectableCharacter.Aucun
+            || card.favoredCharacter == SelectableCharacter.Starting
+            || card.favoredCharacter == filterCharacter;
+    }
+
+    private bool PassesUnlockFilter(CardEntry entry)
+    {
+        if (unlockStateDropdown == null)
+            return true;
+
+        return unlockStateDropdown.value switch
+        {
+            1 => entry.unlocked,
+            2 => !entry.unlocked,
+            _ => true
+        };
+    }
+
+    private bool PassesSearchFilter(STSCardData card)
+    {
+        if (searchInput == null || string.IsNullOrWhiteSpace(searchInput.text))
+            return true;
+
+        string term = searchInput.text.Trim();
+        return (!string.IsNullOrWhiteSpace(card.cardName) && card.cardName.Contains(term, StringComparison.OrdinalIgnoreCase))
+            || (!string.IsNullOrWhiteSpace(card.id) && card.id.Contains(term, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private string BuildLockReason(CardEntry entry)
+    {
+        if (!entry.unlocked)
+        {
+            if (entry.card.multiplayerExclusive)
+            {
+                return $"Niv. requis: {entry.card.characterLevel}";
+            }
+
+            return "Carte non obtenue";
+        }
+
+        if (!entry.characterCompatible)
+        {
+            return $"Incompatible ({selectedCharacter})";
+        }
+
+        return string.Empty;
+    }
+
+    private void HandleCardToggleChanged(string cardKey, bool selected)
+    {
+        if (string.IsNullOrWhiteSpace(cardKey))
+            return;
+
+        if (selected)
+        {
+            if (selectedCardKeys.Count >= maxDeckSize)
+            {
+                Notify($"Le deck est limité à {maxDeckSize} cartes.");
+                RefreshGrid();
+                return;
+            }
+
+            CardEntry entry = allEntries.FirstOrDefault(c => string.Equals(c.key, cardKey, StringComparison.OrdinalIgnoreCase));
+            if (entry == null || !entry.unlocked || !entry.characterCompatible)
+            {
+                RefreshGrid();
+                return;
+            }
+
+            selectedCardKeys.Add(cardKey);
+        }
+        else
+        {
+            selectedCardKeys.Remove(cardKey);
+        }
+
+        RefreshDeckCounter();
+    }
+
+    private void AddAllVisibleCards()
+    {
+        int added = 0;
+        foreach (CardEntry entry in visibleEntries)
+        {
+            if (selectedCardKeys.Count >= maxDeckSize)
+                break;
+
+            if (!entry.unlocked || !entry.characterCompatible)
+                continue;
+
+            if (selectedCardKeys.Add(entry.key))
+            {
+                added++;
+            }
+        }
+
+        RefreshGrid();
+        Notify(added > 0
+            ? $"{added} carte(s) ajoutée(s) au deck."
+            : "Aucune carte visible valide à ajouter.");
+    }
+
+    private async Task ValidateDeckAsync()
+    {
+        if (selectedCardKeys.Count < minDeckSize)
+        {
+            Notify($"Le deck doit contenir au moins {minDeckSize} cartes.");
+            return;
+        }
+
+        if (selectedCardKeys.Count > maxDeckSize)
+        {
+            Notify($"Le deck dépasse la limite de {maxDeckSize} cartes.");
+            return;
+        }
+
+        JObject payload = new JObject
+        {
+            ["name"] = string.IsNullOrWhiteSpace(deckNameInput != null ? deckNameInput.text : null) ? "Deck Actif" : deckNameInput.text.Trim(),
+            ["selectedCharacter"] = selectedCharacter.ToString(),
+            ["isActive"] = true,
+            ["cardIds"] = new JArray(selectedCardKeys.ToArray())
+        };
+
+        JToken response = await STSApiClient.SavePvpDeckAsync(payload);
+        if (response == null)
+        {
+            Notify("Impossible de sauvegarder le deck actif.");
+            return;
+        }
+
+        Notify("Deck validé et sauvegardé.");
+        await RefreshSavedDecksAsync();
+    }
+
+    private async Task SaveDeckPresetAsync()
+    {
+        string name = deckNameInput != null ? deckNameInput.text?.Trim() : null;
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            Notify("Nom de deck requis pour la sauvegarde.");
+            return;
+        }
+
+        JObject payload = new JObject
+        {
+            ["name"] = name,
+            ["selectedCharacter"] = selectedCharacter.ToString(),
+            ["isActive"] = false,
+            ["cardIds"] = new JArray(selectedCardKeys.ToArray())
+        };
+
+        JToken response = await STSApiClient.SavePvpDeckAsync(payload);
+        if (response == null)
+        {
+            Notify("Échec de sauvegarde du deck.");
+            return;
+        }
+
+        Notify("Deck sauvegardé.");
+        await RefreshSavedDecksAsync();
+    }
+
+    private async Task LoadSelectedDeckPresetAsync()
+    {
+        if (savedDecksDropdown == null || savedDecksDropdown.value < 0 || savedDecksDropdown.value >= savedDecks.Count)
+        {
+            Notify("Aucun deck sauvegardé sélectionné.");
+            return;
+        }
+
+        DeckViewModel selectedDeck = savedDecks[savedDecksDropdown.value];
+        if (selectedDeck == null || string.IsNullOrWhiteSpace(selectedDeck.id))
+        {
+            Notify("Deck sélectionné invalide.");
+            return;
+        }
+
+        JToken loadedDeck = await STSApiClient.LoadPvpDeckAsync(selectedDeck.id);
+        List<string> loadedCardIds = ExtractCardIdListFromDeckToken(loadedDeck);
+
+        selectedCardKeys.Clear();
+
+        int skipped = 0;
+        foreach (string cardId in loadedCardIds)
+        {
+            CardEntry entry = allEntries.FirstOrDefault(e =>
+                string.Equals(e.key, cardId, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(e.card.cardName, cardId, StringComparison.OrdinalIgnoreCase));
+
+            if (entry == null || !entry.unlocked || !entry.characterCompatible)
+            {
+                skipped++;
+                continue;
+            }
+
+            if (selectedCardKeys.Count >= maxDeckSize)
+            {
+                skipped++;
+                continue;
+            }
+
+            selectedCardKeys.Add(entry.key);
+        }
+
+        RefreshGrid();
+
+        if (skipped > 0)
+        {
+            Notify($"Deck chargé avec {skipped} carte(s) ignorée(s) car incompatibles/non débloquées.");
+        }
+        else
+        {
+            Notify("Deck chargé.");
+        }
+    }
+
+    private async Task RefreshSavedDecksAsync()
+    {
+        savedDecks.Clear();
+
+        JToken decksToken = await STSApiClient.ListPvpDecksAsync();
+        if (decksToken != null)
+        {
+            foreach (JToken deckToken in ExtractDeckTokens(decksToken))
+            {
+                DeckViewModel model = ParseDeckModel(deckToken);
+                if (model != null)
+                {
+                    savedDecks.Add(model);
+                }
+            }
+        }
+
+        if (savedDecksDropdown != null)
+        {
+            savedDecksDropdown.ClearOptions();
+            List<string> names = savedDecks.Count == 0
+                ? new List<string> { "Aucun deck" }
+                : savedDecks.Select(d => d.name).ToList();
+            savedDecksDropdown.AddOptions(names);
+            savedDecksDropdown.value = 0;
+            savedDecksDropdown.interactable = savedDecks.Count > 0;
+        }
+
+        if (loadDeckButton != null)
+        {
+            loadDeckButton.interactable = savedDecks.Count > 0;
+        }
+    }
+
+    private IEnumerable<JToken> ExtractDeckTokens(JToken token)
+    {
+        if (token == null)
+            yield break;
+
+        if (token.Type == JTokenType.Array)
+        {
+            foreach (JToken item in token)
+            {
+                if (item != null)
+                    yield return item;
+            }
+
+            yield break;
+        }
+
+        if (token.Type != JTokenType.Object)
+            yield break;
+
+        JObject obj = (JObject)token;
+        foreach (string key in new[] { "decks", "items", "data", "result", "payload" })
+        {
+            if (obj.TryGetValue(key, StringComparison.OrdinalIgnoreCase, out JToken nested) && nested != null)
+            {
+                foreach (JToken item in ExtractDeckTokens(nested))
+                {
+                    yield return item;
+                }
+                yield break;
+            }
+        }
+
+        yield return token;
+    }
+
+    private DeckViewModel ParseDeckModel(JToken token)
+    {
+        if (token == null || token.Type != JTokenType.Object)
+            return null;
+
+        JObject obj = (JObject)token;
+        string id = obj.Value<string>("id")
+            ?? obj.Value<string>("deckId")
+            ?? obj.Value<string>("uuid");
+        string name = obj.Value<string>("name")
+            ?? obj.Value<string>("deckName")
+            ?? "Deck";
+
+        List<string> cardIds = ExtractCardIdListFromDeckToken(obj);
+
+        if (string.IsNullOrWhiteSpace(id))
+            return null;
+
+        return new DeckViewModel
+        {
+            id = id,
+            name = name,
+            cardIds = cardIds
+        };
+    }
+
+    private List<string> ExtractCardIdListFromDeckToken(JToken token)
+    {
+        List<string> ids = new();
+        if (token == null)
+            return ids;
+
+        if (token.Type == JTokenType.Object)
+        {
+            JObject obj = (JObject)token;
+            foreach (string key in new[] { "cardIds", "cards", "deck", "deckCards" })
+            {
+                if (obj.TryGetValue(key, StringComparison.OrdinalIgnoreCase, out JToken nested))
+                {
+                    ExtractCardIdsFromToken(nested, ids);
+                }
+            }
+        }
+        else
+        {
+            ExtractCardIdsFromToken(token, ids);
+        }
+
+        return ids;
+    }
+
+    private void ExtractCardIdsFromToken(JToken token, List<string> target)
+    {
+        if (token == null)
+            return;
+
+        if (token.Type == JTokenType.String)
+        {
+            string value = token.Value<string>();
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                target.Add(value);
+            }
+            return;
+        }
+
+        if (token.Type == JTokenType.Array)
+        {
+            foreach (JToken child in token)
+            {
+                ExtractCardIdsFromToken(child, target);
+            }
+            return;
+        }
+
+        if (token.Type != JTokenType.Object)
+            return;
+
+        JObject obj = (JObject)token;
+        string cardId = obj.Value<string>("cardId")
+            ?? obj.Value<string>("id")
+            ?? obj.Value<string>("collectionCardId");
+
+        if (!string.IsNullOrWhiteSpace(cardId))
+        {
+            target.Add(cardId);
+        }
+
+        foreach (JProperty property in obj.Properties())
+        {
+            if (property.Value.Type == JTokenType.Object || property.Value.Type == JTokenType.Array)
+            {
+                ExtractCardIdsFromToken(property.Value, target);
+            }
+        }
+    }
+
+    private void CollectOwnedCardIds(JToken token, HashSet<string> target)
+    {
+        if (token == null)
+            return;
+
+        if (token.Type == JTokenType.String)
+        {
+            string value = token.Value<string>();
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                target.Add(value);
+            }
+            return;
+        }
+
+        if (token.Type == JTokenType.Array)
+        {
+            foreach (JToken child in token)
+            {
+                CollectOwnedCardIds(child, target);
+            }
+            return;
+        }
+
+        if (token.Type != JTokenType.Object)
+            return;
+
+        JObject obj = (JObject)token;
+
+        string cardId = obj.Value<string>("cardId")
+            ?? obj.Value<string>("collectionCardId")
+            ?? obj.Value<string>("id");
+
+        if (!string.IsNullOrWhiteSpace(cardId) && LooksLikeCardPayload(obj))
+        {
+            target.Add(cardId);
+        }
+
+        foreach (string key in new[] { "ownedCardIds", "unlockedCardIds", "cardIds", "cards", "deck", "items", "data", "result", "payload" })
+        {
+            if (obj.TryGetValue(key, StringComparison.OrdinalIgnoreCase, out JToken nested) && nested != null)
+            {
+                CollectOwnedCardIds(nested, target);
+            }
+        }
+
+        foreach (JProperty property in obj.Properties())
+        {
+            if (property.Value.Type == JTokenType.Object || property.Value.Type == JTokenType.Array)
+            {
+                CollectOwnedCardIds(property.Value, target);
+            }
+        }
+    }
+
+    private bool LooksLikeCardPayload(JObject obj)
+    {
+        if (obj == null)
+            return false;
+
+        if (obj.TryGetValue("cardId", StringComparison.OrdinalIgnoreCase, out _)
+            || obj.TryGetValue("collectionCardId", StringComparison.OrdinalIgnoreCase, out _)
+            || obj.TryGetValue("cardName", StringComparison.OrdinalIgnoreCase, out _)
+            || obj.TryGetValue("rarity", StringComparison.OrdinalIgnoreCase, out _)
+            || obj.TryGetValue("targetingMode", StringComparison.OrdinalIgnoreCase, out _))
+        {
+            return true;
+        }
+
+        if (obj.TryGetValue("collectionType", StringComparison.OrdinalIgnoreCase, out JToken collectionType)
+            && string.Equals(collectionType?.Value<string>(), "VIRTUAL", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private int ResolveCharacterLevel(JToken profile, SelectableCharacter character)
+    {
+        if (profile == null)
+            return 0;
+
+        int direct = profile.Value<int?>("characterLevel") ?? 0;
+        if (direct > 0)
+            return direct;
+
+        JToken levels = profile["characterLevels"];
+        if (levels is JObject levelsObject)
+        {
+            int level = levelsObject.Value<int?>(character.ToString()) ?? 0;
+            return Math.Max(0, level);
+        }
+
+        return 0;
+    }
+
+    private string GetCardKey(STSCardData card)
+    {
+        if (card == null)
+            return null;
+
+        if (!string.IsNullOrWhiteSpace(card.id))
+            return card.id;
+
+        return card.cardName;
+    }
+
+    private void RefreshDeckCounter()
+    {
+        if (counterText == null)
+            return;
+
+        counterText.text = $"{selectedCardKeys.Count}/{maxDeckSize}";
+    }
+
+    private void SetStatus(string message)
+    {
+        if (statusText != null)
+        {
+            statusText.text = message;
+        }
+    }
+
+    private void Notify(string message)
+    {
+        host?.ShowNotification(message);
+        SetStatus(message);
+    }
+
+    private void ClosePanel()
+    {
+        gameObject.SetActive(false);
+        host?.ShowConfigurationPanel();
+    }
+}

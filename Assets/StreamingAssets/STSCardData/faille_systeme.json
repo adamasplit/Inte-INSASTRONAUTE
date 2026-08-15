@@ -2,6 +2,8 @@
   "id": "faille_systeme",
   "cardName": "Faille système",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "critique",
   "cost": 2,
   "xCost": false,

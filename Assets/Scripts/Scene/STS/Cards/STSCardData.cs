@@ -7,6 +7,8 @@ public class STSCardData : ScriptableObject
     public string id;
     public string cardName;
     public string collectionCardId;
+    public bool multiplayerExclusive;
+    public int characterLevel;
     public Sprite icon;
     public int cost;
     public bool xCost=false;
@@ -42,6 +44,8 @@ public class STSCardData : ScriptableObject
         dto.id = id;
         dto.cardName = cardName;
         dto.collectionCardId = GetCollectionCardId();
+        dto.multiplayerExclusive = multiplayerExclusive;
+        dto.characterLevel = characterLevel;
         dto.cost = cost;
         dto.iconId = icon != null ? icon.name : null;
         dto.type = type.ToString();
@@ -81,6 +85,8 @@ public class STSCardData : ScriptableObject
             card.cardName = dto.id;
         }
         card.collectionCardId = dto.collectionCardId;
+        card.multiplayerExclusive = dto.multiplayerExclusive;
+        card.characterLevel = dto.characterLevel;
         card.icon = (dto.iconId != null && dto.iconId != "") ? Resources.Load<Sprite>("STS/Icons/Cards/" + dto.iconId) : null;
         if (dto.iconId != null && dto.iconId != "" && card.icon == null)
         {

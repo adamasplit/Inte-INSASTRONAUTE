@@ -2,6 +2,8 @@
   "id": "elasticite",
   "cardName": "Élasticité",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Pouvoir2",
   "cost": 3,
   "xCost": false,

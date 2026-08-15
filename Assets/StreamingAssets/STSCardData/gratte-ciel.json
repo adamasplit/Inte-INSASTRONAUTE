@@ -2,6 +2,8 @@
   "id": "gratte-ciel",
   "cardName": "Gratte-ciel",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "ciel",
   "cost": 2,
   "xCost": false,

@@ -2,6 +2,8 @@
   "id": "galaxie",
   "cardName": "Galaxie",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Galaxie",
   "cost": 3,
   "xCost": false,

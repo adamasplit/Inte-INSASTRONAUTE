@@ -2,6 +2,8 @@
   "id": "maille_parfaite",
   "cardName": "Maille parfaite",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "maille",
   "cost": 2,
   "xCost": false,

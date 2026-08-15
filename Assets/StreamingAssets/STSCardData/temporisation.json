@@ -2,6 +2,8 @@
   "id": "temporisation",
   "cardName": "Temporisation",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "tempo",
   "cost": 0,
   "xCost": false,

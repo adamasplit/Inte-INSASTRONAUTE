@@ -2,6 +2,8 @@
   "id": "souffle_de_feu",
   "cardName": "Pyrosouffle",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Ténèbres",
   "cost": 2,
   "xCost": false,

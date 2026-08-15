@@ -2,6 +2,8 @@
   "id": "barriere_d_energie",
   "cardName": "Barrière d'énergie",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "barriere",
   "cost": 2,
   "xCost": false,

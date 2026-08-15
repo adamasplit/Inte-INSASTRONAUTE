@@ -2,6 +2,8 @@
   "id": "bouclier_organique",
   "cardName": "Bouclier organique",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "barriere",
   "cost": 2,
   "xCost": false,

@@ -2,6 +2,8 @@
   "id": "demonstration_triviale",
   "cardName": "Démonstration triviale",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "rdm",
   "cost": 3,
   "xCost": false,

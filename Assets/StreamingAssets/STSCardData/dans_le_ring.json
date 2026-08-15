@@ -2,6 +2,8 @@
   "id": "dans_le_ring",
   "cardName": "Dans le ring",
   "collectionCardId": "Stadium",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 0,
   "xCost": false,

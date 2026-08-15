@@ -2,6 +2,8 @@
   "id": "propulsion_hypersonique",
   "cardName": "Propulsion hypersonique",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "perce",
   "cost": 2,
   "xCost": false,

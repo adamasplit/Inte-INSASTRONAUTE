@@ -2,6 +2,8 @@
   "id": "blou_blou",
   "cardName": "Blou blou",
   "collectionCardId": "Sharks (campagne)",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 1,
   "xCost": false,

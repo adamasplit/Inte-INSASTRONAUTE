@@ -2,6 +2,8 @@
   "id": "economie_d_energie",
   "cardName": "Économie d'énergie",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "batterie",
   "cost": 2,
   "xCost": false,

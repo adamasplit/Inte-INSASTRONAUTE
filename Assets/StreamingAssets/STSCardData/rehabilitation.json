@@ -2,6 +2,8 @@
   "id": "rehabilitation",
   "cardName": "Recyclage",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "cycle",
   "cost": 1,
   "xCost": false,

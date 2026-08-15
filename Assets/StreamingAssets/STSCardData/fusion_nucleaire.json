@@ -2,6 +2,8 @@
   "id": "fusion_nucleaire",
   "cardName": "Fusion nucléaire",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Hollow",
   "cost": 1,
   "xCost": false,

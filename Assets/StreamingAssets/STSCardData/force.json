@@ -2,6 +2,8 @@
   "id": "force",
   "cardName": "Force",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Buff",
   "cost": 0,
   "xCost": false,

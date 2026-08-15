@@ -2,6 +2,8 @@
   "id": "espace_vectoriel_norme",
   "cardName": "Espace vectoriel normé",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "triangulation",
   "cost": 1,
   "xCost": false,

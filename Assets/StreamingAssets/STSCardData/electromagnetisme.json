@@ -2,6 +2,8 @@
   "id": "electromagnetisme",
   "cardName": "Electromagnétisme",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "thunder",
   "cost": 1,
   "xCost": false,

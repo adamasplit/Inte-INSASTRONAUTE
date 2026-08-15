@@ -2,6 +2,8 @@
   "id": "danse_regionale",
   "cardName": "Danse régionale",
   "collectionCardId": "Limousin",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 3,
   "xCost": false,

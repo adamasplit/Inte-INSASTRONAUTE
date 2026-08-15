@@ -2,6 +2,8 @@
   "id": "fureur_de_la_planete",
   "cardName": "Fureur de la planète",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "halo",
   "cost": 3,
   "xCost": false,

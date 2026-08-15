@@ -2,6 +2,8 @@
   "id": "simulation_thermique",
   "cardName": "Simulation thermique",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "batiment",
   "cost": 1,
   "xCost": false,

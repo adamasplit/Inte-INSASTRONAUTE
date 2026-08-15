@@ -2,6 +2,8 @@
   "id": "triangulation_gnss",
   "cardName": "Triangulation GNSS",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "triangulation",
   "cost": 2,
   "xCost": false,

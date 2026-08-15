@@ -2,6 +2,8 @@
   "id": "depart_en_sprint",
   "cardName": "Départ en sprint",
   "collectionCardId": "Purple",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 0,
   "xCost": false,

@@ -2,6 +2,8 @@
   "id": "cycle_de_vie",
   "cardName": "Cycle de vie",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Buff",
   "cost": 1,
   "xCost": false,

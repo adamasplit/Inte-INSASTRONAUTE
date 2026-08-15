@@ -8,6 +8,8 @@ public class ActionExhaustedModifier : StatModifier
     }
     public override int Modify(int value, EffectContext ctx)
     {
+        if (ctx==null||ctx.state == null|| ctx.state.cardsExhausted == 0)
+            return value;
         return value + ctx.state.cardsExhausted * perExhaust;
     }
 

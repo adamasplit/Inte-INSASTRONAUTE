@@ -2,6 +2,8 @@
   "id": "catastrophe_naturelle",
   "cardName": "Catastrophe naturelle",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Nova",
   "cost": 0,
   "xCost": true,

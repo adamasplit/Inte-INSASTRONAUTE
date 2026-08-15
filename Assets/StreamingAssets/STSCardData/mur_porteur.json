@@ -2,6 +2,8 @@
   "id": "mur_porteur",
   "cardName": "Mur porteur",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Dégâts et Armure",
   "cost": 2,
   "xCost": false,

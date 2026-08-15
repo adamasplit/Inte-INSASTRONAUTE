@@ -2,6 +2,8 @@
   "id": "forteresse",
   "cardName": "Forteresse mobile",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "ultimate_shield",
   "cost": 5,
   "xCost": false,

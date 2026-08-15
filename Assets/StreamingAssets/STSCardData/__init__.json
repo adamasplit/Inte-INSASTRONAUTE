@@ -2,6 +2,8 @@
   "id": "__init__",
   "cardName": "__init__",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "ArmureSoin",
   "cost": 0,
   "xCost": false,

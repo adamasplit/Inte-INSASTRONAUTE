@@ -2,6 +2,8 @@
   "id": "robot_autoguide",
   "cardName": "Robot autoguidé",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "robot",
   "cost": 1,
   "xCost": false,

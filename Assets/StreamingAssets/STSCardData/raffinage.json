@@ -2,6 +2,8 @@
   "id": "raffinage",
   "cardName": "Raffinage",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "spirale2",
   "cost": 1,
   "xCost": false,

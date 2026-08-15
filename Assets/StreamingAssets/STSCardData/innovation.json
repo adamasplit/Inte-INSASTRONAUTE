@@ -2,6 +2,8 @@
   "id": "innovation",
   "cardName": "Innovation",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "creation",
   "cost": 3,
   "xCost": false,

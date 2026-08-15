@@ -2,6 +2,8 @@
   "id": "transfert_thermique",
   "cardName": "Transfert thermique",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Darkness",
   "cost": 2,
   "xCost": false,

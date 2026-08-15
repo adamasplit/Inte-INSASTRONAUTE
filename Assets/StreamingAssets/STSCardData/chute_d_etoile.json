@@ -2,6 +2,8 @@
   "id": "chute_d_etoile",
   "cardName": "Chute d'étoile",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Comète",
   "cost": 0,
   "xCost": false,

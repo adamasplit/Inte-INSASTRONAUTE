@@ -2,6 +2,8 @@
   "id": "pieces_de_rechange",
   "cardName": "Pièces de rechange",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "engrenages",
   "cost": 1,
   "xCost": false,

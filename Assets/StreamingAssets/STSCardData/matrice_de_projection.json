@@ -2,6 +2,8 @@
   "id": "matrice_de_projection",
   "cardName": "Matrice de projection",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "naoya",
   "cost": 1,
   "xCost": false,

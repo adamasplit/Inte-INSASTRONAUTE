@@ -2,6 +2,8 @@
   "id": "cristallisation",
   "cardName": "Cristallisation",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Cristal",
   "cost": 1,
   "xCost": false,

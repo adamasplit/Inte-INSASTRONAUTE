@@ -2,6 +2,8 @@
   "id": "autodecomposer",
   "cardName": "Autodécomposer",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Magique",
   "cost": 1,
   "xCost": false,

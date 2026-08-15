@@ -2,6 +2,8 @@
   "id": "corrosion",
   "cardName": "Corrosion",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Affliction",
   "cost": 0,
   "xCost": true,

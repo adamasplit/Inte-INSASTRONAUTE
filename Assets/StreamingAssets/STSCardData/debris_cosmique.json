@@ -2,6 +2,8 @@
   "id": "debris_cosmique",
   "cardName": "Débris cosmique",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Météorite",
   "cost": 1,
   "xCost": false,

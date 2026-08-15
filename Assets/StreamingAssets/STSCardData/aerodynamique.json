@@ -2,6 +2,8 @@
   "id": "aerodynamique",
   "cardName": "Aérodynamique",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "aero",
   "cost": 1,
   "xCost": false,

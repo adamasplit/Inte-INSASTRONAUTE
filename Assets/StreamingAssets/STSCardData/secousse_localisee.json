@@ -2,6 +2,8 @@
   "id": "secousse_localisee",
   "cardName": "Secousse localisée",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Zone2",
   "cost": 0,
   "xCost": false,

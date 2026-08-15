@@ -2,6 +2,8 @@
   "id": "poutre",
   "cardName": "Poutre centrale",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "rudebuster",
   "cost": 2,
   "xCost": false,

@@ -2,6 +2,8 @@
   "id": "gravitron",
   "cardName": "Gravitron",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Gravité",
   "cost": 2,
   "xCost": false,

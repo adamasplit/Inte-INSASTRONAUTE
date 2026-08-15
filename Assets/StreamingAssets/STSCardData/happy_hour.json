@@ -2,6 +2,8 @@
   "id": "happy_hour",
   "cardName": "Happy Hour",
   "collectionCardId": "Bar des Fleurs (campagne)",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 1,
   "xCost": false,

@@ -2,6 +2,8 @@
   "id": "ultralaser",
   "cardName": "Ultralaser",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "laser",
   "cost": 2,
   "xCost": false,

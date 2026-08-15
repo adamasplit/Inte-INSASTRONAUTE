@@ -2,6 +2,8 @@
   "id": "point_critique",
   "cardName": "Point critique",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "critique",
   "cost": 1,
   "xCost": false,

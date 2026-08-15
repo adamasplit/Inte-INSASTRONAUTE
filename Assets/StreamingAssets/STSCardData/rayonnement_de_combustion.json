@@ -2,6 +2,8 @@
   "id": "rayonnement_de_combustion",
   "cardName": "Rayonnement de combustion",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Pouvoir2",
   "cost": 0,
   "xCost": true,

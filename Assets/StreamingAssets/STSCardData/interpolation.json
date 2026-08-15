@@ -2,6 +2,8 @@
   "id": "interpolation",
   "cardName": "Interpolation",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "between",
   "cost": 2,
   "xCost": false,

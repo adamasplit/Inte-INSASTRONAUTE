@@ -2,6 +2,8 @@
   "id": "cle_de_voute",
   "cardName": "Clé de voûte",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "voute",
   "cost": 1,
   "xCost": false,

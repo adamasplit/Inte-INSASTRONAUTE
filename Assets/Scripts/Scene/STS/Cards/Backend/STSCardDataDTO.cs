@@ -7,6 +7,8 @@ public class STSCardDataDTO
     public string id;
     public string cardName;
     public string collectionCardId;
+    public bool multiplayerExclusive;
+    public int characterLevel;
     public string iconId;
     public int cost;
     public bool xCost;

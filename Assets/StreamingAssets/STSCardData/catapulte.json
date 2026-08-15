@@ -2,6 +2,8 @@
   "id": "catapulte",
   "cardName": "Catapulte",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "rocks",
   "cost": 2,
   "xCost": false,

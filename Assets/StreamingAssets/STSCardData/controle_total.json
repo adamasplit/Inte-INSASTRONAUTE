@@ -2,6 +2,8 @@
   "id": "controle_total",
   "cardName": "Contrôle total",
   "collectionCardId": "Contrôleur Astuce",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 2,
   "xCost": false,

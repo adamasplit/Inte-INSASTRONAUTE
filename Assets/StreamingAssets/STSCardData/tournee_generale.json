@@ -2,6 +2,8 @@
   "id": "tournee_generale",
   "cardName": "Tournée générale",
   "collectionCardId": "Quartier Libre",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 0,
   "xCost": false,

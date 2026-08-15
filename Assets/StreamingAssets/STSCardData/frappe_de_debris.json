@@ -2,6 +2,8 @@
   "id": "frappe_de_debris",
   "cardName": "Frappe de débris",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Comète",
   "cost": 0,
   "xCost": false,

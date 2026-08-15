@@ -5,12 +5,16 @@ public class Character
 {
     public Sprite portrait; // à assigner dans l'inspecteur ou via code
     public string name;
+    public string playerDisplayName;
+    public string playerUserId;
     public int maxHP;
     public int currentHP;
     public int armor;
     public bool IsAlive => currentHP > 0;
     public ResourceSet resources = new ResourceSet();
     public bool isPlayer;
+    public bool isAlly;
+    public bool isLocalPlayer;
     public List<StatusEffect> statusEffects = new List<StatusEffect>();
     public CombatManager combat;
     public bool onTurn = false;
@@ -107,7 +111,7 @@ public class Character
     {
         resources.energy += amount;
         combat.state.energyGainedThisTurn += amount;
-        if (isPlayer)
+        if (isLocalPlayer)
         {
             VFXManager.Instance.AnimateEnergyGain();
         }
@@ -116,6 +120,9 @@ public class Character
     public void AddArmor(int amount)
     {
         armor += amount;
+        if (RunManager.Instance == null)
+            return;
+
         foreach (var relic in RunManager.Instance.relics)
         {
             relic.OnAnyArmorGain(this, amount);
@@ -128,7 +135,7 @@ public class Character
         {
             RunManager.Instance.ui.FlashGreenOverlay();
         }
-        if (isPlayer)
+        if (isLocalPlayer && RunManager.Instance != null)
         {
             foreach (var relic in RunManager.Instance.relics)
             {
@@ -144,11 +151,14 @@ public class Character
     public void AddStatus(StatusEffect status)
     {
         // Check if the status can be applied (e.g. if the character intercepts a given amount of negative statuses)
-        foreach (var relic in RunManager.Instance.relics)
+        if (RunManager.Instance != null)
         {
-            if (!relic.CanApplyStatus(status, this))
+            foreach (var relic in RunManager.Instance.relics)
             {
-                return; // Status application is blocked by a relic
+                if (!relic.CanApplyStatus(status, this))
+                {
+                    return; // Status application is blocked by a relic
+                }
             }
         }
         foreach (var existingStatus in statusEffects)
@@ -199,7 +209,7 @@ public class Character
     {
         onTurn = true;
         int newArmor = 0;
-        if (isPlayer)
+        if (isLocalPlayer && RunManager.Instance != null)
         {
             foreach (var relic in RunManager.Instance.relics)
             {
@@ -212,7 +222,7 @@ public class Character
         }
         armor=newArmor;
         resources.energy = 3;
-        if (isPlayer)
+        if (isLocalPlayer && RunManager.Instance != null)
         {
             int newEnergy = 3;
             foreach (var relic in RunManager.Instance.relics)
@@ -241,7 +251,7 @@ public class Character
         }
         // Collect status effects to remove, then remove after iteration
         ExpireStatuses();
-        if (isPlayer)
+        if (isLocalPlayer && RunManager.Instance != null)
         {
             foreach (var relic in RunManager.Instance.relics)
             {
@@ -257,6 +267,9 @@ public class Character
         {
             status.OnFieldTurnEnd(this);
         }
+        if (RunManager.Instance == null)
+            return;
+
         foreach (var relic in RunManager.Instance.relics)
         {
             relic.OnFieldTurnEnd(this);

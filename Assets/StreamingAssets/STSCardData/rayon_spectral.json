@@ -2,6 +2,8 @@
   "id": "rayon_spectral",
   "cardName": "Rayon spectral",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "spectral",
   "cost": 1,
   "xCost": false,

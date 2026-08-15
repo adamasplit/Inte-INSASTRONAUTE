@@ -2,6 +2,8 @@
   "id": "dissipation",
   "cardName": "Dissipation",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Dissipation",
   "cost": 0,
   "xCost": false,

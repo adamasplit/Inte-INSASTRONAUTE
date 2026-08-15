@@ -2,6 +2,8 @@
   "id": "gestion_du_risque",
   "cardName": "Gestion du risque",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Pouvoir",
   "cost": 1,
   "xCost": false,

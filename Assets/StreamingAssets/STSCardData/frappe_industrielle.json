@@ -2,6 +2,8 @@
   "id": "frappe_industrielle",
   "cardName": "Frappe industrielle",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Industrie",
   "cost": 0,
   "xCost": false,

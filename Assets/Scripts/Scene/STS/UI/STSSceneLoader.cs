@@ -11,6 +11,7 @@ public class STSSceneLoader : MonoBehaviour
     private float backgroundProgress = 0f;
     private float sceneTransitionProgress = 0f;
     private float sceneStartProgress = 0f;
+    private int sceneTransitionToken = 0;
 
     private void Awake()
     {
@@ -52,6 +53,7 @@ public class STSSceneLoader : MonoBehaviour
         // Start async loading and update the loading screen progress.
         sceneTransitionPending = true;
         sceneTransitionProgress = 0f;
+        sceneTransitionToken++;
         sceneStartProgress = backgroundLoadingCount > 0
             ? Mathf.Clamp01(backgroundProgress)
             : 0f;
@@ -61,10 +63,10 @@ public class STSSceneLoader : MonoBehaviour
             loadingScreen.gameObject.SetActive(true);
             ApplyProgressToScreen();
         }
-        StartCoroutine(LoadSceneAsyncRoutine(sceneName));
+        StartCoroutine(LoadSceneAsyncRoutine(sceneName, sceneTransitionToken));
     }
 
-    private IEnumerator LoadSceneAsyncRoutine(string sceneName)
+    private IEnumerator LoadSceneAsyncRoutine(string sceneName, int transitionToken)
     {
         AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
 
@@ -80,6 +82,18 @@ public class STSSceneLoader : MonoBehaviour
         // Ensure progress reaches 100%
         sceneTransitionProgress = 1f;
         ApplyProgressToScreen();
+
+        // Safety net: if the loaded scene does not call SceneReady(), clear pending state automatically.
+        yield return null;
+        if (transitionToken != sceneTransitionToken)
+        {
+            yield break;
+        }
+
+        if (sceneTransitionPending && backgroundLoadingCount == 0)
+        {
+            SceneReady();
+        }
     }
 
     public void EndLoading()

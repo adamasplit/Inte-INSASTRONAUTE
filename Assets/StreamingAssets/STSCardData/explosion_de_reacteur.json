@@ -2,6 +2,8 @@
   "id": "explosion_de_reacteur",
   "cardName": "Explosion de réacteur",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "burn",
   "cost": 0,
   "xCost": false,

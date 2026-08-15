@@ -2,6 +2,8 @@
   "id": "filtre",
   "cardName": "Filtre",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "signal",
   "cost": 1,
   "xCost": false,

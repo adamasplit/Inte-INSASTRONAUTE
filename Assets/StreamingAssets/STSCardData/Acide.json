@@ -2,6 +2,8 @@
   "id": "acide",
   "cardName": "Acide",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Debuff",
   "cost": 0,
   "xCost": false,

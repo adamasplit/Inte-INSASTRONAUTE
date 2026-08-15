@@ -93,8 +93,12 @@ MonoBehaviour:
   combat: {fileID: 0}
   highlight: {fileID: 8069965279577739418}
   image: {fileID: 8908696926109726373}
+  imageRect: {fileID: 0}
   isHovered: 0
   acceptsEnemyCards: 0
+  clickNameText: {fileID: 7735141795828592913}
+  clickNameCanvasGroup: {fileID: 8827489384561472084}
+  clickNameFadeDuration: 1
 --- !u!114 &9107350340381725388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,6 +119,7 @@ MonoBehaviour:
   intentText: {fileID: 0}
   intentContainer: {fileID: 0}
   intentUIPrefab: {fileID: 0}
+  uiManager: {fileID: 0}
 --- !u!1 &2141384636338668923
 GameObject:
   m_ObjectHideFlags: 0
@@ -384,6 +389,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+--- !u!114 &7735141795828592913 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4344545001062797931, guid: cf5f86c8f1f618d4aa429df7fc5af7d8, type: 3}
+  m_PrefabInstance: {fileID: 6274168300975940474}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!114 &8762094659112691013 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3353884817630266943, guid: cf5f86c8f1f618d4aa429df7fc5af7d8, type: 3}
@@ -398,6 +414,11 @@ MonoBehaviour:
 --- !u!224 &8794204946861905915 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3249655122631865473, guid: cf5f86c8f1f618d4aa429df7fc5af7d8, type: 3}
+  m_PrefabInstance: {fileID: 6274168300975940474}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &8827489384561472084 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 3284206050646855982, guid: cf5f86c8f1f618d4aa429df7fc5af7d8, type: 3}
   m_PrefabInstance: {fileID: 6274168300975940474}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &8908696926109726373 stripped

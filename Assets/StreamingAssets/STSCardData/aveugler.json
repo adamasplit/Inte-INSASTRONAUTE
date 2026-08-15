@@ -2,6 +2,8 @@
   "id": "aveugler",
   "cardName": "Aveugler",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "feu",
   "cost": 2,
   "xCost": false,

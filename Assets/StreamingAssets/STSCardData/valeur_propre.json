@@ -2,6 +2,8 @@
   "id": "valeur_propre",
   "cardName": "Valeur propre",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "spirale",
   "cost": 1,
   "xCost": false,

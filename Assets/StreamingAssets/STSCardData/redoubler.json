@@ -2,6 +2,8 @@
   "id": "redoubler",
   "cardName": "Redoubler",
   "collectionCardId": "Rattrapages",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 1,
   "xCost": false,

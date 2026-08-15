@@ -2,6 +2,8 @@
   "id": "pinte_de_trop",
   "cardName": "Pinte de trop",
   "collectionCardId": "Paix Dieu (campagne)",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 1,
   "xCost": false,

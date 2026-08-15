@@ -2,6 +2,8 @@
   "id": "frappe_deterministe",
   "cardName": "Frappe déterministe",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "forceofwill",
   "cost": 2,
   "xCost": false,

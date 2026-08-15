@@ -2,6 +2,8 @@
   "id": "decharge",
   "cardName": "Décharge",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "lightning",
   "cost": 0,
   "xCost": false,

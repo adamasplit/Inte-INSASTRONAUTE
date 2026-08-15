@@ -2,6 +2,8 @@
   "id": "droit_des_sols",
   "cardName": "Droit des sols",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Zone2",
   "cost": 2,
   "xCost": false,

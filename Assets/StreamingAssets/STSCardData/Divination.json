@@ -2,6 +2,8 @@
   "id": "divination",
   "cardName": "Divination",
   "collectionCardId": "Chacharlatante",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 3,
   "xCost": false,

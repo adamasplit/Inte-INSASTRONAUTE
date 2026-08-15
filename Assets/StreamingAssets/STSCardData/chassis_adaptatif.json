@@ -2,6 +2,8 @@
   "id": "chassis_adaptatif",
   "cardName": "Châssis adaptatif",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "protection",
   "cost": 1,
   "xCost": false,

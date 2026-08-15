@@ -2,6 +2,8 @@
   "id": "brouillage",
   "cardName": "Brouillage",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "kaleid",
   "cost": 1,
   "xCost": false,

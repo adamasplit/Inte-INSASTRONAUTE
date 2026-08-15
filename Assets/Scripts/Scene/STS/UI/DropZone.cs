@@ -3,8 +3,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 
-public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
+public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     static readonly List<DropZone> ActiveDropZones = new();
 
@@ -19,6 +20,11 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
     public bool acceptsEnemyCards = false;
     public static Character hoveredCharacter;
+    [Header("Click Name")]
+    [SerializeField] TextMeshProUGUI clickNameText;
+    [SerializeField] CanvasGroup clickNameCanvasGroup;
+    [SerializeField] float clickNameFadeDuration = 1f;
+    Coroutine clickNameFadeRoutine;
     bool deathAnimationPlayed;
     bool enemyImageSizeCached;
     Vector2 enemyImageSize;
@@ -109,6 +115,9 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         {
             EnsureDropZoneLayoutLock();
         }
+
+        EnsureClickNameWidget();
+        SetClickNameAlpha(0f);
     }
 
     void OnDestroy()
@@ -358,6 +367,101 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         Vector2 discardPos = combat.animator.animationLayer.InverseTransformPoint(combat.ui.discardAnchor.position);
         drag?.NotifyCardPlayedFromDrop();
         combat.PlayCard(combat.player, cardView.cardInstance, targets);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData == null)
+            return;
+
+        if (eventData.dragging || eventData.pointerDrag != null)
+            return;
+
+        ShowClickName();
+    }
+
+    void ShowClickName()
+    {
+        EnsureClickNameWidget();
+        if (clickNameText == null || clickNameCanvasGroup == null)
+            return;
+
+        string displayName = ResolveDisplayName();
+        if (string.IsNullOrWhiteSpace(displayName))
+            return;
+
+        clickNameText.text = displayName;
+
+        if (clickNameFadeRoutine != null)
+        {
+            StopCoroutine(clickNameFadeRoutine);
+            clickNameFadeRoutine = null;
+        }
+
+        clickNameFadeRoutine = StartCoroutine(FadeClickNameRoutine());
+    }
+
+    string ResolveDisplayName()
+    {
+        if (target == null)
+            return string.Empty;
+
+        if (!string.IsNullOrWhiteSpace(target.playerDisplayName))
+            return target.playerDisplayName;
+
+        if (!string.IsNullOrWhiteSpace(target.name))
+            return target.name;
+
+        return "Inconnu";
+    }
+
+    IEnumerator FadeClickNameRoutine()
+    {
+        SetClickNameAlpha(1f);
+
+        float duration = Mathf.Max(0.01f, clickNameFadeDuration);
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            SetClickNameAlpha(1f - t);
+            yield return null;
+        }
+
+        SetClickNameAlpha(0f);
+        clickNameFadeRoutine = null;
+    }
+
+    void SetClickNameAlpha(float alpha)
+    {
+        if (clickNameCanvasGroup == null)
+            return;
+
+        clickNameCanvasGroup.alpha = Mathf.Clamp01(alpha);
+    }
+
+    void EnsureClickNameWidget()
+    {
+        if (clickNameText == null)
+        {
+            clickNameText = GetComponentInChildren<TextMeshProUGUI>(true);
+        }
+
+        if (clickNameText == null)
+            return;
+
+        if (clickNameCanvasGroup == null)
+        {
+            clickNameCanvasGroup = clickNameText.GetComponent<CanvasGroup>();
+            if (clickNameCanvasGroup == null)
+            {
+                clickNameCanvasGroup = clickNameText.gameObject.AddComponent<CanvasGroup>();
+            }
+        }
+
+        clickNameCanvasGroup.interactable = false;
+        clickNameCanvasGroup.blocksRaycasts = false;
     }
 
     bool IsValidTarget(PointerEventData eventData)

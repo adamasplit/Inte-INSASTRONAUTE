@@ -8,8 +8,10 @@ using TMPro;
 public class STSMainMenuController : MonoBehaviour
 {
     public Button loadButton;
+    public Button pvpButton;
     public string resumeSceneName = "STS_Map";
     public string bootSceneName = "STS_Boot";
+    public string pvpMenuSceneName = "STS_MultiplayerMenu";
     const string NewGameTutorialPromptKey = "STS_NewGameTutorialPromptSeen";
     public GameObject tutorialPromptPanel;
     public Button acceptTutorialButton;
@@ -34,6 +36,7 @@ public class STSMainMenuController : MonoBehaviour
 
         ResetBlackOverlay();
         EnsureButtonGoldGlow(loadButton);
+        EnsureButtonGoldGlow(pvpButton);
     }
 
     public async void OnClick()
@@ -130,6 +133,7 @@ public class STSMainMenuController : MonoBehaviour
         RefreshLoadButtonState();
         HideTutorialPrompt();
         EnsureButtonGoldGlow(loadButton);
+        EnsureButtonGoldGlow(pvpButton);
     }
 
     public async void RefreshLoadButtonState()
@@ -183,6 +187,23 @@ public class STSMainMenuController : MonoBehaviour
     public async void LoadSavedRun()
     {
         await AbandonCurrentRunAsync();
+    }
+
+    public async void OnClickPvp()
+    {
+        if (transitionInProgress)
+        {
+            return;
+        }
+
+        transitionInProgress = true;
+        await FadeBlackOverlayToAsync(1f, blackFadeInDuration, keepVisibleAtEnd: true);
+
+        introSequence?.HideTitleLine();
+
+        STSSceneLoader.Instance?.LoadScene(pvpMenuSceneName);
+
+        transitionInProgress = false;
     }
 
     public async Task AbandonCurrentRunAsync()

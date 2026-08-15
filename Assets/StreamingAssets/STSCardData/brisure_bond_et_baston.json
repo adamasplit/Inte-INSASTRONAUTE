@@ -2,6 +2,8 @@
   "id": "brisure_bond_et_baston",
   "cardName": "Brisure, Bond et Baston",
   "collectionCardId": "3B (campagne)",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 2,
   "xCost": false,

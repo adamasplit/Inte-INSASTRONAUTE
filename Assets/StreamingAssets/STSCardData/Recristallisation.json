@@ -2,6 +2,8 @@
   "id": "recristallisation",
   "cardName": "Recristallisation",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Cristal",
   "cost": 0,
   "xCost": false,

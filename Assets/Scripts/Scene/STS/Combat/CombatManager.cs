@@ -86,6 +86,7 @@ public class CombatManager : MonoBehaviour
     {
         EnsureAllies();
         EnsureEncounterEnemies();
+        RunManager.Instance?.ApplyPvpParticipantDisplayNames(allies, enemies);
         ui.Init(this);          // inject
         ui.InitCharacters();    // spawn UI
         ui.RefreshUI();

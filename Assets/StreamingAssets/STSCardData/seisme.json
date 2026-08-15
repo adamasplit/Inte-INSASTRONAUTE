@@ -2,6 +2,8 @@
   "id": "seisme",
   "cardName": "Séisme",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Zone",
   "cost": 1,
   "xCost": false,

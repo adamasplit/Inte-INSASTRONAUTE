@@ -2,6 +2,8 @@
   "id": "reboot",
   "cardName": "Reboot",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "reboot",
   "cost": 0,
   "xCost": false,

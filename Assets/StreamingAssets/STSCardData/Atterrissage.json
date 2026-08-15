@@ -2,6 +2,8 @@
   "id": "atterrissage",
   "cardName": "Atterrissage",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Choc",
   "cost": 0,
   "xCost": false,

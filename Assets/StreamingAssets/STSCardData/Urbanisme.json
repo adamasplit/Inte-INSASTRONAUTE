@@ -2,6 +2,8 @@
   "id": "urbanisme",
   "cardName": "Urbanisme",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Transfert2",
   "cost": 2,
   "xCost": false,

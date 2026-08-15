@@ -2,6 +2,8 @@
   "id": "equilibrage_d_emploi_du_temps",
   "cardName": "Équilibrage d'emploi du temps",
   "collectionCardId": "Ingénieur Humaniste (campagne)",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": null,
   "cost": 0,
   "xCost": false,

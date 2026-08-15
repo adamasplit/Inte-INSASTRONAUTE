@@ -2,6 +2,8 @@
   "id": "pluie_de_surins",
   "cardName": "Pluie de surins",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "Magique",
   "cost": 0,
   "xCost": false,

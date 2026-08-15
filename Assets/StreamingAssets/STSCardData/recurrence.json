@@ -2,6 +2,8 @@
   "id": "recurrence",
   "cardName": "Récurrence",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "iter",
   "cost": 0,
   "xCost": false,

@@ -2,6 +2,8 @@
   "id": "frappe_infinie",
   "cardName": "Frappe infinie",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "cut",
   "cost": 0,
   "xCost": false,

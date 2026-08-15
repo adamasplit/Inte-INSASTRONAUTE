@@ -2,6 +2,8 @@
   "id": "limit_break",
   "cardName": "Dépassement de limites",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "limit",
   "cost": 2,
   "xCost": false,

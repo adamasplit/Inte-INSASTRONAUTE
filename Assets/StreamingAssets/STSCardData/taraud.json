@@ -2,6 +2,8 @@
   "id": "taraud",
   "cardName": "Taraud",
   "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
   "iconId": "foreuse",
   "cost": 1,
   "xCost": false,
