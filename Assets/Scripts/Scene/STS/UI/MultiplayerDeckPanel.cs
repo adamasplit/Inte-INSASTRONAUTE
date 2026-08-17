@@ -172,23 +172,32 @@ public class MultiplayerDeckPanel : MonoBehaviour
         selectedCharacterLevel = ResolveCharacterLevel(profile, selectedCharacter);
 
         ownedCardIds.Clear();
-        JToken collection = await STSApiClient.GetPvpCollectionAsync();
-        if (collection == null)
+
+        // Both sources are merged: the PVP collection can answer with ids that match nothing usable here.
+        JToken pvpCollection = await STSApiClient.GetPvpCollectionAsync();
+        if (pvpCollection != null)
         {
-            collection = await STSApiClient.GetVirtualCollectionDeckAsync();
+            CollectOwnedCardIds(pvpCollection, ownedCardIds);
         }
 
-        if (collection == null)
+        JToken virtualDeck = await STSApiClient.GetVirtualCollectionDeckAsync();
+        if (virtualDeck != null)
+        {
+            CollectOwnedCardIds(virtualDeck, ownedCardIds);
+        }
+
+        if (ownedCardIds.Count == 0)
         {
             missingApiResponses = true;
         }
 
-        CollectOwnedCardIds(collection, ownedCardIds);
+        Debug.Log($"[STS-PVP] Owned collection entries: {ownedCardIds.Count} -> {string.Join(", ", ownedCardIds.Take(30))}");
 
         RebuildEntries();
+        Debug.Log($"[STS-PVP] Deck builder entries: {allEntries.Count}, unlocked: {allEntries.Count(entry => entry.unlocked)}");
         await RefreshSavedDecksAsync();
         RefreshGrid();
-        SetStatus($"Cartes disponibles: {allEntries.Count}");
+        UpdateStatusWithCounts();
     }
 
     private void BuildStaticFilterOptions()
@@ -253,6 +262,9 @@ public class MultiplayerDeckPanel : MonoBehaviour
             if (card == null)
                 continue;
 
+            if (IsHiddenFromDeckBuilder(card))
+                continue;
+
             string key = GetCardKey(card);
             if (string.IsNullOrWhiteSpace(key))
                 continue;
@@ -276,20 +288,24 @@ public class MultiplayerDeckPanel : MonoBehaviour
         selectedCardKeys.RemoveWhere(key => allEntries.All(entry => !string.Equals(entry.key, key, StringComparison.OrdinalIgnoreCase)));
     }
 
+    // Never selectable in PVP, so they are dropped before any filter runs.
+    private bool IsHiddenFromDeckBuilder(STSCardData card)
+    {
+        return card.favoredCharacter == SelectableCharacter.Impossible
+            || card.favoredCharacter == SelectableCharacter.Starting
+            || card.HasTag(CardTag.Unobtainable);
+    }
+
     private bool IsOwnedCard(STSCardData card)
     {
-        string key = GetCardKey(card);
-        if (!string.IsNullOrWhiteSpace(key) && ownedCardIds.Contains(key))
-            return true;
+        return OwnsIdentifier(card.GetCollectionCardId())
+            || OwnsIdentifier(GetCardKey(card))
+            || OwnsIdentifier(card.cardName);
+    }
 
-        if (!string.IsNullOrWhiteSpace(card.cardName) && ownedCardIds.Contains(card.cardName))
-            return true;
-
-        string collectionId = card.GetCollectionCardId();
-        if (!string.IsNullOrWhiteSpace(collectionId) && ownedCardIds.Contains(collectionId))
-            return true;
-
-        return false;
+    private bool OwnsIdentifier(string identifier)
+    {
+        return !string.IsNullOrWhiteSpace(identifier) && ownedCardIds.Contains(identifier.Trim());
     }
 
     private bool IsUnlocked(STSCardData card, bool owned)
@@ -354,6 +370,7 @@ public class MultiplayerDeckPanel : MonoBehaviour
         }
 
         RefreshDeckCounter();
+        UpdateStatusWithCounts();
     }
 
     private void ClearGrid()
@@ -844,7 +861,7 @@ public class MultiplayerDeckPanel : MonoBehaviour
             string value = token.Value<string>();
             if (!string.IsNullOrWhiteSpace(value))
             {
-                target.Add(value);
+                target.Add(value.Trim());
             }
             return;
         }
@@ -867,9 +884,21 @@ public class MultiplayerDeckPanel : MonoBehaviour
             ?? obj.Value<string>("collectionCardId")
             ?? obj.Value<string>("id");
 
-        if (!string.IsNullOrWhiteSpace(cardId) && LooksLikeCardPayload(obj))
+        string cardName = obj.Value<string>("cardName")
+            ?? obj.Value<string>("name");
+
+        if (LooksLikeCardPayload(obj) && HasOwnedQuantity(obj))
         {
-            target.Add(cardId);
+            if (!string.IsNullOrWhiteSpace(cardId))
+            {
+                target.Add(cardId.Trim());
+            }
+
+            // /api/cards/deck identifies cards by display name, which maps to collectionCardId here.
+            if (!string.IsNullOrWhiteSpace(cardName))
+            {
+                target.Add(cardName.Trim());
+            }
         }
 
         foreach (string key in new[] { "ownedCardIds", "unlockedCardIds", "cardIds", "cards", "deck", "items", "data", "result", "payload" })
@@ -889,6 +918,15 @@ public class MultiplayerDeckPanel : MonoBehaviour
         }
     }
 
+    // The deck endpoint also lists cards the player does not own, with quantity 0.
+    private bool HasOwnedQuantity(JObject obj)
+    {
+        if (!obj.TryGetValue("quantity", StringComparison.OrdinalIgnoreCase, out JToken quantity) || quantity == null)
+            return true;
+
+        return (quantity.Value<int?>() ?? 0) > 0;
+    }
+
     private bool LooksLikeCardPayload(JObject obj)
     {
         if (obj == null)
@@ -896,9 +934,12 @@ public class MultiplayerDeckPanel : MonoBehaviour
 
         if (obj.TryGetValue("cardId", StringComparison.OrdinalIgnoreCase, out _)
             || obj.TryGetValue("collectionCardId", StringComparison.OrdinalIgnoreCase, out _)
+            || obj.TryGetValue("collectionId", StringComparison.OrdinalIgnoreCase, out _)
             || obj.TryGetValue("cardName", StringComparison.OrdinalIgnoreCase, out _)
+            || obj.TryGetValue("quantity", StringComparison.OrdinalIgnoreCase, out _)
             || obj.TryGetValue("rarity", StringComparison.OrdinalIgnoreCase, out _)
-            || obj.TryGetValue("targetingMode", StringComparison.OrdinalIgnoreCase, out _))
+            || obj.TryGetValue("targetingMode", StringComparison.OrdinalIgnoreCase, out _)
+            || obj.TryGetValue("id", StringComparison.OrdinalIgnoreCase, out _))
         {
             return true;
         }
@@ -948,6 +989,22 @@ public class MultiplayerDeckPanel : MonoBehaviour
             return;
 
         counterText.text = $"{selectedCardKeys.Count}/{maxDeckSize}";
+    }
+
+    private void UpdateStatusWithCounts()
+    {
+        if (statusText == null)
+            return;
+
+        int shown = visibleEntries.Count;
+        int total = allEntries.Count;
+        if (missingApiResponses)
+        {
+            statusText.text = $"Cartes affichées: {shown}/{total} (API indisponible)";
+            return;
+        }
+
+        statusText.text = $"Cartes affichées: {shown}/{total}";
     }
 
     private void SetStatus(string message)

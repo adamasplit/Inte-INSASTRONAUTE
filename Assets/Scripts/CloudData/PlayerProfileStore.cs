@@ -7,6 +7,8 @@ using UnityEngine;
 
 public static class PlayerProfileStore
 {
+    private const string UnlockPrefix = "STS.PlayerProfile.UnlockedCards.";
+
     public const string DisplayNameKey   = "displayName";
     public const string DepartmentKey = "department";
     public const string FriendsKey = "friends";
@@ -14,6 +16,131 @@ public static class PlayerProfileStore
     public const string PhysicalCardCollectionKey = "physicalCardCollection";
     public const string PackCollectionKey = "packCollection";
     public const string DeckSelectionKey = "deckSelection";
+
+    public static void UnlockCardsFromDeck(List<CardInstance> deck, SelectableCharacter selectedCharacter, bool wasRetreat, int act)
+    {
+        if (deck == null || deck.Count == 0)
+        {
+            return;
+        }
+
+        if (selectedCharacter == SelectableCharacter.Aucun
+            || selectedCharacter == SelectableCharacter.Starting
+            || selectedCharacter == SelectableCharacter.Impossible)
+        {
+            return;
+        }
+
+        var candidates = new List<STSCardData>();
+        foreach (CardInstance card in deck)
+        {
+            if (card == null || card.data == null)
+            {
+                continue;
+            }
+
+            if (card.data.favoredCharacter != selectedCharacter)
+            {
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(card.data.id))
+            {
+                continue;
+            }
+
+            if (HasUnlockedCard(card.data.id, selectedCharacter))
+            {
+                continue;
+            }
+
+            candidates.Add(card.data);
+        }
+
+        if (candidates.Count == 0)
+        {
+            return;
+        }
+
+        int unlockCount = 1 + (wasRetreat ? Mathf.Max(0, act) : 0);
+        int countToUnlock = Mathf.Min(unlockCount, candidates.Count);
+
+        var toUnlock = new HashSet<string>(System.StringComparer.OrdinalIgnoreCase);
+        for (int i = 0; i < countToUnlock; i++)
+        {
+            toUnlock.Add(candidates[i].id);
+        }
+
+        if (toUnlock.Count == 0)
+        {
+            return;
+        }
+
+        HashSet<string> current = LoadUnlockedCardIds(selectedCharacter);
+        foreach (string cardId in toUnlock)
+        {
+            current.Add(cardId);
+        }
+
+        SaveUnlockedCardIds(selectedCharacter, current);
+        Debug.Log($"[STS-PROFILE] Unlocked {current.Count} cards for {selectedCharacter} after run end (retreat={wasRetreat}, act={act}).");
+    }
+
+    public static bool HasUnlockedCard(string cardId, SelectableCharacter selectedCharacter)
+    {
+        if (string.IsNullOrWhiteSpace(cardId))
+        {
+            return false;
+        }
+
+        return LoadUnlockedCardIds(selectedCharacter).Contains(cardId);
+    }
+
+    public static List<string> GetUnlockedCardIds(SelectableCharacter selectedCharacter)
+    {
+        return LoadUnlockedCardIds(selectedCharacter)
+            .OrderBy(id => id, System.StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private static HashSet<string> LoadUnlockedCardIds(SelectableCharacter selectedCharacter)
+    {
+        string key = BuildKey(selectedCharacter);
+        string raw = PlayerPrefs.GetString(key, string.Empty);
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return new HashSet<string>(System.StringComparer.OrdinalIgnoreCase);
+        }
+
+        var ids = new HashSet<string>(System.StringComparer.OrdinalIgnoreCase);
+        foreach (string entry in raw.Split('|', System.StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (!string.IsNullOrWhiteSpace(entry))
+            {
+                ids.Add(entry.Trim());
+            }
+        }
+
+        return ids;
+    }
+
+    private static void SaveUnlockedCardIds(SelectableCharacter selectedCharacter, HashSet<string> ids)
+    {
+        if (ids == null || ids.Count == 0)
+        {
+            PlayerPrefs.DeleteKey(BuildKey(selectedCharacter));
+            return;
+        }
+
+        string serialized = string.Join("|", ids.OrderBy(id => id, System.StringComparer.OrdinalIgnoreCase));
+        PlayerPrefs.SetString(BuildKey(selectedCharacter), serialized);
+        PlayerPrefs.Save();
+    }
+
+    private static string BuildKey(SelectableCharacter selectedCharacter)
+    {
+        return UnlockPrefix + selectedCharacter.ToString();
+    }
 
     // Events — toute UI dans n'importe quelle scène peut s'abonner
     public static event System.Action<long>   OnTokenChanged;
@@ -480,7 +607,7 @@ public static class PlayerProfileStore
     {
         try
         {
-            Debug.Log("[PlayerProfileStore] Suppression de toutes les données Cloud Save...");
+            Debug.Log("[STSPlayerProfileStore] Suppression de toutes les données Cloud Save...");
             
             // Effacer les données locales
             CARD_COLLECTION.Clear();
@@ -513,11 +640,11 @@ public static class PlayerProfileStore
                 }
                 catch (System.Exception ex)
                 {
-                    Debug.LogWarning($"[PlayerProfileStore] Impossible de supprimer la clé '{key}': {ex.Message}");
+                    Debug.LogWarning($"[STSPlayerProfileStore] Impossible de supprimer la clé '{key}': {ex.Message}");
                 }
             }
             
-            Debug.Log("[PlayerProfileStore] Toutes les données Cloud Save ont été supprimées");
+            Debug.Log("[STSPlayerProfileStore] Toutes les données Cloud Save ont été supprimées");
 
             // Notifier les listeners
             OnCardCollectionChanged?.Invoke();
@@ -529,7 +656,7 @@ public static class PlayerProfileStore
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"[PlayerProfileStore] Erreur lors de la suppression des données: {e.Message}");
+            Debug.LogError($"[STSPlayerProfileStore] Erreur lors de la suppression des données: {e.Message}");
             throw;
         }
     }

@@ -31,6 +31,7 @@ public class STSApiRunCreateResponse
     public STSApiMapState map;
     public List<JToken> pendingRewards = new();
     public STSApiActiveEncounterState activeEncounter;
+    public JToken activeCombat;
     public JToken activeEvent;
 }
 
@@ -106,8 +107,37 @@ public class STSApiNodeEnterResponse
     public int nodeId;
     public string nodeType;
     public STSApiActiveEncounterState activeEncounter;
+    public JToken activeCombat;
     public JToken activeEvent;
     public string eventId;
+}
+
+[Serializable]
+public class STSApiCombatStateResponse
+{
+    public bool accepted;
+    public string runId;
+    public JToken combat;
+}
+
+[Serializable]
+public class STSApiCombatCommandRequest
+{
+    public string commandType;
+    public long expectedRevision;
+    public string cardInstanceId;
+    public List<string> targetIds = new();
+}
+
+[Serializable]
+public class STSApiCombatCommandResponse
+{
+    public bool accepted;
+    public string runId;
+    public JToken combat;
+    public List<JToken> events = new();
+    public string rejectionCode;
+    public string rejectionMessage;
 }
 
 [Serializable]
@@ -509,6 +539,58 @@ public static class STSApiClient
         return response;
     }
 
+    public static async Task<STSApiCombatStateResponse> GetCombatStateAsync(string runId)
+    {
+        runId = NormalizeRunId(runId);
+        if (string.IsNullOrWhiteSpace(runId))
+            return null;
+
+        string json = await ReactApiBridge.RequestWithAliasesAsync(
+            new[]
+            {
+                $"sts.runs.{runId}.combat.state",
+                $"sts.runs.{runId}.combat",
+                "sts.runs.combat.state"
+            },
+            new { runId }
+        );
+
+        STSApiCombatStateResponse response = ParseResponse<STSApiCombatStateResponse>(json);
+        if (response != null)
+        {
+            response.runId = NormalizeRunId(response.runId);
+        }
+        return response;
+    }
+
+    public static async Task<STSApiCombatCommandResponse> SubmitCombatCommandAsync(string runId, STSApiCombatCommandRequest request)
+    {
+        runId = NormalizeRunId(runId);
+        if (string.IsNullOrWhiteSpace(runId) || request == null)
+            return null;
+
+        JObject payload = JObject.FromObject(request);
+        payload["runId"] = runId;
+        string json = await ReactApiBridge.RequestWithAliasesAsync(
+            new[]
+            {
+                $"sts.runs.{runId}.combat.commands",
+                $"sts.runs.{runId}.combat.command",
+                "sts.runs.combat.commands",
+                "sts.runs.combat.command"
+            },
+            payload
+        );
+
+        STSApiCombatCommandResponse response = ParseResponse<STSApiCombatCommandResponse>(json);
+        if (response != null)
+        {
+            response.runId = NormalizeRunId(response.runId);
+            response.events ??= new List<JToken>();
+        }
+        return response;
+    }
+
     public static async Task<JToken> GetPvpProfileAsync()
     {
         string json = await ReactApiBridge.RequestAsync("sts.pvp.profile.get");
@@ -669,6 +751,7 @@ public static class STSApiClient
             relics = ConvertRelics(response.runInventory != null ? response.runInventory.relics : null),
             map = ConvertMap(response.map != null ? response.map.nodes : null),
             activeEncounter = response.activeEncounter,
+            activeCombat = response.activeCombat,
             activeEvent = response.activeEvent
         };
 
@@ -1001,5 +1084,6 @@ public class STSApiRunState
     public List<Relic> relics = new();
     public List<MapNode> map = new();
     public STSApiActiveEncounterState activeEncounter;
+    public JToken activeCombat;
     public JToken activeEvent;
 }

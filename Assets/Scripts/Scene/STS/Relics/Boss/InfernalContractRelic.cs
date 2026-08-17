@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class InfernalContractRelic : Relic
 {
+    private bool triggered;
+
     public InfernalContractRelic()
     {
         rarity = RelicRarity.Boss;
@@ -11,9 +13,21 @@ public class InfernalContractRelic : Relic
 
     public override void OnCombatStart(Character player)
     {
+        triggered = false;
+        player.AddStatus(StatusEffect.Factory(StatusType.Poison, 6, 6));
+    }
+
+    public override void OnTurnStart(Character player)
+    {
+        // Grant here (not OnCombatStart) so it survives the first turn's energy/armor reset.
+        if (triggered)
+        {
+            return;
+        }
+
+        triggered = true;
         player.GainEnergy(2);
         player.DrawCard();
         player.DrawCard();
-        player.AddStatus(StatusEffect.Factory(StatusType.Poison, 6, 6));
     }
 }

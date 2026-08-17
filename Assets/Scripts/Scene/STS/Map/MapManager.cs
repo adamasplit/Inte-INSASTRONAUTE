@@ -134,6 +134,10 @@ public class MapManager : MonoBehaviour
         {
             SFXManager.Instance.PlaySound("Encounter");
         }
+        if (view != null)
+        {
+            StartCoroutine(view.ZoomToNode(node, view.nodeZoomScale, 0.5f));
+        }
         yield return StartCoroutine(FadeToBlack(0.5f));
         node.visited = true;
         RunManager.Instance.currentFloor+=1;

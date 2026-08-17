@@ -13,7 +13,7 @@
   "effects": [
     {
       "type": "Damage",
-      "value": 8,
+      "value": 4,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -54,7 +54,7 @@
     {
       "type": "Damage",
       "kind": "SpecificStatusOnTarget",
-      "value": 4,
+      "value": 3,
       "info": "Burn",
       "description": ""
     }

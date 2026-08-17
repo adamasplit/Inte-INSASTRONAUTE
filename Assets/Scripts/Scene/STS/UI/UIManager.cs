@@ -390,6 +390,36 @@ public class UIManager : MonoBehaviour
 
         RefreshHandLayout();
     }
+
+    public void SyncHandFromDeckState()
+    {
+        HideCombatCardPreview();
+        selectedCard = null;
+
+        foreach (var view in currentHandViews)
+        {
+            if (view != null)
+            {
+                Destroy(view.gameObject);
+            }
+        }
+
+        currentHandViews.Clear();
+
+        if (combat == null || combat.deck == null || combat.deck.hand == null)
+            return;
+
+        foreach (var card in combat.deck.hand)
+        {
+            if (card != null)
+            {
+                CreateHandCard(card);
+            }
+        }
+
+        RefreshHandLayout();
+    }
+
     public void RefreshHandLayout()
     {
         currentHandViews.RemoveAll(v => v == null);

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 using UnityEngine.UI;
 public class MapView : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class MapView : MonoBehaviour
     public float lineWidthMultiplier = 0.14f;
     [Range(0f, 0.5f)] public float horizontalNoiseRatio = 0.1f;
     [Range(0f, 0.5f)] public float verticalNoiseRatio = 0.06f;
+    public float nodeZoomScale = 1.6f;
 
     private Dictionary<MapNode, RectTransform> nodeToUI = new();
     private Dictionary<MapNode, NodeView> nodeToView = new();
@@ -204,6 +206,35 @@ public class MapView : MonoBehaviour
             clampedOffsetX,
             noiseY * verticalAmplitude * visualScale
         );
+    }
+
+    // Scales/translates the panel so the selected node stays fixed on screen while everything zooms in around it.
+    public IEnumerator ZoomToNode(MapNode node, float targetScale, float duration)
+    {
+        RectTransform panelRect = mapPanel as RectTransform;
+        if (panelRect == null || node == null || !nodeToUI.TryGetValue(node, out RectTransform nodeRect))
+            yield break;
+
+        Vector3 startScale = panelRect.localScale;
+        Vector2 startAnchoredPos = panelRect.anchoredPosition;
+        Vector2 nodeLocalPos = nodeRect.anchoredPosition;
+
+        Vector3 endScale = Vector3.one * targetScale;
+        Vector2 endAnchoredPos = startAnchoredPos + (1f - targetScale) * nodeLocalPos;
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float eased = t * t * (3f - 2f * t);
+            panelRect.localScale = Vector3.Lerp(startScale, endScale, eased);
+            panelRect.anchoredPosition = Vector2.Lerp(startAnchoredPos, endAnchoredPos, eased);
+            yield return null;
+        }
+
+        panelRect.localScale = endScale;
+        panelRect.anchoredPosition = endAnchoredPos;
     }
 
     void DrawConnections(List<MapNode> nodes)

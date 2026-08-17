@@ -3,6 +3,11 @@ using UnityEngine;
 using System;
 public class DeckManager
 {
+    bool ShouldBypassLocalDeckMutations()
+    {
+        return combatManager != null && combatManager.UsesAuthoritativeCombat;
+    }
+
     public List<CardInstance> drawPile = new();
     public List<CardInstance> hand = new();
     public List<CardInstance> discardPile = new();
@@ -15,12 +20,18 @@ public class DeckManager
     public event Action<CardInstance> OnCardAddedToHand;
     public void AddToHand(CardInstance card)
     {
+        if (ShouldBypassLocalDeckMutations())
+            return;
+
         hand.Add(card);
         OnCardAddedToHand?.Invoke(card);
     }
 
     public void Draw(int amount = 1, bool firstTurn=false)
     {
+        if (ShouldBypassLocalDeckMutations())
+            return;
+
         for (int i = 0; i < amount; i++)
         {
             if (hand.Count >= 10)
@@ -62,6 +73,9 @@ public class DeckManager
     }
     public void Discard()
     {
+        if (ShouldBypassLocalDeckMutations())
+            return;
+
         if (hand.Count == 0)
             return;
         int index = UnityEngine.Random.Range(0, hand.Count);
@@ -72,6 +86,9 @@ public class DeckManager
     }
     public void Discard(CardInstance card)
     {
+        if (ShouldBypassLocalDeckMutations())
+            return;
+
         if (hand.Contains(card))
         {
             hand.Remove(card);
@@ -82,16 +99,25 @@ public class DeckManager
 
     public void RemoveFromHand(CardInstance card)
     {
+        if (ShouldBypassLocalDeckMutations())
+            return;
+
         hand.Remove(card);
     }
 
     public void SendToDiscard(CardInstance card)
     {
+        if (ShouldBypassLocalDeckMutations())
+            return;
+
         discardPile.Add(card);
     }
 
     public void Exhaust(CardInstance card)
     {
+        if (ShouldBypassLocalDeckMutations())
+            return;
+
         if (card == null)
             return;
 
@@ -106,6 +132,9 @@ public class DeckManager
 
     public void Delete(CardInstance card)
     {
+        if (ShouldBypassLocalDeckMutations())
+            return;
+
         //Just remove the card from all piles without sending it to discard or exhaust
         if (hand.Contains(card))
         {
@@ -119,6 +148,9 @@ public class DeckManager
 
     public void DiscardHand()
     {
+        if (ShouldBypassLocalDeckMutations())
+            return;
+
         for (int i = hand.Count - 1; i >= 0; i--)
         {
             CardInstance card = hand[i];
@@ -140,6 +172,9 @@ public class DeckManager
     }
     public void AddCardToHand(string cardID)
     {
+        if (ShouldBypassLocalDeckMutations())
+            return;
+
         STSCardData cardToAdd = STSCardDatabase.Get(cardID);
         if (cardToAdd != null)
         {

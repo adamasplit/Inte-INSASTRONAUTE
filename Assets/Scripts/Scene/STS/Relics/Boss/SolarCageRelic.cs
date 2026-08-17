@@ -11,13 +11,26 @@ public class SolarCageRelic : Relic
 
     public override void OnCombatStart(Character player)
     {
+        triggered = false;
+        grantedThisCombat = false;
+    }
+    private bool triggered = false;
+    private bool grantedThisCombat = false;
+
+    public override void OnTurnStart(Character player)
+    {
+        // Grant here (not OnCombatStart) so it survives the first turn's energy reset.
+        if (grantedThisCombat)
+        {
+            return;
+        }
+
+        grantedThisCombat = true;
         player.GainEnergy(1);
         player.DrawCard();
         player.DrawCard();
         player.DrawCard();
-        triggered = false;
     }
-    private bool triggered = false;
 
     public override void OnTurnEnd(Character player)
     {

@@ -31,6 +31,7 @@ public class MultiplayerMenuController : MonoBehaviour
 
     private readonly List<SelectableCharacter> availableCharacters = new();
     private bool suppressDropdownCallback;
+    private bool isQuickMatchQueued;
 
     private void Start()
     {
@@ -286,6 +287,21 @@ public class MultiplayerMenuController : MonoBehaviour
 
     private async Task QuickMatchAsync()
     {
+        if (isQuickMatchQueued)
+        {
+            await CancelQuickMatchAsync();
+            return;
+        }
+
+        isQuickMatchQueued = true;
+        if (quickMatchButton != null)
+        {
+            quickMatchButton.interactable = false;
+        }
+
+        STSSceneLoader.Instance?.BeginLoading("Recherche rapide PVP...", true, () => _ = CancelQuickMatchAsync());
+        ShowNotification("Recherche rapide PVP en cours...");
+
         try
         {
             JToken response = await STSApiClient.QuickMatchPvpAsync(new JObject
@@ -297,6 +313,7 @@ public class MultiplayerMenuController : MonoBehaviour
             if (response == null)
             {
                 ShowNotification("La recherche rapide PVP n'a pas répondu.");
+                await CancelQuickMatchAsync(false);
                 return;
             }
 
@@ -304,14 +321,43 @@ public class MultiplayerMenuController : MonoBehaviour
             if (!string.IsNullOrWhiteSpace(battleId))
             {
                 await CacheBattleParticipantsAsync(battleId);
+                ShowNotification("Match PVP trouvé !");
+                await CancelQuickMatchAsync(false);
+                return;
             }
 
-            ShowNotification("Recherche rapide PVP lancée.");
+            bool queued = response.Value<bool?>("queued") ?? response.Value<bool?>("isQueued") ?? false;
+            if (!queued)
+            {
+                ShowNotification("Recherche rapide PVP lancée.");
+            }
+            else
+            {
+                ShowNotification("Recherche rapide PVP en cours...");
+            }
         }
         catch (Exception ex)
         {
             Debug.LogWarning($"Failed to start PVP matchmaking: {ex.Message}");
             ShowNotification("Erreur lors du matchmaking PVP.");
+            await CancelQuickMatchAsync(false);
+        }
+    }
+
+    private async Task CancelQuickMatchAsync(bool showNotification = true)
+    {
+        isQuickMatchQueued = false;
+        if (quickMatchButton != null)
+        {
+            quickMatchButton.interactable = true;
+        }
+
+        STSSceneLoader.Instance?.EndLoading();
+        STSSceneLoader.Instance?.SceneReady();
+
+        if (showNotification)
+        {
+            ShowNotification("Recherche rapide PVP annulée.");
         }
     }
 
@@ -379,5 +425,9 @@ public class MultiplayerMenuController : MonoBehaviour
         {
             Debug.LogWarning($"Failed to cache PVP battle participants: {ex.Message}");
         }
+    }
+    public void ReturnToMainMenu()
+    {
+        STSSceneLoader.Instance?.LoadScene("STS_Boot");
     }
 }

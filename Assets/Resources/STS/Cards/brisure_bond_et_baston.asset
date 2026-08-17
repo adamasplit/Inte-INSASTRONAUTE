@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: brisure_bond_et_baston
   cardName: Brisure, Bond et Baston
-  collectionCardId: 3B (campagne)
+  collectionCardId: 3B
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 0}
   cost: 2
   xCost: 0

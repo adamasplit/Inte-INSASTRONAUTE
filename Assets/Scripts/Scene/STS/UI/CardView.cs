@@ -169,9 +169,12 @@ public class CardView : MonoBehaviour,IPointerClickHandler
                 Debug.LogError("CardView is missing UI references");
                 return;
             }
-            cardTypeText.text = card.data.type.ToString();
-            cardBg.color = SelectableCharacterUtils.getCharacterColor(card.data.favoredCharacter);
-            specialCardOverlay.SetActive(card.data.HasTag(CardTag.Unobtainable));
+            if (cardTypeText != null)
+                cardTypeText.text = card.data.type.ToString();
+            if (cardBg != null)
+                cardBg.color = SelectableCharacterUtils.getCharacterColor(card.data.favoredCharacter);
+            if (specialCardOverlay != null)
+                specialCardOverlay.SetActive(card.data.HasTag(CardTag.Unobtainable));
             SetName(card.displayName);
             SetWithCollectionCard(card);
             Color rarityColor = Color.white;
@@ -196,19 +199,19 @@ public class CardView : MonoBehaviour,IPointerClickHandler
                     rarityColor = new Color(0.86f, 0.08f, 0.24f);
                     break;
             }
-            rarityBorder.color = rarityColor;
-            rarityBorder2.color = rarityColor;
-            imgBg.color=rarityColor*0.5f;
-            imgOverlay.color = new Color(rarityColor.r, rarityColor.g, rarityColor.b, 0.2f);
+            if (rarityBorder != null)
+                rarityBorder.color = rarityColor;
+            if (rarityBorder2 != null)
+                rarityBorder2.color = rarityColor;
+            if (imgBg != null)
+                imgBg.color = rarityColor * 0.5f;
+            if (imgOverlay != null)
+                imgOverlay.color = new Color(rarityColor.r, rarityColor.g, rarityColor.b, 0.2f);
             
             RefreshDescription();
-            if (card.enchantments.Count > 0)
+            if (glowOverlay != null)
             {
-                glowOverlay.gameObject.SetActive(true);
-            }
-            else
-            {
-                glowOverlay.gameObject.SetActive(false);
+                glowOverlay.gameObject.SetActive(card.enchantments.Count > 0);
             }
         }
         else
@@ -649,15 +652,27 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         if (card == null || card.data == null)
             return;
 
-        cardImage.sprite = card.data.icon;
-        cardImage.preserveAspect = true;
-        imgBg.enabled = true;
-        imgOverlay.enabled = true;
-        collectionCardRoot.SetActive(false);
-        genericCardRoot.SetActive(true);
-        descriptionText.color = Color.white;
-        nameText.color = Color.white;
-        nameText.transform.localScale = Vector3.one;
+        if (cardImage != null)
+        {
+            cardImage.sprite = card.data.icon;
+            cardImage.preserveAspect = true;
+        }
+
+        if (imgBg != null)
+            imgBg.enabled = true;
+        if (imgOverlay != null)
+            imgOverlay.enabled = true;
+        if (collectionCardRoot != null)
+            collectionCardRoot.SetActive(false);
+        if (genericCardRoot != null)
+            genericCardRoot.SetActive(true);
+        if (descriptionText != null)
+            descriptionText.color = Color.white;
+        if (nameText != null)
+        {
+            nameText.color = Color.white;
+            nameText.transform.localScale = Vector3.one;
+        }
 
         string collectionCardId = card.data.GetCollectionCardId();
         if (string.IsNullOrWhiteSpace(collectionCardId))
@@ -687,13 +702,20 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         if (card == null || sprite == null)
             return;
 
-        collectionCardImage.sprite = sprite;
-        imgBg.enabled = false;
-        imgOverlay.enabled = false;
-        cardImage.preserveAspect = false;
-        collectionCardRoot.SetActive(true);
-        genericCardRoot.SetActive(false);
-        nameText.transform.localScale = Vector3.one * 0.6f;
+        if (collectionCardImage != null)
+            collectionCardImage.sprite = sprite;
+        if (imgBg != null)
+            imgBg.enabled = false;
+        if (imgOverlay != null)
+            imgOverlay.enabled = false;
+        if (cardImage != null)
+            cardImage.preserveAspect = false;
+        if (collectionCardRoot != null)
+            collectionCardRoot.SetActive(true);
+        if (genericCardRoot != null)
+            genericCardRoot.SetActive(false);
+        if (nameText != null)
+            nameText.transform.localScale = Vector3.one * 0.6f;
 
         if (collectionCardImage != null && collectionCardImage.sprite != null)
         {
@@ -717,11 +739,14 @@ public class CardView : MonoBehaviour,IPointerClickHandler
                 sample = Color.white;
             }
 
-            collectionCardDescBg.color = sample;
+            if (collectionCardDescBg != null)
+                collectionCardDescBg.color = sample;
             float brightness = (sample.r + sample.g + sample.b) / 3f;
             Color textColor = brightness < 0.5f ? Color.white : Color.black;
-            descriptionText.color = textColor;
-            nameText.color = textColor;
+            if (descriptionText != null)
+                descriptionText.color = textColor;
+            if (nameText != null)
+                nameText.color = textColor;
         }
     }
 

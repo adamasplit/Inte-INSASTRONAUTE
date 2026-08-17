@@ -45,13 +45,17 @@ public class CharacterUI : MonoBehaviour
     public void Refresh()
     {
         if (character == null) return;
+        bool authoritativeCombat = uiManager != null && uiManager.combat != null && uiManager.combat.UsesAuthoritativeCombat;
         hp.SetHealth(character.currentHP, character.maxHP);
         hp.fillImage.color=character.armor > 0 ? Color.blue : Color.red;
-        foreach (var status in character.statusEffects.ToList())
+        if (!authoritativeCombat)
         {
-            status.Update(character);
+            foreach (var status in character.statusEffects.ToList())
+            {
+                status.Update(character);
+            }
+            character.ExpireStatuses();
         }
-        character.ExpireStatuses();
         int currentArmor = character.armor;
         armorText.text = currentArmor > 0 ? $"{currentArmor}" : "";
         UpdateArmorImage(currentArmor);
@@ -81,7 +85,7 @@ public class CharacterUI : MonoBehaviour
 
             if (activeStatusUIs.TryGetValue(status, out var statusUI))
             {
-                statusUI.SetStatus(status, uiManager, character.isPlayer,false);
+                statusUI.SetStatus(status, uiManager, character.isPlayer, false, authoritativeCombat);
                 statusUI.transform.SetSiblingIndex(i);
             }
             else

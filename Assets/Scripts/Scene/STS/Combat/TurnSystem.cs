@@ -24,6 +24,9 @@ public class TurnSystem : MonoBehaviour
         if (combat == null || combat.combatEnded || !combat.allowTurn)
             return;
 
+        if (combat.UsesAuthoritativeCombat)
+            return;
+
         if (combat.CardPlaysRunning || startTurnRoutineRunning || endTurnRoutineRunning)
             return;
 
@@ -248,6 +251,14 @@ public class TurnSystem : MonoBehaviour
             return;
         ui.HideAllTooltips();
         endTurnButton.interactable = false;
+
+        if (combat.UsesAuthoritativeCombat)
+        {
+            combat.NotifyTurnEnded();
+            combat.RequestAuthoritativeEndTurn();
+            return;
+        }
+
         combat.deck.DiscardHand();
         combat.NotifyTurnEnded();
         EndTurn(CurrentCharacter.turnDelay(baseDelay));

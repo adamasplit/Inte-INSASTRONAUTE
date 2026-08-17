@@ -18,6 +18,12 @@ public class Character
     public List<StatusEffect> statusEffects = new List<StatusEffect>();
     public CombatManager combat;
     public bool onTurn = false;
+
+    bool ShouldBypassLocalRelicHooks()
+    {
+        return combat != null && combat.UsesAuthoritativeCombat;
+    }
+
     public Character(string name, int maxHP)
     {
         this.name = name;
@@ -39,6 +45,9 @@ public class Character
     }
     public DamageInfo TakeDamage(int amount, bool ignoreArmor=false)
     {
+        if (combat != null && combat.UsesAuthoritativeCombat)
+            return new DamageInfo();
+
         if (RunManager.Instance != null && !RunManager.Instance.inCombat)
         {
             RunManager.Instance.ui.FlashRedOverlay();
@@ -85,6 +94,9 @@ public class Character
     }
     public void LoseHP(int amount)
     {
+        if (combat != null && combat.UsesAuthoritativeCombat)
+            return;
+
         foreach (var status in statusEffects.ToList())
         {
             amount = status.ValidateHPLoss(amount, this);
@@ -109,6 +121,9 @@ public class Character
 
     public void GainEnergy(int amount)
     {
+        if (combat != null && combat.UsesAuthoritativeCombat)
+            return;
+
         resources.energy += amount;
         combat.state.energyGainedThisTurn += amount;
         if (isLocalPlayer)
@@ -119,8 +134,11 @@ public class Character
 
     public void AddArmor(int amount)
     {
+        if (combat != null && combat.UsesAuthoritativeCombat)
+            return;
+
         armor += amount;
-        if (RunManager.Instance == null)
+        if (RunManager.Instance == null || ShouldBypassLocalRelicHooks())
             return;
 
         foreach (var relic in RunManager.Instance.relics)
@@ -130,12 +148,15 @@ public class Character
     }
     public void Heal(int amount)
     {
+        if (combat != null && combat.UsesAuthoritativeCombat)
+            return;
+
         int previousHP = currentHP;
         if (RunManager.Instance != null && !RunManager.Instance.inCombat && RunManager.Instance.ui != null)
         {
             RunManager.Instance.ui.FlashGreenOverlay();
         }
-        if (isLocalPlayer && RunManager.Instance != null)
+        if (isLocalPlayer && RunManager.Instance != null && !ShouldBypassLocalRelicHooks())
         {
             foreach (var relic in RunManager.Instance.relics)
             {
@@ -150,6 +171,9 @@ public class Character
     }
     public void AddStatus(StatusEffect status)
     {
+        if (combat != null && combat.UsesAuthoritativeCombat)
+            return;
+
         // Check if the status can be applied (e.g. if the character intercepts a given amount of negative statuses)
         if (RunManager.Instance != null)
         {
@@ -173,6 +197,9 @@ public class Character
     }
     public void RemoveStatus(StatusEffect status)
     {
+        if (combat != null && combat.UsesAuthoritativeCombat)
+            return;
+
         statusEffects.Remove(status);
         status.OnExpire(this);
     }
@@ -182,6 +209,9 @@ public class Character
     }
     public void AfterAction(Character actor,CardInstance card)
     {
+        if (combat != null && combat.UsesAuthoritativeCombat)
+            return;
+
         ExpireStatuses();
         foreach (var status in statusEffects.ToList())
         {
@@ -207,6 +237,9 @@ public class Character
     }
     public void StartTurn()
     {
+        if (combat != null && combat.UsesAuthoritativeCombat)
+            return;
+
         onTurn = true;
         int newArmor = 0;
         if (isLocalPlayer && RunManager.Instance != null)
@@ -244,6 +277,9 @@ public class Character
     }
     public void EndTurn()
     {
+        if (combat != null && combat.UsesAuthoritativeCombat)
+            return;
+
         onTurn = false;
         foreach (var status in statusEffects.ToList())
         {
@@ -263,6 +299,9 @@ public class Character
     }
     public void FieldTurnEnd()
     {
+        if (combat != null && combat.UsesAuthoritativeCombat)
+            return;
+
         foreach (var status in statusEffects.ToList())
         {
             status.OnFieldTurnEnd(this);
@@ -277,6 +316,9 @@ public class Character
     }
     public void SpendEnergy(int amount)
     {
+        if (combat != null && combat.UsesAuthoritativeCombat)
+            return;
+
         if (amount==-1)
         {
             amount = resources.energy;
@@ -307,6 +349,9 @@ public class Character
         if (cm == null)
             return;
 
+        if (cm.UsesAuthoritativeCombat)
+            return;
+
         cm.deck.Draw(1,cm.state.turnCount==1);
     }
     public void DiscardCard()
@@ -319,11 +364,17 @@ public class Character
         if (cm == null)
             return;
 
+        if (cm.UsesAuthoritativeCombat)
+            return;
+
         cm.deck.Discard();
     }
 
     public void OnDamageDealt(Character target, int damage,bool unblocked=false)
     {
+        if (ShouldBypassLocalRelicHooks())
+            return;
+
         foreach (var status in statusEffects.ToList())
         {
             status.OnDamageDealt(this, target, ref damage);
@@ -338,6 +389,9 @@ public class Character
     }
     public void OnDamageTaken(Character source, int damage,bool unblocked=false)
     {
+        if (ShouldBypassLocalRelicHooks())
+            return;
+
         foreach (var status in statusEffects.ToList())
         {
             status.OnDamageTaken(source, this, ref damage);
@@ -352,6 +406,9 @@ public class Character
     }
     public void OnTargetArmorBroken(Character target)
     {
+        if (ShouldBypassLocalRelicHooks())
+            return;
+
         foreach (var status in statusEffects.ToList())
         {
             status.OnTargetArmorBroken(this, target);
@@ -366,6 +423,9 @@ public class Character
     }
     public void OnOwnArmorBroken(Character source)
     {
+        if (ShouldBypassLocalRelicHooks())
+            return;
+
         foreach (var status in statusEffects.ToList())
         {
             status.OnOwnArmorBroken(source, this);

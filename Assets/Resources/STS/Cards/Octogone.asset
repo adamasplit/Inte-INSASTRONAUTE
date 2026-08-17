@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: octogone
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: 
+  id: octogone
   cardName: Octogone
   collectionCardId: Stadium
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 0}
   cost: 1
   xCost: 0
@@ -56,7 +58,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   - type: 3
-    value: 3
+    value: 2
     targetSelf: 1
     targetOthers: 0
     statusType: 0

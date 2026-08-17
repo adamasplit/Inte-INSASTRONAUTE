@@ -33,6 +33,7 @@ public class RunManager : MonoBehaviour
     public List<string> debugCards=new List<string>();//Debug option to specify which cards to add to the deck when addAllCardsToDeck is true
     [HideInInspector] public bool inCombat=false;
     public STSApiActiveEncounterState activeEncounter;
+    public JToken activeCombat;
     public JToken activeEvent;
     public JToken serverRunInventoryPatch;
     public JToken serverAccountInventoryPatch;
@@ -263,11 +264,37 @@ public class RunManager : MonoBehaviour
         OnRunEnd(clearSave, true);
     }
 
+    private bool runEndUnlocksGranted;
+
+    public void GrantRunEndUnlocks(bool wasRetreat)
+    {
+        if (runEndUnlocksGranted || deck == null || deck.Count == 0)
+        {
+            return;
+        }
+
+        if (selectedCharacter == SelectableCharacter.Aucun
+            || selectedCharacter == SelectableCharacter.Starting
+            || selectedCharacter == SelectableCharacter.Impossible)
+        {
+            return;
+        }
+
+        STSPlayerProfileStore.UnlockCardsFromDeck(deck, selectedCharacter, wasRetreat, act);
+        runEndUnlocksGranted = true;
+        Debug.Log($"[STS-RUN] Granted end-of-run unlocks for {selectedCharacter} (retreat={wasRetreat}, act={act}, deckSize={deck.Count}).");
+    }
+
     public void OnRunEnd(bool clearSave, bool resetRemoteRun)
     {
         string currentScene = SceneManager.GetActiveScene().name;
         Debug.Log($"[STS-RUN] OnRunEnd(clearSave={clearSave}, resetRemoteRun={resetRemoteRun}, runId={runId}, scene={currentScene}, completedFinalAct={completedFinalAct})");
         STSRunAuditSystem.RecordRunEnded(this, clearSave ? "clear_save" : "preserve_save");
+
+        if (!runEndUnlocksGranted)
+        {
+            GrantRunEndUnlocks(currentScene == "STS_Retreat");
+        }
 
         if (resetRemoteRun && clearSave && !string.IsNullOrWhiteSpace(runId) && !unrestrictedMode)
         {
@@ -291,6 +318,7 @@ public class RunManager : MonoBehaviour
         currentNode = null;
         map = null;
         activeEncounter = null;
+        activeCombat = null;
         activeEvent = null;
         enteredNodeId = null;
         completedFinalAct = false;
@@ -369,6 +397,7 @@ public class RunManager : MonoBehaviour
 
         RegenerateMap = false;
         activeEncounter = remoteState.activeEncounter;
+        activeCombat = remoteState.activeCombat;
         activeEvent = remoteState.activeEvent;
         pendingReward = null;
         serverPendingRewards = remoteRun.pendingRewards != null
@@ -411,6 +440,7 @@ public class RunManager : MonoBehaviour
 
         RegenerateMap = false;
         activeEncounter = remoteState.activeEncounter;
+        activeCombat = remoteState.activeCombat;
         activeEvent = remoteState.activeEvent;
         pendingReward = null;
         serverPendingRewards = pendingRewards != null
@@ -531,6 +561,7 @@ public class RunManager : MonoBehaviour
         {
             activeEncounter = response.activeEncounter;
         }
+        activeCombat = response.activeCombat;
         activeEvent = response.activeEvent;
         enteredNodeId = response.nodeId;
 
@@ -565,6 +596,7 @@ public class RunManager : MonoBehaviour
         serverPendingRewards = response.pendingRewards ?? new List<JToken>();
         serverMapPatch = response.mapPatch;
         activeEncounter = null;
+        activeCombat = null;
         activeEvent = null;
         enteredNodeId = response.mapPatch != null ? response.mapPatch.enteredNodeId : null;
 

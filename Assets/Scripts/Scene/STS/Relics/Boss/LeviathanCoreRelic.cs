@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class LeviathanCoreRelic : Relic
 {
+    private bool triggered;
+
     public LeviathanCoreRelic()
     {
         rarity = RelicRarity.Boss;
@@ -10,7 +12,19 @@ public class LeviathanCoreRelic : Relic
     }
     public override void OnCombatStart(Character player)
     {
-        player.GainEnergy(2);
+        triggered = false;
         player.AddStatus(StatusEffect.Factory(StatusType.Strength, 1, -1));
+    }
+
+    public override void OnTurnStart(Character player)
+    {
+        // Grant here (not OnCombatStart) so it survives the first turn's energy reset.
+        if (triggered)
+        {
+            return;
+        }
+
+        triggered = true;
+        player.GainEnergy(2);
     }
 }

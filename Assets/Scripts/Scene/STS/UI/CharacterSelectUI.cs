@@ -21,12 +21,23 @@ public class CharacterSelectUI : MonoBehaviour
     public RectTransform boxContainer;
     public STSMainMenuIntroSequence introSequence;
     public float backgroundColorTransitionDuration = 0.28f;
+    public Image characterIllustration;
+    public float illustrationSlideDuration = 0.45f;
     Coroutine backgroundColorTransitionRoutine;
+    Coroutine illustrationSlideRoutine;
+    RectTransform illustrationRect;
+    Vector2 illustrationHomePosition;
     async void Awake()
     {
         if (introSequence == null)
         {
             introSequence = FindObjectOfType<STSMainMenuIntroSequence>(true);
+        }
+
+        if (characterIllustration != null)
+        {
+            illustrationRect = characterIllustration.rectTransform;
+            illustrationHomePosition = illustrationRect.anchoredPosition;
         }
 
         STSSceneLoader.Instance?.BeginLoading();
@@ -64,7 +75,7 @@ public class CharacterSelectUI : MonoBehaviour
     public void OnCharacterSelected(SelectableCharacter character)
     {
         circularMenu.ForceToFront(characterListContainer.Find(character.ToString()).GetComponent<RectTransform>());
-        background.sprite = possibleBackgrounds[(int)character];
+        //background.sprite = possibleBackgrounds[(int)character];
         foreach (Transform child in characterListContainer)
         {
             CharacterSelectButton btn = child.GetComponent<CharacterSelectButton>();
@@ -90,6 +101,7 @@ public class CharacterSelectUI : MonoBehaviour
         relicDescriptionText.text += relic.Describe();
         Color col=SelectableCharacterUtils.getCharacterColor(character);
         StartBackgroundColorTransition(new Color(col.r * 0.4f, col.g * 0.4f, col.b * 0.4f, 1f));
+        ShowCharacterIllustration(character);
         EnsureButtonGoldGlow(confirmButton);
         confirmButton.onClick.RemoveAllListeners();
         confirmButton.onClick.AddListener(() => OnCharacterConfirm(character));
@@ -170,5 +182,65 @@ public class CharacterSelectUI : MonoBehaviour
 
         backgroundImage.color = targetColor;
         backgroundColorTransitionRoutine = null;
+    }
+
+    void ShowCharacterIllustration(SelectableCharacter character)
+    {
+        if (characterIllustration == null)
+        {
+            return;
+        }
+
+        Sprite sprite = Resources.Load<Sprite>($"STS/UI/{character}");
+        if (illustrationSlideRoutine != null)
+        {
+            StopCoroutine(illustrationSlideRoutine);
+            illustrationSlideRoutine = null;
+        }
+
+        if (sprite == null)
+        {
+            characterIllustration.gameObject.SetActive(false);
+            return;
+        }
+
+        characterIllustration.sprite = sprite;
+        characterIllustration.gameObject.SetActive(true);
+
+        if (illustrationRect == null)
+        {
+            return;
+        }
+
+        Canvas canvas = characterIllustration.canvas;
+        float offscreenX = illustrationHomePosition.x + (canvas != null ? canvas.GetComponent<RectTransform>().rect.width : Screen.width);
+        Vector2 startPosition = new Vector2(offscreenX, illustrationHomePosition.y);
+
+        if (illustrationSlideDuration <= 0f)
+        {
+            illustrationRect.anchoredPosition = illustrationHomePosition;
+            return;
+        }
+
+        illustrationSlideRoutine = StartCoroutine(AnimateIllustrationSlide(startPosition));
+    }
+
+    IEnumerator AnimateIllustrationSlide(Vector2 startPosition)
+    {
+        illustrationRect.anchoredPosition = startPosition;
+        float elapsed = 0f;
+        float duration = Mathf.Max(0.0001f, illustrationSlideDuration);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float eased = Mathf.SmoothStep(0f, 1f, t);
+            illustrationRect.anchoredPosition = Vector2.Lerp(startPosition, illustrationHomePosition, eased);
+            yield return null;
+        }
+
+        illustrationRect.anchoredPosition = illustrationHomePosition;
+        illustrationSlideRoutine = null;
     }
 }

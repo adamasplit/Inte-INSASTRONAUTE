@@ -199,6 +199,11 @@ public class RetreatManager : MonoBehaviour
             await EnsureTokenRewardAppliedAsync();
         }
 
+        if (RunManager.Instance != null)
+        {
+            RunManager.Instance.GrantRunEndUnlocks(true);
+        }
+
         if (RunManager.Instance != null && RunManager.Instance.completedFinalAct)
         {
             STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Boot", "final_act_continue");
@@ -250,6 +255,12 @@ public class RetreatManager : MonoBehaviour
         {
             await EnsureTokenRewardAppliedAsync();
         }
+
+        if (RunManager.Instance != null)
+        {
+            RunManager.Instance.GrantRunEndUnlocks(true);
+        }
+
         STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Boot", "retreat_menu");
         RunManager.Instance.OnRunEnd(true, false);
         STSSceneLoader.Instance?.EndLoading();
@@ -404,7 +415,7 @@ public class RetreatManager : MonoBehaviour
             bool granted = await TryGrantTokensWithReflectionAsync(requestedTokens);
             if (!granted)
             {
-                Debug.LogWarning($"Retreat token reward could not be applied. No compatible method found on {nameof(PlayerProfileStore)}.");
+                Debug.LogWarning($"Retreat token reward could not be applied. No compatible method found on {nameof(STSPlayerProfileStore)}.");
                 return;
             }
 
@@ -757,7 +768,7 @@ public class RetreatManager : MonoBehaviour
 
     private async Task<bool> TryGrantTokensWithReflectionAsync(long amount)
     {
-        Type storeType = typeof(PlayerProfileStore);
+        Type storeType = typeof(STSPlayerProfileStore);
 
         foreach (string methodName in TokenMethodCandidates)
         {
@@ -787,7 +798,7 @@ public class RetreatManager : MonoBehaviour
     private bool TryReadTokenBalance(out long balance)
     {
         balance = 0;
-        Type storeType = typeof(PlayerProfileStore);
+        Type storeType = typeof(STSPlayerProfileStore);
 
         foreach (string methodName in TokenBalanceMethodCandidates)
         {

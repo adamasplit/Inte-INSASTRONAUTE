@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class SolarCoreRelic : Relic
 {
+    private bool triggered;
+
     public SolarCoreRelic()
     {
         rarity = RelicRarity.Rare;
@@ -11,6 +13,18 @@ public class SolarCoreRelic : Relic
 
     public override void OnCombatStart(Character player)
     {
+        triggered = false;
+    }
+
+    public override void OnTurnStart(Character player)
+    {
+        // Grant here (not OnCombatStart) so it survives the first turn's energy reset.
+        if (triggered)
+        {
+            return;
+        }
+
+        triggered = true;
         player.GainEnergy(2);
         player.DrawCard();
         player.DrawCard();

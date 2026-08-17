@@ -37,8 +37,14 @@ public class MultiplayerDeckCardItem : MonoBehaviour
         cardKey = uniqueKey;
         onToggleChanged = toggleChanged;
 
+        if (cardView == null)
+        {
+            cardView = GetComponentInChildren<CardView>(true);
+        }
+
         if (cardView != null && cardData != null)
         {
+            cardView.gameObject.SetActive(true);
             cardView.SetCard(new CardInstance(cardData));
         }
 

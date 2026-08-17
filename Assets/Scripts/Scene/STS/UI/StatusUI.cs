@@ -19,6 +19,7 @@ public class StatusUI : MonoBehaviour
     private RectTransform rectTransform;
     private Coroutine spawnAnimation;
     private Coroutine removeAnimation;
+    private Coroutine updatePulseAnimation;
     private bool isRemoving;
 
     public StatusEffect BoundStatus { get; private set; }
@@ -58,7 +59,7 @@ public class StatusUI : MonoBehaviour
             TooltipManager.Instance.HideTooltip();
         }
     }
-    public void SetStatus(StatusEffect status, UIManager uiManager,bool isPlayer, bool playSpawnAnimation = true)
+    public void SetStatus(StatusEffect status, UIManager uiManager,bool isPlayer, bool playSpawnAnimation = true, bool playUpdatePulse = false)
     {
         this.uiManager = uiManager;
         BoundStatus = status;
@@ -72,6 +73,11 @@ public class StatusUI : MonoBehaviour
         {
             StopCoroutine(spawnAnimation);
             spawnAnimation = null;
+        }
+        if (updatePulseAnimation != null)
+        {
+            StopCoroutine(updatePulseAnimation);
+            updatePulseAnimation = null;
         }
         canvasGroup.alpha = 1f;
         if (rectTransform != null)
@@ -125,6 +131,10 @@ public class StatusUI : MonoBehaviour
         {
             PlaySpawnAnimation();
         }
+        else if (playUpdatePulse)
+        {
+            PlayUpdatePulseAnimation();
+        }
     }
 
     public void PlaySpawnAnimation()
@@ -176,6 +186,50 @@ public class StatusUI : MonoBehaviour
         canvasGroup.alpha = 1f;
         rectTransform.localScale = Vector3.one;
         spawnAnimation = null;
+    }
+
+    public void PlayUpdatePulseAnimation()
+    {
+        if (updatePulseAnimation != null)
+        {
+            StopCoroutine(updatePulseAnimation);
+        }
+        updatePulseAnimation = StartCoroutine(UpdatePulseRoutine());
+    }
+
+    private IEnumerator UpdatePulseRoutine()
+    {
+        if (rectTransform == null || canvasGroup == null)
+        {
+            updatePulseAnimation = null;
+            yield break;
+        }
+
+        Color originalValueColor = valueText != null ? valueText.color : Color.white;
+        float elapsed = 0f;
+        const float duration = 0.18f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float pulse = Mathf.Sin(t * Mathf.PI);
+            rectTransform.localScale = Vector3.one * Mathf.Lerp(1f, 1.14f, pulse);
+            canvasGroup.alpha = Mathf.Lerp(1f, 0.88f, pulse * 0.35f);
+            if (valueText != null)
+            {
+                valueText.color = Color.Lerp(originalValueColor, Color.white, pulse * 0.5f);
+            }
+            yield return null;
+        }
+
+        rectTransform.localScale = Vector3.one;
+        canvasGroup.alpha = 1f;
+        if (valueText != null)
+        {
+            valueText.color = originalValueColor;
+        }
+        updatePulseAnimation = null;
     }
 
     private IEnumerator RemoveRoutine()

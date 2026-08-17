@@ -15,6 +15,8 @@ MonoBehaviour:
   id: katana
   cardName: Frappe au katana
   collectionCardId: Insamourai
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 0}
   cost: 1
   xCost: 0
@@ -22,7 +24,7 @@ MonoBehaviour:
   rarity: 0
   effects:
   - type: 0
-    value: 6
+    value: 10
     targetSelf: 0
     targetOthers: 0
     statusType: 0

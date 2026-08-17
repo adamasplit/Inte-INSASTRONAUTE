@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,15 +19,15 @@ public class STSSceneLoader : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Optional: Keep the scene loader across scenes
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject); // Ensure only one instance exists
+            Destroy(gameObject);
         }
     }
 
-    public void BeginLoading()
+    public void BeginLoading(string statusText = null, bool canCancel = false, Action onCancel = null)
     {
         if (backgroundLoadingCount == 0)
         {
@@ -37,20 +38,27 @@ public class STSSceneLoader : MonoBehaviour
         if (loadingScreen != null)
         {
             loadingScreen.gameObject.SetActive(true);
+            loadingScreen.SetLoadingState(statusText, canCancel, onCancel);
             ApplyProgressToScreen();
+        }
+    }
+
+    public void SetLoadingState(string statusText, bool canCancel = false, Action onCancel = null)
+    {
+        if (loadingScreen != null)
+        {
+            loadingScreen.SetLoadingState(statusText, canCancel, onCancel);
         }
     }
 
     public void SetBackgroundProgress(float progress)
     {
-        // Keep loading progression monotonic to avoid visible regressions.
         backgroundProgress = Mathf.Max(backgroundProgress, Mathf.Clamp01(progress));
         ApplyProgressToScreen();
     }
 
     public void LoadScene(string sceneName)
     {
-        // Start async loading and update the loading screen progress.
         sceneTransitionPending = true;
         sceneTransitionProgress = 0f;
         sceneTransitionToken++;
@@ -72,18 +80,15 @@ public class STSSceneLoader : MonoBehaviour
 
         while (!op.isDone)
         {
-            // op.progress is 0..0.9 while loading, then becomes 1 when done
             float progress = op.progress;
             sceneTransitionProgress = Mathf.Clamp01(progress / 0.9f);
             ApplyProgressToScreen();
             yield return null;
         }
 
-        // Ensure progress reaches 100%
         sceneTransitionProgress = 1f;
         ApplyProgressToScreen();
 
-        // Safety net: if the loaded scene does not call SceneReady(), clear pending state automatically.
         yield return null;
         if (transitionToken != sceneTransitionToken)
         {

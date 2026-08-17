@@ -1,16 +1,21 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 using System.Collections;
 
 public class STSLoadingScreen : MonoBehaviour
 {
     public Image loadingImage;
     public TextMeshProUGUI loadingText;
+    public Button cancelButton;
     [SerializeField] float fillLerpSpeed = 1.6f;
 
-    float displayedProgress;
-    float targetProgress;
+    private string defaultStatusText = "Chargement...";
+    private Action cancelAction;
+    private bool showCancelAction;
+    private float displayedProgress;
+    private float targetProgress;
 
     void OnEnable()
     {
@@ -31,7 +36,23 @@ public class STSLoadingScreen : MonoBehaviour
         RenderProgress(displayedProgress);
     }
 
-    // Public API to set progress from external loaders
+    public void SetLoadingState(string statusText, bool canCancel = false, Action onCancel = null)
+    {
+        defaultStatusText = string.IsNullOrWhiteSpace(statusText) ? "Chargement..." : statusText;
+        showCancelAction = canCancel;
+        cancelAction = onCancel;
+        if (cancelButton != null)
+        {
+            cancelButton.gameObject.SetActive(showCancelAction);
+            cancelButton.onClick.RemoveAllListeners();
+            if (showCancelAction)
+            {
+                cancelButton.onClick.AddListener(() => onCancel?.Invoke());
+            }
+        }
+        RenderProgress(displayedProgress);
+    }
+
     public void SetProgress(float progress)
     {
         targetProgress = Mathf.Max(targetProgress, Mathf.Clamp01(progress));
@@ -47,24 +68,29 @@ public class STSLoadingScreen : MonoBehaviour
 
         if (loadingImage != null)
         {
-            loadingImage.fillAmount = clampedProgress; // Update the fill amount of the loading image
+            loadingImage.fillAmount = clampedProgress;
         }
+
         if (loadingText != null)
         {
-            loadingText.text = $"Chargement... {Mathf.RoundToInt(clampedProgress * 100)}%"; // Update the loading text
+            int percentage = Mathf.RoundToInt(clampedProgress * 100f);
+            string label = showCancelAction && !string.IsNullOrWhiteSpace(defaultStatusText)
+                ? defaultStatusText
+                : "Chargement...";
+            loadingText.text = $"{label} {percentage}%";
         }
     }
 
     public void HideLoadingScreen()
     {
         if (!gameObject.activeSelf)
-            return; // Already hidden
+            return;
         StartCoroutine(HideLoadingScreenRoutine());
     }
+
     public IEnumerator HideLoadingScreenRoutine()
     {
-        // Optionally, you can add a fade-out effect here
-        yield return new WaitForSeconds(0.2f); // Wait for half a second before hiding
+        yield return new WaitForSeconds(0.2f);
         gameObject.SetActive(false);
     }
 }

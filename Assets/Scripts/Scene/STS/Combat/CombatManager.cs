@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 public enum TeamOutcome
 {
     None,
@@ -82,14 +83,18 @@ public class CombatManager : MonoBehaviour
     public bool forceTutorial = false;
     public bool allowTurn = false; 
     private bool turnSystemInitialized;
+    private bool authoritativeCommandInFlight;
+
+    public bool UsesAuthoritativeCombat => RunManager.Instance != null && RunManager.Instance.activeCombat != null;
+
     public void Init()
     {
         EnsureAllies();
         EnsureEncounterEnemies();
         RunManager.Instance?.ApplyPvpParticipantDisplayNames(allies, enemies);
+        ResetCombatStatus();
         ui.Init(this);          // inject
         ui.InitCharacters();    // spawn UI
-        ui.RefreshUI();
         currentEnemiesData = new();
         deck.combatManager = this; // inject
         foreach (var enemy in enemies)
@@ -121,6 +126,68 @@ public class CombatManager : MonoBehaviour
             RunManager.Instance.inCombat=true;
             STSRunAuditSystem.RecordNodeEntered(RunManager.Instance, RunManager.Instance.currentNode, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, "combat_init");
         }
+
+        if (UsesAuthoritativeCombat)
+        {
+            allowTurn = true;
+            ApplyAuthoritativeCombatState(RunManager.Instance.activeCombat, true);
+            STSSceneLoader.Instance?.SceneReady();
+            return;
+        }
+
+        if (CanBootstrapAuthoritativeCombat())
+        {
+            StartCoroutine(BootstrapAuthoritativeCombatRoutine());
+            return;
+        }
+
+        StartLocalCombatFlow();
+    }
+
+    bool CanBootstrapAuthoritativeCombat()
+    {
+        return RunManager.Instance != null
+            && RunManager.Instance.activeEncounter != null
+            && !string.IsNullOrWhiteSpace(RunManager.Instance.runId);
+    }
+
+    IEnumerator BootstrapAuthoritativeCombatRoutine()
+    {
+        Task<STSApiCombatStateResponse> stateTask = STSApiClient.GetCombatStateAsync(RunManager.Instance.runId);
+        while (!stateTask.IsCompleted)
+            yield return null;
+
+        bool appliedAuthoritativeState = false;
+
+        try
+        {
+            if (stateTask.Status == TaskStatus.RanToCompletion
+                && stateTask.Result != null
+                && stateTask.Result.accepted
+                && stateTask.Result.combat != null)
+            {
+                allowTurn = true;
+                ApplyAuthoritativeCombatState(stateTask.Result.combat, true);
+                appliedAuthoritativeState = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[STS-COMBAT] Failed to bootstrap authoritative combat state: {ex.Message}");
+        }
+
+        if (appliedAuthoritativeState)
+        {
+            STSSceneLoader.Instance?.SceneReady();
+            yield break;
+        }
+
+        StartLocalCombatFlow();
+    }
+
+    void StartLocalCombatFlow()
+    {
+        ui.RefreshUI();
 
         // Build the timeline only after allies/enemies are fully hydrated from API state.
         if (!turnSystemInitialized && turnSystem != null)
@@ -227,8 +294,823 @@ public class CombatManager : MonoBehaviour
 
     public void PlayCard(Character source, CardInstance card, List<Character> targets, bool ignoreEnergy = false, bool createView = false)
     {
+        if (UsesAuthoritativeCombat && source != null && source.isPlayer)
+        {
+            if (authoritativeCommandInFlight)
+                return;
+
+            queuedCardPlays++;
+            StartCoroutine(PlayCardAuthoritativeRoutine(card, targets));
+            return;
+        }
+
         queuedCardPlays++;
         StartCoroutine(PlayCardRoutine(source, card, targets, ignoreEnergy, createView));
+    }
+
+    IEnumerator PlayCardAuthoritativeRoutine(CardInstance card, List<Character> targets)
+    {
+        authoritativeCommandInFlight = true;
+        activeCardPlays++;
+        queuedCardPlays = Mathf.Max(0, queuedCardPlays - 1);
+
+        Task<STSApiCombatCommandResponse> commandTask = STSApiClient.SubmitCombatCommandAsync(
+            RunManager.Instance != null ? RunManager.Instance.runId : null,
+            new STSApiCombatCommandRequest
+            {
+                commandType = "PLAY_CARD",
+                expectedRevision = GetAuthoritativeRevision(),
+                cardInstanceId = card != null ? card.instanceId : null,
+                targetIds = MapTargetsToAuthoritativeIds(targets)
+            });
+
+        while (!commandTask.IsCompleted)
+            yield return null;
+
+        try
+        {
+            if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == null)
+            {
+                Debug.LogWarning("[STS-COMBAT] Failed to submit backend play-card command.");
+                yield break;
+            }
+
+            STSApiCombatCommandResponse response = commandTask.Result;
+            if (!response.accepted)
+            {
+                if (string.Equals(response.rejectionCode, "INSUFFICIENT_ENERGY", StringComparison.OrdinalIgnoreCase))
+                {
+                    ui.StartCoroutine(ui.EnergyTextGlowRed());
+                }
+                else
+                {
+                    Debug.LogWarning($"[STS-COMBAT] Backend play-card rejected: {response.rejectionCode} {response.rejectionMessage}");
+                }
+                yield break;
+            }
+
+            yield return ReplayAuthoritativeEvents(response.events);
+            ApplyAuthoritativeCombatState(response.combat, true);
+        }
+        finally
+        {
+            authoritativeCommandInFlight = false;
+            activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
+        }
+    }
+
+    public void RequestAuthoritativeEndTurn()
+    {
+        if (!UsesAuthoritativeCombat || authoritativeCommandInFlight)
+            return;
+
+        StartCoroutine(AuthoritativeEndTurnRoutine());
+    }
+
+    IEnumerator AuthoritativeEndTurnRoutine()
+    {
+        authoritativeCommandInFlight = true;
+        activeCardPlays++;
+
+        Task<STSApiCombatCommandResponse> commandTask = STSApiClient.SubmitCombatCommandAsync(
+            RunManager.Instance != null ? RunManager.Instance.runId : null,
+            new STSApiCombatCommandRequest
+            {
+                commandType = "END_TURN",
+                expectedRevision = GetAuthoritativeRevision(),
+                targetIds = new List<string>()
+            });
+
+        while (!commandTask.IsCompleted)
+            yield return null;
+
+        try
+        {
+            if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == null)
+            {
+                Debug.LogWarning("[STS-COMBAT] Failed to submit backend end-turn command.");
+                yield break;
+            }
+
+            STSApiCombatCommandResponse response = commandTask.Result;
+            if (!response.accepted)
+            {
+                Debug.LogWarning($"[STS-COMBAT] Backend end-turn rejected: {response.rejectionCode} {response.rejectionMessage}");
+                yield break;
+            }
+
+            yield return ReplayAuthoritativeEvents(response.events);
+            ApplyAuthoritativeCombatState(response.combat, true);
+        }
+        finally
+        {
+            authoritativeCommandInFlight = false;
+            activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
+        }
+    }
+
+    long GetAuthoritativeRevision()
+    {
+        JToken activeCombat = RunManager.Instance != null ? RunManager.Instance.activeCombat : null;
+        return activeCombat != null ? activeCombat.Value<long?>("revision") ?? 0L : 0L;
+    }
+
+    List<string> MapTargetsToAuthoritativeIds(List<Character> targets)
+    {
+        var ids = new List<string>();
+        if (targets == null)
+            return ids;
+
+        foreach (Character target in targets)
+        {
+            string combatantId = GetAuthoritativeCombatantId(target);
+            if (!string.IsNullOrWhiteSpace(combatantId))
+            {
+                ids.Add(combatantId);
+            }
+        }
+
+        return ids;
+    }
+
+    string GetAuthoritativeCombatantId(Character character)
+    {
+        if (character == null)
+            return null;
+
+        if (character.isPlayer)
+            return "player";
+
+        int enemyIndex = enemies.IndexOf(character);
+        return enemyIndex >= 0 ? $"enemy-{enemyIndex}" : null;
+    }
+
+    void ApplyAuthoritativeCombatState(JToken combatToken, bool refreshUI)
+    {
+        if (combatToken == null || RunManager.Instance == null)
+            return;
+
+        RunManager.Instance.activeCombat = combatToken;
+
+        JArray combatants = combatToken["combatants"] as JArray;
+        if (combatants == null)
+            return;
+
+        foreach (Character character in GetAllCharacters())
+        {
+            if (character != null)
+                character.onTurn = false;
+        }
+
+        string activeCombatantId = combatToken.Value<string>("activeCombatantId");
+
+        foreach (JToken combatantToken in combatants)
+        {
+            string combatantId = combatantToken.Value<string>("combatantId");
+            Character target = ResolveCombatant(combatantId);
+            if (target == null)
+                continue;
+
+            target.maxHP = combatantToken.Value<int?>("maxHp") ?? target.maxHP;
+            target.currentHP = combatantToken.Value<int?>("hp") ?? target.currentHP;
+            target.armor = combatantToken.Value<int?>("armor") ?? target.armor;
+            target.resources.energy = combatantToken.Value<int?>("energy") ?? target.resources.energy;
+            target.onTurn = !string.IsNullOrWhiteSpace(activeCombatantId)
+                && string.Equals(combatantId, activeCombatantId, StringComparison.Ordinal);
+
+            if (target.isPlayer)
+            {
+                ApplyAuthoritativePlayerPiles(combatantToken["piles"]);
+            }
+        }
+
+        if (turnSystem != null && turnSystem.endTurnButton != null)
+        {
+            turnSystem.endTurnButton.interactable = string.Equals(activeCombatantId, "player", StringComparison.Ordinal)
+                && !combatEnded;
+        }
+
+        if (refreshUI && ui != null)
+        {
+            ui.SyncHandFromDeckState();
+            ui.RefreshUI(false);
+        }
+
+        TryEndCombatIfNeeded();
+    }
+
+    IEnumerator ReplayAuthoritativeEvents(List<JToken> events)
+    {
+        if (events == null || events.Count == 0)
+            yield break;
+
+        foreach (JToken combatEvent in events)
+        {
+            if (combatEvent == null || combatEvent.Type != JTokenType.Object)
+                continue;
+
+            string eventType = ResolveCombatEventType(combatEvent);
+            switch (eventType)
+            {
+                case "CardPlayed":
+                    yield return ReplayCardPlayedEvent(combatEvent);
+                    break;
+                case "CardDrawn":
+                    yield return ReplayCardDrawnEvent(combatEvent);
+                    break;
+                case "CardMoved":
+                    yield return ReplayCardMovedEvent(combatEvent);
+                    break;
+                case "PileShuffled":
+                    yield return ReplayPileShuffledEvent(combatEvent);
+                    break;
+                case "StatusApplied":
+                    yield return ReplayStatusAppliedEvent(combatEvent);
+                    break;
+                case "StatusRemoved":
+                    ReplayStatusRemovedEvent(combatEvent);
+                    yield return new WaitForSeconds(0.05f);
+                    break;
+                case "StatusUpdated":
+                    ReplayStatusUpdatedEvent(combatEvent);
+                    yield return new WaitForSeconds(0.05f);
+                    break;
+                case "DamageApplied":
+                    ReplayDamageAppliedEvent(combatEvent);
+                    yield return new WaitForSeconds(0.12f);
+                    break;
+                case "ArmorGained":
+                    yield return FlashCombatantWhite(ResolveCombatant(combatEvent.Value<string>("targetId")));
+                    break;
+                case "EnergySpent":
+                    ReplayEnergySpentEvent(combatEvent);
+                    break;
+                case "TurnStarted":
+                case "TurnEnded":
+                    yield return new WaitForSeconds(0.05f);
+                    break;
+                case "CombatEnded":
+                    yield return new WaitForSeconds(0.1f);
+                    break;
+            }
+        }
+    }
+
+    string ResolveCombatEventType(JToken combatEvent)
+    {
+        string explicitType = combatEvent.Value<string>("eventType");
+        if (!string.IsNullOrWhiteSpace(explicitType))
+            return explicitType;
+
+        if (combatEvent["definitionId"] != null && combatEvent["cardInstanceId"] != null)
+            return "CardPlayed";
+        if (combatEvent["requestedDamage"] != null)
+            return "DamageApplied";
+        if (combatEvent["requestedArmor"] != null)
+            return "ArmorGained";
+        if (combatEvent["remainingEnergy"] != null && combatEvent["amount"] != null)
+            return "EnergySpent";
+        if (combatEvent["handIndex"] != null)
+            return "CardDrawn";
+        if (combatEvent["statusType"] != null || combatEvent["status"] != null || combatEvent["statusName"] != null)
+        {
+            if ((combatEvent.Value<bool?>("removed") ?? false) || (combatEvent.Value<bool?>("expired") ?? false))
+                return "StatusRemoved";
+            if (combatEvent["remainingDuration"] != null || combatEvent["newValue"] != null)
+                return "StatusUpdated";
+            return "StatusApplied";
+        }
+        if (combatEvent["fromPile"] != null || combatEvent["toPile"] != null || combatEvent["sourcePile"] != null || combatEvent["destinationPile"] != null)
+            return "CardMoved";
+        if (combatEvent["pile"] != null || combatEvent["drawSize"] != null)
+            return "PileShuffled";
+        if (combatEvent["previousReadyAtTick"] != null)
+            return "TurnEnded";
+        if (combatEvent["readyAtTick"] != null)
+            return "TurnStarted";
+        if (combatEvent["winnerTeamId"] != null)
+            return "CombatEnded";
+        return string.Empty;
+    }
+
+    IEnumerator ReplayCardPlayedEvent(JToken combatEvent)
+    {
+        string actorId = combatEvent.Value<string>("actorId");
+        string cardInstanceId = combatEvent.Value<string>("cardInstanceId");
+        string definitionId = combatEvent.Value<string>("definitionId");
+
+        Character actor = ResolveCombatant(actorId);
+        if (actor == null || string.IsNullOrWhiteSpace(cardInstanceId) || string.IsNullOrWhiteSpace(definitionId))
+            yield break;
+
+        CardInstance card = FindCardByInstanceId(cardInstanceId) ?? BuildCardFromDefinition(definitionId, cardInstanceId);
+        if (card == null)
+            yield break;
+
+        CardView playedView = actor.isPlayer ? ui.GetView(card) : null;
+        if (playedView == null)
+        {
+            Transform sourceView = ui.GetView(actor);
+            playedView = ui.CreateCardView(card, false, sourceView != null ? (Vector3?)sourceView.position : null);
+        }
+
+        if (playedView == null)
+            yield break;
+
+        yield return ui.AnimateCardToCenter(playedView);
+        playedView.Flash();
+        yield return new WaitForSeconds(0.08f);
+        yield return ui.AnimateCardToDiscard(playedView, false);
+    }
+
+    IEnumerator ReplayCardDrawnEvent(JToken combatEvent)
+    {
+        string cardInstanceId = combatEvent.Value<string>("cardInstanceId");
+        string definitionId = combatEvent.Value<string>("definitionId");
+
+        CardInstance card = FindCardByInstanceId(cardInstanceId)
+            ?? BuildCardFromDefinition(definitionId, cardInstanceId);
+        if (card == null || deck == null || ui == null)
+            yield break;
+
+        deck.discardPile.Remove(card);
+        deck.exhaustPile.Remove(card);
+        deck.drawPile.Remove(card);
+        if (!deck.hand.Contains(card))
+        {
+            int handIndex = combatEvent.Value<int?>("handIndex") ?? -1;
+            InsertCardAt(deck.hand, card, handIndex);
+        }
+
+        ui.DrawCardAnimated(card);
+        yield return new WaitForSeconds(0.12f);
+    }
+
+    IEnumerator ReplayCardMovedEvent(JToken combatEvent)
+    {
+        string cardInstanceId = combatEvent.Value<string>("cardInstanceId");
+        string definitionId = combatEvent.Value<string>("definitionId");
+        string fromPile = ResolvePileName(combatEvent["fromPile"]?.ToString() ?? combatEvent["sourcePile"]?.ToString());
+        string toPile = ResolvePileName(combatEvent["toPile"]?.ToString() ?? combatEvent["destinationPile"]?.ToString());
+
+        CardInstance card = FindCardByInstanceId(cardInstanceId)
+            ?? BuildCardFromDefinition(definitionId, cardInstanceId);
+        if (card == null || deck == null)
+            yield break;
+
+        List<CardInstance> fromList = GetPileByName(fromPile);
+        List<CardInstance> toList = GetPileByName(toPile);
+        if (fromList != null)
+        {
+            fromList.Remove(card);
+        }
+        else
+        {
+            deck.hand.Remove(card);
+            deck.drawPile.Remove(card);
+            deck.discardPile.Remove(card);
+            deck.exhaustPile.Remove(card);
+        }
+
+        if (toList != null && !toList.Contains(card))
+        {
+            int targetIndex = combatEvent.Value<int?>("toIndex")
+                ?? combatEvent.Value<int?>("destinationIndex")
+                ?? combatEvent.Value<int?>("handIndex")
+                ?? -1;
+            InsertCardAt(toList, card, targetIndex);
+        }
+
+        if (ui == null)
+        {
+            yield return null;
+            yield break;
+        }
+
+        if (string.Equals(toPile, "EXHAUST", StringComparison.Ordinal))
+        {
+            if (ui.GetView(card) != null)
+            {
+                ui.ExhaustCardAnimated(card);
+            }
+            else
+            {
+                yield return ui.AnimateCardToPile(card, CardSelectionSource.ExhaustPile);
+            }
+            yield return new WaitForSeconds(0.12f);
+            yield break;
+        }
+
+        if (string.Equals(toPile, "DISCARD", StringComparison.Ordinal))
+        {
+            if (ui.GetView(card) != null)
+            {
+                ui.DiscardCardAnimated(card);
+            }
+            else
+            {
+                yield return ui.AnimateCardToPile(card, CardSelectionSource.DiscardPile);
+            }
+            yield return new WaitForSeconds(0.10f);
+            yield break;
+        }
+
+        if (string.Equals(toPile, "HAND", StringComparison.Ordinal))
+        {
+            if (string.Equals(fromPile, "DRAW", StringComparison.Ordinal))
+            {
+                ui.DrawCardAnimated(card);
+            }
+            else
+            {
+                ui.AddCardAnimated(card);
+            }
+            yield return new WaitForSeconds(0.12f);
+            yield break;
+        }
+
+        if (string.Equals(toPile, "DRAW", StringComparison.Ordinal))
+        {
+            yield return ui.AnimateCardToPile(card, CardSelectionSource.DrawPile);
+        }
+    }
+
+    IEnumerator ReplayPileShuffledEvent(JToken combatEvent)
+    {
+        string pileName = ResolvePileName(combatEvent.Value<string>("pile"));
+        if (string.Equals(pileName, "DRAW", StringComparison.Ordinal) && deck != null)
+        {
+            deck.Shuffle(deck.drawPile);
+        }
+        yield return new WaitForSeconds(0.05f);
+    }
+
+    IEnumerator ReplayStatusAppliedEvent(JToken combatEvent)
+    {
+        Character target = ResolveStatusTarget(combatEvent);
+        if (target == null || !TryResolveStatusType(combatEvent, out StatusType statusType))
+            yield break;
+
+        int value = combatEvent.Value<int?>("value")
+            ?? combatEvent.Value<int?>("potency")
+            ?? 1;
+        int duration = combatEvent.Value<int?>("duration")
+            ?? combatEvent.Value<int?>("remainingDuration")
+            ?? -1;
+        string cardId = combatEvent.Value<string>("cardId")
+            ?? combatEvent.Value<string>("cardID")
+            ?? string.Empty;
+        int index = combatEvent.Value<int?>("index") ?? 0;
+
+        StatusEffect status = StatusEffect.Factory(statusType, value, duration, cardId, index);
+        if (status == null)
+            yield break;
+
+        status.Value = value;
+        status.Duration = duration;
+        status.statusType = statusType;
+        status.cardID = cardId;
+        status.index = index;
+
+        status.InsertInto(target.statusEffects);
+        status.OnApply(target);
+
+        ui?.RefreshUI(false);
+        yield return FlashCombatantWhite(target);
+    }
+
+    void ReplayStatusRemovedEvent(JToken combatEvent)
+    {
+        Character target = ResolveStatusTarget(combatEvent);
+        if (target == null)
+            return;
+
+        List<StatusEffect> toRemove = ResolveMatchingStatuses(target, combatEvent);
+        foreach (StatusEffect status in toRemove)
+        {
+            if (status == null)
+                continue;
+
+            status.OnExpire(target);
+            target.statusEffects.Remove(status);
+        }
+
+        ui?.RefreshUI(false);
+    }
+
+    void ReplayStatusUpdatedEvent(JToken combatEvent)
+    {
+        Character target = ResolveStatusTarget(combatEvent);
+        if (target == null)
+            return;
+
+        List<StatusEffect> matches = ResolveMatchingStatuses(target, combatEvent);
+        if (matches.Count == 0)
+            return;
+
+        int? newValue = combatEvent.Value<int?>("newValue")
+            ?? combatEvent.Value<int?>("value")
+            ?? combatEvent.Value<int?>("potency");
+        int? newDuration = combatEvent.Value<int?>("remainingDuration")
+            ?? combatEvent.Value<int?>("duration");
+        bool shouldRemove = (combatEvent.Value<bool?>("removed") ?? false)
+            || (combatEvent.Value<bool?>("expired") ?? false)
+            || (newDuration.HasValue && newDuration.Value == 0);
+
+        foreach (StatusEffect status in matches.ToList())
+        {
+            if (status == null)
+                continue;
+
+            if (shouldRemove)
+            {
+                status.OnExpire(target);
+                target.statusEffects.Remove(status);
+                continue;
+            }
+
+            if (newValue.HasValue)
+            {
+                status.Value = newValue.Value;
+            }
+
+            if (newDuration.HasValue)
+            {
+                status.Duration = newDuration.Value;
+            }
+        }
+
+        ui?.RefreshUI(false);
+    }
+
+    void ReplayDamageAppliedEvent(JToken combatEvent)
+    {
+        Character target = ResolveCombatant(combatEvent.Value<string>("targetId"));
+        if (target == null || ui == null)
+            return;
+
+        int hpLost = combatEvent.Value<int?>("hpLost") ?? 0;
+        int requestedDamage = combatEvent.Value<int?>("requestedDamage") ?? hpLost;
+        bool blocked = hpLost <= 0 && requestedDamage > 0;
+        int popupAmount = blocked ? requestedDamage : hpLost;
+        if (popupAmount > 0)
+        {
+            ui.ShowDamagePopup(target, popupAmount, false, blocked);
+        }
+    }
+
+    void ReplayEnergySpentEvent(JToken combatEvent)
+    {
+        string combatantId = combatEvent.Value<string>("combatantId");
+        if (!string.Equals(combatantId, "player", StringComparison.Ordinal) || player == null)
+            return;
+
+        player.resources.energy = combatEvent.Value<int?>("remainingEnergy") ?? player.resources.energy;
+        ui?.RefreshUI(false);
+    }
+
+    IEnumerator FlashCombatantWhite(Character target)
+    {
+        if (target == null || ui == null)
+            yield break;
+
+        DropZone zone = ui.GetDropZone(target);
+        if (zone == null)
+            yield break;
+
+        yield return zone.FlashWhite();
+    }
+
+    CardInstance FindCardByInstanceId(string instanceId)
+    {
+        if (string.IsNullOrWhiteSpace(instanceId) || deck == null)
+            return null;
+
+        foreach (CardInstance card in deck.hand)
+        {
+            if (card != null && string.Equals(card.instanceId, instanceId, StringComparison.Ordinal))
+                return card;
+        }
+        foreach (CardInstance card in deck.drawPile)
+        {
+            if (card != null && string.Equals(card.instanceId, instanceId, StringComparison.Ordinal))
+                return card;
+        }
+        foreach (CardInstance card in deck.discardPile)
+        {
+            if (card != null && string.Equals(card.instanceId, instanceId, StringComparison.Ordinal))
+                return card;
+        }
+        foreach (CardInstance card in deck.exhaustPile)
+        {
+            if (card != null && string.Equals(card.instanceId, instanceId, StringComparison.Ordinal))
+                return card;
+        }
+        return null;
+    }
+
+    CardInstance BuildCardFromDefinition(string definitionId, string instanceId)
+    {
+        STSCardData data = STSCardDatabase.Get(definitionId);
+        if (data == null)
+            return null;
+
+        var card = new CardInstance(data)
+        {
+            instanceId = instanceId
+        };
+        return card;
+    }
+
+    string ResolvePileName(string rawPile)
+    {
+        if (string.IsNullOrWhiteSpace(rawPile))
+            return null;
+
+        string upper = rawPile.Trim().ToUpperInvariant();
+        if (upper.Contains("HAND"))
+            return "HAND";
+        if (upper.Contains("DRAW") || upper.Contains("DECK"))
+            return "DRAW";
+        if (upper.Contains("DISCARD"))
+            return "DISCARD";
+        if (upper.Contains("EXHAUST"))
+            return "EXHAUST";
+        return upper;
+    }
+
+    Character ResolveStatusTarget(JToken combatEvent)
+    {
+        string targetId = combatEvent.Value<string>("targetId")
+            ?? combatEvent.Value<string>("combatantId")
+            ?? combatEvent.Value<string>("ownerId");
+        return ResolveCombatant(targetId);
+    }
+
+    bool TryResolveStatusType(JToken combatEvent, out StatusType statusType)
+    {
+        statusType = default;
+
+        string raw = combatEvent.Value<string>("statusType")
+            ?? combatEvent.Value<string>("status")
+            ?? combatEvent.Value<string>("statusName");
+        if (string.IsNullOrWhiteSpace(raw))
+            return false;
+
+        if (Enum.TryParse(raw, true, out statusType))
+            return true;
+
+        string normalized = NormalizeStatusTypeToken(raw);
+        foreach (StatusType candidate in Enum.GetValues(typeof(StatusType)))
+        {
+            if (string.Equals(NormalizeStatusTypeToken(candidate.ToString()), normalized, StringComparison.Ordinal))
+            {
+                statusType = candidate;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    List<StatusEffect> ResolveMatchingStatuses(Character target, JToken combatEvent)
+    {
+        if (target == null)
+            return new List<StatusEffect>();
+
+        int? index = combatEvent.Value<int?>("index");
+        string cardId = combatEvent.Value<string>("cardId") ?? combatEvent.Value<string>("cardID");
+
+        if (TryResolveStatusType(combatEvent, out StatusType statusType))
+        {
+            return target.statusEffects
+                .Where(s => s != null
+                    && s.statusType == statusType
+                    && (!index.HasValue || s.index == index.Value)
+                    && (string.IsNullOrWhiteSpace(cardId) || string.Equals(s.cardID, cardId, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+        }
+
+        string rawName = combatEvent.Value<string>("statusName") ?? combatEvent.Value<string>("status");
+        if (string.IsNullOrWhiteSpace(rawName))
+            return new List<StatusEffect>();
+
+        string normalizedName = NormalizeStatusTypeToken(rawName);
+        return target.statusEffects
+            .Where(s => s != null
+                && (string.Equals(NormalizeStatusTypeToken(s.Name), normalizedName, StringComparison.Ordinal)
+                    || string.Equals(NormalizeStatusTypeToken(s.GetType().Name.Replace("Status", string.Empty)), normalizedName, StringComparison.Ordinal)))
+            .ToList();
+    }
+
+    string NormalizeStatusTypeToken(string raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            return string.Empty;
+
+        var chars = raw.Where(char.IsLetterOrDigit).ToArray();
+        return new string(chars).ToUpperInvariant();
+    }
+
+    List<CardInstance> GetPileByName(string pileName)
+    {
+        if (deck == null || string.IsNullOrWhiteSpace(pileName))
+            return null;
+
+        switch (pileName)
+        {
+            case "HAND":
+                return deck.hand;
+            case "DRAW":
+                return deck.drawPile;
+            case "DISCARD":
+                return deck.discardPile;
+            case "EXHAUST":
+                return deck.exhaustPile;
+            default:
+                return null;
+        }
+    }
+
+    void InsertCardAt(List<CardInstance> pile, CardInstance card, int index)
+    {
+        if (pile == null || card == null)
+            return;
+
+        if (index < 0 || index > pile.Count)
+        {
+            pile.Add(card);
+            return;
+        }
+
+        pile.Insert(index, card);
+    }
+
+    Character ResolveCombatant(string combatantId)
+    {
+        if (string.IsNullOrWhiteSpace(combatantId))
+            return null;
+
+        if (string.Equals(combatantId, "player", StringComparison.Ordinal))
+            return player;
+
+        if (combatantId.StartsWith("enemy-", StringComparison.Ordinal)
+            && int.TryParse(combatantId.Substring("enemy-".Length), out int enemyIndex)
+            && enemyIndex >= 0
+            && enemyIndex < enemies.Count)
+        {
+            return enemies[enemyIndex];
+        }
+
+        return null;
+    }
+
+    void ApplyAuthoritativePlayerPiles(JToken pilesToken)
+    {
+        if (pilesToken == null || deck == null)
+            return;
+
+        deck.drawPile = ParseAuthoritativeCardList(pilesToken["draw"]);
+        deck.hand = ParseAuthoritativeCardList(pilesToken["hand"]);
+        deck.discardPile = ParseAuthoritativeCardList(pilesToken["discard"]);
+        deck.exhaustPile = ParseAuthoritativeCardList(pilesToken["exhaust"]);
+        if (RunManager.Instance != null)
+        {
+            RunManager.Instance.deck = deck.drawPile
+                .Concat(deck.hand)
+                .Concat(deck.discardPile)
+                .Concat(deck.exhaustPile)
+                .Select(card => card != null ? card.Clone() : null)
+                .Where(card => card != null)
+                .ToList();
+        }
+    }
+
+    List<CardInstance> ParseAuthoritativeCardList(JToken cardsToken)
+    {
+        var cards = new List<CardInstance>();
+        if (cardsToken == null || cardsToken.Type != JTokenType.Array)
+            return cards;
+
+        foreach (JToken cardToken in cardsToken)
+        {
+            string definitionId = cardToken.Value<string>("definitionId");
+            string instanceId = cardToken.Value<string>("instanceId");
+            if (string.IsNullOrWhiteSpace(definitionId) || string.IsNullOrWhiteSpace(instanceId))
+                continue;
+
+            STSCardData data = STSCardDatabase.Get(definitionId);
+            if (data == null)
+                continue;
+
+            var card = new CardInstance(data)
+            {
+                instanceId = instanceId
+            };
+            cards.Add(card);
+        }
+
+        return cards;
     }
 
     IEnumerator PlayCardRoutine(Character source, CardInstance card, List<Character> targets, bool ignoreEnergy = false, bool createView = false)
@@ -577,9 +1459,12 @@ public class CombatManager : MonoBehaviour
         {
             if (ally != null && !ally.IsAlive)
             {
-                foreach (var relic in RunManager.Instance.relics) // Last chacnce for relics to react to death and revive the character or do something 
+                if (!UsesAuthoritativeCombat && RunManager.Instance != null)
                 {
-                    relic.OnDeath(ally);
+                    foreach (var relic in RunManager.Instance.relics) // Last chance for relics to react to death and revive the character or do something
+                    {
+                        relic.OnDeath(ally);
+                    }
                 }
                 if (!ally.IsAlive)                
                 {
@@ -746,9 +1631,12 @@ public class CombatManager : MonoBehaviour
             STSSceneLoader.Instance?.BeginLoading();
             STSSceneLoader.Instance?.SetBackgroundProgress(0.08f);
 
-            foreach (var relic in RunManager.Instance.relics)
+            if (!UsesAuthoritativeCombat && RunManager.Instance != null)
             {
-                relic.OnCombatEnd(player);
+                foreach (var relic in RunManager.Instance.relics)
+                {
+                    relic.OnCombatEnd(player);
+                }
             }
 
             if (RunManager.Instance != null && RunManager.Instance.currentNode != null)
