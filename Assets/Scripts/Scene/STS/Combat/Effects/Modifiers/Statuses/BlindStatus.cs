@@ -25,6 +25,6 @@ public class BlindStatus : StatusEffect
         {
             return "Vos attaques infligent 0 dégâts";
         }
-        return "Les attaques de cet ennemi infligent 0 dégâts";
+        return "Les attaques de ce personnage infligent 0 dégâts";
     }
 }

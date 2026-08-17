@@ -751,8 +751,8 @@ public static class STSApiClient
             relics = ConvertRelics(response.runInventory != null ? response.runInventory.relics : null),
             map = ConvertMap(response.map != null ? response.map.nodes : null),
             activeEncounter = response.activeEncounter,
-            activeCombat = response.activeCombat,
-            activeEvent = response.activeEvent
+            activeCombat = NormalizeOptionalToken(response.activeCombat),
+            activeEvent = NormalizeOptionalToken(response.activeEvent)
         };
 
         return state;
@@ -930,6 +930,15 @@ public static class STSApiClient
     public static Relic CreateRelicFromId(string relicId)
     {
         return CreateRelic(relicId);
+    }
+
+    // JSON nulls deserialize to JValue(Null), which is not C# null and throws when indexed.
+    public static JToken NormalizeOptionalToken(JToken token)
+    {
+        if (token == null || token.Type == JTokenType.Null || token.Type == JTokenType.Undefined)
+            return null;
+
+        return token;
     }
 
     private static T ParseResponse<T>(string json) where T : class

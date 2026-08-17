@@ -194,6 +194,12 @@ public abstract class StatusEffect : StatModifier
             StatusType.Blind=>new BlindStatus(duration),
             StatusType.Link=>new LinkStatus(value,duration,effectInfo,index),
             StatusType.Hide=>new HideStatus(value,duration),
+            StatusType.Undead=>new UndeadStatus(duration),
+            StatusType.Sap=>new SapStatus(),
+            StatusType.TimeStop=>new TimeStopStatus(duration),
+            StatusType.Signal=>new SignalStatus(duration),
+            StatusType.Unbiased=>new UnbiasedStatus(duration),
+            StatusType.Production=>new ProductionStatus(duration),
             _ => null
         };
         stat.statusType = type;

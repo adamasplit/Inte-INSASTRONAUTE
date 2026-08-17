@@ -19,6 +19,6 @@ public class PlatingStatus : StatusEffect
         {
             return $"Vous gagnez {Duration} d'Armure à la fin de votre tour";
         }
-        return $"L'ennemi gagne {Duration} d'Armure à la fin de son tour";
+        return $"Le personnage gagne {Duration} d'Armure à la fin de son tour";
     }
 }

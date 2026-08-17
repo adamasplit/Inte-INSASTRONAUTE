@@ -14,9 +14,9 @@ public class DivinationStatus : StatusEffect
     {
         if (isPlayer)
         {
-            return $"Annule les dégâts d'une attaque ennemie. Se déclenche {Value} fois.";
+            return $"Annule les dégâts d'une attaque subie. Se déclenche {Value} fois.";
         }
-        return $"Annule les dégâts d'une de vos attaques. Se déclenche {Value} fois.";
+        return $"Annule les dégâts d'une attaque subie. Se déclenche {Value} fois.";
     }
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {

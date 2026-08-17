@@ -14,9 +14,9 @@ public class VulnerabilizeStatus : StatusEffect
     {
         if (isPlayer)
         {
-            return $"Pendant {Duration} tours, chaque fois que vous infligez des dégâts à un ennemi, appliquez {Value} de Vulnérable.";
+            return $"Pendant {Duration} tours, chaque fois que vous infligez des dégâts à une cible, appliquez {Value} de Vulnérable.";
         }
-        return $"Pendant {Duration} tours, chaque fois que l'ennemi vous inflige des dégâts, vous subissez {Value} de Vulnérable.";
+        return $"Pendant {Duration} tours, chaque fois que le personnage inflige des dégâts, sa cible subit {Value} de Vulnérable.";
     }
     public override void OnDamageDealt(Character source, Character target, ref int damage)
     {

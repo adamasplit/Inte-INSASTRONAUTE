@@ -28,7 +28,7 @@ public class RegulatorStatus : StatusEffect
     }
     public override string Desc(bool isPlayer)
     {
-        return (isPlayer ? "Vous ne pouvez pas subir plus de " : "L'ennemi ne peut pas subir plus de ") + $"{maxValue} dégâts en un seul tour.";
+        return (isPlayer ? "Vous ne pouvez pas subir plus de " : "Le personnage ne peut pas subir plus de ") + $"{maxValue} dégâts en un seul tour.";
     }
     private int maxDamage(int value)
     {

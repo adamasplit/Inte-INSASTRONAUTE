@@ -17,7 +17,7 @@ public class FatigueStatus : StatusEffect
         {
             return $"Vous perdez {Value} de Vitesse quand vous infligez des dégâts";
         }
-        return $"L'ennemi perd {Value} de Vitesse quand il vous inflige des dégâts";
+        return $"Le personnage perd {Value} de Vitesse quand il vous inflige des dégâts";
     }
     public override void OnDamageDealt(Character source, Character target, ref int damage)
     {

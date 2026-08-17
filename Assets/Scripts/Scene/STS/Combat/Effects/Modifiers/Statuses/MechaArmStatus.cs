@@ -32,6 +32,6 @@ public class MechaArmStatus : StatusEffect
     }
     public override string Desc(bool isPlayer)
     {
-        return (isPlayer ? "À la fin de votre tour" : "À la fin du tour de l'ennemi") + $", déclenche un effet aléatoire : +{1*Value} PV, +{4*Value} Armure, ou {3*Value} dégâts sur tous les ennemis.";
+        return (isPlayer ? "À la fin de votre tour" : "À la fin du tour du personnage") + $", déclenche un effet aléatoire : +{1*Value} PV, +{4*Value} Armure, ou {3*Value} dégâts sur tous les ennemis.";
     }
 }

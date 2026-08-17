@@ -17,13 +17,13 @@ public class CardFollowUpStatus:FollowUpStatus
             {
                 return baseStr+$" que vous jouez déclenchent {nameStr}{endStr}.";
             }
-            return baseStr+$" jouées par l'ennemi activent {nameStr}{endStr}.";
+            return baseStr+$" jouées par le personnage activent {nameStr}{endStr}.";
         }
         if (isPlayer)
         {
             return baseStr+$" jouées, déclenchez {nameStr}{endStr}.";
         }
-        return baseStr+$" jouées, l'ennemi joue aussi {nameStr}{endStr}.";
+        return baseStr+$" jouées, le personnage joue aussi {nameStr}{endStr}.";
     }
     public override void OnCardPlayed(Character source,Character target,CardInstance card)
     {

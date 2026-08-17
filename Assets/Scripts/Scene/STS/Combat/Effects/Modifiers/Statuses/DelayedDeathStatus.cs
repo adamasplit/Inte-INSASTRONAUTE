@@ -29,12 +29,12 @@ public class DelayedDeathStatus : StatusEffect
             {
                 return $"Vous mourrez au début de votre prochain tour";
             }
-            return $"L'ennemi mourra au début de son prochain tour";
+            return $"Le personnage mourra au début de son prochain tour";
         }
         if (isPlayer)
         {
             return $"Vous serez tué dans {Duration} tour(s)";
         }
-        return $"L'ennemi sera tué dans {Duration} tour(s)";
+        return $"Le personnage sera tué dans {Duration} tour(s)";
     }
 }

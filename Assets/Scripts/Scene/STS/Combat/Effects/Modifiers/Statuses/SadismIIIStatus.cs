@@ -23,7 +23,7 @@ public class SadismIIIStatus:StatusEffect
     {
         if (isPlayer)
         {
-            return $"+{30}% dégâts supplémentaires subis et +{30}% d'Armure gagnée. Lorsque vous attaquez un ennemi qui a moins de 50% de sa vie, déclenchez une attaque supplémentaire.";
+            return $"+{30}% dégâts supplémentaires subis et +{30}% d'Armure gagnée. Lorsque vous attaquez une cible qui a moins de 50% de sa vie, déclenchez une attaque supplémentaire.";
         }
         return $"+{30}% dégâts supplémentaires subis et +{30}% d'Armure gagnée. Lorsque qu'un adversaire qui a moins de 50% de sa vie est ciblé, cela déclenche une attaque supplémentaire.";
     }

@@ -14,9 +14,9 @@ public class ClockStatus : StatusEffect
     {
         if (isPlayer)
         {
-            return $"Chaque fois que vous infligez des dégâts à un ennemi, son tour est retardé de {Value*2}%.";
+            return $"Chaque fois que vous infligez des dégâts à une cible, son tour est retardé de {Value*2}%.";
         }
-        return $"Chaque fois que l'ennemi vous inflige des dégâts, votre tour est retardé de {Value*2}%.";
+        return $"Chaque fois que le personnage vous inflige des dégâts, votre tour est retardé de {Value*2}%.";
     }
     public override void OnDamageDealt(Character source, Character target, ref int damage)
     {

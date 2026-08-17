@@ -32,7 +32,7 @@ public class EnergyStatus : StatusEffect
         {
             return $"Gagnez {Mathf.Abs(Value)} énergie en {(Value>0?"plus":"moins")} au début du tour.";
         }
-        return $"L'ennemi gagne {Mathf.Abs(Value)} énergie en {(Value>0?"plus":"moins")} au début du tour.";
+        return $"Le personnage gagne {Mathf.Abs(Value)} énergie en {(Value>0?"plus":"moins")} au début du tour.";
     }
     public override void OnTurnStart(Character target)
     {

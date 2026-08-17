@@ -61,5 +61,11 @@ public enum StatusType
     Regulator,
     Blind,
     Link,
-    Hide
+    Hide,
+    Undead,
+    Sap,
+    TimeStop,
+    Signal,
+    Unbiased,
+    Production
 }

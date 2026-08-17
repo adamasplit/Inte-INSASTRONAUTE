@@ -19,7 +19,7 @@ public class ImitateStatus : StatusEffect
         {
             return $"Quand vous êtes ciblé par une carte, une copie de celle-ci est ajoutée à votre main.";
         }
-        return $"À son tour, l'ennemi jouera une copie de la dernière carte que vous lui avez jouée.";
+        return $"À son tour, le personnage jouera une copie de la dernière carte que vous lui avez jouée.";
     }
     public override void OnTargetedByCard(Character source, Character target, CardInstance card)
     {

@@ -15,15 +15,15 @@ public class AnyCardFollowUpStatus:FollowUpStatus
         {
             if (isPlayer)
             {
-                return baseStr+$" jouées par des ennemis déclenchent {nameStr}{endStr}.";
+                return baseStr+$" jouées par d'autres personnages déclenchent {nameStr}{endStr}.";
             }
             return baseStr+$" que vous jouez activent {nameStr}{endStr}.";
         }
         if (isPlayer)
         {
-            return baseStr+$" jouées par un ennemi, déclenchez {nameStr}{endStr}.";
+            return baseStr+$" jouées par un autre personnage, déclenchez {nameStr}{endStr}.";
         }
-        return baseStr+$" que vous jouez, l'ennemi joue {nameStr}{endStr}.";
+        return baseStr+$" que vous jouez, le personnage joue {nameStr}{endStr}.";
     }
     public override void OnAnyCardPlayed(Character source,CardInstance card)
     {

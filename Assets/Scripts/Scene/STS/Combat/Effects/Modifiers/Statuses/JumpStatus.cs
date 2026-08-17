@@ -20,7 +20,7 @@ public class JumpStatus:StatusEffect
         {
             return $"Portez une attaque puissante sur un ennemi au début de votre prochain tour. Vous ne pouvez pas subir de dégâts avant cela.";
         }
-        return $"L'ennemi portera une attaque puissante sur vous au début de son prochain tour. Il ne peut pas subir de dégâts avant cela.";
+        return $"Le personnage portera une attaque puissante sur vous au début de son prochain tour. Il ne peut pas subir de dégâts avant cela.";
     }
     public override void OnTurnEnd(Character character)
     {

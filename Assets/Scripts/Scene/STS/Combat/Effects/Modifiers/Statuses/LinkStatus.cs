@@ -12,7 +12,7 @@ public class LinkStatus:StatusEffect
     }
     public override string Desc(bool isPlayer)
     {
-        return $"Tant que {effectInfo} sera en vie, {(isPlayer?"vous ne pourrez pas ":"l'ennemi ne pourra pas ")}perdre de PV.";
+        return $"Tant que {effectInfo} sera en vie, {(isPlayer?"vous ne pourrez pas ":"le personnage ne pourra pas ")}perdre de PV.";
     }
     public override string IconPath()
     {

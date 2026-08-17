@@ -202,7 +202,7 @@ public static class EffectResolver
                 int val = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
                 int dur = BattleCalculator.GetModifiedValue(effect.duration, StatType.StatusDuration, ctx);
                 StatusEffect stat=StatusEffect.Factory(effect.statusType,val,dur,effect.cardID,effect.index);
-                ctx.target.AddStatus(stat);
+                ctx.target.AddStatus(stat, ctx.source);
                 yield break;
             }
             case EffectType.DeleteNextTurn:
@@ -822,7 +822,7 @@ public static class EffectResolver
                     foreach (var debuff in debuffsToDouble)
                     {
                         StatusEffect newDebuff = StatusEffect.Factory(debuff.statusType, debuff.Value, debuff.Duration, debuff.cardID, debuff.index);
-                        ctx.target.AddStatus(newDebuff);
+                        ctx.target.AddStatus(newDebuff, ctx.source);
                     }
                     yield break;
                 }

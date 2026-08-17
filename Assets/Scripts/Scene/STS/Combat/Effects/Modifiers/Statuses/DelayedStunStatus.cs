@@ -29,12 +29,12 @@ public class DelayedStunStatus : StatusEffect
             {
                 return $"Vous serez étourdi au prochain tour";
             }
-            return $"L'ennemi sera étourdi au prochain tour";
+            return $"Le personnage sera étourdi au prochain tour";
         }
         if (isPlayer)
         {
             return $"Vous serez étourdi dans {Duration} tour(s) (cette valeur diminue aussi si vous subissez des dégâts)";
         }
-        return $"L'ennemi sera étourdi dans {Duration} tour(s) (cette valeur diminue aussi si il subit des dégâts)";
+        return $"Le personnage sera étourdi dans {Duration} tour(s) (cette valeur diminue aussi si il subit des dégâts)";
     }
 }

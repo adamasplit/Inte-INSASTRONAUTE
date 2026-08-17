@@ -20,19 +20,19 @@ public class FieldTurnFollowUpStatus:FollowUpStatus
                 {
                     return $"Toutes les {maxValueStr}fins de votre tour, déclenchez {Name}{endStr}.";
                 }
-                return $"Toutes les {maxValueStr}fins de son tour, l'ennemi joue aussi {Name}{endStr}.";
+                return $"Toutes les {maxValueStr}fins de son tour, le personnage joue aussi {Name}{endStr}.";
             case 2: // Start of own turn
                 if (isPlayer)
                 {
                     return $"Tous les {maxValueStr}débuts de votre tour, déclenchez {Name}{endStr}.";
                 }
-                return $"Tous les {maxValueStr}débuts de son tour, l'ennemi joue aussi {Name}{endStr}.";
+                return $"Tous les {maxValueStr}débuts de son tour, le personnage joue aussi {Name}{endStr}.";
             default: // Any field turn end
                 if (isPlayer)
                 {
                     return $"Tous les {maxValueStr}tours, déclenchez {Name}{endStr}.";
                 }
-                return $"Tous les {maxValueStr}tours, l'ennemi joue aussi {Name}{endStr}.";
+                return $"Tous les {maxValueStr}tours, le personnage joue aussi {Name}{endStr}.";
         }
     }
     public override void OnFieldTurnEnd(Character character)

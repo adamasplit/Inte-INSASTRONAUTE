@@ -397,8 +397,8 @@ public class RunManager : MonoBehaviour
 
         RegenerateMap = false;
         activeEncounter = remoteState.activeEncounter;
-        activeCombat = remoteState.activeCombat;
-        activeEvent = remoteState.activeEvent;
+        activeCombat = STSApiClient.NormalizeOptionalToken(remoteState.activeCombat);
+        activeEvent = STSApiClient.NormalizeOptionalToken(remoteState.activeEvent);
         pendingReward = null;
         serverPendingRewards = remoteRun.pendingRewards != null
             ? new List<JToken>(remoteRun.pendingRewards)
@@ -440,8 +440,8 @@ public class RunManager : MonoBehaviour
 
         RegenerateMap = false;
         activeEncounter = remoteState.activeEncounter;
-        activeCombat = remoteState.activeCombat;
-        activeEvent = remoteState.activeEvent;
+        activeCombat = STSApiClient.NormalizeOptionalToken(remoteState.activeCombat);
+        activeEvent = STSApiClient.NormalizeOptionalToken(remoteState.activeEvent);
         pendingReward = null;
         serverPendingRewards = pendingRewards != null
             ? new List<JToken>(pendingRewards)
@@ -561,8 +561,8 @@ public class RunManager : MonoBehaviour
         {
             activeEncounter = response.activeEncounter;
         }
-        activeCombat = response.activeCombat;
-        activeEvent = response.activeEvent;
+        activeCombat = STSApiClient.NormalizeOptionalToken(response.activeCombat);
+        activeEvent = STSApiClient.NormalizeOptionalToken(response.activeEvent);
         enteredNodeId = response.nodeId;
 
         if (map != null)

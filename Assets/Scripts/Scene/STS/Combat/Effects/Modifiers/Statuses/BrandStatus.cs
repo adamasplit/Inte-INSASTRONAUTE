@@ -19,7 +19,7 @@ public class BrandStatus:StatusEffect
     }
     public override int Modify(int damage, EffectContext ctx)
     {
-        int debuffCount = ctx.target.statusEffects.Where(se=>se.debuff && se != this).Count();
+        int debuffCount = ctx.target.statusEffects.Where(se=>se.debuff && se != this).Select(se=>se.GetType()).Distinct().Count();
         return damage + (damage * Value * debuffCount) / 100;
     }
     public override string Desc(bool isPlayer)

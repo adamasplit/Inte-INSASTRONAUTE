@@ -85,7 +85,9 @@ public class CombatManager : MonoBehaviour
     private bool turnSystemInitialized;
     private bool authoritativeCommandInFlight;
 
-    public bool UsesAuthoritativeCombat => RunManager.Instance != null && RunManager.Instance.activeCombat != null;
+    public bool UsesAuthoritativeCombat => RunManager.Instance != null
+        && RunManager.Instance.activeCombat != null
+        && RunManager.Instance.activeCombat.Type == JTokenType.Object;
 
     public void Init()
     {
@@ -412,7 +414,10 @@ public class CombatManager : MonoBehaviour
     long GetAuthoritativeRevision()
     {
         JToken activeCombat = RunManager.Instance != null ? RunManager.Instance.activeCombat : null;
-        return activeCombat != null ? activeCombat.Value<long?>("revision") ?? 0L : 0L;
+        if (activeCombat == null || activeCombat.Type != JTokenType.Object)
+            return 0L;
+
+        return activeCombat.Value<long?>("revision") ?? 0L;
     }
 
     List<string> MapTargetsToAuthoritativeIds(List<Character> targets)
@@ -447,7 +452,7 @@ public class CombatManager : MonoBehaviour
 
     void ApplyAuthoritativeCombatState(JToken combatToken, bool refreshUI)
     {
-        if (combatToken == null || RunManager.Instance == null)
+        if (combatToken == null || combatToken.Type != JTokenType.Object || RunManager.Instance == null)
             return;
 
         RunManager.Instance.activeCombat = combatToken;
@@ -466,6 +471,9 @@ public class CombatManager : MonoBehaviour
 
         foreach (JToken combatantToken in combatants)
         {
+            if (combatantToken == null || combatantToken.Type != JTokenType.Object)
+                continue;
+
             string combatantId = combatantToken.Value<string>("combatantId");
             Character target = ResolveCombatant(combatantId);
             if (target == null)
@@ -1067,7 +1075,7 @@ public class CombatManager : MonoBehaviour
 
     void ApplyAuthoritativePlayerPiles(JToken pilesToken)
     {
-        if (pilesToken == null || deck == null)
+        if (pilesToken == null || pilesToken.Type != JTokenType.Object || deck == null)
             return;
 
         deck.drawPile = ParseAuthoritativeCardList(pilesToken["draw"]);
@@ -1094,6 +1102,9 @@ public class CombatManager : MonoBehaviour
 
         foreach (JToken cardToken in cardsToken)
         {
+            if (cardToken == null || cardToken.Type != JTokenType.Object)
+                continue;
+
             string definitionId = cardToken.Value<string>("definitionId");
             string instanceId = cardToken.Value<string>("instanceId");
             if (string.IsNullOrWhiteSpace(definitionId) || string.IsNullOrWhiteSpace(instanceId))

@@ -19,6 +19,6 @@ public class ElasticStatus : StatusEffect
         {
             return $"Gagnez {Value} d'Armure quand vous subissez des dégâts";
         }
-        return $"L'ennemi gagne {Value} d'Armure quand vous lui infligez des dégâts";
+        return $"Le personnage gagne {Value} d'Armure quand vous lui infligez des dégâts";
     }
 }

@@ -293,7 +293,9 @@ public class MultiplayerDeckPanel : MonoBehaviour
     {
         return card.favoredCharacter == SelectableCharacter.Impossible
             || card.favoredCharacter == SelectableCharacter.Starting
-            || card.HasTag(CardTag.Unobtainable);
+            || card.HasTag(CardTag.Unobtainable)
+            || card.HasTag(CardTag.Created)
+            || card.HasTag(CardTag.FollowUp);
     }
 
     private bool IsOwnedCard(STSCardData card)

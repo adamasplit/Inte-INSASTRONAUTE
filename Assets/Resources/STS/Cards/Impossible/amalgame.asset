@@ -15,7 +15,8 @@ MonoBehaviour:
   id: amalgame
   cardName: Amalgame
   collectionCardId: 
-  collectionCard: {fileID: 0}
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 7cea5e24abf8dfc408a7ee0cc04ea114, type: 3}
   cost: 0
   xCost: 0
@@ -24,12 +25,13 @@ MonoBehaviour:
   effects:
   - type: 24
     value: -1
-    targetSelf: 0
+    targetSelf: 1
     targetOthers: 0
     statusType: 0
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +39,7 @@ MonoBehaviour:
     cardSelectionSource: 2
     cardFilterTags: 
     cardSelectionEffect: 7
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 10

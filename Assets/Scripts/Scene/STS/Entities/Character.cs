@@ -163,33 +163,43 @@ public class Character
                 amount = relic.OnHeal(this, amount);
             }
         }
+        foreach (var status in statusEffects.ToList())
+        {
+            status.OnHeal(this, ref amount);
+        }
         currentHP = STSHealing.Apply(currentHP, maxHP, amount);
         if (combat != null && combat.ui != null)
         {
             combat.ui.ShowDamagePopup(this, currentHP - previousHP, true, false);
         }
     }
-    public void AddStatus(StatusEffect status)
+    public void AddStatus(StatusEffect status, Character source = null)
     {
         if (combat != null && combat.UsesAuthoritativeCombat)
             return;
 
-        // Check if the status can be applied (e.g. if the character intercepts a given amount of negative statuses)
-        if (RunManager.Instance != null)
+        // Unbiased lets its holder's debuffs bypass the target's resistances (Artifact, Filter, etc.)
+        bool ignoresResistances = status.debuff && source != null && source.statusEffects.Any(s => s is UnbiasedStatus);
+
+        if (!ignoresResistances)
         {
-            foreach (var relic in RunManager.Instance.relics)
+            // Check if the status can be applied (e.g. if the character intercepts a given amount of negative statuses)
+            if (RunManager.Instance != null)
             {
-                if (!relic.CanApplyStatus(status, this))
+                foreach (var relic in RunManager.Instance.relics)
                 {
-                    return; // Status application is blocked by a relic
+                    if (!relic.CanApplyStatus(status, this))
+                    {
+                        return; // Status application is blocked by a relic
+                    }
                 }
             }
-        }
-        foreach (var existingStatus in statusEffects)
-        {
-            if (!existingStatus.CanApply(status,this))
+            foreach (var existingStatus in statusEffects)
             {
-                return; 
+                if (!existingStatus.CanApply(status,this))
+                {
+                    return; 
+                }
             }
         }
         status.InsertInto(statusEffects);

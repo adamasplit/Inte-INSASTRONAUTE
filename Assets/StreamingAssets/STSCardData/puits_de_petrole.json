@@ -33,7 +33,7 @@
     {
       "type": "AddCardToDiscardPile",
       "value": 1,
-      "targetSelf": false,
+      "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,

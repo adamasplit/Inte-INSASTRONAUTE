@@ -28,6 +28,6 @@ public class HideStatus : StatusEffect
         {
             return $"Pendant {Duration} tours, gagnez {Value} d'Armure la première fois que vous subissez des dégâts";
         }
-        return $"L'ennemi gagne {Value} d'Armure la première fois que vous lui infligez des dégâts";
+        return $"Le personnage gagne {Value} d'Armure la première fois que vous lui infligez des dégâts";
     }
 }

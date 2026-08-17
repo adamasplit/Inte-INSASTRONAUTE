@@ -14,9 +14,9 @@ public class FullMoonStatus : StatusEffect
     {
         if (isPlayer)
         {
-            return $"Donne {Value} de Force temporaire en infligeant des dégâts à un ennemi";
+            return $"Donne {Value} de Force temporaire en infligeant des dégâts à une cible";
         }
-        return $"L'ennemi gagne {Value} de Force temporaire quand il vous inflige des dégâts";
+        return $"Le personnage gagne {Value} de Force temporaire quand il inflige des dégâts à une cible";
     }
     public override void OnDamageDealt(Character source, Character target, ref int damage)
     {
