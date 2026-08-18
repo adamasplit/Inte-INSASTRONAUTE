@@ -14,5 +14,9 @@ public enum CardSelectionEffect
     ReduceCost,
     ReduceCostTemp,
     IncreaseDamage,
-    IncreaseDamageTemp
+    IncreaseDamageTemp,
+    AddDamageEffect,
+    AddArmorEffect,
+    AddExhaustTag,
+    AddAutomaticTag
 }

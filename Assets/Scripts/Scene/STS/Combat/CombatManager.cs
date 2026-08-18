@@ -625,6 +625,8 @@ public class CombatManager : MonoBehaviour
         if (playedView == null)
             yield break;
 
+        ui.GetDropZone(actor)?.PlayActionSprite(DropZone.ActionSpriteVariant(card));
+
         yield return ui.AnimateCardToCenter(playedView);
         playedView.Flash();
         yield return new WaitForSeconds(0.08f);
@@ -1204,13 +1206,15 @@ public class CombatManager : MonoBehaviour
             }
         }
         StartCoroutine(ui.GetView(source).GetComponent<DropZone>().FlashWhite());
+        ui.GetDropZone(source)?.PlayActionSprite(DropZone.ActionSpriteVariant(card));
 
         bool exhausted = false;
         Coroutine exitAnimation = null;
 
         if (source != null && source.isPlayer)
         {
-            if (card.data.HasTag(CardTag.Exhaust))
+            // Powers never reach a pile, so they must not run the exhaust roll/animation path.
+            if (card.data.HasTag(CardTag.Exhaust) && card.data.type != CardType.Pouvoir)
             {
                 float exhaustChance = BattleCalculator.GetModifiedValue(100, StatType.ExhaustChance, ctxSelf) / 100f;
                 exhausted = UnityEngine.Random.value < exhaustChance;

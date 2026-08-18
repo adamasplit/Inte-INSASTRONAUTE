@@ -678,6 +678,29 @@ public static class EffectResolver
                                     mod2.temporary=true;
                                     card.AddModifier(mod2);
                                     break;
+                                case CardSelectionEffect.AddDamageEffect:
+                                    card.addedEffects.Add(new EffectEntry
+                                    {
+                                        type = EffectType.Damage,
+                                        value = effect.duration
+                                    });
+                                    if (card.targetingMode == TargetingMode.Player)
+                                        card.targetingMode = TargetingMode.Enemy;
+                                    break;
+                                case CardSelectionEffect.AddArmorEffect:
+                                    card.addedEffects.Add(new EffectEntry
+                                    {
+                                        type = EffectType.Armor,
+                                        value = effect.duration,
+                                        targetSelf = true
+                                    });
+                                    break;
+                                case CardSelectionEffect.AddExhaustTag:
+                                    card.AddTag(CardTag.Exhaust);
+                                    break;
+                                case CardSelectionEffect.AddAutomaticTag:
+                                    card.AddTag(CardTag.Automatic);
+                                    break;
                                 default:
                                     break;
                             }

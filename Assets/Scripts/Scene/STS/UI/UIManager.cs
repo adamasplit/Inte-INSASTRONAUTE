@@ -327,6 +327,9 @@ public class UIManager : MonoBehaviour
         if (character == null || amount <= 0 || animator == null || animator.animationLayer == null || DamagePopupPrefab == null)
             return;
 
+        if (!healing && !blocked)
+            GetDropZone(character)?.PlayActionSprite(4);
+
         GameObject popupObject = Instantiate(DamagePopupPrefab, animator.animationLayer, false);
         popupObject.transform.SetAsLastSibling();
 

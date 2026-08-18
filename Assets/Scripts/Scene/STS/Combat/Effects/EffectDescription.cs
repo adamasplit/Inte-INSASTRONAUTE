@@ -290,6 +290,10 @@ public static class EffectDescription
                         CardSelectionEffect.ReduceCostTemp => $"Réduisez temporairement le coût de toutes les cartes{filterSuffix} de {source} de {effect.duration}",
                         CardSelectionEffect.IncreaseDamage => $"Augmentez les dégâts de toutes les cartes{filterSuffix} de {source} de {effect.duration}",
                         CardSelectionEffect.IncreaseDamageTemp => $"Augmentez temporairement les dégâts de toutes les cartes{filterSuffix} de {source} de {effect.duration}",
+                        CardSelectionEffect.AddDamageEffect => $"Ajoutez {effect.duration} dégâts à toutes les cartes{filterSuffix} de {source}",
+                        CardSelectionEffect.AddArmorEffect => $"Ajoutez {effect.duration} d'Armure à toutes les cartes{filterSuffix} de {source}",
+                        CardSelectionEffect.AddExhaustTag => $"Rendez toutes les cartes{filterSuffix} de {source} Éphémères",
+                        CardSelectionEffect.AddAutomaticTag => $"Rendez toutes les cartes{filterSuffix} de {source} Automatiques",
                         _ => $"Appliquez l'effet {effect.cardSelectionEffect} à toutes les cartes{filterSuffix} de {source}",
                         
                     };
@@ -310,6 +314,10 @@ public static class EffectDescription
                     CardSelectionEffect.ReduceCostTemp => $"réduisez temporairement {(effect.value!=1?"leur":"son")} coût de {effect.duration}",
                     CardSelectionEffect.IncreaseDamage => $"augmentez {(effect.value!=1?"leur":"son")} dégâts de {effect.duration}",
                     CardSelectionEffect.IncreaseDamageTemp => $"augmentez temporairement {(effect.value!=1?"leur":"son")} dégâts de {effect.duration}",
+                    CardSelectionEffect.AddDamageEffect => $"ajoutez-{(effect.value!=1?"leur":"lui")} {effect.duration} dégâts",
+                    CardSelectionEffect.AddArmorEffect => $"ajoutez-{(effect.value!=1?"leur":"lui")} {effect.duration} d'Armure",
+                    CardSelectionEffect.AddExhaustTag => "rendez-"+pl+" Éphémère"+(effect.value!=1?"s":""),
+                    CardSelectionEffect.AddAutomaticTag => "rendez-"+pl+" Automatique"+(effect.value!=1?"s":""),
                     _ => effect.cardSelectionEffect.ToString()
                 };
                 string cardStr = effect.value!=-1? $"Choisissez {effect.value.ToString()}" : "Prenez toutes les";

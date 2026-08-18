@@ -48,6 +48,7 @@
         "catastrophe_naturelle.json",
         "cfi.json",
         "chaine_de_markov.json",
+        "chaine_de_production.json",
         "champ_de_mines.json",
         "chantier_en_cours.json",
         "chant_de_force.json",

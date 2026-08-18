@@ -41,6 +41,8 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     LayoutElement deathSizeLock;
     bool deathSizeLockCreated;
     bool deathSizeLockOriginalIgnoreLayout;
+    Sprite baseSprite;
+    Coroutine actionSpriteRoutine;
 
     void OnEnable()
     {
@@ -62,6 +64,11 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         combat = cm;
         target = t;
         CleanupDeathDisintegrationTexture();
+        if (actionSpriteRoutine != null)
+        {
+            StopCoroutine(actionSpriteRoutine);
+            actionSpriteRoutine = null;
+        }
         dropZoneRect = transform as RectTransform;
 
         Sprite sprite = null;
@@ -80,6 +87,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         {
             sprite = Resources.Load<Sprite>("STS/Characters/" + target.name);
         }
+        baseSprite = sprite;
         if (sprite != null)
         {
             image.gameObject.SetActive(true);
@@ -123,6 +131,59 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     void OnDestroy()
     {
         CleanupDeathDisintegrationTexture();
+    }
+
+    /// Returns the animation sprite index for a card, or 0 when the card has no matching variant.
+    public static int ActionSpriteVariant(CardInstance card)
+    {
+        if (card == null || card.data == null)
+            return 0;
+
+        if (card.HasTag(CardTag.Curse))
+            return 4;
+
+        switch (card.data.type)
+        {
+            case CardType.Attaque:
+                return 1;
+            case CardType.Compétence:
+                return 2;
+            case CardType.Pouvoir:
+                return 3;
+            default:
+                return 0;
+        }
+    }
+
+    public void PlayActionSprite(int variant, float duration = 0.5f)
+    {
+        if (variant <= 0 || image == null || target == null || baseSprite == null || deathAnimationPlayed)
+            return;
+
+        Sprite actionSprite = Resources.Load<Sprite>($"STS/Animations/{target.name}{variant}");
+        if (actionSprite == null && variant != 1 && variant != 4)
+        {
+            // Variant 1 doubles as the generic animation when no type-specific sprite exists.
+            actionSprite = Resources.Load<Sprite>($"STS/Animations/{target.name}1");
+        }
+        if (actionSprite == null)
+            return;
+
+        if (actionSpriteRoutine != null)
+            StopCoroutine(actionSpriteRoutine);
+
+        actionSpriteRoutine = StartCoroutine(ActionSpriteRoutine(actionSprite, duration));
+    }
+
+    IEnumerator ActionSpriteRoutine(Sprite actionSprite, float duration)
+    {
+        image.sprite = actionSprite;
+        yield return new WaitForSeconds(duration);
+
+        if (!deathAnimationPlayed && baseSprite != null)
+            image.sprite = baseSprite;
+
+        actionSpriteRoutine = null;
     }
 
     void Update()

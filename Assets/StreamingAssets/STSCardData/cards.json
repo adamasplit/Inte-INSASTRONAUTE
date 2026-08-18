@@ -289,11 +289,11 @@
       "effects": [
         {
           "type": "Status",
-          "value": 0,
+          "value": 5,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "FieldTurnFollowUp",
-          "duration": 5,
+          "duration": 0,
           "description": "",
           "cardID": "Secousse localisée",
           "conditional": false,
@@ -13569,6 +13569,45 @@
       "tags": []
     },
     {
+      "id": "chaine_de_production",
+      "cardName": "Chaîne de production",
+      "collectionCardId": null,
+      "multiplayerExclusive": false,
+      "characterLevel": 0,
+      "iconId": null,
+      "cost": 1,
+      "xCost": false,
+      "type": "Pouvoir",
+      "rarity": "Rare",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 10,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Production",
+          "duration": 5,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "PERF",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": []
+    },
+    {
       "id": "industrialisation",
       "cardName": "Industrialisation",
       "collectionCardId": null,
@@ -13645,7 +13684,7 @@
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "CardFollowUp",
-          "duration": 5,
+          "duration": 6,
           "description": "",
           "cardID": "",
           "conditional": false,

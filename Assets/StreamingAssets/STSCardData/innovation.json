@@ -17,7 +17,7 @@
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "CardFollowUp",
-      "duration": 5,
+      "duration": 6,
       "description": "",
       "cardID": "",
       "conditional": false,

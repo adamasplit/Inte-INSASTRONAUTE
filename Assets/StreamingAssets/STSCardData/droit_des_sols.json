@@ -13,11 +13,11 @@
   "effects": [
     {
       "type": "Status",
-      "value": 0,
+      "value": 5,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "FieldTurnFollowUp",
-      "duration": 5,
+      "duration": 0,
       "description": "",
       "cardID": "Secousse localisée",
       "conditional": false,
