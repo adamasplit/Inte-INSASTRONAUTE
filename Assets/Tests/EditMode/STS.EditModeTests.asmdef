@@ -2,7 +2,8 @@
   "name": "STS.EditModeTests",
   "rootNamespace": "",
   "references": [
-    "STS.RunResume"
+    "STS.RunResume",
+    "STS.ReactCombatBridge"
   ],
   "includePlatforms": [
     "Editor"
