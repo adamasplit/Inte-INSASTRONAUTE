@@ -1,0 +1,82 @@
+{
+  "protocolVersion": 1,
+  "cases": [
+    {
+      "case": "valid-large-revision-event",
+      "kind": "message",
+      "valid": true,
+      "message": {
+        "protocolVersion": 1,
+        "combatId": "combat-fixture",
+        "revision": "9007199254740993",
+        "type": "TURN_STARTED",
+        "payload": {}
+      }
+    },
+    {
+      "case": "valid-causation-event",
+      "kind": "message",
+      "valid": true,
+      "message": {
+        "protocolVersion": 1,
+        "combatId": "combat-fixture",
+        "revision": "43",
+        "type": "CARD_PLAYED",
+        "causationActionId": "action-fixture",
+        "payload": {
+          "cardId": "card-fixture"
+        }
+      }
+    },
+    {
+      "case": "invalid-leading-zero-revision",
+      "kind": "message",
+      "valid": false,
+      "message": {
+        "protocolVersion": 1,
+        "combatId": "combat-fixture",
+        "revision": "043",
+        "type": "CARD_PLAYED",
+        "payload": {}
+      }
+    },
+    {
+      "case": "invalid-protocol-version",
+      "kind": "message",
+      "valid": false,
+      "message": {
+        "protocolVersion": 2,
+        "combatId": "combat-fixture",
+        "revision": "43",
+        "type": "CARD_PLAYED",
+        "payload": {}
+      }
+    },
+    {
+      "case": "valid-end-turn-command",
+      "kind": "command",
+      "valid": true,
+      "message": {
+        "protocolVersion": 1,
+        "actionId": "action-fixture",
+        "combatId": "combat-fixture",
+        "expectedRevision": "9007199254740993",
+        "type": "END_TURN",
+        "payload": {}
+      }
+    },
+    {
+      "case": "invalid-authoritative-result-command",
+      "kind": "command",
+      "valid": false,
+      "message": {
+        "protocolVersion": 1,
+        "actionId": "action-fixture",
+        "combatId": "combat-fixture",
+        "expectedRevision": "43",
+        "type": "DECLARE_VICTORY",
+        "payload": {}
+      }
+    }
+  ]
+}

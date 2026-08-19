@@ -133,4 +133,21 @@ public class ReactCombatBridgeTests
         StringAssert.Contains("HandleCombatEvent", source);
         StringAssert.Contains("HandleCombatStatus", source);
     }
+
+    [Test]
+    public void SharedProtocolFixtureMatchesTheFrontContract()
+    {
+        string unityPath = Path.Combine(
+            "Assets", "Tests", "Fixtures", "combat-protocol-v1.json");
+        string frontPath = Path.GetFullPath(Path.Combine(
+            "..", "..", "insastral", "tests", "fixtures", "combat-protocol-v1.json"));
+
+        Assert.That(File.Exists(unityPath), Is.True, "Unity protocol fixture must exist");
+        Assert.That(File.Exists(frontPath), Is.True, "Front protocol fixture must exist");
+        string fixture = File.ReadAllText(unityPath);
+        Assert.That(fixture, Is.EqualTo(File.ReadAllText(frontPath)));
+        StringAssert.Contains("valid-large-revision-event", fixture);
+        StringAssert.Contains("invalid-leading-zero-revision", fixture);
+        StringAssert.Contains("valid-end-turn-command", fixture);
+    }
 }
