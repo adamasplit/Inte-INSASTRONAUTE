@@ -132,14 +132,26 @@ public class CombatManager : MonoBehaviour
         if (UsesAuthoritativeCombat)
         {
             allowTurn = true;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            ReactCombatBridge.CombatEventReceived += HandleReactCombatEvent;
+            _ = ReactCombatBridge.ConnectAsync(RunManager.Instance.runId);
+            STSSceneLoader.Instance?.SceneReady();
+#else
             ApplyAuthoritativeCombatState(RunManager.Instance.activeCombat, true);
             STSSceneLoader.Instance?.SceneReady();
+#endif
             return;
         }
 
         if (CanBootstrapAuthoritativeCombat())
         {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            ReactCombatBridge.CombatEventReceived += HandleReactCombatEvent;
+            _ = ReactCombatBridge.ConnectAsync(RunManager.Instance.runId);
+            STSSceneLoader.Instance?.SceneReady();
+#else
             StartCoroutine(BootstrapAuthoritativeCombatRoutine());
+#endif
             return;
         }
 
@@ -316,6 +328,31 @@ public class CombatManager : MonoBehaviour
         activeCardPlays++;
         queuedCardPlays = Mathf.Max(0, queuedCardPlays - 1);
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+        var payload = new
+        {
+            cardInstanceId = card != null ? card.instanceId : null,
+            targetIds = MapTargetsToAuthoritativeIds(targets)
+        };
+        string currentRev = ReactCombatBridge.CurrentRevision ?? GetAuthoritativeRevision().ToString();
+        Task<ReactCombatCommandOutcome> commandTask = ReactCombatBridge.SendCommandAsync("PLAY_CARD", payload, currentRev);
+
+        while (!commandTask.IsCompleted)
+            yield return null;
+
+        try
+        {
+            if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == ReactCombatCommandOutcome.Unknown)
+            {
+                Debug.LogWarning("[STS-COMBAT] Failed to submit backend play-card command via Bridge.");
+            }
+        }
+        finally
+        {
+            authoritativeCommandInFlight = false;
+            activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
+        }
+#else
         Task<STSApiCombatCommandResponse> commandTask = STSApiClient.SubmitCombatCommandAsync(
             RunManager.Instance != null ? RunManager.Instance.runId : null,
             new STSApiCombatCommandRequest
@@ -359,6 +396,37 @@ public class CombatManager : MonoBehaviour
             authoritativeCommandInFlight = false;
             activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
         }
+#endif
+    }
+
+    void HandleReactCombatEvent(string json)
+    {
+        JObject message;
+        try { message = JObject.Parse(json); } catch { return; }
+
+        string type = message.Value<string>("type");
+        if (type == "COMBAT_SNAPSHOT")
+        {
+            JToken state = message["payload"]?["state"];
+            if (state != null) ApplyAuthoritativeCombatState(state, true);
+        }
+        else if (type == "COMBAT_EVENT")
+        {
+            JToken payload = message["payload"];
+            if (payload != null) StartCoroutine(ReplayAuthoritativeEvents(new List<JToken> { payload }));
+        }
+        else if (type == "STATE_UPDATED")
+        {
+            JToken payload = message["payload"];
+            if (payload != null) ApplyAuthoritativeCombatState(payload, true);
+        }
+    }
+
+    void OnDestroy()
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        ReactCombatBridge.CombatEventReceived -= HandleReactCombatEvent;
+#endif
     }
 
     public void RequestAuthoritativeEndTurn()
@@ -374,6 +442,27 @@ public class CombatManager : MonoBehaviour
         authoritativeCommandInFlight = true;
         activeCardPlays++;
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+        var payload = new { targetIds = new List<string>() };
+        string currentRev = ReactCombatBridge.CurrentRevision ?? GetAuthoritativeRevision().ToString();
+        Task<ReactCombatCommandOutcome> commandTask = ReactCombatBridge.SendCommandAsync("END_TURN", payload, currentRev);
+
+        while (!commandTask.IsCompleted)
+            yield return null;
+
+        try
+        {
+            if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == ReactCombatCommandOutcome.Unknown)
+            {
+                Debug.LogWarning("[STS-COMBAT] Failed to submit backend end-turn command via Bridge.");
+            }
+        }
+        finally
+        {
+            authoritativeCommandInFlight = false;
+            activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
+        }
+#else
         Task<STSApiCombatCommandResponse> commandTask = STSApiClient.SubmitCombatCommandAsync(
             RunManager.Instance != null ? RunManager.Instance.runId : null,
             new STSApiCombatCommandRequest
@@ -409,6 +498,7 @@ public class CombatManager : MonoBehaviour
             authoritativeCommandInFlight = false;
             activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
         }
+#endif
     }
 
     long GetAuthoritativeRevision()
