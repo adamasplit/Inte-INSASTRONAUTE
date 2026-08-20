@@ -7,18 +7,20 @@ public static class STSPlayerProfileStore
 {
     private const string UnlockPrefix = "STS.PlayerProfile.UnlockedCards.";
 
-    public static void UnlockCardsFromDeck(List<CardInstance> deck, SelectableCharacter selectedCharacter, bool wasRetreat, int act)
+    public static List<STSCardData> UnlockCardsFromDeck(List<CardInstance> deck, SelectableCharacter selectedCharacter, bool wasRetreat, int act)
     {
+        List<STSCardData> unlocked = new();
+
         if (deck == null || deck.Count == 0)
         {
-            return;
+            return unlocked;
         }
 
         if (selectedCharacter == SelectableCharacter.Aucun
             || selectedCharacter == SelectableCharacter.Starting
             || selectedCharacter == SelectableCharacter.Impossible)
         {
-            return;
+            return unlocked;
         }
 
         List<STSCardData> candidates = new();
@@ -49,7 +51,7 @@ public static class STSPlayerProfileStore
 
         if (candidates.Count == 0)
         {
-            return;
+            return unlocked;
         }
 
         int unlockCount = 1 + (wasRetreat ? Mathf.Max(0, act) : 0);
@@ -59,11 +61,12 @@ public static class STSPlayerProfileStore
         for (int i = 0; i < countToUnlock; i++)
         {
             toUnlock.Add(candidates[i].id);
+            unlocked.Add(candidates[i]);
         }
 
         if (toUnlock.Count == 0)
         {
-            return;
+            return unlocked;
         }
 
         HashSet<string> current = LoadUnlockedCardIds(selectedCharacter);
@@ -74,6 +77,7 @@ public static class STSPlayerProfileStore
 
         SaveUnlockedCardIds(selectedCharacter, current);
         Debug.Log($"[STS-PROFILE] Unlocked {current.Count} cards for {selectedCharacter} after run end (retreat={wasRetreat}, act={act}).");
+        return unlocked;
     }
 
     public static bool HasUnlockedCard(string cardId, SelectableCharacter selectedCharacter)

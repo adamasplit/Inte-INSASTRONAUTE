@@ -689,7 +689,8 @@ public class CardView : MonoBehaviour,IPointerClickHandler
             if (sprite == null || cardInstance != card || !string.Equals(card.data.GetCollectionCardId(), collectionCardId, StringComparison.Ordinal))
                 return;
 
-            ApplyCollectionCardVisual(card, sprite);
+            bool isTextless = STSCardDatabase.IsCollectionCardTextless(collectionCardId);
+            ApplyCollectionCardVisual(card, sprite, isTextless);
         }
         catch (Exception ex)
         {
@@ -697,7 +698,7 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         }
     }
 
-    private void ApplyCollectionCardVisual(CardInstance card, Sprite sprite)
+    private void ApplyCollectionCardVisual(CardInstance card, Sprite sprite, bool isTextless)
     {
         if (card == null || sprite == null)
             return;
@@ -716,6 +717,20 @@ public class CardView : MonoBehaviour,IPointerClickHandler
             genericCardRoot.SetActive(false);
         if (nameText != null)
             nameText.transform.localScale = Vector3.one * 0.6f;
+
+        if (isTextless)
+        {
+            if (collectionCardDescBg != null)
+                collectionCardDescBg.enabled = false;
+            if (descriptionText != null)
+                descriptionText.color = Color.white;
+            if (nameText != null)
+                nameText.color = Color.white;
+            return;
+        }
+
+        if (collectionCardDescBg != null)
+            collectionCardDescBg.enabled = true;
 
         if (collectionCardImage != null && collectionCardImage.sprite != null)
         {

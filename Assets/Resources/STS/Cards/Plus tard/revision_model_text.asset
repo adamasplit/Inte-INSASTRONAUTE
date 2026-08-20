@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: revision_model_text
   cardName: "R\xE9vision Model Text"
-  collectionCardId: Souillard (campagne)
+  collectionCardId: Souillard
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 0}
   cost: 1
   xCost: 0

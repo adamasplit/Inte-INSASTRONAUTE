@@ -46,7 +46,16 @@ public class GameOverController : MonoBehaviour
     {
         if (RunManager.Instance != null)
         {
-            RunManager.Instance.GrantRunEndUnlocks(false);
+            List<STSCardData> unlockedCards = RunManager.Instance.GrantRunEndUnlocks(false);
+            if (unlockedCards != null && unlockedCards.Count > 0 && RunManager.Instance.ui != null)
+            {
+                RunManager.Instance.ui.ShowUnlockedCardsPanel(unlockedCards, () =>
+                {
+                    RunManager.Instance.OnRunEnd();
+                    STSSceneLoader.Instance.LoadScene("STS_Boot");
+                });
+                return;
+            }
             RunManager.Instance.OnRunEnd();
         }
         STSSceneLoader.Instance.LoadScene("STS_Boot");
