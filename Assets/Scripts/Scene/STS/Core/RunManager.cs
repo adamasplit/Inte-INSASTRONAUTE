@@ -295,7 +295,7 @@ public class RunManager : MonoBehaviour
                 .ToList();
             if (collectionCardNames.Count > 0)
             {
-                _ = STSApiClient.UnlockPvpCardsAsync(collectionCardNames);
+                _ = STSApiClient.UnlockPvpCardsAsync(runId, collectionCardNames);
             }
         }
 

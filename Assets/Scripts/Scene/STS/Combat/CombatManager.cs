@@ -1734,18 +1734,38 @@ public class CombatManager : MonoBehaviour
         if (RunManager.Instance.unrestrictedMode)
             return true;
 
-        var request = new STSApiNodeCompleteRequest
+        STSApiNodeCompleteRequest request;
+        if (UsesAuthoritativeCombat)
         {
-            encounterInstanceId = RunManager.Instance.activeEncounter.encounterInstanceId,
-            result = result,
-            turnCount = state.turnCount,
-            playerHpAfter = player != null ? player.currentHP : 0,
-            damageTaken = RunManager.Instance.activeEncounter != null ? Mathf.Max(0, RunManager.Instance.activeEncounter.playerHpBefore - (player != null ? player.currentHP : 0)) : 0,
-            enemiesDefeated = string.Equals(result, "victory", StringComparison.OrdinalIgnoreCase)
-                ? new List<string>(RunManager.Instance.activeEncounter.enemyIds ?? new List<string>())
-                : enemies.Where(e => e != null && !e.IsAlive).Select(e => e is Enemy enemy ? (enemy.data != null && !string.IsNullOrWhiteSpace(enemy.data.id) ? enemy.data.id : enemy.name) : e.name).ToList(),
-            deckHash = STSApiClient.ComputeDeckHash(RunManager.Instance.deck)
-        };
+            // Authoritative combats are already resolved server-side from the run's stored combat state;
+            // encounterInstanceId/result must stay null so the backend takes that snapshot path instead of
+            // validating a client-reported turnCount that the authoritative flow never increments locally.
+            request = new STSApiNodeCompleteRequest
+            {
+                encounterInstanceId = null,
+                result = null,
+                turnCount = 0,
+                playerHpAfter = player != null ? player.currentHP : 0,
+                damageTaken = 0,
+                enemiesDefeated = new List<string>(),
+                deckHash = STSApiClient.ComputeDeckHash(RunManager.Instance.deck)
+            };
+        }
+        else
+        {
+            request = new STSApiNodeCompleteRequest
+            {
+                encounterInstanceId = RunManager.Instance.activeEncounter.encounterInstanceId,
+                result = result,
+                turnCount = state.turnCount,
+                playerHpAfter = player != null ? player.currentHP : 0,
+                damageTaken = RunManager.Instance.activeEncounter != null ? Mathf.Max(0, RunManager.Instance.activeEncounter.playerHpBefore - (player != null ? player.currentHP : 0)) : 0,
+                enemiesDefeated = string.Equals(result, "victory", StringComparison.OrdinalIgnoreCase)
+                    ? new List<string>(RunManager.Instance.activeEncounter.enemyIds ?? new List<string>())
+                    : enemies.Where(e => e != null && !e.IsAlive).Select(e => e is Enemy enemy ? (enemy.data != null && !string.IsNullOrWhiteSpace(enemy.data.id) ? enemy.data.id : enemy.name) : e.name).ToList(),
+                deckHash = STSApiClient.ComputeDeckHash(RunManager.Instance.deck)
+            };
+        }
 
         try
         {

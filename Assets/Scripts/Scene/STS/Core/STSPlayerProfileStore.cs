@@ -54,7 +54,7 @@ public static class STSPlayerProfileStore
             return unlocked;
         }
 
-        int unlockCount = 1 + (wasRetreat ? Mathf.Max(0, act) : 0);
+        int unlockCount = RunEndUnlockCount(wasRetreat, act);
         int countToUnlock = Mathf.Min(unlockCount, candidates.Count);
 
         HashSet<string> toUnlock = new(StringComparer.OrdinalIgnoreCase);
@@ -78,6 +78,20 @@ public static class STSPlayerProfileStore
         SaveUnlockedCardIds(selectedCharacter, current);
         Debug.Log($"[STS-PROFILE] Unlocked {current.Count} cards for {selectedCharacter} after run end (retreat={wasRetreat}, act={act}).");
         return unlocked;
+    }
+
+    // Mirrors the server-authoritative formula in StsPvpService so the client preview matches what actually gets granted.
+    // Retreat: 0/1/3/6/... unlocks for 0/1/2/3/... bosses defeated. Game over: 1 unlock if any boss was defeated, else 0.
+    private static int RunEndUnlockCount(bool wasRetreat, int act)
+    {
+        int normalizedAct = Mathf.Max(0, act);
+        if (wasRetreat)
+        {
+            int bossesDefeated = normalizedAct + 1;
+            return bossesDefeated * (bossesDefeated + 1) / 2;
+        }
+
+        return normalizedAct > 0 ? 1 : 0;
     }
 
     public static bool HasUnlockedCard(string cardId, SelectableCharacter selectedCharacter)
