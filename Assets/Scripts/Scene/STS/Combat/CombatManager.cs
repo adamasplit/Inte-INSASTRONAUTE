@@ -328,11 +328,15 @@ public class CombatManager : MonoBehaviour
         activeCardPlays++;
         queuedCardPlays = Mathf.Max(0, queuedCardPlays - 1);
 
+        List<string> selectedCardInstanceIds = new();
+        yield return CollectAuthoritativeCardSelection(card, selectedCardInstanceIds);
+
 #if UNITY_WEBGL && !UNITY_EDITOR
         var payload = new
         {
             cardInstanceId = card != null ? card.instanceId : null,
-            targetIds = MapTargetsToAuthoritativeIds(targets)
+            targetIds = MapTargetsToAuthoritativeIds(targets),
+            selectedCardInstanceIds
         };
         string currentRev = ReactCombatBridge.CurrentRevision ?? GetAuthoritativeRevision().ToString();
         Task<ReactCombatCommandOutcome> commandTask = ReactCombatBridge.SendCommandAsync("PLAY_CARD", payload, currentRev);
@@ -360,7 +364,8 @@ public class CombatManager : MonoBehaviour
                 commandType = "PLAY_CARD",
                 expectedRevision = GetAuthoritativeRevision(),
                 cardInstanceId = card != null ? card.instanceId : null,
-                targetIds = MapTargetsToAuthoritativeIds(targets)
+                targetIds = MapTargetsToAuthoritativeIds(targets),
+                selectedCardInstanceIds = selectedCardInstanceIds
             });
 
         while (!commandTask.IsCompleted)
@@ -397,6 +402,66 @@ public class CombatManager : MonoBehaviour
             activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
         }
 #endif
+    }
+
+    IEnumerator CollectAuthoritativeCardSelection(CardInstance playedCard, List<string> selectedIds)
+    {
+        if (playedCard == null || playedCard.data == null || playedCard.data.effects == null)
+            yield break;
+
+        EffectEntry effect = playedCard.data.effects.FirstOrDefault(entry => entry.type == EffectType.CardSelection);
+        if (effect == null || (effect.cardFilterTags != null && effect.cardFilterTags.Count > 0))
+            yield break;
+
+        bool supportedAction = effect.cardSelectionEffect == CardSelectionEffect.Exhaust
+            || effect.cardSelectionEffect == CardSelectionEffect.Discard
+            || effect.cardSelectionEffect == CardSelectionEffect.ReturnToHand
+            || effect.cardSelectionEffect == CardSelectionEffect.TopOfDrawPile;
+        if (!supportedAction)
+            yield break;
+
+        List<CardInstance> candidates = effect.cardSelectionSource switch
+        {
+            CardSelectionSource.Hand => deck.hand,
+            CardSelectionSource.DrawPile => deck.drawPile,
+            CardSelectionSource.DiscardPile => deck.discardPile,
+            CardSelectionSource.ExhaustPile => deck.exhaustPile,
+            _ => new List<CardInstance>()
+        };
+        candidates = candidates
+            .Where(candidate => candidate != null && candidate.instanceId != playedCard.instanceId)
+            .ToList();
+        int amount = effect.value < 0 ? candidates.Count : Mathf.Min(effect.value, candidates.Count);
+        if (amount == 0)
+            yield break;
+
+        List<CardInstance> selectedCards = new();
+        if (effect.cardSelectionSource == CardSelectionSource.Hand)
+        {
+            HashSet<string> candidateIds = candidates.Select(candidate => candidate.instanceId).ToHashSet();
+            var request = new CardSelectionRequest
+            {
+                amount = amount,
+                message = $"Choisissez {amount} carte" + (amount > 1 ? "s" : ""),
+                filter = candidate => candidate != null && candidateIds.Contains(candidate.instanceId)
+            };
+            yield return ui.RequestCardSelection(request, cards => selectedCards = cards);
+        }
+        else if (candidates.Count <= amount)
+        {
+            selectedCards = candidates;
+        }
+        else
+        {
+            var panel = RunManager.Instance.ui.deckGridPanel;
+            panel.Show(candidates, "Choisissez des cartes");
+            SelectionManager.Instance.StartSelection(amount, cards => selectedCards = cards);
+            while (SelectionManager.Instance.selectionMode)
+                yield return null;
+            panel.Hide();
+        }
+
+        selectedIds.AddRange(selectedCards.Select(selected => selected.instanceId));
     }
 
     void HandleReactCombatEvent(string json)

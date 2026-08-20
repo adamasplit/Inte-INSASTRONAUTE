@@ -127,6 +127,7 @@ public class STSApiCombatCommandRequest
     public long expectedRevision;
     public string cardInstanceId;
     public List<string> targetIds = new();
+    public List<string> selectedCardInstanceIds = new();
 }
 
 [Serializable]
