@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using System.IO;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 public class ReactCombatBridgeTests
@@ -12,6 +13,17 @@ public class ReactCombatBridgeTests
         string causation = actionId == null ? "" : ",\"causationActionId\":\"" + actionId + "\"";
         return "{\"protocolVersion\":1,\"combatId\":\"combat-1\",\"revision\":\"" + revision
             + "\",\"type\":\"" + type + "\"" + causation + ",\"payload\":{}}";
+    }
+
+    [Test]
+    public void AuthoritativeConnectionUsesCombatIdFromCombatState()
+    {
+        JToken activeCombat = JToken.Parse(
+            "{\"combatId\":\"combat-713d\",\"revision\":0}");
+
+        Assert.That(
+            AuthoritativeCombatIdentity.GetCombatId(activeCombat),
+            Is.EqualTo("combat-713d"));
     }
 
     [Test]

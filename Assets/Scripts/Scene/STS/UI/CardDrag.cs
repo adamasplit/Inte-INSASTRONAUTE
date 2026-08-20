@@ -33,8 +33,11 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         if (cardView == null || cardView.isAnimating)
         {
+            Debug.LogWarning($"[STS-INPUT] drag-begin blocked cardView={(cardView != null)} animating={cardView != null && cardView.isAnimating}");
             return;
         }
+
+        Debug.Log($"[STS-INPUT] drag-begin card={cardView.cardInstance?.displayName ?? "<null>"} instanceId={cardView.cardInstance?.instanceId ?? "<null>"} mode={cardView.cardInstance?.targetingMode.ToString() ?? "<null>"}");
 
         cardPlayedByDrop = false;
         DropZone.hoveredCharacter = null;
@@ -107,6 +110,7 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         if (cardView == null)
         {
+            Debug.LogWarning("[STS-INPUT] drag-end blocked: missing CardView");
             return;
         }
 
@@ -117,6 +121,8 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
             Character target = GetHoveredTarget(eventData);
             TargetingMode mode = cardView.cardInstance.targetingMode;
             bool canPlayFromDropArea = IsInAllowedDropArea(mode, eventData);
+
+            Debug.Log($"[STS-INPUT] drag-end card={cardView.cardInstance.displayName} instanceId={cardView.cardInstance.instanceId} mode={mode} dropArea={canPlayFromDropArea} target={(target != null ? target.name : "<none>")} playedByDrop={cardPlayedByDrop}");
 
             if (!canPlayFromDropArea)
             {
@@ -131,8 +137,13 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
                 List<Character> targets = combat.GetDisplayTargets(mode, target);
                 if (targets.Count > 0)
                 {
+                    Debug.Log($"[STS-INPUT] drag-end submitting card={cardView.cardInstance.displayName} targets={targets.Count}");
                     combat.PlayCard(combat.player, cardView.cardInstance, targets);
                     cardPlayedByDrop = true;
+                }
+                else
+                {
+                    Debug.LogWarning($"[STS-INPUT] drag-end blocked: no display targets for card={cardView.cardInstance.displayName} mode={mode}");
                 }
             }
         }

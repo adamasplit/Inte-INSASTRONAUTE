@@ -405,12 +405,15 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     public void OnDrop(PointerEventData eventData)
     {
         if (!isHovered)
+        {
+            Debug.Log("[STS-INPUT] drop ignored: zone is not hovered");
             return;
+        }
 
         isHovered = false;
 
         var drag = eventData.pointerDrag?.GetComponentInParent<CardDrag>();
-        drag.Destroy();
+        drag?.Destroy();
         var cardView = drag?.GetComponentInChildren<CardView>();
 
         if (cardView?.cardInstance == null)
@@ -422,8 +425,13 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         var mode = cardView.cardInstance.targetingMode;
         var targets = combat.GetDisplayTargets(mode, target);
 
+        Debug.Log($"[STS-INPUT] drop card={cardView.cardInstance.displayName} instanceId={cardView.cardInstance.instanceId} mode={mode} zoneTarget={(target != null ? target.name : "<none>")} targets={targets.Count}");
+
         if (targets.Count == 0)
+        {
+            Debug.LogWarning($"[STS-INPUT] drop blocked: no display targets for card={cardView.cardInstance.displayName} mode={mode}");
             return;
+        }
 
         Vector2 discardPos = combat.animator.animationLayer.InverseTransformPoint(combat.ui.discardAnchor.position);
         drag?.NotifyCardPlayedFromDrop();

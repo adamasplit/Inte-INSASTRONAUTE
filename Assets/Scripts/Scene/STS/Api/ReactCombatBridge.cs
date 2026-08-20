@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 public sealed class ReactCombatBridge : MonoBehaviour
@@ -46,8 +47,9 @@ public sealed class ReactCombatBridge : MonoBehaviour
         instance = null;
     }
 
-    public static Task<bool> ConnectAsync(string combatId)
+    public static Task<bool> ConnectAsync(JToken activeCombat)
     {
+        string combatId = AuthoritativeCombatIdentity.GetCombatId(activeCombat);
         ReactCombatBridge bridge = EnsureInstance();
         bridge.core.Connect(combatId);
         string json = JsonConvert.SerializeObject(new { combatId });
@@ -72,13 +74,25 @@ public sealed class ReactCombatBridge : MonoBehaviour
     {
         ReactCombatBridge bridge = EnsureInstance();
         if (!string.Equals(bridge.core.CurrentRevision, expectedRevision, StringComparison.Ordinal))
+        {
+            Debug.LogWarning($"[STS-BRIDGE] command blocked type={type}: expectedRevision={expectedRevision} currentRevision={bridge.core.CurrentRevision ?? "<null>"}");
             return ReactCombatCommandOutcome.Unknown;
+        }
 
         ReactCombatCommand command = bridge.core.CreateCommand(type, payload);
-        if (InvokeCommand(command.Json) == 0)
-            return await bridge.core.WaitForCommandAsync(command.ActionId, 0);
+        Debug.Log($"[STS-BRIDGE] command dispatch type={type} actionId={command.ActionId} combatId={bridge.core.CombatId} revision={bridge.core.CurrentRevision}");
+        int dispatchResult = InvokeCommand(command.Json);
+        if (dispatchResult == 0)
+        {
+            Debug.LogWarning($"[STS-BRIDGE] command dispatch rejected by JS type={type} actionId={command.ActionId}");
+            ReactCombatCommandOutcome rejectedOutcome = await bridge.core.WaitForCommandAsync(command.ActionId, 0);
+            Debug.Log($"[STS-BRIDGE] command outcome type={type} actionId={command.ActionId} outcome={rejectedOutcome}");
+            return rejectedOutcome;
+        }
 
-        return await bridge.core.WaitForCommandAsync(command.ActionId, timeoutMs);
+        ReactCombatCommandOutcome outcome = await bridge.core.WaitForCommandAsync(command.ActionId, timeoutMs);
+        Debug.Log($"[STS-BRIDGE] command outcome type={type} actionId={command.ActionId} outcome={outcome}");
+        return outcome;
     }
 
     public void HandleCombatEvent(string json)

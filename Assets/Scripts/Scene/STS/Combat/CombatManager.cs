@@ -134,7 +134,7 @@ public class CombatManager : MonoBehaviour
             allowTurn = true;
 #if UNITY_WEBGL && !UNITY_EDITOR
             ReactCombatBridge.CombatEventReceived += HandleReactCombatEvent;
-            _ = ReactCombatBridge.ConnectAsync(RunManager.Instance.runId);
+            _ = ReactCombatBridge.ConnectAsync(RunManager.Instance.activeCombat);
             STSSceneLoader.Instance?.SceneReady();
 #else
             ApplyAuthoritativeCombatState(RunManager.Instance.activeCombat, true);
@@ -147,8 +147,7 @@ public class CombatManager : MonoBehaviour
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
             ReactCombatBridge.CombatEventReceived += HandleReactCombatEvent;
-            _ = ReactCombatBridge.ConnectAsync(RunManager.Instance.runId);
-            STSSceneLoader.Instance?.SceneReady();
+            StartCoroutine(BootstrapAuthoritativeCombatRoutine());
 #else
             StartCoroutine(BootstrapAuthoritativeCombatRoutine());
 #endif
@@ -192,6 +191,9 @@ public class CombatManager : MonoBehaviour
 
         if (appliedAuthoritativeState)
         {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            _ = ReactCombatBridge.ConnectAsync(RunManager.Instance.activeCombat);
+#endif
             STSSceneLoader.Instance?.SceneReady();
             yield break;
         }
@@ -259,6 +261,7 @@ public class CombatManager : MonoBehaviour
 
             if (enemies.Count > 0)
             {
+                Debug.Log($"[STS-COMBAT] Initialized authoritative encounter enemies=[{string.Join(",", enemies.Select(enemy => enemy.name))}]");
                 return;
             }
         }
@@ -308,10 +311,15 @@ public class CombatManager : MonoBehaviour
 
     public void PlayCard(Character source, CardInstance card, List<Character> targets, bool ignoreEnergy = false, bool createView = false)
     {
+        Debug.Log($"[STS-COMBAT] PlayCard entered card={card?.displayName ?? "<null>"} instanceId={card?.instanceId ?? "<null>"} source={(source != null ? source.name : "<null>")} targets={targets?.Count ?? 0} authoritative={UsesAuthoritativeCombat} inFlight={authoritativeCommandInFlight}");
+
         if (UsesAuthoritativeCombat && source != null && source.isPlayer)
         {
             if (authoritativeCommandInFlight)
+            {
+                Debug.LogWarning($"[STS-COMBAT] PlayCard blocked: authoritative command already in flight card={card?.displayName ?? "<null>"}");
                 return;
+            }
 
             queuedCardPlays++;
             StartCoroutine(PlayCardAuthoritativeRoutine(card, targets));
@@ -339,6 +347,7 @@ public class CombatManager : MonoBehaviour
             selectedCardInstanceIds
         };
         string currentRev = ReactCombatBridge.CurrentRevision ?? GetAuthoritativeRevision().ToString();
+        Debug.Log($"[STS-COMBAT] Sending PLAY_CARD card={card?.displayName ?? "<null>"} instanceId={card?.instanceId ?? "<null>"} targetIds=[{string.Join(",", payload.targetIds)}] revision={currentRev}");
         Task<ReactCombatCommandOutcome> commandTask = ReactCombatBridge.SendCommandAsync("PLAY_CARD", payload, currentRev);
 
         while (!commandTask.IsCompleted)
@@ -346,6 +355,7 @@ public class CombatManager : MonoBehaviour
 
         try
         {
+            Debug.Log($"[STS-COMBAT] PLAY_CARD completed taskStatus={commandTask.Status} outcome={(commandTask.Status == TaskStatus.RanToCompletion ? commandTask.Result.ToString() : "<none>")}");
             if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == ReactCombatCommandOutcome.Unknown)
             {
                 Debug.LogWarning("[STS-COMBAT] Failed to submit backend play-card command via Bridge.");
