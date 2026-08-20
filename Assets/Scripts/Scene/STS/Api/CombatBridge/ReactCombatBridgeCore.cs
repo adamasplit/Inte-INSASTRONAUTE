@@ -145,9 +145,16 @@ public sealed class ReactCombatBridgeCore
         {
             CurrentRevision = revision;
         }
-        else if (isCommandRejected || isCombatEvent)
+        else if (isCommandRejected)
         {
             if (CurrentRevision == null || !string.Equals(revision, CurrentRevision, StringComparison.Ordinal))
+                return false;
+        }
+        else if (isCombatEvent)
+        {
+            if (CurrentRevision == null
+                || (!string.Equals(revision, CurrentRevision, StringComparison.Ordinal)
+                    && !string.Equals(revision, IncrementRevision(CurrentRevision), StringComparison.Ordinal)))
                 return false;
         }
         else if (isStateUpdate)
