@@ -7,11 +7,11 @@ public class ReactCombatBridgeTests
     private const string Snapshot =
         "{\"protocolVersion\":1,\"combatId\":\"combat-1\",\"revision\":\"42\",\"type\":\"COMBAT_SNAPSHOT\",\"payload\":{}}";
 
-    private static string Event(string revision, string actionId = null)
+    private static string Event(string revision, string actionId = null, string type = "CARD_PLAYED")
     {
         string causation = actionId == null ? "" : ",\"causationActionId\":\"" + actionId + "\"";
         return "{\"protocolVersion\":1,\"combatId\":\"combat-1\",\"revision\":\"" + revision
-            + "\",\"type\":\"CARD_PLAYED\"" + causation + ",\"payload\":{}}";
+            + "\",\"type\":\"" + type + "\"" + causation + ",\"payload\":{}}";
     }
 
     [Test]
@@ -62,6 +62,17 @@ public class ReactCombatBridgeTests
         StringAssert.Contains("\"reason\":\"PLAYER\"", command.Json);
     }
 
+    [TestCase("SELECT_CHOICE")]
+    [TestCase("SURRENDER")]
+    public void UnsupportedBackendCommandsAreRejectedLocally(string commandType)
+    {
+        var core = new ReactCombatBridgeCore(() => "action-fixed");
+        core.Connect("combat-1");
+        core.HandleCombatEvent(Snapshot);
+
+        Assert.Throws<System.ArgumentException>(() => core.CreateCommand(commandType, new { }));
+    }
+
     [Test]
     public async Task CausationActionConfirmsPendingCommand()
     {
@@ -74,6 +85,34 @@ public class ReactCombatBridgeTests
         core.HandleCombatEvent(Event("43", command.ActionId));
 
         Assert.That(await pending, Is.EqualTo(ReactCombatCommandOutcome.Confirmed));
+    }
+
+    [Test]
+    public async Task AuthoritativeStateUpdateMayAdvanceAcrossAiRevisions()
+    {
+        var core = new ReactCombatBridgeCore(() => "action-1");
+        core.Connect("combat-1");
+        core.HandleCombatEvent(Snapshot);
+        ReactCombatCommand command = core.CreateCommand("END_TURN", new { });
+        Task<ReactCombatCommandOutcome> pending = core.WaitForCommandAsync(command.ActionId, 1000);
+
+        Assert.That(core.HandleCombatEvent(Event("46", command.ActionId, "STATE_UPDATED")), Is.True);
+        Assert.That(core.CurrentRevision, Is.EqualTo("46"));
+        Assert.That(await pending, Is.EqualTo(ReactCombatCommandOutcome.Confirmed));
+    }
+
+    [Test]
+    public async Task CommandRejectionDoesNotAdvanceRevisionOrConfirmCommand()
+    {
+        var core = new ReactCombatBridgeCore(() => "action-1");
+        core.Connect("combat-1");
+        core.HandleCombatEvent(Snapshot);
+        ReactCombatCommand command = core.CreateCommand("END_TURN", new { });
+        Task<ReactCombatCommandOutcome> pending = core.WaitForCommandAsync(command.ActionId, 1000);
+
+        Assert.That(core.HandleCombatEvent(Event("42", command.ActionId, "COMMAND_REJECTED")), Is.True);
+        Assert.That(core.CurrentRevision, Is.EqualTo("42"));
+        Assert.That(await pending, Is.EqualTo(ReactCombatCommandOutcome.Rejected));
     }
 
     [Test]

@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 public enum ReactCombatCommandOutcome
 {
     Confirmed,
+    Rejected,
     Unknown
 }
 
@@ -27,9 +28,7 @@ public sealed class ReactCombatBridgeCore
     private static readonly HashSet<string> CommandTypes = new HashSet<string>(StringComparer.Ordinal)
     {
         "PLAY_CARD",
-        "END_TURN",
-        "SELECT_CHOICE",
-        "SURRENDER"
+        "END_TURN"
     };
 
     private static readonly HashSet<string> StatusTypes = new HashSet<string>(StringComparer.Ordinal)
@@ -138,8 +137,22 @@ public sealed class ReactCombatBridgeCore
         if (!IsCanonicalRevision(revision) || string.IsNullOrWhiteSpace(type))
             return false;
 
-        if (string.Equals(type, "COMBAT_SNAPSHOT", StringComparison.Ordinal))
+        bool isSnapshot = string.Equals(type, "COMBAT_SNAPSHOT", StringComparison.Ordinal);
+        bool isStateUpdate = string.Equals(type, "STATE_UPDATED", StringComparison.Ordinal);
+        bool isCommandRejected = string.Equals(type, "COMMAND_REJECTED", StringComparison.Ordinal);
+        if (isSnapshot)
         {
+            CurrentRevision = revision;
+        }
+        else if (isCommandRejected)
+        {
+            if (CurrentRevision == null || !string.Equals(revision, CurrentRevision, StringComparison.Ordinal))
+                return false;
+        }
+        else if (isStateUpdate)
+        {
+            if (CurrentRevision == null || CompareRevisions(revision, CurrentRevision) <= 0)
+                return false;
             CurrentRevision = revision;
         }
         else
@@ -153,7 +166,9 @@ public sealed class ReactCombatBridgeCore
         if (!string.IsNullOrEmpty(actionId)
             && pendingCommands.TryGetValue(actionId, out TaskCompletionSource<ReactCombatCommandOutcome> pending))
         {
-            pending.TrySetResult(ReactCombatCommandOutcome.Confirmed);
+            pending.TrySetResult(isCommandRejected
+                ? ReactCombatCommandOutcome.Rejected
+                : ReactCombatCommandOutcome.Confirmed);
         }
 
         CombatEventReceived?.Invoke(json);
@@ -213,5 +228,13 @@ public sealed class ReactCombatBridgeCore
             digits[index] = '0';
         }
         return "1" + new string(digits);
+    }
+
+    private static int CompareRevisions(string left, string right)
+    {
+        int lengthComparison = left.Length.CompareTo(right.Length);
+        return lengthComparison != 0
+            ? lengthComparison
+            : string.CompareOrdinal(left, right);
     }
 }
