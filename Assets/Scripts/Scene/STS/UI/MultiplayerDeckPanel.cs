@@ -219,8 +219,7 @@ public class MultiplayerDeckPanel : MonoBehaviour
             List<string> characterOptions = new() { "Tous persos" };
             foreach (SelectableCharacter character in Enum.GetValues(typeof(SelectableCharacter)))
             {
-                if (character == SelectableCharacter.Aucun
-                    || character == SelectableCharacter.Impossible
+                if (character == SelectableCharacter.Impossible
                     || character == SelectableCharacter.Starting)
                 {
                     continue;
@@ -454,8 +453,7 @@ public class MultiplayerDeckPanel : MonoBehaviour
         List<SelectableCharacter> list = new();
         foreach (SelectableCharacter character in Enum.GetValues(typeof(SelectableCharacter)))
         {
-            if (character == SelectableCharacter.Aucun
-                || character == SelectableCharacter.Impossible
+            if (character == SelectableCharacter.Impossible
                 || character == SelectableCharacter.Starting)
             {
                 continue;
@@ -470,8 +468,7 @@ public class MultiplayerDeckPanel : MonoBehaviour
 
         SelectableCharacter filterCharacter = list[index];
 
-        return card.favoredCharacter == SelectableCharacter.Aucun
-            || card.favoredCharacter == SelectableCharacter.Starting
+        return card.favoredCharacter == SelectableCharacter.Starting
             || card.favoredCharacter == filterCharacter;
     }
 

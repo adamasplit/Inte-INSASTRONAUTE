@@ -609,6 +609,12 @@ public static class STSApiClient
         return ParseEnvelope(json);
     }
 
+    public static async Task<JToken> UnlockPvpCardsAsync(List<string> cardNames)
+    {
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.collection.unlock", new { cardNames = cardNames ?? new List<string>() });
+        return ParseEnvelope(json);
+    }
+
     public static async Task<JToken> GetVirtualCollectionDeckAsync()
     {
         string json = await ReactApiBridge.RequestAsync(

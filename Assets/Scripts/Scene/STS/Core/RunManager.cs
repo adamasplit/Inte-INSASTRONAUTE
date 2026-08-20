@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
@@ -285,6 +286,19 @@ public class RunManager : MonoBehaviour
         runEndUnlocksGranted = true;
         lastRunEndUnlockedCards = unlocked;
         Debug.Log($"[STS-RUN] Granted end-of-run unlocks for {selectedCharacter} (retreat={wasRetreat}, act={act}, deckSize={deck.Count}, unlockedCount={unlocked.Count}).");
+
+        if (unlocked.Count > 0)
+        {
+            List<string> collectionCardNames = unlocked
+                .Select(card => card.GetCollectionCardId() ?? card.cardName)
+                .Where(name => !string.IsNullOrWhiteSpace(name))
+                .ToList();
+            if (collectionCardNames.Count > 0)
+            {
+                _ = STSApiClient.UnlockPvpCardsAsync(collectionCardNames);
+            }
+        }
+
         return unlocked;
     }
 

@@ -13,6 +13,12 @@ public class RunEndUnlockPanel : MonoBehaviour
 
     private Action pendingOnClose;
 
+    void Awake()
+    {
+        // Survive the scene load back to the main menu regardless of where this panel is parented.
+        DontDestroyOnLoad(transform.root.gameObject);
+    }
+
     void Start()
     {
         if (okButton != null)
