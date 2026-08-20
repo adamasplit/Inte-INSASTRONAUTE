@@ -140,11 +140,12 @@ public sealed class ReactCombatBridgeCore
         bool isSnapshot = string.Equals(type, "COMBAT_SNAPSHOT", StringComparison.Ordinal);
         bool isStateUpdate = string.Equals(type, "STATE_UPDATED", StringComparison.Ordinal);
         bool isCommandRejected = string.Equals(type, "COMMAND_REJECTED", StringComparison.Ordinal);
+        bool isCombatEvent = string.Equals(type, "COMBAT_EVENT", StringComparison.Ordinal);
         if (isSnapshot)
         {
             CurrentRevision = revision;
         }
-        else if (isCommandRejected)
+        else if (isCommandRejected || isCombatEvent)
         {
             if (CurrentRevision == null || !string.Equals(revision, CurrentRevision, StringComparison.Ordinal))
                 return false;

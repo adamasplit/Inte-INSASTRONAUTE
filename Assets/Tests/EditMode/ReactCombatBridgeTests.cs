@@ -116,6 +116,24 @@ public class ReactCombatBridgeTests
     }
 
     [Test]
+    public async Task CombatEventIsDeliveredWithoutAdvancingRevision()
+    {
+        var core = new ReactCombatBridgeCore(() => "action-1");
+        int delivered = 0;
+        core.CombatEventReceived += _ => delivered++;
+        core.Connect("combat-1");
+        core.HandleCombatEvent(Snapshot); // revision = 42, delivered = 1
+        ReactCombatCommand command = core.CreateCommand("PLAY_CARD", new { });
+        Task<ReactCombatCommandOutcome> pending = core.WaitForCommandAsync(command.ActionId, 1000);
+
+        // COMBAT_EVENT shares the current revision (42) — must pass through, not increment
+        Assert.That(core.HandleCombatEvent(Event("42", command.ActionId, "COMBAT_EVENT")), Is.True);
+        Assert.That(core.CurrentRevision, Is.EqualTo("42"), "COMBAT_EVENT must not advance revision");
+        Assert.That(delivered, Is.EqualTo(2), "COMBAT_EVENT must be delivered to listeners");
+        Assert.That(await pending, Is.EqualTo(ReactCombatCommandOutcome.Confirmed));
+    }
+
+    [Test]
     public async Task TimeoutReturnsUnknownRatherThanRejected()
     {
         var core = new ReactCombatBridgeCore(() => "action-1");
