@@ -134,7 +134,9 @@ public class CombatManager : MonoBehaviour
             allowTurn = true;
 #if UNITY_WEBGL && !UNITY_EDITOR
             ReactCombatBridge.CombatEventReceived += HandleReactCombatEvent;
-            _ = ReactCombatBridge.ConnectAsync(RunManager.Instance.activeCombat);
+            _ = ReactCombatBridge.ConnectAsync(AuthoritativeCombatIdentity.GetTransportId(
+                RunManager.Instance.runId,
+                RunManager.Instance.activeCombat));
             STSSceneLoader.Instance?.SceneReady();
 #else
             ApplyAuthoritativeCombatState(RunManager.Instance.activeCombat, true);
@@ -192,7 +194,9 @@ public class CombatManager : MonoBehaviour
         if (appliedAuthoritativeState)
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            _ = ReactCombatBridge.ConnectAsync(RunManager.Instance.activeCombat);
+            _ = ReactCombatBridge.ConnectAsync(AuthoritativeCombatIdentity.GetTransportId(
+                RunManager.Instance.runId,
+                RunManager.Instance.activeCombat));
 #endif
             STSSceneLoader.Instance?.SceneReady();
             yield break;

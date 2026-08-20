@@ -2,7 +2,6 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 public sealed class ReactCombatBridge : MonoBehaviour
@@ -47,9 +46,8 @@ public sealed class ReactCombatBridge : MonoBehaviour
         instance = null;
     }
 
-    public static Task<bool> ConnectAsync(JToken activeCombat)
+    public static Task<bool> ConnectAsync(string combatId)
     {
-        string combatId = AuthoritativeCombatIdentity.GetCombatId(activeCombat);
         ReactCombatBridge bridge = EnsureInstance();
         bridge.core.Connect(combatId);
         string json = JsonConvert.SerializeObject(new { combatId });

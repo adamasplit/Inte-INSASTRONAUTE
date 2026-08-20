@@ -16,14 +16,14 @@ public class ReactCombatBridgeTests
     }
 
     [Test]
-    public void AuthoritativeConnectionUsesCombatIdFromCombatState()
+    public void AuthoritativeConnectionUsesRunIdAsTransportId()
     {
         JToken activeCombat = JToken.Parse(
             "{\"combatId\":\"combat-713d\",\"revision\":0}");
 
         Assert.That(
-            AuthoritativeCombatIdentity.GetCombatId(activeCombat),
-            Is.EqualTo("combat-713d"));
+            AuthoritativeCombatIdentity.GetTransportId("run-42", activeCombat),
+            Is.EqualTo("run-42"));
     }
 
     [Test]
