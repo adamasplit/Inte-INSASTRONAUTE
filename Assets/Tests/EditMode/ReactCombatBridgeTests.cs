@@ -147,6 +147,22 @@ public class ReactCombatBridgeTests
     }
 
     [Test]
+    public void CommandWaitCompletesInlineWhenUnityReceivesConfirmation()
+    {
+        var core = new ReactCombatBridgeCore(() => "action-1");
+        core.Connect("combat-1");
+        core.HandleCombatEvent(Snapshot);
+        ReactCombatCommand command = core.CreateCommand("PLAY_CARD", new { });
+        Task<ReactCombatCommandOutcome> pending = core.WaitForCommandAsync(command.ActionId, 1000);
+
+        core.HandleCombatEvent(Event("43", command.ActionId, "COMBAT_EVENT"));
+
+        Assert.That(pending.IsCompleted, Is.True,
+            "WebGL has no worker thread available to resume an asynchronous continuation");
+        Assert.That(pending.Result, Is.EqualTo(ReactCombatCommandOutcome.Confirmed));
+    }
+
+    [Test]
     public async Task TimeoutReturnsUnknownRatherThanRejected()
     {
         var core = new ReactCombatBridgeCore(() => "action-1");

@@ -206,8 +206,7 @@ public sealed class ReactCombatBridgeCore
 
     private static TaskCompletionSource<ReactCombatCommandOutcome> NewPendingCommand()
     {
-        return new TaskCompletionSource<ReactCombatCommandOutcome>(
-            TaskCreationOptions.RunContinuationsAsynchronously);
+        return new TaskCompletionSource<ReactCombatCommandOutcome>();
     }
 
     private static bool IsCanonicalRevision(string revision)
