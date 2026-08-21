@@ -194,14 +194,15 @@ public class MapManager : MonoBehaviour
             bool accepted = enterResponse != null && enterResponse.accepted;
             bool hasEncounter = enterResponse != null && enterResponse.activeEncounter != null && enterResponse.activeEncounter.enemyIds != null && enterResponse.activeEncounter.enemyIds.Count > 0;
 
-            bool mustBlock = !accepted || (sceneName == "STS_Combat" && !hasEncounter);
-            if (mustBlock)
+            bool combatScene = sceneName == "STS_Combat";
+            if (!AuthoritativeCombatStateReducer.CanLoadEnteredNode(accepted, combatScene, hasEncounter))
             {
                 string failureReason = !accepted
                     ? $"node enter rejected for node {node.id}"
                     : $"node enter missing encounter payload for node {node.id}";
-                Debug.LogWarning($"{failureReason}. scene={sceneName} localNodeType={node.type} serverNodeType={enterResponse?.nodeType} runId={RunManager.Instance.runId}. Switching to unrestricted mode and continuing locally.");
-                RunManager.Instance.EnableUnrestrictedMode(failureReason);
+                Debug.LogWarning($"{failureReason}. scene={sceneName} localNodeType={node.type} serverNodeType={enterResponse?.nodeType} runId={RunManager.Instance.runId}. Staying on map to avoid reusing stale authoritative combat state.");
+                STSSceneLoader.Instance?.EndLoading();
+                yield break;
             }
         }
 

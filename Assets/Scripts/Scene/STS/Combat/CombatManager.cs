@@ -84,6 +84,8 @@ public class CombatManager : MonoBehaviour
     public bool allowTurn = false; 
     private bool turnSystemInitialized;
     private bool authoritativeCommandInFlight;
+    private readonly Queue<JObject> authoritativeMessageQueue = new();
+    private bool authoritativeMessageQueueRunning;
 
     public bool UsesAuthoritativeCombat => RunManager.Instance != null
         && RunManager.Instance.activeCombat != null
@@ -483,22 +485,37 @@ public class CombatManager : MonoBehaviour
         JObject message;
         try { message = JObject.Parse(json); } catch { return; }
 
-        string type = message.Value<string>("type");
-        if (type == "COMBAT_SNAPSHOT")
+        authoritativeMessageQueue.Enqueue(message);
+        if (!authoritativeMessageQueueRunning)
+            StartCoroutine(ProcessAuthoritativeMessageQueue());
+    }
+
+    IEnumerator ProcessAuthoritativeMessageQueue()
+    {
+        authoritativeMessageQueueRunning = true;
+        while (authoritativeMessageQueue.Count > 0)
         {
-            JToken state = message["payload"]?["state"];
-            if (state != null) ApplyAuthoritativeCombatState(state, true);
+            JObject message = authoritativeMessageQueue.Dequeue();
+            string type = message.Value<string>("type");
+            if (type == "COMBAT_SNAPSHOT")
+            {
+                JToken state = message["payload"]?["state"];
+                if (state != null) ApplyAuthoritativeCombatState(state, true);
+            }
+            else if (type == "COMBAT_EVENT")
+            {
+                JToken payload = message["payload"];
+                if (payload != null)
+                    yield return ReplayAuthoritativeEvents(new List<JToken> { payload });
+            }
+            else if (type == "STATE_UPDATED")
+            {
+                JToken payload = message["payload"];
+                if (payload != null) ApplyAuthoritativeCombatState(payload, true);
+            }
         }
-        else if (type == "COMBAT_EVENT")
-        {
-            JToken payload = message["payload"];
-            if (payload != null) StartCoroutine(ReplayAuthoritativeEvents(new List<JToken> { payload }));
-        }
-        else if (type == "STATE_UPDATED")
-        {
-            JToken payload = message["payload"];
-            if (payload != null) ApplyAuthoritativeCombatState(payload, true);
-        }
+
+        authoritativeMessageQueueRunning = false;
     }
 
     void OnDestroy()
@@ -506,6 +523,8 @@ public class CombatManager : MonoBehaviour
 #if UNITY_WEBGL && !UNITY_EDITOR
         ReactCombatBridge.CombatEventReceived -= HandleReactCombatEvent;
 #endif
+        authoritativeMessageQueue.Clear();
+        authoritativeMessageQueueRunning = false;
     }
 
     public void RequestAuthoritativeEndTurn()
@@ -652,6 +671,7 @@ public class CombatManager : MonoBehaviour
             target.currentHP = combatantToken.Value<int?>("hp") ?? target.currentHP;
             target.armor = combatantToken.Value<int?>("armor") ?? target.armor;
             target.resources.energy = combatantToken.Value<int?>("energy") ?? target.resources.energy;
+            ApplyAuthoritativeStatuses(target, combatantToken["statuses"]);
             target.onTurn = !string.IsNullOrWhiteSpace(activeCombatantId)
                 && string.Equals(combatantId, activeCombatantId, StringComparison.Ordinal);
 
@@ -660,6 +680,10 @@ public class CombatManager : MonoBehaviour
                 ApplyAuthoritativePlayerPiles(combatantToken["piles"]);
             }
         }
+
+        state.turnCount = AuthoritativeCombatStateReducer.ResolveTurnCount(
+            state.turnCount,
+            combatToken.Value<string>("status"));
 
         if (turnSystem != null && turnSystem.endTurnButton != null)
         {
@@ -723,6 +747,10 @@ public class CombatManager : MonoBehaviour
                     ReplayEnergySpentEvent(combatEvent);
                     break;
                 case "TurnStarted":
+                    if (string.Equals(combatEvent.Value<string>("combatantId"), "player", StringComparison.Ordinal))
+                        state.turnCount = Mathf.Max(1, state.turnCount + 1);
+                    yield return new WaitForSeconds(0.05f);
+                    break;
                 case "TurnEnded":
                     yield return new WaitForSeconds(0.05f);
                     break;
@@ -783,6 +811,11 @@ public class CombatManager : MonoBehaviour
         CardInstance card = FindCardByInstanceId(cardInstanceId) ?? BuildCardFromDefinition(definitionId, cardInstanceId);
         if (card == null)
             yield break;
+
+        if (actor.isPlayer && deck != null)
+        {
+            AuthoritativeCombatStateReducer.MoveCard(deck.hand, deck.discardPile, card);
+        }
 
         CardView playedView = actor.isPlayer ? ui.GetView(card) : null;
         if (playedView == null)
@@ -1028,6 +1061,14 @@ public class CombatManager : MonoBehaviour
         if (target == null || ui == null)
             return;
 
+        AuthoritativeDamageState state = AuthoritativeCombatStateReducer.ResolveDamage(
+            target.currentHP,
+            target.armor,
+            combatEvent.Value<int?>("remainingHp"),
+            combatEvent.Value<int?>("remainingArmor"));
+        target.currentHP = state.Hp;
+        target.armor = state.Armor;
+
         int hpLost = combatEvent.Value<int?>("hpLost") ?? 0;
         int requestedDamage = combatEvent.Value<int?>("requestedDamage") ?? hpLost;
         bool blocked = hpLost <= 0 && requestedDamage > 0;
@@ -1036,6 +1077,7 @@ public class CombatManager : MonoBehaviour
         {
             ui.ShowDamagePopup(target, popupAmount, false, blocked);
         }
+        ui.RefreshUI(false);
     }
 
     void ReplayEnergySpentEvent(JToken combatEvent)
@@ -1124,6 +1166,56 @@ public class CombatManager : MonoBehaviour
             ?? combatEvent.Value<string>("combatantId")
             ?? combatEvent.Value<string>("ownerId");
         return ResolveCombatant(targetId);
+    }
+
+    void ApplyAuthoritativeStatuses(Character target, JToken statusesToken)
+    {
+        if (target == null || statusesToken == null)
+            return;
+
+        IReadOnlyList<AuthoritativeStatusState> authoritativeStatuses =
+            AuthoritativeCombatStateReducer.ReadStatuses(statusesToken);
+        var retained = new HashSet<StatusEffect>();
+
+        foreach (AuthoritativeStatusState stateValue in authoritativeStatuses)
+        {
+            var statusToken = new JObject
+            {
+                ["statusType"] = stateValue.StatusType,
+                ["cardId"] = stateValue.CardId,
+                ["index"] = stateValue.Index
+            };
+            if (!TryResolveStatusType(statusToken, out StatusType statusType))
+                continue;
+
+            StatusEffect status = target.statusEffects.FirstOrDefault(candidate =>
+                candidate != null
+                && candidate.statusType == statusType
+                && candidate.index == stateValue.Index
+                && string.Equals(candidate.cardID ?? string.Empty, stateValue.CardId, StringComparison.OrdinalIgnoreCase));
+
+            if (status == null)
+            {
+                status = StatusEffect.Factory(
+                    statusType,
+                    stateValue.Value,
+                    stateValue.Duration,
+                    stateValue.CardId,
+                    stateValue.Index);
+                if (status == null)
+                    continue;
+                target.statusEffects.Add(status);
+            }
+
+            status.statusType = statusType;
+            status.Value = stateValue.Value;
+            status.Duration = stateValue.Duration;
+            status.cardID = stateValue.CardId;
+            status.index = stateValue.Index;
+            retained.Add(status);
+        }
+
+        target.statusEffects.RemoveAll(status => status == null || !retained.Contains(status));
     }
 
     bool TryResolveStatusType(JToken combatEvent, out StatusType statusType)
