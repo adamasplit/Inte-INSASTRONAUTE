@@ -152,9 +152,11 @@ public sealed class ReactCombatBridgeCore
         }
         else if (isCombatEvent)
         {
-            if (CurrentRevision == null
-                || (!string.Equals(revision, CurrentRevision, StringComparison.Ordinal)
-                    && !string.Equals(revision, IncrementRevision(CurrentRevision), StringComparison.Ordinal)))
+            // A single command can make the server advance several internal AI steps at once
+            // (End Turn resolving multiple enemy turns), so every resulting COMBAT_EVENT is
+            // tagged with the same final resultingRevision rather than incrementing per event.
+            // Requiring an exact +1 match silently dropped every event from that whole chain.
+            if (CurrentRevision == null || CompareRevisions(revision, CurrentRevision) < 0)
                 return false;
         }
         else if (isStateUpdate)
