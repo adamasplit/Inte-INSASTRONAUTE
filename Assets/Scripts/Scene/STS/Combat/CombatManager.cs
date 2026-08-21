@@ -111,6 +111,11 @@ public class CombatManager : MonoBehaviour
     private readonly Queue<JObject> authoritativeMessageQueue = new();
     private bool authoritativeMessageQueueRunning;
 
+    // Plays this client has already shown, keyed by card instance, so the server echo confirms
+    // them instead of playing them a second time. See PlayCardAuthoritativeRoutine.
+    private readonly Dictionary<string, Coroutine> presentedCardPlays =
+        new Dictionary<string, Coroutine>(StringComparer.Ordinal);
+
     public bool UsesAuthoritativeCombat => RunManager.Instance != null
         && RunManager.Instance.activeCombat != null
         && RunManager.Instance.activeCombat.Type == JTokenType.Object;
@@ -398,6 +403,16 @@ public class CombatManager : MonoBehaviour
         List<string> selectedCardInstanceIds = new();
         yield return CollectAuthoritativeCardSelection(card, selectedCardInstanceIds);
 
+        // Show the play now rather than when the server echoes it back. Waiting on the round trip
+        // leaves the card sitting in the hand, where HandLayoutController pulls it back into its
+        // slot every frame, so the play read as arriving late instead of merely being confirmed
+        // late. The echo below waits on this same coroutine, which keeps damage and status events
+        // behind the card animation exactly as they were.
+        if (card != null && !string.IsNullOrWhiteSpace(card.instanceId) && player != null)
+        {
+            presentedCardPlays[card.instanceId] = StartCoroutine(PresentCardPlayed(player, card, targets));
+        }
+
 #if UNITY_WEBGL && !UNITY_EDITOR
         var payload = new
         {
@@ -442,7 +457,13 @@ public class CombatManager : MonoBehaviour
         // A lost/unacknowledged command leaves the client's view of whose turn it is stale;
         // re-fetch the authoritative state so the UI does not freeze forever.
         if (needsResyncWebGL)
+        {
+            // No echo is coming for a play that was not accepted, so drop the presentation the
+            // echo was meant to claim; the resync below puts the card back where it belongs.
+            if (card != null && !string.IsNullOrWhiteSpace(card.instanceId))
+                presentedCardPlays.Remove(card.instanceId);
             yield return RefreshAuthoritativeCombatState();
+        }
 #else
         Task<STSApiCombatCommandResponse> commandTask = STSApiClient.SubmitCombatCommandAsync(
             RunManager.Instance != null ? RunManager.Instance.runId : null,
@@ -497,7 +518,11 @@ public class CombatManager : MonoBehaviour
         }
 
         if (needsResync)
+        {
+            if (card != null && !string.IsNullOrWhiteSpace(card.instanceId))
+                presentedCardPlays.Remove(card.instanceId);
             yield return RefreshAuthoritativeCombatState();
+        }
 #endif
     }
 
@@ -625,6 +650,7 @@ public class CombatManager : MonoBehaviour
 #endif
         authoritativeMessageQueue.Clear();
         authoritativeMessageQueueRunning = false;
+        presentedCardPlays.Clear();
     }
 
     public void RequestAuthoritativeEndTurn()
@@ -1041,10 +1067,39 @@ public class CombatManager : MonoBehaviour
         if (actor == null || string.IsNullOrWhiteSpace(cardInstanceId) || string.IsNullOrWhiteSpace(definitionId))
             yield break;
 
+        // This play was already shown when it was submitted; wait for that animation rather than
+        // replaying it, so the events that follow stay behind the card as they always did.
+        if (actor.isPlayer && presentedCardPlays.TryGetValue(cardInstanceId, out Coroutine presenting))
+        {
+            presentedCardPlays.Remove(cardInstanceId);
+            yield return presenting;
+            yield break;
+        }
+
         CardInstance card = FindCardByInstanceId(cardInstanceId) ?? BuildCardFromDefinition(definitionId, cardInstanceId);
         if (card == null)
             yield break;
 
+        yield return PresentCardPlayed(actor, card, ResolveCombatants(combatEvent["targetIds"]));
+    }
+
+    List<Character> ResolveCombatants(JToken combatantIdsToken)
+    {
+        var resolved = new List<Character>();
+        if (combatantIdsToken is not JArray combatantIds)
+            return resolved;
+
+        foreach (JToken combatantId in combatantIds)
+        {
+            Character combatant = ResolveCombatant(combatantId?.Value<string>());
+            if (combatant != null)
+                resolved.Add(combatant);
+        }
+        return resolved;
+    }
+
+    IEnumerator PresentCardPlayed(Character actor, CardInstance card, List<Character> targets)
+    {
         if (actor.isPlayer && deck != null)
         {
             AuthoritativeCombatStateReducer.MoveCard(deck.hand, deck.discardPile, card);
@@ -1070,32 +1125,35 @@ public class CombatManager : MonoBehaviour
 
         yield return ui.AnimateCardToCenter(playedView);
         playedView.Flash();
-        PlayCardEffectFeedback(combatEvent, card);
+        PlayCardEffectFeedback(targets, card);
+
+        if (actor.isPlayer)
+        {
+            // The card leaves the centre while its effects land, which is what the local combat
+            // path does and says in as many words: effects begin exactly when the card starts
+            // leaving the center. Waiting for that exit instead put the whole of it in front of
+            // every hit — 0.4s of travel plus the read pause — and that wait, not the round trip,
+            // is what made an attack feel late.
+            StartCoroutine(ui.AnimateCardToDiscard(playedView, false));
+            yield break;
+        }
+
         yield return new WaitForSeconds(0.08f);
         yield return ui.AnimateCardToDiscard(playedView, false);
-
-        if (!actor.isPlayer)
-            yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.2f);
     }
 
     // The authoritative replay path only ever animated card movement and popped up numbers;
     // it never played the per-effect SFX/VFX the local (non-authoritative) flow already has.
-    void PlayCardEffectFeedback(JToken combatEvent, CardInstance card)
+    // Takes the targets already resolved rather than the event they came from: a play is now
+    // shown when it is submitted, before any event exists, and it deserves the same feedback.
+    void PlayCardEffectFeedback(List<Character> targets, CardInstance card)
     {
         List<EffectEntry> effects = card.GetEffects();
         if (effects == null || effects.Count == 0)
             return;
 
-        List<Character> targets = new();
-        if (combatEvent["targetIds"] is JArray targetIdsArray)
-        {
-            foreach (JToken targetIdToken in targetIdsArray)
-            {
-                Character target = ResolveCombatant(targetIdToken?.Value<string>());
-                if (target != null)
-                    targets.Add(target);
-            }
-        }
+        targets ??= new List<Character>();
 
         foreach (EffectEntry effect in effects)
         {
