@@ -655,6 +655,21 @@ public class CombatManager : MonoBehaviour
             target.onTurn = !string.IsNullOrWhiteSpace(activeCombatantId)
                 && string.Equals(combatantId, activeCombatantId, StringComparison.Ordinal);
 
+            if (target is Enemy enemy)
+            {
+                int? patternIndex = combatantToken.Value<int?>("patternIndex");
+                if (patternIndex.HasValue)
+                {
+                    enemy.SetPatternIndex(patternIndex.Value);
+                }
+                string intentCardId = combatantToken.Value<string>("intentCardId");
+                if (!string.IsNullOrWhiteSpace(intentCardId))
+                {
+                    CardInstance intentCard = BuildCardFromDefinition(intentCardId, "intent-" + intentCardId);
+                    enemy.SetAuthoritativeIntentCard(intentCard != null ? intentCard.data : null);
+                }
+            }
+
             if (target.isPlayer)
             {
                 ApplyAuthoritativePlayerPiles(combatantToken["piles"]);
@@ -669,7 +684,8 @@ public class CombatManager : MonoBehaviour
 
         if (refreshUI && ui != null)
         {
-            ui.SyncHandFromDeckState();
+            // Don't call SyncHandFromDeckState here — the COMBAT_EVENT replays already handle hand state,
+            // and calling it destroys card views that are still being animated.
             ui.RefreshUI(false);
         }
 
@@ -1091,14 +1107,54 @@ public class CombatManager : MonoBehaviour
     CardInstance BuildCardFromDefinition(string definitionId, string instanceId)
     {
         STSCardData data = STSCardDatabase.Get(definitionId);
-        if (data == null)
-            return null;
-
-        var card = new CardInstance(data)
+        if (data != null)
         {
-            instanceId = instanceId
-        };
-        return card;
+            return new CardInstance(data)
+            {
+                instanceId = instanceId
+            };
+        }
+
+        // Enemy move cards are runtime-generated server-side with IDs like "enemy-move:{enemyId}:{index}";
+        // resolve them from the local enemy data instead of the card database.
+        if (definitionId != null && definitionId.StartsWith("enemy-move:", StringComparison.Ordinal))
+        {
+            string[] parts = definitionId.Split(':');
+            if (parts.Length >= 3 && int.TryParse(parts[2], out int moveIndex))
+            {
+                string enemyId = parts[1];
+                EnemyData enemyData = EnemyDataDatabase.Get(enemyId);
+                if (enemyData == null)
+                {
+                    foreach (var enemy in enemies)
+                    {
+                        if (enemy is Enemy e && e.data != null && e.data.id == enemyId)
+                        {
+                            enemyData = e.data;
+                            break;
+                        }
+                    }
+                }
+                if (enemyData != null && moveIndex >= 0 && moveIndex < enemyData.ActionCount)
+                {
+                    EnemyMoveEntry move = enemyData.GetActionAt(moveIndex);
+                    if (move != null)
+                    {
+                        STSCardData runtimeCard = move.CreateRuntimeCard(enemyId);
+                        if (runtimeCard != null)
+                        {
+                            return new CardInstance(runtimeCard)
+                            {
+                                instanceId = instanceId
+                            };
+                        }
+                    }
+                }
+            }
+        }
+
+        Debug.LogWarning($"[STS-COMBAT] Could not build card from definition '{definitionId}'.");
+        return null;
     }
 
     string ResolvePileName(string rawPile)
@@ -1280,6 +1336,14 @@ public class CombatManager : MonoBehaviour
             string instanceId = cardToken.Value<string>("instanceId");
             if (string.IsNullOrWhiteSpace(definitionId) || string.IsNullOrWhiteSpace(instanceId))
                 continue;
+
+            // Reuse existing card instances by instanceId so card views (which use reference equality) survive state syncs.
+            CardInstance existing = FindCardByInstanceId(instanceId);
+            if (existing != null && existing.data != null && string.Equals(existing.data.id, definitionId, StringComparison.Ordinal))
+            {
+                cards.Add(existing);
+                continue;
+            }
 
             STSCardData data = STSCardDatabase.Get(definitionId);
             if (data == null)

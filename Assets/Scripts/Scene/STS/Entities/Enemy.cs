@@ -40,6 +40,17 @@ public class Enemy : Character
 
     private int patternIndex = 0;
     private readonly Queue<STSCardData> forcedNextActions = new();
+    public STSCardData authoritativeIntentCard; // Set by the authoritative combat state sync; overrides local PeekNextAction for intent display
+
+    public void SetPatternIndex(int index)
+    {
+        patternIndex = Mathf.Max(0, index);
+    }
+
+    public void SetAuthoritativeIntentCard(STSCardData card)
+    {
+        authoritativeIntentCard = card;
+    }
 
     public void Init(EnemyData d)
     {
@@ -100,6 +111,10 @@ public class Enemy : Character
 
     public STSCardData PeekNextAction()
     {
+        // In authoritative mode, the server tracks the pattern; use the synced intent card.
+        if (authoritativeIntentCard != null)
+            return authoritativeIntentCard;
+
         if (forcedNextActions.Count > 0)
             return forcedNextActions.Peek();
 
