@@ -7193,6 +7193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 203bad292a2429c42b0a241ca2a88fda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::STSMainMenuController
+  gameButtonText: {fileID: 2116620109}
   loadButton: {fileID: 380415878}
   pvpButton: {fileID: 256201636}
   resumeSceneName: STS_Map

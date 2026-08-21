@@ -7,6 +7,7 @@ using TMPro;
 
 public class STSMainMenuController : MonoBehaviour
 {
+    public TMP_Text gameButtonText;
     public Button loadButton;
     public Button pvpButton;
     public string resumeSceneName = "STS_Map";
@@ -182,6 +183,14 @@ public class STSMainMenuController : MonoBehaviour
         }
 
         loadButton.gameObject.SetActive(hasCurrentRun);
+        if (hasCurrentRun)
+        {
+            gameButtonText.text="Reprendre la partie";
+        }
+        else
+        {
+            gameButtonText.text="Nouvelle partie";
+        }
     }
 
     public async void LoadSavedRun()

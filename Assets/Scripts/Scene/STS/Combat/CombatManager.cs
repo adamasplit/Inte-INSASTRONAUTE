@@ -84,7 +84,30 @@ public class CombatManager : MonoBehaviour
     public bool allowTurn = false; 
     private bool turnSystemInitialized;
     private bool authoritativeHandSynced;
+    private readonly Dictionary<string, TurnEntry> authoritativeTimelineEntries = new();
     private bool authoritativeCommandInFlight;
+    private float authoritativeCommandInFlightSince;
+    private const float AuthoritativeCommandWatchdogSeconds = 8f;
+
+    // Both known transports (STOMP + REST) time out around 5s; anything still "in flight"
+    // past that is a stuck flag, not a real pending request, and must not softlock input forever.
+    bool AuthoritativeCommandBusy
+    {
+        get
+        {
+            if (!authoritativeCommandInFlight)
+                return false;
+
+            if (Time.unscaledTime - authoritativeCommandInFlightSince > AuthoritativeCommandWatchdogSeconds)
+            {
+                Debug.LogWarning("[STS-COMBAT] Authoritative command watchdog fired: clearing a stuck in-flight flag.");
+                authoritativeCommandInFlight = false;
+                return false;
+            }
+
+            return true;
+        }
+    }
     private readonly Queue<JObject> authoritativeMessageQueue = new();
     private bool authoritativeMessageQueueRunning;
 
@@ -135,16 +158,18 @@ public class CombatManager : MonoBehaviour
         if (UsesAuthoritativeCombat)
         {
             allowTurn = true;
+            // Apply the state we already have immediately; the socket only carries future
+            // updates and never proactively pushes a snapshot on connect, so waiting for it
+            // here left onTurn/endTurnButton/hand/timeline uninitialized forever in WebGL.
+            ApplyAuthoritativeCombatState(RunManager.Instance.activeCombat, true);
 #if UNITY_WEBGL && !UNITY_EDITOR
             ReactCombatBridge.CombatEventReceived += HandleReactCombatEvent;
-            _ = ReactCombatBridge.ConnectAsync(AuthoritativeCombatIdentity.GetTransportId(
+            ReactCombatBridge.CombatStatusChanged += HandleReactCombatStatusChanged;
+            StartCoroutine(ConnectAuthoritativeCombatSocketRoutine(AuthoritativeCombatIdentity.GetTransportId(
                 RunManager.Instance.runId,
-                RunManager.Instance.activeCombat));
-            STSSceneLoader.Instance?.SceneReady();
-#else
-            ApplyAuthoritativeCombatState(RunManager.Instance.activeCombat, true);
-            STSSceneLoader.Instance?.SceneReady();
+                RunManager.Instance.activeCombat)));
 #endif
+            STSSceneLoader.Instance?.SceneReady();
             return;
         }
 
@@ -152,6 +177,7 @@ public class CombatManager : MonoBehaviour
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
             ReactCombatBridge.CombatEventReceived += HandleReactCombatEvent;
+            ReactCombatBridge.CombatStatusChanged += HandleReactCombatStatusChanged;
             StartCoroutine(BootstrapAuthoritativeCombatRoutine());
 #else
             StartCoroutine(BootstrapAuthoritativeCombatRoutine());
@@ -197,15 +223,34 @@ public class CombatManager : MonoBehaviour
         if (appliedAuthoritativeState)
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            _ = ReactCombatBridge.ConnectAsync(AuthoritativeCombatIdentity.GetTransportId(
+            StartCoroutine(ConnectAuthoritativeCombatSocketRoutine(AuthoritativeCombatIdentity.GetTransportId(
                 RunManager.Instance.runId,
-                RunManager.Instance.activeCombat));
+                RunManager.Instance.activeCombat)));
 #endif
             STSSceneLoader.Instance?.SceneReady();
             yield break;
         }
 
         StartLocalCombatFlow();
+    }
+
+    IEnumerator ConnectAuthoritativeCombatSocketRoutine(string transportId)
+    {
+        Task<bool> connectTask = ReactCombatBridge.ConnectAsync(transportId);
+        while (!connectTask.IsCompleted)
+            yield return null;
+
+        bool connected = connectTask.Status == TaskStatus.RanToCompletion && connectTask.Result;
+        Debug.Log($"[STS-BRIDGE] socket connect combatId={transportId} success={connected}");
+        if (!connected)
+            Debug.LogWarning("[STS-BRIDGE] Combat socket failed to connect; commands will silently no-op until reconnected.");
+    }
+
+    void HandleReactCombatStatusChanged(string status)
+    {
+        Debug.Log($"[STS-BRIDGE] status changed: {status}");
+        if (string.Equals(status, "DISCONNECTED", StringComparison.Ordinal))
+            Debug.LogWarning("[STS-BRIDGE] Combat socket disconnected; end turn/play card commands will silently no-op until reconnected.");
     }
 
     void StartLocalCombatFlow()
@@ -322,7 +367,13 @@ public class CombatManager : MonoBehaviour
 
         if (UsesAuthoritativeCombat && source != null && source.isPlayer)
         {
-            if (authoritativeCommandInFlight)
+            if (combatEnded)
+            {
+                Debug.LogWarning($"[STS-COMBAT] PlayCard blocked: combat already ended card={card?.displayName ?? "<null>"}");
+                return;
+            }
+
+            if (AuthoritativeCommandBusy)
             {
                 Debug.LogWarning($"[STS-COMBAT] PlayCard blocked: authoritative command already in flight card={card?.displayName ?? "<null>"}");
                 return;
@@ -340,6 +391,7 @@ public class CombatManager : MonoBehaviour
     IEnumerator PlayCardAuthoritativeRoutine(CardInstance card, List<Character> targets)
     {
         authoritativeCommandInFlight = true;
+        authoritativeCommandInFlightSince = Time.unscaledTime;
         activeCardPlays++;
         queuedCardPlays = Mathf.Max(0, queuedCardPlays - 1);
 
@@ -357,17 +409,28 @@ public class CombatManager : MonoBehaviour
         Debug.Log($"[STS-COMBAT] Sending PLAY_CARD card={card?.displayName ?? "<null>"} instanceId={card?.instanceId ?? "<null>"} targetIds=[{string.Join(",", payload.targetIds)}] revision={currentRev}");
         Task<ReactCombatCommandOutcome> commandTask = ReactCombatBridge.SendCommandAsync("PLAY_CARD", payload, currentRev);
 
-        while (!commandTask.IsCompleted)
+        // Don't trust Task.Delay alone to bound this wait; poll a frame-based deadline too so a
+        // dropped/never-acked socket command can't hang the coroutine past the watchdog.
+        float deadline = Time.unscaledTime + AuthoritativeCommandWatchdogSeconds;
+        while (!commandTask.IsCompleted && Time.unscaledTime < deadline)
             yield return null;
 
         bool needsResyncWebGL = false;
         try
         {
-            Debug.Log($"[STS-COMBAT] PLAY_CARD completed taskStatus={commandTask.Status} outcome={(commandTask.Status == TaskStatus.RanToCompletion ? commandTask.Result.ToString() : "<none>")}");
-            if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == ReactCombatCommandOutcome.Unknown)
+            if (!commandTask.IsCompleted)
             {
-                Debug.LogWarning("[STS-COMBAT] Failed to submit backend play-card command via Bridge.");
+                Debug.LogWarning("[STS-COMBAT] PLAY_CARD via Bridge never completed before deadline; socket may be disconnected.");
                 needsResyncWebGL = true;
+            }
+            else
+            {
+                Debug.Log($"[STS-COMBAT] PLAY_CARD completed taskStatus={commandTask.Status} outcome={(commandTask.Status == TaskStatus.RanToCompletion ? commandTask.Result.ToString() : "<none>")}");
+                if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == ReactCombatCommandOutcome.Unknown)
+                {
+                    Debug.LogWarning("[STS-COMBAT] Failed to submit backend play-card command via Bridge.");
+                    needsResyncWebGL = true;
+                }
             }
         }
         finally
@@ -558,6 +621,7 @@ public class CombatManager : MonoBehaviour
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
         ReactCombatBridge.CombatEventReceived -= HandleReactCombatEvent;
+        ReactCombatBridge.CombatStatusChanged -= HandleReactCombatStatusChanged;
 #endif
         authoritativeMessageQueue.Clear();
         authoritativeMessageQueueRunning = false;
@@ -565,8 +629,20 @@ public class CombatManager : MonoBehaviour
 
     public void RequestAuthoritativeEndTurn()
     {
-        if (!UsesAuthoritativeCombat || authoritativeCommandInFlight)
+        if (!UsesAuthoritativeCombat)
             return;
+
+        if (combatEnded)
+        {
+            Debug.LogWarning("[STS-COMBAT] EndTurn blocked: combat already ended.");
+            return;
+        }
+
+        if (AuthoritativeCommandBusy)
+        {
+            Debug.LogWarning("[STS-COMBAT] EndTurn blocked: authoritative command already in flight.");
+            return;
+        }
 
         StartCoroutine(AuthoritativeEndTurnRoutine());
     }
@@ -574,6 +650,7 @@ public class CombatManager : MonoBehaviour
     IEnumerator AuthoritativeEndTurnRoutine()
     {
         authoritativeCommandInFlight = true;
+        authoritativeCommandInFlightSince = Time.unscaledTime;
         activeCardPlays++;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -581,13 +658,21 @@ public class CombatManager : MonoBehaviour
         string currentRev = ReactCombatBridge.CurrentRevision ?? GetAuthoritativeRevision().ToString();
         Task<ReactCombatCommandOutcome> commandTask = ReactCombatBridge.SendCommandAsync("END_TURN", payload, currentRev);
 
-        while (!commandTask.IsCompleted)
+        // Don't trust Task.Delay alone to bound this wait; poll a frame-based deadline too so a
+        // dropped/never-acked socket command can't hang the coroutine past the watchdog.
+        float deadline = Time.unscaledTime + AuthoritativeCommandWatchdogSeconds;
+        while (!commandTask.IsCompleted && Time.unscaledTime < deadline)
             yield return null;
 
         bool needsResyncWebGL = false;
         try
         {
-            if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == ReactCombatCommandOutcome.Unknown)
+            if (!commandTask.IsCompleted)
+            {
+                Debug.LogWarning("[STS-COMBAT] END_TURN via Bridge never completed before deadline; socket may be disconnected.");
+                needsResyncWebGL = true;
+            }
+            else if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == ReactCombatCommandOutcome.Unknown)
             {
                 Debug.LogWarning("[STS-COMBAT] Failed to submit backend end-turn command via Bridge.");
                 needsResyncWebGL = true;
@@ -780,23 +865,35 @@ public class CombatManager : MonoBehaviour
         if (turnSystem == null || turnSystem.timelineUI == null || timelineArray == null)
             return;
 
+        var seenCombatantIds = new HashSet<string>();
         List<TurnEntry> authoritativeTimeline = new List<TurnEntry>();
         foreach (JToken entryToken in timelineArray)
         {
             if (entryToken == null || entryToken.Type != JTokenType.Object)
                 continue;
 
-            Character entryCharacter = ResolveCombatant(entryToken.Value<string>("combatantId"));
-            if (entryCharacter == null)
+            string combatantId = entryToken.Value<string>("combatantId");
+            Character entryCharacter = ResolveCombatant(combatantId);
+            if (entryCharacter == null || string.IsNullOrWhiteSpace(combatantId))
                 continue;
 
-            authoritativeTimeline.Add(new TurnEntry
+            // Reuse the same TurnEntry (and uid) per combatant across syncs, otherwise every
+            // sync looks like a brand-new entry to TimelineUI and icons re-appear from the edge
+            // instead of animating from their previous position.
+            if (!authoritativeTimelineEntries.TryGetValue(combatantId, out TurnEntry entry))
             {
-                character = entryCharacter,
-                time = entryToken.Value<long?>("readyAtTick") ?? 0L,
-                uid = TurnEntry.nextUID++
-            });
+                entry = new TurnEntry { character = entryCharacter, uid = TurnEntry.nextUID++ };
+                authoritativeTimelineEntries[combatantId] = entry;
+            }
+            entry.character = entryCharacter;
+            entry.time = entryToken.Value<long?>("readyAtTick") ?? 0L;
+
+            authoritativeTimeline.Add(entry);
+            seenCombatantIds.Add(combatantId);
         }
+
+        foreach (string staleId in authoritativeTimelineEntries.Keys.Where(id => !seenCombatantIds.Contains(id)).ToList())
+            authoritativeTimelineEntries.Remove(staleId);
 
         turnSystem.timeline = authoritativeTimeline.OrderBy(entry => entry.time).ToList();
         turnSystem.timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
@@ -842,11 +939,26 @@ public class CombatManager : MonoBehaviour
                     ReplayDamageAppliedEvent(combatEvent);
                     yield return new WaitForSeconds(0.12f);
                     break;
+                case "HealApplied":
+                    ReplayHealAppliedEvent(combatEvent);
+                    yield return new WaitForSeconds(0.12f);
+                    break;
+                case "HpLost":
+                    ReplayHpLostEvent(combatEvent);
+                    yield return new WaitForSeconds(0.12f);
+                    break;
                 case "ArmorGained":
+                    yield return FlashCombatantWhite(ResolveCombatant(combatEvent.Value<string>("targetId")));
+                    break;
+                case "ArmorBroken":
+                    ReplayArmorBrokenEvent(combatEvent);
                     yield return FlashCombatantWhite(ResolveCombatant(combatEvent.Value<string>("targetId")));
                     break;
                 case "EnergySpent":
                     ReplayEnergySpentEvent(combatEvent);
+                    break;
+                case "EnergyGained":
+                    ReplayEnergyGainedEvent(combatEvent);
                     break;
                 case "TurnStarted":
                     if (string.Equals(combatEvent.Value<string>("combatantId"), "player", StringComparison.Ordinal))
@@ -873,10 +985,18 @@ public class CombatManager : MonoBehaviour
             return "CardPlayed";
         if (combatEvent["requestedDamage"] != null)
             return "DamageApplied";
+        if (combatEvent["requestedHeal"] != null)
+            return "HealApplied";
+        if (combatEvent["requestedLoss"] != null)
+            return "HpLost";
         if (combatEvent["requestedArmor"] != null)
             return "ArmorGained";
+        if (combatEvent["armorLost"] != null)
+            return "ArmorBroken";
         if (combatEvent["remainingEnergy"] != null && combatEvent["amount"] != null)
             return "EnergySpent";
+        if (combatEvent["resultingEnergy"] != null && combatEvent["amount"] != null)
+            return "EnergyGained";
         if (combatEvent["handIndex"] != null)
             return "CardDrawn";
         if (combatEvent["statusType"] != null || combatEvent["status"] != null || combatEvent["statusName"] != null)
@@ -931,10 +1051,19 @@ public class CombatManager : MonoBehaviour
 
         ui.GetDropZone(actor)?.PlayActionSprite(DropZone.ActionSpriteVariant(card));
 
+        // The server resolves a whole AI turn chain in one round-trip and streams every event
+        // back-to-back; without this pause enemy actions replay with no perceptible gap between
+        // them, unlike the old local EnemyTurn coroutine which paused 0.2s before/after each move.
+        if (!actor.isPlayer)
+            yield return new WaitForSeconds(0.2f);
+
         yield return ui.AnimateCardToCenter(playedView);
         playedView.Flash();
         yield return new WaitForSeconds(0.08f);
         yield return ui.AnimateCardToDiscard(playedView, false);
+
+        if (!actor.isPlayer)
+            yield return new WaitForSeconds(0.2f);
     }
 
     IEnumerator ReplayCardDrawnEvent(JToken combatEvent)
@@ -1189,6 +1318,54 @@ public class CombatManager : MonoBehaviour
             return;
 
         player.resources.energy = combatEvent.Value<int?>("remainingEnergy") ?? player.resources.energy;
+        ui?.RefreshUI(false);
+    }
+
+    void ReplayEnergyGainedEvent(JToken combatEvent)
+    {
+        string combatantId = combatEvent.Value<string>("combatantId");
+        Character target = ResolveCombatant(combatantId);
+        if (target == null)
+            return;
+
+        target.resources.energy = combatEvent.Value<int?>("resultingEnergy") ?? target.resources.energy;
+        ui?.RefreshUI(false);
+    }
+
+    void ReplayHealAppliedEvent(JToken combatEvent)
+    {
+        Character target = ResolveCombatant(combatEvent.Value<string>("targetId"));
+        if (target == null || ui == null)
+            return;
+
+        target.currentHP = combatEvent.Value<int?>("remainingHp") ?? target.currentHP;
+        int actualHeal = combatEvent.Value<int?>("actualHeal") ?? 0;
+        if (actualHeal > 0)
+            ui.ShowDamagePopup(target, actualHeal, healing: true);
+        ui.RefreshUI(false);
+    }
+
+    void ReplayHpLostEvent(JToken combatEvent)
+    {
+        Character target = ResolveCombatant(combatEvent.Value<string>("targetId"));
+        if (target == null || ui == null)
+            return;
+
+        target.currentHP = combatEvent.Value<int?>("remainingHp") ?? target.currentHP;
+        int actualLoss = combatEvent.Value<int?>("actualLoss") ?? 0;
+        if (actualLoss > 0)
+            ui.ShowDamagePopup(target, actualLoss, healing: false, blocked: false);
+        ui.RefreshUI(false);
+    }
+
+    void ReplayArmorBrokenEvent(JToken combatEvent)
+    {
+        Character target = ResolveCombatant(combatEvent.Value<string>("targetId"));
+        if (target == null)
+            return;
+
+        int armorLost = combatEvent.Value<int?>("armorLost") ?? 0;
+        target.armor = Mathf.Max(0, target.armor - armorLost);
         ui?.RefreshUI(false);
     }
 
