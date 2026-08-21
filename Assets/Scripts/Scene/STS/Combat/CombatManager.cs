@@ -896,7 +896,13 @@ public class CombatManager : MonoBehaviour
             authoritativeTimelineEntries.Remove(staleId);
 
         turnSystem.timeline = authoritativeTimeline.OrderBy(entry => entry.time).ToList();
-        turnSystem.timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
+
+        // GetDisplayTimeline()/GetFuture() extrapolates turns beyond each combatant's first
+        // upcoming entry using a local turnDelay() heuristic that has no relation to the
+        // server's real tick-based scheduling — every projected entry beyond the first was a
+        // fabricated guess. The server only ever reports one true upcoming entry per combatant,
+        // so display exactly that instead of a locally-simulated (and wrong) lookahead.
+        turnSystem.timelineUI.Display(turnSystem.timeline);
     }
 
     IEnumerator ReplayAuthoritativeEvents(List<JToken> events)
@@ -1059,11 +1065,47 @@ public class CombatManager : MonoBehaviour
 
         yield return ui.AnimateCardToCenter(playedView);
         playedView.Flash();
+        PlayCardEffectFeedback(combatEvent, card);
         yield return new WaitForSeconds(0.08f);
         yield return ui.AnimateCardToDiscard(playedView, false);
 
         if (!actor.isPlayer)
             yield return new WaitForSeconds(0.2f);
+    }
+
+    // The authoritative replay path only ever animated card movement and popped up numbers;
+    // it never played the per-effect SFX/VFX the local (non-authoritative) flow already has.
+    void PlayCardEffectFeedback(JToken combatEvent, CardInstance card)
+    {
+        List<EffectEntry> effects = card.GetEffects();
+        if (effects == null || effects.Count == 0)
+            return;
+
+        List<Character> targets = new();
+        if (combatEvent["targetIds"] is JArray targetIdsArray)
+        {
+            foreach (JToken targetIdToken in targetIdsArray)
+            {
+                Character target = ResolveCombatant(targetIdToken?.Value<string>());
+                if (target != null)
+                    targets.Add(target);
+            }
+        }
+
+        foreach (EffectEntry effect in effects)
+        {
+            SFXManager.Instance?.PlaySound(effect.GetEffectName());
+
+            if (targets.Count == 0)
+                continue;
+
+            foreach (Character target in targets)
+            {
+                Transform targetView = ui.GetView(target);
+                if (targetView != null)
+                    VFXManager.Instance?.PlayEffect(effect, targetView.position);
+            }
+        }
     }
 
     IEnumerator ReplayCardDrawnEvent(JToken combatEvent)
