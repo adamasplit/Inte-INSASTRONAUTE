@@ -849,12 +849,17 @@ public class CombatManager : MonoBehaviour
             ui.RefreshUI(false);
         }
 
-        // The very first application seeds the hand from raw pile data (no CardDrawn events exist
-        // yet to replay), otherwise the initial hand never gets any CardView and looks undrawn.
-        if (!authoritativeHandSynced && ui != null)
+        // The first application seeds the hand from raw pile data, since no CardDrawn events exist
+        // yet to replay. Every later one reconciles it: the state hands us freshly built
+        // CardInstance objects, so a view made earlier points at an object the hand no longer
+        // holds. Seeding once and trusting the event replays alone left the player holding a card
+        // the server had already discarded — refused as CARD_NOT_IN_HAND — and never seeing the
+        // cards it had dealt. The reconciliation only rebuilds on drift, so views being animated
+        // are left alone.
+        if (ui != null)
         {
             authoritativeHandSynced = true;
-            ui.SyncHandFromDeckState();
+            ui.SyncHandFromDeckStateIfDrifted();
         }
 
         TryEndCombatIfNeeded();
@@ -1222,10 +1227,53 @@ public class CombatManager : MonoBehaviour
 
     IEnumerator ReplayPileShuffledEvent(JToken combatEvent)
     {
+        // The server shuffled and told us the order it got. Shuffling again locally would produce
+        // a different one, and every draw after it would disagree with the server about which
+        // card came up.
         string pileName = ResolvePileName(combatEvent.Value<string>("pile"));
-        if (string.Equals(pileName, "DRAW", StringComparison.Ordinal) && deck != null)
+        List<CardInstance> pile = GetPileByName(pileName) ?? deck?.drawPile;
+        JToken orderToken = combatEvent["cardInstanceIds"];
+        if (pile != null && orderToken != null && orderToken.Type == JTokenType.Array)
         {
-            deck.Shuffle(deck.drawPile);
+            List<CardInstance> reordered = new List<CardInstance>();
+            foreach (JToken idToken in orderToken)
+            {
+                string instanceId = idToken?.ToString();
+                if (string.IsNullOrWhiteSpace(instanceId))
+                    continue;
+
+                CardInstance card = pile.FirstOrDefault(candidate =>
+                        candidate != null
+                        && string.Equals(candidate.instanceId, instanceId, StringComparison.Ordinal))
+                    ?? FindCardByInstanceId(instanceId);
+                if (card == null || reordered.Contains(card))
+                    continue;
+
+                // A reshuffle names the cards it took from another pile — the discard, which the
+                // client still holds them in. They have to leave it, or the same card ends up in
+                // two piles at once.
+                if (!pile.Contains(card))
+                {
+                    deck.hand.Remove(card);
+                    deck.drawPile.Remove(card);
+                    deck.discardPile.Remove(card);
+                    deck.exhaustPile.Remove(card);
+                }
+
+                reordered.Add(card);
+            }
+
+            // Anything the server did not name stays where it was, under what it did name.
+            foreach (CardInstance card in pile)
+            {
+                if (card != null && !reordered.Contains(card))
+                {
+                    reordered.Add(card);
+                }
+            }
+
+            pile.Clear();
+            pile.AddRange(reordered);
         }
         yield return new WaitForSeconds(0.05f);
     }
