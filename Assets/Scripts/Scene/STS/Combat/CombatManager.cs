@@ -83,6 +83,7 @@ public class CombatManager : MonoBehaviour
     public bool forceTutorial = false;
     public bool allowTurn = false; 
     private bool turnSystemInitialized;
+    private bool authoritativeHandSynced;
     private bool authoritativeCommandInFlight;
     private readonly Queue<JObject> authoritativeMessageQueue = new();
     private bool authoritativeMessageQueueRunning;
@@ -359,12 +360,14 @@ public class CombatManager : MonoBehaviour
         while (!commandTask.IsCompleted)
             yield return null;
 
+        bool needsResyncWebGL = false;
         try
         {
             Debug.Log($"[STS-COMBAT] PLAY_CARD completed taskStatus={commandTask.Status} outcome={(commandTask.Status == TaskStatus.RanToCompletion ? commandTask.Result.ToString() : "<none>")}");
             if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == ReactCombatCommandOutcome.Unknown)
             {
                 Debug.LogWarning("[STS-COMBAT] Failed to submit backend play-card command via Bridge.");
+                needsResyncWebGL = true;
             }
         }
         finally
@@ -372,6 +375,11 @@ public class CombatManager : MonoBehaviour
             authoritativeCommandInFlight = false;
             activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
         }
+
+        // A lost/unacknowledged command leaves the client's view of whose turn it is stale;
+        // re-fetch the authoritative state so the UI does not freeze forever.
+        if (needsResyncWebGL)
+            yield return RefreshAuthoritativeCombatState();
 #else
         Task<STSApiCombatCommandResponse> commandTask = STSApiClient.SubmitCombatCommandAsync(
             RunManager.Instance != null ? RunManager.Instance.runId : null,
@@ -387,37 +395,65 @@ public class CombatManager : MonoBehaviour
         while (!commandTask.IsCompleted)
             yield return null;
 
+        bool needsResync = false;
         try
         {
             if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == null)
             {
                 Debug.LogWarning("[STS-COMBAT] Failed to submit backend play-card command.");
-                yield break;
+                needsResync = true;
             }
-
-            STSApiCombatCommandResponse response = commandTask.Result;
-            if (!response.accepted)
+            else
             {
-                if (string.Equals(response.rejectionCode, "INSUFFICIENT_ENERGY", StringComparison.OrdinalIgnoreCase))
+                STSApiCombatCommandResponse response = commandTask.Result;
+                if (!response.accepted)
                 {
-                    ui.StartCoroutine(ui.EnergyTextGlowRed());
+                    if (string.Equals(response.rejectionCode, "INSUFFICIENT_ENERGY", StringComparison.OrdinalIgnoreCase))
+                    {
+                        ui.StartCoroutine(ui.EnergyTextGlowRed());
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[STS-COMBAT] Backend play-card rejected: {response.rejectionCode} {response.rejectionMessage}");
+                    }
+                    // A rejection can mean the client's cached revision drifted from the server
+                    // (e.g. AI turns advanced in a previous request); resync so play/end-turn keep working.
+                    needsResync = true;
                 }
                 else
                 {
-                    Debug.LogWarning($"[STS-COMBAT] Backend play-card rejected: {response.rejectionCode} {response.rejectionMessage}");
+                    yield return ReplayAuthoritativeEvents(response.events);
+                    ApplyAuthoritativeCombatState(response.combat, true);
                 }
-                yield break;
             }
-
-            yield return ReplayAuthoritativeEvents(response.events);
-            ApplyAuthoritativeCombatState(response.combat, true);
         }
         finally
         {
             authoritativeCommandInFlight = false;
             activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
         }
+
+        if (needsResync)
+            yield return RefreshAuthoritativeCombatState();
 #endif
+    }
+
+    IEnumerator RefreshAuthoritativeCombatState()
+    {
+        if (RunManager.Instance == null || string.IsNullOrWhiteSpace(RunManager.Instance.runId))
+            yield break;
+
+        Task<STSApiCombatStateResponse> stateTask = STSApiClient.GetCombatStateAsync(RunManager.Instance.runId);
+        while (!stateTask.IsCompleted)
+            yield return null;
+
+        if (stateTask.Status == TaskStatus.RanToCompletion
+            && stateTask.Result != null
+            && stateTask.Result.accepted
+            && stateTask.Result.combat != null)
+        {
+            ApplyAuthoritativeCombatState(stateTask.Result.combat, true);
+        }
     }
 
     IEnumerator CollectAuthoritativeCardSelection(CardInstance playedCard, List<string> selectedIds)
@@ -548,11 +584,13 @@ public class CombatManager : MonoBehaviour
         while (!commandTask.IsCompleted)
             yield return null;
 
+        bool needsResyncWebGL = false;
         try
         {
             if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == ReactCombatCommandOutcome.Unknown)
             {
                 Debug.LogWarning("[STS-COMBAT] Failed to submit backend end-turn command via Bridge.");
+                needsResyncWebGL = true;
             }
         }
         finally
@@ -560,6 +598,9 @@ public class CombatManager : MonoBehaviour
             authoritativeCommandInFlight = false;
             activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
         }
+
+        if (needsResyncWebGL)
+            yield return RefreshAuthoritativeCombatState();
 #else
         Task<STSApiCombatCommandResponse> commandTask = STSApiClient.SubmitCombatCommandAsync(
             RunManager.Instance != null ? RunManager.Instance.runId : null,
@@ -573,29 +614,37 @@ public class CombatManager : MonoBehaviour
         while (!commandTask.IsCompleted)
             yield return null;
 
+        bool needsResync = false;
         try
         {
             if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == null)
             {
                 Debug.LogWarning("[STS-COMBAT] Failed to submit backend end-turn command.");
-                yield break;
+                needsResync = true;
             }
-
-            STSApiCombatCommandResponse response = commandTask.Result;
-            if (!response.accepted)
+            else
             {
-                Debug.LogWarning($"[STS-COMBAT] Backend end-turn rejected: {response.rejectionCode} {response.rejectionMessage}");
-                yield break;
+                STSApiCombatCommandResponse response = commandTask.Result;
+                if (!response.accepted)
+                {
+                    Debug.LogWarning($"[STS-COMBAT] Backend end-turn rejected: {response.rejectionCode} {response.rejectionMessage}");
+                    needsResync = true;
+                }
+                else
+                {
+                    yield return ReplayAuthoritativeEvents(response.events);
+                    ApplyAuthoritativeCombatState(response.combat, true);
+                }
             }
-
-            yield return ReplayAuthoritativeEvents(response.events);
-            ApplyAuthoritativeCombatState(response.combat, true);
         }
         finally
         {
             authoritativeCommandInFlight = false;
             activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
         }
+
+        if (needsResync)
+            yield return RefreshAuthoritativeCombatState();
 #endif
     }
 
@@ -706,6 +755,8 @@ public class CombatManager : MonoBehaviour
                 && !combatEnded;
         }
 
+        ApplyAuthoritativeTimeline(combatToken["timeline"] as JArray);
+
         if (refreshUI && ui != null)
         {
             // Don't call SyncHandFromDeckState here — the COMBAT_EVENT replays already handle hand state,
@@ -713,7 +764,42 @@ public class CombatManager : MonoBehaviour
             ui.RefreshUI(false);
         }
 
+        // The very first application seeds the hand from raw pile data (no CardDrawn events exist
+        // yet to replay), otherwise the initial hand never gets any CardView and looks undrawn.
+        if (!authoritativeHandSynced && ui != null)
+        {
+            authoritativeHandSynced = true;
+            ui.SyncHandFromDeckState();
+        }
+
         TryEndCombatIfNeeded();
+    }
+
+    void ApplyAuthoritativeTimeline(JArray timelineArray)
+    {
+        if (turnSystem == null || turnSystem.timelineUI == null || timelineArray == null)
+            return;
+
+        List<TurnEntry> authoritativeTimeline = new List<TurnEntry>();
+        foreach (JToken entryToken in timelineArray)
+        {
+            if (entryToken == null || entryToken.Type != JTokenType.Object)
+                continue;
+
+            Character entryCharacter = ResolveCombatant(entryToken.Value<string>("combatantId"));
+            if (entryCharacter == null)
+                continue;
+
+            authoritativeTimeline.Add(new TurnEntry
+            {
+                character = entryCharacter,
+                time = entryToken.Value<long?>("readyAtTick") ?? 0L,
+                uid = TurnEntry.nextUID++
+            });
+        }
+
+        turnSystem.timeline = authoritativeTimeline.OrderBy(entry => entry.time).ToList();
+        turnSystem.timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
     }
 
     IEnumerator ReplayAuthoritativeEvents(List<JToken> events)
@@ -2059,18 +2145,38 @@ public class CombatManager : MonoBehaviour
         if (RunManager.Instance.unrestrictedMode)
             return true;
 
-        var request = new STSApiNodeCompleteRequest
+        STSApiNodeCompleteRequest request;
+        if (UsesAuthoritativeCombat)
         {
-            encounterInstanceId = RunManager.Instance.activeEncounter.encounterInstanceId,
-            result = result,
-            turnCount = state.turnCount,
-            playerHpAfter = player != null ? player.currentHP : 0,
-            damageTaken = RunManager.Instance.activeEncounter != null ? Mathf.Max(0, RunManager.Instance.activeEncounter.playerHpBefore - (player != null ? player.currentHP : 0)) : 0,
-            enemiesDefeated = string.Equals(result, "victory", StringComparison.OrdinalIgnoreCase)
-                ? new List<string>(RunManager.Instance.activeEncounter.enemyIds ?? new List<string>())
-                : enemies.Where(e => e != null && !e.IsAlive).Select(e => e is Enemy enemy ? (enemy.data != null && !string.IsNullOrWhiteSpace(enemy.data.id) ? enemy.data.id : enemy.name) : e.name).ToList(),
-            deckHash = STSApiClient.ComputeDeckHash(RunManager.Instance.deck)
-        };
+            // Authoritative combats are resolved server-side from the run's stored combat state;
+            // encounterInstanceId/result must stay null so the backend takes that snapshot path instead of
+            // validating a client-reported turnCount that the authoritative flow never increments locally.
+            request = new STSApiNodeCompleteRequest
+            {
+                encounterInstanceId = null,
+                result = null,
+                turnCount = 0,
+                playerHpAfter = player != null ? player.currentHP : 0,
+                damageTaken = 0,
+                enemiesDefeated = new List<string>(),
+                deckHash = STSApiClient.ComputeDeckHash(RunManager.Instance.deck)
+            };
+        }
+        else
+        {
+            request = new STSApiNodeCompleteRequest
+            {
+                encounterInstanceId = RunManager.Instance.activeEncounter.encounterInstanceId,
+                result = result,
+                turnCount = state.turnCount,
+                playerHpAfter = player != null ? player.currentHP : 0,
+                damageTaken = RunManager.Instance.activeEncounter != null ? Mathf.Max(0, RunManager.Instance.activeEncounter.playerHpBefore - (player != null ? player.currentHP : 0)) : 0,
+                enemiesDefeated = string.Equals(result, "victory", StringComparison.OrdinalIgnoreCase)
+                    ? new List<string>(RunManager.Instance.activeEncounter.enemyIds ?? new List<string>())
+                    : enemies.Where(e => e != null && !e.IsAlive).Select(e => e is Enemy enemy ? (enemy.data != null && !string.IsNullOrWhiteSpace(enemy.data.id) ? enemy.data.id : enemy.name) : e.name).ToList(),
+                deckHash = STSApiClient.ComputeDeckHash(RunManager.Instance.deck)
+            };
+        }
 
         try
         {
