@@ -238,7 +238,10 @@ public class MultiplayerDeckPanel : MonoBehaviour
         layout.childControlHeight = false;
         layout.childForceExpandWidth = false;
         layout.childForceExpandHeight = false;
-        layout.spacing = 0f;
+        layout.spacing = 24f;
+        ContentSizeFitter fitter = row.AddComponent<ContentSizeFitter>();
+        fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+        fitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
 
         for (int i = 0; i < options.Count; i++)
         {
@@ -310,12 +313,12 @@ public class MultiplayerDeckPanel : MonoBehaviour
     {
         return rarity switch
         {
-            CardRarity.Common => "commun",
-            CardRarity.Uncommon => "inhabituel",
-            CardRarity.Rare => "rare",
-            CardRarity.Epic => "epique",
-            CardRarity.Legendary => "legendaire",
-            CardRarity.Special => "special",
+            CardRarity.Common => "rarity1",
+            CardRarity.Uncommon => "rarity2",
+            CardRarity.Rare => "rarity3",
+            CardRarity.Epic => "rarity4",
+            CardRarity.Legendary => "rarity5",
+            CardRarity.Special => "rarity6",
             _ => rarity.ToString().ToLowerInvariant()
         };
     }
@@ -340,6 +343,11 @@ public class MultiplayerDeckPanel : MonoBehaviour
                 continue;
 
             if (IsHiddenFromDeckBuilder(card))
+                continue;
+
+            // Cards bound to another character are never selectable in this panel, so don't even show them.
+            if (card.favoredCharacter != SelectableCharacter.Aucun
+                && card.favoredCharacter != selectedCharacter)
                 continue;
 
             string key = GetCardKey(card);
@@ -368,8 +376,7 @@ public class MultiplayerDeckPanel : MonoBehaviour
     // Never selectable in PVP, so they are dropped before any filter runs.
     private bool IsHiddenFromDeckBuilder(STSCardData card)
     {
-        return card.favoredCharacter == SelectableCharacter.Impossible
-            || card.favoredCharacter == SelectableCharacter.Starting
+        return (card.favoredCharacter != SelectableCharacter.Aucun&& card.favoredCharacter != selectedCharacter)
             || card.HasTag(CardTag.Unobtainable)
             || card.HasTag(CardTag.Created)
             || card.HasTag(CardTag.FollowUp);
