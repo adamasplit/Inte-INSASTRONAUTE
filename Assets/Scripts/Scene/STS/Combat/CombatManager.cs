@@ -885,7 +885,7 @@ public class CombatManager : MonoBehaviour
         {
             // Don't call SyncHandFromDeckState here — the COMBAT_EVENT replays already handle hand state,
             // and calling it destroys card views that are still being animated.
-            ui.RefreshUI(false);
+            ui.RefreshUI(false, skipHandLayout: presentedCardPlays.Count > 0);
         }
 
         // The first application seeds the hand from raw pile data, since no CardDrawn events exist
@@ -1671,6 +1671,11 @@ public class CombatManager : MonoBehaviour
         if (target == null || statusesToken == null)
             return;
 
+        var beforeStatuses = target.statusEffects
+            .Where(status => status != null)
+            .Select(status => (type: status.statusType, cardId: status.cardID ?? string.Empty, index: status.index, value: status.Value, duration: status.Duration))
+            .ToList();
+
         IReadOnlyList<AuthoritativeStatusState> authoritativeStatuses =
             AuthoritativeCombatStateReducer.ReadStatuses(statusesToken);
         var retained = new HashSet<StatusEffect>();
@@ -1714,6 +1719,62 @@ public class CombatManager : MonoBehaviour
         }
 
         target.statusEffects.RemoveAll(status => status == null || !retained.Contains(status));
+
+        // Status effects in authoritative mode are just synced snapshots now — the old client-side
+        // tick hooks (OnTurnEnd/OnDamageTaken/etc.) never run, so the only place feedback can come
+        // from is detecting changes in this snapshot: appearing/disappearing/changing value.
+        PlayStatusChangeFeedback(target, beforeStatuses);
+    }
+
+    // Authoritative statuses arrive as full snapshots, so "trigger" feedback has to be inferred
+    // from the diff: a status that just appeared/changed is what used to fire the per-status
+    // tick hooks (Burn/Thorns/Trap/Continuous/Sadism/MechaArm) that carry the SFX/VFX calls.
+    void PlayStatusChangeFeedback(Character target, List<(StatusType type, string cardId, int index, int value, int duration)> beforeStatuses)
+    {
+        if (target == null || ui == null)
+            return;
+
+        foreach (StatusEffect status in target.statusEffects)
+        {
+            if (status == null)
+                continue;
+
+            var previous = beforeStatuses.FirstOrDefault(s =>
+                s.type == status.statusType
+                && string.Equals(s.cardId, status.cardID ?? string.Empty, StringComparison.OrdinalIgnoreCase)
+                && s.index == status.index);
+
+            bool isNew = !beforeStatuses.Any(s =>
+                s.type == status.statusType
+                && string.Equals(s.cardId, status.cardID ?? string.Empty, StringComparison.OrdinalIgnoreCase)
+                && s.index == status.index);
+
+            bool valueChanged = !isNew && previous.value != status.Value;
+
+            if (!isNew && !valueChanged)
+                continue;
+
+            string feedbackName = status.statusType switch
+            {
+                StatusType.Burn => "DamageFire",
+                StatusType.Thorns => "Thorns",
+                StatusType.Trap => "DamageExplosionSmall",
+                StatusType.Continuous => "Continuous",
+                StatusType.Sadism => "Sadism",
+                StatusType.MechaArm => "DamageMagic",
+                _ => null
+            };
+
+            if (string.IsNullOrEmpty(feedbackName))
+                continue;
+
+            Transform targetView = ui.GetView(target);
+            if (targetView == null)
+                continue;
+
+            SFXManager.Instance?.PlaySound(feedbackName);
+            VFXManager.Instance?.PlayEffect(feedbackName, targetView.position);
+        }
     }
 
     bool TryResolveStatusType(JToken combatEvent, out StatusType statusType)

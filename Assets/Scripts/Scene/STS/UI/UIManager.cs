@@ -369,7 +369,7 @@ public class UIManager : MonoBehaviour
 
         yield return zone.PlayDeathAnimation();
     }
-    public void RefreshUI(bool refreshHand = true)
+    public void RefreshUI(bool refreshHand = true, bool skipHandLayout = false)
     {
         selectedCard = null;
         foreach (var ui in characterUIs)
@@ -380,7 +380,8 @@ public class UIManager : MonoBehaviour
         deckCountText.text = $"{combat.deck.drawPile.Count}";
         discardCountText.text = $"{combat.deck.discardPile.Count}";
 
-        RefreshHandLayout();
+        if (!skipHandLayout)
+            RefreshHandLayout();
     }
     void CreateInitialHand()
     {
