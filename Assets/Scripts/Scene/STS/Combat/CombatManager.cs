@@ -112,11 +112,6 @@ public class CombatManager : MonoBehaviour
     private readonly Queue<JObject> authoritativeMessageQueue = new();
     private bool authoritativeMessageQueueRunning;
 
-    // Plays this client has already shown, keyed by card instance, so the server echo confirms
-    // them instead of playing them a second time. See PlayCardAuthoritativeRoutine.
-    private readonly Dictionary<string, Coroutine> presentedCardPlays =
-        new Dictionary<string, Coroutine>(StringComparer.Ordinal);
-
     public bool UsesAuthoritativeCombat => RunManager.Instance != null
         && RunManager.Instance.activeCombat != null
         && RunManager.Instance.activeCombat.Type == JTokenType.Object;
@@ -404,9 +399,9 @@ public class CombatManager : MonoBehaviour
         List<string> selectedCardInstanceIds = new();
         yield return CollectAuthoritativeCardSelection(card, selectedCardInstanceIds);
 
-        // Gate the optimistic presentation on the one thing we can validate locally: the play
-        // would otherwise animate fully before the server gets a chance to reject it with
-        // INSUFFICIENT_ENERGY, so an unaffordable card looked played even though it never was.
+        // Gate on the one thing we can validate locally before ever contacting the server: an
+        // unaffordable card would otherwise still get submitted only to be rejected, wasting a
+        // round trip for feedback we already know the answer to.
         int cardCost = card != null ? card.Cost() : 0;
         if (player != null && cardCost >= 0 && player.resources.energy < cardCost)
         {
@@ -417,15 +412,10 @@ public class CombatManager : MonoBehaviour
             yield break;
         }
 
-        // Show the play now rather than when the server echoes it back. Waiting on the round trip
-        // leaves the card sitting in the hand, where HandLayoutController pulls it back into its
-        // slot every frame, so the play read as arriving late instead of merely being confirmed
-        // late. The echo below waits on this same coroutine, which keeps damage and status events
-        // behind the card animation exactly as they were.
-        if (card != null && !string.IsNullOrWhiteSpace(card.instanceId) && player != null)
-        {
-            presentedCardPlays[card.instanceId] = StartCoroutine(PresentCardPlayed(player, card, targets));
-        }
+        // The card is only ever animated to the middle once the server actually accepts the
+        // play: for WebGL that happens when the resulting CardPlayed event arrives over the
+        // socket and ReplayCardPlayedEvent presents it; for REST it happens below once
+        // response.accepted is true. A rejected command must never show the card being played.
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         var payload = new
@@ -455,7 +445,13 @@ public class CombatManager : MonoBehaviour
             else
             {
                 Debug.Log($"[STS-COMBAT] PLAY_CARD completed taskStatus={commandTask.Status} outcome={(commandTask.Status == TaskStatus.RanToCompletion ? commandTask.Result.ToString() : "<none>")}");
-                if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == ReactCombatCommandOutcome.Unknown)
+                if (commandTask.Status == TaskStatus.RanToCompletion && commandTask.Result == ReactCombatCommandOutcome.Rejected)
+                {
+                    // The state never changed for a rejected play, so there is nothing to resync;
+                    // no CardPlayed event will ever arrive for this attempt either.
+                    Debug.LogWarning($"[STS-COMBAT] Backend rejected play-card command via Bridge card={card?.displayName ?? "<null>"}");
+                }
+                else if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == ReactCombatCommandOutcome.Unknown)
                 {
                     Debug.LogWarning("[STS-COMBAT] Failed to submit backend play-card command via Bridge.");
                     needsResyncWebGL = true;
@@ -471,13 +467,7 @@ public class CombatManager : MonoBehaviour
         // A lost/unacknowledged command leaves the client's view of whose turn it is stale;
         // re-fetch the authoritative state so the UI does not freeze forever.
         if (needsResyncWebGL)
-        {
-            // No echo is coming for a play that was not accepted, so drop the presentation the
-            // echo was meant to claim; the resync below puts the card back where it belongs.
-            if (card != null && !string.IsNullOrWhiteSpace(card.instanceId))
-                presentedCardPlays.Remove(card.instanceId);
             yield return RefreshAuthoritativeCombatState();
-        }
 #else
         Task<STSApiCombatCommandResponse> commandTask = STSApiClient.SubmitCombatCommandAsync(
             RunManager.Instance != null ? RunManager.Instance.runId : null,
@@ -532,11 +522,7 @@ public class CombatManager : MonoBehaviour
         }
 
         if (needsResync)
-        {
-            if (card != null && !string.IsNullOrWhiteSpace(card.instanceId))
-                presentedCardPlays.Remove(card.instanceId);
             yield return RefreshAuthoritativeCombatState();
-        }
 #endif
     }
 
@@ -664,7 +650,6 @@ public class CombatManager : MonoBehaviour
 #endif
         authoritativeMessageQueue.Clear();
         authoritativeMessageQueueRunning = false;
-        presentedCardPlays.Clear();
     }
 
     public void RequestAuthoritativeEndTurn()
@@ -945,32 +930,75 @@ public class CombatManager : MonoBehaviour
             authoritativeTimelineEntries.Remove(staleId);
 
         turnSystem.timeline = authoritativeTimeline.OrderBy(entry => entry.time).ToList();
+        RefreshTimelineDisplay();
+    }
 
-        // The server only ever reports one upcoming entry per combatant, so once a combatant's
-        // turn passes they would vanish from the timeline until the next sync. Keep one stable
-        // local projection per combatant (its own uid, so TimelineUI can animate it smoothly)
-        // instead of the old GetFuture() unbounded exponential growth, but only as a visual
-        // estimate — the server's next sync always overwrites it with the truth.
-        foreach (TurnEntry currentEntry in authoritativeTimeline)
+    // Individual TurnEnded events fire once per internal AI step (an End Turn command can
+    // resolve a whole chain of enemy turns in one round trip), but only the final STATE_UPDATED
+    // carries the full timeline JSON. Updating only there made the whole chain jump in one big
+    // leap instead of sliding turn-by-turn the way the old local timeline always did.
+    void ApplyTurnEndedToTimeline(JToken combatEvent)
+    {
+        if (turnSystem == null || turnSystem.timelineUI == null)
+            return;
+
+        string combatantId = combatEvent.Value<string>("combatantId");
+        long? nextReadyAtTick = combatEvent.Value<long?>("nextReadyAtTick");
+        if (string.IsNullOrWhiteSpace(combatantId) || !nextReadyAtTick.HasValue)
+            return;
+
+        if (!authoritativeTimelineEntries.TryGetValue(combatantId, out TurnEntry entry))
+            return;
+
+        entry.time = nextReadyAtTick.Value;
+        turnSystem.timeline = turnSystem.timeline.OrderBy(e => e.time).ToList();
+        RefreshTimelineDisplay();
+    }
+
+    // Builds the projected lookahead from the current authoritativeTimelineEntries and pushes it
+    // to the UI. Called after a full sync and after each TurnEnded event.
+    void RefreshTimelineDisplay()
+    {
+        // The server only ever reports one upcoming entry per combatant, so a single-step guess
+        // could never show a fast combatant taking two turns before a slower one's next turn —
+        // exactly the case players noticed the timeline getting wrong. Project several steps per
+        // combatant instead, keyed by the server's own combatantId (not re-derived from the
+        // character reference, which drifts once any earlier enemy dies and shifts indices).
+        // This stays a separate display-only list: other systems (CardDrag's play preview,
+        // CurrentCharacter, SyncTimelineWithLivingCharacters) assume exactly one entry per living
+        // combatant, and mutating the real list doubled every character there.
+        const int projectionStepsPerCombatant = 4;
+        var projectionKeys = new HashSet<string>();
+        List<TurnEntry> displayTimeline = new List<TurnEntry>(turnSystem.timeline);
+        foreach (var kvp in authoritativeTimelineEntries)
         {
-            if (currentEntry.character == null)
+            string combatantId = kvp.Key;
+            TurnEntry realEntry = kvp.Value;
+            if (realEntry.character == null)
                 continue;
 
-            string combatantId = GetAuthoritativeCombatantId(currentEntry.character);
-            if (string.IsNullOrWhiteSpace(combatantId))
-                continue;
-
-            if (!authoritativeTimelineProjectionEntries.TryGetValue(combatantId, out TurnEntry projectedEntry))
+            long projectedTime = (long)realEntry.time;
+            for (int step = 0; step < projectionStepsPerCombatant; step++)
             {
-                projectedEntry = new TurnEntry { character = currentEntry.character, uid = TurnEntry.nextUID++ };
-                authoritativeTimelineProjectionEntries[combatantId] = projectedEntry;
+                projectedTime += (long)Mathf.Max(1f, realEntry.character.turnDelay(turnSystem.baseDelay));
+                string projectionKey = $"{combatantId}#{step}";
+                projectionKeys.Add(projectionKey);
+
+                if (!authoritativeTimelineProjectionEntries.TryGetValue(projectionKey, out TurnEntry projectedEntry))
+                {
+                    projectedEntry = new TurnEntry { character = realEntry.character, uid = TurnEntry.nextUID++ };
+                    authoritativeTimelineProjectionEntries[projectionKey] = projectedEntry;
+                }
+                projectedEntry.character = realEntry.character;
+                projectedEntry.time = projectedTime;
+                displayTimeline.Add(projectedEntry);
             }
-            projectedEntry.character = currentEntry.character;
-            projectedEntry.time = currentEntry.time + currentEntry.character.turnDelay(turnSystem.baseDelay);
-            turnSystem.timeline.Add(projectedEntry);
         }
 
-        turnSystem.timelineUI.Display(turnSystem.timeline);
+        foreach (string staleKey in authoritativeTimelineProjectionEntries.Keys.Where(key => !projectionKeys.Contains(key)).ToList())
+            authoritativeTimelineProjectionEntries.Remove(staleKey);
+
+        turnSystem.timelineUI.Display(displayTimeline.OrderBy(entry => entry.time).ToList());
     }
 
     IEnumerator ReplayAuthoritativeEvents(List<JToken> events)
@@ -1040,6 +1068,7 @@ public class CombatManager : MonoBehaviour
                     yield return new WaitForSeconds(0.05f);
                     break;
                 case "TurnEnded":
+                    ApplyTurnEndedToTimeline(combatEvent);
                     yield return new WaitForSeconds(0.05f);
                     break;
                 case "CombatEnded":
@@ -1104,15 +1133,6 @@ public class CombatManager : MonoBehaviour
         if (actor == null || string.IsNullOrWhiteSpace(cardInstanceId) || string.IsNullOrWhiteSpace(definitionId))
             yield break;
 
-        // This play was already shown when it was submitted; wait for that animation rather than
-        // replaying it, so the events that follow stay behind the card as they always did.
-        if (actor.isPlayer && presentedCardPlays.TryGetValue(cardInstanceId, out Coroutine presenting))
-        {
-            presentedCardPlays.Remove(cardInstanceId);
-            yield return presenting;
-            yield break;
-        }
-
         CardInstance card = FindCardByInstanceId(cardInstanceId) ?? BuildCardFromDefinition(definitionId, cardInstanceId);
         if (card == null)
             yield break;
@@ -1148,11 +1168,21 @@ public class CombatManager : MonoBehaviour
             Transform sourceView = ui.GetView(actor);
             playedView = ui.CreateCardView(card, false, sourceView != null ? (Vector3?)sourceView.position : null);
         }
+        else
+        {
+            // Discard/exhaust already do this the moment a card leaves the hand; a played card
+            // never did, so it kept being counted (and re-arranged) by every RefreshHandLayout()
+            // call that fired from any other event replayed during the same play (energy, damage,
+            // status, ...) while it was still mid-flight to the center of the table.
+            ui.RemoveView(playedView);
+        }
 
         if (playedView == null)
             yield break;
 
-        ui.GetDropZone(actor)?.PlayActionSprite(DropZone.ActionSpriteVariant(card));
+        DropZone actorZone = ui.GetDropZone(actor);
+        Debug.Log($"[STS-VFX] PresentCardPlayed actor={actor.name} isPlayer={actor.isPlayer} zoneFound={actorZone != null} variant={DropZone.ActionSpriteVariant(card)}");
+        actorZone?.PlayActionSprite(DropZone.ActionSpriteVariant(card));
 
         // The server resolves a whole AI turn chain in one round-trip and streams every event
         // back-to-back; without this pause enemy actions replay with no perceptible gap between
