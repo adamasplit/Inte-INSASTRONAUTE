@@ -95,7 +95,10 @@ public sealed class ReactCombatBridge : MonoBehaviour
 
     public void HandleCombatEvent(string json)
     {
-        core.HandleCombatEvent(json);
+        // A message the core turns down is a message the player never sees animate, and it used
+        // to go by without a trace. Say so, so the next protocol drift is one log line away.
+        if (!core.HandleCombatEvent(json))
+            Debug.LogWarning($"[STS-BRIDGE] combat message discarded revision={core.CurrentRevision ?? "<null>"} json={json}");
     }
 
     public void HandleCombatStatus(string json)

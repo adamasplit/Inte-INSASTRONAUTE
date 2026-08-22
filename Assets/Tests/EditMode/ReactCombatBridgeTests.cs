@@ -147,6 +147,37 @@ public class ReactCombatBridgeTests
     }
 
     [Test]
+    public void CombatEventsOfAMultiRevisionCommandAreDelivered()
+    {
+        var core = new ReactCombatBridgeCore(() => "action-1");
+        int delivered = 0;
+        core.CombatEventReceived += _ => delivered++;
+        core.Connect("combat-1");
+        core.HandleCombatEvent(Snapshot); // revision = 42, delivered = 1
+
+        // One END_TURN resolves the player discard, the whole AI chain and the next draw;
+        // the server stamps every event it produced with the revision the command lands on,
+        // which is several revisions ahead of the one the client still knows.
+        Assert.That(core.HandleCombatEvent(Event("45", type: "COMBAT_EVENT")), Is.True);
+        Assert.That(core.HandleCombatEvent(Event("45", type: "COMBAT_EVENT")), Is.True);
+        Assert.That(core.CurrentRevision, Is.EqualTo("42"), "COMBAT_EVENT must not advance revision");
+        Assert.That(delivered, Is.EqualTo(3), "every event of the command must reach the presentation layer");
+    }
+
+    [Test]
+    public void CombatEventsOlderThanTheKnownRevisionAreNotDelivered()
+    {
+        var core = new ReactCombatBridgeCore(() => "action-1");
+        int delivered = 0;
+        core.CombatEventReceived += _ => delivered++;
+        core.Connect("combat-1");
+        core.HandleCombatEvent(Snapshot); // revision = 42, delivered = 1
+
+        Assert.That(core.HandleCombatEvent(Event("41", type: "COMBAT_EVENT")), Is.False);
+        Assert.That(delivered, Is.EqualTo(1));
+    }
+
+    [Test]
     public void CommandWaitCompletesInlineWhenUnityReceivesConfirmation()
     {
         var core = new ReactCombatBridgeCore(() => "action-1");

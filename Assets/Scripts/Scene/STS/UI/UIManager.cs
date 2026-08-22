@@ -423,6 +423,49 @@ public class UIManager : MonoBehaviour
         RefreshHandLayout();
     }
 
+    /// <summary>
+    /// Rebuilds the hand views only when they no longer match the deck's hand.
+    /// </summary>
+    /// <remarks>
+    /// The authoritative state replaces <c>deck.hand</c> with freshly built CardInstance objects
+    /// on every update, so a view created earlier points at an object the hand no longer holds.
+    /// Left alone, the player sees a card the server has already discarded — and clicking it is
+    /// refused with CARD_NOT_IN_HAND — while cards the server dealt never appear.
+    /// Rebuilding unconditionally would destroy views mid-animation, so this only acts on drift.
+    /// </remarks>
+    public void SyncHandFromDeckStateIfDrifted()
+    {
+        if (combat == null || combat.deck == null || combat.deck.hand == null)
+            return;
+
+        // Which cards are held, not what order they sit in: a reorder is the layout's business
+        // and rebuilding for one would destroy views that are still animating.
+        List<CardInstance> hand = combat.deck.hand;
+        HashSet<string> shown = new HashSet<string>(System.StringComparer.Ordinal);
+        foreach (CardView view in currentHandViews)
+        {
+            if (view != null && view.cardInstance != null
+                && !string.IsNullOrEmpty(view.cardInstance.instanceId))
+            {
+                shown.Add(view.cardInstance.instanceId);
+            }
+        }
+
+        HashSet<string> held = new HashSet<string>(System.StringComparer.Ordinal);
+        foreach (CardInstance card in hand)
+        {
+            if (card != null && !string.IsNullOrEmpty(card.instanceId))
+            {
+                held.Add(card.instanceId);
+            }
+        }
+
+        if (!shown.SetEquals(held))
+        {
+            SyncHandFromDeckState();
+        }
+    }
+
     public void RefreshHandLayout()
     {
         currentHandViews.RemoveAll(v => v == null);
