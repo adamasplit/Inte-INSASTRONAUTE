@@ -403,6 +403,19 @@ public class CombatManager : MonoBehaviour
         List<string> selectedCardInstanceIds = new();
         yield return CollectAuthoritativeCardSelection(card, selectedCardInstanceIds);
 
+        // Gate the optimistic presentation on the one thing we can validate locally: the play
+        // would otherwise animate fully before the server gets a chance to reject it with
+        // INSUFFICIENT_ENERGY, so an unaffordable card looked played even though it never was.
+        int cardCost = card != null ? card.Cost() : 0;
+        if (player != null && cardCost >= 0 && player.resources.energy < cardCost)
+        {
+            authoritativeCommandInFlight = false;
+            activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
+            Debug.Log($"[STS-COMBAT] PlayCard rejected locally: insufficient energy ({player.resources.energy} < {cardCost}) card={card?.displayName ?? "<null>"}");
+            ui.StartCoroutine(ui.EnergyTextGlowRed());
+            yield break;
+        }
+
         // Show the play now rather than when the server echoes it back. Waiting on the round trip
         // leaves the card sitting in the hand, where HandLayoutController pulls it back into its
         // slot every frame, so the play read as arriving late instead of merely being confirmed
@@ -1520,6 +1533,18 @@ public class CombatManager : MonoBehaviour
         int armorLost = combatEvent.Value<int?>("armorLost") ?? 0;
         target.armor = Mathf.Max(0, target.armor - armorLost);
         ui?.RefreshUI(false);
+    }
+
+    IEnumerator FlashCombatantWhite(Character target)
+    {
+        if (target == null || ui == null)
+            yield break;
+
+        DropZone zone = ui.GetDropZone(target);
+        if (zone == null)
+            yield break;
+
+        yield return zone.FlashWhite();
     }
 
     // Unlike every other stat event, ArmorGained previously only played the flash and never
