@@ -78,6 +78,9 @@ public class CardInstance
             case TargetingMode.Player:
                 text += "<color=green>(Soi-même)</color> :\n";
                 break;
+            case TargetingMode.AnyPlayer:
+                text += "<color=green>(Un allié)</color> :\n";
+                break;
             case TargetingMode.Enemy:
                 text += "<color=red>(Adversaire)</color> :\n";
                 break;
@@ -276,9 +279,13 @@ public class CardInstance
             {
                 merged.targetingMode = TargetingMode.RandomEnemy;
             }
-            if (card.targetingMode==TargetingMode.Enemy && merged.targetingMode==TargetingMode.Player)
+            if (card.targetingMode==TargetingMode.Enemy && (merged.targetingMode==TargetingMode.Player||merged.targetingMode==TargetingMode.AnyPlayer))
             {
                 merged.targetingMode = TargetingMode.Enemy;
+            }
+            if (card.targetingMode==TargetingMode.AnyPlayer && merged.targetingMode==TargetingMode.Player)
+            {
+                merged.targetingMode = TargetingMode.AnyPlayer;
             }
             foreach (var mod in card.GetModifiers(false, true))
             {

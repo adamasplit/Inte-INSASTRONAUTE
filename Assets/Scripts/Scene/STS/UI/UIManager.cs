@@ -263,16 +263,19 @@ public class UIManager : MonoBehaviour
         int playerIndex = 0;
         int enemyIndex = 0;
 
-        // PLAYER
-        if (combat.player != null)
+        // PLAYERS — one dropzone per ally, same treatment as the enemy row below.
+        foreach (var ally in combat.allies)
         {
+            if (ally == null)
+                continue;
+
             GameObject playerZone = playerIndex < playerZones.Count ? playerZones[playerIndex] : Instantiate(playerPrefab, playerRoot);
             playerZone.SetActive(true);
             var pUI = playerZone.GetComponent<CharacterUI>();
-            pUI.SetCharacter(combat.player, this);
+            pUI.SetCharacter(ally, this);
 
             var dz = playerZone.GetComponent<DropZone>();
-            dz.Init(combat, combat.player, false);
+            dz.Init(combat, ally, false);
             allZones.Add(dz);
             characterUIs.Add(pUI);
             playerIndex++;
@@ -376,7 +379,8 @@ public class UIManager : MonoBehaviour
         {
             ui.Refresh();
         }
-        energyText.text = combat.player != null ? $"{combat.player.resources.energy}" : "-";
+        Character actingPlayer = combat != null ? combat.GetActingPlayer() : null;
+        energyText.text = actingPlayer != null ? $"{actingPlayer.resources.energy}" : "-";
         deckCountText.text = $"{combat.deck.drawPile.Count}";
         discardCountText.text = $"{combat.deck.discardPile.Count}";
 
@@ -488,6 +492,8 @@ public class UIManager : MonoBehaviour
 
     public void HighlightTargets(TargetingMode mode, Character hovered)
     {
+        Character actingPlayer = combat != null ? combat.GetActingPlayer() : null;
+
         foreach (var zone in allZones)
         {
             bool shouldHighlight = false;
@@ -499,11 +505,15 @@ public class UIManager : MonoBehaviour
                     break;
 
                 case TargetingMode.AllEnemies:
-                    shouldHighlight = zone.target != combat.player&& hovered != null;
+                    shouldHighlight = zone.target != null && !zone.target.isPlayer && hovered != null;
                     break;
 
                 case TargetingMode.Player:
-                    shouldHighlight = (zone.target == combat.player) && (hovered == combat.player);
+                    shouldHighlight = (zone.target == actingPlayer) && (hovered == actingPlayer);
+                    break;
+
+                case TargetingMode.AnyPlayer:
+                    shouldHighlight = zone.target != null && zone.target.isPlayer && hovered != null && zone.target.IsAlive;
                     break;
 
                 case TargetingMode.AllCharacters:
@@ -513,7 +523,7 @@ public class UIManager : MonoBehaviour
                     shouldHighlight = false;
                     break;
                 case TargetingMode.RandomEnemy:
-                    shouldHighlight = zone.target != combat.player&& hovered != null;
+                    shouldHighlight = zone.target != null && !zone.target.isPlayer && hovered != null;
                     break;
             }
 
