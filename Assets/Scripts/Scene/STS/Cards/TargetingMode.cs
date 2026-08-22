@@ -5,5 +5,6 @@ public enum TargetingMode
     AllEnemies,
     AllCharacters,
     None,
-    RandomEnemy
+    RandomEnemy,
+    AnyPlayer
 }

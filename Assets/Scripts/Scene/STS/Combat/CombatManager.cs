@@ -401,13 +401,15 @@ public class CombatManager : MonoBehaviour
 
         // Gate on the one thing we can validate locally before ever contacting the server: an
         // unaffordable card would otherwise still get submitted only to be rejected, wasting a
-        // round trip for feedback we already know the answer to.
+        // round trip for feedback we already know the answer to. With several allies the energy
+        // pool belongs to the ally whose turn it is, not necessarily the first one.
+        Player actingPlayer = GetActingPlayer();
         int cardCost = card != null ? card.Cost() : 0;
-        if (player != null && cardCost >= 0 && player.resources.energy < cardCost)
+        if (actingPlayer != null && cardCost >= 0 && actingPlayer.resources.energy < cardCost)
         {
             authoritativeCommandInFlight = false;
             activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
-            Debug.Log($"[STS-COMBAT] PlayCard rejected locally: insufficient energy ({player.resources.energy} < {cardCost}) card={card?.displayName ?? "<null>"}");
+            Debug.Log($"[STS-COMBAT] PlayCard rejected locally: insufficient energy ({actingPlayer.resources.energy} < {cardCost}) card={card?.displayName ?? "<null>"}");
             ui.StartCoroutine(ui.EnergyTextGlowRed());
             yield break;
         }
@@ -791,7 +793,14 @@ public class CombatManager : MonoBehaviour
             return null;
 
         if (character.isPlayer)
+        {
+            // The first ally keeps the legacy "player" id the backend already emits; extra
+            // player-side combatants get index-based ids mirroring the enemy-N convention.
+            int allyIndex = allies.IndexOf(character as Player);
+            if (allyIndex > 0)
+                return $"player-{allyIndex}";
             return "player";
+        }
 
         int enemyIndex = enemies.IndexOf(character);
         return enemyIndex >= 0 ? $"enemy-{enemyIndex}" : null;
@@ -849,7 +858,9 @@ public class CombatManager : MonoBehaviour
                 }
             }
 
-            if (target.isPlayer)
+            // Only the primary player combatant owns the shared deck/hand UI; extra allies have
+            // their own piles server-side and must not overwrite the local deck state.
+            if (target.isPlayer && string.Equals(combatantId, "player", StringComparison.Ordinal))
             {
                 ApplyAuthoritativePlayerPiles(combatantToken["piles"]);
             }
@@ -861,7 +872,10 @@ public class CombatManager : MonoBehaviour
 
         if (turnSystem != null && turnSystem.endTurnButton != null)
         {
-            turnSystem.endTurnButton.interactable = string.Equals(activeCombatantId, "player", StringComparison.Ordinal)
+            // Any living player-side combatant holding the active turn unlocks the button.
+            Character activeCombatant = ResolveCombatant(activeCombatantId);
+            turnSystem.endTurnButton.interactable = activeCombatant != null
+                && activeCombatant.isPlayer
                 && !combatEnded;
         }
 
@@ -1946,6 +1960,14 @@ public class CombatManager : MonoBehaviour
         if (string.Equals(combatantId, "player", StringComparison.Ordinal))
             return player;
 
+        if (combatantId.StartsWith("player-", StringComparison.Ordinal)
+            && int.TryParse(combatantId.Substring("player-".Length), out int allyIndex)
+            && allyIndex >= 0
+            && allyIndex < allies.Count)
+        {
+            return allies[allyIndex];
+        }
+
         if (combatantId.StartsWith("enemy-", StringComparison.Ordinal)
             && int.TryParse(combatantId.Substring("enemy-".Length), out int enemyIndex)
             && enemyIndex >= 0
@@ -2446,6 +2468,18 @@ public class CombatManager : MonoBehaviour
         resolvingCombatCleanup = false;
     }
 
+    /// The player-side character whose turn is currently active. Cards in Player mode aim at
+    /// them alone; AnyPlayer mode may aim at any living ally, including them.
+    public Player GetActingPlayer()
+    {
+        foreach (var ally in allies)
+        {
+            if (ally != null && ally.IsAlive && ally.onTurn)
+                return ally;
+        }
+        return player;
+    }
+
     public List<Character> GetDisplayTargets(TargetingMode mode, Character hovered)
     {
         switch (mode)
@@ -2454,7 +2488,13 @@ public class CombatManager : MonoBehaviour
                 return hovered != null && hovered.IsAlive ? new List<Character> { hovered } : new();
 
             case TargetingMode.Player:
-                return player != null && player.IsAlive ? new List<Character> { player } : new();
+                Player acting = GetActingPlayer();
+                return acting != null && acting.IsAlive ? new List<Character> { acting } : new();
+
+            case TargetingMode.AnyPlayer:
+                return hovered != null && hovered.isPlayer && hovered.IsAlive
+                    ? new List<Character> { hovered }
+                    : new();
 
             case TargetingMode.AllEnemies:
                 return enemies.Where(e => e != null && e.IsAlive).ToList();
@@ -2477,7 +2517,8 @@ public class CombatManager : MonoBehaviour
         }
         if (!source.isPlayer)
         {
-            return new List<Character>{player};
+            Character firstAlly = allies.FirstOrDefault(a => a != null && a.IsAlive);
+            return firstAlly != null ? new List<Character> { firstAlly } : new List<Character>();
         }
         switch (mode)
         {
@@ -2488,6 +2529,15 @@ public class CombatManager : MonoBehaviour
                     return RandomEnemy();
             case TargetingMode.AllEnemies:
                 return enemies.Where(e => e != null && e.IsAlive).ToList();
+            case TargetingMode.Player:
+            {
+                Player acting = GetActingPlayer();
+                return acting != null && acting.IsAlive ? new List<Character> { acting } : new();
+            }
+            case TargetingMode.AnyPlayer:
+                if (target != null && target.isPlayer && target.IsAlive)
+                    return new List<Character> { target };
+                return source != null ? new List<Character> { source } : new List<Character>();
             default:
                 return RandomEnemy();
         }
@@ -2495,8 +2545,11 @@ public class CombatManager : MonoBehaviour
     public List<Character> GetAllCharacters()
     {
         var list = enemies.Where(e => e != null && e.IsAlive).Cast<Character>().ToList();
-        if (player != null && player.IsAlive)
-            list.Add(player);
+        foreach (var ally in allies)
+        {
+            if (ally != null && ally.IsAlive)
+                list.Add(ally);
+        }
         return list;
     }
     public List<Character> GetAdversaries(Character character)
@@ -2507,7 +2560,7 @@ public class CombatManager : MonoBehaviour
         }
         else
         {
-            return player != null && player.IsAlive ? new List<Character> { player } : new List<Character>();
+            return allies.Where(a => a != null && a.IsAlive).Cast<Character>().ToList();
         }
     }
     public List<Character> RandomEnemy()
