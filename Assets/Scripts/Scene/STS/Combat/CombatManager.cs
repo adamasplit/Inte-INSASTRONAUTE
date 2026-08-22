@@ -954,7 +954,7 @@ public class CombatManager : MonoBehaviour
                     yield return new WaitForSeconds(0.12f);
                     break;
                 case "ArmorGained":
-                    yield return FlashCombatantWhite(ResolveCombatant(combatEvent.Value<string>("targetId")));
+                    yield return ReplayArmorGainedEvent(combatEvent);
                     break;
                 case "ArmorBroken":
                     ReplayArmorBrokenEvent(combatEvent);
@@ -1079,7 +1079,10 @@ public class CombatManager : MonoBehaviour
     {
         List<EffectEntry> effects = card.GetEffects();
         if (effects == null || effects.Count == 0)
+        {
+            Debug.Log($"[STS-VFX] no effects found for card {card?.displayName ?? "<null>"}");
             return;
+        }
 
         List<Character> targets = new();
         if (combatEvent["targetIds"] is JArray targetIdsArray)
@@ -1094,7 +1097,9 @@ public class CombatManager : MonoBehaviour
 
         foreach (EffectEntry effect in effects)
         {
-            SFXManager.Instance?.PlaySound(effect.GetEffectName());
+            string effectName = effect.GetEffectName();
+            Debug.Log($"[STS-VFX] card={card?.displayName ?? "<null>"} effect={effect.type} sfx={effectName} targets={targets.Count}");
+            SFXManager.Instance?.PlaySound(effectName);
 
             if (targets.Count == 0)
                 continue;
@@ -1411,16 +1416,17 @@ public class CombatManager : MonoBehaviour
         ui?.RefreshUI(false);
     }
 
-    IEnumerator FlashCombatantWhite(Character target)
+    // Unlike every other stat event, ArmorGained previously only played the flash and never
+    // actually applied the value to the character, so gained armor was invisible on the UI.
+    IEnumerator ReplayArmorGainedEvent(JToken combatEvent)
     {
+        Character target = ResolveCombatant(combatEvent.Value<string>("targetId"));
         if (target == null || ui == null)
             yield break;
 
-        DropZone zone = ui.GetDropZone(target);
-        if (zone == null)
-            yield break;
-
-        yield return zone.FlashWhite();
+        target.armor = combatEvent.Value<int?>("resultingArmor") ?? target.armor;
+        yield return FlashCombatantWhite(target);
+        ui.RefreshUI(false);
     }
 
     CardInstance FindCardByInstanceId(string instanceId)
