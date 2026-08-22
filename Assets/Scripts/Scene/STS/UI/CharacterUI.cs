@@ -85,7 +85,10 @@ public class CharacterUI : MonoBehaviour
 
             if (activeStatusUIs.TryGetValue(status, out var statusUI))
             {
-                statusUI.SetStatus(status, uiManager, character.isPlayer, false, authoritativeCombat);
+                // Don't pass authoritativeCombat as playUpdatePulse: in that mode this refresh runs
+                // after every single state sync, and the pulse was firing on every action even
+                // though the status had not actually been reapplied or updated.
+                statusUI.SetStatus(status, uiManager, character.isPlayer, false, false);
                 statusUI.transform.SetSiblingIndex(i);
             }
             else

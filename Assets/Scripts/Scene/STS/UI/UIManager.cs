@@ -383,6 +383,10 @@ public class UIManager : MonoBehaviour
         if (!skipHandLayout)
             RefreshHandLayout();
     }
+
+    // True while any hand card is mid-animation (draw, discard, play, etc.) — a layout run
+    // during one of those would fight the animation and snap cards instead of flowing.
+    public bool HandHasAnimatingCard => currentHandViews.Any(view => view != null && view.isAnimating);
     void CreateInitialHand()
     {
         currentHandViews.Clear();

@@ -85,6 +85,7 @@ public class CombatManager : MonoBehaviour
     private bool turnSystemInitialized;
     private bool authoritativeHandSynced;
     private readonly Dictionary<string, TurnEntry> authoritativeTimelineEntries = new();
+    private readonly Dictionary<string, TurnEntry> authoritativeTimelineProjectionEntries = new();
     private bool authoritativeCommandInFlight;
     private float authoritativeCommandInFlightSince;
     private const float AuthoritativeCommandWatchdogSeconds = 8f;
@@ -885,7 +886,11 @@ public class CombatManager : MonoBehaviour
         {
             // Don't call SyncHandFromDeckState here — the COMBAT_EVENT replays already handle hand state,
             // and calling it destroys card views that are still being animated.
-            ui.RefreshUI(false, skipHandLayout: presentedCardPlays.Count > 0);
+            // Skip the hand re-layout while any card is still mid-animation, not just while the
+            // optimistic presentation was recently started: the state's echo arrives after the
+            // presentation finishes, and a layout run then would snap the remaining cards into
+            // place again even though the leaving card's own animation already settled the hand.
+            ui.RefreshUI(false, skipHandLayout: ui.HandHasAnimatingCard);
         }
 
         // The first application seeds the hand from raw pile data, since no CardDrawn events exist
@@ -941,11 +946,30 @@ public class CombatManager : MonoBehaviour
 
         turnSystem.timeline = authoritativeTimeline.OrderBy(entry => entry.time).ToList();
 
-        // GetDisplayTimeline()/GetFuture() extrapolates turns beyond each combatant's first
-        // upcoming entry using a local turnDelay() heuristic that has no relation to the
-        // server's real tick-based scheduling — every projected entry beyond the first was a
-        // fabricated guess. The server only ever reports one true upcoming entry per combatant,
-        // so display exactly that instead of a locally-simulated (and wrong) lookahead.
+        // The server only ever reports one upcoming entry per combatant, so once a combatant's
+        // turn passes they would vanish from the timeline until the next sync. Keep one stable
+        // local projection per combatant (its own uid, so TimelineUI can animate it smoothly)
+        // instead of the old GetFuture() unbounded exponential growth, but only as a visual
+        // estimate — the server's next sync always overwrites it with the truth.
+        foreach (TurnEntry currentEntry in authoritativeTimeline)
+        {
+            if (currentEntry.character == null)
+                continue;
+
+            string combatantId = GetAuthoritativeCombatantId(currentEntry.character);
+            if (string.IsNullOrWhiteSpace(combatantId))
+                continue;
+
+            if (!authoritativeTimelineProjectionEntries.TryGetValue(combatantId, out TurnEntry projectedEntry))
+            {
+                projectedEntry = new TurnEntry { character = currentEntry.character, uid = TurnEntry.nextUID++ };
+                authoritativeTimelineProjectionEntries[combatantId] = projectedEntry;
+            }
+            projectedEntry.character = currentEntry.character;
+            projectedEntry.time = currentEntry.time + currentEntry.character.turnDelay(turnSystem.baseDelay);
+            turnSystem.timeline.Add(projectedEntry);
+        }
+
         turnSystem.timelineUI.Display(turnSystem.timeline);
     }
 
@@ -1590,17 +1614,9 @@ public class CombatManager : MonoBehaviour
 
     CardInstance BuildCardFromDefinition(string definitionId, string instanceId)
     {
-        STSCardData data = STSCardDatabase.Get(definitionId);
-        if (data != null)
-        {
-            return new CardInstance(data)
-            {
-                instanceId = instanceId
-            };
-        }
-
         // Enemy move cards are runtime-generated server-side with IDs like "enemy-move:{enemyId}:{index}";
-        // resolve them from the local enemy data instead of the card database.
+        // they live outside the card database, so resolve them from local enemy data instead of
+        // logging a bogus "Card not found!" error first.
         if (definitionId != null && definitionId.StartsWith("enemy-move:", StringComparison.Ordinal))
         {
             string[] parts = definitionId.Split(':');
@@ -1635,6 +1651,15 @@ public class CombatManager : MonoBehaviour
                     }
                 }
             }
+        }
+
+        STSCardData data = STSCardDatabase.Get(definitionId);
+        if (data != null)
+        {
+            return new CardInstance(data)
+            {
+                instanceId = instanceId
+            };
         }
 
         Debug.LogWarning($"[STS-COMBAT] Could not build card from definition '{definitionId}'.");
@@ -1729,9 +1754,16 @@ public class CombatManager : MonoBehaviour
     // Authoritative statuses arrive as full snapshots, so "trigger" feedback has to be inferred
     // from the diff: a status that just appeared/changed is what used to fire the per-status
     // tick hooks (Burn/Thorns/Trap/Continuous/Sadism/MechaArm) that carry the SFX/VFX calls.
+    // Skip the very first sync of a given status entirely, otherwise entering combat would
+    // play every starting-status's trigger effect at once even though none of them have fired yet.
     void PlayStatusChangeFeedback(Character target, List<(StatusType type, string cardId, int index, int value, int duration)> beforeStatuses)
     {
         if (target == null || ui == null)
+            return;
+
+        // First-ever sync for this combatant has no "before" to diff against; everything would
+        // count as new. Don't play any feedback on the very first application.
+        if (beforeStatuses.Count == 0)
             return;
 
         foreach (StatusEffect status in target.statusEffects)
