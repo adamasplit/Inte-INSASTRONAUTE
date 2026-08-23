@@ -464,9 +464,13 @@ public class CombatManager : MonoBehaviour
                     // no CardPlayed event will ever arrive for this attempt either.
                     Debug.LogWarning($"[STS-COMBAT] Backend rejected play-card command via Bridge card={card?.displayName ?? "<null>"}");
                 }
-                else if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == ReactCombatCommandOutcome.Unknown)
+                // Anything that is not a confirmation leaves us unsure of the server's
+                // state, so resync. Testing for "not confirmed" rather than listing the
+                // outcomes we know keeps a new one from being silently ignored here.
+                else if (commandTask.Status != TaskStatus.RanToCompletion
+                    || commandTask.Result != ReactCombatCommandOutcome.Confirmed)
                 {
-                    Debug.LogWarning("[STS-COMBAT] Failed to submit backend play-card command via Bridge.");
+                    Debug.LogWarning($"[STS-COMBAT] Play-card command did not confirm via Bridge outcome={(commandTask.Status == TaskStatus.RanToCompletion ? commandTask.Result.ToString() : "<none>")}");
                     needsResyncWebGL = true;
                 }
             }
@@ -713,9 +717,14 @@ public class CombatManager : MonoBehaviour
                 Debug.LogWarning("[STS-COMBAT] END_TURN via Bridge never completed before deadline; socket may be disconnected.");
                 needsResyncWebGL = true;
             }
-            else if (commandTask.Status != TaskStatus.RanToCompletion || commandTask.Result == ReactCombatCommandOutcome.Unknown)
+            // A rejection was evaluated against a known state, so there is nothing to
+            // resync. Everything else — a failure, an outcome this build does not know —
+            // leaves us unsure, and guessing is what softlocked a combat before.
+            else if (commandTask.Status != TaskStatus.RanToCompletion
+                || (commandTask.Result != ReactCombatCommandOutcome.Confirmed
+                    && commandTask.Result != ReactCombatCommandOutcome.Rejected))
             {
-                Debug.LogWarning("[STS-COMBAT] Failed to submit backend end-turn command via Bridge.");
+                Debug.LogWarning($"[STS-COMBAT] End-turn command did not confirm via Bridge outcome={(commandTask.Status == TaskStatus.RanToCompletion ? commandTask.Result.ToString() : "<none>")}");
                 needsResyncWebGL = true;
             }
         }
