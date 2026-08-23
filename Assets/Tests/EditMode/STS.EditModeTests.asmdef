@@ -3,7 +3,8 @@
   "rootNamespace": "",
   "references": [
     "STS.RunResume",
-    "STS.ReactCombatBridge"
+    "STS.ReactCombatBridge",
+    "STS.AuthoritativeCombat"
   ],
   "includePlatforms": [
     "Editor"
