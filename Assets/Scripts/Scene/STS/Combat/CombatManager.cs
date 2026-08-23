@@ -1133,7 +1133,7 @@ public class CombatManager : MonoBehaviour
             return "EnergyGained";
         if (combatEvent["handIndex"] != null)
             return "CardDrawn";
-        if (combatEvent["statusType"] != null || combatEvent["status"] != null || combatEvent["statusName"] != null)
+        if (combatEvent["statusType"] != null)
         {
             if ((combatEvent.Value<bool?>("removed") ?? false) || (combatEvent.Value<bool?>("expired") ?? false))
                 return "StatusRemoved";
@@ -1141,7 +1141,7 @@ public class CombatManager : MonoBehaviour
                 return "StatusUpdated";
             return "StatusApplied";
         }
-        if (combatEvent["fromPile"] != null || combatEvent["toPile"] != null || combatEvent["sourcePile"] != null || combatEvent["destinationPile"] != null)
+        if (combatEvent["fromPile"] != null || combatEvent["toPile"] != null)
             return "CardMoved";
         if (combatEvent["pile"] != null || combatEvent["drawSize"] != null)
             return "PileShuffled";
@@ -1358,9 +1358,7 @@ public class CombatManager : MonoBehaviour
 
         if (toList != null && !toList.Contains(card))
         {
-            int targetIndex = combatEvent.Value<int?>("toIndex")
-                ?? combatEvent.Value<int?>("destinationIndex")
-                ?? combatEvent.Value<int?>("handIndex")
+            int targetIndex = combatEvent.Value<int?>("destinationIndex")
                 ?? -1;
             InsertCardAt(toList, card, targetIndex);
         }
@@ -1485,7 +1483,6 @@ public class CombatManager : MonoBehaviour
             ?? combatEvent.Value<int?>("remainingDuration")
             ?? -1;
         string cardId = combatEvent.Value<string>("cardId")
-            ?? combatEvent.Value<string>("cardID")
             ?? string.Empty;
         int index = combatEvent.Value<int?>("index") ?? 0;
 
@@ -1891,8 +1888,7 @@ public class CombatManager : MonoBehaviour
         statusType = default;
 
         string raw = combatEvent.Value<string>("statusType")
-            ?? combatEvent.Value<string>("status")
-            ?? combatEvent.Value<string>("statusName");
+            ?? combatEvent.Value<string>("status");
         if (string.IsNullOrWhiteSpace(raw))
             return false;
 
@@ -1918,7 +1914,7 @@ public class CombatManager : MonoBehaviour
             return new List<StatusEffect>();
 
         int? index = combatEvent.Value<int?>("index");
-        string cardId = combatEvent.Value<string>("cardId") ?? combatEvent.Value<string>("cardID");
+        string cardId = combatEvent.Value<string>("cardId");
 
         if (TryResolveStatusType(combatEvent, out StatusType statusType))
         {
@@ -1930,7 +1926,7 @@ public class CombatManager : MonoBehaviour
                 .ToList();
         }
 
-        string rawName = combatEvent.Value<string>("statusName") ?? combatEvent.Value<string>("status");
+        string rawName = combatEvent.Value<string>("status");
         if (string.IsNullOrWhiteSpace(rawName))
             return new List<StatusEffect>();
 
