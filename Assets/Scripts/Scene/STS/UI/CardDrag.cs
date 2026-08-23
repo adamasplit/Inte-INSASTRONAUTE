@@ -138,7 +138,7 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
                 if (targets.Count > 0)
                 {
                     Debug.Log($"[STS-INPUT] drag-end submitting card={cardView.cardInstance.displayName} targets={targets.Count}");
-                    combat.PlayCard(combat.player, cardView.cardInstance, targets);
+                    combat.PlayCard(combat.GetActingPlayer(), cardView.cardInstance, targets);
                     cardPlayedByDrop = true;
                 }
                 else
@@ -192,6 +192,7 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
     static bool RequiresExplicitTarget(TargetingMode mode)
     {
         return mode == TargetingMode.Player ||
+               mode == TargetingMode.AnyPlayer ||
                mode == TargetingMode.Enemy;
     }
 
@@ -209,6 +210,9 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
 
         if (mode == TargetingMode.AllCharacters)
             return inEnemyThreshold || inPlayerThreshold;
+
+        if (mode == TargetingMode.AnyPlayer)
+            return inPlayerThreshold;
 
         return true;
     }

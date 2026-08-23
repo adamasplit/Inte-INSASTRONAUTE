@@ -101,10 +101,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         if (image != null)
         {
             imageRect.localScale = Vector3.one;
-            if (!target.isPlayer)
-            {
-                imageRect.anchoredPosition = Vector2.zero;
-            }
+            imageRect.anchoredPosition = Vector2.zero;
 
             Color color = image.color;
             color.a = 1f;
@@ -119,7 +116,8 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
         isHovered = false;
 
-        if (target != null && !target.isPlayer)
+        // Player-side zones size and lock their layout exactly like enemy zones.
+        if (target != null)
         {
             EnsureDropZoneLayoutLock();
         }
@@ -203,12 +201,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         if (imageRect == null)
             imageRect = image.rectTransform;
 
-        if (target.isPlayer)
-        {
-            imageRect.sizeDelta = new Vector2(800, 800);
-            return;
-        }
-
+        // Player-side and enemy-side zones share the same fit-to-box sizing now.
         if (!enemyImageSizeCached)
         {
             RectTransform zoneRect = GetComponent<RectTransform>();
@@ -250,7 +243,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
     void ApplyDropZoneSize(Vector2 size)
     {
-        if (target == null || target.isPlayer)
+        if (target == null)
             return;
 
         EnsureDropZoneLayoutLock();
@@ -305,11 +298,14 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
         if (normalizedHeight <= 0.3f && CanTargetPlayer(mode))
         {
+            // Player mode aims at the acting ally alone, no matter whose zone is nearest;
+            // AnyPlayer picks the closest player-side zone like enemy targeting does.
             DropZone playerZone = GetNearestDropZone(pointerScreenPosition, zone =>
                 zone != null &&
                 zone.isActiveAndEnabled &&
                 zone.target != null &&
-                zone.target.isPlayer,
+                zone.target.isPlayer &&
+                (mode != TargetingMode.Player || zone.combat == null || zone.target == zone.combat.GetActingPlayer()),
                 eventCamera);
 
             return playerZone != null ? playerZone.target : null;
@@ -398,6 +394,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     static bool CanTargetPlayer(TargetingMode mode)
     {
         return mode == TargetingMode.Player ||
+               mode == TargetingMode.AnyPlayer ||
                mode == TargetingMode.AllCharacters;
     }
 
@@ -441,7 +438,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
         Vector2 discardPos = combat.animator.animationLayer.InverseTransformPoint(combat.ui.discardAnchor.position);
         drag?.NotifyCardPlayedFromDrop();
-        combat.PlayCard(combat.player, cardView.cardInstance, targets);
+        combat.PlayCard(combat.GetActingPlayer(), cardView.cardInstance, targets);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -557,7 +554,11 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
                    cardView.cardInstance.targetingMode == TargetingMode.AllCharacters ||
                    cardView.cardInstance.targetingMode == TargetingMode.RandomEnemy;
 
-        return cardView.cardInstance.targetingMode == TargetingMode.Player ||
+        // Player mode aims at the acting ally alone; AnyPlayer may land on any ally's zone.
+        if (cardView.cardInstance.targetingMode == TargetingMode.Player)
+            return combat == null || target == combat.GetActingPlayer();
+
+        return cardView.cardInstance.targetingMode == TargetingMode.AnyPlayer ||
                cardView.cardInstance.targetingMode == TargetingMode.AllCharacters;
     }
 

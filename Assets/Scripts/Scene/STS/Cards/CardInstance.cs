@@ -279,9 +279,13 @@ public class CardInstance
             {
                 merged.targetingMode = TargetingMode.RandomEnemy;
             }
-            if (card.targetingMode==TargetingMode.Enemy && merged.targetingMode==TargetingMode.Player)
+            if (card.targetingMode==TargetingMode.Enemy && (merged.targetingMode==TargetingMode.Player||merged.targetingMode==TargetingMode.AnyPlayer))
             {
                 merged.targetingMode = TargetingMode.Enemy;
+            }
+            if (card.targetingMode==TargetingMode.AnyPlayer && merged.targetingMode==TargetingMode.Player)
+            {
+                merged.targetingMode = TargetingMode.AnyPlayer;
             }
             foreach (var mod in card.GetModifiers(false, true))
             {
