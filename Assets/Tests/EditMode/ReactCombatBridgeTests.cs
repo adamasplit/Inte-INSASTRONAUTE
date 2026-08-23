@@ -193,6 +193,64 @@ public class ReactCombatBridgeTests
         Assert.That(pending.Result, Is.EqualTo(ReactCombatCommandOutcome.Confirmed));
     }
 
+    /// <summary>
+    /// A command the server could not process at all answers COMMAND_FAILED. The player
+    /// who hit this waited on a deadline instead and softlocked, because the message was
+    /// dropped before it could answer anything.
+    /// </summary>
+    [Test]
+    public async Task CommandFailureAnswersThePendingCommand()
+    {
+        var core = new ReactCombatBridgeCore(() => "action-1");
+        core.Connect("combat-1");
+        core.HandleCombatEvent(Snapshot);
+        ReactCombatCommand command = core.CreateCommand("END_TURN", new { });
+        Task<ReactCombatCommandOutcome> pending = core.WaitForCommandAsync(command.ActionId, 1000);
+
+        Assert.That(core.HandleCombatEvent(Event("42", command.ActionId, "COMMAND_FAILED")), Is.True);
+        Assert.That(await pending, Is.EqualTo(ReactCombatCommandOutcome.Failed));
+    }
+
+    /// <summary>
+    /// A failure rolled the server's transaction back, so nothing advanced. Taking the
+    /// echoed revision as progress would leave the client a revision ahead of the server.
+    /// </summary>
+    [Test]
+    public void CommandFailureDoesNotAdvanceTheRevision()
+    {
+        var core = new ReactCombatBridgeCore(() => "action-1");
+        core.Connect("combat-1");
+        core.HandleCombatEvent(Snapshot);
+        ReactCombatCommand command = core.CreateCommand("END_TURN", new { });
+        core.WaitForCommandAsync(command.ActionId, 1000);
+
+        core.HandleCombatEvent(Event("42", command.ActionId, "COMMAND_FAILED"));
+
+        Assert.That(core.CurrentRevision, Is.EqualTo("42"));
+    }
+
+    /// <summary>
+    /// The failure that softlocked a real game was a message type this client did not
+    /// know. Whatever the server invents next, a message naming our command must answer
+    /// it rather than be dropped — Unknown is honest, and it makes the caller resync.
+    /// </summary>
+    [Test]
+    public async Task AMessageOfAnUnknownTypeStillAnswersTheCommandItNames()
+    {
+        var core = new ReactCombatBridgeCore(() => "action-1");
+        core.Connect("combat-1");
+        core.HandleCombatEvent(Snapshot);
+        ReactCombatCommand command = core.CreateCommand("END_TURN", new { });
+        Task<ReactCombatCommandOutcome> pending = core.WaitForCommandAsync(command.ActionId, 1000);
+
+        // Not a type this client knows, and not a revision it can place either.
+        Assert.That(
+            core.HandleCombatEvent(Event("99", command.ActionId, "SOMETHING_NEW")),
+            Is.False);
+        Assert.That(await pending, Is.EqualTo(ReactCombatCommandOutcome.Unknown));
+        Assert.That(core.CurrentRevision, Is.EqualTo("42"));
+    }
+
     [Test]
     public async Task TimeoutReturnsUnknownRatherThanRejected()
     {
