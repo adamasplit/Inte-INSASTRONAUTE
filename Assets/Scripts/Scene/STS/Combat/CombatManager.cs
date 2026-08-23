@@ -89,6 +89,12 @@ public class CombatManager : MonoBehaviour
     private bool authoritativeCommandInFlight;
     private float authoritativeCommandInFlightSince;
     private const float AuthoritativeCommandWatchdogSeconds = 8f;
+    private readonly CombatantRegistry<Character> combatantRegistry =
+        new CombatantRegistry<Character>();
+    // Explicit rather than inferred from the registry being empty: a combat whose local
+    // combatant never showed up would leave LocalCombatantId null, and an emptiness test
+    // would rebuild on every state — Register would then throw on a known id.
+    private bool combatantRegistryBuilt;
 
     // Both known transports (STOMP + REST) time out around 5s; anything still "in flight"
     // past that is a stuck flag, not a real pending request, and must not softlock input forever.
@@ -652,6 +658,8 @@ public class CombatManager : MonoBehaviour
 #endif
         authoritativeMessageQueue.Clear();
         authoritativeMessageQueueRunning = false;
+        combatantRegistry.Clear();
+        combatantRegistryBuilt = false;
     }
 
     public void RequestAuthoritativeEndTurn()
@@ -789,21 +797,7 @@ public class CombatManager : MonoBehaviour
 
     string GetAuthoritativeCombatantId(Character character)
     {
-        if (character == null)
-            return null;
-
-        if (character.isPlayer)
-        {
-            // The first ally keeps the legacy "player" id the backend already emits; extra
-            // player-side combatants get index-based ids mirroring the enemy-N convention.
-            int allyIndex = allies.IndexOf(character as Player);
-            if (allyIndex > 0)
-                return $"player-{allyIndex}";
-            return "player";
-        }
-
-        int enemyIndex = enemies.IndexOf(character);
-        return enemyIndex >= 0 ? $"enemy-{enemyIndex}" : null;
+        return combatantRegistry.IdOf(character);
     }
 
     void ApplyAuthoritativeCombatState(JToken combatToken, bool refreshUI)
@@ -816,6 +810,9 @@ public class CombatManager : MonoBehaviour
         JArray combatants = combatToken["combatants"] as JArray;
         if (combatants == null)
             return;
+
+        if (!combatantRegistryBuilt)
+            BuildCombatantRegistry(combatToken);
 
         foreach (Character character in GetAllCharacters())
         {
@@ -1977,6 +1974,40 @@ public class CombatManager : MonoBehaviour
     }
 
     Character ResolveCombatant(string combatantId)
+    {
+        return combatantRegistry.Resolve(combatantId);
+    }
+
+    /// <summary>
+    /// Ties the server's ids to the scene's Character objects, once and for all. The
+    /// enemy order comes from activeEncounter.enemyIds, the very list the server draws
+    /// its enemy-{index} from, so the two agree at construction time — and never need
+    /// to agree again afterwards.
+    /// </summary>
+    void BuildCombatantRegistry(JToken combatToken)
+    {
+        combatantRegistry.Clear();
+        combatantRegistryBuilt = true;
+
+        IReadOnlyList<CombatantDescriptor> descriptors =
+            CombatantSnapshotReader.ReadCombatants(combatToken, "player");
+
+        foreach (CombatantDescriptor descriptor in descriptors)
+        {
+            Character combatant = ResolveCombatantByConvention(descriptor.CombatantId);
+            if (combatant != null)
+                combatantRegistry.Register(descriptor, combatant);
+            else
+                Debug.LogWarning(
+                    $"[STS-COMBAT] No Character for combatant {descriptor.CombatantId}");
+        }
+    }
+
+    /// <summary>
+    /// The positional convention, used only while building the registry — that is,
+    /// before any death has had a chance to shift anything.
+    /// </summary>
+    Character ResolveCombatantByConvention(string combatantId)
     {
         if (string.IsNullOrWhiteSpace(combatantId))
             return null;
