@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: cartes
+  m_Name: insaristocrate
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: cartes
-  cardName: Booster
-  collectionCardId: 
+  id: insaristocrate
+  cardName: "\xC0 mort"
+  collectionCardId: Ins'aristocrate (campagne)
   multiplayerExclusive: 0
   characterLevel: 0
   icon: {fileID: 0}
-  cost: 0
+  cost: 2
   xCost: 0
-  type: 0
-  rarity: 0
+  type: 1
+  rarity: 3
   effects:
-  - type: 21
-    value: 5
+  - type: 3
+    value: 0
     targetSelf: 0
     targetOthers: 0
-    statusType: 0
-    duration: 0
+    statusType: 48
+    duration: 7
     description: 
     cardID: 
     index: 0
@@ -40,9 +40,9 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  targetingMode: 0
+  targetingMode: 1
   modifiers: []
-  favoredCharacter: 11
+  favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
   tags: 09000000

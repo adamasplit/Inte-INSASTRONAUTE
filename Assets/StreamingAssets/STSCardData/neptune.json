@@ -1,25 +1,25 @@
 {
-  "id": "cartes",
-  "cardName": "Booster",
-  "collectionCardId": null,
+  "id": "neptune",
+  "cardName": "Vent violent",
+  "collectionCardId": "Neptune",
   "multiplayerExclusive": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 0,
   "xCost": false,
-  "type": "Attaque",
-  "rarity": "Common",
+  "type": "Pouvoir",
+  "rarity": "Epic",
   "targetingMode": "Player",
   "effects": [
     {
-      "type": "AddRandomCard",
-      "value": 5,
-      "targetSelf": false,
+      "type": "Status",
+      "value": 1,
+      "targetSelf": true,
       "targetOthers": false,
-      "statusType": "Strength",
+      "statusType": "FieldTurnFollowUp",
       "duration": 0,
       "description": "",
-      "cardID": "",
+      "cardID": "Tempête",
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
@@ -32,10 +32,8 @@
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Starting",
+  "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": [
-    "Exhaust"
-  ]
+  "tags": []
 }

@@ -1,19 +1,19 @@
 {
-  "id": "cartes",
-  "cardName": "Booster",
+  "id": "armada",
+  "cardName": "Armada",
   "collectionCardId": null,
   "multiplayerExclusive": false,
   "characterLevel": 0,
-  "iconId": null,
-  "cost": 0,
+  "iconId": "spirale2",
+  "cost": 1,
   "xCost": false,
-  "type": "Attaque",
-  "rarity": "Common",
+  "type": "Compétence",
+  "rarity": "Epic",
   "targetingMode": "Player",
   "effects": [
     {
-      "type": "AddRandomCard",
-      "value": 5,
+      "type": "CardSelection",
+      "value": 1,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -24,18 +24,16 @@
       "conditionType": "KillingBlow",
       "conditionValue": "",
       "trueEffect": false,
-      "cardSelectionSource": "Hand",
+      "cardSelectionSource": "DiscardPile",
       "index": 0,
       "cardFilterTags": [],
-      "cardSelectionEffect": "None",
+      "cardSelectionEffect": "AddAutomaticTag",
       "animationType": "Default"
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Starting",
+  "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": [
-    "Exhaust"
-  ]
+  "tags": []
 }

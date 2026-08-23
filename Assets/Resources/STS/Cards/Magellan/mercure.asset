@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: cartes
+  m_Name: mercure
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: cartes
-  cardName: Booster
-  collectionCardId: 
+  id: mercure
+  cardName: Eruption solaire
+  collectionCardId: Mercure
   multiplayerExclusive: 0
   characterLevel: 0
   icon: {fileID: 0}
-  cost: 0
+  cost: 2
   xCost: 0
-  type: 0
-  rarity: 0
+  type: 2
+  rarity: 3
   effects:
-  - type: 21
-    value: 5
-    targetSelf: 0
+  - type: 3
+    value: 1
+    targetSelf: 1
     targetOthers: 0
     statusType: 0
     duration: 0
@@ -41,8 +41,13 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   targetingMode: 0
-  modifiers: []
-  favoredCharacter: 11
+  modifiers:
+  - type: 4
+    kind: 3
+    value: 2
+    info: 
+    description: 
+  favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
-  tags: 09000000
+  tags: 

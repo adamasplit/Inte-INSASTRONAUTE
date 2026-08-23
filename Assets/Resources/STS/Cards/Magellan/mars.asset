@@ -10,39 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: perf_e
+  m_Name: mars
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: perf_e
-  cardName: "Performance \xE9nerg\xE9tique"
-  collectionCardId: 
+  id: mars
+  cardName: Invasion martienne
+  collectionCardId: Mars
   multiplayerExclusive: 0
   characterLevel: 0
-  icon: {fileID: 21300000, guid: 55f21412bc05193448970dcf9879e7bf, type: 3}
-  cost: 0
+  icon: {fileID: 0}
+  cost: 3
   xCost: 0
-  type: 1
-  rarity: 1
+  type: 0
+  rarity: 3
   effects:
-  - type: 24
-    value: 2
-    targetSelf: 1
-    targetOthers: 0
-    statusType: 0
-    duration: 0
-    description: 
-    cardID: 
-    index: 0
-    conditional: 0
-    conditionType: 0
-    conditionValue: 
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 1
-    animationType: 0
-  - type: 12
-    value: 2
-    targetSelf: 1
+  - type: 0
+    value: 10
+    targetSelf: 0
     targetOthers: 0
     statusType: 0
     duration: 0
@@ -56,10 +39,44 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-    animationType: 0
-  targetingMode: 0
+    animationType: 6
+  - type: 3
+    value: 3
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 20
+    duration: 3
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 6
+  - type: 3
+    value: 3
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 5
+    duration: 3
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 6
+  targetingMode: 2
   modifiers: []
-  favoredCharacter: 8
+  favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
   tags: 

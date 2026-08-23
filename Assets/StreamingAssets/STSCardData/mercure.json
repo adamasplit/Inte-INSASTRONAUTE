@@ -1,38 +1,19 @@
 {
-  "id": "galanterie",
-  "cardName": "Galanterie",
-  "collectionCardId": "Gala",
+  "id": "mercure",
+  "cardName": "Eruption solaire",
+  "collectionCardId": "Mercure",
   "multiplayerExclusive": false,
   "characterLevel": 0,
   "iconId": null,
-  "cost": 0,
+  "cost": 2,
   "xCost": false,
-  "type": "Compétence",
+  "type": "Pouvoir",
   "rarity": "Epic",
-  "targetingMode": "Enemy",
+  "targetingMode": "Player",
   "effects": [
     {
-      "type": "DispelBuff",
+      "type": "Status",
       "value": 1,
-      "targetSelf": false,
-      "targetOthers": false,
-      "statusType": "Strength",
-      "duration": 0,
-      "description": "",
-      "cardID": "",
-      "conditional": false,
-      "conditionType": "KillingBlow",
-      "conditionValue": "",
-      "trueEffect": true,
-      "cardSelectionSource": "Hand",
-      "index": 0,
-      "cardFilterTags": [],
-      "cardSelectionEffect": "None",
-      "animationType": "Default"
-    },
-    {
-      "type": "DelayTurn",
-      "value": 6,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
@@ -50,7 +31,15 @@
       "animationType": "Default"
     }
   ],
-  "modifiers": [],
+  "modifiers": [
+    {
+      "type": "StatusPotency",
+      "kind": "DebuffOnSelf",
+      "value": 2,
+      "info": "",
+      "description": ""
+    }
+  ],
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,

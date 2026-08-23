@@ -1005,7 +1005,9 @@ public class CombatManager : MonoBehaviour
             for (int step = 0; step < projectionStepsPerCombatant; step++)
             {
                 projectedTime += (long)Mathf.Max(1f, realEntry.character.turnDelay(turnSystem.baseDelay));
-                string projectionKey = $"{combatantId}#{step}";
+                    // A projection belongs to this specific real turn. When that turn is consumed,
+                    // its new uid produces fresh future icons instead of moving the old ones back.
+                    string projectionKey = $"{combatantId}:{realEntry.uid}#{step}";
                 projectionKeys.Add(projectionKey);
 
                 if (!authoritativeTimelineProjectionEntries.TryGetValue(projectionKey, out TurnEntry projectedEntry))
@@ -1215,7 +1217,7 @@ public class CombatManager : MonoBehaviour
 
         yield return ui.AnimateCardToCenter(playedView);
         playedView.Flash();
-        PlayCardEffectFeedback(targets, card);
+            PlayCardEffectFeedback(actor, targets, card);
 
         if (actor.isPlayer)
         {
@@ -1237,7 +1239,7 @@ public class CombatManager : MonoBehaviour
     // it never played the per-effect SFX/VFX the local (non-authoritative) flow already has.
     // Takes the targets already resolved rather than the event they came from: a play is now
     // shown when it is submitted, before any event exists, and it deserves the same feedback.
-    void PlayCardEffectFeedback(List<Character> targets, CardInstance card)
+    void PlayCardEffectFeedback(Character source, List<Character> targets, CardInstance card)
     {
         List<EffectEntry> effects = card.GetEffects();
         if (effects == null || effects.Count == 0)
@@ -1254,10 +1256,23 @@ public class CombatManager : MonoBehaviour
             Debug.Log($"[STS-VFX] card={card?.displayName ?? "<null>"} effect={effect.type} sfx={effectName} targets={targets.Count}");
             SFXManager.Instance?.PlaySound(effectName);
 
-            if (targets.Count == 0)
-                continue;
+            List<Character> effectTargets;
+            if (effect.targetSelf)
+            {
+                effectTargets = source != null ? new List<Character> { source } : new List<Character>();
+            }
+            else if (effect.targetOthers)
+            {
+                effectTargets = enemies
+                    .Where(enemy => enemy != null && enemy.IsAlive && !targets.Contains(enemy))
+                    .ToList();
+            }
+            else
+            {
+                effectTargets = targets;
+            }
 
-            foreach (Character target in targets)
+            foreach (Character target in effectTargets)
             {
                 Transform targetView = ui.GetView(target);
                 if (targetView != null)
