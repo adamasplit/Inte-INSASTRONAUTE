@@ -96,6 +96,11 @@ public class CombatManager : MonoBehaviour
     // would rebuild on every state — Register would then throw on a known id.
     private bool combatantRegistryBuilt;
 
+    // No "already built" flag here, unlike the identity registry above: piles are
+    // replaced by every state that arrives, and reflecting that is the whole point.
+    private readonly CombatantPilesRegistry<CardInstance> combatantPiles =
+        new CombatantPilesRegistry<CardInstance>();
+
     // Both known transports (STOMP + REST) time out around 5s; anything still "in flight"
     // past that is a stuck flag, not a real pending request, and must not softlock input forever.
     bool AuthoritativeCommandBusy
@@ -660,6 +665,7 @@ public class CombatManager : MonoBehaviour
         authoritativeMessageQueueRunning = false;
         combatantRegistry.Clear();
         combatantRegistryBuilt = false;
+        combatantPiles.Clear();
     }
 
     public void RequestAuthoritativeEndTurn()
@@ -854,6 +860,8 @@ public class CombatManager : MonoBehaviour
                     enemy.SetAuthoritativeIntentCard(intentCard != null ? intentCard.data : null);
                 }
             }
+
+            RegisterCombatantPiles(combatantId, target, combatantToken);
 
             // Only the primary player combatant owns the shared deck/hand UI; extra allies have
             // their own piles server-side and must not overwrite the local deck state.
@@ -1976,6 +1984,59 @@ public class CombatManager : MonoBehaviour
     Character ResolveCombatant(string combatantId)
     {
         return combatantRegistry.Resolve(combatantId);
+    }
+
+    /// <summary>
+    /// Records whose piles are whose for this state. The local combatant keeps the
+    /// DeckManager — it owns the hand UI and the animations — while anyone else is
+    /// held as the server projects them: counts for draw and hand, cards for the two
+    /// public piles.
+    /// </summary>
+    void RegisterCombatantPiles(string combatantId, Character combatant, JToken combatantToken)
+    {
+        if (string.IsNullOrWhiteSpace(combatantId))
+            return;
+
+        if (combatant != null && combatant == player && deck != null)
+        {
+            combatantPiles.Set(combatantId, new LocalPiles(deck));
+            return;
+        }
+
+        JToken hidden = combatantToken["hiddenPiles"];
+        if (hidden != null && hidden.Type == JTokenType.Object)
+        {
+            combatantPiles.Set(combatantId, new RemotePiles<CardInstance>(
+                hidden.Value<int?>("drawCount") ?? 0,
+                hidden.Value<int?>("handCount") ?? 0,
+                ReadPileCards(hidden["discard"]),
+                ReadPileCards(hidden["exhaust"])));
+        }
+    }
+
+    /// <summary>
+    /// Builds the card objects of a pile we are allowed to see. A card the catalogue
+    /// does not know is skipped rather than replaced by a blank, so a gap stays
+    /// visible instead of becoming a plausible card.
+    /// </summary>
+    List<CardInstance> ReadPileCards(JToken pileToken)
+    {
+        var cards = new List<CardInstance>();
+        if (!(pileToken is JArray pile))
+            return cards;
+
+        foreach (JToken cardToken in pile)
+        {
+            string instanceId = cardToken.Value<string>("instanceId")
+                ?? cardToken.Value<string>("cardInstanceId");
+            string definitionId = cardToken.Value<string>("definitionId");
+
+            CardInstance card = FindCardByInstanceId(instanceId)
+                ?? BuildCardFromDefinition(definitionId, instanceId);
+            if (card != null)
+                cards.Add(card);
+        }
+        return cards;
     }
 
     /// <summary>
