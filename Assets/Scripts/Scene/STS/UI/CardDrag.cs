@@ -155,7 +155,11 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
             rect.anchoredPosition = startPos;
         }
 
-        timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
+        // GetDisplayTimeline() projects future turns with a local turnDelay() heuristic that
+        // only applies to the non-authoritative flow; in authoritative combat it fabricated data
+        // that overwrote the server-driven timeline on every drag release, real or cancelled.
+        if (!combat.UsesAuthoritativeCombat)
+            timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
         if (cardView != null)
         {
             cardView.Deselect();

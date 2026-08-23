@@ -156,10 +156,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     public void PlayActionSprite(int variant, float duration = 0.5f)
     {
         if (variant <= 0 || image == null || target == null || baseSprite == null || deathAnimationPlayed)
-        {
-            Debug.Log($"[STS-VFX] PlayActionSprite skipped target={(target != null ? target.name : "<null>")} variant={variant} image={(image != null)} baseSprite={(baseSprite != null)} deathAnimationPlayed={deathAnimationPlayed}");
             return;
-        }
 
         Sprite actionSprite = Resources.Load<Sprite>($"STS/Animations/{target.name}{variant}");
         if (actionSprite == null && variant != 1 && variant != 4)
@@ -168,10 +165,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             actionSprite = Resources.Load<Sprite>($"STS/Animations/{target.name}1");
         }
         if (actionSprite == null)
-        {
-            Debug.Log($"[STS-VFX] PlayActionSprite found no sprite for target={target.name} variant={variant}");
             return;
-        }
 
         if (actionSpriteRoutine != null)
             StopCoroutine(actionSpriteRoutine);

@@ -959,20 +959,23 @@ public class CombatManager : MonoBehaviour
         string combatantId = combatEvent.Value<string>("combatantId");
         long? nextReadyAtTick = combatEvent.Value<long?>("nextReadyAtTick");
         if (string.IsNullOrWhiteSpace(combatantId) || !nextReadyAtTick.HasValue)
-        {
-            Debug.Log($"[STS-TIMELINE] TurnEnded skipped: missing combatantId or nextReadyAtTick. raw={combatEvent}");
             return;
-        }
 
         if (!authoritativeTimelineEntries.TryGetValue(combatantId, out TurnEntry entry))
-        {
-            Debug.Log($"[STS-TIMELINE] TurnEnded for combatantId={combatantId} has no tracked entry yet.");
             return;
-        }
 
-        Debug.Log($"[STS-TIMELINE] TurnEnded combatantId={combatantId} time {entry.time} -> {nextReadyAtTick.Value}");
-        entry.time = nextReadyAtTick.Value;
-        turnSystem.timeline = turnSystem.timeline.OrderBy(e => e.time).ToList();
+        // A fresh uid here, not a mutation of the consumed entry, is what makes TimelineUI treat
+        // this as "that icon reached the marker and disappeared, a new one appears for their next
+        // turn" instead of the same icon sliding continuously between its old and new time — the
+        // old local combat timeline achieved this the same way (remove the entry, append a new one).
+        authoritativeTimelineEntries[combatantId] = new TurnEntry
+        {
+            character = entry.character,
+            time = nextReadyAtTick.Value,
+            uid = TurnEntry.nextUID++
+        };
+
+        turnSystem.timeline = authoritativeTimelineEntries.Values.OrderBy(e => e.time).ToList();
         RefreshTimelineDisplay();
     }
 
@@ -1202,7 +1205,6 @@ public class CombatManager : MonoBehaviour
             yield break;
 
         DropZone actorZone = ui.GetDropZone(actor);
-        Debug.Log($"[STS-VFX] PresentCardPlayed actor={actor.name} isPlayer={actor.isPlayer} zoneFound={actorZone != null} variant={DropZone.ActionSpriteVariant(card)}");
         actorZone?.PlayActionSprite(DropZone.ActionSpriteVariant(card));
 
         // The server resolves a whole AI turn chain in one round-trip and streams every event
