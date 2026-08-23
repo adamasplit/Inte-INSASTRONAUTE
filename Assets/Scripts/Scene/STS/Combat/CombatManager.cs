@@ -1188,9 +1188,18 @@ public class CombatManager : MonoBehaviour
 
     IEnumerator PresentCardPlayed(Character actor, CardInstance card, List<Character> targets)
     {
-        if (actor.isPlayer && deck != null)
+        // PresentCardPlayed has a single caller, ReplayCardPlayedEvent, which knows the
+        // actor by the id CardPlayed calls actorId — not combatantId. Rather than thread
+        // it through the signature, ask the identity registry for the inverse: that is
+        // what it is for.
+        ICombatantPiles<CardInstance> actorPiles =
+            combatantPiles.For(GetAuthoritativeCombatantId(actor));
+        if (actorPiles != null)
         {
-            AuthoritativeCombatStateReducer.MoveCard(deck.hand, deck.discardPile, card);
+            AuthoritativeCombatStateReducer.MoveCard(
+                actorPiles.Pile(PileKind.Hand) as List<CardInstance>,
+                actorPiles.Pile(PileKind.Discard) as List<CardInstance>,
+                card);
         }
 
         CardView playedView = actor.isPlayer ? ui.GetView(card) : null;
@@ -1288,21 +1297,25 @@ public class CombatManager : MonoBehaviour
 
     IEnumerator ReplayCardDrawnEvent(JToken combatEvent)
     {
+        string combatantId = combatEvent.Value<string>("combatantId");
         string cardInstanceId = combatEvent.Value<string>("cardInstanceId");
         string definitionId = combatEvent.Value<string>("definitionId");
 
         CardInstance card = FindCardByInstanceId(cardInstanceId)
             ?? BuildCardFromDefinition(definitionId, cardInstanceId);
-        if (card == null || deck == null || ui == null)
+        if (card == null || ui == null)
             yield break;
 
-        deck.discardPile.Remove(card);
-        deck.exhaustPile.Remove(card);
-        deck.drawPile.Remove(card);
-        if (!deck.hand.Contains(card))
+        ICombatantPiles<CardInstance> drawPiles = combatantPiles.For(combatantId);
+        if (drawPiles == null)
+            yield break;
+
+        drawPiles.RemoveEverywhere(card);
+        List<CardInstance> hand = drawPiles.Pile(PileKind.Hand) as List<CardInstance>;
+        if (hand != null && !hand.Contains(card))
         {
             int handIndex = combatEvent.Value<int?>("handIndex") ?? -1;
-            InsertCardAt(deck.hand, card, handIndex);
+            InsertCardAt(hand, card, handIndex);
         }
 
         ui.DrawCardAnimated(card);
@@ -1311,28 +1324,36 @@ public class CombatManager : MonoBehaviour
 
     IEnumerator ReplayCardMovedEvent(JToken combatEvent)
     {
+        string combatantId = combatEvent.Value<string>("combatantId");
         string cardInstanceId = combatEvent.Value<string>("cardInstanceId");
         string definitionId = combatEvent.Value<string>("definitionId");
-        string fromPile = ResolvePileName(combatEvent["fromPile"]?.ToString() ?? combatEvent["sourcePile"]?.ToString());
-        string toPile = ResolvePileName(combatEvent["toPile"]?.ToString() ?? combatEvent["destinationPile"]?.ToString());
+        string fromPile = combatEvent.Value<string>("fromPile");
+        string toPile = combatEvent.Value<string>("toPile");
+
+        // Parsed once so the animation branches below match on the closed vocabulary
+        // instead of on the raw string, which ResolvePileName used to upper-case for
+        // them. A name outside the vocabulary now reaches no branch at all.
+        PileKind? fromKind = PileKinds.Parse(fromPile);
+        PileKind? toKind = PileKinds.Parse(toPile);
+
+        ICombatantPiles<CardInstance> piles = combatantPiles.For(combatantId);
+        if (piles == null)
+            yield break;
 
         CardInstance card = FindCardByInstanceId(cardInstanceId)
             ?? BuildCardFromDefinition(definitionId, cardInstanceId);
-        if (card == null || deck == null)
+        if (card == null)
             yield break;
 
-        List<CardInstance> fromList = GetPileByName(fromPile);
-        List<CardInstance> toList = GetPileByName(toPile);
+        List<CardInstance> fromList = GetPileByName(combatantId, fromPile);
+        List<CardInstance> toList = GetPileByName(combatantId, toPile);
         if (fromList != null)
         {
             fromList.Remove(card);
         }
         else
         {
-            deck.hand.Remove(card);
-            deck.drawPile.Remove(card);
-            deck.discardPile.Remove(card);
-            deck.exhaustPile.Remove(card);
+            piles.RemoveEverywhere(card);
         }
 
         if (toList != null && !toList.Contains(card))
@@ -1350,7 +1371,7 @@ public class CombatManager : MonoBehaviour
             yield break;
         }
 
-        if (string.Equals(toPile, "EXHAUST", StringComparison.Ordinal))
+        if (toKind == PileKind.Exhaust)
         {
             if (ui.GetView(card) != null)
             {
@@ -1364,7 +1385,7 @@ public class CombatManager : MonoBehaviour
             yield break;
         }
 
-        if (string.Equals(toPile, "DISCARD", StringComparison.Ordinal))
+        if (toKind == PileKind.Discard)
         {
             if (ui.GetView(card) != null)
             {
@@ -1378,9 +1399,9 @@ public class CombatManager : MonoBehaviour
             yield break;
         }
 
-        if (string.Equals(toPile, "HAND", StringComparison.Ordinal))
+        if (toKind == PileKind.Hand)
         {
-            if (string.Equals(fromPile, "DRAW", StringComparison.Ordinal))
+            if (fromKind == PileKind.Draw)
             {
                 ui.DrawCardAnimated(card);
             }
@@ -1392,7 +1413,7 @@ public class CombatManager : MonoBehaviour
             yield break;
         }
 
-        if (string.Equals(toPile, "DRAW", StringComparison.Ordinal))
+        if (toKind == PileKind.Draw)
         {
             yield return ui.AnimateCardToPile(card, CardSelectionSource.DrawPile);
         }
@@ -1403,10 +1424,13 @@ public class CombatManager : MonoBehaviour
         // The server shuffled and told us the order it got. Shuffling again locally would produce
         // a different one, and every draw after it would disagree with the server about which
         // card came up.
-        string pileName = ResolvePileName(combatEvent.Value<string>("pile"));
-        List<CardInstance> pile = GetPileByName(pileName) ?? deck?.drawPile;
+        string combatantId = combatEvent.Value<string>("combatantId");
+        List<CardInstance> pile = GetPileByName(combatantId, combatEvent.Value<string>("pile"));
+        if (pile == null)
+            yield break;
+
         JToken orderToken = combatEvent["cardInstanceIds"];
-        if (pile != null && orderToken != null && orderToken.Type == JTokenType.Array)
+        if (orderToken != null && orderToken.Type == JTokenType.Array)
         {
             List<CardInstance> reordered = new List<CardInstance>();
             foreach (JToken idToken in orderToken)
@@ -1427,10 +1451,7 @@ public class CombatManager : MonoBehaviour
                 // two piles at once.
                 if (!pile.Contains(card))
                 {
-                    deck.hand.Remove(card);
-                    deck.drawPile.Remove(card);
-                    deck.discardPile.Remove(card);
-                    deck.exhaustPile.Remove(card);
+                    combatantPiles.For(combatantId)?.RemoveEverywhere(card);
                 }
 
                 reordered.Add(card);
@@ -1739,23 +1760,6 @@ public class CombatManager : MonoBehaviour
         return null;
     }
 
-    string ResolvePileName(string rawPile)
-    {
-        if (string.IsNullOrWhiteSpace(rawPile))
-            return null;
-
-        string upper = rawPile.Trim().ToUpperInvariant();
-        if (upper.Contains("HAND"))
-            return "HAND";
-        if (upper.Contains("DRAW") || upper.Contains("DECK"))
-            return "DRAW";
-        if (upper.Contains("DISCARD"))
-            return "DISCARD";
-        if (upper.Contains("EXHAUST"))
-            return "EXHAUST";
-        return upper;
-    }
-
     Character ResolveStatusTarget(JToken combatEvent)
     {
         string targetId = combatEvent.Value<string>("targetId")
@@ -1947,24 +1951,18 @@ public class CombatManager : MonoBehaviour
         return new string(chars).ToUpperInvariant();
     }
 
-    List<CardInstance> GetPileByName(string pileName)
+    /// <summary>
+    /// The named pile of the named combatant, or null when either is unknown to us.
+    /// Null is a refusal to guess: the caller must skip, not fall back on the local
+    /// deck. Cf. spec §3.4 entries 6 and 9.
+    /// </summary>
+    List<CardInstance> GetPileByName(string combatantId, string pileName)
     {
-        if (deck == null || string.IsNullOrWhiteSpace(pileName))
+        PileKind? kind = PileKinds.Parse(pileName);
+        if (kind == null)
             return null;
 
-        switch (pileName)
-        {
-            case "HAND":
-                return deck.hand;
-            case "DRAW":
-                return deck.drawPile;
-            case "DISCARD":
-                return deck.discardPile;
-            case "EXHAUST":
-                return deck.exhaustPile;
-            default:
-                return null;
-        }
+        return combatantPiles.Pile(combatantId, kind.Value) as List<CardInstance>;
     }
 
     void InsertCardAt(List<CardInstance> pile, CardInstance card, int index)
