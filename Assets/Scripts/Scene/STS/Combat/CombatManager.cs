@@ -1319,7 +1319,14 @@ public class CombatManager : MonoBehaviour
         if (drawPiles == null)
             yield break;
 
-        drawPiles.RemoveEverywhere(card);
+        // Only the piles the card is leaving, never the hand. A card already in hand keeps
+        // its position — and with it its slot on screen. Pulling it out to re-insert it at
+        // the server's index would reshuffle the player's hand under their cursor, and
+        // restart its animation, for a card that never moved.
+        drawPiles.Pile(PileKind.Draw)?.Remove(card);
+        drawPiles.Pile(PileKind.Discard)?.Remove(card);
+        drawPiles.Pile(PileKind.Exhaust)?.Remove(card);
+
         List<CardInstance> hand = drawPiles.Pile(PileKind.Hand) as List<CardInstance>;
         if (hand != null && !hand.Contains(card))
         {
