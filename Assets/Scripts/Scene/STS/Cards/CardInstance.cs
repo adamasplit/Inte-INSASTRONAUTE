@@ -78,6 +78,9 @@ public class CardInstance
             case TargetingMode.Player:
                 text += "<color=green>(Soi-même)</color> :\n";
                 break;
+            case TargetingMode.AnyPlayer:
+                text += "<color=green>(Un allié)</color> :\n";
+                break;
             case TargetingMode.Enemy:
                 text += "<color=red>(Adversaire)</color> :\n";
                 break;

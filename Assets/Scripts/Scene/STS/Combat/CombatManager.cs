@@ -945,11 +945,18 @@ public class CombatManager : MonoBehaviour
         string combatantId = combatEvent.Value<string>("combatantId");
         long? nextReadyAtTick = combatEvent.Value<long?>("nextReadyAtTick");
         if (string.IsNullOrWhiteSpace(combatantId) || !nextReadyAtTick.HasValue)
+        {
+            Debug.Log($"[STS-TIMELINE] TurnEnded skipped: missing combatantId or nextReadyAtTick. raw={combatEvent}");
             return;
+        }
 
         if (!authoritativeTimelineEntries.TryGetValue(combatantId, out TurnEntry entry))
+        {
+            Debug.Log($"[STS-TIMELINE] TurnEnded for combatantId={combatantId} has no tracked entry yet.");
             return;
+        }
 
+        Debug.Log($"[STS-TIMELINE] TurnEnded combatantId={combatantId} time {entry.time} -> {nextReadyAtTick.Value}");
         entry.time = nextReadyAtTick.Value;
         turnSystem.timeline = turnSystem.timeline.OrderBy(e => e.time).ToList();
         RefreshTimelineDisplay();
