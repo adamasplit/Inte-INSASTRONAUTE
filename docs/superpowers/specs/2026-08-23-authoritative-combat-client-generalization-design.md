@@ -166,10 +166,27 @@ vérifie ; une aspiration non. Voici donc la liste exacte, chaque entrée vérif
 le code au 2026-08-23. Elle sert de critère d'acceptation : le chantier est réussi
 quand elle est vide.
 
-1. **Identité dérivée d'une position mutable** — `enemy-{enemies.IndexOf(character)}`
+1. ~~**Identité dérivée d'une position mutable**~~ — `enemy-{enemies.IndexOf(character)}`
    (ligne 796) et `enemies[N]` (ligne 1941). Cause du défaut §3.3.
-2. **Identité par chaîne littérale** — `activeCombatantId == "player"` (ligne 864)
+   **Traitée** par le plan `2026-08-23-combatant-identity-seam` (tâche 4) : les deux
+   dérivations lisent le registre. La convention positionnelle ne subsiste que dans
+   `ResolveCombatantByConvention`, appelée une fois à la construction du registre,
+   avant qu'aucune mort n'ait pu déplacer quoi que ce soit.
+   *Le merge `8f17676` avait entre-temps étendu le même schéma au côté allié —
+   `allies.IndexOf` → `player-{index}` et `allies[N]` — donc le défaut existait en
+   double au moment de le retirer. `CombatantIdentityTests` en garde la trace.*
+2. ~~**Identité par chaîne littérale**~~ — `activeCombatantId == "player"` (ligne 864)
    pour décider si le bouton de fin de tour est actif.
+   **Traitée**, mais pas par nous : le merge `8f17676` a remplacé la comparaison de
+   chaîne par `ResolveCombatant(activeCombatantId)?.isPlayer`. Cette ligne s'est donc
+   corrigée d'elle-même quand `ResolveCombatant` est passée par le registre. La
+   sémantique retenue est celle du merge — « tout combattant du côté joueur » — et
+   non `IsLocalCombatant` ; c'est au plan PvP de trancher entre les deux, puisque
+   c'est là que la différence devient observable.
+11. **Propriété des piles décidée par une chaîne littérale** — `target.isPlayer &&
+    combatantId == "player"` (ligne 858), introduit par le merge `8f17676` pour que
+    les alliés supplémentaires n'écrasent pas le deck local. Même motif que l'entrée
+    2, déplacé d'un cran. Relève du plan « piles adressées par combattant » (§4.3).
 3. **Mode déduit d'un effet de bord** — `UsesAuthoritativeCombat` vaut
    `RunManager.Instance.activeCombat != null` (ligne 115), champ écrit par
    `ApplyAuthoritativeCombatState` (ligne 805). Le client est en mode autoritatif
@@ -202,7 +219,7 @@ quand elle est vide.
     turn flow valid ». En mode autoritatif, un état incompréhensible appelle une
     resynchronisation, pas l'invention d'un combattant que le serveur ne connaît pas.
 
-Ces dix entrées ont un motif commun, et c'est lui qu'il faut retenir plutôt que la
+Ces entrées ont un motif commun, et c'est lui qu'il faut retenir plutôt que la
 liste : **le client se débrouille pour continuer là où il devrait constater qu'il ne
 sait pas.** Chacune est un endroit où une information manquante ou ambiguë produit une
 valeur plausible au lieu d'une erreur. C'est ce qui rend les symptômes diffus — un
