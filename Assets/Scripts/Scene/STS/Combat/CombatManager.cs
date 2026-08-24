@@ -1326,8 +1326,8 @@ public class CombatManager : MonoBehaviour
             }
             else if (effect.targetOthers)
             {
-                effectTargets = enemies
-                    .Where(enemy => enemy != null && enemy.IsAlive && !targets.Contains(enemy))
+                effectTargets = LivingOpponentsOf(source)
+                    .Where(other => !targets.Contains(other))
                     .ToList();
             }
             else
