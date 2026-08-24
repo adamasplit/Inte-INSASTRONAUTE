@@ -2712,7 +2712,7 @@ public class CombatManager : MonoBehaviour
                     : new();
 
             case TargetingMode.AllEnemies:
-                return enemies.Where(e => e != null && e.IsAlive).ToList();
+                return LivingOpponentsOf(GetActingPlayer());
 
             case TargetingMode.AllCharacters:
                 return GetAllCharacters();
@@ -2732,8 +2732,10 @@ public class CombatManager : MonoBehaviour
         }
         if (!source.isPlayer)
         {
-            Character firstAlly = allies.FirstOrDefault(a => a != null && a.IsAlive);
-            return firstAlly != null ? new List<Character> { firstAlly } : new List<Character>();
+            Character firstOpponent = LivingOpponentsOf(source).FirstOrDefault();
+            return firstOpponent != null
+                ? new List<Character> { firstOpponent }
+                : new List<Character>();
         }
         switch (mode)
         {
@@ -2743,7 +2745,7 @@ public class CombatManager : MonoBehaviour
                 else
                     return RandomEnemy();
             case TargetingMode.AllEnemies:
-                return enemies.Where(e => e != null && e.IsAlive).ToList();
+                return LivingOpponentsOf(source);
             case TargetingMode.Player:
             {
                 Player acting = GetActingPlayer();
