@@ -2036,6 +2036,43 @@ public class CombatManager : MonoBehaviour
         return combatantRegistry.Resolve(combatantId);
     }
 
+    /// Les vivants de l'équipe adverse à `character`, vus par le registre.
+    ///
+    /// Sur le chemin local le registre est vide : on retombe sur les listes positionnelles,
+    /// qui restent la vérité du tutoriel.
+    List<Character> LivingOpponentsOf(Character character)
+    {
+        string id = combatantRegistry.IdOf(character);
+        if (id == null)
+            return character != null && character.isPlayer
+                ? enemies.Where(e => e != null && e.IsAlive).ToList()
+                : allies.Where(a => a != null && a.IsAlive).Cast<Character>().ToList();
+
+        string team = combatantRegistry.DescriptorOf(id)?.TeamId;
+        if (string.IsNullOrEmpty(team))
+            return new List<Character>();
+
+        return AllRegistered()
+            .Where(other => other != null && other.IsAlive)
+            .Where(other => !string.Equals(TeamOf(other), team, StringComparison.Ordinal))
+            .ToList();
+    }
+
+    string TeamOf(Character character)
+    {
+        string id = combatantRegistry.IdOf(character);
+        return id == null ? null : combatantRegistry.DescriptorOf(id)?.TeamId;
+    }
+
+    /// Tout le monde, des deux côtés, dans l'ordre où le registre les tient.
+    List<Character> AllRegistered()
+    {
+        var everyone = new List<Character>();
+        everyone.AddRange(combatantRegistry.Allies());
+        everyone.AddRange(combatantRegistry.Opponents());
+        return everyone;
+    }
+
     /// <summary>
     /// Records whose piles are whose for this state. The local combatant keeps the
     /// DeckManager — it owns the hand UI and the animations — while anyone else is
@@ -2722,31 +2759,30 @@ public class CombatManager : MonoBehaviour
     }
     public List<Character> GetAllCharacters()
     {
-        var list = enemies.Where(e => e != null && e.IsAlive).Cast<Character>().ToList();
-        foreach (var ally in allies)
+        if (combatantRegistry.LocalCombatantId == null)
         {
-            if (ally != null && ally.IsAlive)
-                list.Add(ally);
+            // Chemin local, inchangé.
+            var local = enemies.Where(e => e != null && e.IsAlive).Cast<Character>().ToList();
+            foreach (var ally in allies)
+            {
+                if (ally != null && ally.IsAlive)
+                    local.Add(ally);
+            }
+            return local;
         }
-        return list;
+
+        return AllRegistered().Where(c => c != null && c.IsAlive).ToList();
     }
     public List<Character> GetAdversaries(Character character)
     {
-        if (character.isPlayer)
-        {
-            return enemies.Where(e => e != null && e.IsAlive).ToList();
-        }
-        else
-        {
-            return allies.Where(a => a != null && a.IsAlive).Cast<Character>().ToList();
-        }
+        return LivingOpponentsOf(character);
     }
     public List<Character> RandomEnemy()
     {
-        var aliveEnemies = enemies.Where(e => e != null && e.IsAlive).ToList();
-                return aliveEnemies.Any()
-                    ? new List<Character> { aliveEnemies[UnityEngine.Random.Range(0, aliveEnemies.Count)] }
-                    : new List<Character>();
+        var candidates = LivingOpponentsOf(GetActingPlayer());
+        return candidates.Count == 0
+            ? new List<Character>()
+            : new List<Character> { candidates[UnityEngine.Random.Range(0, candidates.Count)] };
     }
     public void NotifyTurnEnded()
     {
