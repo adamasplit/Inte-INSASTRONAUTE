@@ -33,6 +33,18 @@ public class MultiplayerMenuController : MonoBehaviour
     private readonly List<SelectableCharacter> availableCharacters = new();
     private bool suppressDropdownCallback;
     private bool isQuickMatchQueued;
+    private bool isEnteringPvpBattle;
+    private Coroutine matchWatchRoutine;
+
+    /// La cadence de la veille sur les notifications d'appariement.
+    ///
+    /// Trois secondes : c'est le retard maximum qu'elle ajoute entre l'arrivée de
+    /// l'adversaire et l'ouverture du combat, et il reste sous le seuil où une attente
+    /// commence à passer pour une panne. En face, ça fait vingt requêtes par minute et
+    /// par joueur en file — un ordre de grandeur sous les trente secondes d'un tour, et
+    /// une dépense négligeable sur un téléphone, d'autant qu'on n'interroge que pendant
+    /// la recherche.
+    private const float MatchPollIntervalSeconds = 3f;
 
     private void Start()
     {
@@ -346,7 +358,7 @@ public class MultiplayerMenuController : MonoBehaviour
             // Le joueur qui s'inscrit le premier ne reçoit pas de battleId : c'est le
             // second qui en obtient un. Sans cette veille, seul le second entre jamais
             // dans le combat, et le premier attend indéfiniment devant un menu.
-            StartCoroutine(WatchForMatchedBattleRoutine());
+            StartWatchingForMatchedBattle();
         }
         catch (Exception ex)
         {
@@ -366,11 +378,25 @@ public class MultiplayerMenuController : MonoBehaviour
     /// </summary>
     private async Task EnterPvpBattleAsync(string battleId)
     {
+        // Les deux joueurs passent par ici : celui dont la demande a refermé
+        // l'appariement et qui a reçu son battleId directement, et celui qui l'a appris
+        // par une notification. Une seule fois, quoi qu'il arrive : la réponse du
+        // matchmaking et la notification peuvent nommer la même bataille à quelques
+        // millisecondes d'écart.
+        if (isEnteringPvpBattle || string.IsNullOrWhiteSpace(battleId))
+        {
+            return;
+        }
+
+        isEnteringPvpBattle = true;
+
         await CacheBattleParticipantsAsync(battleId);
+        await AcknowledgeMatchNotificationsAsync(battleId);
         await CancelQuickMatchAsync(false);
 
         if (RunManager.Instance == null)
         {
+            isEnteringPvpBattle = false;
             ShowNotification("Impossible de rejoindre le combat : gestionnaire de partie absent.");
             return;
         }
@@ -381,64 +407,120 @@ public class MultiplayerMenuController : MonoBehaviour
     }
 
     /// <summary>
-    /// Interroge les notifications PVP jusqu'à ce qu'une bataille apparaisse.
+    /// Acquitte l'annonce d'appariement de cette bataille, avant d'ouvrir la scène.
     ///
-    /// <para><b>La forme exacte d'une notification n'est pas vérifiable depuis ce
-    /// dépôt</b> : le nom de la requête est traduit en URL dans `insastral`, et le DTO
-    /// vit dans `webAPI`. Plutôt que d'inventer un nom de champ, on cherche le premier
-    /// `battleId` présent n'importe où dans la réponse, et la trame brute est
-    /// journalisée pour que la passe suivante puisse le nommer. C'est un provisoire
-    /// assumé, pas une tolérance de protocole.</para>
+    /// <para>Une notification non lue est relue à chaque interrogation : sans cet
+    /// acquittement, la prochaine recherche d'adversaire ramènerait le joueur dans ce
+    /// combat-là, terminé depuis longtemps. Le joueur dont la demande a refermé
+    /// l'appariement reçoit son battleId directement et ne regarde jamais la liste — il a
+    /// pourtant une notification à acquitter comme l'autre, puisque le serveur en crée une
+    /// pour chacun des deux. C'est pour lui qu'on cherche par bataille plutôt que de se
+    /// contenter de l'identifiant qu'on vient de lire.</para>
+    ///
+    /// <para>Un échec n'empêche pas d'entrer : mieux vaut un duel joué avec une
+    /// notification de trop qu'un duel manqué.</para>
+    /// </summary>
+    private async Task AcknowledgeMatchNotificationsAsync(string battleId)
+    {
+        try
+        {
+            JToken notifications = await STSApiClient.ListPvpNotificationsAsync();
+            foreach (string notificationId in
+                PvpMatchNotifications.QuickMatchIdsForBattle(notifications, battleId))
+            {
+                await STSApiClient.AcknowledgePvpNotificationAsync(notificationId);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[STS-PVP] Failed to acknowledge the match notification: {ex.Message}");
+        }
+    }
+
+    private void StartWatchingForMatchedBattle()
+    {
+        StopWatchingForMatchedBattle();
+        matchWatchRoutine = StartCoroutine(WatchForMatchedBattleRoutine());
+    }
+
+    /// La veille ne survit pas à la file d'attente : annuler la recherche l'arrête tout
+    /// de suite, sans attendre la fin de l'intervalle en cours.
+    private void StopWatchingForMatchedBattle()
+    {
+        if (matchWatchRoutine == null)
+        {
+            return;
+        }
+
+        Coroutine routine = matchWatchRoutine;
+        matchWatchRoutine = null;
+        StopCoroutine(routine);
+    }
+
+    /// <summary>
+    /// Interroge les notifications PVP tant qu'on est en file, jusqu'à ce qu'un
+    /// appariement soit annoncé.
+    ///
+    /// <para>Le joueur qui s'inscrit le premier reçoit <c>queued</c> sans battleId : c'est
+    /// le second, celui dont la demande referme l'appariement, qui en obtient un. Le
+    /// serveur crée alors une notification <c>QUICK_MATCH_FOUND</c> pour les deux, et
+    /// c'est le seul moyen qu'a le premier d'apprendre que quelqu'un est arrivé. Sans
+    /// cette veille, un seul des deux joueurs entre dans le combat.</para>
+    ///
+    /// <para>Le choix de la notification et la lecture du battleId sont dans
+    /// <see cref="PvpMatchNotifications"/>, testés séparément : ce qui reste ici est de la
+    /// glue Unity.</para>
     /// </summary>
     private IEnumerator WatchForMatchedBattleRoutine()
     {
         while (isQuickMatchQueued)
         {
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(MatchPollIntervalSeconds);
             if (!isQuickMatchQueued)
+            {
                 yield break;
+            }
 
             Task<JToken> notificationsTask = STSApiClient.ListPvpNotificationsAsync();
             while (!notificationsTask.IsCompleted)
+            {
                 yield return null;
+            }
 
+            if (!isQuickMatchQueued)
+            {
+                yield break;
+            }
+
+            // Une interrogation ratée n'annule pas la recherche : l'adversaire est
+            // peut-être déjà là, et la suivante le verra.
             if (notificationsTask.Status != TaskStatus.RanToCompletion || notificationsTask.Result == null)
+            {
+                Debug.LogWarning("[STS-PVP] Notification poll failed, still queued: "
+                    + (notificationsTask.Exception?.GetBaseException().Message ?? "empty response"));
                 continue;
+            }
 
-            JToken notifications = notificationsTask.Result;
-            Debug.Log($"[STS-PVP] notifications payload: {notifications.ToString(Newtonsoft.Json.Formatting.None)}");
-
-            string battleId = FindFirstBattleId(notifications);
-            if (string.IsNullOrWhiteSpace(battleId))
+            PvpMatchNotification match = PvpMatchNotifications.FindQuickMatch(notificationsTask.Result);
+            if (!match.Found)
+            {
                 continue;
+            }
 
-            _ = EnterPvpBattleAsync(battleId);
+            Debug.Log($"[STS-PVP] Quick match notification {match.NotificationId} names battle {match.BattleId}");
+
+            // Se retirer du champ avant d'entrer : l'entrée annule la recherche, et
+            // l'annulation arrête la veille — c'est-à-dire cette coroutine-ci.
+            matchWatchRoutine = null;
+            _ = EnterPvpBattleAsync(match.BattleId);
             yield break;
         }
-    }
-
-    private static string FindFirstBattleId(JToken token)
-    {
-        if (!(token is JContainer container))
-            return null;
-
-        foreach (JToken descendant in container.DescendantsAndSelf())
-        {
-            if (descendant is JProperty property
-                && string.Equals(property.Name, "battleId", StringComparison.Ordinal))
-            {
-                string value = property.Value?.Value<string>();
-                if (!string.IsNullOrWhiteSpace(value))
-                    return value;
-            }
-        }
-
-        return null;
     }
 
     private async Task CancelQuickMatchAsync(bool showNotification = true)
     {
         isQuickMatchQueued = false;
+        StopWatchingForMatchedBattle();
         if (quickMatchButton != null)
         {
             quickMatchButton.interactable = true;
