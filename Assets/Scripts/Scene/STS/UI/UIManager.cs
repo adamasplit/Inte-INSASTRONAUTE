@@ -275,7 +275,7 @@ public class UIManager : MonoBehaviour
             pUI.SetCharacter(ally, this);
 
             var dz = playerZone.GetComponent<DropZone>();
-            dz.Init(combat, ally, false);
+            dz.Init(combat, ally, combat.IsHostileTo(combat.GetActingPlayer(), ally));
             allZones.Add(dz);
             characterUIs.Add(pUI);
             playerIndex++;
@@ -287,7 +287,7 @@ public class UIManager : MonoBehaviour
             zone.SetActive(true);
 
             var dz2 = zone.GetComponent<DropZone>();
-            dz2.Init(combat, enemy, true);
+            dz2.Init(combat, enemy, combat.IsHostileTo(combat.GetActingPlayer(), enemy));
             var eUI = zone.GetComponent<CharacterUI>();
             eUI.SetCharacter(enemy, this);
             characterUIs.Add(eUI);

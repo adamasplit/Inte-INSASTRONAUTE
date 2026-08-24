@@ -2779,6 +2779,23 @@ public class CombatManager : MonoBehaviour
     {
         return LivingOpponentsOf(character);
     }
+
+    /// Deux combattants sont hostiles quand ils ne partagent pas d'équipe.
+    ///
+    /// Sur le chemin local, où le registre est vide, la question se ramène à `isPlayer`,
+    /// qui était la seule réponse possible avant que les équipes existent.
+    public bool IsHostileTo(Character viewer, Character other)
+    {
+        if (viewer == null || other == null)
+            return false;
+
+        string viewerTeam = TeamOf(viewer);
+        string otherTeam = TeamOf(other);
+        if (string.IsNullOrEmpty(viewerTeam) || string.IsNullOrEmpty(otherTeam))
+            return viewer.isPlayer != other.isPlayer;
+
+        return !string.Equals(viewerTeam, otherTeam, StringComparison.Ordinal);
+    }
     public List<Character> RandomEnemy()
     {
         var candidates = LivingOpponentsOf(GetActingPlayer());
