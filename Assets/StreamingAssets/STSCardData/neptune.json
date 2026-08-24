@@ -1,0 +1,39 @@
+{
+  "id": "neptune",
+  "cardName": "Vent violent",
+  "collectionCardId": "Neptune",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 0,
+  "xCost": false,
+  "type": "Pouvoir",
+  "rarity": "Epic",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 1,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "FieldTurnFollowUp",
+      "duration": 0,
+      "description": "",
+      "cardID": "Tempête",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

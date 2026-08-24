@@ -15,7 +15,9 @@ MonoBehaviour:
   id: perf_e
   cardName: "Performance \xE9nerg\xE9tique"
   collectionCardId: 
-  icon: {fileID: 0}
+  multiplayerExclusive: 0
+  characterLevel: 0
+  icon: {fileID: 21300000, guid: 55f21412bc05193448970dcf9879e7bf, type: 3}
   cost: 0
   xCost: 0
   type: 1

@@ -21,7 +21,16 @@ public class TurnSystem : MonoBehaviour
 
     void Update()
     {
-        if (combat == null || combat.combatEnded || !combat.allowTurn)
+        if (combat == null)
+            return;
+
+        // Ici, et pas dans CombatManager : son propre Update est entièrement encadré par
+        // #if UNITY_EDITOR et n'existe pas dans un build. Et avant les sorties ci-dessous,
+        // dont celle qui rend la main dès que le combat est autoritatif — c'est-à-dire
+        // dans tous les combats qui ont une limite de temps.
+        ui?.DisplayTurnCountdown(combat.SecondsLeftInTurn());
+
+        if (combat.combatEnded || !combat.allowTurn)
             return;
 
         if (combat.UsesAuthoritativeCombat)

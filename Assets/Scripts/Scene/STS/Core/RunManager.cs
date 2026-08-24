@@ -44,8 +44,25 @@ public class RunManager : MonoBehaviour
     public bool completedFinalAct;
     public bool unrestrictedMode;
     public string unrestrictedModeReason;
+    // Set by STSDebugCombatPanel: this combat belongs to no map node, so it must not be reported
+    // as a node completion and it returns to the debug scene instead of the reward screen.
+    [HideInInspector] public bool debugCombat;
+    [HideInInspector] public string debugCombatReturnScene;
     public string pvpLocalUserId;
     public string pvpBattleId;
+
+    /// La bataille effectivement en train d'etre jouee.
+    ///
+    /// Distinct de `pvpBattleId`, qui ne fait que retenir la derniere bataille annoncee
+    /// par le matchmaking et n'est efface qu'en fin de run. Tout ce qui doit se comporter
+    /// autrement en duel s'appuie sur ce champ-ci, de sorte qu'un matchmaking passe ne
+    /// puisse jamais faire croire a une rencontre PvE qu'elle est un duel.
+    public string activePvpBattleId;
+
+    /// Le menu multijoueur doit relancer une recherche des son ouverture. Ecrit par le
+    /// bouton « Revanche » de l'ecran de fin de duel, et consomme une seule fois : il
+    /// n'existe pas d'endpoint de revanche cote serveur, c'est un nouveau matchmaking.
+    public bool requestPvpQuickMatch;
     public List<STSApiClient.StsPvpParticipantSnapshot> pvpParticipants = new();
     void Update()
     {
@@ -340,7 +357,11 @@ public class RunManager : MonoBehaviour
         enteredNodeId = null;
         completedFinalAct = false;
         backendRewardClaimUnavailable = false;
+        debugCombat = false;
+        debugCombatReturnScene = null;
         pvpLocalUserId = null;
+        activePvpBattleId = null;
+        requestPvpQuickMatch = false;
         ClearPvpBattleParticipants();
         SetUnrestrictedMode(false, null);
         if (clearSave)
@@ -681,6 +702,28 @@ public class RunManager : MonoBehaviour
         act = 0;
     }
 
+    public void BeginPvpBattle(string battleId)
+    {
+        activePvpBattleId = string.IsNullOrWhiteSpace(battleId) ? null : battleId.Trim();
+    }
+
+    /// Referme la session, et rien d'autre : une run PvE mise en pause pendant le duel
+    /// doit se retrouver exactement comme elle etait.
+    public void EndPvpBattle()
+    {
+        activePvpBattleId = null;
+        inCombat = false;
+    }
+
+    /// Rend, et efface, la demande de revanche. Une fois lue, elle ne doit plus valoir :
+    /// sinon revenir au menu par un autre chemin relancerait une recherche non demandee.
+    public bool ConsumePvpQuickMatchRequest()
+    {
+        bool requested = requestPvpQuickMatch;
+        requestPvpQuickMatch = false;
+        return requested;
+    }
+
     public void CachePvpBattleParticipants(string battleId, List<STSApiClient.StsPvpParticipantSnapshot> participants)
     {
         pvpBattleId = string.IsNullOrWhiteSpace(battleId) ? null : battleId.Trim();
@@ -695,35 +738,53 @@ public class RunManager : MonoBehaviour
         pvpParticipants = new List<STSApiClient.StsPvpParticipantSnapshot>();
     }
 
-    public void ApplyPvpParticipantDisplayNames(List<Player> allies, List<Character> enemies)
+    /// Le participant que ce client pilote, reconnu par l'identifiant d'utilisateur que
+    /// le profil PVP a donne. A defaut, le premier de la premiere equipe — un repli qui
+    /// n'est juste que pour l'hote, et qui ne sert qu'a ne pas afficher un ecran vide.
+    public STSApiClient.StsPvpParticipantSnapshot LocalPvpParticipant()
     {
-        if (string.IsNullOrWhiteSpace(pvpBattleId) || pvpParticipants == null || pvpParticipants.Count == 0)
-            return;
+        if (pvpParticipants == null || pvpParticipants.Count == 0)
+            return null;
 
-        STSApiClient.StsPvpParticipantSnapshot localParticipant = null;
         if (!string.IsNullOrWhiteSpace(pvpLocalUserId))
         {
-            localParticipant = pvpParticipants.Find(p =>
+            STSApiClient.StsPvpParticipantSnapshot mine = pvpParticipants.Find(p =>
                 p != null
                 && !string.IsNullOrWhiteSpace(p.userId)
                 && string.Equals(p.userId, pvpLocalUserId, StringComparison.OrdinalIgnoreCase));
+            if (mine != null)
+                return mine;
         }
 
-        if (localParticipant == null)
-        {
-            localParticipant = pvpParticipants.Find(p => p != null && p.teamIndex == 0 && p.slotIndex == 0)
-                ?? pvpParticipants.Find(p => p != null);
-        }
+        return pvpParticipants.Find(p => p != null && p.teamIndex == 0 && p.slotIndex == 0)
+            ?? pvpParticipants.Find(p => p != null);
+    }
 
-        STSApiClient.StsPvpParticipantSnapshot opponentParticipant = pvpParticipants.Find(p =>
-            p != null
-            && p != localParticipant
-            && (localParticipant == null || p.teamIndex != localParticipant.teamIndex));
+    /// Le premier participant d'une autre equipe que la notre. En 1v1 il n'y en a qu'un ;
+    /// la formulation par equipe est ce qui la laissera vraie en 2v2.
+    public STSApiClient.StsPvpParticipantSnapshot OpponentPvpParticipant()
+    {
+        if (pvpParticipants == null || pvpParticipants.Count == 0)
+            return null;
 
-        if (opponentParticipant == null)
-        {
-            opponentParticipant = pvpParticipants.Find(p => p != null && p != localParticipant);
-        }
+        STSApiClient.StsPvpParticipantSnapshot local = LocalPvpParticipant();
+        return pvpParticipants.Find(p =>
+                   p != null && p != local
+                   && (local == null || p.teamIndex != local.teamIndex))
+               ?? pvpParticipants.Find(p => p != null && p != local);
+    }
+
+    public void ApplyPvpParticipantDisplayNames(List<Player> allies, List<Character> enemies)
+    {
+        // Sur la bataille en cours, et sur elle seule. La garde precedente lisait
+        // `pvpBattleId`, qui retient la derniere bataille annoncee par le matchmaking et
+        // survit a tout : la rencontre PvE jouee apres un matchmaking affichait donc le
+        // pseudo de l'adversaire PvP sur son premier ennemi.
+        if (string.IsNullOrWhiteSpace(activePvpBattleId) || pvpParticipants == null || pvpParticipants.Count == 0)
+            return;
+
+        STSApiClient.StsPvpParticipantSnapshot localParticipant = LocalPvpParticipant();
+        STSApiClient.StsPvpParticipantSnapshot opponentParticipant = OpponentPvpParticipant();
 
         if (allies != null && allies.Count > 0)
         {

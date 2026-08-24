@@ -1,0 +1,39 @@
+{
+  "id": "terre",
+  "cardName": "Noyau",
+  "collectionCardId": "Terre",
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 3,
+  "xCost": false,
+  "type": "Pouvoir",
+  "rarity": "Legendary",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 30,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "DamageReduction",
+      "duration": -1,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

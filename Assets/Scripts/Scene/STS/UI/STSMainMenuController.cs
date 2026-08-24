@@ -7,6 +7,7 @@ using TMPro;
 
 public class STSMainMenuController : MonoBehaviour
 {
+    public TMP_Text gameButtonText;
     public Button loadButton;
     public Button pvpButton;
     public string resumeSceneName = "STS_Map";
@@ -182,6 +183,14 @@ public class STSMainMenuController : MonoBehaviour
         }
 
         loadButton.gameObject.SetActive(hasCurrentRun);
+        if (hasCurrentRun)
+        {
+            gameButtonText.text="Reprendre la partie";
+        }
+        else
+        {
+            gameButtonText.text="Nouvelle partie";
+        }
     }
 
     public async void LoadSavedRun()
@@ -214,54 +223,60 @@ public class STSMainMenuController : MonoBehaviour
         }
 
         transitionInProgress = true;
-        await FadeBlackOverlayToAsync(1f, blackFadeInDuration, keepVisibleAtEnd: true);
+        try
+        {
+            await FadeBlackOverlayToAsync(1f, blackFadeInDuration, keepVisibleAtEnd: true);
 
-        introSequence?.HideTitleLine();
+            introSequence?.HideTitleLine();
 
-        string runId = null;
-        if (RunManager.Instance != null && !string.IsNullOrWhiteSpace(RunManager.Instance.runId))
-        {
-            runId = RunManager.Instance.runId;
-        }
-        else if (STSRunSaveSystem.TryGetSavedRunId(out string savedRunId))
-        {
-            runId = savedRunId;
-        }
-        else
-        {
-            try
+            string runId = null;
+            if (RunManager.Instance != null && !string.IsNullOrWhiteSpace(RunManager.Instance.runId))
             {
-                STSApiCurrentRunResponse currentRun = await STSApiClient.CurrentRunAsync();
-                runId = currentRun != null && currentRun.hasRun ? currentRun.run?.runId : null;
+                runId = RunManager.Instance.runId;
             }
-            catch (Exception ex)
+            else if (STSRunSaveSystem.TryGetSavedRunId(out string savedRunId))
             {
-                Debug.LogWarning($"Failed to query current run before abandon: {ex.Message}");
+                runId = savedRunId;
             }
-        }
+            else
+            {
+                try
+                {
+                    STSApiCurrentRunResponse currentRun = await STSApiClient.CurrentRunAsync();
+                    runId = currentRun != null && currentRun.hasRun ? currentRun.run?.runId : null;
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning($"Failed to query current run before abandon: {ex.Message}");
+                }
+            }
 
-        if (!string.IsNullOrWhiteSpace(runId))
+            if (!string.IsNullOrWhiteSpace(runId))
+            {
+                try
+                {
+                    await STSApiClient.ResetRunAsync(runId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning($"Failed to reset remote run during abandon: {ex.Message}");
+                }
+            }
+
+            if (RunManager.Instance == null)
+            {
+                new GameObject("RunManager").AddComponent<RunManager>();
+            }
+
+            RunManager.Instance.OnRunEnd(true, false);
+            RefreshLoadButtonState();
+
+            await FadeBlackOverlayToAsync(0f, blackFadeOutDuration);
+        }
+        finally
         {
-            try
-            {
-                await STSApiClient.ResetRunAsync(runId);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogWarning($"Failed to reset remote run during abandon: {ex.Message}");
-            }
+            transitionInProgress = false;
         }
-
-        if (RunManager.Instance == null)
-        {
-            new GameObject("RunManager").AddComponent<RunManager>();
-        }
-
-        RunManager.Instance.OnRunEnd(true, false);
-        RefreshLoadButtonState();
-
-        await FadeBlackOverlayToAsync(0f, blackFadeOutDuration);
-        transitionInProgress = false;
     }
 
     public void StartTutorialFromNewGame()

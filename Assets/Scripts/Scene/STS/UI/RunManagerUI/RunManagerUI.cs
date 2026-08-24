@@ -26,6 +26,7 @@ public class RunManagerUI : MonoBehaviour
 
     [Header("Run Session")]
     public Button saveAndReturnToMenuButton;
+    public TextMeshProUGUI saveAndReturnToMenuButtonLabel;
     public GameObject unrestrictedRoot;
 
     [Header("Run End Unlocks")]
@@ -33,7 +34,12 @@ public class RunManagerUI : MonoBehaviour
     public GameObject hudContentRoot; // Optional: HUD elements to hide while the unlock panel is shown
 
     public Image redOrGreenOverlay;
-    
+
+    // Non-null pendant un duel PvP : le combat s'approprie alors l'entete de run (voir
+    // BeginPvpCombatOverride) au lieu d'afficher etage/acte/sauvegarde.
+    private CombatManager pvpCombatOverride;
+    private string defaultSaveButtonLabelText;
+
     void Start()
     {
         if (relicsButton != null)
@@ -41,7 +47,11 @@ public class RunManagerUI : MonoBehaviour
         if (deckButton != null)
             deckButton.onClick.AddListener(ShowDeck);
         if (saveAndReturnToMenuButton != null)
-            saveAndReturnToMenuButton.onClick.AddListener(SaveAndReturnToMenu);
+            saveAndReturnToMenuButton.onClick.AddListener(OnSaveButtonPressed);
+        if (saveAndReturnToMenuButtonLabel == null && saveAndReturnToMenuButton != null)
+            saveAndReturnToMenuButtonLabel = saveAndReturnToMenuButton.GetComponentInChildren<TextMeshProUGUI>();
+        if (saveAndReturnToMenuButtonLabel != null)
+            defaultSaveButtonLabelText = saveAndReturnToMenuButtonLabel.text;
         
         // Ensure an EventSystem exists so UI can receive clicks
         var es = UnityEngine.EventSystems.EventSystem.current;
@@ -71,7 +81,12 @@ public class RunManagerUI : MonoBehaviour
     void Update()
     {
         if (RunManager.Instance == null) return;
-        if (saveAndReturnToMenuButton != null)
+
+        // Pendant un duel, le combat pilote ces champs lui-meme (voir BeginPvpCombatOverride) :
+        // les ecraser ici chaque frame effacerait l'avis de combat et le decompte de tour.
+        bool pvpOverride = pvpCombatOverride != null;
+
+        if (saveAndReturnToMenuButton != null && !pvpOverride)
         {
             bool canSave = SceneManager.GetActiveScene().name == "STS_Map"
                 && RunManager.Instance.map != null
@@ -79,8 +94,11 @@ public class RunManagerUI : MonoBehaviour
 
             saveAndReturnToMenuButton.interactable = canSave;
         }
-        floorText.text = $"Étage {RunManager.Instance.currentFloor}";
-        actText.text = $"Acte {RunManager.Instance.act + 1}";
+        if (!pvpOverride)
+        {
+            floorText.text = $"Étage {RunManager.Instance.currentFloor}";
+            actText.text = $"Acte {RunManager.Instance.act + 1}";
+        }
         hpText.text = $"PV : {RunManager.Instance.player.currentHP}/{RunManager.Instance.player.maxHP}";
         
         // Update button counts
@@ -122,6 +140,43 @@ public class RunManagerUI : MonoBehaviour
     {
         if (deckGridPanel != null)
             deckGridPanel.Show(RunManager.Instance.deck,"Deck");
+    }
+
+    /// <summary>
+    /// Un duel s'approprie l'entete de run : l'acte devient le decompte de tour, l'etage
+    /// devient l'avis de combat, et ce bouton devient celui d'abandon. Le PvE ne passe
+    /// jamais par ici, donc il ne voit rien changer.
+    /// </summary>
+    public void BeginPvpCombatOverride(CombatManager combat)
+    {
+        pvpCombatOverride = combat;
+    }
+
+    /// Rend l'entete de run a la carte : le duel est fini, sauve ou perdu.
+    public void EndPvpCombatOverride()
+    {
+        pvpCombatOverride = null;
+
+        if (floorText != null)
+            floorText.gameObject.SetActive(true);
+        if (actText != null)
+        {
+            actText.gameObject.SetActive(true);
+            actText.color = Color.white;
+        }
+        if (saveAndReturnToMenuButtonLabel != null)
+            saveAndReturnToMenuButtonLabel.text = defaultSaveButtonLabelText;
+    }
+
+    void OnSaveButtonPressed()
+    {
+        if (pvpCombatOverride != null)
+        {
+            pvpCombatOverride.RequestSurrender();
+            return;
+        }
+
+        SaveAndReturnToMenu();
     }
 
     public void ShowUnlockedCardsPanel(List<STSCardData> unlockedCards, Action onClosed)

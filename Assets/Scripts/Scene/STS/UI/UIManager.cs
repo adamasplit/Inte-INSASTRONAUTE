@@ -29,12 +29,31 @@ public class UIManager : MonoBehaviour
     public CardView selectedCard;
     private GameObject combatPreviewCardObject;
     public GameOverController gameOverController;
+    // L'ecran de fin d'un duel. Laisse vide tant qu'un humain ne l'a pas pose dans
+    // STS_Combat : ShowPvpResult retombe alors sur l'avis de combat.
+    public PvpResultController pvpResultController;
     public RectTransform discardAnchor;
     public RectTransform deckAnchor;
     public CardAnimator animator;
     public TextMeshProUGUI discardCountText;
     public TextMeshProUGUI deckCountText;
     public CardSelectionController selectionController;
+
+    [Header("Combat distant")]
+    // Laissés vides tant qu'un humain ne les a pas branchés dans la scène : tout ce qui
+    // les lit est null-safe, donc le PvE ne voit rien changer.
+    public TextMeshProUGUI combatNoticeText;
+    public TextMeshProUGUI turnCountdownText;
+
+    [Header("Abandon d'un duel")]
+    // Branchez le bouton sur OnSurrenderPressed() et, s'il existe, le bouton d'annulation
+    // sur OnSurrenderCancelled(). Tout est null-safe : tant que rien n'est pose dans la
+    // scene, le duel se joue exactement comme avant, sans bouton.
+    public GameObject surrenderButton;
+    public TextMeshProUGUI surrenderButtonLabel;
+    public GameObject surrenderPrompt;
+    public TextMeshProUGUI surrenderPromptText;
+    Coroutine combatNoticeRoutine;
     private int pendingDrawAnimations = 0;
     private int pendingPlayedCardAnimations = 0;
     public Image backgroundImage;
@@ -244,7 +263,118 @@ public class UIManager : MonoBehaviour
         combat.deck.OnCardDiscarded += DiscardCardAnimated;
         combat.deck.OnCardExhausted += ExhaustCardAnimated;
         combat.deck.OnCardAddedToHand += AddCardAnimated;
+
+        if (combat.Mode == CombatMode.Pvp)
+            WireRunHeaderForPvp();
+
+        InitSurrender();
         //CreateInitialHand();
+    }
+
+    void OnDestroy()
+    {
+        // Rend l'entete de run a la carte, meme si le duel se termine sans passer par
+        // ShowPvpResult (scene rechargee, combat interrompu, ...).
+        if (RunManager.Instance != null)
+            RunManager.Instance.ui?.EndPvpCombatOverride();
+    }
+
+    /// <summary>
+    /// Un duel n'a pas ses propres champs d'avis/decompte/abandon dans la scene : il
+    /// emprunte ceux de l'entete de run (etage/acte/sauvegarde) plutot que d'en exiger
+    /// de nouveaux. Ne remplace jamais un champ qu'un humain a deja branche a la main.
+    /// </summary>
+    void WireRunHeaderForPvp()
+    {
+        RunManagerUI header = RunManager.Instance != null ? RunManager.Instance.ui : null;
+        if (header == null)
+            return;
+
+        header.BeginPvpCombatOverride(combat);
+
+        if (combatNoticeText == null)
+            combatNoticeText = header.floorText;
+        if (turnCountdownText == null)
+            turnCountdownText = header.actText;
+        if (surrenderButton == null && header.saveAndReturnToMenuButton != null)
+            surrenderButton = header.saveAndReturnToMenuButton.gameObject;
+        if (surrenderButtonLabel == null)
+            surrenderButtonLabel = header.saveAndReturnToMenuButtonLabel;
+    }
+
+    /// <summary>
+    /// Le bouton d'abandon n'existe que dans un duel.
+    ///
+    /// <para>Un combat de run n'a personne a qui abandonner : l'endpoint refuserait, et le
+    /// bouton ne promettrait rien. On le cache donc partout ailleurs plutot que de le laisser
+    /// visible et inerte.</para>
+    /// </summary>
+    void InitSurrender()
+    {
+        bool duel = combat != null && combat.Mode == CombatMode.Pvp;
+
+        if (surrenderButton != null)
+        {
+            surrenderButton.SetActive(duel);
+            var button = surrenderButton.GetComponent<UnityEngine.UI.Button>();
+            if (button != null)
+                button.interactable = duel;
+        }
+            surrenderButtonLabel.text = SurrenderConfirmation.IdleLabel;
+
+        HideSurrenderPrompt();
+    }
+
+    /// Le bouton d'abandon a ete presse. C'est le combat qui decide ce que ca veut dire :
+    /// la premiere pression arme la confirmation, la seconde abandonne.
+    public void OnSurrenderPressed()
+    {
+        combat?.RequestSurrender();
+    }
+
+    /// Le joueur se ravise.
+    public void OnSurrenderCancelled()
+    {
+        combat?.CancelSurrender();
+    }
+
+    /// <summary>
+    /// Affiche ce que l'abandon coute, avant qu'il ne soit fait.
+    ///
+    /// <para>Le texte le dit sans detour : le serveur regle l'abandon par <c>concede</c>, qui
+    /// deplace le classement exactement comme le forfait d'un joueur absent. Sans cette phrase,
+    /// le bouton laisserait croire a une sortie gratuite.</para>
+    ///
+    /// <para>Sans champ branche dans la scene, l'avertissement passe par l'avis de combat : un
+    /// abandon ne doit jamais partir sans que le joueur ait lu ce qu'il fait.</para>
+    /// </summary>
+    public void ShowSurrenderPrompt(SurrenderConfirmation confirmation)
+    {
+        if (confirmation == null)
+            return;
+
+        if (surrenderButtonLabel != null)
+            surrenderButtonLabel.text = confirmation.Label;
+
+        if (surrenderPromptText != null)
+            surrenderPromptText.text = SurrenderConfirmation.Warning;
+
+        if (surrenderPrompt != null)
+        {
+            surrenderPrompt.SetActive(true);
+            return;
+        }
+
+        ShowCombatNotice(SurrenderConfirmation.Warning);
+    }
+
+    /// Referme l'avertissement et rend au bouton son texte de repos.
+    public void HideSurrenderPrompt()
+    {
+        if (surrenderPrompt != null)
+            surrenderPrompt.SetActive(false);
+        if (surrenderButtonLabel != null)
+            surrenderButtonLabel.text = SurrenderConfirmation.IdleLabel;
     }
 
     public void InitCharacters()
@@ -263,16 +393,19 @@ public class UIManager : MonoBehaviour
         int playerIndex = 0;
         int enemyIndex = 0;
 
-        // PLAYER
-        if (combat.player != null)
+        // PLAYERS — one dropzone per ally, same treatment as the enemy row below.
+        foreach (var ally in combat.allies)
         {
+            if (ally == null)
+                continue;
+
             GameObject playerZone = playerIndex < playerZones.Count ? playerZones[playerIndex] : Instantiate(playerPrefab, playerRoot);
             playerZone.SetActive(true);
             var pUI = playerZone.GetComponent<CharacterUI>();
-            pUI.SetCharacter(combat.player, this);
+            pUI.SetCharacter(ally, this);
 
             var dz = playerZone.GetComponent<DropZone>();
-            dz.Init(combat, combat.player, false);
+            dz.Init(combat, ally, combat.IsHostileTo(combat.GetActingPlayer(), ally));
             allZones.Add(dz);
             characterUIs.Add(pUI);
             playerIndex++;
@@ -284,7 +417,7 @@ public class UIManager : MonoBehaviour
             zone.SetActive(true);
 
             var dz2 = zone.GetComponent<DropZone>();
-            dz2.Init(combat, enemy, true);
+            dz2.Init(combat, enemy, combat.IsHostileTo(combat.GetActingPlayer(), enemy));
             var eUI = zone.GetComponent<CharacterUI>();
             eUI.SetCharacter(enemy, this);
             characterUIs.Add(eUI);
@@ -369,19 +502,25 @@ public class UIManager : MonoBehaviour
 
         yield return zone.PlayDeathAnimation();
     }
-    public void RefreshUI(bool refreshHand = true)
+    public void RefreshUI(bool refreshHand = true, bool skipHandLayout = false)
     {
         selectedCard = null;
         foreach (var ui in characterUIs)
         {
             ui.Refresh();
         }
-        energyText.text = combat.player != null ? $"{combat.player.resources.energy}" : "-";
+        Character actingPlayer = combat != null ? combat.GetActingPlayer() : null;
+        energyText.text = actingPlayer != null ? $"{actingPlayer.resources.energy}" : "-";
         deckCountText.text = $"{combat.deck.drawPile.Count}";
         discardCountText.text = $"{combat.deck.discardPile.Count}";
 
-        RefreshHandLayout();
+        if (!skipHandLayout)
+            RefreshHandLayout();
     }
+
+    // True while any hand card is mid-animation (draw, discard, play, etc.) — a layout run
+    // during one of those would fight the animation and snap cards instead of flowing.
+    public bool HandHasAnimatingCard => currentHandViews.Any(view => view != null && view.isAnimating);
     void CreateInitialHand()
     {
         currentHandViews.Clear();
@@ -423,6 +562,49 @@ public class UIManager : MonoBehaviour
         RefreshHandLayout();
     }
 
+    /// <summary>
+    /// Rebuilds the hand views only when they no longer match the deck's hand.
+    /// </summary>
+    /// <remarks>
+    /// The authoritative state replaces <c>deck.hand</c> with freshly built CardInstance objects
+    /// on every update, so a view created earlier points at an object the hand no longer holds.
+    /// Left alone, the player sees a card the server has already discarded — and clicking it is
+    /// refused with CARD_NOT_IN_HAND — while cards the server dealt never appear.
+    /// Rebuilding unconditionally would destroy views mid-animation, so this only acts on drift.
+    /// </remarks>
+    public void SyncHandFromDeckStateIfDrifted()
+    {
+        if (combat == null || combat.deck == null || combat.deck.hand == null)
+            return;
+
+        // Which cards are held, not what order they sit in: a reorder is the layout's business
+        // and rebuilding for one would destroy views that are still animating.
+        List<CardInstance> hand = combat.deck.hand;
+        HashSet<string> shown = new HashSet<string>(System.StringComparer.Ordinal);
+        foreach (CardView view in currentHandViews)
+        {
+            if (view != null && view.cardInstance != null
+                && !string.IsNullOrEmpty(view.cardInstance.instanceId))
+            {
+                shown.Add(view.cardInstance.instanceId);
+            }
+        }
+
+        HashSet<string> held = new HashSet<string>(System.StringComparer.Ordinal);
+        foreach (CardInstance card in hand)
+        {
+            if (card != null && !string.IsNullOrEmpty(card.instanceId))
+            {
+                held.Add(card.instanceId);
+            }
+        }
+
+        if (!shown.SetEquals(held))
+        {
+            SyncHandFromDeckState();
+        }
+    }
+
     public void RefreshHandLayout()
     {
         currentHandViews.RemoveAll(v => v == null);
@@ -440,6 +622,8 @@ public class UIManager : MonoBehaviour
 
     public void HighlightTargets(TargetingMode mode, Character hovered)
     {
+        Character actingPlayer = combat != null ? combat.GetActingPlayer() : null;
+
         foreach (var zone in allZones)
         {
             bool shouldHighlight = false;
@@ -451,11 +635,15 @@ public class UIManager : MonoBehaviour
                     break;
 
                 case TargetingMode.AllEnemies:
-                    shouldHighlight = zone.target != combat.player&& hovered != null;
+                    shouldHighlight = zone.target != null && !zone.target.isPlayer && hovered != null;
                     break;
 
                 case TargetingMode.Player:
-                    shouldHighlight = (zone.target == combat.player) && (hovered == combat.player);
+                    shouldHighlight = (zone.target == actingPlayer) && (hovered == actingPlayer);
+                    break;
+
+                case TargetingMode.AnyPlayer:
+                    shouldHighlight = zone.target != null && zone.target.isPlayer && hovered != null && zone.target.IsAlive;
                     break;
 
                 case TargetingMode.AllCharacters:
@@ -465,7 +653,7 @@ public class UIManager : MonoBehaviour
                     shouldHighlight = false;
                     break;
                 case TargetingMode.RandomEnemy:
-                    shouldHighlight = zone.target != combat.player&& hovered != null;
+                    shouldHighlight = zone.target != null && !zone.target.isPlayer && hovered != null;
                     break;
             }
 
@@ -654,6 +842,94 @@ public class UIManager : MonoBehaviour
     public void ShowGameOver(List<Character> enemy)
     {
         gameOverController.Show(enemy);
+    }
+
+    /// <summary>
+    /// Une phrase brève, au milieu de l'écran, qui s'efface seule. Le serveur refuse une
+    /// commande et le client n'en montrait rien : la carte ne bougeait pas, sans un mot.
+    /// </summary>
+    public void ShowCombatNotice(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return;
+
+        if (combatNoticeText == null)
+        {
+            Debug.LogWarning($"[STS-COMBAT] {message} (no notice field wired in the scene)");
+            return;
+        }
+
+        combatNoticeText.text = message;
+        combatNoticeText.gameObject.SetActive(true);
+
+        if (combatNoticeRoutine != null)
+            StopCoroutine(combatNoticeRoutine);
+        combatNoticeRoutine = StartCoroutine(HideCombatNoticeRoutine());
+    }
+
+    IEnumerator HideCombatNoticeRoutine()
+    {
+        yield return new WaitForSecondsRealtime(2.5f);
+        if (combatNoticeText != null)
+            combatNoticeText.gameObject.SetActive(false);
+        combatNoticeRoutine = null;
+    }
+
+    /// <summary>
+    /// L'issue d'un duel. Rend true quand le panneau dédié l'a prise en charge — c'est
+    /// alors lui qui referme la session et qui rend la main au menu, sur un clic du
+    /// joueur plutôt que sur un délai.
+    ///
+    /// <para>Elle ne passe jamais par GameOverController : celui-ci écrit « Vous avez été
+    /// vaincu par … » — faux sur une victoire — et son bouton met fin à la run
+    /// (GrantRunEndUnlocks, OnRunEnd), ce qu'un duel n'a aucun droit de faire.</para>
+    /// </summary>
+    public bool ShowPvpResult(TeamOutcome outcome, string opponentName)
+    {
+        if (pvpResultController != null)
+        {
+            pvpResultController.Show(outcome, opponentName);
+            return true;
+        }
+
+        string against = string.IsNullOrWhiteSpace(opponentName) ? "" : $" contre {opponentName}";
+        string message;
+        switch (outcome)
+        {
+            case TeamOutcome.Victory: message = $"Victoire{against} !"; break;
+            case TeamOutcome.Defeat:  message = $"Défaite{against}."; break;
+            case TeamOutcome.Draw:    message = $"Match nul{against}."; break;
+            default:                  message = "Duel terminé."; break;
+        }
+
+        Debug.Log($"[STS-PVP] {message}");
+        ShowCombatNotice(message);
+        return false;
+    }
+
+    /// <summary>
+    /// Les secondes qu'il reste au tour, ou rien. Le champ n'est pas branché tant qu'un
+    /// humain ne l'a pas posé dans la scène, auquel cas cette méthode ne fait rien : le
+    /// PvE, qui n'a pas de limite de temps, ne doit de toute façon rien voir.
+    /// </summary>
+    public void DisplayTurnCountdown(double? secondsRemaining)
+    {
+        if (turnCountdownText == null)
+            return;
+
+        if (secondsRemaining == null)
+        {
+            if (turnCountdownText.gameObject.activeSelf)
+                turnCountdownText.gameObject.SetActive(false);
+            return;
+        }
+
+        int whole = Mathf.Max(0, Mathf.CeilToInt((float)secondsRemaining.Value));
+        if (!turnCountdownText.gameObject.activeSelf)
+            turnCountdownText.gameObject.SetActive(true);
+
+        turnCountdownText.text = $"{whole}s";
+        turnCountdownText.color = whole <= 5 ? Color.red : Color.white;
     }
     Vector2 ScreenToHandLocal(Vector3 screenPos)
     {

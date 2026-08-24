@@ -10,23 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: divination
+  m_Name: insatourne
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: divination
-  cardName: Divination
-  collectionCardId: Chacharlatante
+  id: insatourne
+  cardName: Pause de tournage
+  collectionCardId: Insatourne
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 0}
-  cost: 3
+  cost: 1
   xCost: 0
-  type: 2
-  rarity: 4
+  type: 1
+  rarity: 3
   effects:
   - type: 3
-    value: 1
-    targetSelf: 1
+    value: 0
+    targetSelf: 0
     targetOthers: 0
-    statusType: 10
-    duration: 0
+    statusType: 64
+    duration: 1
     description: 
     cardID: 
     index: 0
@@ -38,26 +40,9 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  - type: 3
-    value: 2
-    targetSelf: 0
-    targetOthers: 0
-    statusType: 39
-    duration: 0
-    description: 
-    cardID: "Mal\xE9diction"
-    index: 0
-    conditional: 0
-    conditionType: 0
-    conditionValue: 
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 0
-    animationType: 0
-  targetingMode: 1
+  targetingMode: 2
   modifiers: []
-  favoredCharacter: 11
+  favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
-  tags: 
+  tags: 09000000

@@ -376,7 +376,7 @@ public class MultiplayerDeckPanel : MonoBehaviour
     // Never selectable in PVP, so they are dropped before any filter runs.
     private bool IsHiddenFromDeckBuilder(STSCardData card)
     {
-        return (card.favoredCharacter != SelectableCharacter.Aucun&& card.favoredCharacter != selectedCharacter)
+        return (card.favoredCharacter != SelectableCharacter.Aucun && card.favoredCharacter != selectedCharacter)
             || card.HasTag(CardTag.Unobtainable)
             || card.HasTag(CardTag.Created)
             || card.HasTag(CardTag.FollowUp);

@@ -1,14 +1,14 @@
 {
   "id": "galanterie",
   "cardName": "Galanterie",
-  "collectionCardId": null,
+  "collectionCardId": "Gala",
   "multiplayerExclusive": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 0,
   "xCost": false,
   "type": "Compétence",
-  "rarity": "Rare",
+  "rarity": "Epic",
   "targetingMode": "Enemy",
   "effects": [
     {
@@ -51,7 +51,7 @@
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Starting",
+  "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": []

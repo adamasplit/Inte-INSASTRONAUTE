@@ -87,7 +87,7 @@ public static class STSPlayerProfileStore
         int normalizedAct = Mathf.Max(0, act);
         if (wasRetreat)
         {
-            int bossesDefeated = normalizedAct + 1;
+            int bossesDefeated = normalizedAct;
             return bossesDefeated * (bossesDefeated + 1) / 2;
         }
 

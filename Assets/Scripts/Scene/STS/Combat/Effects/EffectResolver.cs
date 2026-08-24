@@ -684,7 +684,7 @@ public static class EffectResolver
                                         type = EffectType.Damage,
                                         value = effect.duration
                                     });
-                                    if (card.targetingMode == TargetingMode.Player)
+                                    if (card.targetingMode == TargetingMode.Player || card.targetingMode == TargetingMode.AnyPlayer)
                                         card.targetingMode = TargetingMode.Enemy;
                                     break;
                                 case CardSelectionEffect.AddArmorEffect:

@@ -9,6 +9,7 @@ public class HealthBar : MonoBehaviour
     [Tooltip("Override the maximum width of the health bar. If 0, use container width.")]
     public float maxWidthOverride = 0f;
     float maxWidth;
+    float initialFillWidth;
     float lastRatio = 1f;
 
     void Awake()
@@ -19,6 +20,7 @@ public class HealthBar : MonoBehaviour
         fill.anchorMax = new Vector2(0f, fill.anchorMax.y);
         fill.pivot = new Vector2(0f, 0.5f);
         fill.anchoredPosition = new Vector2(0f, fill.anchoredPosition.y);
+        initialFillWidth = fill.rect.width;
 
         CacheMaxWidth();
     }
@@ -50,9 +52,13 @@ public class HealthBar : MonoBehaviour
             }
 
             float fillWidth = fill.rect.width;
-            if (fillWidth > 0f)
+            if (fillWidth > maxWidth)
             {
                 maxWidth = fillWidth;
+            }
+            if (initialFillWidth > maxWidth)
+            {
+                maxWidth = initialFillWidth;
             }
         }
     }

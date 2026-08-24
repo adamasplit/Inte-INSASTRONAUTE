@@ -85,7 +85,10 @@ public class CharacterUI : MonoBehaviour
 
             if (activeStatusUIs.TryGetValue(status, out var statusUI))
             {
-                statusUI.SetStatus(status, uiManager, character.isPlayer, false, authoritativeCombat);
+                // Don't pass authoritativeCombat as playUpdatePulse: in that mode this refresh runs
+                // after every single state sync, and the pulse was firing on every action even
+                // though the status had not actually been reapplied or updated.
+                statusUI.SetStatus(status, uiManager, character.isPlayer, false, false);
                 statusUI.transform.SetSiblingIndex(i);
             }
             else
@@ -106,8 +109,24 @@ public class CharacterUI : MonoBehaviour
         }
         if (!character.isPlayer)
         {
+            Enemy enemy = character as Enemy;
             // Refresh the enemy's intent
-            RefreshIntent(character as Enemy);
+            RefreshIntent(enemy);
+
+            // Un combattant humain n'a pas d'intention à montrer — c'est l'autre joueur qui
+            // décide — mais il a des piles dont on connaît la taille sans en connaître le
+            // contenu. On met les compteurs là où l'intention se serait affichée (décision
+            // D2), et seulement là où elle est restée vide : si un ennemi PvE arrivait un
+            // jour avec des piles cachées, son intention passerait avant ses compteurs.
+            if (enemy != null && enemy.PeekNextAction() == null)
+            {
+                string remotePiles = uiManager != null && uiManager.combat != null
+                    ? uiManager.combat.RemotePilesSummary(character)
+                    : null;
+
+                if (remotePiles != null)
+                    intentText.text = remotePiles;
+            }
         }
     }
 

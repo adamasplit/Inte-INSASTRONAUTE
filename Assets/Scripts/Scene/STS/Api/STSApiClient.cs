@@ -127,6 +127,7 @@ public class STSApiCombatCommandRequest
     public long expectedRevision;
     public string cardInstanceId;
     public List<string> targetIds = new();
+    public List<string> selectedCardInstanceIds = new();
 }
 
 [Serializable]
@@ -249,6 +250,27 @@ public class STSApiClaimRewardResponse
     public bool accepted;
     public JToken runInventory;
     public List<JToken> pendingRewards = new();
+}
+
+[Serializable]
+public class STSApiDebugCombatRequest
+{
+    public string character;
+    public int maxHp;
+    public List<string> enemyIds = new();
+    public List<string> cardIds = new();
+    public List<string> relicIds = new();
+}
+
+[Serializable]
+public class STSApiDebugCombatResponse
+{
+    public bool accepted;
+    public string runId;
+    public STSApiPlayerState player;
+    public STSApiRunInventoryState runInventory;
+    public STSApiActiveEncounterState activeEncounter;
+    public JToken activeCombat;
 }
 
 public static class STSApiClient
@@ -591,6 +613,50 @@ public static class STSApiClient
         return response;
     }
 
+    // Debug only: rewrites the run server-side with a hand-picked encounter, deck and relics.
+    // Requires app.sts.debug.combat.enabled on the backend, otherwise the route does not exist.
+    public static async Task<STSApiDebugCombatResponse> StartDebugCombatAsync(string runId, STSApiDebugCombatRequest request)
+    {
+        runId = NormalizeRunId(runId);
+        if (string.IsNullOrWhiteSpace(runId) || request == null)
+            return null;
+
+        JObject payload = JObject.FromObject(request);
+        payload["runId"] = runId;
+        string json = await ReactApiBridge.RequestWithAliasesAsync(
+            new[]
+            {
+                $"sts.runs.{runId}.debug.combat",
+                "sts.runs.debug.combat"
+            },
+            payload,
+            20000);
+
+        STSApiDebugCombatResponse response = ParseResponse<STSApiDebugCombatResponse>(json);
+        if (response != null)
+        {
+            response.runId = NormalizeRunId(response.runId);
+            response.activeCombat = NormalizeOptionalToken(response.activeCombat);
+        }
+        return response;
+    }
+
+    public static async Task<bool> ClearDebugCombatAsync(string runId)
+    {
+        runId = NormalizeRunId(runId);
+        if (string.IsNullOrWhiteSpace(runId))
+            return false;
+
+        string json = await ReactApiBridge.RequestWithAliasesAsync(
+            new[]
+            {
+                $"sts.runs.{runId}.debug.combat.clear",
+                "sts.runs.debug.combat.clear"
+            },
+            new { runId });
+        return !string.IsNullOrWhiteSpace(json);
+    }
+
     public static async Task<JToken> GetPvpProfileAsync()
     {
         string json = await ReactApiBridge.RequestAsync("sts.pvp.profile.get");
@@ -692,6 +758,48 @@ public static class STSApiClient
         JObject payload = action != null ? (action as JObject) ?? JObject.FromObject(action) : new JObject();
         payload["battleId"] = battleId;
         string json = await ReactApiBridge.RequestAsync("sts.pvp.battle.action", payload);
+        return ParseEnvelope(json);
+    }
+
+    /// <summary>
+    /// Dit au serveur que le joueur est toujours là, sans rien jouer.
+    ///
+    /// <para><c>StsPvpService.submitBattleAction</c> estampille la présence <b>avant</b> de
+    /// regarder ce que l'action demande, et un corps portant <c>heartbeatOnly</c> s'arrête là :
+    /// aucune carte, aucun tour, aucune révision attendue. Le nom du champ est celui du record
+    /// <c>StsPvpBattleActionRequest(actionType, action, endTurn, heartbeatOnly)</c>.</para>
+    ///
+    /// <para>Sans ces battements, <c>StsPvpBattleTimeoutScheduler</c> déclare forfait tout
+    /// participant silencieux depuis plus de 120 secondes — y compris celui qui n'a jamais rien
+    /// envoyé, car une entrée absente se lit comme une absence.</para>
+    /// </summary>
+    /// <returns><c>true</c> quand le serveur a répondu.</returns>
+    public static async Task<bool> SendPvpBattleHeartbeatAsync(string battleId)
+    {
+        JToken answer = await SendPvpBattleActionAsync(
+            battleId,
+            new JObject { ["heartbeatOnly"] = true });
+        return answer != null;
+    }
+
+    /// <summary>
+    /// Abandonne un duel : le combat se termine à l'avantage de l'adversaire, tout de suite.
+    ///
+    /// <para>C'est <c>POST /api/sts/pvp/battles/{battleId}/surrender</c>, <b>sans corps</b> — le
+    /// combat est dans le chemin et le joueur est celui qui s'est authentifié. Ce n'est donc pas
+    /// une commande de la socket : <c>ReactCombatBridgeCore</c> ne connaît que <c>PLAY_CARD</c>
+    /// et <c>END_TURN</c>, et il n'a aucune raison d'en inventer une troisième.</para>
+    ///
+    /// <para>L'appeler deux fois ne casse rien : un combat déjà terminé est rendu tel quel.
+    /// L'adversaire, lui, l'apprend par la socket (<c>CombatEnded</c> puis l'état).</para>
+    /// </summary>
+    /// <returns>Le <c>StsPvpBattleDto</c> du combat, désormais <c>FINISHED</c>, ou null.</returns>
+    public static async Task<JToken> SurrenderPvpBattleAsync(string battleId)
+    {
+        if (string.IsNullOrWhiteSpace(battleId))
+            return null;
+
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.battle.surrender", new { battleId });
         return ParseEnvelope(json);
     }
 

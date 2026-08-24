@@ -10,41 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: galanterie
+  m_Name: avire
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: galanterie
-  cardName: Galanterie
-  collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: cfd0f1a4b5056e14597a92a70e20d072, type: 2}
+  id: avire
+  cardName: Souffle dans les voiles
+  collectionCardId: Avire
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 0}
-  cost: 0
+  cost: 1
   xCost: 0
   type: 1
   rarity: 2
   effects:
-  - type: 16
-    value: 1
+  - type: 1
+    value: 4
     targetSelf: 0
     targetOthers: 0
     statusType: 0
     duration: 0
     description: 
     cardID: 
-    conditional: 0
-    conditionType: 0
-    conditionValue: 
-    trueEffect: 1
-    cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 0
-  - type: 6
-    value: 6
-    targetSelf: 1
-    targetOthers: 0
-    statusType: 0
-    duration: 0
-    description: 
-    cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -52,9 +39,27 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-  targetingMode: 1
+    animationType: 0
+  - type: 3
+    value: 1
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 14
+    duration: 0
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  targetingMode: 6
   modifiers: []
-  favoredCharacter: 11
+  favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
   tags: 

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,7 +19,10 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
     public bool isHovered = false;
 
-    public bool acceptsEnemyCards = false;
+    // FormerlySerializedAs : les prefabs PlayerZone/EnemyZone sérialisent encore le champ
+    // sous son ancien nom ; sans ça leur valeur serait perdue au réimport.
+    [FormerlySerializedAs("acceptsEnemyCards")]
+    public bool isHostileZone = false;
     public static Character hoveredCharacter;
     [Header("Click Name")]
     [SerializeField] TextMeshProUGUI clickNameText;
@@ -57,7 +61,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             hoveredCharacter = null;
     }
 
-    public void Init(CombatManager cm, Character t, bool acceptsEnemy)
+    public void Init(CombatManager cm, Character t, bool hostile)
     {
         if (imageRect == null)
             imageRect = image.rectTransform;
@@ -101,10 +105,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         if (image != null)
         {
             imageRect.localScale = Vector3.one;
-            if (!target.isPlayer)
-            {
-                imageRect.anchoredPosition = Vector2.zero;
-            }
+            imageRect.anchoredPosition = Vector2.zero;
 
             Color color = image.color;
             color.a = 1f;
@@ -112,14 +113,15 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         }
 
         enemyImageSizeCached = false;
-        acceptsEnemyCards = acceptsEnemy;
+        isHostileZone = hostile;
         deathAnimationPlayed = false;
 
-        highlight.color = acceptsEnemy ? new Color(1, 0, 0, 0f) : new Color(0, 1, 0, 0f);
+        highlight.color = hostile ? new Color(1, 0, 0, 0f) : new Color(0, 1, 0, 0f);
 
         isHovered = false;
 
-        if (target != null && !target.isPlayer)
+        // Player-side zones size and lock their layout exactly like enemy zones.
+        if (target != null)
         {
             EnsureDropZoneLayoutLock();
         }
@@ -197,12 +199,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         if (imageRect == null)
             imageRect = image.rectTransform;
 
-        if (target.isPlayer)
-        {
-            imageRect.sizeDelta = new Vector2(800, 800);
-            return;
-        }
-
+        // Player-side and enemy-side zones share the same fit-to-box sizing now.
         if (!enemyImageSizeCached)
         {
             RectTransform zoneRect = GetComponent<RectTransform>();
@@ -244,7 +241,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
     void ApplyDropZoneSize(Vector2 size)
     {
-        if (target == null || target.isPlayer)
+        if (target == null)
             return;
 
         EnsureDropZoneLayoutLock();
@@ -299,11 +296,14 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
         if (normalizedHeight <= 0.3f && CanTargetPlayer(mode))
         {
+            // Player mode aims at the acting ally alone, no matter whose zone is nearest;
+            // AnyPlayer picks the closest player-side zone like enemy targeting does.
             DropZone playerZone = GetNearestDropZone(pointerScreenPosition, zone =>
                 zone != null &&
                 zone.isActiveAndEnabled &&
                 zone.target != null &&
-                zone.target.isPlayer,
+                zone.target.isPlayer &&
+                (mode != TargetingMode.Player || zone.combat == null || zone.target == zone.combat.GetActingPlayer()),
                 eventCamera);
 
             return playerZone != null ? playerZone.target : null;
@@ -392,25 +392,29 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     static bool CanTargetPlayer(TargetingMode mode)
     {
         return mode == TargetingMode.Player ||
+               mode == TargetingMode.AnyPlayer ||
                mode == TargetingMode.AllCharacters;
     }
 
     public void SetHighlight(bool highlight)
     {
         this.highlight.color = highlight
-            ? (acceptsEnemyCards ? new Color(1, 0, 0, 0.3f) : new Color(0, 1, 0, 0.3f))
-            : (acceptsEnemyCards ? new Color(1, 0, 0, 0f) : new Color(0, 1, 0, 0f));
+            ? (isHostileZone ? new Color(1, 0, 0, 0.3f) : new Color(0, 1, 0, 0.3f))
+            : (isHostileZone ? new Color(1, 0, 0, 0f) : new Color(0, 1, 0, 0f));
     }
 
     public void OnDrop(PointerEventData eventData)
     {
         if (!isHovered)
+        {
+            Debug.Log("[STS-INPUT] drop ignored: zone is not hovered");
             return;
+        }
 
         isHovered = false;
 
         var drag = eventData.pointerDrag?.GetComponentInParent<CardDrag>();
-        drag.Destroy();
+        drag?.Destroy();
         var cardView = drag?.GetComponentInChildren<CardView>();
 
         if (cardView?.cardInstance == null)
@@ -422,12 +426,17 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         var mode = cardView.cardInstance.targetingMode;
         var targets = combat.GetDisplayTargets(mode, target);
 
+        Debug.Log($"[STS-INPUT] drop card={cardView.cardInstance.displayName} instanceId={cardView.cardInstance.instanceId} mode={mode} zoneTarget={(target != null ? target.name : "<none>")} targets={targets.Count}");
+
         if (targets.Count == 0)
+        {
+            Debug.LogWarning($"[STS-INPUT] drop blocked: no display targets for card={cardView.cardInstance.displayName} mode={mode}");
             return;
+        }
 
         Vector2 discardPos = combat.animator.animationLayer.InverseTransformPoint(combat.ui.discardAnchor.position);
         drag?.NotifyCardPlayedFromDrop();
-        combat.PlayCard(combat.player, cardView.cardInstance, targets);
+        combat.PlayCard(combat.GetActingPlayer(), cardView.cardInstance, targets);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -537,13 +546,17 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         if (cardView?.cardInstance?.data == null)
             return false;
 
-        if (acceptsEnemyCards)
+        if (isHostileZone)
             return cardView.cardInstance.targetingMode == TargetingMode.Enemy ||
                    cardView.cardInstance.targetingMode == TargetingMode.AllEnemies ||
                    cardView.cardInstance.targetingMode == TargetingMode.AllCharacters ||
                    cardView.cardInstance.targetingMode == TargetingMode.RandomEnemy;
 
-        return cardView.cardInstance.targetingMode == TargetingMode.Player ||
+        // Player mode aims at the acting ally alone; AnyPlayer may land on any ally's zone.
+        if (cardView.cardInstance.targetingMode == TargetingMode.Player)
+            return combat == null || target == combat.GetActingPlayer();
+
+        return cardView.cardInstance.targetingMode == TargetingMode.AnyPlayer ||
                cardView.cardInstance.targetingMode == TargetingMode.AllCharacters;
     }
 
