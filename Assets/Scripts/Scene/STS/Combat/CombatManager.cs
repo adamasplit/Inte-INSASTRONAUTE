@@ -2609,27 +2609,38 @@ public class CombatManager : MonoBehaviour
     {
         yield return CleanupSlainCharactersRoutine();
 
-        bool alliesSlain = allies.All(a => a == null || !a.IsAlive);
-        bool enemiesSlain = enemies.All(e => e == null || !e.IsAlive);
-
-        if (!alliesSlain && !enemiesSlain)
+        // Le serveur a tranché : on le lit. Il connaît des fins que les PV ne racontent pas
+        // — un nul, un forfait — et il connaît les PV mieux que nous.
+        if (announcedOutcome != TeamOutcome.None)
         {
-            if (ui != null)
-            {
-                ui.RefreshUI(false);
-            }
-
-            if (turnSystem != null)
-            {
-                turnSystem.timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
-            }
-
-            resolvingCombatCleanup = false;
-            yield break;
+            combatEnded = true;
+            outcome = announcedOutcome;
         }
+        else
+        {
+            // Chemin local : pas de serveur pour trancher, on déduit comme avant.
+            bool alliesSlain = allies.All(a => a == null || !a.IsAlive);
+            bool enemiesSlain = enemies.All(e => e == null || !e.IsAlive);
 
-        combatEnded = true;
-        outcome = enemiesSlain ? TeamOutcome.Victory : TeamOutcome.Defeat;
+            if (!alliesSlain && !enemiesSlain)
+            {
+                if (ui != null)
+                {
+                    ui.RefreshUI(false);
+                }
+
+                if (turnSystem != null)
+                {
+                    turnSystem.timelineUI.Display(turnSystem.GetDisplayTimeline(turnSystem.timeline));
+                }
+
+                resolvingCombatCleanup = false;
+                yield break;
+            }
+
+            combatEnded = true;
+            outcome = enemiesSlain ? TeamOutcome.Victory : TeamOutcome.Defeat;
+        }
 
         yield return EndCombat();
         resolvingCombatCleanup = false;
@@ -2819,7 +2830,10 @@ public class CombatManager : MonoBehaviour
             STSSceneLoader.Instance.LoadScene("STS_Reward");
             STSSceneLoader.Instance?.EndLoading();
         }
-        else if (outcome == TeamOutcome.Defeat)
+        // Ruling : un nul termine la run comme une défaite. Le serveur n'accorde aucune
+        // récompense sur un nul, donc l'écran de victoire serait vide ; et sans cette
+        // branche l'écran de fin ne s'afficherait pas du tout.
+        else if (outcome == TeamOutcome.Defeat || outcome == TeamOutcome.Draw)
         {
             Task<bool> completeTask = SubmitCombatResultAsync("defeat");
             while (!completeTask.IsCompleted)
