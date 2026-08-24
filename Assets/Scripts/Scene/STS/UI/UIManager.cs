@@ -263,8 +263,43 @@ public class UIManager : MonoBehaviour
         combat.deck.OnCardDiscarded += DiscardCardAnimated;
         combat.deck.OnCardExhausted += ExhaustCardAnimated;
         combat.deck.OnCardAddedToHand += AddCardAnimated;
+
+        if (combat.Mode == CombatMode.Pvp)
+            WireRunHeaderForPvp();
+
         InitSurrender();
         //CreateInitialHand();
+    }
+
+    void OnDestroy()
+    {
+        // Rend l'entete de run a la carte, meme si le duel se termine sans passer par
+        // ShowPvpResult (scene rechargee, combat interrompu, ...).
+        if (RunManager.Instance != null)
+            RunManager.Instance.ui?.EndPvpCombatOverride();
+    }
+
+    /// <summary>
+    /// Un duel n'a pas ses propres champs d'avis/decompte/abandon dans la scene : il
+    /// emprunte ceux de l'entete de run (etage/acte/sauvegarde) plutot que d'en exiger
+    /// de nouveaux. Ne remplace jamais un champ qu'un humain a deja branche a la main.
+    /// </summary>
+    void WireRunHeaderForPvp()
+    {
+        RunManagerUI header = RunManager.Instance != null ? RunManager.Instance.ui : null;
+        if (header == null)
+            return;
+
+        header.BeginPvpCombatOverride(combat);
+
+        if (combatNoticeText == null)
+            combatNoticeText = header.floorText;
+        if (turnCountdownText == null)
+            turnCountdownText = header.actText;
+        if (surrenderButton == null && header.saveAndReturnToMenuButton != null)
+            surrenderButton = header.saveAndReturnToMenuButton.gameObject;
+        if (surrenderButtonLabel == null)
+            surrenderButtonLabel = header.saveAndReturnToMenuButtonLabel;
     }
 
     /// <summary>
