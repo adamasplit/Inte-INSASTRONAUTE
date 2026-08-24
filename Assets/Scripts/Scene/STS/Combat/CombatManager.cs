@@ -11,7 +11,8 @@ public enum TeamOutcome
 {
     None,
     Victory,
-    Defeat
+    Defeat,
+    Draw
 }
 
 public class CombatManager : MonoBehaviour
@@ -75,6 +76,11 @@ public class CombatManager : MonoBehaviour
     public CombatState state = new CombatState();
     public bool combatEnded { get; private set; }
     public TeamOutcome outcome { get; private set; } = TeamOutcome.None;
+
+    /// L'issue que le serveur a annoncée dans son CombatEnded, ou None s'il n'a rien dit.
+    /// Distincte de `outcome`, qui reste ce que le combat local dérive : le chemin local
+    /// (tutoriel) n'a pas de serveur pour trancher et continue de déduire.
+    TeamOutcome announcedOutcome = TeamOutcome.None;
     public List<EnemyData> currentEnemiesData = new();
     public CardAnimator animator;
     public CardInstance currentCard; // For animation purposes
@@ -1112,6 +1118,7 @@ public class CombatManager : MonoBehaviour
                     yield return new WaitForSeconds(0.05f);
                     break;
                 case "CombatEnded":
+                    RecordAnnouncedOutcome(combatEvent);
                     yield return new WaitForSeconds(0.1f);
                     break;
             }
@@ -1161,6 +1168,39 @@ public class CombatManager : MonoBehaviour
         if (combatEvent["winnerTeamId"] != null)
             return "CombatEnded";
         return string.Empty;
+    }
+
+    /// Le serveur vient de clore le combat et dit qui l'emporte. On le note ici plutôt que
+    /// d'agir tout de suite : les événements qui suivent dans le même lot doivent finir de
+    /// se jouer, et c'est ResolveCombatEndRoutine qui conclut, une fois les animations
+    /// terminées.
+    void RecordAnnouncedOutcome(JToken combatEvent)
+    {
+        string localTeamId = LocalTeamId();
+        if (string.IsNullOrEmpty(localTeamId))
+            return;
+
+        // Absent du JSON quand le combat est nul : le serveur n'écrit pas de vainqueur.
+        string winnerTeamId = combatEvent.Value<string>("winnerTeamId");
+
+        switch (CombatOutcomeSource.FromWinner(winnerTeamId, localTeamId))
+        {
+            case CombatOutcome.Victory: announcedOutcome = TeamOutcome.Victory; break;
+            case CombatOutcome.Defeat:  announcedOutcome = TeamOutcome.Defeat;  break;
+            case CombatOutcome.Draw:    announcedOutcome = TeamOutcome.Draw;    break;
+            default:                    announcedOutcome = TeamOutcome.None;    break;
+        }
+    }
+
+    /// L'équipe du combattant local, telle que le registre l'a enregistrée.
+    string LocalTeamId()
+    {
+        string localId = combatantRegistry.LocalCombatantId;
+        if (string.IsNullOrEmpty(localId))
+            return null;
+
+        CombatantDescriptor descriptor = combatantRegistry.DescriptorOf(localId);
+        return descriptor?.TeamId;
     }
 
     IEnumerator ReplayCardPlayedEvent(JToken combatEvent)
@@ -2502,6 +2542,7 @@ public class CombatManager : MonoBehaviour
     {
         combatEnded = false;
         outcome = TeamOutcome.None;
+        announcedOutcome = TeamOutcome.None;
     }
 
     private IEnumerator CleanupSlainCharactersRoutine()
