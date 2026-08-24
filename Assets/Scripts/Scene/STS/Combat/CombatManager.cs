@@ -2634,7 +2634,13 @@ public class CombatManager : MonoBehaviour
         bool enemiesSlain = enemies.All(e => e == null || !e.IsAlive);
         bool hasDeadCharacters = allies.Any(a => a != null && !a.IsAlive) || enemies.Any(e => e != null && !e.IsAlive);
 
-        if (!alliesSlain && !enemiesSlain && !hasDeadCharacters)
+        // An outcome the server announced ends the combat whatever the client can see. Without
+        // this, the gate below still asks the question the whole point was to stop asking: a
+        // combat closed with nobody dead on our side of the wire -- a draw, a forfeit, or simply a
+        // client whose view of the hit points differs -- was recorded and then never acted upon,
+        // and the player went on playing a combat the server had finished.
+        if (announcedOutcome == TeamOutcome.None
+                && !alliesSlain && !enemiesSlain && !hasDeadCharacters)
             return false;
 
         resolvingCombatCleanup = true;
