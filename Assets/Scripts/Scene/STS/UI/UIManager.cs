@@ -314,8 +314,12 @@ public class UIManager : MonoBehaviour
         bool duel = combat != null && combat.Mode == CombatMode.Pvp;
 
         if (surrenderButton != null)
+        {
             surrenderButton.SetActive(duel);
-        if (surrenderButtonLabel != null)
+            var button = surrenderButton.GetComponent<UnityEngine.UI.Button>();
+            if (button != null)
+                button.interactable = duel;
+        }
             surrenderButtonLabel.text = SurrenderConfirmation.IdleLabel;
 
         HideSurrenderPrompt();
