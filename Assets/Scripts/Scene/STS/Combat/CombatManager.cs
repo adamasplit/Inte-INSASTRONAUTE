@@ -183,9 +183,11 @@ public class CombatManager : MonoBehaviour
 #if UNITY_WEBGL && !UNITY_EDITOR
             ReactCombatBridge.CombatEventReceived += HandleReactCombatEvent;
             ReactCombatBridge.CombatStatusChanged += HandleReactCombatStatusChanged;
-            StartCoroutine(ConnectAuthoritativeCombatSocketRoutine(AuthoritativeCombatIdentity.GetTransportId(
-                RunManager.Instance.runId,
-                RunManager.Instance.activeCombat)));
+            StartCoroutine(ConnectAuthoritativeCombatSocketRoutine(
+                AuthoritativeCombatIdentity.GetTransportId(
+                    RunManager.Instance.runId,
+                    RunManager.Instance.activeCombat),
+                CombatModes.ToWireName(CombatMode.Pve)));
 #endif
             STSSceneLoader.Instance?.SceneReady();
             return;
@@ -241,9 +243,11 @@ public class CombatManager : MonoBehaviour
         if (appliedAuthoritativeState)
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            StartCoroutine(ConnectAuthoritativeCombatSocketRoutine(AuthoritativeCombatIdentity.GetTransportId(
-                RunManager.Instance.runId,
-                RunManager.Instance.activeCombat)));
+            StartCoroutine(ConnectAuthoritativeCombatSocketRoutine(
+                AuthoritativeCombatIdentity.GetTransportId(
+                    RunManager.Instance.runId,
+                    RunManager.Instance.activeCombat),
+                CombatModes.ToWireName(CombatMode.Pve)));
 #endif
             STSSceneLoader.Instance?.SceneReady();
             yield break;
@@ -252,14 +256,14 @@ public class CombatManager : MonoBehaviour
         StartLocalCombatFlow();
     }
 
-    IEnumerator ConnectAuthoritativeCombatSocketRoutine(string transportId)
+    IEnumerator ConnectAuthoritativeCombatSocketRoutine(string transportId, string mode)
     {
-        Task<bool> connectTask = ReactCombatBridge.ConnectAsync(transportId);
+        Task<bool> connectTask = ReactCombatBridge.ConnectAsync(transportId, mode);
         while (!connectTask.IsCompleted)
             yield return null;
 
         bool connected = connectTask.Status == TaskStatus.RanToCompletion && connectTask.Result;
-        Debug.Log($"[STS-BRIDGE] socket connect combatId={transportId} success={connected}");
+        Debug.Log($"[STS-BRIDGE] socket connect combatId={transportId} mode={mode} success={connected}");
         if (!connected)
             Debug.LogWarning("[STS-BRIDGE] Combat socket failed to connect; commands will silently no-op until reconnected.");
     }

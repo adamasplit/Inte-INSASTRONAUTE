@@ -83,6 +83,29 @@ public sealed class ReactCombatBridgeCore
         CurrentRevision = null;
     }
 
+    /// <summary>
+    /// La charge utile qui ouvre une socket de combat.
+    ///
+    /// <para>Le <c>mode</c> est ce qui dit a la couche React quelles trois destinations
+    /// employer : l'endpoint de snapshot, la file privee et la destination des commandes.
+    /// Rien d'autre ne le transporte, parce qu'aucun code React n'ouvre jamais un combat
+    /// — c'est Unity qui le fait.</para>
+    ///
+    /// <para>Il est exige plutot que defaute, et c'est delibere : un duel connecte sans
+    /// mode emprunte les routes PvE <b>en silence</b>. La socket s'ouvre, la file reste
+    /// vide, les commandes partent dans le vide, et aucune erreur n'apparait nulle part.
+    /// Lever ici est le dernier endroit ou cette panne fait encore du bruit.</para>
+    /// </summary>
+    public static string CreateConnectPayload(string combatId, string mode)
+    {
+        if (string.IsNullOrWhiteSpace(combatId))
+            throw new ArgumentException("A combat identifier is required", nameof(combatId));
+        if (string.IsNullOrWhiteSpace(mode))
+            throw new ArgumentException("A combat mode is required", nameof(mode));
+
+        return JsonConvert.SerializeObject(new { combatId, mode });
+    }
+
     public ReactCombatCommand CreateCommand(string type, object payload)
     {
         if (CombatId == null || CurrentRevision == null)

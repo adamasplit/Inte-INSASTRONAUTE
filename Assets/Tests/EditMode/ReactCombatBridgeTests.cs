@@ -325,4 +325,44 @@ public class ReactCombatBridgeTests
         StringAssert.Contains("invalid-leading-zero-revision", fixture);
         StringAssert.Contains("valid-end-turn-command", fixture);
     }
+
+    [Test]
+    public void ConnectPayloadNamesTheCombatAndItsMode()
+    {
+        string payload = ReactCombatBridgeCore.CreateConnectPayload("battle-77", "PVP");
+
+        StringAssert.Contains("\"combatId\":\"battle-77\"", payload);
+        StringAssert.Contains("\"mode\":\"PVP\"", payload);
+    }
+
+    /// Sans mode, la couche React retombe sur ses routes PvE sans le dire : la socket
+    /// s'ouvre, la file reste vide et les commandes disparaissent. Refuser ici est le
+    /// seul endroit ou cette panne peut encore faire du bruit.
+    [Test]
+    public void ConnectPayloadRefusesAModelessConnection()
+    {
+        Assert.Throws<System.ArgumentException>(
+            () => ReactCombatBridgeCore.CreateConnectPayload("battle-77", null));
+        Assert.Throws<System.ArgumentException>(
+            () => ReactCombatBridgeCore.CreateConnectPayload("battle-77", "   "));
+    }
+
+    [Test]
+    public void ConnectPayloadRefusesACombatlessConnection()
+    {
+        Assert.Throws<System.ArgumentException>(
+            () => ReactCombatBridgeCore.CreateConnectPayload("", "PVP"));
+    }
+
+    /// Le PvE s'adresse par son runId, le PvP par son battleId. Deux methodes plutot
+    /// qu'une parametree : la premiere leve sur un runId vide, ce qui est exactement ce
+    /// qu'un PvP lui presenterait.
+    [Test]
+    public void APvpConnectionUsesTheBattleIdAsTransportId()
+    {
+        Assert.That(AuthoritativeCombatIdentity.GetPvpTransportId("battle-77"),
+            Is.EqualTo("battle-77"));
+        Assert.Throws<System.ArgumentException>(
+            () => AuthoritativeCombatIdentity.GetPvpTransportId(" "));
+    }
 }
