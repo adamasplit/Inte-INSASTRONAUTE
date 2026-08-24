@@ -102,6 +102,15 @@ public class CombatManager : MonoBehaviour
     // would rebuild on every state — Register would then throw on a known id.
     private bool combatantRegistryBuilt;
 
+    // L'état autoritatif courant. En PvE c'est aussi RunManager.activeCombat, parce que la
+    // run le possède ; en PvP la run n'a rien à voir avec ce combat et ne doit surtout pas
+    // s'en trouver modifiée — un joueur qui met une run en pause pour jouer un duel doit la
+    // retrouver telle quelle.
+    private JToken authoritativeCombatState;
+
+    // La deadline du tour, relue à chaque état. None en PvE, où le tour n'expire pas.
+    private TurnCountdown turnCountdown = TurnCountdown.None;
+
     // No "already built" flag here, unlike the identity registry above: piles are
     // replaced by every state that arrives, and reflecting that is the whole point.
     private readonly CombatantPilesRegistry<CardInstance> combatantPiles =
@@ -129,9 +138,32 @@ public class CombatManager : MonoBehaviour
     private readonly Queue<JObject> authoritativeMessageQueue = new();
     private bool authoritativeMessageQueueRunning;
 
-    public bool UsesAuthoritativeCombat => RunManager.Instance != null
-        && RunManager.Instance.activeCombat != null
-        && RunManager.Instance.activeCombat.Type == JTokenType.Object;
+    /// <summary>
+    /// Ce que ce combat est. Un duel se reconnaît à la session ouverte par le menu
+    /// multijoueur ; un combat de run, à l'état que la run porte.
+    ///
+    /// <para>L'ordre compte : le duel se déclare <b>avant</b> d'avoir reçu son premier
+    /// état, là où le PvE ne se déclarait qu'après. C'est ce qui empêche la première
+    /// carte d'un duel de partir dans le moteur local pendant que la socket s'ouvre.</para>
+    /// </summary>
+    public CombatMode Mode
+    {
+        get
+        {
+            if (RunManager.Instance == null)
+                return CombatMode.Local;
+
+            if (!string.IsNullOrWhiteSpace(RunManager.Instance.activePvpBattleId))
+                return CombatMode.Pvp;
+
+            return RunManager.Instance.activeCombat != null
+                && RunManager.Instance.activeCombat.Type == JTokenType.Object
+                    ? CombatMode.Pve
+                    : CombatMode.Local;
+        }
+    }
+
+    public bool UsesAuthoritativeCombat => Mode != CombatMode.Local;
 
     public void Init()
     {
@@ -145,8 +177,14 @@ public class CombatManager : MonoBehaviour
         deck.combatManager = this; // inject
         foreach (var enemy in enemies)
         {
-            Enemy enn=enemy as Enemy;
-            currentEnemiesData.Add(enn.data);
+            Enemy enn = enemy as Enemy;
+            if (enn == null)
+                continue;
+
+            // Un adversaire humain n'a pas d'EnemyData : rien à empiler pour lui, et
+            // currentEnemiesData ne sert de toute façon qu'à composer une récompense PvE.
+            if (enn.data != null)
+                currentEnemiesData.Add(enn.data);
             enn.combat = this;
         }
         foreach (var ally in allies)
@@ -167,10 +205,22 @@ public class CombatManager : MonoBehaviour
             }
             tutorial.Init();
         }
-        if (RunManager.Instance!=null)
+        if (RunManager.Instance != null)
         {
-            RunManager.Instance.inCombat=true;
-            STSRunAuditSystem.RecordNodeEntered(RunManager.Instance, RunManager.Instance.currentNode, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, "combat_init");
+            RunManager.Instance.inCombat = true;
+            // Un duel n'est pas un nœud de carte : l'auditer en tant que tel écrirait dans
+            // l'historique d'une run l'entrée dans un combat qui ne lui appartient pas.
+            if (Mode != CombatMode.Pvp)
+            {
+                STSRunAuditSystem.RecordNodeEntered(RunManager.Instance, RunManager.Instance.currentNode, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, "combat_init");
+            }
+        }
+
+        if (Mode == CombatMode.Pvp)
+        {
+            allowTurn = true;
+            StartCoroutine(BootstrapPvpBattleRoutine());
+            return;
         }
 
         if (UsesAuthoritativeCombat)
@@ -256,6 +306,80 @@ public class CombatManager : MonoBehaviour
         StartLocalCombatFlow();
     }
 
+    /// <summary>
+    /// Ouvre un duel.
+    ///
+    /// <para>Contrairement au PvE, il n'y a rien à appliquer d'avance : le premier état
+    /// qu'un duel voit est le COMBAT_SNAPSHOT que la couche React va chercher en ouvrant
+    /// la socket. On se connecte, et on attend.</para>
+    ///
+    /// <para>Et contrairement au PvE, <b>il n'y a pas de repli sur StartLocalCombatFlow</b>.
+    /// Un combat dont l'autre moitié est un autre joueur n'a pas de vérité locale : jouer
+    /// une simulation en attendant afficherait un combat imaginaire.</para>
+    /// </summary>
+    IEnumerator BootstrapPvpBattleRoutine()
+    {
+        // Un yield inconditionnel : le seul autre est dans un bloc #if, et sans celui-ci la
+        // méthode cesserait d'être un itérateur dans un build non-WebGL.
+        yield return null;
+
+        string battleId = RunManager.Instance != null
+            ? RunManager.Instance.activePvpBattleId
+            : null;
+
+        if (string.IsNullOrWhiteSpace(battleId))
+        {
+            Debug.LogError("[STS-PVP] The combat scene was opened as a duel without a battle id; nothing can connect.");
+        }
+        else
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            ReactCombatBridge.CombatEventReceived += HandleReactCombatEvent;
+            ReactCombatBridge.CombatStatusChanged += HandleReactCombatStatusChanged;
+            yield return ConnectAuthoritativeCombatSocketRoutine(
+                AuthoritativeCombatIdentity.GetPvpTransportId(battleId),
+                CombatModes.ToWireName(CombatMode.Pvp));
+#else
+            Debug.LogWarning("[STS-PVP] A duel needs the React combat bridge, which exists only in a WebGL player: no state will arrive in this build.");
+#endif
+        }
+
+        // Toujours, même après l'erreur : sans ça l'écran de chargement ne se lève jamais
+        // et le joueur reste devant un voile, ce qui est pire qu'un combat vide.
+        STSSceneLoader.Instance?.SceneReady();
+    }
+
+    private bool leavingPvpBattle;
+
+    /// <summary>
+    /// Sort d'un duel qu'on ne sait pas jouer, en le disant (décision D3).
+    ///
+    /// <para>Le défaut du plan — journaliser et continuer — laissait le joueur dans un
+    /// combat inerte : registre vide, donc pas d'équipes, pas de ciblage, pas de bouton de
+    /// fin de tour, et rien à l'écran pour dire pourquoi. <b>Le coût de ce choix est
+    /// connu :</b> partir avant la fin fait expirer nos tours et le serveur clôt le combat
+    /// comme un forfait.</para>
+    /// </summary>
+    void LeavePvpBattle(string reason)
+    {
+        if (leavingPvpBattle)
+            return;
+
+        leavingPvpBattle = true;
+        Debug.LogError($"[STS-PVP] Leaving the battle: {reason}");
+        ui?.ShowCombatNotice(reason);
+        StartCoroutine(LeavePvpBattleRoutine());
+    }
+
+    IEnumerator LeavePvpBattleRoutine()
+    {
+        yield return new WaitForSecondsRealtime(2.5f);
+
+        ReactCombatBridge.Disconnect();
+        RunManager.Instance?.EndPvpBattle();
+        STSSceneLoader.Instance?.LoadScene("STS_MultiplayerMenu");
+    }
+
     IEnumerator ConnectAuthoritativeCombatSocketRoutine(string transportId, string mode)
     {
         Task<bool> connectTask = ReactCombatBridge.ConnectAsync(transportId, mode);
@@ -314,6 +438,12 @@ public class CombatManager : MonoBehaviour
 
     private void EnsureEncounterEnemies()
     {
+        // En duel, l'adversaire a déjà été monté par GameManager.SetupPvpBattle. Une run
+        // PvE mise en pause garde son activeEncounter : sans cette sortie, la branche
+        // ci-dessous remplacerait l'adversaire humain par les ennemis de cette rencontre.
+        if (Mode == CombatMode.Pvp)
+            return;
+
         if (RunManager.Instance != null && RunManager.Instance.activeEncounter != null && RunManager.Instance.activeEncounter.enemyIds != null && RunManager.Instance.activeEncounter.enemyIds.Count > 0)
         {
             enemies = new List<Character>();
@@ -555,7 +685,12 @@ public class CombatManager : MonoBehaviour
 
     IEnumerator RefreshAuthoritativeCombatState()
     {
-        if (RunManager.Instance == null || string.IsNullOrWhiteSpace(RunManager.Instance.runId))
+        // La route de resynchronisation est celle d'une run. Un duel se resynchronise par
+        // la couche React, qui refait son snapshot sur l'endpoint PvP dès qu'elle voit un
+        // trou de révision ; passer par ici lui appliquerait l'état d'une run en pause.
+        if (Mode != CombatMode.Pve
+            || RunManager.Instance == null
+            || string.IsNullOrWhiteSpace(RunManager.Instance.runId))
             yield break;
 
         Task<STSApiCombatStateResponse> stateTask = STSApiClient.GetCombatStateAsync(RunManager.Instance.runId);
@@ -664,9 +799,40 @@ public class CombatManager : MonoBehaviour
                 JToken payload = message["payload"];
                 if (payload != null) ApplyAuthoritativeCombatState(payload, true);
             }
+            else if (type == "COMMAND_REJECTED")
+            {
+                HandleCommandRejected(message["payload"]);
+            }
         }
 
         authoritativeMessageQueueRunning = false;
+    }
+
+    /// <summary>
+    /// Le serveur a refusé une commande, dans le vocabulaire de son moteur.
+    ///
+    /// <para>Le refus était déjà réglé un cran plus bas — le noyau du pont libère la
+    /// commande en attente, donc rien ne se bloquait — mais il n'atteignait jamais
+    /// l'écran. Une carte refusée se contentait de ne pas bouger, et le joueur
+    /// recommençait.</para>
+    ///
+    /// <para>On ne resynchronise pas ici, volontairement : le chemin PvE resynchronise
+    /// déjà sur l'issue de la commande, et un duel se resynchronise par la couche
+    /// React.</para>
+    /// </summary>
+    void HandleCommandRejected(JToken payload)
+    {
+        string code = payload?.Value<string>("code");
+        string serverMessage = payload?.Value<string>("message");
+        Debug.LogWarning($"[STS-COMBAT] Command rejected code={code ?? "<none>"} message={serverMessage ?? "<none>"}");
+
+        if (ui == null)
+            return;
+
+        if (CombatRejectionMessages.WarrantsEnergyGlow(code))
+            ui.StartCoroutine(ui.EnergyTextGlowRed());
+
+        ui.ShowCombatNotice(CombatRejectionMessages.ForCode(code));
     }
 
     void OnDestroy()
@@ -795,11 +961,13 @@ public class CombatManager : MonoBehaviour
 
     long GetAuthoritativeRevision()
     {
-        JToken activeCombat = RunManager.Instance != null ? RunManager.Instance.activeCombat : null;
-        if (activeCombat == null || activeCombat.Type != JTokenType.Object)
+        // Le champ, pas la run : en duel la run ne porte pas cet état, et le lire là-bas
+        // rendrait la révision d'une run en pause.
+        JToken state = authoritativeCombatState;
+        if (state == null || state.Type != JTokenType.Object)
             return 0L;
 
-        return activeCombat.Value<long?>("revision") ?? 0L;
+        return state.Value<long?>("revision") ?? 0L;
     }
 
     List<string> MapTargetsToAuthoritativeIds(List<Character> targets)
@@ -830,7 +998,16 @@ public class CombatManager : MonoBehaviour
         if (combatToken == null || combatToken.Type != JTokenType.Object || RunManager.Instance == null)
             return;
 
-        RunManager.Instance.activeCombat = combatToken;
+        authoritativeCombatState = combatToken;
+        if (Mode != CombatMode.Pvp)
+            RunManager.Instance.activeCombat = combatToken;
+
+        // Absents en PvE, où le tour n'expire pas : FromState rend alors None et rien ne
+        // s'affiche.
+        turnCountdown = TurnCountdown.FromState(
+            combatToken.Value<string>("turnDeadline"),
+            combatToken.Value<string>("serverTime"),
+            DateTimeOffset.UtcNow);
 
         JArray combatants = combatToken["combatants"] as JArray;
         if (combatants == null)
@@ -884,7 +1061,9 @@ public class CombatManager : MonoBehaviour
 
             // Only the primary player combatant owns the shared deck/hand UI; extra allies have
             // their own piles server-side and must not overwrite the local deck state.
-            if (target.isPlayer && string.Equals(combatantId, "player", StringComparison.Ordinal))
+            // Le registre sait qui est local ; la chaîne "player" ne le savait qu'en PvE, et
+            // en duel cette condition ne se vérifiait jamais — la main restait vide.
+            if (combatantRegistry.IsLocalCombatant(combatantId))
             {
                 ApplyAuthoritativePlayerPiles(combatantToken["piles"]);
             }
@@ -896,11 +1075,15 @@ public class CombatManager : MonoBehaviour
 
         if (turnSystem != null && turnSystem.endTurnButton != null)
         {
-            // Any living player-side combatant holding the active turn unlocks the button.
+            // On ne finit que son propre tour. « N'importe quel combattant du côté joueur »
+            // marchait tant que le seul combattant humain était nous ; en duel, l'adversaire
+            // est un humain lui aussi, et en co-op ce serait le tour d'un allié.
+            // Le repli sur isPlayer couvre le tutoriel, où le registre est vide.
             Character activeCombatant = ResolveCombatant(activeCombatantId);
-            turnSystem.endTurnButton.interactable = activeCombatant != null
-                && activeCombatant.isPlayer
-                && !combatEnded;
+            bool ours = combatantRegistry.LocalCombatantId != null
+                ? combatantRegistry.IsLocalCombatant(activeCombatantId)
+                : activeCombatant != null && activeCombatant.isPlayer;
+            turnSystem.endTurnButton.interactable = ours && !combatEnded;
         }
 
         ApplyAuthoritativeTimeline(combatToken["timeline"] as JArray);
@@ -930,6 +1113,34 @@ public class CombatManager : MonoBehaviour
         }
 
         TryEndCombatIfNeeded();
+    }
+
+    /// <summary>
+    /// Les secondes restantes au tour en cours, ou null quand ce combat n'a pas de limite
+    /// de temps. Nul aussi une fois le combat terminé : un compte à rebours qui continue
+    /// de tourner sur un combat fini est un mensonge.
+    /// </summary>
+    public double? SecondsLeftInTurn()
+    {
+        if (combatEnded || !turnCountdown.HasDeadline)
+            return null;
+
+        return turnCountdown.SecondsRemainingAt(DateTimeOffset.UtcNow);
+    }
+
+    /// <summary>
+    /// « Main 3 · Pioche 12 » pour un combattant dont on n'a pas le droit de voir les
+    /// cartes ; null pour tout autre — un ennemi PvE n'a aucune pile enregistrée, et le
+    /// joueur local montre sa vraie main.
+    /// </summary>
+    public string RemotePilesSummary(Character character)
+    {
+        ICombatantPiles<CardInstance> piles =
+            combatantPiles.For(combatantRegistry.IdOf(character));
+        if (piles == null || piles.IsFullyVisible)
+            return null;
+
+        return $"Main {piles.Count(PileKind.Hand)}  ·  Pioche {piles.Count(PileKind.Draw)}";
     }
 
     void ApplyAuthoritativeTimeline(JArray timelineArray)
@@ -1113,7 +1324,7 @@ public class CombatManager : MonoBehaviour
                     ReplayEnergyGainedEvent(combatEvent);
                     break;
                 case "TurnStarted":
-                    if (string.Equals(combatEvent.Value<string>("combatantId"), "player", StringComparison.Ordinal))
+                    if (combatantRegistry.IsLocalCombatant(combatEvent.Value<string>("combatantId")))
                         state.turnCount = Mathf.Max(1, state.turnCount + 1);
                     yield return new WaitForSeconds(0.05f);
                     break;
@@ -1655,10 +1866,11 @@ public class CombatManager : MonoBehaviour
     void ReplayEnergySpentEvent(JToken combatEvent)
     {
         string combatantId = combatEvent.Value<string>("combatantId");
-        if (!string.Equals(combatantId, "player", StringComparison.Ordinal) || player == null)
+        Character target = ResolveCombatant(combatantId);
+        if (target == null)
             return;
 
-        player.resources.energy = combatEvent.Value<int?>("remainingEnergy") ?? player.resources.energy;
+        target.resources.energy = combatEvent.Value<int?>("remainingEnergy") ?? target.resources.energy;
         ui?.RefreshUI(false);
     }
 
@@ -2141,8 +2353,32 @@ public class CombatManager : MonoBehaviour
         combatantRegistry.Clear();
         combatantRegistryBuilt = true;
 
+        // "player" reste la convention PvE ; en duel c'est un UUID d'utilisateur, et le
+        // résolveur retombe sur la propriété du protocole — celui qui montre ses cartes
+        // est celui qui regarde — quand l'identifiant proposé n'est pas dans l'état.
+        string localCombatantId = LocalCombatantResolver.Resolve(
+            combatToken,
+            Mode == CombatMode.Pvp
+                ? (RunManager.Instance != null ? RunManager.Instance.pvpLocalUserId : null)
+                : "player");
+
+        if (string.IsNullOrEmpty(localCombatantId))
+        {
+            Debug.LogError("[STS-COMBAT] No local combatant could be identified in this state; "
+                + "teams, targeting and the end-turn button will all be inert.");
+
+            // Décision D3 : en duel on ne laisse pas le joueur devant un combat inerte —
+            // ni équipes, ni ciblage, ni bouton de fin de tour, et rien pour le lui dire.
+            // On l'en sort. Le coût est connu : le serveur comptera l'abandon comme un
+            // forfait au bout des trente secondes du tour.
+            if (Mode == CombatMode.Pvp)
+            {
+                LeavePvpBattle("Ce duel n'a pas pu être rejoint : combattant introuvable.");
+            }
+        }
+
         IReadOnlyList<CombatantDescriptor> descriptors =
-            CombatantSnapshotReader.ReadCombatants(combatToken, "player");
+            CombatantSnapshotReader.ReadCombatants(combatToken, localCombatantId);
 
         foreach (CombatantDescriptor descriptor in descriptors)
         {
@@ -2163,6 +2399,21 @@ public class CombatManager : MonoBehaviour
     {
         if (string.IsNullOrWhiteSpace(combatantId))
             return null;
+
+        // En duel, l'identifiant est celui de l'utilisateur : on le retrouve sur le
+        // Character que le montage de scène a étiqueté avec, plutôt que sur une position.
+        // Si le serveur nommait ses combattants autrement, c'est ici — et nulle part
+        // ailleurs — que la correspondance se referait.
+        foreach (Player ally in allies)
+        {
+            if (ally != null && string.Equals(ally.playerUserId, combatantId, StringComparison.Ordinal))
+                return ally;
+        }
+        foreach (Character enemy in enemies)
+        {
+            if (enemy != null && string.Equals(enemy.playerUserId, combatantId, StringComparison.Ordinal))
+                return enemy;
+        }
 
         if (string.Equals(combatantId, "player", StringComparison.Ordinal))
             return player;
@@ -2195,7 +2446,10 @@ public class CombatManager : MonoBehaviour
         deck.hand = ParseAuthoritativeCardList(pilesToken["hand"]);
         deck.discardPile = ParseAuthoritativeCardList(pilesToken["discard"]);
         deck.exhaustPile = ParseAuthoritativeCardList(pilesToken["exhaust"]);
-        if (RunManager.Instance != null)
+        // Le deck de la run est le deck de la run. Les piles d'un duel viennent du deck
+        // PVP, stocké ailleurs côté serveur, et les recopier ici remplacerait le deck
+        // d'une run en pause par celui du duel.
+        if (Mode != CombatMode.Pvp && RunManager.Instance != null)
         {
             RunManager.Instance.deck = deck.drawPile
                 .Concat(deck.hand)
@@ -2827,6 +3081,19 @@ public class CombatManager : MonoBehaviour
         {
             yield return null;
         }
+        // Un duel n'est pas un nœud de carte. Sans cette sortie, une victoire PvP
+        // déclencherait les hooks de reliques, marquerait le nœud courant terminé,
+        // composerait une récompense depuis l'étage et l'acte de la run, appellerait
+        // CompleteNode et chargerait STS_Reward. SubmitCombatResultAsync sort bien sans
+        // rien faire quand il n'y a pas de run — mais un joueur qui a mis une run en pause
+        // pour jouer un duel a toujours son runId et son activeEncounter, et gagnerait donc
+        // un nœud de sa run en gagnant son duel.
+        if (Mode == CombatMode.Pvp)
+        {
+            yield return EndPvpBattleRoutine();
+            yield break;
+        }
+
         if (outcome == TeamOutcome.Victory)
         {
             STSSceneLoader.Instance?.BeginLoading();
@@ -2913,6 +3180,47 @@ public class CombatManager : MonoBehaviour
             }
             ui.ShowGameOver(enemies);
         }
+    }
+
+    /// <summary>
+    /// Referme un duel : on coupe le transport, on montre l'issue, et on rend la main.
+    /// Aucune complétion de nœud, aucune récompense, aucun déverrouillage de fin de run.
+    ///
+    /// <para>Quand le panneau de résultat est branché dans la scène, c'est lui qui referme
+    /// la session et charge le menu, sur un clic. Sans lui, on retombe sur l'avis de
+    /// combat et un retour au bout de quatre secondes.</para>
+    /// </summary>
+    IEnumerator EndPvpBattleRoutine()
+    {
+        string opponentName = OpponentDisplayName();
+        Debug.Log($"[STS-PVP] Battle over: outcome={outcome} opponent={opponentName ?? "<unknown>"}");
+
+        ReactCombatBridge.Disconnect();
+
+        bool panelHasTheFloor = ui != null && ui.ShowPvpResult(outcome, opponentName);
+        if (panelHasTheFloor)
+            yield break;
+
+        yield return new WaitForSecondsRealtime(4f);
+
+        RunManager.Instance?.EndPvpBattle();
+        STSSceneLoader.Instance?.LoadScene("STS_MultiplayerMenu");
+    }
+
+    /// Le nom sous lequel l'adversaire s'est présenté, à défaut le nom de son personnage.
+    string OpponentDisplayName()
+    {
+        foreach (Character opponent in combatantRegistry.Opponents())
+        {
+            if (opponent == null)
+                continue;
+
+            return !string.IsNullOrWhiteSpace(opponent.playerDisplayName)
+                ? opponent.playerDisplayName
+                : opponent.name;
+        }
+
+        return null;
     }
 
     private async Task<bool> SubmitCombatResultAsync(string result)

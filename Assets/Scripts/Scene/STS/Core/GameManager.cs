@@ -40,6 +40,15 @@ public class GameManager : MonoBehaviour
 
     void SetupGame()
     {
+        // Le duel d'abord : sans cette branche, ouvrir STS_Combat sans run tirerait une
+        // rencontre PvE au hasard et un joueur de secours.
+        if (RunManager.Instance != null
+            && !string.IsNullOrWhiteSpace(RunManager.Instance.activePvpBattleId))
+        {
+            SetupPvpBattle();
+            return;
+        }
+
         if (RunManager.Instance == null||RunManager.Instance.forceTutorial)
         {
             new GameObject("RunManager").AddComponent<RunManager>();
@@ -127,5 +136,59 @@ public class GameManager : MonoBehaviour
                 relic.OnCombatStart(combat.allies[0]);
             }
         }
+    }
+    /// <summary>
+    /// Monte la scène pour un duel : deux combattants, un deck vide, aucune run.
+    ///
+    /// <para>Les points de vie, l'énergie, les statuts et les piles arrivent avec le
+    /// premier état autoritatif ; ici on ne pose que les objets que l'interface a besoin
+    /// d'avoir sous la main pour se construire. C'est la même division qu'en PvE, où
+    /// EnsureEncounterEnemies pose les ennemis avant que l'état ne les remplisse.</para>
+    ///
+    /// <para><c>RunManager.player</c> n'est pas touché : une run PvE mise en pause pour
+    /// jouer un duel doit se retrouver intacte.</para>
+    /// </summary>
+    void SetupPvpBattle()
+    {
+        RunManager run = RunManager.Instance;
+        STSApiClient.StsPvpParticipantSnapshot localParticipant = run.LocalPvpParticipant();
+        STSApiClient.StsPvpParticipantSnapshot opponentParticipant = run.OpponentPvpParticipant();
+
+        const int PlaceholderHp = 1;
+
+        var localPlayer = new Player(CharacterNameOf(localParticipant), PlaceholderHp)
+        {
+            playerDisplayName = localParticipant != null ? localParticipant.displayName : null,
+            playerUserId = localParticipant != null ? localParticipant.userId : null
+        };
+
+        combat.allies.Clear();
+        combat.allies.Add(localPlayer);
+
+        combat.enemies = new List<Character>
+        {
+            new Enemy(
+                CharacterNameOf(opponentParticipant),
+                PlaceholderHp,
+                opponentParticipant != null ? opponentParticipant.userId : null,
+                opponentParticipant != null ? opponentParticipant.displayName : null)
+        };
+
+        // Vide : le premier état apporte les quatre piles telles que le serveur les tient.
+        combat.deck = new DeckManager();
+
+        Debug.Log($"[STS-PVP] Scene set up for battle {run.activePvpBattleId}: "
+            + $"{localPlayer.name} vs {combat.enemies[0].name}");
+    }
+
+    /// Le personnage choisi par un participant, qui est aussi le nom du portrait sous
+    /// Resources/STS/Characters. À défaut, EP — le premier de la liste jouable — plutôt
+    /// qu'un nom vide, qui laisserait un emplacement sans image.
+    static string CharacterNameOf(STSApiClient.StsPvpParticipantSnapshot participant)
+    {
+        string selected = participant != null ? participant.selectedCharacter : null;
+        return string.IsNullOrWhiteSpace(selected)
+            ? SelectableCharacter.EP.ToString()
+            : selected.Trim();
     }
 }

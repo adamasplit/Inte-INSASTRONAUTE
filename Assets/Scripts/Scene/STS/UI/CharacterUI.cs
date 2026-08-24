@@ -109,8 +109,24 @@ public class CharacterUI : MonoBehaviour
         }
         if (!character.isPlayer)
         {
+            Enemy enemy = character as Enemy;
             // Refresh the enemy's intent
-            RefreshIntent(character as Enemy);
+            RefreshIntent(enemy);
+
+            // Un combattant humain n'a pas d'intention à montrer — c'est l'autre joueur qui
+            // décide — mais il a des piles dont on connaît la taille sans en connaître le
+            // contenu. On met les compteurs là où l'intention se serait affichée (décision
+            // D2), et seulement là où elle est restée vide : si un ennemi PvE arrivait un
+            // jour avec des piles cachées, son intention passerait avant ses compteurs.
+            if (enemy != null && enemy.PeekNextAction() == null)
+            {
+                string remotePiles = uiManager != null && uiManager.combat != null
+                    ? uiManager.combat.RemotePilesSummary(character)
+                    : null;
+
+                if (remotePiles != null)
+                    intentText.text = remotePiles;
+            }
         }
     }
 

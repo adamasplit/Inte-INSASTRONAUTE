@@ -29,12 +29,22 @@ public class UIManager : MonoBehaviour
     public CardView selectedCard;
     private GameObject combatPreviewCardObject;
     public GameOverController gameOverController;
+    // L'ecran de fin d'un duel. Laisse vide tant qu'un humain ne l'a pas pose dans
+    // STS_Combat : ShowPvpResult retombe alors sur l'avis de combat.
+    public PvpResultController pvpResultController;
     public RectTransform discardAnchor;
     public RectTransform deckAnchor;
     public CardAnimator animator;
     public TextMeshProUGUI discardCountText;
     public TextMeshProUGUI deckCountText;
     public CardSelectionController selectionController;
+
+    [Header("Combat distant")]
+    // Laissés vides tant qu'un humain ne les a pas branchés dans la scène : tout ce qui
+    // les lit est null-safe, donc le PvE ne voit rien changer.
+    public TextMeshProUGUI combatNoticeText;
+    public TextMeshProUGUI turnCountdownText;
+    Coroutine combatNoticeRoutine;
     private int pendingDrawAnimations = 0;
     private int pendingPlayedCardAnimations = 0;
     public Image backgroundImage;
@@ -712,6 +722,94 @@ public class UIManager : MonoBehaviour
     public void ShowGameOver(List<Character> enemy)
     {
         gameOverController.Show(enemy);
+    }
+
+    /// <summary>
+    /// Une phrase brève, au milieu de l'écran, qui s'efface seule. Le serveur refuse une
+    /// commande et le client n'en montrait rien : la carte ne bougeait pas, sans un mot.
+    /// </summary>
+    public void ShowCombatNotice(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return;
+
+        if (combatNoticeText == null)
+        {
+            Debug.LogWarning($"[STS-COMBAT] {message} (no notice field wired in the scene)");
+            return;
+        }
+
+        combatNoticeText.text = message;
+        combatNoticeText.gameObject.SetActive(true);
+
+        if (combatNoticeRoutine != null)
+            StopCoroutine(combatNoticeRoutine);
+        combatNoticeRoutine = StartCoroutine(HideCombatNoticeRoutine());
+    }
+
+    IEnumerator HideCombatNoticeRoutine()
+    {
+        yield return new WaitForSecondsRealtime(2.5f);
+        if (combatNoticeText != null)
+            combatNoticeText.gameObject.SetActive(false);
+        combatNoticeRoutine = null;
+    }
+
+    /// <summary>
+    /// L'issue d'un duel. Rend true quand le panneau dédié l'a prise en charge — c'est
+    /// alors lui qui referme la session et qui rend la main au menu, sur un clic du
+    /// joueur plutôt que sur un délai.
+    ///
+    /// <para>Elle ne passe jamais par GameOverController : celui-ci écrit « Vous avez été
+    /// vaincu par … » — faux sur une victoire — et son bouton met fin à la run
+    /// (GrantRunEndUnlocks, OnRunEnd), ce qu'un duel n'a aucun droit de faire.</para>
+    /// </summary>
+    public bool ShowPvpResult(TeamOutcome outcome, string opponentName)
+    {
+        if (pvpResultController != null)
+        {
+            pvpResultController.Show(outcome, opponentName);
+            return true;
+        }
+
+        string against = string.IsNullOrWhiteSpace(opponentName) ? "" : $" contre {opponentName}";
+        string message;
+        switch (outcome)
+        {
+            case TeamOutcome.Victory: message = $"Victoire{against} !"; break;
+            case TeamOutcome.Defeat:  message = $"Défaite{against}."; break;
+            case TeamOutcome.Draw:    message = $"Match nul{against}."; break;
+            default:                  message = "Duel terminé."; break;
+        }
+
+        Debug.Log($"[STS-PVP] {message}");
+        ShowCombatNotice(message);
+        return false;
+    }
+
+    /// <summary>
+    /// Les secondes qu'il reste au tour, ou rien. Le champ n'est pas branché tant qu'un
+    /// humain ne l'a pas posé dans la scène, auquel cas cette méthode ne fait rien : le
+    /// PvE, qui n'a pas de limite de temps, ne doit de toute façon rien voir.
+    /// </summary>
+    public void DisplayTurnCountdown(double? secondsRemaining)
+    {
+        if (turnCountdownText == null)
+            return;
+
+        if (secondsRemaining == null)
+        {
+            if (turnCountdownText.gameObject.activeSelf)
+                turnCountdownText.gameObject.SetActive(false);
+            return;
+        }
+
+        int whole = Mathf.Max(0, Mathf.CeilToInt((float)secondsRemaining.Value));
+        if (!turnCountdownText.gameObject.activeSelf)
+            turnCountdownText.gameObject.SetActive(true);
+
+        turnCountdownText.text = $"{whole}s";
+        turnCountdownText.color = whole <= 5 ? Color.red : Color.white;
     }
     Vector2 ScreenToHandLocal(Vector3 screenPos)
     {

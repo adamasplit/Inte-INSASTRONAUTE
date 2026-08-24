@@ -53,6 +53,11 @@ public class RunManager : MonoBehaviour
     /// autrement en duel s'appuie sur ce champ-ci, de sorte qu'un matchmaking passe ne
     /// puisse jamais faire croire a une rencontre PvE qu'elle est un duel.
     public string activePvpBattleId;
+
+    /// Le menu multijoueur doit relancer une recherche des son ouverture. Ecrit par le
+    /// bouton « Revanche » de l'ecran de fin de duel, et consomme une seule fois : il
+    /// n'existe pas d'endpoint de revanche cote serveur, c'est un nouveau matchmaking.
+    public bool requestPvpQuickMatch;
     public List<STSApiClient.StsPvpParticipantSnapshot> pvpParticipants = new();
     void Update()
     {
@@ -333,6 +338,7 @@ public class RunManager : MonoBehaviour
         backendRewardClaimUnavailable = false;
         pvpLocalUserId = null;
         activePvpBattleId = null;
+        requestPvpQuickMatch = false;
         ClearPvpBattleParticipants();
         SetUnrestrictedMode(false, null);
         if (clearSave)
@@ -684,6 +690,15 @@ public class RunManager : MonoBehaviour
     {
         activePvpBattleId = null;
         inCombat = false;
+    }
+
+    /// Rend, et efface, la demande de revanche. Une fois lue, elle ne doit plus valoir :
+    /// sinon revenir au menu par un autre chemin relancerait une recherche non demandee.
+    public bool ConsumePvpQuickMatchRequest()
+    {
+        bool requested = requestPvpQuickMatch;
+        requestPvpQuickMatch = false;
+        return requested;
     }
 
     public void CachePvpBattleParticipants(string battleId, List<STSApiClient.StsPvpParticipantSnapshot> participants)
