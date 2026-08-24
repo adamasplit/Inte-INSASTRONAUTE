@@ -67,7 +67,7 @@ public sealed class CombatantRegistry<TCombatant> where TCombatant : class
 
         foreach (KeyValuePair<string, TCombatant> entry in registrationOrder)
         {
-            if (ReferenceEquals(entry.Value, combatant) || entry.Value.Equals(combatant))
+            if (ReferenceEquals(entry.Value, combatant))
                 return entry.Key;
         }
         return null;
