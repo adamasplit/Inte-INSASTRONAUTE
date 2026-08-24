@@ -56,6 +56,8 @@ public static class StatTypeString
                 return $"Se rejoue {value}{(isPercentage ? "% de" : "")} fois supplémentaire{plural}";
             case StatType.StatusDuration:
                 return $"La durée de l'effet augmente de {value}{(isPercentage ? "%" : "")}";
+            case StatType.StatusPotency:
+                return $"Renforce de {value}{(isPercentage ? "%" : "")}";
             default:
                 return $"{type}: {value}";
         }
