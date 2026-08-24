@@ -183,6 +183,11 @@ quand elle est vide.
    sémantique retenue est celle du merge — « tout combattant du côté joueur » — et
    non `IsLocalCombatant` ; c'est au plan PvP de trancher entre les deux, puisque
    c'est là que la différence devient observable.
+   **Tranché le 2026-08-24** par `2026-08-24-unity-pvp-client` (tâche 10, step 6) :
+   c'est `IsLocalCombatant` qui décide. « Tout combattant du côté joueur » ne coûtait
+   rien tant que le seul humain de la scène était nous ; en duel, l'adversaire en est
+   un aussi. Le repli sur `isPlayer` subsiste pour le seul cas où le registre est vide
+   — le tutoriel, qui n'a pas de serveur pour le remplir.
 11. ~~**Propriété des piles décidée par une chaîne littérale**~~ — `target.isPlayer &&
     combatantId == "player"` (ligne 858), introduit par le merge `8f17676` pour que
     les alliés supplémentaires n'écrasent pas le deck local.
@@ -193,6 +198,15 @@ quand elle est vide.
    `RunManager.Instance.activeCombat != null` (ligne 115), champ écrit par
    `ApplyAuthoritativeCombatState` (ligne 805). Le client est en mode autoritatif
    *parce qu'un état est arrivé*, et non parce qu'on le lui a dit.
+   **Close à moitié, et pas davantage**, par `2026-08-24-unity-pvp-client` (tâches 1 et
+   9) : `CombatMode` nomme le mode, `CombatManager.Mode` le rend, et
+   `UsesAuthoritativeCombat` n'est plus qu'un `Mode != Local`. Le duel, lui, est
+   explicite : il se reconnaît à la session que le menu multijoueur ouvre
+   (`RunManager.activePvpBattleId`), donc **avant** d'avoir reçu le moindre état — ce
+   qui est précisément la propriété qui manquait, puisque sans elle la première carte
+   d'un duel serait partie dans le moteur local. **Mais `Mode` distingue toujours le PvE
+   du local par la présence d'un état** : cette moitié-là reste déduite, et l'entrée
+   reste donc ouverte.
 4. ~~**Deux sources de vérité sur l'issue**~~ — `TryEndCombatIfNeeded` déduisait la
    victoire des PV locaux, alors que `SubmitCombatResultAsync` envoie déjà
    `result = null` en mode autoritatif parce que le serveur tranche depuis son état.
@@ -358,23 +372,77 @@ une reconstruction de scène**, et il l'est encore moins qu'écrit ici. Par aill
 `Character`, `Player` et `Enemy` sont des objets C# ordinaires (`new Enemy(enemyId)`),
 non couplés à un prefab : le modèle se généralise sans toucher aux assets.
 
-Reste à ajouter, côté affichage : les compteurs `drawCount` / `handCount` d'un
-combattant distant, et l'absence d'intention pour un combattant `HUMAN`.
+~~Reste à ajouter, côté affichage : les compteurs `drawCount` / `handCount` d'un
+combattant distant, et l'absence d'intention pour un combattant `HUMAN`.~~
+**Fait** par `2026-08-24-unity-pvp-client` (tâche 13) : `CombatManager.RemotePilesSummary`
+rend « Main n · Pioche n » pour tout combattant dont les piles ne sont pas entièrement
+visibles, et `CharacterUI.Refresh` l'écrit dans `intentText` — la zone d'intention, que
+`Enemy.PeekNextAction` laisse déjà vide quand il n'y a pas d'`EnemyData`, ce qui est le
+cas d'un adversaire humain. Le choix de cette zone est la **décision D2** du plan :
+aucun champ de prefab n'est ajouté. Les compteurs ne s'écrivent que là où l'intention
+est restée vide, pour qu'un ennemi PvE qui arriverait un jour avec des piles cachées
+garde la sienne.
+
+Restent ouverts pour l'affichage : les deux `TextMeshProUGUI` de `UIManager`
+(`combatNoticeText`, `turnCountdownText`) sont **null tant qu'un humain ne les a pas
+posés dans `Assets/Scenes/STS_Combat.unity`**, de même que `pvpResultController`. Tout
+ce qui les lit est null-safe : sans eux, l'avis de refus part en avertissement dans la
+console, le compte à rebours ne s'affiche pas, et la fin de duel retombe sur l'avis de
+combat suivi d'un retour automatique au menu.
 
 ## 5. Bootstrap et sortie du combat PvP
 
-`MultiplayerMenuController` charge aujourd'hui la scène `STS_Boot` après le
-matchmaking, et retombe dans un combat **local** où l'adversaire est un `Enemy`
-portant son pseudo (`RunManager.ApplyPvpParticipantDisplayNames`). Aucune action PvP
-n'est jamais envoyée : `STSApiClient.SendPvpBattleActionAsync` existe et n'est appelée
-nulle part.
+> **Récrit le 2026-08-24.** Ce qui suivait était faux sur le fait : le paragraphe
+> affirmait que `MultiplayerMenuController` chargeait `STS_Boot` après le matchmaking
+> et retombait dans un combat local. Il ne chargeait **rien du tout**. Le seul
+> `LoadScene("STS_Boot")` du fichier est celui du bouton « retour » du menu, sans
+> rapport avec le matchmaking.
 
-Il faut une entrée PvP qui hydrate les combattants depuis le snapshot, connecte le
-pont en mode PVP, et court-circuite la run, la carte et les récompenses. La fin est
-décidée par le serveur et mène à un écran de résultat PvP, pas à la boucle de
-récompenses PvE — `SubmitCombatResultAsync` sort déjà sans rien faire quand `runId`
-ou `activeEncounter` est absent, donc le risque de contamination est faible, mais il
-doit être rendu explicite plutôt que subi.
+**Ce que le menu faisait réellement, jusqu'au 2026-08-24.** `QuickMatchAsync` lisait le
+`battleId` de la réponse, mettait les participants en cache, affichait « Match PVP
+trouvé ! » et **rendait la main**. Aucun combat n'était ouvert, ni local ni distant, et
+aucune action PvP n'était jamais envoyée : `STSApiClient.SendPvpBattleActionAsync`
+existait sans appelant — comme `ListPvpNotificationsAsync` et
+`AcknowledgePvpNotificationAsync`. Le combat local avec le pseudo de l'adversaire
+existait bien, mais ailleurs : `RunManager.ApplyPvpParticipantDisplayNames`, appelée
+par `CombatManager.Init`, se gardait sur `pvpBattleId` — écrit au matchmaking, effacé
+nulle part avant la fin de la run — et renommait donc le premier ennemi de la
+**prochaine rencontre PvE**. C'était une fuite PvE, pas un chemin PvP.
+
+**Ce qu'il fait depuis** (`2026-08-24-unity-pvp-client`, tâches 6 à 9 et 14) :
+
+- `RunManager.activePvpBattleId` porte « le combat en cours est un duel », et lui seul :
+  `BeginPvpBattle` l'ouvre, `EndPvpBattle` le referme, et
+  `ApplyPvpParticipantDisplayNames` se garde désormais dessus — ce qui ferme la fuite
+  ci-dessus.
+- `MultiplayerMenuController.EnterPvpBattleAsync` est la porte d'entrée unique :
+  participants en cache, file refermée, session ouverte, `STS_Combat` chargée. Le joueur
+  qui s'inscrit **le premier** ne reçoit pas de `battleId` ; une veille
+  (`WatchForMatchedBattleRoutine`) interroge `ListPvpNotificationsAsync` toutes les deux
+  secondes et entre par la même porte. **La forme exacte d'une notification n'est pas
+  vérifiable depuis ce dépôt** : la veille cherche le premier `battleId` présent
+  n'importe où dans la réponse et journalise la trame brute
+  (`[STS-PVP] notifications payload:`) pour qu'une passe suivante puisse nommer le champ.
+- `GameManager.SetupGame` a une troisième branche, `SetupPvpBattle` : un `Player` et un
+  `Enemy` sans `EnemyData`, un `DeckManager` vide, aucune run touchée. Tout le reste
+  arrive avec le premier état autoritatif.
+- `CombatManager.Mode == Pvp` est vrai **avant** le premier état.
+  `BootstrapPvpBattleRoutine` se connecte sur `GetPvpTransportId(battleId)` en mode
+  `"PVP"` et attend le `COMBAT_SNAPSHOT` ; **il n'y a pas de repli sur
+  `StartLocalCombatFlow`**, un duel n'ayant pas de vérité locale.
+- La run est protégée explicitement, et non plus par accident : l'état autoritatif est
+  gardé dans un champ de `CombatManager` au lieu d'écrire `RunManager.activeCombat`, le
+  deck de la run n'est plus réécrit par les piles du duel, le nœud courant n'est pas
+  audité, et la resynchronisation par la route de run est refusée. **La protection de
+  `SubmitCombatResultAsync` ne suffisait pas** : un joueur qui met une run en pause pour
+  jouer un duel garde son `runId` et son `activeEncounter`, et gagnait donc un nœud de sa
+  run en gagnant un duel.
+- La sortie est `EndPvpBattleRoutine`, branchée **avant** tout le reste dans
+  `EndCombat` : transport coupé, issue montrée, retour au menu multijoueur. Aucune
+  complétion de nœud, aucune récompense, aucun `GrantRunEndUnlocks`. L'écran est un
+  `PvpResultController` dédié — **décision D1, option A** —, modelé sur
+  `GameOverController` mais jamais lui : celui-là écrit « Vous avez été vaincu par … »,
+  faux sur une victoire, et son bouton termine la run.
 
 ## 6. Changements côté serveur
 
@@ -389,7 +457,11 @@ Le pont React appelle aujourd'hui `GET /api/sts/combats/{combatId}`
 `GET /api/sts/pvp/battles/{id}`, qui renvoie un `StsPvpBattleDto` — forme que
 `parseCombatSnapshot` rejette, provoquant une boucle de resynchronisation.
 
-### 6.2 La deadline dans la vue — requis
+### 6.2 La deadline dans la vue — ~~requis~~ **livré côté serveur (2026-08-24)**
+
+> Livré et vivant sur la branche `dev` du backend. La vue porte `turnDeadline` et
+> `serverTime` ; côté client, `TurnCountdown` les lit et `UIManager.DisplayTurnCountdown`
+> les affiche — dès qu'un humain aura branché `turnCountdownText` dans `STS_Combat`.
 
 `StsPvpCombatView` gagne `turnDeadline` et `serverTime`, renseignés depuis le battle.
 
@@ -399,7 +471,12 @@ socket. Sans elle, aucun compte à rebours n'est affichable et le joueur perd so
 sans comprendre pourquoi. `serverTime` corrige le décalage d'horloge, comme le fait
 déjà `StsPvpBattleDto`.
 
-### 6.3 `COMMAND_REJECTED` — requis
+### 6.3 `COMMAND_REJECTED` — ~~requis~~ **livré côté serveur (2026-08-24)**
+
+> Livré et vivant sur la branche `dev` du backend, avec les huit codes du moteur.
+> Côté client, `CombatManager.ProcessAuthoritativeMessageQueue` traite désormais
+> `COMMAND_REJECTED` et `CombatRejectionMessages` en fait une phrase montrable ; le
+> message traversait la file et disparaissait.
 
 `StsPvpCombatSocketController` laisse aujourd'hui remonter `ForbiddenException` et
 `ConflictException`. Il n'existe aucun `@MessageExceptionHandler` dans le projet :
@@ -412,7 +489,13 @@ la queue privée de l'auteur, avec son `causationActionId` — exactement la str
 déjà en place pour le PvE (`CombatCommandController.java:92`). Unity sait déjà lire
 ce message et se resynchroniser.
 
-### 6.4 `COMBAT_EVENT` projetés — requis pour les animations
+### 6.4 `COMBAT_EVENT` projetés — ~~requis~~ **livré côté serveur (2026-08-24)**
+
+> Livré et vivant sur la branche `dev` du backend : un `COMBAT_EVENT` par événement,
+> avec un discriminant `eventType`, et les événements qui nommeraient une carte cachée
+> filtrés en amont. **Conséquence pour le client :** l'idée du §4.4 d'un dos de carte
+> pour un `definitionId` nul n'a plus d'objet, puisque rien n'arrive à afficher. Les
+> compteurs du §4.7 sont ce qui la remplace.
 
 `StsPvpCombatBroadcaster` n'émet que `STATE_UPDATED`. Sans les événements, les points
 de vie et l'armure sautent d'un état à l'autre sans animation.
