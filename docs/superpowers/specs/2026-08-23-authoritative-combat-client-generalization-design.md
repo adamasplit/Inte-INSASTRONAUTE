@@ -183,36 +183,56 @@ quand elle est vide.
    sémantique retenue est celle du merge — « tout combattant du côté joueur » — et
    non `IsLocalCombatant` ; c'est au plan PvP de trancher entre les deux, puisque
    c'est là que la différence devient observable.
-11. **Propriété des piles décidée par une chaîne littérale** — `target.isPlayer &&
+11. ~~**Propriété des piles décidée par une chaîne littérale**~~ — `target.isPlayer &&
     combatantId == "player"` (ligne 858), introduit par le merge `8f17676` pour que
-    les alliés supplémentaires n'écrasent pas le deck local. Même motif que l'entrée
-    2, déplacé d'un cran. Relève du plan « piles adressées par combattant » (§4.3).
+    les alliés supplémentaires n'écrasent pas le deck local.
+    **Traitée** par le plan `2026-08-23-combatant-addressed-piles` : le registre de
+    piles répond à la question, et `LocalPiles` / `RemotePiles` disent ce qu'un
+    combattant donné laisse voir.
 3. **Mode déduit d'un effet de bord** — `UsesAuthoritativeCombat` vaut
    `RunManager.Instance.activeCombat != null` (ligne 115), champ écrit par
    `ApplyAuthoritativeCombatState` (ligne 805). Le client est en mode autoritatif
    *parce qu'un état est arrivé*, et non parce qu'on le lui a dit.
-4. **Deux sources de vérité sur l'issue** — `TryEndCombatIfNeeded` (ligne 2402) déduit
-   la victoire des PV locaux, alors que `SubmitCombatResultAsync` envoie déjà
-   `result = null` en mode autoritatif parce que le serveur tranche depuis son état
-   stocké.
+4. ~~**Deux sources de vérité sur l'issue**~~ — `TryEndCombatIfNeeded` déduisait la
+   victoire des PV locaux, alors que `SubmitCombatResultAsync` envoie déjà
+   `result = null` en mode autoritatif parce que le serveur tranche depuis son état.
+   **Traitée** par le plan `2026-08-24-combat-outcome-and-team-targeting` (tâches 2 et
+   3) : `CombatOutcomeSource` lit le `winnerTeamId` du `CombatEnded`, et la dérivation
+   locale ne subsiste que pour le tutoriel, qui n'a pas de serveur pour trancher.
+   *Deux choses n'étaient pas dans le plan et ont été trouvées en l'exécutant. Le match
+   nul n'avait pas de valeur dans `TeamOutcome`, donc il s'affichait en victoire — les
+   deux équipes anéanties donnant « tous les ennemis sont morts ». Et le plan ne
+   nommait que la sortie anticipée interne : `TryEndCombatIfNeeded` reposait la même
+   question un cran plus haut et refusait de lancer la routine tant qu'aucun mort
+   n'était visible, si bien que l'issue annoncée était enregistrée puis jamais
+   appliquée.*
 5. **Une classe qui se désactive de l'intérieur** — `DeckManager` appelle
    `ShouldBypassLocalDeckMutations()` dans **onze** de ses méthodes. Ce sont deux
    implémentations déguisées en onze gardes.
-6. **Piles non adressées** — `GetPileByName(pileName)` (ligne 1907) ne prend aucun
-   combattant.
-7. **Binaire allié/ennemi jusque dans l'interface** — `DropZone.Init(CombatManager,
+6. ~~**Piles non adressées**~~ — `GetPileByName(pileName)` ne prenait aucun combattant.
+   **Traitée** par le plan `2026-08-23-combatant-addressed-piles` : la méthode prend un
+   `combatantId` et passe par `CombatantPilesRegistry`.
+7. ~~**Binaire allié/ennemi jusque dans l'interface**~~ — `DropZone.Init(CombatManager,
    Character, bool acceptsEnemy)`.
-8. **Tolérance à plusieurs orthographes du protocole** — `fromPile ?? sourcePile` et
-   `toPile ?? destinationPile` (lignes 1273–1274), `statusType ?? status ??
-   statusName` (ligne 1105), `cardId ?? cardID` (ligne 1424). Le client devine le
-   contrat du serveur au lieu de le connaître ; chaque orthographe acceptée est une
-   divergence qu'on ne verra jamais.
-9. **Repli silencieux sur une valeur plausible** — `GetPileByName(pileName) ??
-   deck?.drawPile` (ligne 1364) : pile inconnue, on écrit dans la pioche.
-   `ReactCombatBridge.CurrentRevision ?? GetAuthoritativeRevision()` (lignes 427 et
-   683), qui retombe sur `0` en l'absence d'état — or `0` est une révision canonique
-   valide, donc l'absence de valeur devient une valeur acceptable au lieu d'un refus
-   d'émettre.
+   **Traitée** par le plan `2026-08-24-combat-outcome-and-team-targeting` (tâche 7) :
+   la zone reçoit l'hostilité calculée par équipe, et le champ sérialisé garde son
+   ancien nom via `[FormerlySerializedAs]` — les prefabs y sont liés.
+8. ~~**Tolérance à plusieurs orthographes du protocole**~~ — `fromPile ?? sourcePile`,
+   `toPile ?? destinationPile`, `statusType ?? status ?? statusName`, `cardId ??
+   cardID`. Le client devinait le contrat du serveur au lieu de le connaître.
+   **Traitée** par le plan `2026-08-23-combatant-addressed-piles` (tâche 7) : le
+   vocabulaire des piles est clos (`PileKinds.Parse`), et les champs sont lus sous le
+   seul nom que le serveur émet. *Les `status.cardID` qui subsistent dans
+   `CombatManager` sont un champ C# de `StatusEffect`, pas une orthographe de
+   protocole.*
+9. **Repli silencieux sur une valeur plausible** — **à moitié traitée.**
+   `GetPileByName(pileName) ?? deck?.drawPile` (pile inconnue, on écrit dans la
+   pioche) a été retirée par le plan `2026-08-23-combatant-addressed-piles` : une pile
+   hors vocabulaire ne joint plus aucune branche.
+   **Reste :** `ReactCombatBridge.CurrentRevision ?? GetAuthoritativeRevision()`
+   (`CombatManager.cs`, lignes 446 et 709), qui retombe sur `0` en l'absence d'état —
+   or `0` est une révision canonique valide, donc l'absence de valeur devient une
+   valeur acceptable au lieu d'un refus d'émettre. **Cette entrée reste ouverte.**
 10. **Combattants inventés** — `CreateFallbackIroncladEnemy()` (ligne 326) et
     `new Player("Player", 100)` (ligne 286), avec les journaux « spawning a fallback
     Ironclad enemy so combat can continue » et « creating a fallback player to keep
@@ -330,9 +350,11 @@ inutilisées et un `LayoutRebuilder` sur les deux racines
 (`Assets/Scripts/Scene/STS/UI/UIManager.cs`, lignes 255–300). Les rencontres PvE
 affichent déjà plusieurs ennemis.
 
-La seule chose qui fige un allié unique est `if (combat.player != null)` (ligne 267),
-à remplacer par une boucle sur le modèle du `foreach (var enemy in combat.enemies)`
-qui la suit ligne 281. **Le 2v2 n'est donc pas une reconstruction de scène.** Par ailleurs
+La seule chose qui figeait un allié unique était `if (combat.player != null)`, à
+remplacer par une boucle. **Ce n'est plus vrai au 2026-08-24** : `UIManager` boucle
+déjà sur `combat.allies`, exactement comme sur `combat.enemies`. Corrigé hors de ce
+chantier, entre la rédaction de cette étude et son exécution. **Le 2v2 n'est donc pas
+une reconstruction de scène**, et il l'est encore moins qu'écrit ici. Par ailleurs
 `Character`, `Player` et `Enemy` sont des objets C# ordinaires (`new Enemy(enemyId)`),
 non couplés à un prefab : le modèle se généralise sans toucher aux assets.
 
