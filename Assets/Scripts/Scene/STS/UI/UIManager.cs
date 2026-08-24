@@ -44,6 +44,15 @@ public class UIManager : MonoBehaviour
     // les lit est null-safe, donc le PvE ne voit rien changer.
     public TextMeshProUGUI combatNoticeText;
     public TextMeshProUGUI turnCountdownText;
+
+    [Header("Abandon d'un duel")]
+    // Branchez le bouton sur OnSurrenderPressed() et, s'il existe, le bouton d'annulation
+    // sur OnSurrenderCancelled(). Tout est null-safe : tant que rien n'est pose dans la
+    // scene, le duel se joue exactement comme avant, sans bouton.
+    public GameObject surrenderButton;
+    public TextMeshProUGUI surrenderButtonLabel;
+    public GameObject surrenderPrompt;
+    public TextMeshProUGUI surrenderPromptText;
     Coroutine combatNoticeRoutine;
     private int pendingDrawAnimations = 0;
     private int pendingPlayedCardAnimations = 0;
@@ -254,7 +263,79 @@ public class UIManager : MonoBehaviour
         combat.deck.OnCardDiscarded += DiscardCardAnimated;
         combat.deck.OnCardExhausted += ExhaustCardAnimated;
         combat.deck.OnCardAddedToHand += AddCardAnimated;
+        InitSurrender();
         //CreateInitialHand();
+    }
+
+    /// <summary>
+    /// Le bouton d'abandon n'existe que dans un duel.
+    ///
+    /// <para>Un combat de run n'a personne a qui abandonner : l'endpoint refuserait, et le
+    /// bouton ne promettrait rien. On le cache donc partout ailleurs plutot que de le laisser
+    /// visible et inerte.</para>
+    /// </summary>
+    void InitSurrender()
+    {
+        bool duel = combat != null && combat.Mode == CombatMode.Pvp;
+
+        if (surrenderButton != null)
+            surrenderButton.SetActive(duel);
+        if (surrenderButtonLabel != null)
+            surrenderButtonLabel.text = SurrenderConfirmation.IdleLabel;
+
+        HideSurrenderPrompt();
+    }
+
+    /// Le bouton d'abandon a ete presse. C'est le combat qui decide ce que ca veut dire :
+    /// la premiere pression arme la confirmation, la seconde abandonne.
+    public void OnSurrenderPressed()
+    {
+        combat?.RequestSurrender();
+    }
+
+    /// Le joueur se ravise.
+    public void OnSurrenderCancelled()
+    {
+        combat?.CancelSurrender();
+    }
+
+    /// <summary>
+    /// Affiche ce que l'abandon coute, avant qu'il ne soit fait.
+    ///
+    /// <para>Le texte le dit sans detour : le serveur regle l'abandon par <c>concede</c>, qui
+    /// deplace le classement exactement comme le forfait d'un joueur absent. Sans cette phrase,
+    /// le bouton laisserait croire a une sortie gratuite.</para>
+    ///
+    /// <para>Sans champ branche dans la scene, l'avertissement passe par l'avis de combat : un
+    /// abandon ne doit jamais partir sans que le joueur ait lu ce qu'il fait.</para>
+    /// </summary>
+    public void ShowSurrenderPrompt(SurrenderConfirmation confirmation)
+    {
+        if (confirmation == null)
+            return;
+
+        if (surrenderButtonLabel != null)
+            surrenderButtonLabel.text = confirmation.Label;
+
+        if (surrenderPromptText != null)
+            surrenderPromptText.text = SurrenderConfirmation.Warning;
+
+        if (surrenderPrompt != null)
+        {
+            surrenderPrompt.SetActive(true);
+            return;
+        }
+
+        ShowCombatNotice(SurrenderConfirmation.Warning);
+    }
+
+    /// Referme l'avertissement et rend au bouton son texte de repos.
+    public void HideSurrenderPrompt()
+    {
+        if (surrenderPrompt != null)
+            surrenderPrompt.SetActive(false);
+        if (surrenderButtonLabel != null)
+            surrenderButtonLabel.text = SurrenderConfirmation.IdleLabel;
     }
 
     public void InitCharacters()

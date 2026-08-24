@@ -711,6 +711,26 @@ public static class STSApiClient
         return answer != null;
     }
 
+    /// <summary>
+    /// Abandonne un duel : le combat se termine à l'avantage de l'adversaire, tout de suite.
+    ///
+    /// <para>C'est <c>POST /api/sts/pvp/battles/{battleId}/surrender</c>, <b>sans corps</b> — le
+    /// combat est dans le chemin et le joueur est celui qui s'est authentifié. Ce n'est donc pas
+    /// une commande de la socket : <c>ReactCombatBridgeCore</c> ne connaît que <c>PLAY_CARD</c>
+    /// et <c>END_TURN</c>, et il n'a aucune raison d'en inventer une troisième.</para>
+    ///
+    /// <para>L'appeler deux fois ne casse rien : un combat déjà terminé est rendu tel quel.
+    /// L'adversaire, lui, l'apprend par la socket (<c>CombatEnded</c> puis l'état).</para>
+    /// </summary>
+    /// <returns>Le <c>StsPvpBattleDto</c> du combat, désormais <c>FINISHED</c>, ou null.</returns>
+    public static async Task<JToken> SurrenderPvpBattleAsync(string battleId)
+    {
+        if (string.IsNullOrWhiteSpace(battleId))
+            return null;
+
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.battle.surrender", new { battleId });
+        return ParseEnvelope(json);
+    }
 
     public static List<StsPvpParticipantSnapshot> ExtractPvpParticipants(JToken battleState)
     {

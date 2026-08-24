@@ -358,6 +358,11 @@ public class CombatManager : MonoBehaviour
     private PvpHeartbeat pvpHeartbeat;
     private Coroutine pvpHeartbeatRoutine;
 
+    // Le verrou du bouton d'abandon. Il est ici et non dans l'UI parce que c'est le combat
+    // qui sait s'il est encore en cours, et parce qu'un test peut alors le lire seul.
+    private readonly SurrenderConfirmation surrenderConfirmation = new SurrenderConfirmation();
+    private bool surrendering;
+
     /// <summary>
     /// Ouvre le battement de présence du duel.
     ///
@@ -393,7 +398,8 @@ public class CombatManager : MonoBehaviour
     }
 
     /// <summary>
-    /// La boucle du duel : elle ne fait rien d'autre que faire passer le temps au battement.
+    /// La boucle du duel : elle fait passer le temps au battement et à la confirmation
+    /// d'abandon, et rien d'autre.
     ///
     /// <para><c>unscaledDeltaTime</c> parce qu'une pause ou un ralenti d'animation ne rend pas
     /// le joueur absent, et que le serveur, lui, compte en secondes réelles.</para>
@@ -407,11 +413,95 @@ public class CombatManager : MonoBehaviour
         while (pvpHeartbeat != null && pvpHeartbeat.IsBeating)
         {
             float elapsed = Time.unscaledDeltaTime;
+
+            bool wasArmed = surrenderConfirmation.IsArmed;
+            surrenderConfirmation.Advance(elapsed);
+            // La fenêtre s'est refermée toute seule : le bouton doit le montrer, sinon il
+            // resterait à « Confirmer l'abandon » alors qu'il ne confirme plus rien.
+            if (wasArmed && !surrenderConfirmation.IsArmed)
+                ui?.HideSurrenderPrompt();
+
             _ = pvpHeartbeat.AdvanceAsync(elapsed);
             yield return null;
         }
 
         pvpHeartbeatRoutine = null;
+    }
+
+    /// <summary>
+    /// Le bouton d'abandon, branché depuis la scène.
+    ///
+    /// <para>La première pression ne fait qu'armer la confirmation et afficher ce que
+    /// l'abandon coûte : le serveur le règle par <c>concede</c>, qui déplace le classement
+    /// exactement comme le forfait d'un joueur absent. Un clic accidentel qui perdrait un
+    /// match classé serait un défaut plus grave que l'absence de bouton.</para>
+    ///
+    /// <para>C'est du HTTP, pas une commande de la socket : le pont de combat ne connaît que
+    /// <c>PLAY_CARD</c> et <c>END_TURN</c>, et n'a pas à inventer de <c>SURRENDER</c>.</para>
+    /// </summary>
+    public void RequestSurrender()
+    {
+        if (Mode != CombatMode.Pvp)
+            return;
+
+        if (combatEnded || surrendering || leavingPvpBattle)
+            return;
+
+        if (!surrenderConfirmation.Press())
+        {
+            ui?.ShowSurrenderPrompt(surrenderConfirmation);
+            return;
+        }
+
+        ui?.HideSurrenderPrompt();
+        surrendering = true;
+        StartCoroutine(SurrenderRoutine());
+    }
+
+    /// Le joueur se ravise : la confirmation se désarme et le bouton reprend son texte.
+    public void CancelSurrender()
+    {
+        surrenderConfirmation.Reset();
+        ui?.HideSurrenderPrompt();
+    }
+
+    /// <summary>
+    /// L'abandon lui-même.
+    ///
+    /// <para>On coupe le battement d'abord : une fois l'abandon parti, continuer à prouver sa
+    /// présence n'a plus de sens. Puis on attend le <c>CombatEnded</c> que le serveur diffuse
+    /// aux deux joueurs — c'est lui qui referme l'écran, comme pour n'importe quelle autre fin
+    /// de duel, ce qui évite deux chemins de sortie qui pourraient diverger.</para>
+    ///
+    /// <para>Un appel qui échoue laisse le combat exactement où il était et le dit : le joueur
+    /// peut réessayer. Le rejouer une seconde fois est sans danger, le serveur rend un combat
+    /// déjà terminé inchangé.</para>
+    /// </summary>
+    IEnumerator SurrenderRoutine()
+    {
+        string battleId = RunManager.Instance != null
+            ? RunManager.Instance.activePvpBattleId
+            : null;
+
+        StopPvpHeartbeat();
+        ui?.ShowCombatNotice("Abandon en cours...");
+
+        Task<JToken> surrenderTask = STSApiClient.SurrenderPvpBattleAsync(battleId);
+        while (!surrenderTask.IsCompleted)
+            yield return null;
+
+        bool accepted = surrenderTask.Status == TaskStatus.RanToCompletion && surrenderTask.Result != null;
+        if (!accepted)
+        {
+            Debug.LogWarning($"[STS-PVP] Surrender of battle {battleId} was not accepted; the duel goes on.");
+            ui?.ShowCombatNotice("L'abandon n'a pas abouti. Le duel continue.");
+            surrendering = false;
+            if (!combatEnded && !leavingPvpBattle && !string.IsNullOrWhiteSpace(battleId))
+                StartPvpHeartbeat(battleId);
+            yield break;
+        }
+
+        Debug.Log($"[STS-PVP] Battle {battleId} surrendered; waiting for the server's CombatEnded.");
     }
 
     private bool leavingPvpBattle;
@@ -3262,6 +3352,8 @@ public class CombatManager : MonoBehaviour
         // Le duel est fini : plus un battement. En laisser partir un de plus entretiendrait
         // au serveur la presence d'un joueur qui n'est plus dans aucun combat.
         StopPvpHeartbeat();
+        surrenderConfirmation.Reset();
+        ui?.HideSurrenderPrompt();
 
         string opponentName = OpponentDisplayName();
         Debug.Log($"[STS-PVP] Battle over: outcome={outcome} opponent={opponentName ?? "<unknown>"}");
