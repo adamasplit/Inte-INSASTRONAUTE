@@ -690,6 +690,28 @@ public static class STSApiClient
         return ParseEnvelope(json);
     }
 
+    /// <summary>
+    /// Dit au serveur que le joueur est toujours là, sans rien jouer.
+    ///
+    /// <para><c>StsPvpService.submitBattleAction</c> estampille la présence <b>avant</b> de
+    /// regarder ce que l'action demande, et un corps portant <c>heartbeatOnly</c> s'arrête là :
+    /// aucune carte, aucun tour, aucune révision attendue. Le nom du champ est celui du record
+    /// <c>StsPvpBattleActionRequest(actionType, action, endTurn, heartbeatOnly)</c>.</para>
+    ///
+    /// <para>Sans ces battements, <c>StsPvpBattleTimeoutScheduler</c> déclare forfait tout
+    /// participant silencieux depuis plus de 120 secondes — y compris celui qui n'a jamais rien
+    /// envoyé, car une entrée absente se lit comme une absence.</para>
+    /// </summary>
+    /// <returns><c>true</c> quand le serveur a répondu.</returns>
+    public static async Task<bool> SendPvpBattleHeartbeatAsync(string battleId)
+    {
+        JToken answer = await SendPvpBattleActionAsync(
+            battleId,
+            new JObject { ["heartbeatOnly"] = true });
+        return answer != null;
+    }
+
+
     public static List<StsPvpParticipantSnapshot> ExtractPvpParticipants(JToken battleState)
     {
         var participants = new List<StsPvpParticipantSnapshot>();

@@ -333,6 +333,10 @@ public class CombatManager : MonoBehaviour
         }
         else
         {
+            // Avant la socket, pas après : tant qu'aucun battement n'est arrivé, le serveur
+            // lit ce joueur comme absent, et l'ouverture du transport n'est pas instantanée.
+            StartPvpHeartbeat(battleId);
+
 #if UNITY_WEBGL && !UNITY_EDITOR
             ReactCombatBridge.CombatEventReceived += HandleReactCombatEvent;
             ReactCombatBridge.CombatStatusChanged += HandleReactCombatStatusChanged;
@@ -347,6 +351,67 @@ public class CombatManager : MonoBehaviour
         // Toujours, même après l'erreur : sans ça l'écran de chargement ne se lève jamais
         // et le joueur reste devant un voile, ce qui est pire qu'un combat vide.
         STSSceneLoader.Instance?.SceneReady();
+    }
+
+    // Le battement qui prouve la présence, et la boucle qui le fait battre. Les deux ne
+    // vivent que le temps d'un duel : voir StartPvpHeartbeat / StopPvpHeartbeat.
+    private PvpHeartbeat pvpHeartbeat;
+    private Coroutine pvpHeartbeatRoutine;
+
+    /// <summary>
+    /// Ouvre le battement de présence du duel.
+    ///
+    /// <para>Sans lui, <c>StsPvpBattleTimeoutScheduler</c> déclare forfait au bout de
+    /// 120 secondes un joueur qui n'a rien joué — assis devant son écran. Le mécanisme
+    /// existait entièrement côté serveur ; il n'y manquait que cet appelant.</para>
+    /// </summary>
+    void StartPvpHeartbeat(string battleId)
+    {
+        if (pvpHeartbeatRoutine != null)
+            return;
+
+        pvpHeartbeat = new PvpHeartbeat(
+            () => STSApiClient.SendPvpBattleHeartbeatAsync(battleId),
+            warning => Debug.LogWarning(warning));
+        pvpHeartbeat.Begin();
+        pvpHeartbeatRoutine = StartCoroutine(PvpHeartbeatRoutine());
+    }
+
+    /// <summary>
+    /// Referme le battement. Un duel terminé dont le client continuerait de battre
+    /// entretiendrait au serveur une présence qui n'existe plus.
+    /// </summary>
+    void StopPvpHeartbeat()
+    {
+        pvpHeartbeat?.Stop();
+
+        if (pvpHeartbeatRoutine != null)
+        {
+            StopCoroutine(pvpHeartbeatRoutine);
+            pvpHeartbeatRoutine = null;
+        }
+    }
+
+    /// <summary>
+    /// La boucle du duel : elle ne fait rien d'autre que faire passer le temps au battement.
+    ///
+    /// <para><c>unscaledDeltaTime</c> parce qu'une pause ou un ralenti d'animation ne rend pas
+    /// le joueur absent, et que le serveur, lui, compte en secondes réelles.</para>
+    ///
+    /// <para>La tâche rendue par <c>AdvanceAsync</c> n'est délibérément pas attendue : un
+    /// battement lent ne doit pas retarder le suivant, et il ne peut pas échouer vers ici —
+    /// <see cref="PvpHeartbeat"/> avale ses propres erreurs.</para>
+    /// </summary>
+    IEnumerator PvpHeartbeatRoutine()
+    {
+        while (pvpHeartbeat != null && pvpHeartbeat.IsBeating)
+        {
+            float elapsed = Time.unscaledDeltaTime;
+            _ = pvpHeartbeat.AdvanceAsync(elapsed);
+            yield return null;
+        }
+
+        pvpHeartbeatRoutine = null;
     }
 
     private bool leavingPvpBattle;
@@ -373,6 +438,7 @@ public class CombatManager : MonoBehaviour
 
     IEnumerator LeavePvpBattleRoutine()
     {
+        StopPvpHeartbeat();
         yield return new WaitForSecondsRealtime(2.5f);
 
         ReactCombatBridge.Disconnect();
@@ -837,6 +903,7 @@ public class CombatManager : MonoBehaviour
 
     void OnDestroy()
     {
+        StopPvpHeartbeat();
 #if UNITY_WEBGL && !UNITY_EDITOR
         ReactCombatBridge.CombatEventReceived -= HandleReactCombatEvent;
         ReactCombatBridge.CombatStatusChanged -= HandleReactCombatStatusChanged;
@@ -3192,6 +3259,10 @@ public class CombatManager : MonoBehaviour
     /// </summary>
     IEnumerator EndPvpBattleRoutine()
     {
+        // Le duel est fini : plus un battement. En laisser partir un de plus entretiendrait
+        // au serveur la presence d'un joueur qui n'est plus dans aucun combat.
+        StopPvpHeartbeat();
+
         string opponentName = OpponentDisplayName();
         Debug.Log($"[STS-PVP] Battle over: outcome={outcome} opponent={opponentName ?? "<unknown>"}");
 
