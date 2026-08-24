@@ -755,6 +755,48 @@ public static class STSApiClient
         return ParseEnvelope(json);
     }
 
+    /// <summary>
+    /// Dit au serveur que le joueur est toujours là, sans rien jouer.
+    ///
+    /// <para><c>StsPvpService.submitBattleAction</c> estampille la présence <b>avant</b> de
+    /// regarder ce que l'action demande, et un corps portant <c>heartbeatOnly</c> s'arrête là :
+    /// aucune carte, aucun tour, aucune révision attendue. Le nom du champ est celui du record
+    /// <c>StsPvpBattleActionRequest(actionType, action, endTurn, heartbeatOnly)</c>.</para>
+    ///
+    /// <para>Sans ces battements, <c>StsPvpBattleTimeoutScheduler</c> déclare forfait tout
+    /// participant silencieux depuis plus de 120 secondes — y compris celui qui n'a jamais rien
+    /// envoyé, car une entrée absente se lit comme une absence.</para>
+    /// </summary>
+    /// <returns><c>true</c> quand le serveur a répondu.</returns>
+    public static async Task<bool> SendPvpBattleHeartbeatAsync(string battleId)
+    {
+        JToken answer = await SendPvpBattleActionAsync(
+            battleId,
+            new JObject { ["heartbeatOnly"] = true });
+        return answer != null;
+    }
+
+    /// <summary>
+    /// Abandonne un duel : le combat se termine à l'avantage de l'adversaire, tout de suite.
+    ///
+    /// <para>C'est <c>POST /api/sts/pvp/battles/{battleId}/surrender</c>, <b>sans corps</b> — le
+    /// combat est dans le chemin et le joueur est celui qui s'est authentifié. Ce n'est donc pas
+    /// une commande de la socket : <c>ReactCombatBridgeCore</c> ne connaît que <c>PLAY_CARD</c>
+    /// et <c>END_TURN</c>, et il n'a aucune raison d'en inventer une troisième.</para>
+    ///
+    /// <para>L'appeler deux fois ne casse rien : un combat déjà terminé est rendu tel quel.
+    /// L'adversaire, lui, l'apprend par la socket (<c>CombatEnded</c> puis l'état).</para>
+    /// </summary>
+    /// <returns>Le <c>StsPvpBattleDto</c> du combat, désormais <c>FINISHED</c>, ou null.</returns>
+    public static async Task<JToken> SurrenderPvpBattleAsync(string battleId)
+    {
+        if (string.IsNullOrWhiteSpace(battleId))
+            return null;
+
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.battle.surrender", new { battleId });
+        return ParseEnvelope(json);
+    }
+
     public static List<StsPvpParticipantSnapshot> ExtractPvpParticipants(JToken battleState)
     {
         var participants = new List<StsPvpParticipantSnapshot>();

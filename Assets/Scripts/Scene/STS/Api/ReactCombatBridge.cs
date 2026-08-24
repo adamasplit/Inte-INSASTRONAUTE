@@ -46,11 +46,11 @@ public sealed class ReactCombatBridge : MonoBehaviour
         instance = null;
     }
 
-    public static Task<bool> ConnectAsync(string combatId)
+    public static Task<bool> ConnectAsync(string combatId, string mode)
     {
         ReactCombatBridge bridge = EnsureInstance();
         bridge.core.Connect(combatId);
-        string json = JsonConvert.SerializeObject(new { combatId });
+        string json = ReactCombatBridgeCore.CreateConnectPayload(combatId, mode);
         return Task.FromResult(InvokeConnect(json) != 0);
     }
 

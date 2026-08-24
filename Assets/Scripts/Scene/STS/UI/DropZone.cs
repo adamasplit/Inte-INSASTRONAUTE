@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,7 +19,10 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
     public bool isHovered = false;
 
-    public bool acceptsEnemyCards = false;
+    // FormerlySerializedAs : les prefabs PlayerZone/EnemyZone sérialisent encore le champ
+    // sous son ancien nom ; sans ça leur valeur serait perdue au réimport.
+    [FormerlySerializedAs("acceptsEnemyCards")]
+    public bool isHostileZone = false;
     public static Character hoveredCharacter;
     [Header("Click Name")]
     [SerializeField] TextMeshProUGUI clickNameText;
@@ -57,7 +61,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             hoveredCharacter = null;
     }
 
-    public void Init(CombatManager cm, Character t, bool acceptsEnemy)
+    public void Init(CombatManager cm, Character t, bool hostile)
     {
         if (imageRect == null)
             imageRect = image.rectTransform;
@@ -109,10 +113,10 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         }
 
         enemyImageSizeCached = false;
-        acceptsEnemyCards = acceptsEnemy;
+        isHostileZone = hostile;
         deathAnimationPlayed = false;
 
-        highlight.color = acceptsEnemy ? new Color(1, 0, 0, 0f) : new Color(0, 1, 0, 0f);
+        highlight.color = hostile ? new Color(1, 0, 0, 0f) : new Color(0, 1, 0, 0f);
 
         isHovered = false;
 
@@ -395,8 +399,8 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     public void SetHighlight(bool highlight)
     {
         this.highlight.color = highlight
-            ? (acceptsEnemyCards ? new Color(1, 0, 0, 0.3f) : new Color(0, 1, 0, 0.3f))
-            : (acceptsEnemyCards ? new Color(1, 0, 0, 0f) : new Color(0, 1, 0, 0f));
+            ? (isHostileZone ? new Color(1, 0, 0, 0.3f) : new Color(0, 1, 0, 0.3f))
+            : (isHostileZone ? new Color(1, 0, 0, 0f) : new Color(0, 1, 0, 0f));
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -542,7 +546,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         if (cardView?.cardInstance?.data == null)
             return false;
 
-        if (acceptsEnemyCards)
+        if (isHostileZone)
             return cardView.cardInstance.targetingMode == TargetingMode.Enemy ||
                    cardView.cardInstance.targetingMode == TargetingMode.AllEnemies ||
                    cardView.cardInstance.targetingMode == TargetingMode.AllCharacters ||

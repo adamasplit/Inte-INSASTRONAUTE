@@ -38,6 +38,33 @@ public class Enemy : Character
     }
     public EnemyData data;
 
+    /// <summary>
+    /// Un adversaire piloté par un humain.
+    ///
+    /// <para>Sans <c>EnemyData</c>, et c'est le point : il n'a ni motif ni intention à
+    /// afficher, puisque c'est l'autre joueur qui décide. <c>PeekNextAction</c> rend
+    /// <c>null</c> dans ce cas et <c>CharacterUI</c> vide alors la zone d'intention, donc
+    /// rien à faire de plus.</para>
+    ///
+    /// <para>Il reste un <c>Enemy</c> plutôt qu'un <c>Character</c> parce que
+    /// <c>DropZone.Init</c> caste en <c>Enemy</c> tout ce qui n'est pas <c>isPlayer</c> ;
+    /// avec <c>data == null</c>, ce cast réussit et le portrait se charge depuis
+    /// <c>STS/Characters/{name}</c>, où le nom du personnage jouable se trouve.</para>
+    ///
+    /// <para>Ses points de vie arrivent avec le premier état autoritatif ; ceux passés ici
+    /// ne servent qu'à ce qu'il ne soit pas mort-né entre le montage et ce premier état.</para>
+    /// </summary>
+    public Enemy(string characterName, int placeholderMaxHP, string userId, string displayName)
+        : base(characterName, placeholderMaxHP)
+    {
+        this.isPlayer = false;
+        this.isAlly = false;
+        this.isLocalPlayer = false;
+        this.playerUserId = userId;
+        this.playerDisplayName = displayName;
+    }
+
+
     private int patternIndex = 0;
     private readonly Queue<STSCardData> forcedNextActions = new();
     public STSCardData authoritativeIntentCard; // Set by the authoritative combat state sync; overrides local PeekNextAction for intent display
