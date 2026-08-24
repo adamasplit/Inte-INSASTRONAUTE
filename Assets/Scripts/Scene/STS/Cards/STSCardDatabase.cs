@@ -357,6 +357,11 @@ public static class STSCardDatabase
         await LoadAsync();
     }
 
+    public static bool IsCollectionCardTextless(string collectionCardId)
+    {
+        return STSCollectionCardApi.IsTextless(collectionCardId);
+    }
+
     public static bool TryGetCollectionCardSprite(string collectionCardId, out Sprite sprite)
     {
         sprite = null;

@@ -2107,7 +2107,7 @@
     {
       "id": "cleanwalk",
       "cardName": "Cleanwalk",
-      "collectionCardId": "Greensa (campagne)",
+      "collectionCardId": "Greensa",
       "multiplayerExclusive": false,
       "characterLevel": 0,
       "iconId": null,
@@ -5512,7 +5512,7 @@
     {
       "id": "equilibrage_d_emploi_du_temps",
       "cardName": "Équilibrage d'emploi du temps",
-      "collectionCardId": "Ingénieur Humaniste (campagne)",
+      "collectionCardId": "Ingénieur Humaniste",
       "multiplayerExclusive": false,
       "characterLevel": 0,
       "iconId": null,
@@ -6573,7 +6573,7 @@
     {
       "id": "fureur_du_meteore",
       "cardName": "Fureur de météore",
-      "collectionCardId": "FDM (campagne)",
+      "collectionCardId": "FDM",
       "multiplayerExclusive": false,
       "characterLevel": 0,
       "iconId": null,
@@ -8776,7 +8776,7 @@
     {
       "id": "happy_hour",
       "cardName": "Happy Hour",
-      "collectionCardId": "Bar des Fleurs (campagne)",
+      "collectionCardId": "Bar des Fleurs",
       "multiplayerExclusive": false,
       "characterLevel": 0,
       "iconId": null,
@@ -14523,7 +14523,7 @@
     {
       "id": "pinte_de_trop",
       "cardName": "Pinte de trop",
-      "collectionCardId": "Paix Dieu (campagne)",
+      "collectionCardId": "Paix Dieu",
       "multiplayerExclusive": false,
       "characterLevel": 0,
       "iconId": null,
@@ -15253,6 +15253,45 @@
       "tags": []
     },
     {
+      "id": "revision_model_text",
+      "cardName": "Révision Model Text",
+      "collectionCardId": "Souillard",
+      "multiplayerExclusive": false,
+      "characterLevel": 0,
+      "iconId": null,
+      "cost": 1,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Common",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "Armor",
+          "value": 5,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "Starting",
+      "animationSpeed": 1.0,
+      "startingCount": 3,
+      "tags": []
+    },
+    {
       "id": "site",
       "cardName": "",
       "collectionCardId": null,
@@ -15564,7 +15603,7 @@
     {
       "id": "terre_brulee",
       "cardName": "Terre brûlée...",
-      "collectionCardId": "BAF (campagne)",
+      "collectionCardId": "BAF",
       "multiplayerExclusive": false,
       "characterLevel": 0,
       "iconId": null,

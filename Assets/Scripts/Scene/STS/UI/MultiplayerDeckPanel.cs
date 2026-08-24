@@ -40,9 +40,8 @@ public class MultiplayerDeckPanel : MonoBehaviour
     [SerializeField] private int editorPlaceholderMaxCount = 28;
 
     [Header("Filters")]
-    [SerializeField] private TMP_Dropdown rarityDropdown;
-    [SerializeField] private TMP_Dropdown characterDropdown;
-    [SerializeField] private TMP_Dropdown unlockStateDropdown;
+    [SerializeField] private Transform filtersContainer;
+    [SerializeField] private GameObject filterToggleItemPrefab;
     [SerializeField] private TMP_InputField searchInput;
 
     [Header("Deck Actions")]
@@ -67,12 +66,16 @@ public class MultiplayerDeckPanel : MonoBehaviour
     private readonly List<DeckViewModel> savedDecks = new();
     private readonly HashSet<string> ownedCardIds = new(StringComparer.OrdinalIgnoreCase);
 
+    private readonly HashSet<CardRarity> selectedRarities = new();
+    private readonly HashSet<SelectableCharacter> selectedCharacterFilters = new();
+    private readonly HashSet<UnlockFilterState> selectedUnlockStates = new();
+
+    private enum UnlockFilterState { Locked, Unlocked }
+
     private MultiplayerMenuController host;
     private SelectableCharacter selectedCharacter = SelectableCharacter.EP;
     private int selectedCharacterLevel;
     private bool missingApiResponses;
-
-    private bool suppressFilterCallbacks;
 
     public void SetHost(MultiplayerMenuController controller)
     {
@@ -82,7 +85,7 @@ public class MultiplayerDeckPanel : MonoBehaviour
     private void Awake()
     {
         WireListeners();
-        BuildStaticFilterOptions();
+        BuildFilterCheckboxes();
         SetStatus(string.Empty);
         RefreshDeckCounter();
     }
@@ -90,30 +93,13 @@ public class MultiplayerDeckPanel : MonoBehaviour
     public void OpenForCharacter(SelectableCharacter character)
     {
         selectedCharacter = character;
+        BuildFilterCheckboxes();
         gameObject.SetActive(true);
         _ = RefreshAsync();
     }
 
     private void WireListeners()
     {
-        if (rarityDropdown != null)
-        {
-            rarityDropdown.onValueChanged.RemoveAllListeners();
-            rarityDropdown.onValueChanged.AddListener(_ => RefreshGrid());
-        }
-
-        if (characterDropdown != null)
-        {
-            characterDropdown.onValueChanged.RemoveAllListeners();
-            characterDropdown.onValueChanged.AddListener(_ => RefreshGrid());
-        }
-
-        if (unlockStateDropdown != null)
-        {
-            unlockStateDropdown.onValueChanged.RemoveAllListeners();
-            unlockStateDropdown.onValueChanged.AddListener(_ => RefreshGrid());
-        }
-
         if (searchInput != null)
         {
             searchInput.onValueChanged.RemoveAllListeners();
@@ -200,52 +186,146 @@ public class MultiplayerDeckPanel : MonoBehaviour
         UpdateStatusWithCounts();
     }
 
-    private void BuildStaticFilterOptions()
+    private void BuildFilterCheckboxes()
     {
-        suppressFilterCallbacks = true;
+        if (filtersContainer == null || filterToggleItemPrefab == null)
+            return;
 
-        if (rarityDropdown != null)
+        foreach (Transform child in filtersContainer)
         {
-            rarityDropdown.ClearOptions();
-            List<string> rarityOptions = new() { "Toutes raretés" };
-            rarityOptions.AddRange(Enum.GetNames(typeof(CardRarity)));
-            rarityDropdown.AddOptions(rarityOptions);
-            rarityDropdown.value = 0;
+            Destroy(child.gameObject);
         }
 
-        if (characterDropdown != null)
-        {
-            characterDropdown.ClearOptions();
-            List<string> characterOptions = new() { "Tous persos" };
-            foreach (SelectableCharacter character in Enum.GetValues(typeof(SelectableCharacter)))
-            {
-                if (character == SelectableCharacter.Aucun
-                    || character == SelectableCharacter.Impossible
-                    || character == SelectableCharacter.Starting)
-                {
-                    continue;
-                }
+        selectedRarities.Clear();
+        selectedCharacterFilters.Clear();
+        selectedUnlockStates.Clear();
 
-                characterOptions.Add(character.ToString());
+        List<(CardRarity value, string iconName, string label)> rarityOptions = new();
+        foreach (CardRarity rarity in Enum.GetValues(typeof(CardRarity)))
+        {
+            rarityOptions.Add((rarity, RarityIconName(rarity), rarity.ToString()));
+        }
+        BuildCheckboxCategory(rarityOptions, selectedRarities);
+
+        // Cards for other characters are never selectable here, so only "Aucun" and the current character are worth filtering by.
+        List<(SelectableCharacter value, string iconName, string label)> characterOptions = new()
+        {
+            (SelectableCharacter.Aucun, CharacterIconName(SelectableCharacter.Aucun), SelectableCharacter.Aucun.ToString())
+        };
+        if (selectedCharacter != SelectableCharacter.Aucun)
+        {
+            characterOptions.Add((selectedCharacter, CharacterIconName(selectedCharacter), selectedCharacter.ToString()));
+        }
+        BuildCheckboxCategory(characterOptions, selectedCharacterFilters);
+
+        List<(UnlockFilterState value, string iconName, string label)> unlockOptions = new()
+        {
+            (UnlockFilterState.Unlocked, "debloque", "Débloquées"),
+            (UnlockFilterState.Locked, "verrouille", "Non débloquées")
+        };
+        BuildCheckboxCategory(unlockOptions, selectedUnlockStates);
+    }
+
+    private void BuildCheckboxCategory<T>(
+        List<(T value, string iconName, string label)> options,
+        HashSet<T> selectedSet)
+    {
+        GameObject row = new GameObject($"FilterRow_{typeof(T).Name}", typeof(RectTransform));
+        row.transform.SetParent(filtersContainer, false);
+        HorizontalLayoutGroup layout = row.AddComponent<HorizontalLayoutGroup>();
+        // Items keep their own authored size; flexible spacer objects between them absorb the leftover width evenly.
+        layout.childControlWidth = true;
+        layout.childControlHeight = false;
+        layout.childForceExpandWidth = false;
+        layout.childForceExpandHeight = false;
+        layout.spacing = 24f;
+        ContentSizeFitter fitter = row.AddComponent<ContentSizeFitter>();
+        fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+        fitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
+
+        for (int i = 0; i < options.Count; i++)
+        {
+            (T value, string iconName, string label) = options[i];
+
+            GameObject itemObject = Instantiate(filterToggleItemPrefab, row.transform);
+            FilterToggleItem item = itemObject.GetComponent<FilterToggleItem>();
+            if (item == null)
+            {
+                item = itemObject.GetComponentInChildren<FilterToggleItem>();
             }
 
-            characterDropdown.AddOptions(characterOptions);
-            characterDropdown.value = 0;
-        }
-
-        if (unlockStateDropdown != null)
-        {
-            unlockStateDropdown.ClearOptions();
-            unlockStateDropdown.AddOptions(new List<string>
+            if (item == null)
             {
-                "Toutes",
-                "Débloquées",
-                "Non débloquées"
-            });
-            unlockStateDropdown.value = 1;
-        }
+                Debug.LogWarning("FilterToggleItem component missing on filter toggle item prefab.");
+                continue;
+            }
 
-        suppressFilterCallbacks = false;
+            RectTransform itemRect = itemObject.transform as RectTransform;
+            LayoutElement itemLayout = itemObject.GetComponent<LayoutElement>();
+            if (itemLayout == null)
+            {
+                itemLayout = itemObject.AddComponent<LayoutElement>();
+            }
+            float lockedWidth = itemRect != null ? itemRect.rect.width : 0f;
+            itemLayout.minWidth = lockedWidth;
+            itemLayout.preferredWidth = lockedWidth;
+            itemLayout.flexibleWidth = 0f;
+
+            if (item.icon != null)
+            {
+                Sprite sprite = Resources.Load<Sprite>($"STS/Icons/PVP/{iconName}");
+                item.icon.sprite = sprite;
+                item.icon.enabled = sprite != null;
+            }
+
+            if (item.label != null)
+            {
+                item.label.text = label;
+            }
+
+            if (item.toggle != null)
+            {
+                item.toggle.isOn = false;
+                item.toggle.onValueChanged.RemoveAllListeners();
+                item.toggle.onValueChanged.AddListener(isOn =>
+                {
+                    if (isOn)
+                        selectedSet.Add(value);
+                    else
+                        selectedSet.Remove(value);
+                    RefreshGrid();
+                });
+            }
+
+            if (i < options.Count - 1)
+            {
+                GameObject spacer = new GameObject("FilterSpacer", typeof(RectTransform));
+                spacer.transform.SetParent(row.transform, false);
+                LayoutElement spacerLayout = spacer.AddComponent<LayoutElement>();
+                spacerLayout.minWidth = 0f;
+                spacerLayout.preferredWidth = 0f;
+                spacerLayout.flexibleWidth = 1f;
+            }
+        }
+    }
+
+    private static string RarityIconName(CardRarity rarity)
+    {
+        return rarity switch
+        {
+            CardRarity.Common => "rarity1",
+            CardRarity.Uncommon => "rarity2",
+            CardRarity.Rare => "rarity3",
+            CardRarity.Epic => "rarity4",
+            CardRarity.Legendary => "rarity5",
+            CardRarity.Special => "rarity6",
+            _ => rarity.ToString().ToLowerInvariant()
+        };
+    }
+
+    private static string CharacterIconName(SelectableCharacter character)
+    {
+        return character.ToString().ToLowerInvariant();
     }
 
     private void RebuildEntries()
@@ -263,6 +343,11 @@ public class MultiplayerDeckPanel : MonoBehaviour
                 continue;
 
             if (IsHiddenFromDeckBuilder(card))
+                continue;
+
+            // Cards bound to another character are never selectable in this panel, so don't even show them.
+            if (card.favoredCharacter != SelectableCharacter.Aucun
+                && card.favoredCharacter != selectedCharacter)
                 continue;
 
             string key = GetCardKey(card);
@@ -291,8 +376,7 @@ public class MultiplayerDeckPanel : MonoBehaviour
     // Never selectable in PVP, so they are dropped before any filter runs.
     private bool IsHiddenFromDeckBuilder(STSCardData card)
     {
-        return card.favoredCharacter == SelectableCharacter.Impossible
-            || card.favoredCharacter == SelectableCharacter.Starting
+        return (card.favoredCharacter != SelectableCharacter.Aucun && card.favoredCharacter != selectedCharacter)
             || card.HasTag(CardTag.Unobtainable)
             || card.HasTag(CardTag.Created)
             || card.HasTag(CardTag.FollowUp);
@@ -332,9 +416,6 @@ public class MultiplayerDeckPanel : MonoBehaviour
 
     private void RefreshGrid()
     {
-        if (suppressFilterCallbacks)
-            return;
-
         visibleEntries.Clear();
         ClearGrid();
 
@@ -437,55 +518,29 @@ public class MultiplayerDeckPanel : MonoBehaviour
 
     private bool PassesRarityFilter(STSCardData card)
     {
-        if (rarityDropdown == null || rarityDropdown.value <= 0)
+        if (selectedRarities.Count == 0)
             return true;
 
-        int rarityIndex = rarityDropdown.value - 1;
-        CardRarity selectedRarity = (CardRarity)rarityIndex;
-        return card.rarity == selectedRarity;
+        return selectedRarities.Contains(card.rarity);
     }
 
     private bool PassesCharacterFilter(STSCardData card)
     {
-        if (characterDropdown == null || characterDropdown.value <= 0)
+        if (selectedCharacterFilters.Count == 0)
             return true;
 
-        int enumOffset = 0;
-        List<SelectableCharacter> list = new();
-        foreach (SelectableCharacter character in Enum.GetValues(typeof(SelectableCharacter)))
-        {
-            if (character == SelectableCharacter.Aucun
-                || character == SelectableCharacter.Impossible
-                || character == SelectableCharacter.Starting)
-            {
-                continue;
-            }
-
-            list.Add(character);
-        }
-
-        int index = characterDropdown.value - 1 - enumOffset;
-        if (index < 0 || index >= list.Count)
-            return true;
-
-        SelectableCharacter filterCharacter = list[index];
-
-        return card.favoredCharacter == SelectableCharacter.Aucun
-            || card.favoredCharacter == SelectableCharacter.Starting
-            || card.favoredCharacter == filterCharacter;
+        return card.favoredCharacter == SelectableCharacter.Starting
+            || selectedCharacterFilters.Contains(card.favoredCharacter);
     }
 
     private bool PassesUnlockFilter(CardEntry entry)
     {
-        if (unlockStateDropdown == null)
+        if (selectedUnlockStates.Count == 0)
             return true;
 
-        return unlockStateDropdown.value switch
-        {
-            1 => entry.unlocked,
-            2 => !entry.unlocked,
-            _ => true
-        };
+        bool wantUnlocked = selectedUnlockStates.Contains(UnlockFilterState.Unlocked);
+        bool wantLocked = selectedUnlockStates.Contains(UnlockFilterState.Locked);
+        return (wantUnlocked && entry.unlocked) || (wantLocked && !entry.unlocked);
     }
 
     private bool PassesSearchFilter(STSCardData card)

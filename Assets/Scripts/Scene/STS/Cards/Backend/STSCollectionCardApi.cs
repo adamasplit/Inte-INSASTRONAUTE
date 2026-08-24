@@ -19,6 +19,7 @@ public static class STSCollectionCardApi
         public string type;
         public string imageUrl;
         public string thumbnailUrl;
+        public string textlessImageUrl;
     }
 
     [Serializable]
@@ -206,6 +207,11 @@ public static class STSCollectionCardApi
         return cardsByName.TryGetValue(cardId, out card);
     }
 
+    public static bool IsTextless(string cardId)
+    {
+        return TryGetCard(cardId, out CollectionCardApiEntry card) && !string.IsNullOrWhiteSpace(card.textlessImageUrl);
+    }
+
     public static async Task<CollectionCardApiEntry> GetCardAsync(string cardId)
     {
         if (string.IsNullOrWhiteSpace(cardId))
@@ -339,6 +345,9 @@ public static class STSCollectionCardApi
     {
         if (card == null)
             return null;
+
+        if (!string.IsNullOrWhiteSpace(card.textlessImageUrl))
+            return card.textlessImageUrl;
 
         if (!string.IsNullOrWhiteSpace(card.imageUrl))
             return card.imageUrl;

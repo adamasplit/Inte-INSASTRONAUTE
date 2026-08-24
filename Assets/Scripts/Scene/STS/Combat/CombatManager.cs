@@ -3417,7 +3417,7 @@ public class CombatManager : MonoBehaviour
         STSApiNodeCompleteRequest request;
         if (UsesAuthoritativeCombat)
         {
-            // Authoritative combats are resolved server-side from the run's stored combat state;
+            // Authoritative combats are already resolved server-side from the run's stored combat state;
             // encounterInstanceId/result must stay null so the backend takes that snapshot path instead of
             // validating a client-reported turnCount that the authoritative flow never increments locally.
             request = new STSApiNodeCompleteRequest

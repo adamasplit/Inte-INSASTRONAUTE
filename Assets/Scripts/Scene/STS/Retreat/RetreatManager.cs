@@ -193,26 +193,16 @@ public class RetreatManager : MonoBehaviour
                 RestoreRetreatControls();
                 return;
             }
-        }
-        else
-        {
-            await EnsureTokenRewardAppliedAsync();
-        }
 
-        if (RunManager.Instance != null)
-        {
             RunManager.Instance.GrantRunEndUnlocks(true);
-        }
-
-        if (RunManager.Instance != null && RunManager.Instance.completedFinalAct)
-        {
             STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Boot", "final_act_continue");
-            RunManager.Instance.OnRunEnd(true, false);
-            STSSceneLoader.Instance?.EndLoading();
-            STSSceneLoader.Instance.LoadScene("STS_Boot");
+            ReturnToMenuAfterUnlockPanel();
             return;
         }
 
+        await EnsureTokenRewardAppliedAsync();
+
+        // Declining retreat and continuing the run must not grant unlocks; those are only earned when the run actually ends.
         if (!await ContinueRunAfterRetreatAsync())
         {
             RestoreRetreatControls();
@@ -262,6 +252,24 @@ public class RetreatManager : MonoBehaviour
         }
 
         STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Boot", "retreat_menu");
+        ReturnToMenuAfterUnlockPanel();
+    }
+
+    private void ReturnToMenuAfterUnlockPanel()
+    {
+        List<STSCardData> unlockedCards = RunManager.Instance != null ? RunManager.Instance.lastRunEndUnlockedCards : null;
+        if (unlockedCards != null && unlockedCards.Count > 0 && RunManager.Instance.ui != null)
+        {
+            STSSceneLoader.Instance?.EndLoading();
+            RunManager.Instance.ui.ShowUnlockedCardsPanel(unlockedCards, () =>
+            {
+                RunManager.Instance.OnRunEnd(true, false);
+                STSSceneLoader.Instance?.BeginLoading();
+                STSSceneLoader.Instance.LoadScene("STS_Boot");
+            });
+            return;
+        }
+
         RunManager.Instance.OnRunEnd(true, false);
         STSSceneLoader.Instance?.EndLoading();
         STSSceneLoader.Instance.LoadScene("STS_Boot");

@@ -2,7 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 public class RunManagerUI : MonoBehaviour
 {
     public TextMeshProUGUI floorText;
@@ -26,6 +28,10 @@ public class RunManagerUI : MonoBehaviour
     public Button saveAndReturnToMenuButton;
     public TextMeshProUGUI saveAndReturnToMenuButtonLabel;
     public GameObject unrestrictedRoot;
+
+    [Header("Run End Unlocks")]
+    public RunEndUnlockPanel runEndUnlockPanel;
+    public GameObject hudContentRoot; // Optional: HUD elements to hide while the unlock panel is shown
 
     public Image redOrGreenOverlay;
 
@@ -171,6 +177,26 @@ public class RunManagerUI : MonoBehaviour
         }
 
         SaveAndReturnToMenu();
+    }
+
+    public void ShowUnlockedCardsPanel(List<STSCardData> unlockedCards, Action onClosed)
+    {
+        if (runEndUnlockPanel == null || unlockedCards == null || unlockedCards.Count == 0)
+        {
+            onClosed?.Invoke();
+            return;
+        }
+
+        gameObject.SetActive(true);
+        if (hudContentRoot != null)
+            hudContentRoot.SetActive(false);
+
+        runEndUnlockPanel.Show(unlockedCards, () =>
+        {
+            if (hudContentRoot != null)
+                hudContentRoot.SetActive(true);
+            onClosed?.Invoke();
+        });
     }
 
     void SaveAndReturnToMenu()

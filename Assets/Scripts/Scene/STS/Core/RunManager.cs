@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
@@ -282,24 +283,40 @@ public class RunManager : MonoBehaviour
     }
 
     private bool runEndUnlocksGranted;
+    public List<STSCardData> lastRunEndUnlockedCards = new();
 
-    public void GrantRunEndUnlocks(bool wasRetreat)
+    public List<STSCardData> GrantRunEndUnlocks(bool wasRetreat)
     {
         if (runEndUnlocksGranted || deck == null || deck.Count == 0)
         {
-            return;
+            return new List<STSCardData>();
         }
 
         if (selectedCharacter == SelectableCharacter.Aucun
             || selectedCharacter == SelectableCharacter.Starting
             || selectedCharacter == SelectableCharacter.Impossible)
         {
-            return;
+            return new List<STSCardData>();
         }
 
-        STSPlayerProfileStore.UnlockCardsFromDeck(deck, selectedCharacter, wasRetreat, act);
+        List<STSCardData> unlocked = STSPlayerProfileStore.UnlockCardsFromDeck(deck, selectedCharacter, wasRetreat, act);
         runEndUnlocksGranted = true;
-        Debug.Log($"[STS-RUN] Granted end-of-run unlocks for {selectedCharacter} (retreat={wasRetreat}, act={act}, deckSize={deck.Count}).");
+        lastRunEndUnlockedCards = unlocked;
+        Debug.Log($"[STS-RUN] Granted end-of-run unlocks for {selectedCharacter} (retreat={wasRetreat}, act={act}, deckSize={deck.Count}, unlockedCount={unlocked.Count}).");
+
+        if (unlocked.Count > 0)
+        {
+            List<string> collectionCardNames = unlocked
+                .Select(card => card.GetCollectionCardId() ?? card.cardName)
+                .Where(name => !string.IsNullOrWhiteSpace(name))
+                .ToList();
+            if (collectionCardNames.Count > 0)
+            {
+                _ = STSApiClient.UnlockPvpCardsAsync(runId, collectionCardNames);
+            }
+        }
+
+        return unlocked;
     }
 
     public void OnRunEnd(bool clearSave, bool resetRemoteRun)
