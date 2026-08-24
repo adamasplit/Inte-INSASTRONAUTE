@@ -1398,6 +1398,8 @@ mode injouable.
 
 **Files:**
 - Modify: `Assets/Scripts/Scene/STS/UI/MultiplayerMenuController.cs`
+- Create: `Assets/Scripts/Scene/STS/Combat/Authoritative/PvpMatchNotifications.cs` (Step 4)
+- Test: `Assets/Tests/EditMode/PvpMatchNotificationsTests.cs` (Step 4)
 
 - [x] **Step 1 : entrer dans le combat quand une bataille est trouvée**
 
@@ -1545,14 +1547,39 @@ Ajouter en tête de fichier les `using` manquants : `System.Collections` (pour
 `IEnumerator`) — `System`, `System.Threading.Tasks`, `Newtonsoft.Json.Linq` et
 `UnityEngine` y sont déjà (lignes 1-7).
 
-- [ ] **Step 4 : vérifier la forme réelle des notifications**
+- [x] **Step 4 : la forme réelle des notifications — relevée sur le serveur, 2026-08-24**
 
-Cette étape est une **observation**, pas un changement. Après le premier duel joué en
-tâche 15, relire la ligne `[STS-PVP] notifications payload:` dans la console du
-navigateur, et **remplacer `FindFirstBattleId` par une lecture du champ nommé** si la
-forme s'y prête. Consigner la forme observée dans ce plan, en dessous de cette étape.
+Elle n'a pas eu besoin d'être devinée : `GET /api/sts/pvp/notifications` rend une liste de
 
-- [x] **Step 5 : compiler.** Suite EditMode : **109 tests, 0 échec**.
+```
+{ id: UUID, type: string, title: string, body: string,
+  actorUserId: UUID, read: boolean, createdAt: Instant, payload: { ... } }
+```
+
+et `POST /api/sts/pvp/notifications/{notificationId}/ack` en marque une comme lue. Le
+`type` vaut `CHALLENGE_RECEIVED`, `CHALLENGE_ACCEPTED`, `CHALLENGE_DECLINED`,
+`QUICK_MATCH_FOUND`, `BATTLE_UPDATED` ou `INFO`. À l'appariement, le serveur crée un
+`QUICK_MATCH_FOUND` **pour les deux joueurs**, de charge utile
+`{ "battleId": "<uuid>", "friendly": <bool> }`.
+
+`FindFirstBattleId` est donc remplacée par `PvpMatchNotifications`, en C# pur et testée
+(8 tests). Trois choses que le provisoire n'avait pas :
+
+- **le type est filtré.** `CHALLENGE_RECEIVED`, `CHALLENGE_DECLINED` et `BATTLE_UPDATED`
+  nomment une bataille eux aussi : lire le premier `battleId` venu faisait entrer dans un
+  combat terminé au lieu de laisser chercher.
+- **la notification est acquittée avant d'ouvrir la scène**, et **par bataille** plutôt que
+  par l'identifiant qu'on vient de lire : le joueur qui a reçu son `battleId` directement
+  ne regarde jamais la liste, et sa notification non lue le ramènerait dans ce combat-là à
+  sa recherche suivante.
+- **l'intervalle est de 3 secondes** (`MatchPollIntervalSeconds`) : c'est le retard maximum
+  ajouté entre l'arrivée de l'adversaire et l'ouverture du combat, pour 20 requêtes par
+  minute et par joueur en file, et seulement pendant la recherche.
+
+Une interrogation ratée est journalisée et n'annule pas la recherche ; annuler la
+recherche arrête la veille tout de suite, par la poignée de coroutine.
+
+- [x] **Step 5 : compiler.** Suite EditMode : **109 tests, 0 échec** ; **142 après le Step 4**.
 
 - [x] **Step 6 : commit**
 
