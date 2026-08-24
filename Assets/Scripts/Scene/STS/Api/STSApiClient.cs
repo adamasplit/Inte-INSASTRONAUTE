@@ -252,6 +252,27 @@ public class STSApiClaimRewardResponse
     public List<JToken> pendingRewards = new();
 }
 
+[Serializable]
+public class STSApiDebugCombatRequest
+{
+    public string character;
+    public int maxHp;
+    public List<string> enemyIds = new();
+    public List<string> cardIds = new();
+    public List<string> relicIds = new();
+}
+
+[Serializable]
+public class STSApiDebugCombatResponse
+{
+    public bool accepted;
+    public string runId;
+    public STSApiPlayerState player;
+    public STSApiRunInventoryState runInventory;
+    public STSApiActiveEncounterState activeEncounter;
+    public JToken activeCombat;
+}
+
 public static class STSApiClient
 {
     public sealed class StsPvpParticipantSnapshot
@@ -590,6 +611,50 @@ public static class STSApiClient
             response.events ??= new List<JToken>();
         }
         return response;
+    }
+
+    // Debug only: rewrites the run server-side with a hand-picked encounter, deck and relics.
+    // Requires app.sts.debug.combat.enabled on the backend, otherwise the route does not exist.
+    public static async Task<STSApiDebugCombatResponse> StartDebugCombatAsync(string runId, STSApiDebugCombatRequest request)
+    {
+        runId = NormalizeRunId(runId);
+        if (string.IsNullOrWhiteSpace(runId) || request == null)
+            return null;
+
+        JObject payload = JObject.FromObject(request);
+        payload["runId"] = runId;
+        string json = await ReactApiBridge.RequestWithAliasesAsync(
+            new[]
+            {
+                $"sts.runs.{runId}.debug.combat",
+                "sts.runs.debug.combat"
+            },
+            payload,
+            20000);
+
+        STSApiDebugCombatResponse response = ParseResponse<STSApiDebugCombatResponse>(json);
+        if (response != null)
+        {
+            response.runId = NormalizeRunId(response.runId);
+            response.activeCombat = NormalizeOptionalToken(response.activeCombat);
+        }
+        return response;
+    }
+
+    public static async Task<bool> ClearDebugCombatAsync(string runId)
+    {
+        runId = NormalizeRunId(runId);
+        if (string.IsNullOrWhiteSpace(runId))
+            return false;
+
+        string json = await ReactApiBridge.RequestWithAliasesAsync(
+            new[]
+            {
+                $"sts.runs.{runId}.debug.combat.clear",
+                "sts.runs.debug.combat.clear"
+            },
+            new { runId });
+        return !string.IsNullOrWhiteSpace(json);
     }
 
     public static async Task<JToken> GetPvpProfileAsync()

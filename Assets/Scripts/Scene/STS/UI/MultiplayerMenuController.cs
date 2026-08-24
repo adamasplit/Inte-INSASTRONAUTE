@@ -390,9 +390,29 @@ public class MultiplayerMenuController : MonoBehaviour
 
         isEnteringPvpBattle = true;
 
-        await CacheBattleParticipantsAsync(battleId);
-        await AcknowledgeMatchNotificationsAsync(battleId);
-        await CancelQuickMatchAsync(false);
+        try
+        {
+            await CacheBattleParticipantsAsync(battleId);
+            await AcknowledgeMatchNotificationsAsync(battleId);
+            await CancelQuickMatchAsync(false);
+
+            if (RunManager.Instance == null)
+            {
+                isEnteringPvpBattle = false;
+                ShowNotification("Impossible de rejoindre le combat : gestionnaire de partie absent.");
+                return;
+            }
+
+            RunManager.Instance.BeginPvpBattle(battleId);
+            Debug.Log($"[STS-PVP] Entering battle {battleId}");
+            STSSceneLoader.Instance?.LoadScene("STS_Combat");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[STS-PVP] Failed to enter battle {battleId}: {ex.Message}");
+            ShowNotification("Erreur lors de l'ouverture du duel PVP.");
+            isEnteringPvpBattle = false;
+        }
 
         if (RunManager.Instance == null)
         {
