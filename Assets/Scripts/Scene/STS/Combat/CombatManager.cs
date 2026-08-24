@@ -2608,6 +2608,26 @@ public class CombatManager : MonoBehaviour
         {
             yield return null;
         }
+
+        // A debug combat belongs to no map node, so there is nothing to report and no reward to
+        // hand out: it just goes back to the menu that launched it.
+        if (RunManager.Instance != null && RunManager.Instance.debugCombat)
+        {
+            Debug.Log($"[STS-DEBUG] Debug combat ended with outcome={outcome}.");
+            RunManager.Instance.inCombat = false;
+            RunManager.Instance.debugCombat = false;
+            string returnScene = RunManager.Instance.debugCombatReturnScene;
+            RunManager.Instance.debugCombatReturnScene = null;
+            _ = STSApiClient.ClearDebugCombatAsync(RunManager.Instance.runId);
+            RunManager.Instance.activeCombat = null;
+            RunManager.Instance.activeEncounter = null;
+            if (!string.IsNullOrWhiteSpace(returnScene))
+            {
+                STSSceneLoader.Instance?.LoadScene(returnScene);
+            }
+            yield break;
+        }
+
         if (outcome == TeamOutcome.Victory)
         {
             STSSceneLoader.Instance?.BeginLoading();

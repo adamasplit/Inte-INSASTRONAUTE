@@ -43,6 +43,10 @@ public class RunManager : MonoBehaviour
     public bool completedFinalAct;
     public bool unrestrictedMode;
     public string unrestrictedModeReason;
+    // Set by STSDebugCombatPanel: this combat belongs to no map node, so it must not be reported
+    // as a node completion and it returns to the debug scene instead of the reward screen.
+    [HideInInspector] public bool debugCombat;
+    [HideInInspector] public string debugCombatReturnScene;
     public string pvpLocalUserId;
     public string pvpBattleId;
     public List<STSApiClient.StsPvpParticipantSnapshot> pvpParticipants = new();
@@ -323,8 +327,9 @@ public class RunManager : MonoBehaviour
         enteredNodeId = null;
         completedFinalAct = false;
         backendRewardClaimUnavailable = false;
-        pvpLocalUserId = null;
-        ClearPvpBattleParticipants();
+        debugCombat = false;
+        debugCombatReturnScene = null;
+        pvpLocalUserId = null;        ClearPvpBattleParticipants();
         SetUnrestrictedMode(false, null);
         if (clearSave)
         {
