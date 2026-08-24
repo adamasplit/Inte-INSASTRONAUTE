@@ -75,4 +75,14 @@ public static class RelicDatabase
     {
         return relics.FindAll(r => r.rarity == rarity);
     }
+
+    public static List<Relic> All
+    {
+        get
+        {
+            if (relics == null)
+                Load();
+            return relics;
+        }
+    }
 }
