@@ -714,6 +714,24 @@ public static class STSApiClient
         return ParseEnvelope(json);
     }
 
+    public static async Task<JToken> CancelQuickMatchPvpAsync()
+    {
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.matchmaking.cancel");
+        return ParseEnvelope(json);
+    }
+
+    public static async Task<JToken> HeartbeatQuickMatchPvpAsync()
+    {
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.matchmaking.heartbeat");
+        return ParseEnvelope(json);
+    }
+
+    public static async Task<JToken> ListFriendsAsync()
+    {
+        string json = await ReactApiBridge.RequestAsync("friends.list");
+        return ParseEnvelope(json);
+    }
+
     public static async Task<JToken> SendPvpChallengeAsync(JToken request = null)
     {
         string json = await ReactApiBridge.RequestAsync("sts.pvp.challenge.send", request ?? new JObject());
