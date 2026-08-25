@@ -76,7 +76,10 @@ public class STSCardData : ScriptableObject
     }
     public static STSCardData FromDTO(STSCardDataDTO dto)
     {
-        STSCardData card = new();
+        // CreateInstance et pas `new` : un ScriptableObject construit avec `new` fait
+        // journaliser une erreur par carte à Unity (329 cartes = 329 erreurs au
+        // démarrage) et rend un objet dont la moitié native n'existe pas.
+        STSCardData card = CreateInstance<STSCardData>();
 
         card.id = dto.id;
         card.cardName = dto.cardName;
