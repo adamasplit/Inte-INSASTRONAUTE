@@ -618,6 +618,55 @@ public class RunManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Applique ce que le serveur vient de changer dans l'inventaire.
+    ///
+    /// <para>Sans ça, le patch était rangé et jamais ouvert : le joueur ne voyait ni
+    /// l'or ni les cartes gagnés avant un resynchro complet. L'état serveur était bon,
+    /// c'est l'affichage qui restait en arrière — et rien ne le signalait.</para>
+    /// </summary>
+    public void ApplyRunInventoryPatch(JToken rawPatch)
+    {
+        STSInventoryPatch patch = STSInventoryPatch.Read(rawPatch);
+
+        gold += patch.GoldDelta;
+
+        if (deck != null && patch.RemovedCardInstanceIds.Count > 0)
+        {
+            var removed = new HashSet<string>(patch.RemovedCardInstanceIds);
+            deck.RemoveAll(card => card != null && removed.Contains(card.instanceId));
+        }
+
+        foreach (JToken cardToken in patch.AddedCards)
+        {
+            CardInstance card = STSApiClient.ConvertCard(cardToken.ToObject<STSApiCardState>());
+            if (card != null)
+                deck?.Add(card);
+        }
+
+        // Une carte enchantée existe déjà : on remplace la sienne plutôt que d'en
+        // ajouter une seconde portant le même instanceId.
+        foreach (JToken cardToken in patch.EnchantedCards)
+        {
+            CardInstance updated = STSApiClient.ConvertCard(cardToken.ToObject<STSApiCardState>());
+            if (updated == null || deck == null)
+                continue;
+
+            int index = deck.FindIndex(card => card != null && card.instanceId == updated.instanceId);
+            if (index >= 0)
+                deck[index] = updated;
+            else
+                deck.Add(updated);
+        }
+
+        foreach (JToken relicToken in patch.AddedRelics)
+        {
+            Relic relic = STSApiClient.CreateRelicFromId(relicToken["relicId"]?.ToString());
+            if (relic != null)
+                relics.Add(relic);
+        }
+    }
+
+    /// <summary>
     /// Le serveur vient de résoudre un événement : ses PV, son inventaire, ses
     /// récompenses et sa carte font foi. Rien n'est recalculé localement.
     /// </summary>
@@ -639,6 +688,7 @@ public class RunManager : MonoBehaviour
             serverRunInventoryPatch = response.runInventoryPatch;
             serverAccountInventoryPatch = response.accountInventoryPatch;
             serverPendingRewards = response.pendingRewards ?? new List<JToken>();
+            ApplyRunInventoryPatch(response.runInventoryPatch);
             activeEvent = STSApiClient.NormalizeOptionalToken(response.activeEvent);
             return;
         }
@@ -677,6 +727,7 @@ public class RunManager : MonoBehaviour
         serverRunInventoryPatch = response.runInventoryPatch;
         serverAccountInventoryPatch = response.accountInventoryPatch;
         serverPendingRewards = response.pendingRewards ?? new List<JToken>();
+        ApplyRunInventoryPatch(response.runInventoryPatch);
         serverMapPatch = response.mapPatch;
         activeEncounter = null;
         activeCombat = null;
