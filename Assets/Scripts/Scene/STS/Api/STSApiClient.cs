@@ -164,6 +164,27 @@ public class STSApiNodeCompleteRequest
 }
 
 [Serializable]
+public class STSApiChooseEventOptionRequest
+{
+    public string optionId;
+    public List<string> selectedCardInstanceIds = new();
+}
+
+public class STSApiChooseEventOptionResponse
+{
+    public bool accepted;
+    public string eventInstanceId;
+    public bool eventCompleted;
+    public STSApiPlayerState player;
+    public JToken runInventoryPatch;
+    public JToken accountInventoryPatch;
+    public List<JToken> pendingRewards = new();
+    public STSApiMapPatchState mapPatch;
+    public string completionMessage;
+    /// L'événement à jour quand il continue ; null quand il vient de se clore.
+    public JToken activeEvent;
+}
+
 public class STSApiNodeCompleteResponse
 {
     public bool accepted;
@@ -559,6 +580,23 @@ public static class STSApiClient
             response.runId = NormalizeRunId(response.runId);
         }
         return response;
+    }
+
+    /// <summary>
+    /// Le serveur applique l'option choisie et rend l'état qui en découle. Le client
+    /// n'a plus qu'à l'afficher : c'est lui qui fait autorité sur l'or, les cartes et
+    /// les récompenses de l'événement.
+    /// </summary>
+    public static async Task<STSApiChooseEventOptionResponse> ChooseEventOptionAsync(
+        string runId, string eventInstanceId, STSApiChooseEventOptionRequest request)
+    {
+        runId = NormalizeRunId(runId);
+        string json = await ReactApiBridge.RequestAsync(
+            $"sts.runs.{runId}.events.{eventInstanceId}.choose",
+            request
+        );
+
+        return ParseResponse<STSApiChooseEventOptionResponse>(json);
     }
 
     public static async Task<STSApiCombatStateResponse> GetCombatStateAsync(string runId)

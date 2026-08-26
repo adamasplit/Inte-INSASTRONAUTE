@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using TMPro;
 using System;
@@ -95,6 +96,119 @@ public class EventManager : MonoBehaviour
         }
 
         ShowEvent(loadedEvents[0]);
+    }
+
+    /// <summary>
+    /// Point d'entrée depuis l'action d'option, qui est synchrone et ne peut pas
+    /// attendre. L'échec est traité ici plutôt que remonté : rouvrir le panneau laisse
+    /// le joueur retenter, là où avancer afficherait un gain que le serveur n'a pas
+    /// accordé.
+    /// </summary>
+    /// <summary>
+    /// Réaffiche les options que le serveur vient de poser dans <c>activeEvent</c>.
+    /// C'est le cas d'une option qui en ouvre d'autres : le nœud reste en cours.
+    /// </summary>
+    private void ShowServerEventOptions()
+    {
+        RunManager run = RunManager.Instance;
+        if (run == null || run.activeEvent == null)
+            return;
+
+        var options = new List<PanelOption>();
+        foreach (var optionToken in run.activeEvent["options"] ?? new JArray())
+        {
+            string optionId = optionToken["optionId"]?.ToString();
+            if (string.IsNullOrWhiteSpace(optionId))
+                continue;
+
+            var option = new PanelOption
+            {
+                id = optionId,
+                text = optionToken["text"]?.ToString() ?? optionId,
+                completionMessage = optionToken["completionMessage"]?.ToString(),
+                closePanel = false,
+                entries = new List<PanelOptionEntry>()
+            };
+            // L'action ne fait que renvoyer le choix : le serveur porte les effets.
+            option.action = () => SubmitEventChoice(option.id);
+            options.Add(option);
+        }
+
+        if (options.Count > 0)
+            ReplaceEventOptions(options);
+    }
+
+    public void SubmitEventChoice(string optionId)
+    {
+        _ = SubmitEventChoiceAndRecoverAsync(optionId);
+    }
+
+    private async Task SubmitEventChoiceAndRecoverAsync(string optionId)
+    {
+        bool accepted = await SubmitEventChoiceAsync(optionId, null);
+        if (accepted)
+            return;
+
+        Debug.LogWarning($"[STS-EVENT] Choix '{optionId}' non appliqué : panneau rouvert.");
+        if (panel != null)
+            panel.gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// Envoie l'option retenue au serveur, qui applique les effets et rend l'état.
+    /// Rend <c>false</c> si l'appel échoue ou si le serveur refuse.
+    /// </summary>
+    public async Task<bool> SubmitEventChoiceAsync(string optionId, List<string> selectedCardInstanceIds)
+    {
+        RunManager run = RunManager.Instance;
+        if (run == null || !run.IsServerAuthoritative || run.activeEvent == null)
+            return true; // bac à sable : le moteur local a déjà appliqué
+
+        string eventInstanceId = run.activeEvent["eventInstanceId"]?.ToString();
+        if (string.IsNullOrWhiteSpace(eventInstanceId))
+        {
+            Debug.LogWarning("[STS-EVENT] Aucun eventInstanceId : choix non envoyé.");
+            return false;
+        }
+
+        var request = new STSApiChooseEventOptionRequest
+        {
+            optionId = optionId,
+            selectedCardInstanceIds = selectedCardInstanceIds ?? new List<string>()
+        };
+
+        try
+        {
+            Debug.Log($"[STS-EVENT] Envoi du choix optionId={optionId} eventInstanceId={eventInstanceId}");
+            STSApiChooseEventOptionResponse response =
+                await STSApiClient.ChooseEventOptionAsync(run.runId, eventInstanceId, request);
+
+            if (response == null || !response.accepted)
+            {
+                Debug.LogWarning("[STS-EVENT] Choix refusé par le serveur.");
+                return false;
+            }
+
+            run.ApplyEventChoiceResponse(response);
+
+            // L'option en a ouvert d'autres : le serveur les a posées dans activeEvent,
+            // on les réaffiche au lieu de refermer le nœud.
+            if (!response.eventCompleted)
+            {
+                Debug.Log($"[STS-EVENT] L'événement continue : réaffichage des options.");
+                ShowServerEventOptions();
+                return true;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.completionMessage) && description != null)
+                description.text = response.completionMessage;
+            return true;
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"[STS-EVENT] Envoi du choix échoué : {ex.Message}");
+            return false;
+        }
     }
 
     public void HideEventPanel()

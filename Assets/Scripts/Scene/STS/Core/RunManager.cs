@@ -10,6 +10,10 @@ public class RunManager : MonoBehaviour
     public static RunManager Instance;
 
     public string runId;
+
+    /// Le serveur fait autorité dès qu'une run lui appartient.
+
+    public bool IsServerAuthoritative => STSServerAuthority.Decides(runId);
     public string apiStatus;
     public string dataVersion;
     public Player player;
@@ -611,6 +615,47 @@ public class RunManager : MonoBehaviour
                 entered.visited = true;
             }
         }
+    }
+
+    /// <summary>
+    /// Le serveur vient de résoudre un événement : ses PV, son inventaire, ses
+    /// récompenses et sa carte font foi. Rien n'est recalculé localement.
+    /// </summary>
+    public void ApplyEventChoiceResponse(STSApiChooseEventOptionResponse response)
+    {
+        if (response == null || !response.accepted)
+            return;
+
+        // Une option peut en ouvrir d'autres : l'événement continue, le nœud n'est pas
+        // terminé. Déléguer à la fin de nœud effacerait activeEvent et enteredNodeId,
+        // et le joueur perdrait le choix qu'on vient de lui présenter.
+        if (!response.eventCompleted)
+        {
+            if (response.player != null && player != null)
+            {
+                player.maxHP = response.player.maxHp;
+                player.currentHP = response.player.currentHp;
+            }
+            serverRunInventoryPatch = response.runInventoryPatch;
+            serverAccountInventoryPatch = response.accountInventoryPatch;
+            serverPendingRewards = response.pendingRewards ?? new List<JToken>();
+            activeEvent = STSApiClient.NormalizeOptionalToken(response.activeEvent);
+            return;
+        }
+
+        // La réponse porte alors exactement la même forme d'état qu'une fin de nœud —
+        // PV, patchs d'inventaire, récompenses, patch de carte. La déléguer évite de
+        // dupliquer quarante lignes qui finiraient par diverger.
+        ApplyNodeCompleteResponse(new STSApiNodeCompleteResponse
+        {
+            accepted = true,
+            runId = runId,
+            player = response.player,
+            runInventoryPatch = response.runInventoryPatch,
+            accountInventoryPatch = response.accountInventoryPatch,
+            pendingRewards = response.pendingRewards,
+            mapPatch = response.mapPatch
+        });
     }
 
     public void ApplyNodeCompleteResponse(STSApiNodeCompleteResponse response)

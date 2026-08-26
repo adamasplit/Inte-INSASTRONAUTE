@@ -12,6 +12,15 @@ public static class EventActionFactory
                 manager.HideEventPanel();
             }
 
+            // Sous autorité serveur, c'est lui qui applique les effets, et sa réponse
+            // porte le message de fin. Exécuter le moteur local en plus les compterait
+            // deux fois, puis ApplyRemoteRunState les écraserait au premier resynchro.
+            if (RunManager.Instance != null && RunManager.Instance.IsServerAuthoritative)
+            {
+                manager.SubmitEventChoice(option.id);
+                return;
+            }
+
             ExecuteEntry(0, option, manager);
             manager.description.text = option.completionMessage; // Display the completion message if provided
         };
