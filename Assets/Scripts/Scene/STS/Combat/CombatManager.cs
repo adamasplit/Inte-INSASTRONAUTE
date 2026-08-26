@@ -710,8 +710,21 @@ public class CombatManager : MonoBehaviour
         // unaffordable card would otherwise still get submitted only to be rejected, wasting a
         // round trip for feedback we already know the answer to. With several allies the energy
         // pool belongs to the ally whose turn it is, not necessarily the first one.
+        // Le coût se calcule dans un contexte, comme partout ailleurs : sans lui, une carte
+        // dont une relique ou un statut baisse le prix serait comparée à l'énergie sur son
+        // coût de base, et refusée ici alors que le serveur l'accepterait.
         Player actingPlayer = GetActingPlayer();
-        int cardCost = card != null ? card.Cost() : 0;
+        EffectContext costContext = new EffectContext
+        {
+            source = actingPlayer,
+            target = null,
+            combat = this,
+            state = state,
+            card = card,
+            timeline = turnSystem != null ? turnSystem.timeline : null,
+            targets = targets
+        };
+        int cardCost = card != null ? card.Cost(costContext) : 0;
         if (actingPlayer != null && cardCost >= 0 && actingPlayer.resources.energy < cardCost)
         {
             authoritativeCommandInFlight = false;

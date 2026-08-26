@@ -320,6 +320,8 @@ public class UIManager : MonoBehaviour
             if (button != null)
                 button.interactable = duel;
         }
+
+        if (surrenderButtonLabel != null)
             surrenderButtonLabel.text = SurrenderConfirmation.IdleLabel;
 
         HideSurrenderPrompt();

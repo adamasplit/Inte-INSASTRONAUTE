@@ -31,10 +31,17 @@ public class MultiplayerMenuController : MonoBehaviour
     [SerializeField] private Button notificationOkButton;
 
     private readonly List<SelectableCharacter> availableCharacters = new();
+    private readonly List<PvpFriend> acceptedFriends = new();
+    private readonly List<GameObject> friendResultRows = new();
     private bool suppressDropdownCallback;
     private bool isQuickMatchQueued;
+    private bool quickMatchFriendly;
     private bool isEnteringPvpBattle;
+    private int quickMatchGeneration;
     private Coroutine matchWatchRoutine;
+    private PvpFriend? selectedChallengeFriend;
+    private RectTransform friendResultsRoot;
+    private TextMeshProUGUI quickMatchButtonText;
 
     /// La cadence de la veille sur les notifications d'appariement.
     ///
@@ -45,6 +52,15 @@ public class MultiplayerMenuController : MonoBehaviour
     /// une dépense négligeable sur un téléphone, d'autant qu'on n'interroge que pendant
     /// la recherche.
     private const float MatchPollIntervalSeconds = 3f;
+
+    private void OnDestroy()
+    {
+        if (isQuickMatchQueued && !isEnteringPvpBattle)
+        {
+            isQuickMatchQueued = false;
+            _ = STSApiClient.CancelQuickMatchPvpAsync();
+        }
+    }
 
     private void Start()
     {
@@ -62,6 +78,7 @@ public class MultiplayerMenuController : MonoBehaviour
         }
 
         await LoadRemotePvpProfileAsync();
+        await LoadFriendsAsync();
         ShowConfigurationPanel();
 
         // « Revanche » : l'écran de fin de duel nous a renvoyés ici en demandant une
@@ -114,6 +131,7 @@ public class MultiplayerMenuController : MonoBehaviour
         {
             quickMatchButton.onClick.RemoveAllListeners();
             quickMatchButton.onClick.AddListener(() => _ = QuickMatchAsync());
+            quickMatchButtonText = quickMatchButton.GetComponentInChildren<TextMeshProUGUI>();
         }
 
         if (openDeckButton != null)
@@ -138,6 +156,17 @@ public class MultiplayerMenuController : MonoBehaviour
         {
             notificationOkButton.onClick.RemoveAllListeners();
             notificationOkButton.onClick.AddListener(HideNotification);
+        }
+
+        if (challengeTargetInput != null)
+        {
+            challengeTargetInput.onValueChanged.RemoveAllListeners();
+            challengeTargetInput.onValueChanged.AddListener(OnFriendSearchChanged);
+            if (challengeTargetInput.placeholder is TextMeshProUGUI placeholder)
+            {
+                placeholder.text = "Rechercher un ami par nom...";
+            }
+            BuildFriendResultsRoot();
         }
     }
 
@@ -315,10 +344,9 @@ public class MultiplayerMenuController : MonoBehaviour
         }
 
         isQuickMatchQueued = true;
-        if (quickMatchButton != null)
-        {
-            quickMatchButton.interactable = false;
-        }
+        quickMatchFriendly = friendlyMatchToggle != null && friendlyMatchToggle.isOn;
+        int generation = ++quickMatchGeneration;
+        UpdateQuickMatchButton();
 
         STSSceneLoader.Instance?.BeginLoading("Recherche rapide PVP...", true, () => _ = CancelQuickMatchAsync());
         ShowNotification("Recherche rapide PVP en cours...");
@@ -327,9 +355,15 @@ public class MultiplayerMenuController : MonoBehaviour
         {
             JToken response = await STSApiClient.QuickMatchPvpAsync(new JObject
             {
-                ["friendly"] = friendlyMatchToggle != null && friendlyMatchToggle.isOn,
+                ["friendly"] = quickMatchFriendly,
                 ["skipMatchmaking"] = false
             });
+
+            if (!isQuickMatchQueued || generation != quickMatchGeneration)
+            {
+                await CancelQuickMatchAsync(false, false);
+                return;
+            }
 
             if (response == null)
             {
@@ -364,7 +398,7 @@ public class MultiplayerMenuController : MonoBehaviour
         {
             Debug.LogWarning($"Failed to start PVP matchmaking: {ex.Message}");
             ShowNotification("Erreur lors du matchmaking PVP.");
-            await CancelQuickMatchAsync(false);
+            await CancelQuickMatchAsync(false, false);
         }
     }
 
@@ -394,7 +428,7 @@ public class MultiplayerMenuController : MonoBehaviour
         {
             await CacheBattleParticipantsAsync(battleId);
             await AcknowledgeMatchNotificationsAsync(battleId);
-            await CancelQuickMatchAsync(false);
+            await CancelQuickMatchAsync(false, false);
 
             if (RunManager.Instance == null)
             {
@@ -413,17 +447,6 @@ public class MultiplayerMenuController : MonoBehaviour
             ShowNotification("Erreur lors de l'ouverture du duel PVP.");
             isEnteringPvpBattle = false;
         }
-
-        if (RunManager.Instance == null)
-        {
-            isEnteringPvpBattle = false;
-            ShowNotification("Impossible de rejoindre le combat : gestionnaire de partie absent.");
-            return;
-        }
-
-        RunManager.Instance.BeginPvpBattle(battleId);
-        Debug.Log($"[STS-PVP] Entering battle {battleId}");
-        STSSceneLoader.Instance?.LoadScene("STS_Combat");
     }
 
     /// <summary>
@@ -501,6 +524,47 @@ public class MultiplayerMenuController : MonoBehaviour
                 yield break;
             }
 
+            // Réinscrire la recherche sert de heartbeat au serveur et peut également
+            // conclure directement le match. Les entrées qui ne battent plus sont
+            // expirées côté backend, donc un onglet fermé ne devient pas un adversaire fantôme.
+            Task<JToken> heartbeatTask = STSApiClient.HeartbeatQuickMatchPvpAsync();
+            while (!heartbeatTask.IsCompleted)
+            {
+                yield return null;
+            }
+
+            if (!isQuickMatchQueued)
+            {
+                yield break;
+            }
+
+            if (heartbeatTask.Status != TaskStatus.RanToCompletion || heartbeatTask.Result == null)
+            {
+                Debug.LogWarning("[STS-PVP] Matchmaking heartbeat failed; the next poll will retry.");
+            }
+            else
+            {
+                string heartbeatBattleId = heartbeatTask.Result.Value<string>("battleId");
+                if (!string.IsNullOrWhiteSpace(heartbeatBattleId))
+                {
+                    matchWatchRoutine = null;
+                    _ = EnterPvpBattleAsync(heartbeatBattleId);
+                    yield break;
+                }
+
+                if (heartbeatTask.Result.Value<bool?>("queued") != true)
+                {
+                    isQuickMatchQueued = false;
+                    quickMatchGeneration++;
+                    matchWatchRoutine = null;
+                    UpdateQuickMatchButton();
+                    STSSceneLoader.Instance?.EndLoading();
+                    STSSceneLoader.Instance?.SceneReady();
+                    ShowNotification("La recherche a expiré. Relancez-la pour chercher un joueur.");
+                    yield break;
+                }
+            }
+
             Task<JToken> notificationsTask = STSApiClient.ListPvpNotificationsAsync();
             while (!notificationsTask.IsCompleted)
             {
@@ -537,38 +601,67 @@ public class MultiplayerMenuController : MonoBehaviour
         }
     }
 
-    private async Task CancelQuickMatchAsync(bool showNotification = true)
+    private async Task<bool> CancelQuickMatchAsync(bool showNotification = true, bool resumeOnFailure = true)
     {
         isQuickMatchQueued = false;
+        quickMatchGeneration++;
         StopWatchingForMatchedBattle();
-        if (quickMatchButton != null)
+        UpdateQuickMatchButton();
+
+        bool cancelled = false;
+        string matchedBattleId = null;
+        try
         {
-            quickMatchButton.interactable = true;
+            JToken state = await STSApiClient.CancelQuickMatchPvpAsync();
+            cancelled = state?.Value<bool?>("cancelled") == true;
+            matchedBattleId = state?.Value<string>("battleId");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[STS-PVP] Failed to leave matchmaking queue: {ex.Message}");
         }
 
         STSSceneLoader.Instance?.EndLoading();
         STSSceneLoader.Instance?.SceneReady();
 
-        if (showNotification)
+        if (!string.IsNullOrWhiteSpace(matchedBattleId))
+        {
+            await EnterPvpBattleAsync(matchedBattleId);
+            return false;
+        }
+
+        if (!cancelled && resumeOnFailure && !isEnteringPvpBattle)
+        {
+            isQuickMatchQueued = true;
+            UpdateQuickMatchButton();
+            StartWatchingForMatchedBattle();
+            ShowNotification("Impossible d'annuler la recherche. Nouvel essai en cours...");
+            return false;
+        }
+
+        if (showNotification && cancelled)
         {
             ShowNotification("Recherche rapide PVP annulée.");
         }
+
+        return cancelled;
     }
 
     private async Task SendChallengeAsync()
     {
-        string targetId = challengeTargetInput != null ? challengeTargetInput.text?.Trim() : null;
-        if (string.IsNullOrWhiteSpace(targetId))
+        if (!selectedChallengeFriend.HasValue)
         {
-            ShowNotification("Entrez un ID joueur avant d'envoyer un défi.");
+            ShowNotification("Sélectionnez un ami dans les résultats avant d'envoyer un défi.");
             return;
         }
+
+        PvpFriend target = selectedChallengeFriend.Value;
 
         try
         {
             JToken response = await STSApiClient.SendPvpChallengeAsync(new JObject
             {
-                ["targetUserId"] = targetId,
+                ["targetUserId"] = target.UserId,
                 ["friendly"] = friendlyMatchToggle != null && friendlyMatchToggle.isOn
             });
 
@@ -578,13 +671,121 @@ public class MultiplayerMenuController : MonoBehaviour
                 return;
             }
 
-            ShowNotification("Défi PVP envoyé.");
+            ShowNotification($"Défi PVP envoyé à {target.DisplayName}.");
         }
         catch (Exception ex)
         {
             Debug.LogWarning($"Failed to send PVP challenge: {ex.Message}");
             ShowNotification("Erreur lors de l'envoi du défi PVP.");
         }
+    }
+
+    private async Task LoadFriendsAsync()
+    {
+        acceptedFriends.Clear();
+        try
+        {
+            JToken response = await STSApiClient.ListFriendsAsync();
+            if (response is not JArray friends)
+                return;
+
+            foreach (JToken entry in friends)
+            {
+                JToken user = entry?["user"];
+                PvpFriend friend = new(
+                    user?.Value<string>("id"),
+                    user?.Value<string>("displayName"));
+                if (friend.IsValid)
+                    acceptedFriends.Add(friend);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[STS-PVP] Failed to load accepted friends: {ex.Message}");
+        }
+    }
+
+    private void OnFriendSearchChanged(string query)
+    {
+        selectedChallengeFriend = null;
+        RenderFriendResults(PvpFriendSearch.Filter(acceptedFriends, query, 5));
+    }
+
+    private void SelectChallengeFriend(PvpFriend friend)
+    {
+        selectedChallengeFriend = friend;
+        challengeTargetInput?.SetTextWithoutNotify(friend.DisplayName);
+        if (friendResultsRoot != null)
+            friendResultsRoot.gameObject.SetActive(false);
+    }
+
+    private void BuildFriendResultsRoot()
+    {
+        if (challengeTargetInput == null || friendResultsRoot != null)
+            return;
+
+        GameObject root = new("FriendSearchResults", typeof(RectTransform), typeof(VerticalLayoutGroup));
+        friendResultsRoot = root.GetComponent<RectTransform>();
+        friendResultsRoot.SetParent(challengeTargetInput.transform.parent, false);
+        friendResultsRoot.anchorMin = new Vector2(0.5f, 0.5f);
+        friendResultsRoot.anchorMax = new Vector2(0.5f, 0.5f);
+        friendResultsRoot.anchoredPosition = new Vector2(0f, -115f);
+        friendResultsRoot.sizeDelta = new Vector2(900f, 280f);
+
+        VerticalLayoutGroup layout = root.GetComponent<VerticalLayoutGroup>();
+        layout.spacing = 6f;
+        layout.childControlHeight = true;
+        layout.childControlWidth = true;
+        layout.childForceExpandHeight = false;
+        root.SetActive(false);
+    }
+
+    private void RenderFriendResults(IReadOnlyList<PvpFriend> matches)
+    {
+        if (friendResultsRoot == null)
+            return;
+
+        foreach (GameObject row in friendResultRows)
+            Destroy(row);
+        friendResultRows.Clear();
+
+        foreach (PvpFriend friend in matches)
+        {
+            GameObject row = new($"Friend_{friend.UserId}", typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement));
+            row.transform.SetParent(friendResultsRoot, false);
+            row.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.96f);
+            row.GetComponent<LayoutElement>().preferredHeight = 48f;
+
+            GameObject labelObject = new("Name", typeof(RectTransform), typeof(TextMeshProUGUI));
+            labelObject.transform.SetParent(row.transform, false);
+            RectTransform labelRect = labelObject.GetComponent<RectTransform>();
+            labelRect.anchorMin = Vector2.zero;
+            labelRect.anchorMax = Vector2.one;
+            labelRect.offsetMin = new Vector2(18f, 0f);
+            labelRect.offsetMax = new Vector2(-18f, 0f);
+
+            TextMeshProUGUI label = labelObject.GetComponent<TextMeshProUGUI>();
+            label.text = friend.DisplayName;
+            label.font = challengeTargetInput.textComponent.font;
+            label.fontSize = 28f;
+            label.color = new Color(0.12f, 0.12f, 0.12f, 1f);
+            label.alignment = TextAlignmentOptions.MidlineLeft;
+            label.raycastTarget = false;
+
+            PvpFriend captured = friend;
+            row.GetComponent<Button>().onClick.AddListener(() => SelectChallengeFriend(captured));
+            friendResultRows.Add(row);
+        }
+
+        friendResultsRoot.gameObject.SetActive(matches.Count > 0);
+    }
+
+    private void UpdateQuickMatchButton()
+    {
+        if (quickMatchButton != null)
+            quickMatchButton.interactable = true;
+        if (quickMatchButtonText != null)
+            quickMatchButtonText.text = isQuickMatchQueued ? "Annuler la recherche" : "Partie rapide";
     }
 
     public SelectableCharacter GetSelectedCharacter()
