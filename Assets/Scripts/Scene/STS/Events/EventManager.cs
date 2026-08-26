@@ -140,12 +140,67 @@ public class EventManager : MonoBehaviour
 
     public void SubmitEventChoice(string optionId)
     {
-        _ = SubmitEventChoiceAndRecoverAsync(optionId);
+        // Certaines entrées réclament que le joueur désigne des cartes — le serveur
+        // refuse le choix sans la sélection attendue. C'est la seule chose que le
+        // client décide encore ici, et c'est de l'interface : les effets restent au
+        // serveur, on ne fait que lui dire sur quoi les appliquer.
+        int required = RequiredCardSelection(optionId);
+        if (required <= 0)
+        {
+            _ = SubmitEventChoiceAndRecoverAsync(optionId, null);
+            return;
+        }
+
+        if (DeckSelectionPanel.Instance == null)
+        {
+            Debug.LogWarning($"[STS-EVENT] Option '{optionId}' demande {required} carte(s) mais aucun panneau de sélection n'est disponible.");
+            return;
+        }
+
+        DeckSelectionPanel.Instance.Open(
+            "Choisis les cartes",
+            required,
+            cards =>
+            {
+                var ids = new List<string>();
+                foreach (CardInstance card in cards ?? new List<CardInstance>())
+                {
+                    if (card != null && !string.IsNullOrWhiteSpace(card.instanceId))
+                        ids.Add(card.instanceId);
+                }
+                _ = SubmitEventChoiceAndRecoverAsync(optionId, ids);
+            });
     }
 
-    private async Task SubmitEventChoiceAndRecoverAsync(string optionId)
+    /// <summary>
+    /// Combien de cartes l'option demande de désigner, d'après l'événement que le
+    /// serveur a posé. Zéro quand elle n'en demande aucune.
+    /// </summary>
+    private int RequiredCardSelection(string optionId)
     {
-        bool accepted = await SubmitEventChoiceAsync(optionId, null);
+        RunManager run = RunManager.Instance;
+        if (run == null || run.activeEvent == null)
+            return 0;
+
+        foreach (var option in run.activeEvent["options"] ?? new JArray())
+        {
+            if (option["optionId"]?.ToString() != optionId)
+                continue;
+
+            foreach (var entry in option["entries"] ?? new JArray())
+            {
+                string type = entry["type"]?.ToString();
+                if (type == "RemoveCard" || type == "UpgradeCard" || type == "TransformCard")
+                    return entry["value"]?.Value<int>() ?? 0;
+            }
+        }
+
+        return 0;
+    }
+
+    private async Task SubmitEventChoiceAndRecoverAsync(string optionId, List<string> selectedCardInstanceIds)
+    {
+        bool accepted = await SubmitEventChoiceAsync(optionId, selectedCardInstanceIds);
         if (accepted)
             return;
 
