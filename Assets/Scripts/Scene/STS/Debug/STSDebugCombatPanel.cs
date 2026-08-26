@@ -24,7 +24,9 @@ public class STSDebugCombatPanel : MonoBehaviour
         public Button removeButton;
         public Button clearButton;
         public TMP_Text entriesText;
-        public TMP_Text suggestionsText;
+        [Tooltip("Parent under which one clickable button per suggestion is created.")]
+        public Transform suggestionsContainer;
+        public Button suggestionButtonPrefab;
     }
 
     [Header("Enemies (required)")]
@@ -80,7 +82,7 @@ public class STSDebugCombatPanel : MonoBehaviour
         _ = LoadCatalogsAsync();
     }
 
-    void BindSection(ListSection section, List<string> entries, Func<string, string> resolve, Func<string, string> suggest)
+    void BindSection(ListSection section, List<string> entries, Func<string, string> resolve, Func<string, List<string>> suggest)
     {
         if (section == null)
             return;
@@ -100,8 +102,8 @@ public class STSDebugCombatPanel : MonoBehaviour
             // Enter in the field is the same as pressing Add, so a list can be typed without
             // reaching for the mouse between every entry.
             section.input.onSubmit.AddListener(_ => Add(section, entries, resolve));
-            if (section.suggestionsText != null)
-                section.input.onValueChanged.AddListener(value => section.suggestionsText.text = suggest(value));
+            if (section.suggestionsContainer != null)
+                section.input.onValueChanged.AddListener(value => RefreshSuggestions(section, entries, resolve, suggest(value)));
         }
 
         RefreshEntries(section, entries);
@@ -133,7 +135,11 @@ public class STSDebugCombatPanel : MonoBehaviour
         if (section == null || section.input == null)
             return;
 
-        string typed = section.input.text?.Trim();
+        TryAdd(section, entries, resolve, section.input.text?.Trim());
+    }
+
+    void TryAdd(ListSection section, List<string> entries, Func<string, string> resolve, string typed)
+    {
         if (string.IsNullOrEmpty(typed))
             return;
 
@@ -145,10 +151,33 @@ public class STSDebugCombatPanel : MonoBehaviour
         }
 
         entries.Add(resolved);
-        section.input.text = string.Empty;
-        section.input.ActivateInputField();
+        if (section.input != null)
+        {
+            section.input.text = string.Empty;
+            section.input.ActivateInputField();
+        }
         RefreshEntries(section, entries);
         SetStatus($"Ajouté : {resolved}.");
+    }
+
+    // One clickable button per suggestion; clicking adds it straight to the list.
+    void RefreshSuggestions(ListSection section, List<string> entries, Func<string, string> resolve, List<string> suggestions)
+    {
+        if (section == null || section.suggestionsContainer == null || section.suggestionButtonPrefab == null)
+            return;
+
+        foreach (Transform child in section.suggestionsContainer)
+            Destroy(child.gameObject);
+
+        foreach (string suggestion in suggestions)
+        {
+            string captured = suggestion;
+            Button button = Instantiate(section.suggestionButtonPrefab, section.suggestionsContainer);
+            TMP_Text label = button.GetComponentInChildren<TMP_Text>();
+            if (label != null)
+                label.text = captured;
+            button.onClick.AddListener(() => TryAdd(section, entries, resolve, captured));
+        }
     }
 
     // Removes the typed entry, or the last one added when the field is empty: repeatedly
@@ -250,35 +279,36 @@ public class STSDebugCombatPanel : MonoBehaviour
         return STSApiClient.CreateRelicFromId(typed) != null ? typed : null;
     }
 
-    string SuggestEnemies(string typed)
+    List<string> SuggestEnemies(string typed)
     {
         return Suggest(EnemyDataDatabase.allEnemies?.Select(enemy => enemy != null
             ? (!string.IsNullOrWhiteSpace(enemy.displayName) ? enemy.displayName : enemy.id)
             : null), typed);
     }
 
-    string SuggestCards(string typed)
+    List<string> SuggestCards(string typed)
     {
         return Suggest(STSCardDatabase.allCards?.Select(card => card != null
             ? (!string.IsNullOrWhiteSpace(card.cardName) ? card.cardName : card.id)
             : null), typed);
     }
 
-    string SuggestRelics(string typed)
+    List<string> SuggestRelics(string typed)
     {
         return Suggest(RelicDatabase.All?.Select(relic => relic != null ? relic.GetType().Name : null), typed);
     }
 
-    string Suggest(IEnumerable<string> names, string typed)
+    List<string> Suggest(IEnumerable<string> names, string typed)
     {
         if (names == null || string.IsNullOrWhiteSpace(typed))
-            return string.Empty;
+            return new List<string>();
 
-        return string.Join(", ", names
+        return names
             .Where(name => !string.IsNullOrWhiteSpace(name)
                 && name.IndexOf(typed.Trim(), StringComparison.OrdinalIgnoreCase) >= 0)
             .Distinct(StringComparer.OrdinalIgnoreCase)
-            .Take(Mathf.Max(1, suggestionCount)));
+            .Take(Mathf.Max(1, suggestionCount))
+            .ToList();
     }
 
     static bool Matches(string candidate, string typed)
