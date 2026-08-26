@@ -10,6 +10,10 @@ public class RunManager : MonoBehaviour
     public static RunManager Instance;
 
     public string runId;
+
+    /// Le serveur fait autorité dès qu'une run lui appartient.
+
+    public bool IsServerAuthoritative => STSServerAuthority.Decides(runId);
     public string apiStatus;
     public string dataVersion;
     public Player player;
@@ -603,6 +607,16 @@ public class RunManager : MonoBehaviour
         activeEvent = STSApiClient.NormalizeOptionalToken(response.activeEvent);
         enteredNodeId = response.nodeId;
 
+        // Un feu de camp pose les charges et fait jouer les reliques de repos côté
+        // serveur : sans cette reprise, la scène s'ouvrirait sur les charges d'avant
+        // et ignorerait le soin qu'on vient de recevoir.
+        if (response.player != null && player != null)
+        {
+            player.maxHP = response.player.maxHp;
+            player.currentHP = response.player.currentHp;
+        }
+        ApplyServerRestCharges(response.player);
+
         if (map != null)
         {
             MapNode entered = map.Find(n => n != null && n.id == response.nodeId);
@@ -611,6 +625,137 @@ public class RunManager : MonoBehaviour
                 entered.visited = true;
             }
         }
+    }
+
+    /// <summary>
+    /// Applique ce que le serveur vient de changer dans l'inventaire.
+    ///
+    /// <para>Sans ça, le patch était rangé et jamais ouvert : le joueur ne voyait ni
+    /// l'or ni les cartes gagnés avant un resynchro complet. L'état serveur était bon,
+    /// c'est l'affichage qui restait en arrière — et rien ne le signalait.</para>
+    /// </summary>
+    /// <summary>
+    /// Reprend les charges de feu de camp que le serveur annonce.
+    /// </summary>
+    /// <remarks>
+    /// Zéro y est ambigu : c'est aussi ce que vaut le champ quand la réponse ne le
+    /// porte pas, faute de nullable dans les DTO. On ne l'accepte donc que si le
+    /// serveur annonce un maximum, seul cas où il a réellement parlé de charges.
+    /// </remarks>
+    private void ApplyServerRestCharges(STSApiPlayerState serverPlayer)
+    {
+        if (serverPlayer == null || serverPlayer.maxRestCharges <= 0)
+            return;
+
+        maxRestCharges = serverPlayer.maxRestCharges;
+        restCharges = serverPlayer.restCharges;
+    }
+
+    public void ApplyRunInventoryPatch(JToken rawPatch)
+    {
+        STSInventoryPatch patch = STSInventoryPatch.Read(rawPatch);
+
+        gold += patch.GoldDelta;
+
+        if (deck != null && patch.RemovedCardInstanceIds.Count > 0)
+        {
+            var removed = new HashSet<string>(patch.RemovedCardInstanceIds);
+            deck.RemoveAll(card => card != null && removed.Contains(card.instanceId));
+        }
+
+        foreach (JToken cardToken in patch.AddedCards)
+        {
+            CardInstance card = STSApiClient.ConvertCard(cardToken.ToObject<STSApiCardState>());
+            if (card != null)
+                deck?.Add(card);
+        }
+
+        // Une carte enchantée existe déjà : on remplace la sienne plutôt que d'en
+        // ajouter une seconde portant le même instanceId.
+        foreach (JToken cardToken in patch.EnchantedCards)
+        {
+            CardInstance updated = STSApiClient.ConvertCard(cardToken.ToObject<STSApiCardState>());
+            if (updated == null || deck == null)
+                continue;
+
+            int index = deck.FindIndex(card => card != null && card.instanceId == updated.instanceId);
+            if (index >= 0)
+                deck[index] = updated;
+            else
+                deck.Add(updated);
+        }
+
+        foreach (JToken relicToken in patch.AddedRelics)
+        {
+            Relic relic = STSApiClient.CreateRelicFromId(relicToken["relicId"]?.ToString());
+            if (relic != null)
+                relics.Add(relic);
+        }
+    }
+
+    /// <summary>
+    /// Le serveur vient de résoudre un événement : ses PV, son inventaire, ses
+    /// récompenses et sa carte font foi. Rien n'est recalculé localement.
+    /// </summary>
+    /// <summary>
+    /// Applique ce que le serveur a décidé au feu de camp : points de vie, cartes
+    /// enchantées, charges restantes.
+    /// </summary>
+    public void ApplyRestResponse(STSApiRestActionResponse response)
+    {
+        if (response == null || !response.accepted)
+            return;
+
+        if (response.player != null && player != null)
+        {
+            player.maxHP = response.player.maxHp;
+            player.currentHP = response.player.currentHp;
+            ApplyServerRestCharges(response.player);
+        }
+
+        ApplyRunInventoryPatch(response.runInventoryPatch);
+        restCharges = response.restCharges;
+        if (response.maxRestCharges > 0)
+            maxRestCharges = response.maxRestCharges;
+    }
+
+    public void ApplyEventChoiceResponse(STSApiChooseEventOptionResponse response)
+    {
+        if (response == null || !response.accepted)
+            return;
+
+        // Une option peut en ouvrir d'autres : l'événement continue, le nœud n'est pas
+        // terminé. Déléguer à la fin de nœud effacerait activeEvent et enteredNodeId,
+        // et le joueur perdrait le choix qu'on vient de lui présenter.
+        if (!response.eventCompleted)
+        {
+            if (response.player != null && player != null)
+            {
+                player.maxHP = response.player.maxHp;
+                player.currentHP = response.player.currentHp;
+                ApplyServerRestCharges(response.player);
+            }
+            serverRunInventoryPatch = response.runInventoryPatch;
+            serverAccountInventoryPatch = response.accountInventoryPatch;
+            serverPendingRewards = response.pendingRewards ?? new List<JToken>();
+            ApplyRunInventoryPatch(response.runInventoryPatch);
+            activeEvent = STSApiClient.NormalizeOptionalToken(response.activeEvent);
+            return;
+        }
+
+        // La réponse porte alors exactement la même forme d'état qu'une fin de nœud —
+        // PV, patchs d'inventaire, récompenses, patch de carte. La déléguer évite de
+        // dupliquer quarante lignes qui finiraient par diverger.
+        ApplyNodeCompleteResponse(new STSApiNodeCompleteResponse
+        {
+            accepted = true,
+            runId = runId,
+            player = response.player,
+            runInventoryPatch = response.runInventoryPatch,
+            accountInventoryPatch = response.accountInventoryPatch,
+            pendingRewards = response.pendingRewards,
+            mapPatch = response.mapPatch
+        });
     }
 
     public void ApplyNodeCompleteResponse(STSApiNodeCompleteResponse response)
@@ -627,11 +772,13 @@ public class RunManager : MonoBehaviour
         {
             player.maxHP = response.player.maxHp;
             player.currentHP = response.player.currentHp;
+            ApplyServerRestCharges(response.player);
         }
 
         serverRunInventoryPatch = response.runInventoryPatch;
         serverAccountInventoryPatch = response.accountInventoryPatch;
         serverPendingRewards = response.pendingRewards ?? new List<JToken>();
+        ApplyRunInventoryPatch(response.runInventoryPatch);
         serverMapPatch = response.mapPatch;
         activeEncounter = null;
         activeCombat = null;

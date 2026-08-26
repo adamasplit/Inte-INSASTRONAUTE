@@ -27,6 +27,6 @@ public class DamageReductionStatus : StatusEffect
     }
     public override string Desc(bool isPlayer)
     {
-        return $"Réduit les dégâts subis de {Value}% pendant {Duration} tour"+(Duration>1?"s":"");
+        return $"Réduit les dégâts subis de {Value}% {(Duration>0 ? (Duration>1 ? $"pendant {Duration} tours" : $"pendant {Duration} tour") : "")}";
     }
 }

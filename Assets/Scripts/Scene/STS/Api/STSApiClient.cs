@@ -40,6 +40,12 @@ public class STSApiPlayerState
 {
     public int maxHp;
     public int currentHp;
+    /// Charges de feu de camp restantes. Le serveur les pose à l'entrée du nœud et
+    /// les décrémente à chaque action ; sans elles, le client afficherait la valeur
+    /// avec laquelle il a démarré et refuserait des enchantements que le serveur
+    /// accepte.
+    public int restCharges;
+    public int maxRestCharges;
 }
 
 [Serializable]
@@ -110,6 +116,9 @@ public class STSApiNodeEnterResponse
     public JToken activeCombat;
     public JToken activeEvent;
     public string eventId;
+    /// L'état du joueur à l'entrée. Un feu de camp y pose les charges et y fait jouer
+    /// les reliques de repos.
+    public STSApiPlayerState player;
 }
 
 [Serializable]
@@ -164,6 +173,45 @@ public class STSApiNodeCompleteRequest
 }
 
 [Serializable]
+public class STSApiChooseEventOptionRequest
+{
+    public string optionId;
+    public List<string> selectedCardInstanceIds = new();
+}
+
+public class STSApiChooseEventOptionResponse
+{
+    public bool accepted;
+    public string eventInstanceId;
+    public bool eventCompleted;
+    public STSApiPlayerState player;
+    public JToken runInventoryPatch;
+    public JToken accountInventoryPatch;
+    public List<JToken> pendingRewards = new();
+    public STSApiMapPatchState mapPatch;
+    public string completionMessage;
+    /// L'événement à jour quand il continue ; null quand il vient de se clore.
+    public JToken activeEvent;
+}
+
+/// <summary>Ce qu'on demande au feu de camp : soigner, ou enchanter une carte.</summary>
+public class STSApiRestActionRequest
+{
+    public string action;
+    public string cardInstanceId;
+    public int charges;
+}
+
+public class STSApiRestActionResponse
+{
+    public bool accepted;
+    public string action;
+    public STSApiPlayerState player;
+    public JToken runInventoryPatch;
+    public int restCharges;
+    public int maxRestCharges;
+}
+
 public class STSApiNodeCompleteResponse
 {
     public bool accepted;
@@ -559,6 +607,39 @@ public static class STSApiClient
             response.runId = NormalizeRunId(response.runId);
         }
         return response;
+    }
+
+    /// <summary>
+    /// Le serveur applique l'option choisie et rend l'état qui en découle. Le client
+    /// n'a plus qu'à l'afficher : c'est lui qui fait autorité sur l'or, les cartes et
+    /// les récompenses de l'événement.
+    /// </summary>
+    public static async Task<STSApiChooseEventOptionResponse> ChooseEventOptionAsync(
+        string runId, string eventInstanceId, STSApiChooseEventOptionRequest request)
+    {
+        runId = NormalizeRunId(runId);
+        string json = await ReactApiBridge.RequestAsync(
+            $"sts.runs.{runId}.events.{eventInstanceId}.choose",
+            request
+        );
+
+        return ParseResponse<STSApiChooseEventOptionResponse>(json);
+    }
+
+    /// <summary>
+    /// Poste une action de feu de camp. Le serveur décide du soin et du tirage
+    /// d'enchantement ; le client applique ce qu'il reçoit.
+    /// </summary>
+    public static async Task<STSApiRestActionResponse> RestAsync(
+        string runId, int nodeId, STSApiRestActionRequest request)
+    {
+        runId = NormalizeRunId(runId);
+        string json = await ReactApiBridge.RequestAsync(
+            $"sts.runs.{runId}.nodes.{nodeId}.rest",
+            request
+        );
+
+        return ParseResponse<STSApiRestActionResponse>(json);
     }
 
     public static async Task<STSApiCombatStateResponse> GetCombatStateAsync(string runId)
