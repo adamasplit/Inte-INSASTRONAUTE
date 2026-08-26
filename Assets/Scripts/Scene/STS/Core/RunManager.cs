@@ -607,6 +607,16 @@ public class RunManager : MonoBehaviour
         activeEvent = STSApiClient.NormalizeOptionalToken(response.activeEvent);
         enteredNodeId = response.nodeId;
 
+        // Un feu de camp pose les charges et fait jouer les reliques de repos côté
+        // serveur : sans cette reprise, la scène s'ouvrirait sur les charges d'avant
+        // et ignorerait le soin qu'on vient de recevoir.
+        if (response.player != null && player != null)
+        {
+            player.maxHP = response.player.maxHp;
+            player.currentHP = response.player.currentHp;
+        }
+        ApplyServerRestCharges(response.player);
+
         if (map != null)
         {
             MapNode entered = map.Find(n => n != null && n.id == response.nodeId);
@@ -624,6 +634,23 @@ public class RunManager : MonoBehaviour
     /// l'or ni les cartes gagnés avant un resynchro complet. L'état serveur était bon,
     /// c'est l'affichage qui restait en arrière — et rien ne le signalait.</para>
     /// </summary>
+    /// <summary>
+    /// Reprend les charges de feu de camp que le serveur annonce.
+    /// </summary>
+    /// <remarks>
+    /// Zéro y est ambigu : c'est aussi ce que vaut le champ quand la réponse ne le
+    /// porte pas, faute de nullable dans les DTO. On ne l'accepte donc que si le
+    /// serveur annonce un maximum, seul cas où il a réellement parlé de charges.
+    /// </remarks>
+    private void ApplyServerRestCharges(STSApiPlayerState serverPlayer)
+    {
+        if (serverPlayer == null || serverPlayer.maxRestCharges <= 0)
+            return;
+
+        maxRestCharges = serverPlayer.maxRestCharges;
+        restCharges = serverPlayer.restCharges;
+    }
+
     public void ApplyRunInventoryPatch(JToken rawPatch)
     {
         STSInventoryPatch patch = STSInventoryPatch.Read(rawPatch);
@@ -670,6 +697,28 @@ public class RunManager : MonoBehaviour
     /// Le serveur vient de résoudre un événement : ses PV, son inventaire, ses
     /// récompenses et sa carte font foi. Rien n'est recalculé localement.
     /// </summary>
+    /// <summary>
+    /// Applique ce que le serveur a décidé au feu de camp : points de vie, cartes
+    /// enchantées, charges restantes.
+    /// </summary>
+    public void ApplyRestResponse(STSApiRestActionResponse response)
+    {
+        if (response == null || !response.accepted)
+            return;
+
+        if (response.player != null && player != null)
+        {
+            player.maxHP = response.player.maxHp;
+            player.currentHP = response.player.currentHp;
+            ApplyServerRestCharges(response.player);
+        }
+
+        ApplyRunInventoryPatch(response.runInventoryPatch);
+        restCharges = response.restCharges;
+        if (response.maxRestCharges > 0)
+            maxRestCharges = response.maxRestCharges;
+    }
+
     public void ApplyEventChoiceResponse(STSApiChooseEventOptionResponse response)
     {
         if (response == null || !response.accepted)
@@ -684,6 +733,7 @@ public class RunManager : MonoBehaviour
             {
                 player.maxHP = response.player.maxHp;
                 player.currentHP = response.player.currentHp;
+                ApplyServerRestCharges(response.player);
             }
             serverRunInventoryPatch = response.runInventoryPatch;
             serverAccountInventoryPatch = response.accountInventoryPatch;
@@ -722,6 +772,7 @@ public class RunManager : MonoBehaviour
         {
             player.maxHP = response.player.maxHp;
             player.currentHP = response.player.currentHp;
+            ApplyServerRestCharges(response.player);
         }
 
         serverRunInventoryPatch = response.runInventoryPatch;

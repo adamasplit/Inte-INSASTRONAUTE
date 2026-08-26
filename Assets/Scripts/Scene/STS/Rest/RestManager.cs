@@ -28,15 +28,20 @@ public class RestManager : MonoBehaviour
             newRunManager.AddComponent<RunManager>();
             await RunManager.Instance.StartRunAsync("",50,new List<Relic>{},false);
         }
-        RunManager.Instance.restCharges = STSRestState.InitialCharges(
-            RunManager.Instance.enteredNodeId.HasValue
-                && RunManager.Instance.currentNode != null
-                && RunManager.Instance.currentNode.type == NodeType.Rest,
-            RunManager.Instance.restCharges,
-            RunManager.Instance.maxRestCharges);
-        foreach (var relic in RunManager.Instance.relics)
+        // Sous autorité serveur, les charges et les reliques de repos ont déjà été
+        // appliquées à l'entrée du nœud : les rejouer ici les compterait deux fois.
+        if (!RunManager.Instance.IsServerAuthoritative)
         {
-            relic.OnEnterRestSite(RunManager.Instance.player);
+            RunManager.Instance.restCharges = STSRestState.InitialCharges(
+                RunManager.Instance.enteredNodeId.HasValue
+                    && RunManager.Instance.currentNode != null
+                    && RunManager.Instance.currentNode.type == NodeType.Rest,
+                RunManager.Instance.restCharges,
+                RunManager.Instance.maxRestCharges);
+            foreach (var relic in RunManager.Instance.relics)
+            {
+                relic.OnEnterRestSite(RunManager.Instance.player);
+            }
         }
         BuildDeck();
         UpdateChargesDisplay();
@@ -65,11 +70,49 @@ public class RestManager : MonoBehaviour
     // ---------------- HEAL ----------------
     public void OnRest()
     {
+        if (RunManager.Instance.IsServerAuthoritative)
+        {
+            _ = RestOnServerAsync();
+            return;
+        }
+
         while (RunManager.Instance.restCharges > 0&&RunManager.Instance.player.currentHP<RunManager.Instance.player.maxHP)
         {
             RunManager.Instance.player.Heal(Mathf.FloorToInt(RunManager.Instance.player.maxHP/12f));
             RunManager.Instance.restCharges--;
         }
+        UpdateChargesDisplay();
+    }
+
+    /// <summary>
+    /// Demande le soin au serveur. Un échec ne touche à rien : les charges restent
+    /// telles quelles et le joueur peut réessayer, ce qu'un soin appliqué en local
+    /// « au cas où » lui interdirait en désynchronisant les deux états.
+    /// </summary>
+    private async Task RestOnServerAsync()
+    {
+        RunManager run = RunManager.Instance;
+        try
+        {
+            STSApiRestActionResponse response = await STSApiClient.RestAsync(
+                run.runId,
+                run.enteredNodeId ?? -1,
+                new STSApiRestActionRequest { action = "HEAL" });
+
+            if (response == null || !response.accepted)
+            {
+                Debug.LogWarning("[STS-REST] Soin refusé par le serveur.");
+                return;
+            }
+
+            run.ApplyRestResponse(response);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"[STS-REST] Soin échoué : {ex.Message}");
+            return;
+        }
+
         UpdateChargesDisplay();
     }
 
@@ -125,6 +168,42 @@ public class RestManager : MonoBehaviour
         StartCoroutine(EnchantRoutine(charges));
     }
 
+    /// <summary>
+    /// Envoie l'enchantement au serveur, qui tire le niveau et l'applique à la carte.
+    /// Rend <c>false</c> si l'appel échoue ou si le serveur refuse — la carte reste
+    /// alors telle quelle, et les charges avec.
+    /// </summary>
+    private async Task<bool> EnchantOnServerAsync(int charges)
+    {
+        RunManager run = RunManager.Instance;
+        try
+        {
+            STSApiRestActionResponse response = await STSApiClient.RestAsync(
+                run.runId,
+                run.enteredNodeId ?? -1,
+                new STSApiRestActionRequest
+                {
+                    action = "ENCHANT",
+                    cardInstanceId = selectedCard != null ? selectedCard.instanceId : null,
+                    charges = charges
+                });
+
+            if (response == null || !response.accepted)
+            {
+                Debug.LogWarning("[STS-REST] Enchantement refusé par le serveur.");
+                return false;
+            }
+
+            run.ApplyRestResponse(response);
+            return true;
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"[STS-REST] Enchantement échoué : {ex.Message}");
+            return false;
+        }
+    }
+
     private IEnumerator EnchantRoutine(int charges)
     {
         if (selectedCard == null || selectedController == null)
@@ -138,10 +217,29 @@ public class RestManager : MonoBehaviour
 
         selectedController.SetSelected(false);
 
-        RunManager.Instance.restCharges -= charges;
-        int enchantLevel = UnityEngine.Random.Range(charges, charges*2);
-        Debug.Log($"Enchanting card with level {enchantLevel} using {charges} charges.");
-        EnchantManager.ApplyEnchant(selectedCard, enchantLevel);
+        // Sous autorité serveur, c'est lui qui tire le niveau et applique
+        // l'enchantement : le faire aussi ici doublerait l'effet, et le tirage local
+        // serait de toute façon écrasé à la prochaine resynchronisation.
+        if (RunManager.Instance.IsServerAuthoritative)
+        {
+            Task<bool> enchantOnServer = EnchantOnServerAsync(charges);
+            while (!enchantOnServer.IsCompleted)
+                yield return null;
+
+            if (!enchantOnServer.Result)
+            {
+                isEnchanting = false;
+                UpdateChargesDisplay();
+                yield break;
+            }
+        }
+        else
+        {
+            RunManager.Instance.restCharges -= charges;
+            int enchantLevel = UnityEngine.Random.Range(charges, charges*2);
+            Debug.Log($"Enchanting card with level {enchantLevel} using {charges} charges.");
+            EnchantManager.ApplyEnchant(selectedCard, enchantLevel);
+        }
 
         // Refresh immediately so the player can see the applied enchant visuals before it exits.
         selectedController.RefreshView();
