@@ -15,6 +15,8 @@ MonoBehaviour:
   id: contrepoids
   cardName: Contrepoids
   collectionCardId: 
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: c3d6669401af4c64d96303688b42343a, type: 3}
   cost: 1
   xCost: 0

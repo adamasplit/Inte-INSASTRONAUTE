@@ -15,6 +15,8 @@ MonoBehaviour:
   id: inversion_de_matrice
   cardName: Inversion de matrice
   collectionCardId: 
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 53770f7c52348c641bb46c1fb020948c, type: 3}
   cost: 1
   xCost: 0

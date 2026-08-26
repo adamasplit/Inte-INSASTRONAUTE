@@ -9,7 +9,7 @@
   <Project Path="CW.Common.csproj" />
   <Project Path="MackySoft.SerializeReferenceExtensions.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
-  <Project Path="STS.RunResume.csproj" />
   <Project Path="STS.ReactCombatBridge.csproj" />
+  <Project Path="STS.RunResume.csproj" />
   <Project Path="LeanTransition.Editor.csproj" />
 </Solution>

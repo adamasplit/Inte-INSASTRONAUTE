@@ -17,7 +17,7 @@ MonoBehaviour:
   collectionCardId: 
   multiplayerExclusive: 0
   characterLevel: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 406c9eafbf0a2b246a75bc88435c4bd6, type: 3}
   cost: 0
   xCost: 0
   type: 2
@@ -42,7 +42,7 @@ MonoBehaviour:
     animationType: 0
   targetingMode: 0
   modifiers: []
-  favoredCharacter: 9
+  favoredCharacter: 6
   animationSpeed: 1
   startingCount: 0
   tags: 
