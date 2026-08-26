@@ -1,23 +1,23 @@
 {
-  "id": "insaristocrate",
-  "cardName": "À mort",
-  "collectionCardId": "Ins'aristocrate (campagne)",
+  "id": "contrefleche",
+  "cardName": "Contreflèche",
+  "collectionCardId": null,
   "multiplayerExclusive": false,
   "characterLevel": 0,
   "iconId": null,
-  "cost": 2,
+  "cost": 0,
   "xCost": false,
-  "type": "Compétence",
+  "type": "Attaque",
   "rarity": "Epic",
   "targetingMode": "Enemy",
   "effects": [
     {
-      "type": "Status",
+      "type": "Damage",
       "value": 0,
       "targetSelf": false,
       "targetOthers": false,
-      "statusType": "DelayedDeath",
-      "duration": 12,
+      "statusType": "Strength",
+      "duration": 0,
       "description": "",
       "cardID": "",
       "conditional": false,
@@ -31,11 +31,17 @@
       "animationType": "Default"
     }
   ],
-  "modifiers": [],
+  "modifiers": [
+    {
+      "type": "Damage",
+      "kind": "HPLostSinceLastTurn",
+      "value": 5,
+      "info": "",
+      "description": ""
+    }
+  ],
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": [
-    "Exhaust"
-  ]
+  "tags": []
 }

@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: seisme
+  m_Name: effondrement
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: seisme
-  cardName: "S\xE9isme"
+  id: effondrement
+  cardName: Effondrement
   collectionCardId: 
   multiplayerExclusive: 0
   characterLevel: 0
-  icon: {fileID: 21300000, guid: 35c6220a57e736e448a6ff87de6e98f5, type: 3}
-  cost: 1
+  icon: {fileID: 0}
+  cost: 2
   xCost: 0
   type: 0
   rarity: 0
   effects:
   - type: 0
-    value: 8
+    value: 0
     targetSelf: 0
     targetOthers: 0
     statusType: 0
@@ -40,9 +40,48 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
+  - type: 20
+    value: 0
+    targetSelf: 1
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 18
+    value: 0
+    targetSelf: 1
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 2
-  modifiers: []
-  favoredCharacter: 6
+  modifiers:
+  - type: 0
+    kind: 9
+    value: 2
+    info: 
+    description: 
+  favoredCharacter: 9
   animationSpeed: 1
-  startingCount: 1
+  startingCount: 0
   tags: 

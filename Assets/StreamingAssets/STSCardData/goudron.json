@@ -1,23 +1,23 @@
 {
-  "id": "insaristocrate",
-  "cardName": "À mort",
-  "collectionCardId": "Ins'aristocrate (campagne)",
+  "id": "goudron",
+  "cardName": "Goudron",
+  "collectionCardId": null,
   "multiplayerExclusive": false,
   "characterLevel": 0,
   "iconId": null,
-  "cost": 2,
+  "cost": 1,
   "xCost": false,
-  "type": "Compétence",
-  "rarity": "Epic",
-  "targetingMode": "Enemy",
+  "type": "Rien",
+  "rarity": "Common",
+  "targetingMode": "Player",
   "effects": [
     {
       "type": "Status",
-      "value": 0,
-      "targetSelf": false,
+      "value": -1,
+      "targetSelf": true,
       "targetOthers": false,
-      "statusType": "DelayedDeath",
-      "duration": 12,
+      "statusType": "Speed",
+      "duration": 0,
       "description": "",
       "cardID": "",
       "conditional": false,
@@ -36,6 +36,9 @@
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": [
-    "Exhaust"
+    "Created",
+    "FollowUp",
+    "Status",
+    "Automatic"
   ]
 }

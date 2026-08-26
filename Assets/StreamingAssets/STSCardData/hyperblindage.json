@@ -1,23 +1,23 @@
 {
-  "id": "insaristocrate",
-  "cardName": "À mort",
-  "collectionCardId": "Ins'aristocrate (campagne)",
+  "id": "hyperblindage",
+  "cardName": "Hyperblindage",
+  "collectionCardId": null,
   "multiplayerExclusive": false,
   "characterLevel": 0,
   "iconId": null,
-  "cost": 2,
-  "xCost": false,
+  "cost": 0,
+  "xCost": true,
   "type": "Compétence",
-  "rarity": "Epic",
-  "targetingMode": "Enemy",
+  "rarity": "Uncommon",
+  "targetingMode": "Player",
   "effects": [
     {
-      "type": "Status",
-      "value": 0,
-      "targetSelf": false,
+      "type": "Armor",
+      "value": 8,
+      "targetSelf": true,
       "targetOthers": false,
-      "statusType": "DelayedDeath",
-      "duration": 12,
+      "statusType": "Strength",
+      "duration": 0,
       "description": "",
       "cardID": "",
       "conditional": false,
@@ -35,7 +35,5 @@
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": [
-    "Exhaust"
-  ]
+  "tags": []
 }

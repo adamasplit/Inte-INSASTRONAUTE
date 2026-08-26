@@ -1,11 +1,11 @@
 {
-  "id": "seisme",
-  "cardName": "Séisme",
+  "id": "centre_de_masse",
+  "cardName": "Centre de masse",
   "collectionCardId": null,
   "multiplayerExclusive": false,
   "characterLevel": 0,
-  "iconId": "Zone",
-  "cost": 1,
+  "iconId": null,
+  "cost": 2,
   "xCost": false,
   "type": "Attaque",
   "rarity": "Common",
@@ -13,7 +13,7 @@
   "effects": [
     {
       "type": "Damage",
-      "value": 8,
+      "value": 12,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -29,11 +29,30 @@
       "cardFilterTags": [],
       "cardSelectionEffect": "None",
       "animationType": "Default"
+    },
+    {
+      "type": "Status",
+      "value": -1,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Speed",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "GC",
+  "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
-  "startingCount": 1,
+  "startingCount": 0,
   "tags": []
 }

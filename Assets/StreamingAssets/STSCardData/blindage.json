@@ -1,23 +1,23 @@
 {
-  "id": "insaristocrate",
-  "cardName": "À mort",
-  "collectionCardId": "Ins'aristocrate (campagne)",
+  "id": "blindage",
+  "cardName": "Blindage",
+  "collectionCardId": null,
   "multiplayerExclusive": false,
   "characterLevel": 0,
   "iconId": null,
-  "cost": 2,
+  "cost": 0,
   "xCost": false,
   "type": "Compétence",
-  "rarity": "Epic",
-  "targetingMode": "Enemy",
+  "rarity": "Special",
+  "targetingMode": "Player",
   "effects": [
     {
       "type": "Status",
-      "value": 0,
-      "targetSelf": false,
+      "value": 1,
+      "targetSelf": true,
       "targetOthers": false,
-      "statusType": "DelayedDeath",
-      "duration": 12,
+      "statusType": "Plating",
+      "duration": 1,
       "description": "",
       "cardID": "",
       "conditional": false,
@@ -32,10 +32,12 @@
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Aucun",
-  "animationSpeed": 1.0,
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 0.1,
   "startingCount": 0,
   "tags": [
-    "Exhaust"
+    "FollowUp",
+    "Exhaust",
+    "Unobtainable"
   ]
 }

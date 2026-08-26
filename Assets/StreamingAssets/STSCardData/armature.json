@@ -1,23 +1,23 @@
 {
-  "id": "insaristocrate",
-  "cardName": "À mort",
-  "collectionCardId": "Ins'aristocrate (campagne)",
+  "id": "armature",
+  "cardName": "Armature",
+  "collectionCardId": null,
   "multiplayerExclusive": false,
   "characterLevel": 0,
   "iconId": null,
-  "cost": 2,
+  "cost": 1,
   "xCost": false,
   "type": "Compétence",
-  "rarity": "Epic",
-  "targetingMode": "Enemy",
+  "rarity": "Rare",
+  "targetingMode": "Player",
   "effects": [
     {
-      "type": "Status",
+      "type": "CardSelection",
       "value": 0,
       "targetSelf": false,
       "targetOthers": false,
-      "statusType": "DelayedDeath",
-      "duration": 12,
+      "statusType": "Strength",
+      "duration": 5,
       "description": "",
       "cardID": "",
       "conditional": false,
@@ -26,8 +26,10 @@
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "index": 0,
-      "cardFilterTags": [],
-      "cardSelectionEffect": "None",
+      "cardFilterTags": [
+        "Attack"
+      ],
+      "cardSelectionEffect": "AddDamageEffect",
       "animationType": "Default"
     }
   ],
@@ -36,6 +38,6 @@
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": [
-    "Exhaust"
+    "Retain"
   ]
 }

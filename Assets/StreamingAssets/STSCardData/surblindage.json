@@ -1,25 +1,25 @@
 {
-  "id": "insaristocrate",
-  "cardName": "À mort",
-  "collectionCardId": "Ins'aristocrate (campagne)",
+  "id": "surblindage",
+  "cardName": "Surblindage",
+  "collectionCardId": null,
   "multiplayerExclusive": false,
   "characterLevel": 0,
   "iconId": null,
-  "cost": 2,
+  "cost": 0,
   "xCost": false,
-  "type": "Compétence",
+  "type": "Pouvoir",
   "rarity": "Epic",
-  "targetingMode": "Enemy",
+  "targetingMode": "Player",
   "effects": [
     {
       "type": "Status",
-      "value": 0,
-      "targetSelf": false,
+      "value": 5,
+      "targetSelf": true,
       "targetOthers": false,
-      "statusType": "DelayedDeath",
-      "duration": 12,
+      "statusType": "AnyCardFollowUp",
+      "duration": 0,
       "description": "",
-      "cardID": "",
+      "cardID": "Blindage",
       "conditional": false,
       "conditionType": "KillingBlow",
       "conditionValue": "",
@@ -35,7 +35,5 @@
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": [
-    "Exhaust"
-  ]
+  "tags": []
 }

@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: insaristocrate
+  m_Name: blindage
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: insaristocrate
-  cardName: "\xC0 mort"
-  collectionCardId: Ins'aristocrate (campagne)
+  id: blindage
+  cardName: Blindage
+  collectionCardId: 
   multiplayerExclusive: 0
   characterLevel: 0
   icon: {fileID: 0}
-  cost: 2
+  cost: 0
   xCost: 0
   type: 1
-  rarity: 3
+  rarity: 5
   effects:
   - type: 3
-    value: 0
-    targetSelf: 0
+    value: 1
+    targetSelf: 1
     targetOthers: 0
-    statusType: 48
-    duration: 12
+    statusType: 32
+    duration: 1
     description: 
     cardID: 
     index: 0
@@ -40,9 +40,9 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  targetingMode: 1
+  targetingMode: 0
   modifiers: []
-  favoredCharacter: 9
-  animationSpeed: 1
+  favoredCharacter: 10
+  animationSpeed: 0.1
   startingCount: 0
-  tags: 09000000
+  tags: 080000000900000007000000

@@ -1,23 +1,23 @@
 {
-  "id": "insaristocrate",
-  "cardName": "À mort",
-  "collectionCardId": "Ins'aristocrate (campagne)",
+  "id": "cloutage",
+  "cardName": "Cloutage",
+  "collectionCardId": null,
   "multiplayerExclusive": false,
   "characterLevel": 0,
   "iconId": null,
-  "cost": 2,
+  "cost": 1,
   "xCost": false,
   "type": "Compétence",
   "rarity": "Epic",
-  "targetingMode": "Enemy",
+  "targetingMode": "AllEnemies",
   "effects": [
     {
       "type": "Status",
-      "value": 0,
+      "value": 5,
       "targetSelf": false,
       "targetOthers": false,
-      "statusType": "DelayedDeath",
-      "duration": 12,
+      "statusType": "Trap",
+      "duration": 1,
       "description": "",
       "cardID": "",
       "conditional": false,
@@ -31,11 +31,17 @@
       "animationType": "Default"
     }
   ],
-  "modifiers": [],
+  "modifiers": [
+    {
+      "type": "StatusPotency",
+      "kind": "ArmorScaling",
+      "value": 5,
+      "info": "",
+      "description": ""
+    }
+  ],
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": [
-    "Exhaust"
-  ]
+  "tags": []
 }
