@@ -99,7 +99,12 @@ public class RunManagerUI : MonoBehaviour
             floorText.text = $"Étage {RunManager.Instance.currentFloor}";
             actText.text = $"Acte {RunManager.Instance.act + 1}";
         }
-        hpText.text = $"PV : {RunManager.Instance.player.currentHP}/{RunManager.Instance.player.maxHP}";
+        // Le joueur n'existe qu'une fois la run creee. Entre la demande de creation et la
+        // reponse du serveur — le temps que les catalogues se chargent, plusieurs secondes —
+        // l'entete est deja affichee et cette ligne levait une exception par frame.
+        Player player = RunManager.Instance.player;
+        if (player != null)
+            hpText.text = $"PV : {player.currentHP}/{player.maxHP}";
         
         // Update button counts
         if (relicsCountText != null)

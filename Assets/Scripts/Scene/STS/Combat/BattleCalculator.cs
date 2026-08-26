@@ -6,6 +6,13 @@ public static class BattleCalculator
     {
         int value = baseValue;
 
+        // CardInstance.Cost déclare son contexte optionnel : sans ce garde, un appelant qui
+        // s'en passe fait mourir la coroutine appelante au lieu de simplement ne bénéficier
+        // d'aucun modificateur. Sans contexte il n'y a ni carte, ni état, ni porteur de
+        // statut à consulter — la valeur de base est la seule réponse possible.
+        if (ctx == null)
+            return baseValue;
+
         List<StatModifier> modifiers = GetAllModifiers(type, ctx.card, ctx.state);
         List<StatModifier> applyingModifiers=new List<StatModifier>();
         foreach (var mod in modifiers)
