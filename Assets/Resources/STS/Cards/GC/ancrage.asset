@@ -15,11 +15,13 @@ MonoBehaviour:
   id: ancrage
   cardName: Ancrage
   collectionCardId: 
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 7f96fe6967af4b54b89bee531feab597, type: 3}
   cost: 0
   xCost: 0
   type: 1
-  rarity: 0
+  rarity: 1
   effects:
   - type: 3
     value: 1

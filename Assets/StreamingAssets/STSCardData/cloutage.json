@@ -1,0 +1,47 @@
+{
+  "id": "cloutage",
+  "cardName": "Cloutage",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 1,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Epic",
+  "targetingMode": "AllEnemies",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 5,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Trap",
+      "duration": 1,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [
+    {
+      "type": "StatusPotency",
+      "kind": "ArmorScaling",
+      "value": 5,
+      "info": "",
+      "description": ""
+    }
+  ],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

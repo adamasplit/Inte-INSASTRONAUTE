@@ -1,0 +1,39 @@
+{
+  "id": "aile_centrale",
+  "cardName": "Aile centrale",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 1,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "AnyPlayer",
+  "effects": [
+    {
+      "type": "AdvanceTurn",
+      "value": 60,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

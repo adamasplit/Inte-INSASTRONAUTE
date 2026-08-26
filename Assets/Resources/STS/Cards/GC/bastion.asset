@@ -15,6 +15,8 @@ MonoBehaviour:
   id: bastion
   cardName: Bastion
   collectionCardId: 
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: d65c7034b7fd62947a1d286932518179, type: 3}
   cost: 1
   xCost: 0

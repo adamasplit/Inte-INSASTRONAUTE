@@ -1,0 +1,24 @@
+{
+  "id": "sample",
+  "cardName": "",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 1,
+  "xCost": false,
+  "type": "Rien",
+  "rarity": "Common",
+  "targetingMode": "Player",
+  "effects": [],
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": [
+    "Created",
+    "FollowUp",
+    "Exhaust",
+    "Status"
+  ]
+}

@@ -17,7 +17,7 @@
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "DelayedDeath",
-      "duration": 7,
+      "duration": 12,
       "description": "",
       "cardID": "",
       "conditional": false,

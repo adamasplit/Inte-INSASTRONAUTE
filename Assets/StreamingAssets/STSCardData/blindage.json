@@ -1,0 +1,43 @@
+{
+  "id": "blindage",
+  "cardName": "Blindage",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 0,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Special",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 1,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Plating",
+      "duration": 1,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 0.1,
+  "startingCount": 0,
+  "tags": [
+    "FollowUp",
+    "Exhaust",
+    "Unobtainable"
+  ]
+}

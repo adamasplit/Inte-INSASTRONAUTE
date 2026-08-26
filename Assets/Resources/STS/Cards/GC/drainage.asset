@@ -15,6 +15,8 @@ MonoBehaviour:
   id: drainage
   cardName: Drainage
   collectionCardId: 
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 05c3d1586939f574cb196f4c8e434cad, type: 3}
   cost: 0
   xCost: 0

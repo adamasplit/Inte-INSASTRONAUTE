@@ -1,0 +1,23 @@
+{
+  "id": "sample2",
+  "cardName": "",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 0,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Special",
+  "targetingMode": "Enemy",
+  "effects": [],
+  "modifiers": [],
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 0.1,
+  "startingCount": 0,
+  "tags": [
+    "FollowUp",
+    "Exhaust",
+    "Unobtainable"
+  ]
+}

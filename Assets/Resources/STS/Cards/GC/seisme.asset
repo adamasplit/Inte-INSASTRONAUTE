@@ -15,6 +15,8 @@ MonoBehaviour:
   id: seisme
   cardName: "S\xE9isme"
   collectionCardId: 
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 35c6220a57e736e448a6ff87de6e98f5, type: 3}
   cost: 1
   xCost: 0
@@ -22,7 +24,7 @@ MonoBehaviour:
   rarity: 0
   effects:
   - type: 0
-    value: 5
+    value: 8
     targetSelf: 0
     targetOthers: 0
     statusType: 0
