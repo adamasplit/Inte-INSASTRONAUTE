@@ -15,7 +15,8 @@ MonoBehaviour:
   id: soutien_du_bde
   cardName: Soutien du BDE
   collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: 550250c1f7fa6a14988bc0a5e1ad5cc6, type: 2}
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 0}
   cost: 1
   xCost: 0
@@ -30,6 +31,7 @@ MonoBehaviour:
     duration: -1
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,9 +39,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
-  favoredCharacter: 9
+  favoredCharacter: 11
   animationSpeed: 1
   startingCount: 0
   tags: 

@@ -9052,7 +9052,7 @@ MonoBehaviour:
   statusText: {fileID: 111107998}
   combatSceneName: STS_Combat
   returnSceneName: STS_Boot
-  suggestionCount: 8
+  suggestionCount: 32
 --- !u!1 &1573449604
 GameObject:
   m_ObjectHideFlags: 0

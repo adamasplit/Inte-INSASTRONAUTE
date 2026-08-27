@@ -42,10 +42,27 @@ MonoBehaviour:
     animationType: 0
   - type: 12
     value: 1
-    targetSelf: 0
+    targetSelf: 1
     targetOthers: 0
     statusType: 0
     duration: 0
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 1
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 1
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 13
+    duration: 1
     description: 
     cardID: 
     index: 0

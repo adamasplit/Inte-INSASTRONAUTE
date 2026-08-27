@@ -13,22 +13,7 @@ MonoBehaviour:
   m_Name: campinsa
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: campinsa
-  cardName: "Vous savez, moi je ne crois pas qu'il y ait de bonne ou de mauvaise
-    situation. Moi, si je devais r\xE9sumer ma vie aujourd'hui avec vous, je dirais
-    que c'est d'abord des rencontres. Des gens qui m'ont tendu la main, peut-\xEAtre
-    \xE0 un moment o\xF9 je ne pouvais pas, o\xF9 j'\xE9tais seul chez moi. Et c'est
-    assez curieux de se dire que les hasards, les rencontres forgent une destin\xE9e.
-    Parce que quand on a le go\xFBt de la chose, quand on a le go\xFBt de la chose
-    bien faite, le beau geste, parfois on ne trouve pas l'interlocuteur en face je
-    dirais, le miroir qui vous aide \xE0 avancer. Alors \xE7a n'est pas mon cas,
-    comme je disais l\xE0, puisque moi au contraire, j'ai pu : et je dis merci \xE0
-    la vie, je lui dis merci, je chante la vie, je danse la vie, je ne suis qu'amour.
-    Et finalement, quand beaucoup de gens aujourd'hui me disent \xAB mais comment
-    fais-tu pour avoir cette humanit\xE9 ? \xBB, et bien je leur r\xE9ponds tr\xE8s
-    simplement, je leur dis que c'est ce go\xFBt de l'amour ce go\xFBt donc qui m'a
-    pouss\xE9 aujourd'hui \xE0 entreprendre une construction m\xE9canique, mais demain
-    qui sait ? Peut-\xEAtre simplement \xE0 me mettre au service de la communaut\xE9,
-    \xE0 faire le don, le don de soi..."
+  cardName: Vous savez, moi je ne crois pas qu'il y ait de bonne ou de mauvaise situation...
   collectionCardId: Camp'insa
   multiplayerExclusive: 0
   characterLevel: 0

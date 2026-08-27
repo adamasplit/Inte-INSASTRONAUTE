@@ -171,6 +171,6 @@ MonoBehaviour:
   rewardCards: []
   startingStatus: 58
   startingStatusDuration: 0
-  startingStatusValue: 25
+  startingStatusValue: 5
   startingStatusInfo: 
   startingStatusIndex: 0

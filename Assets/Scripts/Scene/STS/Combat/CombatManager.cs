@@ -881,15 +881,25 @@ public class CombatManager : MonoBehaviour
             yield break;
 
         EffectEntry effect = playedCard.data.effects.FirstOrDefault(entry => entry.type == EffectType.CardSelection);
-        if (effect == null || (effect.cardFilterTags != null && effect.cardFilterTags.Count > 0))
+        if (effect == null)
             yield break;
 
-        bool supportedAction = effect.cardSelectionEffect == CardSelectionEffect.Exhaust
-            || effect.cardSelectionEffect == CardSelectionEffect.Discard
-            || effect.cardSelectionEffect == CardSelectionEffect.ReturnToHand
-            || effect.cardSelectionEffect == CardSelectionEffect.TopOfDrawPile;
-        if (!supportedAction)
+        // The server only resolves a CardSelection carrying at most one filter tag
+        // (CardSelectionSupport.unsupportedReason); a card asking for more would be rejected
+        // there regardless, so there is nothing useful to collect for it here.
+        if (effect.cardFilterTags != null && effect.cardFilterTags.Count > 1)
             yield break;
+
+        // Every CardSelectionEffect the server actually resolves needs its selection collected,
+        // not just the original four (Exhaust/Discard/ReturnToHand/TopOfDrawPile) — None is the
+        // only one it never implements (CardSelectionSupport.IMPLEMENTED_ACTIONS). Restricting
+        // this to that first quartet is what made every other CardSelection card (Enchant,
+        // Transform, ReduceCost, ...) submit an empty selection and get rejected as
+        // INVALID_CARD_SELECTION even though the server could resolve it.
+        if (effect.cardSelectionEffect == CardSelectionEffect.None)
+            yield break;
+
+        System.Predicate<CardInstance> predicate = BuildCardSelectionFilter(effect.cardFilterTags);
 
         List<CardInstance> candidates = effect.cardSelectionSource switch
         {
@@ -897,10 +907,12 @@ public class CombatManager : MonoBehaviour
             CardSelectionSource.DrawPile => deck.drawPile,
             CardSelectionSource.DiscardPile => deck.discardPile,
             CardSelectionSource.ExhaustPile => deck.exhaustPile,
+            CardSelectionSource.All => deck.hand.Concat(deck.discardPile).Concat(deck.drawPile).Concat(deck.exhaustPile).ToList(),
+            CardSelectionSource.AllExceptExhaustPile => deck.hand.Concat(deck.discardPile).Concat(deck.drawPile).ToList(),
             _ => new List<CardInstance>()
         };
         candidates = candidates
-            .Where(candidate => candidate != null && candidate.instanceId != playedCard.instanceId)
+            .Where(candidate => candidate != null && candidate.instanceId != playedCard.instanceId && predicate(candidate))
             .ToList();
         int amount = effect.value < 0 ? candidates.Count : Mathf.Min(effect.value, candidates.Count);
         if (amount == 0)
@@ -933,6 +945,69 @@ public class CombatManager : MonoBehaviour
         }
 
         selectedIds.AddRange(selectedCards.Select(selected => selected.instanceId));
+    }
+
+    /// <summary>
+    /// The same OR-combined tag predicate EffectResolver.Apply's own CardSelection case builds
+    /// for local combat, needed here too now that the authoritative path collects a selection
+    /// for a filtered CardSelection instead of skipping it outright.
+    /// </summary>
+    static System.Predicate<CardInstance> BuildCardSelectionFilter(List<CardFilterTag> tags)
+    {
+        if (tags == null || tags.Count == 0)
+            return _ => true;
+
+        return candidate =>
+        {
+            if (candidate == null || candidate.data == null)
+                return false;
+
+            foreach (var tag in tags)
+            {
+                switch (tag)
+                {
+                    case CardFilterTag.Attack:
+                        if (candidate.data.type == CardType.Attaque) return true;
+                        break;
+                    case CardFilterTag.Skill:
+                        if (candidate.data.type == CardType.Compétence) return true;
+                        break;
+                    case CardFilterTag.Power:
+                        if (candidate.data.type == CardType.Pouvoir) return true;
+                        break;
+                    case CardFilterTag.Retain:
+                        if (candidate.data.HasTag(CardTag.Retain)) return true;
+                        break;
+                    case CardFilterTag.Cost0:
+                        if (candidate.data.cost == 0) return true;
+                        break;
+                    case CardFilterTag.Cost1:
+                        if (candidate.data.cost == 1) return true;
+                        break;
+                    case CardFilterTag.Cost2:
+                        if (candidate.data.cost == 2) return true;
+                        break;
+                    case CardFilterTag.Cost3Plus:
+                        if (candidate.data.cost >= 3) return true;
+                        break;
+                    case CardFilterTag.Unupgraded:
+                        if (!candidate.HasEnchantments()) return true;
+                        break;
+                    case CardFilterTag.Upgraded:
+                        if (candidate.HasEnchantments()) return true;
+                        break;
+                    case CardFilterTag.Atom:
+                        if (candidate.HasTag(CardTag.Atom)) return true;
+                        break;
+                    case CardFilterTag.Molecule:
+                        if (candidate.HasTag(CardTag.Molecule)) return true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return false;
+        };
     }
 
     void HandleReactCombatEvent(string json)
