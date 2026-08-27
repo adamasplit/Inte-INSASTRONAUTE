@@ -8,14 +8,16 @@ public readonly struct AuthoritativeStatusState
     public int Duration { get; }
     public string CardId { get; }
     public int Index { get; }
+    public int Progress { get; }
 
-    public AuthoritativeStatusState(string statusType, int value, int duration, string cardId, int index)
+    public AuthoritativeStatusState(string statusType, int value, int duration, string cardId, int index, int progress)
     {
         StatusType = statusType;
         Value = value;
         Duration = duration;
         CardId = cardId;
         Index = index;
+        Progress = progress;
     }
 }
 
@@ -71,7 +73,8 @@ public static class AuthoritativeCombatStateReducer
                 token.Value<int?>("value") ?? 1,
                 token.Value<int?>("duration") ?? -1,
                 token.Value<string>("cardId") ?? string.Empty,
-                token.Value<int?>("index") ?? 0));
+                token.Value<int?>("index") ?? 0,
+                token.Value<int?>("progress") ?? 0));
         }
         return result;
     }

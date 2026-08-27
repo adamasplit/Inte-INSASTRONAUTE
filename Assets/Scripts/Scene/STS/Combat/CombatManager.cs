@@ -1628,11 +1628,12 @@ public class CombatManager : MonoBehaviour
         // what it is for.
         ICombatantPiles<CardInstance> actorPiles =
             combatantPiles.For(GetAuthoritativeCombatantId(actor));
+        bool burns = BurnsOnPlay(card);
         if (actorPiles != null)
         {
             AuthoritativeCombatStateReducer.MoveCard(
                 actorPiles.Pile(PileKind.Hand) as List<CardInstance>,
-                actorPiles.Pile(PileKind.Discard) as List<CardInstance>,
+                actorPiles.Pile(burns ? PileKind.Exhaust : PileKind.Discard) as List<CardInstance>,
                 card);
         }
 
@@ -1674,13 +1675,23 @@ public class CombatManager : MonoBehaviour
             // leaving the center. Waiting for that exit instead put the whole of it in front of
             // every hit — 0.4s of travel plus the read pause — and that wait, not the round trip,
             // is what made an attack feel late.
-            StartCoroutine(ui.AnimateCardToDiscard(playedView, false));
+            StartCoroutine(ui.AnimateCardToDiscard(playedView, burns));
             yield break;
         }
 
         yield return new WaitForSeconds(0.08f);
-        yield return ui.AnimateCardToDiscard(playedView, false);
+        yield return ui.AnimateCardToDiscard(playedView, burns);
         yield return new WaitForSeconds(0.2f);
+    }
+
+    // The server burns a card tagged Exhaust instead of discarding it (CombatEngine.afterPlaying)
+    // and emits no CardMoved saying so, so the animation is the only place that fact can show.
+    static bool BurnsOnPlay(CardInstance card)
+    {
+        return card != null
+            && card.data != null
+            && card.data.type != CardType.Pouvoir
+            && card.data.HasTag(CardTag.Exhaust);
     }
 
     // The authoritative replay path only ever animated card movement and popped up numbers;
@@ -1698,11 +1709,23 @@ public class CombatManager : MonoBehaviour
 
         targets ??= new List<Character>();
 
+        // Conditions are read per target, the way the local path reads them: whether an effect
+        // fires can differ from one target to the next.
+        EffectContext ctx = new EffectContext
+        {
+            source = source,
+            target = null,
+            combat = this,
+            state = state,
+            card = card,
+            timeline = turnSystem != null ? turnSystem.timeline : null,
+            targets = targets
+        };
+
         foreach (EffectEntry effect in effects)
         {
             string effectName = effect.GetEffectName();
             Debug.Log($"[STS-VFX] card={card?.displayName ?? "<null>"} effect={effect.type} sfx={effectName} targets={targets.Count}");
-            SFXManager.Instance?.PlaySound(effectName);
 
             List<Character> effectTargets;
             if (effect.targetSelf)
@@ -1720,13 +1743,38 @@ public class CombatManager : MonoBehaviour
                 effectTargets = targets;
             }
 
+            if (effectTargets.Count == 0)
+            {
+                ctx.target = null;
+                if (EffectFires(effect, ctx))
+                    SFXManager.Instance?.PlaySound(effectName);
+                continue;
+            }
+
+            bool sounded = false;
             foreach (Character target in effectTargets)
             {
+                ctx.target = target;
+                if (!EffectFires(effect, ctx))
+                    continue;
+
+                if (!sounded)
+                {
+                    SFXManager.Instance?.PlaySound(effectName);
+                    sounded = true;
+                }
+
                 Transform targetView = ui.GetView(target);
                 if (targetView != null)
                     VFXManager.Instance?.PlayEffect(effect, targetView.position);
             }
         }
+    }
+
+    static bool EffectFires(EffectEntry effect, EffectContext ctx)
+    {
+        return !effect.conditional
+            || EffectResolver.VerifyCondition(effect.conditionType, effect.conditionValue, ctx);
     }
 
     IEnumerator ReplayCardDrawnEvent(JToken combatEvent)
@@ -2252,10 +2300,15 @@ public class CombatManager : MonoBehaviour
             }
 
             status.statusType = statusType;
-            status.Value = stateValue.Value;
             status.Duration = stateValue.Duration;
             status.cardID = stateValue.CardId;
             status.index = stateValue.Index;
+            // These count cards (or turns) towards a threshold rather than holding a plain
+            // value, so what the player sees is how many are still needed, not the threshold
+            // itself — the server sends that progress apart from the threshold.
+            status.Value = IsFollowUpStatusType(statusType)
+                ? Mathf.Max(0, Mathf.Max(1, stateValue.Value) - stateValue.Progress)
+                : stateValue.Value;
             retained.Add(status);
         }
 
@@ -2265,6 +2318,13 @@ public class CombatManager : MonoBehaviour
         // tick hooks (OnTurnEnd/OnDamageTaken/etc.) never run, so the only place feedback can come
         // from is detecting changes in this snapshot: appearing/disappearing/changing value.
         PlayStatusChangeFeedback(target, beforeStatuses);
+    }
+
+    static bool IsFollowUpStatusType(StatusType statusType)
+    {
+        return statusType == StatusType.CardFollowUp
+            || statusType == StatusType.AnyCardFollowUp
+            || statusType == StatusType.FieldTurnFollowUp;
     }
 
     // Authoritative statuses arrive as full snapshots, so "trigger" feedback has to be inferred

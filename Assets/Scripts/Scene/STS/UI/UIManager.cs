@@ -998,9 +998,14 @@ public IEnumerator AnimateCardToCenter(CardView view)
         bool exhaust
     )
     {
+        if (view == null)
+            yield break;
+
         if (exhaust)
         {
-            yield return AnimateExhaust(view.cardInstance);
+            // Burn the card that was played, not a copy of it: spawning one left the original
+            // alive in the animation layer, where nothing ever destroyed it.
+            yield return AnimateExhaust(view);
             yield break;
         }
 
