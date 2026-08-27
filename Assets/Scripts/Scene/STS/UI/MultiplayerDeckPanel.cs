@@ -345,11 +345,6 @@ public class MultiplayerDeckPanel : MonoBehaviour
             if (IsHiddenFromDeckBuilder(card))
                 continue;
 
-            // Cards bound to another character are never selectable in this panel, so don't even show them.
-            if (card.favoredCharacter != SelectableCharacter.Aucun
-                && card.favoredCharacter != selectedCharacter)
-                continue;
-
             string key = GetCardKey(card);
             if (string.IsNullOrWhiteSpace(key))
                 continue;
@@ -376,7 +371,7 @@ public class MultiplayerDeckPanel : MonoBehaviour
     // Never selectable in PVP, so they are dropped before any filter runs.
     private bool IsHiddenFromDeckBuilder(STSCardData card)
     {
-        return (card.favoredCharacter != SelectableCharacter.Aucun && card.favoredCharacter != selectedCharacter)
+        return !IsCompatibleWithCurrentCharacter(card)
             || card.HasTag(CardTag.Unobtainable)
             || card.HasTag(CardTag.Created)
             || card.HasTag(CardTag.FollowUp);
@@ -394,14 +389,24 @@ public class MultiplayerDeckPanel : MonoBehaviour
         return !string.IsNullOrWhiteSpace(identifier) && ownedCardIds.Contains(identifier.Trim());
     }
 
+    /// <summary>
+    /// Délègue à la règle du serveur, au lieu de la redire ici.
+    /// </summary>
+    /// <remarks>
+    /// Ce code exigeait de posséder toute carte non exclusive. Le serveur, lui, ne
+    /// restreint que celles liées à une carte de collection — quarante-deux sur trois
+    /// cent cinquante. Un joueur sans collection voyait donc une grille vide, ne
+    /// pouvait composer aucun deck, et se voyait refuser toute recherche de combat
+    /// faute d'en avoir un. Le multijoueur était fermé à qui n'avait jamais scanné.
+    /// </remarks>
     private bool IsUnlocked(STSCardData card, bool owned)
     {
-        if (card.multiplayerExclusive)
-        {
-            return selectedCharacterLevel >= card.characterLevel;
-        }
-
-        return owned;
+        return PvpDeckEligibility.IsUsable(
+            card.GetCollectionCardId(),
+            owned,
+            card.multiplayerExclusive,
+            card.characterLevel,
+            selectedCharacterLevel);
     }
 
     private bool IsCompatibleWithCurrentCharacter(STSCardData card)
@@ -409,9 +414,8 @@ public class MultiplayerDeckPanel : MonoBehaviour
         if (card == null)
             return false;
 
-        return card.favoredCharacter == SelectableCharacter.Aucun
-            || card.favoredCharacter == SelectableCharacter.Starting
-            || card.favoredCharacter == selectedCharacter;
+        return PvpDeckEligibility.BelongsToPool(
+            card.favoredCharacter.ToString(), selectedCharacter.ToString());
     }
 
     private void RefreshGrid()
