@@ -1,0 +1,39 @@
+{
+  "id": "am5_vuln",
+  "cardName": "Vulnérable (Armure mult.5)",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
+  "iconId": "armor_5",
+  "cost": 0,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Uncommon",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Vuln",
+      "duration": 2,
+      "description": "",
+      "cardID": "",
+      "conditional": true,
+      "conditionType": "TargetArmorMultiple",
+      "conditionValue": "5",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "GM",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

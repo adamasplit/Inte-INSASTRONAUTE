@@ -1074,9 +1074,116 @@ public static class EffectResolver
                     }
                 }
                 return true; // If no enemy is found, assume none will attack
+            case ConditionType.TargetHpHigherThanSelf:
+                if (ctx.source == null || ctx.target == null)
+                    return false;
+                return ctx.target.currentHP > ctx.source.currentHP;
+            case ConditionType.TargetHpLowerThanSelf:
+                if (ctx.source == null || ctx.target == null)
+                    return false;
+                return ctx.target.currentHP < ctx.source.currentHP;
+            case ConditionType.SelfBuffCountThreshold:
+                if (ctx.source == null)
+                    return false;
+                if (int.TryParse(strValue, out int selfBuffThreshold))
+                {
+                    return ctx.source.statusEffects.Count(s => s.buff) >= selfBuffThreshold;
+                }
+                else
+                {
+                    Debug.LogWarning($"Valeur de seuil de buffs invalide : {strValue}");
+                    return false;
+                }
+            case ConditionType.TargetBuffCountThreshold:
+                if (ctx.target == null)
+                    return false;
+                if (int.TryParse(strValue, out int targetBuffThreshold))
+                {
+                    return ctx.target.statusEffects.Count(s => s.buff) >= targetBuffThreshold;
+                }
+                else
+                {
+                    Debug.LogWarning($"Valeur de seuil de buffs de la cible invalide : {strValue}");
+                    return false;
+                }
+            case ConditionType.SelfDebuffCountThreshold:
+                if (ctx.source == null)
+                    return false;
+                if (int.TryParse(strValue, out int selfDebuffThreshold))
+                {
+                    return ctx.source.statusEffects.Count(s => s.debuff) >= selfDebuffThreshold;
+                }
+                else
+                {
+                    Debug.LogWarning($"Valeur de seuil de debuffs invalide : {strValue}");
+                    return false;
+                }
+            case ConditionType.TargetDebuffCountThreshold:
+                if (ctx.target == null)
+                    return false;
+                if (int.TryParse(strValue, out int targetDebuffThreshold))
+                {
+                    return ctx.target.statusEffects.Count(s => s.debuff) >= targetDebuffThreshold;
+                }
+                else
+                {
+                    Debug.LogWarning($"Valeur de seuil de debuffs de la cible invalide : {strValue}");
+                    return false;
+                }
+            case ConditionType.SelfHpMultiple:
+                return ctx.source != null && IsMultipleOrPrime(ctx.source.currentHP, strValue);
+            case ConditionType.TargetHpMultiple:
+                return ctx.target != null && IsMultipleOrPrime(ctx.target.currentHP, strValue);
+            case ConditionType.SelfArmorMultiple:
+                return ctx.source != null && IsMultipleOrPrime(ctx.source.armor, strValue);
+            case ConditionType.TargetArmorMultiple:
+                return ctx.target != null && IsMultipleOrPrime(ctx.target.armor, strValue);
+            case ConditionType.SelfTurnsBeforeTarget:
+                return HasTurnsBeforeTarget(ctx, strValue);
             default:
                 return false;
         }
+    }
+
+    private static bool IsMultipleOrPrime(int actual, string divisorText)
+    {
+        if (!int.TryParse(divisorText, out int divisor) || divisor <= 0 || actual < 0)
+            return false;
+
+        if (divisor == 1)
+            return actual >= 2 && Enumerable.Range(2, Mathf.FloorToInt(Mathf.Sqrt(actual)) - 1)
+                .All(candidate => actual % candidate != 0);
+
+        return actual % divisor == 0;
+    }
+
+    private static bool HasTurnsBeforeTarget(EffectContext ctx, string countText)
+    {
+        if (ctx.source == null || ctx.target == null || ctx.timeline == null || ctx.combat == null
+            || !int.TryParse(countText, out int requiredTurns) || requiredTurns <= 0)
+            return false;
+
+        TurnEntry sourceEntry = ctx.timeline
+            .Where(entry => entry.character == ctx.source)
+            .OrderBy(entry => entry.time)
+            .FirstOrDefault();
+        TurnEntry targetEntry = ctx.timeline
+            .Where(entry => entry.character == ctx.target)
+            .OrderBy(entry => entry.time)
+            .FirstOrDefault();
+        if (sourceEntry == null || targetEntry == null || sourceEntry == targetEntry)
+            return false;
+
+        float sourceDelay = Mathf.Max(1f, ctx.source.turnDelay(ctx.combat.turnSystem.baseDelay));
+        float nextSourceTurn = sourceEntry.time + sourceDelay;
+        int turnsBeforeTarget = 0;
+        while (nextSourceTurn < targetEntry.time && turnsBeforeTarget < requiredTurns)
+        {
+            turnsBeforeTarget++;
+            nextSourceTurn += sourceDelay;
+        }
+
+        return turnsBeforeTarget >= requiredTurns;
     }
 
     private static bool MatchesCardFilters(STSCardData card, List<CardFilterTag> tags)

@@ -82,9 +82,50 @@ public static class EffectDescription
                 {
                     return $"Si la cible ne va pas attaquer, ";
                 }
+            case ConditionType.TargetHpHigherThanSelf:
+                {
+                    return $"Si la cible a plus de PV que vous, ";
+                }
+            case ConditionType.TargetHpLowerThanSelf:
+                {
+                    return $"Si la cible a moins de PV que vous, ";
+                }
+            case ConditionType.SelfBuffCountThreshold:
+                {
+                    return $"Si vous avez au moins {effect.conditionValue} buff"+(effect.conditionValue!="1"?"s":"")+", ";
+                }
+            case ConditionType.TargetBuffCountThreshold:
+                {
+                    return $"Si la cible a au moins {effect.conditionValue} buff"+(effect.conditionValue!="1"?"s":"")+", ";
+                }
+            case ConditionType.SelfDebuffCountThreshold:
+                {
+                    return $"Si vous avez au moins {effect.conditionValue} debuff"+(effect.conditionValue!="1"?"s":"")+", ";
+                }
+            case ConditionType.TargetDebuffCountThreshold:
+                {
+                    return $"Si la cible a au moins {effect.conditionValue} debuff"+(effect.conditionValue!="1"?"s":"")+", ";
+                }
+            case ConditionType.SelfHpMultiple:
+                return MultipleDescription("vos PV", effect.conditionValue,true);
+            case ConditionType.TargetHpMultiple:
+                return MultipleDescription("les PV de la cible", effect.conditionValue,true);
+            case ConditionType.SelfArmorMultiple:
+                return MultipleDescription("votre Armure", effect.conditionValue,false);
+            case ConditionType.TargetArmorMultiple:
+                return MultipleDescription("l'Armure de la cible", effect.conditionValue,false);
+            case ConditionType.SelfTurnsBeforeTarget:
+                return $"Si vous avez au moins {effect.conditionValue} tour"+(effect.conditionValue!="1"?"s":"")+" avant celui de la cible, ";
             default:
                 return "";
         }
+    }
+
+    private static string MultipleDescription(string subject, string divisor,bool plural)
+    {
+        return divisor == "1"
+            ? $"Si {subject} {(plural?"sont":"est")} un nombre premier, "
+            : $"Si {subject} {(plural?"sont":"est")} un multiple de {divisor}, ";
     }
     public static string GetEffectDescription(EffectEntry effect, EffectContext ctx)
     {
@@ -209,7 +250,12 @@ public static class EffectDescription
             }
             case EffectType.LoseHP:
             {
-                return $"Perdez "+transform(effect.value,"tous vos")+" PV";
+                if (effect.targetSelf)
+                {
+                    return $"Perdez "+transform(effect.value,"tous vos")+" PV";
+                }
+                return $"La cible perd "+transform(effect.value,"tous ses")+" PV";
+                
             }
             case EffectType.GainEnergy:
             {
@@ -245,6 +291,10 @@ public static class EffectDescription
             }
             case EffectType.Gravity:
             {
+                if (effect.targetSelf)
+                {
+                    return $"Vous perdez {effect.value}% de vos PV";
+                }
                 return  multipleTargets?$"Les cibles perdent {effect.value}% de leurs PV":$"La cible perd {effect.value}% de ses PV";
             }
             case EffectType.Break:

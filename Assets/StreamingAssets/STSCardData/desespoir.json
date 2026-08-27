@@ -33,7 +33,7 @@
     {
       "type": "LoseHP",
       "value": 2,
-      "targetSelf": false,
+      "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,

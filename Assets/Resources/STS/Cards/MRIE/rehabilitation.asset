@@ -15,6 +15,8 @@ MonoBehaviour:
   id: rehabilitation
   cardName: Recyclage
   collectionCardId: 
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 127f14f22caf1e44c853d6b66d5fc452, type: 3}
   cost: 1
   xCost: 0

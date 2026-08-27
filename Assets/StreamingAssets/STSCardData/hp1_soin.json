@@ -1,0 +1,39 @@
+{
+  "id": "hp1_soin",
+  "cardName": "Soin (PV nb.premier)",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
+  "iconId": "heal_prime",
+  "cost": 0,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Epic",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "Heal",
+      "value": 5,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Vuln",
+      "duration": 2,
+      "description": "",
+      "cardID": "",
+      "conditional": true,
+      "conditionType": "SelfHpMultiple",
+      "conditionValue": "1",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "GM",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

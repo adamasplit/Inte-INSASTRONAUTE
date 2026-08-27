@@ -15,6 +15,8 @@ MonoBehaviour:
   id: capteur_de_temperature
   cardName: "Capteur de temp\xE9rature"
   collectionCardId: 
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 38f0a5a43275dcb41b696a8faf9fcbb4, type: 3}
   cost: 1
   xCost: 0

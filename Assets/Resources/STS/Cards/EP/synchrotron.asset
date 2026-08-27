@@ -15,6 +15,8 @@ MonoBehaviour:
   id: synchrotron
   cardName: Synchrotron
   collectionCardId: 
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 4ab8197107962c948b56475a99197704, type: 3}
   cost: 0
   xCost: 0

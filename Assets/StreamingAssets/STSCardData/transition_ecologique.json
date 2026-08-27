@@ -1,0 +1,39 @@
+{
+  "id": "transition_ecologique",
+  "cardName": "Transition écologique",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
+  "iconId": "creation",
+  "cost": 2,
+  "xCost": false,
+  "type": "Pouvoir",
+  "rarity": "Rare",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 4,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "CardFollowUp",
+      "duration": 0,
+      "description": "",
+      "cardID": "Energie renouvelable",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "MRIE",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

@@ -4,7 +4,7 @@
   "collectionCardId": null,
   "multiplayerExclusive": false,
   "characterLevel": 0,
-  "iconId": null,
+  "iconId": "Frappe ultime",
   "cost": 1,
   "xCost": false,
   "type": "Compétence",
@@ -34,7 +34,7 @@
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Aucun",
+  "favoredCharacter": "GC",
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": [

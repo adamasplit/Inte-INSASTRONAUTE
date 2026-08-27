@@ -4,12 +4,12 @@
   <Project Path="LeanTransition.csproj" />
   <Project Path="STS.EditModeTests.csproj" />
   <Project Path="STS.AuthoritativeCombat.csproj" />
+  <Project Path="CW.Common.csproj" />
   <Project Path="MackySoft.SerializeReferenceExtensions.Editor.csproj" />
   <Project Path="LeanGUI.csproj" />
-  <Project Path="CW.Common.csproj" />
-  <Project Path="MackySoft.SerializeReferenceExtensions.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
-  <Project Path="STS.ReactCombatBridge.csproj" />
   <Project Path="STS.RunResume.csproj" />
+  <Project Path="MackySoft.SerializeReferenceExtensions.csproj" />
+  <Project Path="STS.ReactCombatBridge.csproj" />
   <Project Path="LeanTransition.Editor.csproj" />
 </Solution>

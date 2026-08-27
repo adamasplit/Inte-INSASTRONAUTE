@@ -1,0 +1,39 @@
+{
+  "id": "am4_celerite",
+  "cardName": "Célérité (Armure mult.4)",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
+  "iconId": "armor_4",
+  "cost": 0,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Haste",
+      "duration": 2,
+      "description": "",
+      "cardID": "",
+      "conditional": true,
+      "conditionType": "SelfArmorMultiple",
+      "conditionValue": "4",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "GM",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

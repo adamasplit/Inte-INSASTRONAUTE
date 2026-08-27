@@ -1,0 +1,39 @@
+{
+  "id": "hp5_bouclier",
+  "cardName": "Bouclier (PV mult.5)",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
+  "iconId": "hp_5",
+  "cost": 0,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Uncommon",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Vuln",
+      "duration": 2,
+      "description": "",
+      "cardID": "",
+      "conditional": true,
+      "conditionType": "SelfHpMultiple",
+      "conditionValue": "5",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "GM",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

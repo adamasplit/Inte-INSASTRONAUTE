@@ -15,7 +15,9 @@ MonoBehaviour:
   id: choc_thermique_ii
   cardName: Choc thermique II
   collectionCardId: 
-  icon: {fileID: 21300000, guid: 62b5cc12021bdeb48bb6335c9d78a106, type: 3}
+  multiplayerExclusive: 0
+  characterLevel: 0
+  icon: {fileID: 21300000, guid: 8d862027116621741aa4a574bfa497ed, type: 3}
   cost: 1
   xCost: 0
   type: 1

@@ -15,6 +15,8 @@ MonoBehaviour:
   id: turbomachine
   cardName: Turbomachine
   collectionCardId: 
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 84760d6aa05b4b8479b679b120c94085, type: 3}
   cost: 2
   xCost: 0

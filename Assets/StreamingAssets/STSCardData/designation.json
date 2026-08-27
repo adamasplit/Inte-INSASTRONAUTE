@@ -4,7 +4,7 @@
   "collectionCardId": null,
   "multiplayerExclusive": true,
   "characterLevel": 0,
-  "iconId": null,
+  "iconId": "critique",
   "cost": 0,
   "xCost": false,
   "type": "Compétence",
@@ -51,7 +51,7 @@
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Aucun",
+  "favoredCharacter": "GC",
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": []

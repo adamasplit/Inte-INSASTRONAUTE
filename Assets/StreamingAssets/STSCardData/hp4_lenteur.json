@@ -1,0 +1,39 @@
+{
+  "id": "hp4_lenteur",
+  "cardName": "Lenteur (PV mult.4)",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
+  "iconId": "hp_4",
+  "cost": 0,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Vuln",
+      "duration": 2,
+      "description": "",
+      "cardID": "",
+      "conditional": true,
+      "conditionType": "TargetHpMultiple",
+      "conditionValue": "4",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "GM",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

@@ -15,6 +15,8 @@ MonoBehaviour:
   id: facade
   cardName: "Fa\xE7ade"
   collectionCardId: 
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 25d4df1f36be07c46870be8a25825e19, type: 3}
   cost: 2
   xCost: 0

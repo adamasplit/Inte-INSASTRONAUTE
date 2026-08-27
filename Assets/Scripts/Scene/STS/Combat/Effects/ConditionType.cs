@@ -11,5 +11,16 @@ public enum ConditionType
     EnergyGainedThreshold,
     EnergySpentThreshold,
     TargetWillAttack,
-    TargetWillNotAttack
+    TargetWillNotAttack,
+    TargetHpHigherThanSelf,
+    TargetHpLowerThanSelf,
+    SelfBuffCountThreshold,
+    TargetBuffCountThreshold,
+    SelfDebuffCountThreshold,
+    TargetDebuffCountThreshold,
+    SelfHpMultiple,
+    TargetHpMultiple,
+    SelfArmorMultiple,
+    TargetArmorMultiple,
+    SelfTurnsBeforeTarget
 }

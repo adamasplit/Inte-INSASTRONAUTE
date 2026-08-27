@@ -15,7 +15,8 @@ MonoBehaviour:
   id: desespoir
   cardName: "D\xE9sespoir"
   collectionCardId: 
-  collectionCard: {fileID: 0}
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: c332216435a9ca14ab03ea39469a4859, type: 3}
   cost: 0
   xCost: 0
@@ -41,7 +42,7 @@ MonoBehaviour:
     animationType: 1
   - type: 11
     value: 2
-    targetSelf: 0
+    targetSelf: 1
     targetOthers: 0
     statusType: 0
     duration: 0

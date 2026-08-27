@@ -1,0 +1,39 @@
+{
+  "id": "frappe_abstraite",
+  "cardName": "Frappe abstraite",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
+  "iconId": "blasting",
+  "cost": 1,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Uncommon",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "LoseHP",
+      "value": 6,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "ITI",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

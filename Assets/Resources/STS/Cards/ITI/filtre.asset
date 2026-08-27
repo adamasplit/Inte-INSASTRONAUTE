@@ -15,6 +15,8 @@ MonoBehaviour:
   id: filtre
   cardName: Filtre
   collectionCardId: 
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 81030cfa8dc89e1419926b1935568cd4, type: 3}
   cost: 1
   xCost: 0

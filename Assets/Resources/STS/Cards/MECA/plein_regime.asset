@@ -15,6 +15,8 @@ MonoBehaviour:
   id: plein_regime
   cardName: "Plein r\xE9gime"
   collectionCardId: 
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 43ad36d243cd9d440abd07dbec726212, type: 3}
   cost: 1
   xCost: 0

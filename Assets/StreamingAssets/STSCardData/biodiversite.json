@@ -1,0 +1,60 @@
+{
+  "id": "biodiversite",
+  "cardName": "Biodiversité",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
+  "iconId": "circle",
+  "cost": 3,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Epic",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "GainEnergy",
+      "value": 3,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    },
+    {
+      "type": "AddRandomCard",
+      "value": 3,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Awakening",
+      "duration": 3,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [
+        "Power"
+      ],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "MRIE",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

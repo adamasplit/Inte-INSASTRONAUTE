@@ -1,0 +1,39 @@
+{
+  "id": "hp1_destruction",
+  "cardName": "Destruction (PV nb.premier)",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "characterLevel": 0,
+  "iconId": "hp_prime",
+  "cost": 0,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Epic",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 9,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Vuln",
+      "duration": 2,
+      "description": "",
+      "cardID": "",
+      "conditional": true,
+      "conditionType": "TargetHpMultiple",
+      "conditionValue": "1",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "GM",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

@@ -4,7 +4,7 @@
   "collectionCardId": null,
   "multiplayerExclusive": false,
   "characterLevel": 0,
-  "iconId": null,
+  "iconId": "Transfert3",
   "cost": 0,
   "xCost": true,
   "type": "Compétence",
@@ -32,7 +32,7 @@
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Aucun",
+  "favoredCharacter": "GC",
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": []
