@@ -39,7 +39,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-    animationType: 0
+    animationType: 6
   targetingMode: 1
   modifiers: []
   favoredCharacter: 2

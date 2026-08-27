@@ -23,8 +23,25 @@ MonoBehaviour:
   type: 0
   rarity: 0
   effects:
+  - type: 6
+    value: 30
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 19
+    conditionValue: 5
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
   - type: 0
-    value: 6
+    value: 8
     targetSelf: 0
     targetOthers: 0
     statusType: 0
@@ -40,23 +57,6 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 1
-  - type: 6
-    value: 20
-    targetSelf: 0
-    targetOthers: 0
-    statusType: 0
-    duration: 0
-    description: 
-    cardID: 
-    index: 0
-    conditional: 0
-    conditionType: 0
-    conditionValue: 
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 0
-    animationType: 0
   targetingMode: 1
   modifiers: []
   favoredCharacter: 2

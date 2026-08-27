@@ -57,6 +57,23 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
+  - type: 6
+    value: 10
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 19
+    conditionValue: 6
+    trueEffect: 0
+    cardSelectionSource: 1
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 1
   modifiers: []
   favoredCharacter: 2

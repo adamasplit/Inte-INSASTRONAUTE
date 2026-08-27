@@ -1,19 +1,60 @@
 {
   "id": "cfi",
-  "cardName": "",
-  "collectionCardId": null,
+  "cardName": "Potion magique + Attente interminable",
+  "collectionCardId": "CFI",
   "multiplayerExclusive": false,
   "characterLevel": 0,
   "iconId": null,
-  "cost": 0,
+  "cost": 3,
   "xCost": false,
   "type": "Attaque",
-  "rarity": "Common",
-  "targetingMode": "Player",
-  "effects": [],
+  "rarity": "Legendary",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "Heal",
+      "value": 10,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    },
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Stun",
+      "duration": 2,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
   "modifiers": [],
-  "favoredCharacter": "Starting",
+  "favoredCharacter": "CFI",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": []
+  "tags": [
+    "Exhaust"
+  ]
 }

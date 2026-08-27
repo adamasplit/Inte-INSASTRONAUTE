@@ -10,21 +10,39 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: insa_racing
+  m_Name: cartes
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: insa_racing
-  cardName: 
-  collectionCardId: 
-  collectionCard: {fileID: 0}
+  id: cartes
+  cardName: Booster
+  collectionCardId: Cartes
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 0}
   cost: 0
   xCost: 0
-  type: 0
-  rarity: 0
-  effects: []
+  type: 2
+  rarity: 4
+  effects:
+  - type: 21
+    value: 5
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
-  favoredCharacter: 11
+  favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
-  tags: 
+  tags: 09000000

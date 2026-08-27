@@ -1147,7 +1147,7 @@ public static class EffectResolver
 
     private static bool IsMultipleOrPrime(int actual, string divisorText)
     {
-        if (!int.TryParse(divisorText, out int divisor) || divisor <= 0 || actual < 0)
+        if (!int.TryParse(divisorText, out int divisor) || divisor <= 0 || actual <= 0)
             return false;
 
         if (divisor == 1)

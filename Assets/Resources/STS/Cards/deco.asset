@@ -10,26 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: apogee
+  m_Name: deco
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: apogee
-  cardName: "Apog\xE9e"
-  collectionCardId: 
-  collectionCard: {fileID: 0}
+  id: deco
+  cardName: "\xC7a c'est ma fus\xE9e bat*rd"
+  collectionCardId: Deco
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 0}
-  cost: 1
+  cost: 2
   xCost: 0
-  type: 2
-  rarity: 5
+  type: 0
+  rarity: 2
   effects:
-  - type: 3
-    value: 3
-    targetSelf: 1
+  - type: 7
+    value: 1
+    targetSelf: 0
     targetOthers: 0
     statusType: 0
-    duration: 0
+    duration: 5
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,14 +39,16 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 3
-    value: 3
-    targetSelf: 1
+    value: 0
+    targetSelf: 0
     targetOthers: 0
-    statusType: 4
-    duration: 0
+    statusType: 36
+    duration: 2
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -52,24 +56,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-  - type: 3
-    value: 3
-    targetSelf: 1
-    targetOthers: 0
-    statusType: 14
-    duration: 0
-    description: 
-    cardID: 
-    conditional: 0
-    conditionType: 0
-    conditionValue: 
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 0
-  targetingMode: 0
+    animationType: 0
+  targetingMode: 1
   modifiers: []
-  favoredCharacter: 11
+  favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
-  tags: 
+  tags: 0a000000

@@ -12,8 +12,8 @@
   "targetingMode": "Player",
   "effects": [
     {
-      "type": "Status",
-      "value": 0,
+      "type": "Armor",
+      "value": 8,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Vuln",

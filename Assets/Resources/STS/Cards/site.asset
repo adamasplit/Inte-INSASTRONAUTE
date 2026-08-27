@@ -13,18 +13,36 @@ MonoBehaviour:
   m_Name: site
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: site
-  cardName: 
-  collectionCardId: 
-  collectionCard: {fileID: 0}
+  cardName: Maintenance
+  collectionCardId: Sites
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 0}
-  cost: 0
+  cost: 1
   xCost: 0
-  type: 0
-  rarity: 0
-  effects: []
-  targetingMode: 0
+  type: 1
+  rarity: 3
+  effects:
+  - type: 3
+    value: 0
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 64
+    duration: 1
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  targetingMode: 1
   modifiers: []
-  favoredCharacter: 11
+  favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
   tags: 

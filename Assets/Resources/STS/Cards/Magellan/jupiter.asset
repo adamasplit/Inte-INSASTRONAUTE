@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: gm
+  m_Name: jupiter
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: gm
-  cardName: 
+  id: jupiter
+  cardName: Cyclone
   collectionCardId: 
-  collectionCard: {fileID: 0}
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 0}
   cost: 0
   xCost: 0
@@ -24,7 +25,7 @@ MonoBehaviour:
   effects: []
   targetingMode: 0
   modifiers: []
-  favoredCharacter: 11
+  favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
   tags: 

@@ -48,6 +48,25 @@
       "cardFilterTags": [],
       "cardSelectionEffect": "None",
       "animationType": "Default"
+    },
+    {
+      "type": "DelayTurn",
+      "value": 10,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": true,
+      "conditionType": "TargetHpMultiple",
+      "conditionValue": "6",
+      "trueEffect": false,
+      "cardSelectionSource": "DiscardPile",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

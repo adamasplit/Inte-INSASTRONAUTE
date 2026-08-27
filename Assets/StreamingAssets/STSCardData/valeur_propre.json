@@ -29,6 +29,25 @@
       "cardFilterTags": [],
       "cardSelectionEffect": "None",
       "animationType": "Default"
+    },
+    {
+      "type": "Heal",
+      "value": 2,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 50,
+      "description": "",
+      "cardID": "",
+      "conditional": true,
+      "conditionType": "SelfHpMultiple",
+      "conditionValue": "10",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

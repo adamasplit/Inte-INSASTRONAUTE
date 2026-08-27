@@ -23,8 +23,8 @@ MonoBehaviour:
   type: 1
   rarity: 1
   effects:
-  - type: 3
-    value: 0
+  - type: 1
+    value: 8
     targetSelf: 1
     targetOthers: 0
     statusType: 1

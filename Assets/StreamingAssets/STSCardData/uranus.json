@@ -1,7 +1,7 @@
 {
-  "id": "tournee_generale",
-  "cardName": "Tournée générale",
-  "collectionCardId": "Quartier Libre",
+  "id": "uranus",
+  "cardName": "_",
+  "collectionCardId": "Uranus",
   "multiplayerExclusive": false,
   "characterLevel": 0,
   "iconId": null,
@@ -9,12 +9,12 @@
   "xCost": false,
   "type": "Compétence",
   "rarity": "Epic",
-  "targetingMode": "Player",
+  "targetingMode": "AllCharacters",
   "effects": [
     {
-      "type": "Draw",
-      "value": 3,
-      "targetSelf": true,
+      "type": "Armor",
+      "value": 30,
+      "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,

@@ -10,19 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: tournee_generale
+  m_Name: radium
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: 
-  cardName: "Tourn\xE9e g\xE9n\xE9rale"
-  collectionCardId: Quartier Libre
+  id: radium
+  cardName: "Arri\xE8re-cour"
+  collectionCardId: Radium
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 0}
-  cost: 0
+  cost: 1
   xCost: 0
   type: 1
-  rarity: 3
+  rarity: 2
   effects:
   - type: 8
-    value: 3
+    value: 1
     targetSelf: 1
     targetOthers: 0
     statusType: 0
@@ -37,6 +39,23 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
+  - type: 24
+    value: 2
+    targetSelf: 1
+    targetOthers: 0
+    statusType: 0
+    duration: 1
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 01000000
+    cardSelectionEffect: 12
     animationType: 0
   targetingMode: 0
   modifiers: []

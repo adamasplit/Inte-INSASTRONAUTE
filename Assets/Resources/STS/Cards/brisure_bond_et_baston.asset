@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: brisure_bond_et_baston
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: brisure_bond_et_baston
-  cardName: Brisure, Bond et Baston
+  cardName: Brisure-Bond-Baston
   collectionCardId: 3B
   multiplayerExclusive: 0
   characterLevel: 0

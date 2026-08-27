@@ -29,6 +29,25 @@
       "cardFilterTags": [],
       "cardSelectionEffect": "None",
       "animationType": "Default"
+    },
+    {
+      "type": "Armor",
+      "value": 3,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": true,
+      "conditionType": "SelfArmorMultiple",
+      "conditionValue": "2",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
     }
   ],
   "modifiers": [],

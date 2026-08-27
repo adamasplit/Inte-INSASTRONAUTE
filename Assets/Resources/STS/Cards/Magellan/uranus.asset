@@ -10,21 +10,39 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: radium
+  m_Name: uranus
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: radium
-  cardName: 
-  collectionCardId: 
-  collectionCard: {fileID: 0}
+  id: uranus
+  cardName: _
+  collectionCardId: Uranus
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 0}
   cost: 0
   xCost: 0
-  type: 0
-  rarity: 0
-  effects: []
-  targetingMode: 0
+  type: 1
+  rarity: 3
+  effects:
+  - type: 1
+    value: 30
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  targetingMode: 3
   modifiers: []
-  favoredCharacter: 11
+  favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
   tags: 

@@ -40,7 +40,7 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  targetingMode: 0
+  targetingMode: 1
   modifiers: []
   favoredCharacter: 9
   animationSpeed: 1

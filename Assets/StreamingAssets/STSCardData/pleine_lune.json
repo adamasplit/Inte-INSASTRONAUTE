@@ -1,7 +1,7 @@
 {
   "id": "pleine_lune",
   "cardName": "Pleine lune",
-  "collectionCardId": null,
+  "collectionCardId": "Alphanight",
   "multiplayerExclusive": false,
   "characterLevel": 0,
   "iconId": null,
@@ -32,7 +32,7 @@
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Starting",
+  "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": []

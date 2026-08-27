@@ -10,26 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: pleine_lune
+  m_Name: insa_racing
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: pleine_lune
-  cardName: Pleine lune
-  collectionCardId: 
-  collectionCard: {fileID: 11400000, guid: 30c5ead21ee130e4ea5279b762b957fd, type: 2}
+  id: insa_racing
+  cardName: Grand prix du parking
+  collectionCardId: Insa Racing
+  multiplayerExclusive: 0
+  characterLevel: 0
   icon: {fileID: 0}
   cost: 2
   xCost: 0
   type: 2
-  rarity: 4
+  rarity: 2
   effects:
   - type: 3
-    value: 1
-    targetSelf: 1
+    value: -10
+    targetSelf: 0
     targetOthers: 0
-    statusType: 7
+    statusType: 14
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,7 +39,25 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-  targetingMode: 0
+    animationType: 0
+  - type: 3
+    value: 5
+    targetSelf: 1
+    targetOthers: 0
+    statusType: 14
+    duration: 0
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  targetingMode: 3
   modifiers: []
   favoredCharacter: 11
   animationSpeed: 1

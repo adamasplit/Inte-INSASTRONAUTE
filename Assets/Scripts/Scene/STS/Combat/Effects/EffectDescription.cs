@@ -293,7 +293,7 @@ public static class EffectDescription
             {
                 if (effect.targetSelf)
                 {
-                    return $"Vous perdez {effect.value}% de vos PV";
+                    return $"Vous perdez {effect.value}% de vos PV"; 
                 }
                 return  multipleTargets?$"Les cibles perdent {effect.value}% de leurs PV":$"La cible perd {effect.value}% de ses PV";
             }
