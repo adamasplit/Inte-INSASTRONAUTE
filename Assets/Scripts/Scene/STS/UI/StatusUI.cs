@@ -61,6 +61,9 @@ public class StatusUI : MonoBehaviour
     }
     public void SetStatus(StatusEffect status, UIManager uiManager,bool isPlayer, bool playSpawnAnimation = true, bool playUpdatePulse = false)
     {
+        if (status == null)
+            return;
+
         this.uiManager = uiManager;
         BoundStatus = status;
         isRemoving = false;

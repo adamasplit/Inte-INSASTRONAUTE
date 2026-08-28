@@ -81,6 +81,9 @@ public class CharacterUI : MonoBehaviour
         for (int i = 0; i < character.statusEffects.Count; i++)
         {
             var status = character.statusEffects[i];
+            if (status == null)
+                continue;
+
             visibleStatuses.Add(status);
 
             if (activeStatusUIs.TryGetValue(status, out var statusUI))

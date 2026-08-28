@@ -16,7 +16,7 @@ public class CardInstance
     public string lastDescription = "";
     public bool HasTag(CardTag tag)
     {
-        return tags.Contains(tag) || data.HasTag(tag);
+        return tags.Contains(tag) || (data != null && data.HasTag(tag));
     }
     public void AddTag(CardTag tag)
     {
@@ -51,6 +51,7 @@ public class CardInstance
 
     public int Cost(EffectContext ctx=null)
     {
+        if (data == null) return 0;
         int cost = data.cost;
         if (data.xCost)
         {
@@ -178,13 +179,16 @@ public class CardInstance
     public List<EffectEntry> GetEffects(bool includeEnchantments=true,bool includeAdded=true)
     {
         List<EffectEntry> effects = new();
-        effects.AddRange(data.effects);
-        effects.AddRange(addedEffects);
-        if (includeEnchantments)
+        if (data != null && data.effects != null)
+            effects.AddRange(data.effects);
+        if (includeAdded && addedEffects != null)
+            effects.AddRange(addedEffects);
+        if (includeEnchantments && enchantments != null)
         {
             foreach (var enchantment in enchantments)
             {
-                effects.AddRange(enchantment.GetEffects());
+                if (enchantment != null)
+                    effects.AddRange(enchantment.GetEffects());
             }
         }
         return effects;

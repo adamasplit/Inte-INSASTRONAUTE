@@ -641,8 +641,13 @@ public static class EffectResolver
                                     card.enchantments.Clear();
                                     break;
                                 case CardSelectionEffect.Transform:
-                                    STSCardData data = STSCardDatabase.GetRandomCard(RunManager.Instance.selectedCharacter);
+                                    SelectableCharacter characterToUse = RunManager.Instance != null ? RunManager.Instance.selectedCharacter : SelectableCharacter.EP;
+                                    STSCardData data = STSCardDatabase.GetRandomCard(characterToUse);
+                                    if (data == null)
+                                        break;
                                     CardInstance newCard = new CardInstance(data);
+                                    if (newCard == null || newCard.data == null)
+                                        break;
                                     ctx.combat.ui.TransformCard(card, newCard);
                                     if (ui != null)
                                     {
@@ -725,15 +730,20 @@ public static class EffectResolver
                     if (amount == 0)
                         yield break;
 
+                    SelectableCharacter activeCharacter = RunManager.Instance != null ? RunManager.Instance.selectedCharacter : SelectableCharacter.EP;
+
                     if (effect.cardFilterTags == null || effect.cardFilterTags.Count == 0)
                     {
                         for (int i = 0; i < amount; i++)
                         {
-                            STSCardData data = STSCardDatabase.GetRandomCard(RunManager.Instance.selectedCharacter);
+                            STSCardData data = STSCardDatabase.GetRandomCard(activeCharacter);
                             if (data == null)
                                 continue;
 
                             CardInstance newCard = new CardInstance(data);
+                            if (newCard == null || newCard.data == null)
+                                continue;
+
                             AddCardToPile(deck, effect.cardSelectionSource, newCard);
                             if (ui != null && effect.cardSelectionSource != CardSelectionSource.Hand)
                             {
@@ -747,7 +757,7 @@ public static class EffectResolver
                         yield break;
 
                     List<STSCardData> candidates = STSCardDatabase.allCards
-                        .Where(card => MatchesCardFilters(card, effect.cardFilterTags))
+                        .Where(card => card != null && MatchesCardFilters(card, effect.cardFilterTags))
                         .ToList();
 
                     if (candidates.Count == 0)
@@ -758,7 +768,13 @@ public static class EffectResolver
 
                     for (int i = 0; i < amount; i++)
                     {
+                        if (candidates[i] == null)
+                            continue;
+
                         CardInstance newCard = new CardInstance(candidates[i]);
+                        if (newCard == null || newCard.data == null)
+                            continue;
+
                         AddCardToPile(deck, effect.cardSelectionSource, newCard);
                         if (ui != null && effect.cardSelectionSource != CardSelectionSource.Hand)
                         {
@@ -771,19 +787,28 @@ public static class EffectResolver
                 {
                     if (ctx.isPreview)
                         yield break;
+                    if (ctx.source == null || ctx.source.GetCombatManager() == null || ctx.source.GetCombatManager().deck == null)
+                        yield break;
+
+                    SelectableCharacter activeCharacter = RunManager.Instance != null ? RunManager.Instance.selectedCharacter : SelectableCharacter.EP;
                     for (int i = 0; i < effect.value; i++)
                     {
                         CardInstance newCard;
                         if (effect.cardID == null || effect.cardID == "")
                         {
-                            STSCardData data = STSCardDatabase.GetRandomCard(RunManager.Instance.selectedCharacter);
+                            STSCardData data = STSCardDatabase.GetRandomCard(activeCharacter);
+                            if (data == null) continue;
                             newCard = new CardInstance(data);
                         }
                         else
                         {
                             STSCardData data = STSCardDatabase.Get(effect.cardID);
+                            if (data == null) continue;
                             newCard = new CardInstance(data);
                         }
+
+                        if (newCard == null || newCard.data == null)
+                            continue;
 
                         ctx.source.GetCombatManager().deck.drawPile.Add(newCard);
                         if (ui != null)
@@ -797,19 +822,28 @@ public static class EffectResolver
                 {
                     if (ctx.isPreview)
                         yield break;
+                    if (ctx.source == null || ctx.source.GetCombatManager() == null || ctx.source.GetCombatManager().deck == null)
+                        yield break;
+
+                    SelectableCharacter activeCharacter = RunManager.Instance != null ? RunManager.Instance.selectedCharacter : SelectableCharacter.EP;
                     for (int i = 0; i < effect.value; i++)
                     {
                         CardInstance newCard;
                         if (effect.cardID == null || effect.cardID == "")
                         {
-                            STSCardData data = STSCardDatabase.GetRandomCard(RunManager.Instance.selectedCharacter);
+                            STSCardData data = STSCardDatabase.GetRandomCard(activeCharacter);
+                            if (data == null) continue;
                             newCard = new CardInstance(data);
                         }
                         else
                         {
                             STSCardData data = STSCardDatabase.Get(effect.cardID);
+                            if (data == null) continue;
                             newCard = new CardInstance(data);
                         }
+
+                        if (newCard == null || newCard.data == null)
+                            continue;
 
                         ctx.source.GetCombatManager().deck.discardPile.Add(newCard);
                         if (ui != null)
@@ -1199,6 +1233,9 @@ public static class EffectResolver
 
     private static bool MatchesCardFilter(STSCardData card, CardFilterTag tag)
     {
+        if (card == null)
+            return false;
+
         return tag switch
         {
             CardFilterTag.Attack => card.type == CardType.Attaque,

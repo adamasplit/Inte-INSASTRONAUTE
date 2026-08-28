@@ -20,19 +20,19 @@ public static class BattleCalculator
             if (mod.AppliesTo(type, ctx))
                 applyingModifiers.Add(mod);
         }
-        if (ctx.source != null)
+        if (ctx.source != null && ctx.source.statusEffects != null)
         {
             foreach (var effect in ctx.source.statusEffects)
             {
-                if (effect.AppliesTo(type, ctx))
+                if (effect != null && effect.AppliesTo(type, ctx))
                     applyingModifiers.Add(effect);
             }
         }
-        if (ctx.target != null&&ctx.target!=ctx.source)
+        if (ctx.target != null && ctx.target != ctx.source && ctx.target.statusEffects != null)
         {
             foreach (var effect in ctx.target.statusEffects)
             {
-                if (effect.AppliesTo(type, ctx))
+                if (effect != null && effect.AppliesTo(type, ctx))
                     applyingModifiers.Add(effect);
             }
         }
@@ -74,9 +74,9 @@ public static class BattleCalculator
 
 
         // Effets spéciaux non résumables à des modificateurs, comme la télékinésie
-        if (ctx.card!=null)
+        if (ctx.card != null && ctx.card.enchantments != null)
         {
-            if (ctx.card.enchantments.Exists(e=>e.data.name=="Télékinésie"))
+            if (ctx.card.enchantments.Exists(e => e != null && e.data != null && e.data.name == "Télékinésie"))
             {
                 value = Mathf.Max(value, baseValue);
             }

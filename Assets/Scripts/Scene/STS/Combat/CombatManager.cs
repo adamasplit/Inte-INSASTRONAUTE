@@ -878,7 +878,7 @@ public class CombatManager : MonoBehaviour
 
     IEnumerator CollectAuthoritativeCardSelection(CardInstance playedCard, List<string> selectedIds)
     {
-        if (playedCard == null || playedCard.data == null || playedCard.data.effects == null)
+        if (deck == null || playedCard == null || playedCard.data == null || playedCard.data.effects == null)
             yield break;
 
         EffectEntry effect = playedCard.data.effects.FirstOrDefault(entry => entry.type == EffectType.CardSelection);
@@ -1022,25 +1022,38 @@ public class CombatManager : MonoBehaviour
         {
             JObject message = authoritativeMessageQueue.Dequeue();
             string type = message.Value<string>("type");
-            if (type == "COMBAT_SNAPSHOT")
+            IEnumerator subRoutine = null;
+            try
             {
-                JToken state = message["payload"]?["state"];
-                if (state != null) ApplyAuthoritativeCombatState(state, true);
+                if (type == "COMBAT_SNAPSHOT")
+                {
+                    JToken state = message["payload"]?["state"];
+                    if (state != null) ApplyAuthoritativeCombatState(state, true);
+                }
+                else if (type == "COMBAT_EVENT")
+                {
+                    JToken payload = message["payload"];
+                    if (payload != null)
+                        subRoutine = ReplayAuthoritativeEvents(new List<JToken> { payload });
+                }
+                else if (type == "STATE_UPDATED")
+                {
+                    JToken payload = message["payload"];
+                    if (payload != null) ApplyAuthoritativeCombatState(payload, true);
+                }
+                else if (type == "COMMAND_REJECTED")
+                {
+                    HandleCommandRejected(message["payload"]);
+                }
             }
-            else if (type == "COMBAT_EVENT")
+            catch (Exception ex)
             {
-                JToken payload = message["payload"];
-                if (payload != null)
-                    yield return ReplayAuthoritativeEvents(new List<JToken> { payload });
+                Debug.LogError($"[STS-COMBAT] Exception processing authoritative message type={type}: {ex}");
             }
-            else if (type == "STATE_UPDATED")
+
+            if (subRoutine != null)
             {
-                JToken payload = message["payload"];
-                if (payload != null) ApplyAuthoritativeCombatState(payload, true);
-            }
-            else if (type == "COMMAND_REJECTED")
-            {
-                HandleCommandRejected(message["payload"]);
+                yield return subRoutine;
             }
         }
 
@@ -1497,10 +1510,12 @@ public class CombatManager : MonoBehaviour
             {
                 projectedTime += (long)Mathf.Max(1f, realEntry.character.turnDelay(turnSystem.baseDelay));
                 if (step == 0)
+                {
                     projectedTime = Math.Max(0L, projectedTime + pendingSelfDelay);
-                    // A projection belongs to this specific real turn. When that turn is consumed,
-                    // its new uid produces fresh future icons instead of moving the old ones back.
-                    string projectionKey = $"{combatantId}:{realEntry.uid}#{step}";
+                }
+                // A projection belongs to this specific real turn. When that turn is consumed,
+                // its new uid produces fresh future icons instead of moving the old ones back.
+                string projectionKey = $"{combatantId}:{realEntry.uid}#{step}";
                 projectionKeys.Add(projectionKey);
 
                 if (!authoritativeTimelineProjectionEntries.TryGetValue(projectionKey, out TurnEntry projectedEntry))
@@ -1531,71 +1546,103 @@ public class CombatManager : MonoBehaviour
                 continue;
 
             string eventType = ResolveCombatEventType(combatEvent);
-            switch (eventType)
+            IEnumerator handler = null;
+            try
             {
-                case "CardPlayed":
-                    yield return ReplayCardPlayedEvent(combatEvent);
-                    break;
-                case "CardDrawn":
-                    yield return ReplayCardDrawnEvent(combatEvent);
-                    break;
-                case "CardMoved":
-                    yield return ReplayCardMovedEvent(combatEvent);
-                    break;
-                case "PileShuffled":
-                    yield return ReplayPileShuffledEvent(combatEvent);
-                    break;
-                case "StatusApplied":
-                    yield return ReplayStatusAppliedEvent(combatEvent);
-                    break;
-                case "StatusRemoved":
-                    ReplayStatusRemovedEvent(combatEvent);
-                    yield return new WaitForSeconds(0.05f);
-                    break;
-                case "StatusUpdated":
-                    ReplayStatusUpdatedEvent(combatEvent);
-                    yield return new WaitForSeconds(0.05f);
-                    break;
-                case "DamageApplied":
-                    ReplayDamageAppliedEvent(combatEvent);
-                    yield return new WaitForSeconds(0.12f);
-                    break;
-                case "HealApplied":
-                    ReplayHealAppliedEvent(combatEvent);
-                    yield return new WaitForSeconds(0.12f);
-                    break;
-                case "HpLost":
-                    ReplayHpLostEvent(combatEvent);
-                    yield return new WaitForSeconds(0.12f);
-                    break;
-                case "ArmorGained":
-                    yield return ReplayArmorGainedEvent(combatEvent);
-                    break;
-                case "ArmorBroken":
-                    ReplayArmorBrokenEvent(combatEvent);
-                    yield return FlashCombatantWhite(ResolveCombatant(combatEvent.Value<string>("targetId")));
-                    break;
-                case "EnergySpent":
-                    ReplayEnergySpentEvent(combatEvent);
-                    break;
-                case "EnergyGained":
-                    ReplayEnergyGainedEvent(combatEvent);
-                    break;
-                case "TurnStarted":
-                    if (combatantRegistry.IsLocalCombatant(combatEvent.Value<string>("combatantId")))
-                        state.turnCount = Mathf.Max(1, state.turnCount + 1);
-                    yield return new WaitForSeconds(0.05f);
-                    break;
-                case "TurnEnded":
-                    ApplyTurnEndedToTimeline(combatEvent);
-                    yield return new WaitForSeconds(0.05f);
-                    break;
-                case "CombatEnded":
-                    RecordAnnouncedOutcome(combatEvent);
-                    yield return new WaitForSeconds(0.1f);
-                    break;
+                switch (eventType)
+                {
+                    case "CardPlayed":
+                        handler = ReplayCardPlayedEvent(combatEvent);
+                        break;
+                    case "CardDrawn":
+                        handler = ReplayCardDrawnEvent(combatEvent);
+                        break;
+                    case "CardMoved":
+                        handler = ReplayCardMovedEvent(combatEvent);
+                        break;
+                    case "PileShuffled":
+                        handler = ReplayPileShuffledEvent(combatEvent);
+                        break;
+                    case "StatusApplied":
+                        handler = ReplayStatusAppliedEvent(combatEvent);
+                        break;
+                    case "StatusRemoved":
+                        ReplayStatusRemovedEvent(combatEvent);
+                        handler = DelaySeconds(0.05f);
+                        break;
+                    case "StatusUpdated":
+                        ReplayStatusUpdatedEvent(combatEvent);
+                        handler = DelaySeconds(0.05f);
+                        break;
+                    case "DamageApplied":
+                        ReplayDamageAppliedEvent(combatEvent);
+                        handler = DelaySeconds(0.12f);
+                        break;
+                    case "HealApplied":
+                        ReplayHealAppliedEvent(combatEvent);
+                        handler = DelaySeconds(0.12f);
+                        break;
+                    case "HpLost":
+                        ReplayHpLostEvent(combatEvent);
+                        handler = DelaySeconds(0.12f);
+                        break;
+                    case "ArmorGained":
+                        handler = ReplayArmorGainedEvent(combatEvent);
+                        break;
+                    case "ArmorBroken":
+                        ReplayArmorBrokenEvent(combatEvent);
+                        handler = FlashCombatantWhite(ResolveCombatant(combatEvent.Value<string>("targetId")));
+                        break;
+                    case "EnergySpent":
+                        ReplayEnergySpentEvent(combatEvent);
+                        break;
+                    case "EnergyGained":
+                        ReplayEnergyGainedEvent(combatEvent);
+                        break;
+                    case "TurnStarted":
+                        if (combatantRegistry.IsLocalCombatant(combatEvent.Value<string>("combatantId")))
+                            state.turnCount = Mathf.Max(1, state.turnCount + 1);
+                        handler = DelaySeconds(0.05f);
+                        break;
+                    case "TurnEnded":
+                        ApplyTurnEndedToTimeline(combatEvent);
+                        handler = DelaySeconds(0.05f);
+                        break;
+                    case "CombatEnded":
+                        RecordAnnouncedOutcome(combatEvent);
+                        handler = DelaySeconds(0.1f);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[STS-COMBAT] Exception setting up event replay for eventType={eventType}: {ex}");
+            }
+
+            if (handler != null)
+            {
+                while (true)
+                {
+                    bool hasNext = false;
+                    try
+                    {
+                        hasNext = handler.MoveNext();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"[STS-COMBAT] Exception replaying eventType={eventType}: {ex}");
+                        break;
+                    }
+                    if (!hasNext) break;
+                    yield return handler.Current;
+                }
             }
         }
+    }
+
+    private static IEnumerator DelaySeconds(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
     }
 
     string ResolveCombatEventType(JToken combatEvent)

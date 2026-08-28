@@ -467,6 +467,9 @@ public static class STSCardDatabase
 
     public static STSCardData Get(string id)
     {
+        if (cardDict == null || string.IsNullOrEmpty(id))
+            return null;
+
         if (cardDict.TryGetValue(id, out var card))
             return card;
 
@@ -477,10 +480,12 @@ public static class STSCardDatabase
     public static List<STSCardData> CardForCollectionCard(string collectionCardId)
     {
         List<STSCardData> cards = new List<STSCardData>();
+        if (allCards == null)
+            return cards;
 
         foreach (var card in allCards)
         {
-            if (card.collectionCardId == collectionCardId)
+            if (card != null && card.collectionCardId == collectionCardId)
             {
                 cards.Add(card);
             }
@@ -507,8 +512,8 @@ public static class STSCardDatabase
             return null;
         }
 
-        List<STSCardData> favoredCards = allCards.FindAll(c => c.favoredCharacter == character&&c.HasTag(CardTag.Created));
-        if (favoredCards.Count > 0)
+        List<STSCardData> favoredCards = allCards.FindAll(c => c != null && c.favoredCharacter == character && c.HasTag(CardTag.Created));
+        if (favoredCards != null && favoredCards.Count > 0)
         {
             int index = UnityEngine.Random.Range(0, favoredCards.Count);
             return favoredCards[index];

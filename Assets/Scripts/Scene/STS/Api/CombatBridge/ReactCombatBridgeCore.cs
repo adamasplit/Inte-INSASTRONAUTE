@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
 public enum ReactCombatCommandOutcome
 {
     Confirmed,
@@ -109,13 +109,22 @@ public sealed class ReactCombatBridgeCore
     public ReactCombatCommand CreateCommand(string type, object payload)
     {
         if (CombatId == null || CurrentRevision == null)
-            throw new InvalidOperationException("A synchronized combat is required");
+        {
+            Debug.WriteLine("[STS-BRIDGE] CreateCommand failed: CombatId or CurrentRevision is null");
+            return null;
+        }
         if (!CommandTypes.Contains(type))
-            throw new ArgumentException("Unsupported combat command", nameof(type));
+        {
+            Debug.WriteLine($"[STS-BRIDGE] CreateCommand failed: Unsupported command type {type}");
+            return null;
+        }
 
         string actionId = actionIdFactory();
         if (string.IsNullOrWhiteSpace(actionId))
-            throw new InvalidOperationException("Action identifier factory returned an empty value");
+        {
+            Debug.WriteLine("[STS-BRIDGE] CreateCommand failed: Action id factory returned empty");
+            return null;
+        }
 
         var body = new
         {
@@ -261,6 +270,13 @@ public sealed class ReactCombatBridgeCore
         if (!string.Equals(message.Value<string>("combatId"), CombatId, StringComparison.Ordinal)
             || !StatusTypes.Contains(status))
             return false;
+
+        if (string.Equals(status, "DISCONNECTED", StringComparison.Ordinal))
+        {
+            foreach (TaskCompletionSource<ReactCombatCommandOutcome> pending in pendingCommands.Values)
+                pending.TrySetResult(ReactCombatCommandOutcome.Unknown);
+            pendingCommands.Clear();
+        }
 
         CombatStatusChanged?.Invoke(status);
         return true;

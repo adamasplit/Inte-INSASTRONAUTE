@@ -8,7 +8,6 @@ public enum StatusType
     Poison,
     Awakening,
     FullMoon,
-    FullMoonTemp,
     Slow,
     Haste,
     Divination,
@@ -68,5 +67,6 @@ public enum StatusType
     TimeStop,
     Signal,
     Unbiased,
-    Production
+    Production,
+    FullMoonTemp
 }

@@ -70,40 +70,69 @@ public sealed class ReactCombatBridge : MonoBehaviour
         string expectedRevision,
         int timeoutMs = 5000)
     {
-        ReactCombatBridge bridge = EnsureInstance();
-        if (!string.Equals(bridge.core.CurrentRevision, expectedRevision, StringComparison.Ordinal))
+        try
         {
-            Debug.LogWarning($"[STS-BRIDGE] command blocked type={type}: expectedRevision={expectedRevision} currentRevision={bridge.core.CurrentRevision ?? "<null>"}");
+            ReactCombatBridge bridge = EnsureInstance();
+            if (bridge == null || bridge.core == null)
+                return ReactCombatCommandOutcome.Unknown;
+
+            if (!string.Equals(bridge.core.CurrentRevision, expectedRevision, StringComparison.Ordinal))
+            {
+                Debug.LogWarning($"[STS-BRIDGE] command blocked type={type}: expectedRevision={expectedRevision} currentRevision={bridge.core.CurrentRevision ?? "<null>"}");
+                return ReactCombatCommandOutcome.Unknown;
+            }
+
+            ReactCombatCommand command = bridge.core.CreateCommand(type, payload);
+            if (command == null)
+            {
+                Debug.LogWarning($"[STS-BRIDGE] command creation failed type={type}");
+                return ReactCombatCommandOutcome.Unknown;
+            }
+
+            Debug.Log($"[STS-BRIDGE] command dispatch type={type} actionId={command.ActionId} combatId={bridge.core.CombatId} revision={bridge.core.CurrentRevision}");
+            int dispatchResult = InvokeCommand(command.Json);
+            if (dispatchResult == 0)
+            {
+                Debug.LogWarning($"[STS-BRIDGE] command dispatch rejected by JS type={type} actionId={command.ActionId}");
+                ReactCombatCommandOutcome rejectedOutcome = await bridge.core.WaitForCommandAsync(command.ActionId, 0);
+                Debug.Log($"[STS-BRIDGE] command outcome type={type} actionId={command.ActionId} outcome={rejectedOutcome}");
+                return rejectedOutcome;
+            }
+
+            ReactCombatCommandOutcome outcome = await bridge.core.WaitForCommandAsync(command.ActionId, timeoutMs);
+            Debug.Log($"[STS-BRIDGE] command outcome type={type} actionId={command.ActionId} outcome={outcome}");
+            return outcome;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[STS-BRIDGE] Exception in SendCommandAsync type={type}: {ex}");
             return ReactCombatCommandOutcome.Unknown;
         }
-
-        ReactCombatCommand command = bridge.core.CreateCommand(type, payload);
-        Debug.Log($"[STS-BRIDGE] command dispatch type={type} actionId={command.ActionId} combatId={bridge.core.CombatId} revision={bridge.core.CurrentRevision}");
-        int dispatchResult = InvokeCommand(command.Json);
-        if (dispatchResult == 0)
-        {
-            Debug.LogWarning($"[STS-BRIDGE] command dispatch rejected by JS type={type} actionId={command.ActionId}");
-            ReactCombatCommandOutcome rejectedOutcome = await bridge.core.WaitForCommandAsync(command.ActionId, 0);
-            Debug.Log($"[STS-BRIDGE] command outcome type={type} actionId={command.ActionId} outcome={rejectedOutcome}");
-            return rejectedOutcome;
-        }
-
-        ReactCombatCommandOutcome outcome = await bridge.core.WaitForCommandAsync(command.ActionId, timeoutMs);
-        Debug.Log($"[STS-BRIDGE] command outcome type={type} actionId={command.ActionId} outcome={outcome}");
-        return outcome;
     }
 
     public void HandleCombatEvent(string json)
     {
-        // A message the core turns down is a message the player never sees animate, and it used
-        // to go by without a trace. Say so, so the next protocol drift is one log line away.
-        if (!core.HandleCombatEvent(json))
-            Debug.LogWarning($"[STS-BRIDGE] combat message discarded revision={core.CurrentRevision ?? "<null>"} json={json}");
+        try
+        {
+            if (!core.HandleCombatEvent(json))
+                Debug.LogWarning($"[STS-BRIDGE] combat message discarded revision={core.CurrentRevision ?? "<null>"} json={json}");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[STS-BRIDGE] Exception handling combat event: {ex}");
+        }
     }
 
     public void HandleCombatStatus(string json)
     {
-        core.HandleCombatStatus(json);
+        try
+        {
+            core.HandleCombatStatus(json);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[STS-BRIDGE] Exception handling combat status: {ex}");
+        }
     }
 
     private static ReactCombatBridge EnsureInstance()

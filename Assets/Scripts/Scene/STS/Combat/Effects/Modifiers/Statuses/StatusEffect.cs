@@ -203,6 +203,8 @@ public abstract class StatusEffect : StatModifier
             StatusType.Production=>new ProductionStatus(duration),
             _ => null
         };
+        if (stat == null)
+            return null;
         stat.statusType = type;
         stat.cardID = effectInfo;
         stat.index = index;
