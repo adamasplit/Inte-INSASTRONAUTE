@@ -8,6 +8,7 @@ public enum StatusType
     Poison,
     Awakening,
     FullMoon,
+    FullMoonTemp,
     Slow,
     Haste,
     Divination,

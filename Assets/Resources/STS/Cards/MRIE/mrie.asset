@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: insastronaute
+  m_Name: mrie
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: insastronaute
-  cardName: Frappe stellaire
-  collectionCardId: 
+  id: mrie
+  cardName: Rafale de salade
+  collectionCardId: MRIE
   multiplayerExclusive: 0
   characterLevel: 0
   icon: {fileID: 0}
-  cost: 1
+  cost: 2
   xCost: 0
   type: 0
   rarity: 4
   effects:
-  - type: 0
+  - type: 7
     value: 10
     targetSelf: 0
     targetOthers: 0
     statusType: 0
-    duration: 0
+    duration: 5
     description: 
     cardID: 
     index: 0
@@ -39,10 +39,44 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-    animationType: 0
-  targetingMode: 1
+    animationType: 2
+  - type: 18
+    value: 0
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 0
+    duration: 5
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 2
+  - type: 3
+    value: 0
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 3
+    duration: 3
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 2
+  targetingMode: 5
   modifiers: []
-  favoredCharacter: 11
+  favoredCharacter: 5
   animationSpeed: 1
   startingCount: 0
   tags: 

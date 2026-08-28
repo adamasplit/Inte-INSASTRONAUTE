@@ -1,18 +1,40 @@
 {
   "id": "treso_goodies",
-  "cardName": "",
-  "collectionCardId": null,
+  "cardName": "Fusion de pôles",
+  "collectionCardId": "Treso X Goodies",
   "multiplayerExclusive": false,
   "characterLevel": 0,
   "iconId": null,
-  "cost": 0,
+  "cost": 1,
   "xCost": false,
-  "type": "Attaque",
-  "rarity": "Common",
+  "type": "Pouvoir",
+  "rarity": "Epic",
   "targetingMode": "Player",
-  "effects": [],
+  "effects": [
+    {
+      "type": "CardSelection",
+      "value": 2,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "DrawPile",
+      "index": 0,
+      "cardFilterTags": [
+        "Cost0"
+      ],
+      "cardSelectionEffect": "Merge",
+      "animationType": "Default"
+    }
+  ],
   "modifiers": [],
-  "favoredCharacter": "Starting",
+  "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": []

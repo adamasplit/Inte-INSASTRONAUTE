@@ -140,6 +140,7 @@ public abstract class StatusEffect : StatModifier
             StatusType.Dexterity => new DexterityStatus(value),
             StatusType.Awakening => new AwakeningStatus(value,duration),
             StatusType.FullMoon => new FullMoonStatus(),
+            StatusType.FullMoonTemp => new FullMoonTempEffect(value),
             StatusType.Slow => new SlowStatus(duration),
             StatusType.Haste => new HasteStatus(duration),
             StatusType.Divination => new DivinationStatus(value),

@@ -40,6 +40,11 @@ public class RunManagerUI : MonoBehaviour
     private CombatManager pvpCombatOverride;
     private string defaultSaveButtonLabelText;
 
+    void Awake()
+    {
+        ResolveSaveButtonLabel();
+    }
+
     void Start()
     {
         if (relicsButton != null)
@@ -48,10 +53,7 @@ public class RunManagerUI : MonoBehaviour
             deckButton.onClick.AddListener(ShowDeck);
         if (saveAndReturnToMenuButton != null)
             saveAndReturnToMenuButton.onClick.AddListener(OnSaveButtonPressed);
-        if (saveAndReturnToMenuButtonLabel == null && saveAndReturnToMenuButton != null)
-            saveAndReturnToMenuButtonLabel = saveAndReturnToMenuButton.GetComponentInChildren<TextMeshProUGUI>();
-        if (saveAndReturnToMenuButtonLabel != null)
-            defaultSaveButtonLabelText = saveAndReturnToMenuButtonLabel.text;
+        ResolveSaveButtonLabel();
         
         // Ensure an EventSystem exists so UI can receive clicks
         var es = UnityEngine.EventSystems.EventSystem.current;
@@ -155,6 +157,25 @@ public class RunManagerUI : MonoBehaviour
     public void BeginPvpCombatOverride(CombatManager combat)
     {
         pvpCombatOverride = combat;
+        ResolveSaveButtonLabel();
+
+        if (floorText != null)
+            floorText.gameObject.SetActive(true);
+        if (actText != null)
+            actText.gameObject.SetActive(true);
+        if (saveAndReturnToMenuButton != null)
+            saveAndReturnToMenuButton.interactable = true;
+        if (saveAndReturnToMenuButtonLabel != null)
+            saveAndReturnToMenuButtonLabel.text = SurrenderConfirmation.IdleLabel;
+    }
+
+    private void ResolveSaveButtonLabel()
+    {
+        if (saveAndReturnToMenuButtonLabel == null && saveAndReturnToMenuButton != null)
+            saveAndReturnToMenuButtonLabel = saveAndReturnToMenuButton.GetComponentInChildren<TextMeshProUGUI>(true);
+
+        if (string.IsNullOrEmpty(defaultSaveButtonLabelText) && saveAndReturnToMenuButtonLabel != null)
+            defaultSaveButtonLabelText = saveAndReturnToMenuButtonLabel.text;
     }
 
     /// Rend l'entete de run a la carte : le duel est fini, sauve ou perdu.

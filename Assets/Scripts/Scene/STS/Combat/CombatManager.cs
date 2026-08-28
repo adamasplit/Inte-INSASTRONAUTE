@@ -92,6 +92,7 @@ public class CombatManager : MonoBehaviour
     private bool authoritativeHandSynced;
     private readonly Dictionary<string, TurnEntry> authoritativeTimelineEntries = new();
     private readonly Dictionary<string, TurnEntry> authoritativeTimelineProjectionEntries = new();
+    private readonly Dictionary<string, long> authoritativeTimelinePendingSelfDelays = new();
     private bool authoritativeCommandInFlight;
     private float authoritativeCommandInFlightSince;
     private const float AuthoritativeCommandWatchdogSeconds = 8f;
@@ -884,12 +885,6 @@ public class CombatManager : MonoBehaviour
         if (effect == null)
             yield break;
 
-        // The server only resolves a CardSelection carrying at most one filter tag
-        // (CardSelectionSupport.unsupportedReason); a card asking for more would be rejected
-        // there regardless, so there is nothing useful to collect for it here.
-        if (effect.cardFilterTags != null && effect.cardFilterTags.Count > 1)
-            yield break;
-
         // Every CardSelectionEffect the server actually resolves needs its selection collected,
         // not just the original four (Exhaust/Discard/ReturnToHand/TopOfDrawPile) — None is the
         // only one it never implements (CardSelectionSupport.IMPLEMENTED_ACTIONS). Restricting
@@ -1091,6 +1086,7 @@ public class CombatManager : MonoBehaviour
         combatantRegistry.Clear();
         combatantRegistryBuilt = false;
         combatantPiles.Clear();
+        authoritativeTimelinePendingSelfDelays.Clear();
     }
 
     public void RequestAuthoritativeEndTurn()
@@ -1416,12 +1412,21 @@ public class CombatManager : MonoBehaviour
             entry.character = entryCharacter;
             entry.time = entryToken.Value<long?>("readyAtTick") ?? 0L;
 
+            long pendingSelfDelay = entryToken.Value<long?>("pendingSelfDelayTicks") ?? 0L;
+            if (pendingSelfDelay == 0L)
+                authoritativeTimelinePendingSelfDelays.Remove(combatantId);
+            else
+                authoritativeTimelinePendingSelfDelays[combatantId] = pendingSelfDelay;
+
             authoritativeTimeline.Add(entry);
             seenCombatantIds.Add(combatantId);
         }
 
         foreach (string staleId in authoritativeTimelineEntries.Keys.Where(id => !seenCombatantIds.Contains(id)).ToList())
+        {
             authoritativeTimelineEntries.Remove(staleId);
+            authoritativeTimelinePendingSelfDelays.Remove(staleId);
+        }
 
         turnSystem.timeline = authoritativeTimeline.OrderBy(entry => entry.time).ToList();
         RefreshTimelineDisplay();
@@ -1454,6 +1459,7 @@ public class CombatManager : MonoBehaviour
             time = nextReadyAtTick.Value,
             uid = TurnEntry.nextUID++
         };
+        authoritativeTimelinePendingSelfDelays.Remove(combatantId);
 
         turnSystem.timeline = authoritativeTimelineEntries.Values.OrderBy(e => e.time).ToList();
         RefreshTimelineDisplay();
@@ -1482,9 +1488,16 @@ public class CombatManager : MonoBehaviour
                 continue;
 
             long projectedTime = (long)realEntry.time;
+            long pendingSelfDelay = authoritativeTimelinePendingSelfDelays.TryGetValue(
+                combatantId,
+                out long pendingDelay)
+                ? pendingDelay
+                : 0L;
             for (int step = 0; step < projectionStepsPerCombatant; step++)
             {
                 projectedTime += (long)Mathf.Max(1f, realEntry.character.turnDelay(turnSystem.baseDelay));
+                if (step == 0)
+                    projectedTime = Math.Max(0L, projectedTime + pendingSelfDelay);
                     // A projection belongs to this specific real turn. When that turn is consumed,
                     // its new uid produces fresh future icons instead of moving the old ones back.
                     string projectionKey = $"{combatantId}:{realEntry.uid}#{step}";

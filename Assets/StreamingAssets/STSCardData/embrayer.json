@@ -4,7 +4,7 @@
   "collectionCardId": null,
   "multiplayerExclusive": false,
   "characterLevel": 0,
-  "iconId": null,
+  "iconId": "embrayage",
   "cost": 2,
   "xCost": false,
   "type": "Compétence",

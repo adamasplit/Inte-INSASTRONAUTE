@@ -36,7 +36,6 @@ public static class PvpDeckEligibility
         }
 
         return favoredCharacter.Equals("Aucun", StringComparison.OrdinalIgnoreCase)
-            || favoredCharacter.Equals("Starting", StringComparison.OrdinalIgnoreCase)
             || favoredCharacter.Equals(selectedCharacter, StringComparison.OrdinalIgnoreCase);
     }
 

@@ -42,7 +42,7 @@ MonoBehaviour:
     animationType: 0
   targetingMode: 0
   modifiers: []
-  favoredCharacter: 9
+  favoredCharacter: 8
   animationSpeed: 1
   startingCount: 0
   tags: 

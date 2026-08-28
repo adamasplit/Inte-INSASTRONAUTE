@@ -290,6 +290,7 @@ public class UIManager : MonoBehaviour
         if (header == null)
             return;
 
+        header.gameObject.SetActive(true);
         header.BeginPvpCombatOverride(combat);
 
         if (combatNoticeText == null)
@@ -921,6 +922,15 @@ public class UIManager : MonoBehaviour
 
         if (secondsRemaining == null)
         {
+            if (combat != null && combat.Mode == CombatMode.Pvp)
+            {
+                if (!turnCountdownText.gameObject.activeSelf)
+                    turnCountdownText.gameObject.SetActive(true);
+                turnCountdownText.color = Color.white;
+                turnCountdownText.text = "En attente...";
+                return;
+            }
+
             if (turnCountdownText.gameObject.activeSelf)
                 turnCountdownText.gameObject.SetActive(false);
             return;

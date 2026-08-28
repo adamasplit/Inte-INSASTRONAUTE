@@ -4,7 +4,7 @@
   "collectionCardId": null,
   "multiplayerExclusive": false,
   "characterLevel": 0,
-  "iconId": null,
+  "iconId": "accelerateur",
   "cost": 1,
   "xCost": false,
   "type": "Attaque",

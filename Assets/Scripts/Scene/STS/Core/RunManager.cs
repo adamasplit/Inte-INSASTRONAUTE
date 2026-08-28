@@ -860,6 +860,11 @@ public class RunManager : MonoBehaviour
     {
         activePvpBattleId = null;
         inCombat = false;
+        if (ui != null)
+        {
+            ui.EndPvpCombatOverride();
+            ui.gameObject.SetActive(false);
+        }
     }
 
     /// Rend, et efface, la demande de revanche. Une fois lue, elle ne doit plus valoir :
