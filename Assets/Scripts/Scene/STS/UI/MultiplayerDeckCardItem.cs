@@ -9,6 +9,7 @@ public class MultiplayerDeckCardItem : MonoBehaviour
     [SerializeField] private Toggle includeToggle;
     [SerializeField] private GameObject lockedOverlay;
     [SerializeField] private TextMeshProUGUI lockedReasonText;
+    [SerializeField] private GameObject selectedOverlay;
 
     private string cardKey;
     private Action<string, bool> onToggleChanged;
@@ -64,6 +65,10 @@ public class MultiplayerDeckCardItem : MonoBehaviour
         if (lockedReasonText != null)
         {
             lockedReasonText.text = interactable ? string.Empty : lockedReason;
+        }
+        if (selectedOverlay != null)
+        {
+            selectedOverlay.SetActive(selected);
         }
     }
 

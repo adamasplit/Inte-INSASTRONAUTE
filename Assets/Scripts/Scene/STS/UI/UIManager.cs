@@ -34,6 +34,9 @@ public class UIManager : MonoBehaviour
     public PvpResultController pvpResultController;
     public RectTransform discardAnchor;
     public RectTransform deckAnchor;
+    [Header("Enemy card animation")]
+    public RectTransform enemyDiscardAnchor;
+    public RectTransform enemyDeckAnchor;
     public CardAnimator animator;
     public TextMeshProUGUI discardCountText;
     public TextMeshProUGUI deckCountText;
@@ -56,6 +59,7 @@ public class UIManager : MonoBehaviour
     Coroutine combatNoticeRoutine;
     private int pendingDrawAnimations = 0;
     private int pendingPlayedCardAnimations = 0;
+    private readonly HashSet<CardView> playedCardViews = new();
     public Image backgroundImage;
     public bool IsSelectingCards()
     {
@@ -199,20 +203,35 @@ public class UIManager : MonoBehaviour
 
     public CardView GetView(CardInstance card)
     {
+        if (card == null)
+            return null;
+
         foreach (var view in currentHandViews)
         {
-            if (view.cardInstance == card)
+            if (IsViewOfCard(view, card))
                 return view;
         }
         // Also check if the card is in the animation layer (e.g., during draw or discard animations)
+        if (animator == null || animator.animationLayer == null)
+            return null;
+
         foreach (Transform child in animator.animationLayer)
         {
             CardView view = child.GetComponentInChildren<CardView>();
-            if (view != null && view.cardInstance == card)
+            if (IsViewOfCard(view, card))
                 return view;
         }
 
         return null;
+    }
+
+    static bool IsViewOfCard(CardView view, CardInstance card)
+    {
+        return view != null
+            && view.cardInstance != null
+            && (view.cardInstance == card
+                || (!string.IsNullOrEmpty(card.instanceId)
+                    && view.cardInstance.instanceId == card.instanceId));
     }
     public CardView CreateCardView(CardInstance card, bool addToHand = true, Vector3? startWorldPosition = null)
     {
@@ -766,6 +785,12 @@ public class UIManager : MonoBehaviour
 
         currentHandViews.Remove(view);
 
+        // A played card owns its exit animation already. Card movement events can arrive while
+        // that animation is running; starting a second discard coroutine would race it and leave
+        // an orphaned view behind.
+        if (playedCardViews.Contains(view))
+            return;
+
         StartCoroutine(
             AnimateDiscard(view)
         );
@@ -809,6 +834,7 @@ public class UIManager : MonoBehaviour
             endScale: new Vector3(0.4f, 0.4f, 1f)
         );
 
+        playedCardViews.Remove(view);
         Destroy(view.gameObject);
     }
     IEnumerator AnimateExhaust(CardView view)
@@ -823,6 +849,7 @@ public class UIManager : MonoBehaviour
 
         yield return view.PlayExhaustAnimation();
 
+        playedCardViews.Remove(view);
         Destroy(view.gameObject);
     }
 
@@ -964,6 +991,7 @@ public IEnumerator AnimateCardToCenter(CardView view)
     if (view == null || view.rootRect == null)
         yield break;
 
+    playedCardViews.Add(view);
     view.isAnimating = true;
     int queueIndex = pendingPlayedCardAnimations++;
 
@@ -1005,7 +1033,8 @@ public IEnumerator AnimateCardToCenter(CardView view)
 }
     public IEnumerator AnimateCardToDiscard(
         CardView view,
-        bool exhaust
+        bool exhaust,
+        Character actor = null
     )
     {
         if (view == null)
@@ -1022,7 +1051,7 @@ public IEnumerator AnimateCardToCenter(CardView view)
         yield return animator.MoveCard(
             view.rootRect,
             view.rootRect.position,
-            discardAnchor.position,
+            DiscardAnchorFor(actor).position,
             1f,
             true,
             true,
@@ -1030,10 +1059,15 @@ public IEnumerator AnimateCardToCenter(CardView view)
             endScale: new Vector3(0.4f, 0.4f, 1f)
         );
 
+        playedCardViews.Remove(view);
         Destroy(view.rootRect.gameObject);
     }
 
-    public IEnumerator AnimateCardToPile(CardInstance card, CardSelectionSource destination)
+    public IEnumerator AnimateCardToPile(
+        CardInstance card,
+        CardSelectionSource destination,
+        Character actor = null
+    )
     {
         if (card == null)
             yield break;
@@ -1050,12 +1084,12 @@ public IEnumerator AnimateCardToCenter(CardView view)
 
         Vector3 targetPosition = destination switch
         {
-            CardSelectionSource.DrawPile => deckAnchor.position,
-            CardSelectionSource.DiscardPile => discardAnchor.position,
-            CardSelectionSource.ExhaustPile => discardAnchor.position,
-            CardSelectionSource.All => deckAnchor.position,
-            CardSelectionSource.AllExceptExhaustPile => deckAnchor.position,
-            _ => deckAnchor.position
+            CardSelectionSource.DrawPile => DeckAnchorFor(actor).position,
+            CardSelectionSource.DiscardPile => DiscardAnchorFor(actor).position,
+            CardSelectionSource.ExhaustPile => DiscardAnchorFor(actor).position,
+            CardSelectionSource.All => DeckAnchorFor(actor).position,
+            CardSelectionSource.AllExceptExhaustPile => DeckAnchorFor(actor).position,
+            _ => DeckAnchorFor(actor).position
         };
 
         yield return StartCoroutine(animator.MoveCard(
@@ -1072,6 +1106,20 @@ public IEnumerator AnimateCardToCenter(CardView view)
         ));
 
         Destroy(view.gameObject);
+    }
+
+    RectTransform DeckAnchorFor(Character actor)
+    {
+        return actor != null && !actor.isPlayer && enemyDeckAnchor != null
+            ? enemyDeckAnchor
+            : deckAnchor;
+    }
+
+    RectTransform DiscardAnchorFor(Character actor)
+    {
+        return actor != null && !actor.isPlayer && enemyDiscardAnchor != null
+            ? enemyDiscardAnchor
+            : discardAnchor;
     }
     public void AddCardAnimated(CardInstance card)
     {

@@ -4717,7 +4717,7 @@
     {
       "id": "cycle_conference_et_conscience",
       "cardName": "Intervention",
-      "collectionCardId": "Cycles conférences",
+      "collectionCardId": "Cycle conférences",
       "multiplayerExclusive": false,
       "characterLevel": 0,
       "iconId": null,
@@ -4934,7 +4934,7 @@
     {
       "id": "depart_en_sprint",
       "cardName": "Départ en sprint",
-      "collectionCardId": "Purple",
+      "collectionCardId": "Purple Rouen",
       "multiplayerExclusive": false,
       "characterLevel": 0,
       "iconId": null,
@@ -7100,7 +7100,7 @@
     {
       "id": "equilibrage_d_emploi_du_temps",
       "cardName": "Équilibrage d'emploi du temps",
-      "collectionCardId": "Ingénieur Humaniste",
+      "collectionCardId": "Ingenieur humaniste",
       "multiplayerExclusive": false,
       "characterLevel": 0,
       "iconId": null,
@@ -12081,7 +12081,7 @@
     {
       "id": "happy_hour",
       "cardName": "Happy Hour",
-      "collectionCardId": "Bar des Fleurs",
+      "collectionCardId": "Bar des fleurs",
       "multiplayerExclusive": false,
       "characterLevel": 0,
       "iconId": null,
@@ -13376,7 +13376,7 @@
     {
       "id": "insastronaute",
       "cardName": "Frapp'astrale",
-      "collectionCardId": null,
+      "collectionCardId": "Ins'astronaute",
       "multiplayerExclusive": false,
       "characterLevel": 0,
       "iconId": null,
@@ -15181,7 +15181,7 @@
     {
       "id": "jupiter",
       "cardName": "Cyclone",
-      "collectionCardId": null,
+      "collectionCardId": "Jupiter",
       "multiplayerExclusive": false,
       "characterLevel": 0,
       "iconId": null,
@@ -19648,7 +19648,7 @@
     {
       "id": "soiree",
       "cardName": "Soirée disco",
-      "collectionCardId": "Soirée",
+      "collectionCardId": "Soiree",
       "multiplayerExclusive": false,
       "characterLevel": 0,
       "iconId": null,
@@ -19818,19 +19818,19 @@
       "cost": 0,
       "xCost": false,
       "type": "Attaque",
-      "rarity": "Special",
+      "rarity": "Legendary",
       "targetingMode": "Enemy",
       "effects": [
         {
-          "type": "Damage",
-          "value": 30,
-          "targetSelf": false,
+          "type": "LoseHP",
+          "value": 10,
+          "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
           "duration": 0,
           "description": "",
           "cardID": "",
-          "conditional": true,
+          "conditional": false,
           "conditionType": "FirstTimePlayingThisCardThisCombat",
           "conditionValue": "",
           "trueEffect": false,
@@ -19841,9 +19841,9 @@
           "animationType": "Default"
         },
         {
-          "type": "LoseHP",
-          "value": 10,
-          "targetSelf": true,
+          "type": "Damage",
+          "value": 30,
+          "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
           "duration": 0,

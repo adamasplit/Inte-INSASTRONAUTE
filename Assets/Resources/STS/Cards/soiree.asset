@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: soiree
   cardName: "Soir\xE9e disco"
-  collectionCardId: "Soir\xE9e"
+  collectionCardId: Soiree
   multiplayerExclusive: 0
   characterLevel: 0
   icon: {fileID: 0}

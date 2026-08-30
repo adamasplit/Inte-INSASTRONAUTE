@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: insastronaute
   cardName: Frapp'astrale
-  collectionCardId: 
+  collectionCardId: Ins'astronaute
   multiplayerExclusive: 0
   characterLevel: 0
   icon: {fileID: 0}

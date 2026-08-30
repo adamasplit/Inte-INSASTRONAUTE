@@ -735,7 +735,7 @@ public class RetreatManager : MonoBehaviour
 
         if (tokenRewardText != null)
         {
-            tokenRewardText.text = $"Tokens prévus: +{response.tokensPreview} (solde projete: {response.projectedTokenBalance})";
+            tokenRewardText.text = $"Tokens prévus: +{response.tokensPreview} (solde prévu: {response.projectedTokenBalance})";
         }
     }
 

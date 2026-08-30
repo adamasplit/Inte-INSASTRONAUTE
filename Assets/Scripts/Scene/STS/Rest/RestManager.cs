@@ -232,6 +232,13 @@ public class RestManager : MonoBehaviour
                 UpdateChargesDisplay();
                 yield break;
             }
+
+            CardInstance updatedCard = RunManager.Instance.deck.Find(c => c != null && c.instanceId == selectedCard.instanceId);
+            if (updatedCard != null)
+            {
+                selectedCard = updatedCard;
+                selectedController.Init(updatedCard, this);
+            }
         }
         else
         {

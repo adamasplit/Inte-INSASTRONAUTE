@@ -69,6 +69,7 @@ public class STSApiCardState
 public class STSApiEnchantmentState
 {
     public string enchantmentClass;
+    public string enchantmentId;
     public int level;
 }
 
@@ -1079,10 +1080,17 @@ public static class STSApiClient
         {
             foreach (STSApiEnchantmentState enchantmentState in cardState.enchantments)
             {
-                if (enchantmentState == null || string.IsNullOrWhiteSpace(enchantmentState.enchantmentClass))
+                if (enchantmentState == null)
                     continue;
 
-                CardEnchantment enchantment = CreateEnchantment(enchantmentState.enchantmentClass, enchantmentState.level);
+                string id = !string.IsNullOrWhiteSpace(enchantmentState.enchantmentClass)
+                    ? enchantmentState.enchantmentClass
+                    : enchantmentState.enchantmentId;
+
+                if (string.IsNullOrWhiteSpace(id))
+                    continue;
+
+                CardEnchantment enchantment = CreateEnchantment(id, enchantmentState.level);
                 if (enchantment != null)
                     card.enchantments.Add(enchantment);
             }
@@ -1229,28 +1237,79 @@ public static class STSApiClient
         }
     }
 
-    private static CardEnchantment CreateEnchantment(string enchantmentClass, int level)
+    private static CardEnchantment CreateEnchantment(string enchantmentIdentifier, int level)
     {
-        Type enchantmentType = FindTypeByName(enchantmentClass);
-        if (enchantmentType == null || !typeof(EnchantmentData).IsAssignableFrom(enchantmentType))
+        if (string.IsNullOrWhiteSpace(enchantmentIdentifier))
             return null;
 
-        try
-        {
-            var data = Activator.CreateInstance(enchantmentType) as EnchantmentData;
-            if (data == null)
-                return null;
+        string trimmed = enchantmentIdentifier.Trim();
 
-            return new CardEnchantment
+        // 1. Direct type lookup by name
+        Type enchantmentType = FindTypeByName(trimmed);
+        if (enchantmentType == null && !trimmed.EndsWith("Enchantment", StringComparison.OrdinalIgnoreCase))
+        {
+            enchantmentType = FindTypeByName(trimmed + "Enchantment");
+        }
+
+        if (enchantmentType != null && typeof(EnchantmentData).IsAssignableFrom(enchantmentType))
+        {
+            try
             {
-                data = data,
-                level = level
-            };
+                var data = Activator.CreateInstance(enchantmentType) as EnchantmentData;
+                if (data != null)
+                {
+                    return new CardEnchantment
+                    {
+                        data = data,
+                        level = level
+                    };
+                }
+            }
+            catch { }
         }
-        catch
+
+        // 2. EnchantType enum parsing
+        string enumName = trimmed.EndsWith("Enchantment", StringComparison.OrdinalIgnoreCase)
+            ? trimmed.Substring(0, trimmed.Length - "Enchantment".Length)
+            : trimmed;
+
+        if (Enum.TryParse(enumName, true, out EnchantManager.EnchantType enumType))
         {
-            return null;
+            CardEnchantment enchantment = EnchantManager.GetEnchantByType(enumType, level);
+            if (enchantment != null)
+                return enchantment;
         }
+
+        // 3. Scan all EnchantmentData subclasses for matching .name property (e.g. French display names like "Mécanique", "Aura de feu")
+        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            Type[] types;
+            try { types = assembly.GetTypes(); }
+            catch { continue; }
+
+            foreach (var t in types)
+            {
+                if (t != null && !t.IsAbstract && typeof(EnchantmentData).IsAssignableFrom(t))
+                {
+                    try
+                    {
+                        var inst = Activator.CreateInstance(t) as EnchantmentData;
+                        if (inst != null && (string.Equals(inst.name, trimmed, StringComparison.OrdinalIgnoreCase)
+                            || string.Equals(t.Name, trimmed, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            return new CardEnchantment
+                            {
+                                data = inst,
+                                level = level
+                            };
+                        }
+                    }
+                    catch { }
+                }
+            }
+        }
+
+        return null;
     }
 
     private static Relic CreateRelic(string relicId)

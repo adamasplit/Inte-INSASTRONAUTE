@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: cycle_conference_et_conscience
   cardName: Intervention
-  collectionCardId: "Cycles conf\xE9rences"
+  collectionCardId: "Cycle conf\xE9rences"
   multiplayerExclusive: 0
   characterLevel: 0
   icon: {fileID: 0}

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: happy_hour
   cardName: Happy Hour
-  collectionCardId: Bar des Fleurs
+  collectionCardId: Bar des fleurs
   multiplayerExclusive: 0
   characterLevel: 0
   icon: {fileID: 0}

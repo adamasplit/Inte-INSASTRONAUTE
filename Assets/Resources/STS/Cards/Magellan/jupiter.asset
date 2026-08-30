@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: jupiter
   cardName: Cyclone
-  collectionCardId: 
+  collectionCardId: Jupiter
   multiplayerExclusive: 0
   characterLevel: 0
   icon: {fileID: 0}

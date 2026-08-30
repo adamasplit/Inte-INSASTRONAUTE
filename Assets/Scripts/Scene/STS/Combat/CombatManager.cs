@@ -881,7 +881,7 @@ public class CombatManager : MonoBehaviour
         if (deck == null || playedCard == null || playedCard.data == null || playedCard.data.effects == null)
             yield break;
 
-        EffectEntry effect = playedCard.data.effects.FirstOrDefault(entry => entry.type == EffectType.CardSelection);
+        EffectEntry effect = playedCard.GetEffects().FirstOrDefault(entry => entry.type == EffectType.CardSelection);
         if (effect == null)
             yield break;
 
@@ -1560,6 +1560,9 @@ public class CombatManager : MonoBehaviour
                     case "CardMoved":
                         handler = ReplayCardMovedEvent(combatEvent);
                         break;
+                    case "CardMerged":
+                        ReplayCardMergedEvent(combatEvent);
+                        break;
                     case "PileShuffled":
                         handler = ReplayPileShuffledEvent(combatEvent);
                         break;
@@ -1681,6 +1684,8 @@ public class CombatManager : MonoBehaviour
             return "CardMoved";
         if (combatEvent["pile"] != null || combatEvent["drawSize"] != null)
             return "PileShuffled";
+        if (combatEvent["resultingCardInstanceId"] != null)
+            return "CardMerged";
         if (combatEvent["previousReadyAtTick"] != null)
             return "TurnEnded";
         if (combatEvent["readyAtTick"] != null)
@@ -1810,12 +1815,12 @@ public class CombatManager : MonoBehaviour
             // leaving the center. Waiting for that exit instead put the whole of it in front of
             // every hit — 0.4s of travel plus the read pause — and that wait, not the round trip,
             // is what made an attack feel late.
-            StartCoroutine(ui.AnimateCardToDiscard(playedView, burns));
+            StartCoroutine(ui.AnimateCardToDiscard(playedView, burns, actor));
             yield break;
         }
 
         yield return new WaitForSeconds(0.08f);
-        yield return ui.AnimateCardToDiscard(playedView, burns);
+        yield return ui.AnimateCardToDiscard(playedView, burns, actor);
         yield return new WaitForSeconds(0.2f);
     }
 
@@ -1946,6 +1951,37 @@ public class CombatManager : MonoBehaviour
         yield return new WaitForSeconds(0.12f);
     }
 
+    void ReplayCardMergedEvent(JToken combatEvent)
+    {
+        string combatantId = combatEvent.Value<string>("combatantId");
+        string resultingInstanceId = combatEvent.Value<string>("resultingCardInstanceId");
+        string resultingDefinitionId = combatEvent.Value<string>("resultingDefinitionId");
+        if (string.IsNullOrWhiteSpace(combatantId)
+            || string.IsNullOrWhiteSpace(resultingInstanceId)
+            || string.IsNullOrWhiteSpace(resultingDefinitionId))
+            return;
+
+        ICombatantPiles<CardInstance> piles = combatantPiles.For(combatantId);
+        if (piles == null)
+            return;
+
+        foreach (JToken selectedId in combatEvent["mergedCardInstanceIds"] as JArray ?? new JArray())
+        {
+            string instanceId = selectedId?.ToString();
+            foreach (PileKind pileKind in new[] { PileKind.Hand, PileKind.Draw, PileKind.Discard, PileKind.Exhaust })
+                GetPileByName(combatantId, pileKind.ToString())?.RemoveAll(card => card != null && card.instanceId == instanceId);
+        }
+
+        CardInstance merged = BuildCardFromDefinition(resultingDefinitionId, resultingInstanceId);
+        List<CardInstance> hand = GetPileByName(combatantId, PileKind.Hand.ToString());
+        if (merged == null || hand == null)
+            return;
+
+        hand.Add(merged);
+        if (piles.IsFullyVisible)
+            ui?.SyncHandFromDeckStateIfDrifted();
+    }
+
     IEnumerator ReplayCardMovedEvent(JToken combatEvent)
     {
         string combatantId = combatEvent.Value<string>("combatantId");
@@ -1993,6 +2029,8 @@ public class CombatManager : MonoBehaviour
             yield break;
         }
 
+        Character movementActor = ResolveCombatant(combatantId);
+
         if (toKind == PileKind.Exhaust)
         {
             if (ui.GetView(card) != null)
@@ -2001,7 +2039,7 @@ public class CombatManager : MonoBehaviour
             }
             else
             {
-                yield return ui.AnimateCardToPile(card, CardSelectionSource.ExhaustPile);
+                yield return ui.AnimateCardToPile(card, CardSelectionSource.ExhaustPile, movementActor);
             }
             yield return new WaitForSeconds(0.12f);
             yield break;
@@ -2015,7 +2053,7 @@ public class CombatManager : MonoBehaviour
             }
             else
             {
-                yield return ui.AnimateCardToPile(card, CardSelectionSource.DiscardPile);
+                yield return ui.AnimateCardToPile(card, CardSelectionSource.DiscardPile, movementActor);
             }
             yield return new WaitForSeconds(0.10f);
             yield break;
@@ -2811,19 +2849,6 @@ public class CombatManager : MonoBehaviour
         deck.hand = ParseAuthoritativeCardList(pilesToken["hand"]);
         deck.discardPile = ParseAuthoritativeCardList(pilesToken["discard"]);
         deck.exhaustPile = ParseAuthoritativeCardList(pilesToken["exhaust"]);
-        // Le deck de la run est le deck de la run. Les piles d'un duel viennent du deck
-        // PVP, stocké ailleurs côté serveur, et les recopier ici remplacerait le deck
-        // d'une run en pause par celui du duel.
-        if (Mode != CombatMode.Pvp && RunManager.Instance != null)
-        {
-            RunManager.Instance.deck = deck.drawPile
-                .Concat(deck.hand)
-                .Concat(deck.discardPile)
-                .Concat(deck.exhaustPile)
-                .Select(card => card != null ? card.Clone() : null)
-                .Where(card => card != null)
-                .ToList();
-        }
     }
 
     List<CardInstance> ParseAuthoritativeCardList(JToken cardsToken)
@@ -2976,7 +3001,7 @@ public class CombatManager : MonoBehaviour
         if (source != null && source.isPlayer && playedView != null)
         {
             // Effects should begin exactly when this card starts leaving the center.
-            exitAnimation = StartCoroutine(ui.AnimateCardToDiscard(playedView, exhausted));
+            exitAnimation = StartCoroutine(ui.AnimateCardToDiscard(playedView, exhausted, source));
         }
 
         // Actually apply effects

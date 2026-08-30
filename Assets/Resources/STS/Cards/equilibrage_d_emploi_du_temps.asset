@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: equilibrage_d_emploi_du_temps
   cardName: "\xC9quilibrage d'emploi du temps"
-  collectionCardId: "Ing\xE9nieur Humaniste"
+  collectionCardId: Ingenieur humaniste
   multiplayerExclusive: 0
   characterLevel: 0
   icon: {fileID: 0}

@@ -41,7 +41,14 @@ public class EventManager : MonoBehaviour
                 RunManager.Instance.deck.AddRange(STSCardDatabase.allCards.Select(data => new CardInstance(data)));
             }
             DeckSelectionPanel.Instance=this.deckSelectionPanel;
-            await LoadRandomEventAsync();
+            if (RunManager.Instance.IsServerAuthoritative && RunManager.Instance.activeEvent != null)
+            {
+                ShowServerEvent();
+            }
+            else
+            {
+                await LoadRandomEventAsync();
+            }
             STSRunAuditSystem.RecordNodeEntered(RunManager.Instance, RunManager.Instance.currentNode, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, "event_init");
         }
         finally
@@ -98,6 +105,42 @@ public class EventManager : MonoBehaviour
         ShowEvent(loadedEvents[0]);
     }
 
+    private void ShowServerEvent()
+    {
+        RunManager run = RunManager.Instance;
+        if (run == null || run.activeEvent == null)
+            return;
+
+        if (description != null)
+        {
+            description.text = run.activeEvent["description"]?.ToString() ?? "";
+        }
+        image.sprite = null;
+
+        string title = run.activeEvent["title"]?.ToString() ?? "Événement";
+        var options = new List<PanelOption>();
+        foreach (var optionToken in run.activeEvent["options"] ?? new JArray())
+        {
+            string optionId = optionToken["optionId"]?.ToString();
+            if (string.IsNullOrWhiteSpace(optionId))
+                continue;
+
+            var option = new PanelOption
+            {
+                id = optionId,
+                text = optionToken["text"]?.ToString() ?? optionId,
+                completionMessage = optionToken["completionMessage"]?.ToString(),
+                closePanel = true,
+                entries = optionToken["entries"]?.ToObject<List<PanelOptionEntry>>()
+                    ?? new List<PanelOptionEntry>()
+            };
+            option.action = () => SubmitEventChoice(option.id);
+            options.Add(option);
+        }
+
+        panel.Show(title, options);
+    }
+
     /// <summary>
     /// Point d'entrée depuis l'action d'option, qui est synchrone et ne peut pas
     /// attendre. L'échec est traité ici plutôt que remonté : rouvrir le panneau laisse
@@ -127,7 +170,8 @@ public class EventManager : MonoBehaviour
                 text = optionToken["text"]?.ToString() ?? optionId,
                 completionMessage = optionToken["completionMessage"]?.ToString(),
                 closePanel = false,
-                entries = new List<PanelOptionEntry>()
+                entries = optionToken["entries"]?.ToObject<List<PanelOptionEntry>>()
+                    ?? new List<PanelOptionEntry>()
             };
             // L'action ne fait que renvoyer le choix : le serveur porte les effets.
             option.action = () => SubmitEventChoice(option.id);
@@ -255,8 +299,15 @@ public class EventManager : MonoBehaviour
                 return true;
             }
 
+            HideEventPanel();
+            if (run.serverPendingRewards != null && run.serverPendingRewards.Count > 0)
+            {
+                STSSceneLoader.Instance?.LoadScene("STS_Reward");
+                return true;
+            }
             if (!string.IsNullOrWhiteSpace(response.completionMessage) && description != null)
                 description.text = response.completionMessage;
+            ShowEventContinue(ReturnToMap);
             return true;
         }
         catch (System.Exception ex)
@@ -336,6 +387,13 @@ public class EventManager : MonoBehaviour
 
     public async void ReturnToMap()
     {
+        if (RunManager.Instance != null && RunManager.Instance.IsServerAuthoritative)
+        {
+            STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Map", "event_return");
+            STSSceneLoader.Instance.LoadScene("STS_Map");
+            return;
+        }
+
         if (!await TryCompleteCurrentNodeAsync("event"))
         {
             return;
@@ -348,6 +406,20 @@ public class EventManager : MonoBehaviour
     private async Task<bool> TryCompleteCurrentNodeAsync(string result)
     {
         if (RunManager.Instance == null || string.IsNullOrWhiteSpace(RunManager.Instance.runId) || RunManager.Instance.currentNode == null)
+        {
+            return true;
+        }
+
+        if (RunManager.Instance.unrestrictedMode)
+        {
+            return true;
+        }
+
+        // Sous autorité serveur, ChooseEventOption termine déjà le nœud côté serveur
+        // (completed=true, enteredNodeId=null). Renvoyer CompleteNode échouerait en 409
+        // car le nœud n'est plus en cours.
+        if (RunManager.Instance.IsServerAuthoritative
+            && (RunManager.Instance.currentNode.completed || !RunManager.Instance.enteredNodeId.HasValue))
         {
             return true;
         }

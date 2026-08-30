@@ -30,7 +30,7 @@ public class RunManager : MonoBehaviour
     public bool RegenerateMap = false;
     public int act=0;
     public int restCharges=3;
-    public int maxRestCharges=15;
+    public int maxRestCharges=3;
     public RunManagerUI ui;
     public int gold=0;
     public bool forceTutorial=false;

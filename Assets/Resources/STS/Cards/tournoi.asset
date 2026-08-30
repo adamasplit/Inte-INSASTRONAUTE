@@ -21,18 +21,18 @@ MonoBehaviour:
   cost: 0
   xCost: 0
   type: 0
-  rarity: 5
+  rarity: 4
   effects:
-  - type: 0
-    value: 30
-    targetSelf: 0
+  - type: 11
+    value: 10
+    targetSelf: 1
     targetOthers: 0
     statusType: 0
     duration: 0
     description: 
     cardID: 
     index: 0
-    conditional: 1
+    conditional: 0
     conditionType: 3
     conditionValue: 
     trueEffect: 0
@@ -40,9 +40,9 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  - type: 11
-    value: 10
-    targetSelf: 1
+  - type: 0
+    value: 30
+    targetSelf: 0
     targetOthers: 0
     statusType: 0
     duration: 0
