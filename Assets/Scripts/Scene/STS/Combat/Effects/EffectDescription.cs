@@ -35,6 +35,22 @@ public static class EffectDescription
         return desc;
 
     }
+    /// <summary>
+    /// Le nom du statut nommé par une condition, ou null quand ce n'est pas un statut.
+    ///
+    /// <para>La valeur d'une condition est du texte libre venu des données de carte : vide sur la
+    /// plupart des effets, et un nom de statut seulement pour les deux conditions qui en lisent
+    /// un.</para>
+    /// </summary>
+    static string ConditionStatusName(string conditionValue)
+    {
+        if (string.IsNullOrWhiteSpace(conditionValue)
+            || !Enum.TryParse(conditionValue, true, out StatusType parsed))
+            return null;
+
+        return StatusEffect.Factory(parsed, 0, 0, "")?.Name;
+    }
+
     public static string GetConditionDescription(EffectEntry effect, EffectContext ctx)
     {
         if (!effect.conditional) return "";
@@ -48,16 +64,19 @@ public static class EffectDescription
                 return "Si c'est la première fois que vous jouez cette carte ce tour-ci, ";
             case ConditionType.FirstTimePlayingThisCardThisCombat:
                 return "Si c'est la première fois que vous jouez cette carte ce combat, ";
+            // Enum.Parse lève une exception sur tout ce qui n'est pas un nom de statut, et ce
+            // code tourne pendant qu'on dessine une carte : une condition mal écrite ne doit pas
+            // faire tomber la boucle de rendu, elle doit juste s'afficher sans nom.
             case ConditionType.TargetHasStatus:
                 {
-                    return $"Si la cible a {StatusEffect.Factory(Enum.Parse<StatusType>(effect.conditionValue), 0, 0, "").Name}, ";
+                    string named = ConditionStatusName(effect.conditionValue);
+                    return named == null ? "Sous condition, " : $"Si la cible a {named}, ";
                 }
-                return "";
             case ConditionType.TargetHasNoStatus:
                 {
-                    return $"Si la cible n'a pas {StatusEffect.Factory(Enum.Parse<StatusType>(effect.conditionValue), 0, 0, "").Name}, ";
+                    string named = ConditionStatusName(effect.conditionValue);
+                    return named == null ? "Sous condition, " : $"Si la cible n'a pas {named}, ";
                 }
-                return "";
             case ConditionType.SelfArmorThreshold:
                 {
                     return $"Si vous avez au moins {effect.conditionValue} d'armure, ";
@@ -165,6 +184,7 @@ public static class EffectDescription
                 int val = BattleCalculator.GetModifiedValue(effect.value, StatType.StatusPotency, ctx);
                 int dur = BattleCalculator.GetModifiedValue(effect.duration, StatType.StatusDuration, ctx);
                 StatusEffect stat=StatusEffect.Factory(effect.statusType,val,dur,effect.cardID,effect.index);
+                if (stat == null) return " ";
                 if (stat.generic) 
                 {
                     int usedValue=stat.Duration>0?stat.Duration:stat.Value;
@@ -228,6 +248,13 @@ public static class EffectDescription
                     return $"Retardez votre prochain tour ({turns}%)";
                 return (multipleTargets?"Retardez les prochains tours de toutes les cibles":"Retardez le prochain tour de la cible") + $" ({turns}%)";
             }
+            case EffectType.ReplayCard:
+            {
+                int times = Mathf.Max(1, effect.value);
+                if (times == 1)
+                    return "Répétez les effets précédents de cette carte";
+                return $"Répétez {times} fois les effets précédents de cette carte";
+            }
             case EffectType.CutInTurn:
             {
                 if (effect.targetSelf)
@@ -238,7 +265,9 @@ public static class EffectDescription
             }
             case EffectType.Draw:
             {
-                return $"Piochez {FormatCardCountForDescription(effect.value, ctx)}";
+                if (effect.targetSelf)
+                    return $"Piochez {FormatCardCountForDescription(effect.value, ctx)}";
+                return $"La cible pioche {FormatCardCountForDescription(effect.value, ctx)}";
             }
             case EffectType.Discard:
             {
@@ -259,7 +288,11 @@ public static class EffectDescription
             }
             case EffectType.GainEnergy:
             {
-                return $"Gagnez {BattleCalculator.GetModifiedDescription(effect.value, StatType.EnergyGain, ctx)} d'énergie";
+                if (effect.targetSelf)
+                {
+                    return $"Gagnez {BattleCalculator.GetModifiedDescription(effect.value, StatType.EnergyGain, ctx)} d'énergie";
+                }
+                return $"La cible gagne {BattleCalculator.GetModifiedDescription(effect.value, StatType.EnergyGain, ctx)} d'énergie";
             }
             case EffectType.AddCardToHand:
             {
@@ -383,11 +416,15 @@ public static class EffectDescription
             }
             case EffectType.AddCardToDrawPile:
             {
-                return $"Ajoutez {FormatQuantityForDescription(effect.value, ctx)} <color=green>{effect.cardID}</color> à votre pioche";
+                if (effect.targetSelf)
+                    return $"Ajoutez {FormatQuantityForDescription(effect.value, ctx)} <color=green>{effect.cardID}</color> à votre pioche";
+                return $"Ajoutez {FormatQuantityForDescription(effect.value, ctx)} <color=green>{effect.cardID}</color> à la pioche de la cible";
             }
             case EffectType.AddCardToDiscardPile:
             {
-                return $"Ajoutez {FormatQuantityForDescription(effect.value, ctx)} <color=green>{effect.cardID}</color> à votre défausse";
+                if (effect.targetSelf)
+                    return $"Ajoutez {FormatQuantityForDescription(effect.value, ctx)} <color=green>{effect.cardID}</color> à votre défausse";
+                return $"Ajoutez {FormatQuantityForDescription(effect.value, ctx)} <color=green>{effect.cardID}</color> à la défausse de la cible";
             }
             case EffectType.ForceNextCard:
             {
@@ -400,6 +437,7 @@ public static class EffectDescription
             case EffectType.SetStatusToMaxValue:
             {
                 StatusEffect stat=StatusEffect.Factory(effect.statusType,0,0,effect.cardID,effect.index);
+                if (stat == null) return "Mettez un statut à sa valeur maximale";
                 return $"Mettez {stat.Name} à sa valeur maximale";
             }
             case EffectType.ExtendStatuses:
@@ -421,6 +459,7 @@ public static class EffectDescription
             case EffectType.DispelBuffsIntoStatus:
             {
                 StatusEffect stat=StatusEffect.Factory(effect.statusType,0,0,effect.cardID,effect.index);
+                if (stat == null) return "Transformez les buffs en statut";
                 if (effect.targetSelf)
                 {
                     return $"Transformez tous vos buffs en {stat.Name}";
@@ -433,6 +472,7 @@ public static class EffectDescription
             case EffectType.DispelSpecificStatus:
             {
                 StatusEffect stat=StatusEffect.Factory(effect.statusType,0,0,effect.cardID,effect.index);
+                if (stat == null) return "Dissipez un statut";
                 if (effect.targetSelf)
                 {
                     return $"Dissipez votre {stat.Name}";

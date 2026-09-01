@@ -174,21 +174,8 @@ public static class RewardGenerator
     {
         List<CardEntry> pool = new List<CardEntry>();
 
-        if (result.enemies != null&&RunManager.Instance!=null && RunManager.Instance.relics.Exists(r=>r is ITIRelic))
-        {
-            ITIRelic iRelic = RunManager.Instance.relics.Find(r => r is ITIRelic) as ITIRelic;
-            Debug.Log("Adding enemy reward cards to pool");
-            foreach (var enemy in result.enemies)
-            {
-                foreach (var card in enemy.rewardCards)
-                {
-                    if (profile.Matches(card, result))
-                    {
-                        pool.Add(new CardEntry(card, iRelic.DropRateForEnemyCards()));
-                    }
-                }
-            }
-        }
+        // ITI ajoutait ici les cartes de l'ennemi vaincu aux récompenses. La relique ne fait plus
+        // ça : elle prend les cartes adverses pendant le combat, pas après.
 
         pool.AddRange(GetFloorCards(RunManager.Instance!=null ? RunManager.Instance.currentFloor : 1,result,profile));
 

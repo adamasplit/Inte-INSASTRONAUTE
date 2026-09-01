@@ -56,5 +56,7 @@
   "favoredCharacter": "CFI",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": []
+  "tags": [
+    "Exhaust"
+  ]
 }

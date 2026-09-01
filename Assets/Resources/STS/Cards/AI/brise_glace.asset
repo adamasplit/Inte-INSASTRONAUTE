@@ -66,7 +66,7 @@ MonoBehaviour:
     description: 
     cardID: 
     index: 0
-    conditional: 1
+    conditional: 0
     conditionType: 1
     conditionValue: 
     trueEffect: 0

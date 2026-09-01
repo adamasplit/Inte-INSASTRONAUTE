@@ -7,13 +7,66 @@ public class CardInstance
     public string instanceId;
     public string displayName ;
     public STSCardData data;
+
+    /// <summary>
+    /// L'identifiant sous lequel le serveur désigne cette carte, quand ce n'est pas celui de sa
+    /// définition.
+    ///
+    /// <para>Un mouvement ennemi s'appelle « enemy-move:{ennemi}:{index} » côté serveur, mais la
+    /// carte que le client en fabrique porte le nom du mouvement comme identifiant. Comparer
+    /// <c>data.id</c> à ce que le serveur envoie ne pouvait donc jamais correspondre : la carte
+    /// était reconstruite à chaque synchronisation d'état, et la vue attachée à l'instance
+    /// précédente restait orpheline. C'est le même piège que celui des cartes de MRIE.</para>
+    /// </summary>
+    public string serverDefinitionId;
+
+    /// <summary>Ce que le serveur appelle cette carte : son identifiant propre, sinon celui de sa définition.</summary>
+    public string DefinitionId =>
+        !string.IsNullOrEmpty(serverDefinitionId) ? serverDefinitionId : (data != null ? data.id : null);
     public List<StatModifier> baseModifiers = new();
     public List<StatModifier> addedModifiers = new();
     public List<CardEnchantment> enchantments = new();
     public List<EffectEntry> addedEffects = new();
     public TargetingMode targetingMode;
     public List<CardTag> tags = new();
+
+    /// <summary>
+    /// La famille de cette copie, quand elle n'est pas celle de sa carte d'origine.
+    ///
+    /// <para>Une copie volée par ITI reprend les effets d'une carte adverse mais pas son identité :
+    /// elle est une Attaque si ces effets frappent, une Compétence sinon, quoi qu'en dise la carte
+    /// dont elle vient. Le serveur l'envoie dans <c>cardType</c> sur l'instance.</para>
+    /// </summary>
+    public CardType? overrideType;
+
+    /// <summary>
+    /// Le coût de cette copie, quand il ne vient pas de sa carte d'origine. Un mouvement ennemi
+    /// coûte zéro pour l'ennemi qui le joue ; la copie que le joueur en reçoit, elle, se paie.
+    /// </summary>
+    public int? overrideCost;
+
     public string lastDescription = "";
+
+    /// <summary>La famille à afficher et à tester : celle de la copie, sinon celle de la carte.</summary>
+    public CardType Type => overrideType ?? (data != null ? data.type : CardType.Rien);
+
+    /// <summary>
+    /// L'illustration de cette carte.
+    ///
+    /// <para>Une copie garde celle de la carte dont elle vient quand cette carte en a une. Les
+    /// mouvements ennemis n'en ont pas — ils n'en héritent que d'une vraie carte qui les porte —
+    /// et retombent alors sur l'icône générique de leur famille. C'est ici que la règle vit, et
+    /// pas côté serveur : le catalogue du serveur ne connaît aucune illustration.</para>
+    /// </summary>
+    public Sprite Icon
+    {
+        get
+        {
+            if (data != null && data.icon != null)
+                return data.icon;
+            return STSCardDatabase.GetGenericIcon(Type);
+        }
+    }
     public bool HasTag(CardTag tag)
     {
         return tags.Contains(tag) || (data != null && data.HasTag(tag));
@@ -52,16 +105,11 @@ public class CardInstance
     public int Cost(EffectContext ctx=null)
     {
         if (data == null) return 0;
-        int cost = data.cost;
         if (data.xCost)
         {
             return -1;
         }
-        else
-        {
-            cost = BattleCalculator.GetModifiedValue(data.cost, StatType.Cost, ctx);
-        }
-        return cost;
+        return BattleCalculator.GetModifiedValue(overrideCost ?? data.cost, StatType.Cost, ctx);
     }
 
     public string GetDescription(EffectContext ctx=null)
@@ -259,6 +307,10 @@ public class CardInstance
         {
             clone.tags.Add(tag);
         }
+        clone.displayName = displayName;
+        clone.overrideType = overrideType;
+        clone.overrideCost = overrideCost;
+        clone.serverDefinitionId = serverDefinitionId;
         return clone;
     }
     public static CardInstance Merge(List<CardInstance> cards)

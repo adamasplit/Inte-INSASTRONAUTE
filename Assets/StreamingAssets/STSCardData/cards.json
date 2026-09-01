@@ -159,7 +159,7 @@
           "duration": 1,
           "description": "",
           "cardID": "",
-          "conditional": true,
+          "conditional": false,
           "conditionType": "ArmorBreak",
           "conditionValue": "",
           "trueEffect": false,
@@ -2015,7 +2015,9 @@
       "favoredCharacter": "CFI",
       "animationSpeed": 1.0,
       "startingCount": 0,
-      "tags": []
+      "tags": [
+        "Exhaust"
+      ]
     },
     {
       "id": "bouclier_organique",
@@ -2077,43 +2079,24 @@
     },
     {
       "id": "cfi",
-      "cardName": "Potion magique + Attente interminable",
+      "cardName": "Attente interminable + Stock de potions",
       "collectionCardId": "CFI",
       "multiplayerExclusive": false,
       "characterLevel": 0,
       "iconId": null,
       "cost": 3,
       "xCost": false,
-      "type": "Attaque",
+      "type": "Compétence",
       "rarity": "Legendary",
       "targetingMode": "Enemy",
       "effects": [
         {
-          "type": "Heal",
-          "value": 10,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        },
-        {
           "type": "Status",
-          "value": 0,
+          "value": -15,
           "targetSelf": false,
           "targetOthers": false,
-          "statusType": "Stun",
-          "duration": 2,
+          "statusType": "Speed",
+          "duration": 0,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -2545,7 +2528,9 @@
       "favoredCharacter": "CFI",
       "animationSpeed": 1.0,
       "startingCount": 0,
-      "tags": []
+      "tags": [
+        "Exhaust"
+      ]
     },
     {
       "id": "generation_spontanee",
@@ -2823,7 +2808,9 @@
       "favoredCharacter": "CFI",
       "animationSpeed": 1.0,
       "startingCount": 0,
-      "tags": []
+      "tags": [
+        "Exhaust"
+      ]
     },
     {
       "id": "spectrometrie_de_masse",
@@ -15615,6 +15602,53 @@
       "tags": []
     },
     {
+      "id": "artillerie_lourde",
+      "cardName": "Artillerie lourde",
+      "collectionCardId": null,
+      "multiplayerExclusive": false,
+      "characterLevel": 0,
+      "iconId": "rudebuster2",
+      "cost": 2,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Rare",
+      "targetingMode": "Enemy",
+      "effects": [
+        {
+          "type": "Damage",
+          "value": 6,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [
+        {
+          "type": "Damage",
+          "kind": "SpecificStatusOnSelf",
+          "value": 2,
+          "info": "Strength",
+          "description": "La Force est 3 fois plus efficace pour cette carte."
+        }
+      ],
+      "favoredCharacter": "MECA",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": []
+    },
+    {
       "id": "auto_conception",
       "cardName": "Auto-conception",
       "collectionCardId": null,
@@ -16288,7 +16322,7 @@
       "collectionCardId": null,
       "multiplayerExclusive": false,
       "characterLevel": 0,
-      "iconId": "Affliction",
+      "iconId": "hp_prime",
       "cost": 2,
       "xCost": false,
       "type": "Compétence",
@@ -17295,7 +17329,7 @@
       "effects": [
         {
           "type": "GainEnergy",
-          "value": 3,
+          "value": 2,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -17314,7 +17348,7 @@
         },
         {
           "type": "AddRandomCard",
-          "value": 3,
+          "value": 2,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Awakening",
@@ -17884,7 +17918,7 @@
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Poison",
-          "duration": 10,
+          "duration": 16,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -18208,6 +18242,53 @@
         }
       ],
       "modifiers": [],
+      "favoredCharacter": "MRIE",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": []
+    },
+    {
+      "id": "optimisation_de_defense",
+      "cardName": "Optimisation défensive",
+      "collectionCardId": null,
+      "multiplayerExclusive": false,
+      "characterLevel": 0,
+      "iconId": "bolide",
+      "cost": 2,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Epic",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "Armor",
+          "value": 5,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [
+        {
+          "type": "Armor",
+          "kind": "SpecificStatusOnSelf",
+          "value": 4,
+          "info": "Dexterity",
+          "description": ""
+        }
+      ],
       "favoredCharacter": "MRIE",
       "animationSpeed": 1.0,
       "startingCount": 0,
@@ -18644,7 +18725,7 @@
         {
           "type": "Status",
           "value": 4,
-          "targetSelf": false,
+          "targetSelf": true,
           "targetOthers": false,
           "statusType": "CardFollowUp",
           "duration": 0,

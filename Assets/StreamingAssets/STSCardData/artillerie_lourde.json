@@ -1,20 +1,20 @@
 {
-  "id": "generation_moleculaire",
-  "cardName": "Génération moléculaire",
+  "id": "artillerie_lourde",
+  "cardName": "Artillerie lourde",
   "collectionCardId": null,
   "multiplayerExclusive": false,
   "characterLevel": 0,
-  "iconId": "Matière3",
-  "cost": 1,
+  "iconId": "rudebuster2",
+  "cost": 2,
   "xCost": false,
-  "type": "Compétence",
+  "type": "Attaque",
   "rarity": "Rare",
-  "targetingMode": "Player",
+  "targetingMode": "Enemy",
   "effects": [
     {
-      "type": "AddRandomCard",
-      "value": 2,
-      "targetSelf": true,
+      "type": "Damage",
+      "value": 6,
+      "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
@@ -26,18 +26,22 @@
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "index": 0,
-      "cardFilterTags": [
-        "Molecule"
-      ],
+      "cardFilterTags": [],
       "cardSelectionEffect": "None",
       "animationType": "Default"
     }
   ],
-  "modifiers": [],
-  "favoredCharacter": "CFI",
+  "modifiers": [
+    {
+      "type": "Damage",
+      "kind": "SpecificStatusOnSelf",
+      "value": 2,
+      "info": "Strength",
+      "description": "La Force est 3 fois plus efficace pour cette carte."
+    }
+  ],
+  "favoredCharacter": "MECA",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": [
-    "Exhaust"
-  ]
+  "tags": []
 }

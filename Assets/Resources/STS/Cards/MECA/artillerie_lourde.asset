@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: biodiversite
+  m_Name: artillerie_lourde
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: biodiversite
-  cardName: "Biodiversit\xE9"
+  id: artillerie_lourde
+  cardName: Artillerie lourde
   collectionCardId: 
   multiplayerExclusive: 0
   characterLevel: 0
-  icon: {fileID: 21300000, guid: 34ed40db40aac9c4ea9ad66950d8f16f, type: 3}
-  cost: 3
+  icon: {fileID: 21300000, guid: 581d7e824abb06042b75b420350bf952, type: 3}
+  cost: 2
   xCost: 0
-  type: 1
-  rarity: 3
+  type: 0
+  rarity: 2
   effects:
-  - type: 12
-    value: 2
-    targetSelf: 1
+  - type: 0
+    value: 6
+    targetSelf: 0
     targetOthers: 0
     statusType: 0
     duration: 0
@@ -40,26 +40,14 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  - type: 21
+  targetingMode: 1
+  modifiers:
+  - type: 0
+    kind: 16
     value: 2
-    targetSelf: 1
-    targetOthers: 0
-    statusType: 6
-    duration: 3
-    description: 
-    cardID: 
-    index: 0
-    conditional: 0
-    conditionType: 0
-    conditionValue: 
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 02000000
-    cardSelectionEffect: 0
-    animationType: 0
-  targetingMode: 0
-  modifiers: []
-  favoredCharacter: 5
+    info: Strength
+    description: La Force est 3 fois plus efficace pour cette carte.
+  favoredCharacter: 1
   animationSpeed: 1
   startingCount: 0
   tags: 

@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: biodiversite
+  m_Name: optimisation_de_defense
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: biodiversite
-  cardName: "Biodiversit\xE9"
+  id: optimisation_de_defense
+  cardName: "Optimisation d\xE9fensive"
   collectionCardId: 
   multiplayerExclusive: 0
   characterLevel: 0
-  icon: {fileID: 21300000, guid: 34ed40db40aac9c4ea9ad66950d8f16f, type: 3}
-  cost: 3
+  icon: {fileID: 21300000, guid: 406c9eafbf0a2b246a75bc88435c4bd6, type: 3}
+  cost: 2
   xCost: 0
   type: 1
   rarity: 3
   effects:
-  - type: 12
-    value: 2
+  - type: 1
+    value: 5
     targetSelf: 1
     targetOthers: 0
     statusType: 0
@@ -40,25 +40,13 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  - type: 21
-    value: 2
-    targetSelf: 1
-    targetOthers: 0
-    statusType: 6
-    duration: 3
-    description: 
-    cardID: 
-    index: 0
-    conditional: 0
-    conditionType: 0
-    conditionValue: 
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 02000000
-    cardSelectionEffect: 0
-    animationType: 0
   targetingMode: 0
-  modifiers: []
+  modifiers:
+  - type: 1
+    kind: 16
+    value: 4
+    info: Dexterity
+    description: 
   favoredCharacter: 5
   animationSpeed: 1
   startingCount: 0

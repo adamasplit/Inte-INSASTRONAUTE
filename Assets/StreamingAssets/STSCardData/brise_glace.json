@@ -58,7 +58,7 @@
       "duration": 1,
       "description": "",
       "cardID": "",
-      "conditional": true,
+      "conditional": false,
       "conditionType": "ArmorBreak",
       "conditionValue": "",
       "trueEffect": false,

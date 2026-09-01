@@ -46,6 +46,7 @@ public class MultiplayerDeckPanel : MonoBehaviour
 
     [Header("Deck Actions")]
     [SerializeField] private Button addAllButton;
+    [SerializeField] private Button removeAllButton;
     [SerializeField] private Button validateButton;
     [SerializeField] private Button closeButton;
     [SerializeField] private Button refreshButton;
@@ -62,6 +63,7 @@ public class MultiplayerDeckPanel : MonoBehaviour
 
     private readonly List<CardEntry> allEntries = new();
     private readonly List<CardEntry> visibleEntries = new();
+    private readonly Dictionary<string, MultiplayerDeckCardItem> visibleItemsByKey = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> selectedCardKeys = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<DeckViewModel> savedDecks = new();
     private readonly HashSet<string> ownedCardIds = new(StringComparer.OrdinalIgnoreCase);
@@ -110,6 +112,12 @@ public class MultiplayerDeckPanel : MonoBehaviour
         {
             addAllButton.onClick.RemoveAllListeners();
             addAllButton.onClick.AddListener(AddAllVisibleCards);
+        }
+
+        if (removeAllButton != null)
+        {
+            removeAllButton.onClick.RemoveAllListeners();
+            removeAllButton.onClick.AddListener(RemoveAllCards);
         }
 
         if (validateButton != null)
@@ -448,6 +456,7 @@ public class MultiplayerDeckPanel : MonoBehaviour
             string lockReason = BuildLockReason(entry);
 
             item.Bind(entry.card, entry.key, isSelected, canSelect, lockReason, HandleCardToggleChanged);
+            visibleItemsByKey[entry.key] = item;
         }
 
         if (visibleEntries.Count == 0 && ShouldSpawnEditorPlaceholders())
@@ -462,6 +471,8 @@ public class MultiplayerDeckPanel : MonoBehaviour
 
     private void ClearGrid()
     {
+        visibleItemsByKey.Clear();
+
         if (gridContainer == null)
             return;
 
@@ -587,14 +598,14 @@ public class MultiplayerDeckPanel : MonoBehaviour
             if (selectedCardKeys.Count >= maxDeckSize)
             {
                 Notify($"Le deck est limité à {maxDeckSize} cartes.");
-                RefreshGrid();
+                SetVisibleItemSelected(cardKey, false);
                 return;
             }
 
             CardEntry entry = allEntries.FirstOrDefault(c => string.Equals(c.key, cardKey, StringComparison.OrdinalIgnoreCase));
             if (entry == null || !entry.unlocked || !entry.characterCompatible)
             {
-                RefreshGrid();
+                SetVisibleItemSelected(cardKey, false);
                 return;
             }
 
@@ -605,7 +616,39 @@ public class MultiplayerDeckPanel : MonoBehaviour
             selectedCardKeys.Remove(cardKey);
         }
 
+        SetVisibleItemSelected(cardKey, selected);
         RefreshDeckCounter();
+    }
+
+    private void SetVisibleItemSelected(string cardKey, bool selected)
+    {
+        if (!string.IsNullOrWhiteSpace(cardKey)
+            && visibleItemsByKey.TryGetValue(cardKey, out MultiplayerDeckCardItem item)
+            && item != null)
+        {
+            item.SetSelected(selected);
+        }
+    }
+
+    private void RemoveAllCards()
+    {
+        if (selectedCardKeys.Count == 0)
+        {
+            Notify("Le deck est déjà vide.");
+            return;
+        }
+
+        selectedCardKeys.Clear();
+        foreach (MultiplayerDeckCardItem item in visibleItemsByKey.Values)
+        {
+            if (item != null)
+            {
+                item.SetSelected(false);
+            }
+        }
+
+        RefreshDeckCounter();
+        Notify("Deck vidé.");
     }
 
     private void AddAllVisibleCards()

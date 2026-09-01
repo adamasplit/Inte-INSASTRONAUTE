@@ -170,7 +170,7 @@ public class CardView : MonoBehaviour,IPointerClickHandler
                 return;
             }
             if (cardTypeText != null)
-                cardTypeText.text = card.data.type.ToString();
+                cardTypeText.text = card.Type.ToString();
             if (cardBg != null)
                 cardBg.color = SelectableCharacterUtils.getCharacterColor(card.data.favoredCharacter);
             if (specialCardOverlay != null)
@@ -238,7 +238,8 @@ public class CardView : MonoBehaviour,IPointerClickHandler
                 costText.text = cost.ToString();
                 return;
             }
-            costText.text = cost>cardInstance.data.cost ? $"<color=red>{cost}</color>" : cost<cardInstance.data.cost ? $"<color=green>{cost}</color>" : cost.ToString();
+            int basePrice = cardInstance.overrideCost ?? cardInstance.data.cost;
+            costText.text = cost>basePrice ? $"<color=red>{cost}</color>" : cost<basePrice ? $"<color=green>{cost}</color>" : cost.ToString();
         }
     }
     public void SetDescription(string description)
@@ -654,7 +655,14 @@ public class CardView : MonoBehaviour,IPointerClickHandler
 
         if (cardImage != null)
         {
-            cardImage.sprite = card.data.icon;
+            // On n'écrase l'illustration du prefab que si on en a vraiment une. Une copie volée
+            // par ITI à un mouvement ennemi sans carte de référence n'a pas d'icône, et l'icône
+            // générique de sa famille peut ne pas encore exister : lui assigner null laissait une
+            // carte qui occupe sa place dans la main sans jamais rien afficher.
+            Sprite icon = card.Icon;
+            if (icon != null)
+                cardImage.sprite = icon;
+            cardImage.enabled = cardImage.sprite != null;
             cardImage.preserveAspect = true;
         }
 

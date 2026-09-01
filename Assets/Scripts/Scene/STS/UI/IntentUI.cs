@@ -32,6 +32,8 @@ public class IntentUI : MonoBehaviour
             case EffectType.Status:
             {
                 StatusEffect status = StatusEffect.Factory(effect.statusType,effect.value, effect.duration,effect.cardID,effect.index);
+                if (status == null)
+                    break;
                 icon.sprite=status.buff?Resources.Load<Sprite>($"STS/Icons/Intent/Buff"):Resources.Load<Sprite>($"STS/Icons/Intent/Debuff");
                 valueText.text = displayText ?? "";
                 break;
@@ -91,6 +93,8 @@ public class IntentUI : MonoBehaviour
                 case EffectType.Status:
                 {
                     StatusEffect status = StatusEffect.Factory(effect.statusType,effect.value, effect.duration,effect.cardID,effect.index);
+                    if (status == null)
+                        break;
                     name = "Statut " + (status.buff ? "positif" : "négatif");
                     description = "L'ennemi va appliquer "+status.Name;
                     break;

@@ -153,10 +153,19 @@ public class EffectEntry
     {
         return type switch
         {
-            EffectType.Damage => "Damage"+animationType.ToString(),
+            // Multihit est une frappe répétée, pas une catégorie d'effet à part : elle porte le
+            // même animationType et doit jouer le même VFX et le même son que la frappe simple.
+            // Sans ce cas, GetEffectName rendait null et on retombait sur "STS/VFX/Multihit",
+            // le même générique quelle que soit l'élément de la carte.
+            EffectType.Damage or EffectType.Multihit => "Damage"+animationType.ToString(),
             EffectType.Heal => "Heal",
             EffectType.Armor => "Armor",
-            EffectType.Status=>StatusEffect.Factory(statusType,value,duration,cardID,index).debuff?"Debuff":"Buff",
+            // Le facteur rend null pour un statut qu'il ne connaît pas, et ce nom sert à charger
+            // un VFX et à jouer un son à chaque effet résolu : le déréférencer sans garde fait
+            // tomber la résolution entière pour un statut manquant.
+            EffectType.Status=>StatusEffect.Factory(statusType,value,duration,cardID,index) is StatusEffect s
+                ? (s.debuff?"Debuff":"Buff")
+                : null,
             EffectType.AdvanceTurn=>"TurnAdvance",
             EffectType.DelayTurn=>"TurnDelay",
             EffectType.DeleteNextTurn=>"TurnDelete",
@@ -207,7 +216,11 @@ public class EffectEntry
             trueEffect = source.trueEffect,
             index = source.index,
             cardSelectionSource = source.cardSelectionSource,
-            cardSelectionEffect = source.cardSelectionEffect
+            cardSelectionEffect = source.cardSelectionEffect,
+            // Sans ça, une copie d'effet perdait son animation et retombait sur Default : les
+            // mouvements ennemis, tous construits par clonage, jouaient le VFX générique au lieu
+            // du leur. C'est aussi ce que lit le nom des cartes volées par ITI.
+            animationType = source.animationType
         };
 
         if (source.cardFilterTags != null)

@@ -13,7 +13,7 @@
   "effects": [
     {
       "type": "GainEnergy",
-      "value": 3,
+      "value": 2,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
@@ -32,7 +32,7 @@
     },
     {
       "type": "AddRandomCard",
-      "value": 3,
+      "value": 2,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Awakening",

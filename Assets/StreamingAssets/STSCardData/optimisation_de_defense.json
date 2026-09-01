@@ -1,19 +1,19 @@
 {
-  "id": "generation_moleculaire",
-  "cardName": "Génération moléculaire",
+  "id": "optimisation_de_defense",
+  "cardName": "Optimisation défensive",
   "collectionCardId": null,
   "multiplayerExclusive": false,
   "characterLevel": 0,
-  "iconId": "Matière3",
-  "cost": 1,
+  "iconId": "bolide",
+  "cost": 2,
   "xCost": false,
   "type": "Compétence",
-  "rarity": "Rare",
+  "rarity": "Epic",
   "targetingMode": "Player",
   "effects": [
     {
-      "type": "AddRandomCard",
-      "value": 2,
+      "type": "Armor",
+      "value": 5,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
@@ -26,18 +26,22 @@
       "trueEffect": false,
       "cardSelectionSource": "Hand",
       "index": 0,
-      "cardFilterTags": [
-        "Molecule"
-      ],
+      "cardFilterTags": [],
       "cardSelectionEffect": "None",
       "animationType": "Default"
     }
   ],
-  "modifiers": [],
-  "favoredCharacter": "CFI",
+  "modifiers": [
+    {
+      "type": "Armor",
+      "kind": "SpecificStatusOnSelf",
+      "value": 4,
+      "info": "Dexterity",
+      "description": ""
+    }
+  ],
+  "favoredCharacter": "MRIE",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": [
-    "Exhaust"
-  ]
+  "tags": []
 }

@@ -33,5 +33,10 @@ public enum EffectType
     DispelBuffsIntoStatus,
     DispelSpecificStatus,
     AddCopyOfCard,
-    CutInTurn
+    CutInTurn,
+
+    // Rejoue les effets qui la précèdent sur la même carte. Ajoutée en dernier : Unity sérialise
+    // cet enum par index dans les ScriptableObjects, donc insérer ailleurs réécrirait
+    // silencieusement l'effet de toutes les cartes situées après.
+    ReplayCard
 }

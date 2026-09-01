@@ -46,6 +46,15 @@ public class CardAnimator : MonoBehaviour
 
         try
         {
+            // La carte animée peut disparaître pendant que la coroutine tourne : une
+            // synchronisation d'état autoritative reconstruit la main en entier et détruit les
+            // vues en place, y compris celles qui sont encore en vol. Une fois le GameObject
+            // détruit, écrire rect.position lève une NullReferenceException depuis
+            // Transform.set_position, la coroutine meurt là où elle en est, et la main se
+            // téléporte à sa disposition finale au lieu d'y glisser.
+            if (rect == null)
+                yield break;
+
             float t = 0f;
             Quaternion startRotation = rect.localRotation;
             Quaternion targetRotation = endRotation ?? (forceRotation ? Quaternion.identity : startRotation);
@@ -78,6 +87,11 @@ public class CardAnimator : MonoBehaviour
             
             while (t < 1f)
             {
+                // Relu à chaque image, et pas seulement à l'entrée : c'est entre deux images que
+                // la vue disparaît.
+                if (rect == null)
+                    yield break;
+
                 t += Time.deltaTime / duration * speedMultiplier;
                 trailTimer += Time.deltaTime;
 
@@ -116,6 +130,9 @@ public class CardAnimator : MonoBehaviour
 
                 yield return null;
             }
+
+            if (rect == null)
+                yield break;
 
             rect.position = end;
             rect.localScale = finalScale;

@@ -961,29 +961,41 @@ public class CombatManager : MonoBehaviour
             {
                 switch (tag)
                 {
+                    // Lu sur l'instance et pas sur la définition : le serveur filtre désormais sur
+                    // la carte effective (EffectiveCard), donc une copie qui porte sa propre
+                    // famille ou son propre coût doit être jugée là-dessus des deux côtés. Sinon
+                    // les deux listes de candidats divergent et la sélection part en refus.
                     case CardFilterTag.Attack:
-                        if (candidate.data.type == CardType.Attaque) return true;
+                        if (candidate.Type == CardType.Attaque) return true;
                         break;
                     case CardFilterTag.Skill:
-                        if (candidate.data.type == CardType.Compétence) return true;
+                        if (candidate.Type == CardType.Compétence) return true;
                         break;
                     case CardFilterTag.Power:
-                        if (candidate.data.type == CardType.Pouvoir) return true;
+                        if (candidate.Type == CardType.Pouvoir) return true;
                         break;
                     case CardFilterTag.Retain:
-                        if (candidate.data.HasTag(CardTag.Retain)) return true;
+                        if (candidate.HasTag(CardTag.Retain)) return true;
+                        break;
+                    // Le serveur connaît ce filtre (CardSelectionResolver.matches), pas ce switch :
+                    // une carte filtrée sur Norm n'aurait trouvé aucun candidat ici, le client
+                    // aurait envoyé une sélection vide, et le serveur l'aurait refusée en en
+                    // attendant une pleine. Aucune carte ne l'utilise aujourd'hui — c'est
+                    // précisément pourquoi ça serait passé inaperçu jusqu'à la première.
+                    case CardFilterTag.Norm:
+                        if (candidate.HasTag(CardTag.Norm)) return true;
                         break;
                     case CardFilterTag.Cost0:
-                        if (candidate.data.cost == 0) return true;
+                        if ((candidate.overrideCost ?? candidate.data.cost) == 0) return true;
                         break;
                     case CardFilterTag.Cost1:
-                        if (candidate.data.cost == 1) return true;
+                        if ((candidate.overrideCost ?? candidate.data.cost) == 1) return true;
                         break;
                     case CardFilterTag.Cost2:
-                        if (candidate.data.cost == 2) return true;
+                        if ((candidate.overrideCost ?? candidate.data.cost) == 2) return true;
                         break;
                     case CardFilterTag.Cost3Plus:
-                        if (candidate.data.cost >= 3) return true;
+                        if ((candidate.overrideCost ?? candidate.data.cost) >= 3) return true;
                         break;
                     case CardFilterTag.Unupgraded:
                         if (!candidate.HasEnchantments()) return true;
@@ -1741,6 +1753,7 @@ public class CombatManager : MonoBehaviour
         CardInstance card = FindCardByInstanceId(cardInstanceId) ?? BuildCardFromDefinition(definitionId, cardInstanceId);
         if (card == null)
             yield break;
+        ApplyEventCardOverrides(card, combatEvent);
 
         yield return PresentCardPlayed(actor, card, ResolveCombatants(combatEvent["targetIds"]));
     }
@@ -1927,6 +1940,7 @@ public class CombatManager : MonoBehaviour
             ?? BuildCardFromDefinition(definitionId, cardInstanceId);
         if (card == null || ui == null)
             yield break;
+        ApplyEventCardOverrides(card, combatEvent);
 
         ICombatantPiles<CardInstance> drawPiles = combatantPiles.For(combatantId);
         if (drawPiles == null)
@@ -2004,6 +2018,7 @@ public class CombatManager : MonoBehaviour
             ?? BuildCardFromDefinition(definitionId, cardInstanceId);
         if (card == null)
             yield break;
+        ApplyEventCardOverrides(card, combatEvent);
 
         List<CardInstance> fromList = GetPileByName(combatantId, fromPile);
         List<CardInstance> toList = GetPileByName(combatantId, toPile);
@@ -2399,7 +2414,8 @@ public class CombatManager : MonoBehaviour
                         {
                             return new CardInstance(runtimeCard)
                             {
-                                instanceId = instanceId
+                                instanceId = instanceId,
+                                serverDefinitionId = definitionId
                             };
                         }
                     }
@@ -2412,7 +2428,8 @@ public class CombatManager : MonoBehaviour
         {
             return new CardInstance(data)
             {
-                instanceId = instanceId
+                instanceId = instanceId,
+                serverDefinitionId = definitionId
             };
         }
 
@@ -2869,24 +2886,106 @@ public class CombatManager : MonoBehaviour
 
             // Reuse existing card instances by instanceId so card views (which use reference equality) survive state syncs.
             CardInstance existing = FindCardByInstanceId(instanceId);
-            if (existing != null && existing.data != null && string.Equals(existing.data.id, definitionId, StringComparison.Ordinal))
+            if (existing != null && existing.data != null && string.Equals(existing.DefinitionId, definitionId, StringComparison.Ordinal))
             {
+                ApplyAuthoritativeCardOverrides(existing, cardToken);
                 cards.Add(existing);
                 continue;
             }
 
-            STSCardData data = STSCardDatabase.Get(definitionId);
-            if (data == null)
+            // Passe par BuildCardFromDefinition et pas par la base de cartes : une copie volée par
+            // ITI porte l'identifiant du mouvement ennemi dont elle vient, et un « enemy-move: »
+            // n'existe dans aucun catalogue. La base rendait null, la carte était sautée, et la
+            // main que le serveur décrivait n'était pas celle que le joueur voyait.
+            CardInstance card = BuildCardFromDefinition(definitionId, instanceId)
+                // Plutôt que de laisser tomber une carte que le serveur dit détenue. Une carte
+                // absente d'ici alors qu'une vue existe pour elle met la main du client en
+                // désaccord permanent avec l'état : SyncHandFromDeckStateIfDrifted voit une
+                // dérive à *chaque* synchronisation, reconstruit la main en entier, et détruit au
+                // passage les vues encore en cours d'animation — d'où la main qui se téléporte au
+                // lieu de glisser. Garder l'instance déjà connue vaut mieux que de la perdre.
+                ?? existing;
+            if (card == null)
                 continue;
 
-            var card = new CardInstance(data)
-            {
-                instanceId = instanceId
-            };
+            ApplyAuthoritativeCardOverrides(card, cardToken);
             cards.Add(card);
         }
 
         return cards;
+    }
+
+    /// <summary>
+    /// Applique les surcharges qu'un événement transporte avec la carte qu'il annonce.
+    ///
+    /// <para>Un événement de déplacement ne portait que le <c>definitionId</c>. Pour une carte
+    /// que le combat vient d'inventer — la copie qu'ITI arrache à l'adversaire — ça ne dit que
+    /// de quelle carte elle est faite, jamais ce qu'elle est : elle arrivait en main sous le nom,
+    /// la famille et le coût du mouvement ennemi copié. Le serveur joint désormais l'instance
+    /// quand elle ne se réduit pas à sa définition.</para>
+    /// </summary>
+    void ApplyEventCardOverrides(CardInstance card, JToken combatEvent)
+    {
+        if (card == null || combatEvent == null)
+            return;
+
+        JToken instance = combatEvent["instance"];
+        if (instance == null || instance.Type != JTokenType.Object)
+            return;
+
+        ApplyAuthoritativeCardOverrides(card, instance);
+    }
+
+    /// <summary>
+    /// Applique ce qui appartient à cette copie de la carte et à aucune autre.
+    ///
+    /// <para>Le serveur porte ces champs sur l'instance depuis toujours — un nom fusionné, une
+    /// visée changée, un marqueur ajouté en cours de combat — mais le client ne lisait que
+    /// <c>definitionId</c> et <c>instanceId</c> et reconstruisait le reste depuis la définition.
+    /// Une carte renommée revenait donc sous son nom d'origine, et un Épuisement posé pendant le
+    /// combat n'apparaissait nulle part.</para>
+    ///
+    /// <para>Relu à chaque synchronisation, y compris sur une instance déjà connue : ces champs
+    /// changent pendant le combat.</para>
+    /// </summary>
+    void ApplyAuthoritativeCardOverrides(CardInstance card, JToken cardToken)
+    {
+        if (card == null || cardToken == null)
+            return;
+
+        string displayName = cardToken.Value<string>("displayName");
+        card.displayName = !string.IsNullOrWhiteSpace(displayName)
+            ? displayName
+            : (card.data != null ? card.data.cardName : card.displayName);
+
+        string targetingMode = cardToken.Value<string>("targetingMode");
+        if (!string.IsNullOrWhiteSpace(targetingMode)
+            && Enum.TryParse(targetingMode, true, out TargetingMode parsedTargeting))
+        {
+            card.targetingMode = parsedTargeting;
+        }
+
+        string cardType = cardToken.Value<string>("cardType");
+        card.overrideType = !string.IsNullOrWhiteSpace(cardType)
+            && Enum.TryParse(cardType, true, out CardType parsedType)
+                ? parsedType
+                : (CardType?)null;
+
+        JToken cost = cardToken["cost"];
+        card.overrideCost = cost != null && cost.Type == JTokenType.Integer
+            ? cost.Value<int>()
+            : (int?)null;
+
+        card.tags.Clear();
+        JToken tags = cardToken["tags"];
+        if (tags != null && tags.Type == JTokenType.Array)
+        {
+            foreach (JToken tag in tags)
+            {
+                if (Enum.TryParse(tag.Value<string>(), true, out CardTag parsedTag))
+                    card.AddTag(parsedTag);
+            }
+        }
     }
 
     IEnumerator PlayCardRoutine(Character source, CardInstance card, List<Character> targets, bool ignoreEnergy = false, bool createView = false)

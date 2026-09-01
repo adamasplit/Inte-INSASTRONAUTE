@@ -465,6 +465,40 @@ public static class STSCardDatabase
         }
     }
 
+    /// <summary>Le dossier d'icônes, le même que celui dont <c>STSCardData.FromDTO</c> tire les siennes.</summary>
+    private const string CardIconFolder = "STS/Icons/Cards/";
+
+    /// <summary>Les deux illustrations génériques : le personnage ITI qui frappe, et qui se défend.</summary>
+    private const string GenericAttackIcon = "Attaque";
+    private const string GenericSkillIcon = "Compétence";
+
+    private static readonly Dictionary<CardType, Sprite> genericIcons = new();
+
+    /// <summary>
+    /// L'illustration à donner à une carte qui n'en a pas.
+    ///
+    /// <para>Seules les copies volées par ITI passent par ici : une carte écrite à la main a
+    /// toujours son icône, et un mouvement ennemi n'en a que s'il est porté par une vraie carte.
+    /// Les deux sprites sont mis en cache parce que la question se repose à chaque carte
+    /// affichée, et qu'un <c>Resources.Load</c> qui échoue coûte autant qu'un qui réussit.</para>
+    /// </summary>
+    public static Sprite GetGenericIcon(CardType type)
+    {
+        if (genericIcons.TryGetValue(type, out Sprite cached))
+            return cached;
+
+        string iconName = type == CardType.Attaque ? GenericAttackIcon : GenericSkillIcon;
+        Sprite icon = Resources.Load<Sprite>(CardIconFolder + iconName);
+        if (icon == null)
+        {
+            Debug.LogWarning(
+                $"[STS] Icône générique '{iconName}' introuvable dans {CardIconFolder}. "
+                + "Les copies d'ITI s'afficheront sans illustration.");
+        }
+        genericIcons[type] = icon;
+        return icon;
+    }
+
     public static STSCardData Get(string id)
     {
         if (cardDict == null || string.IsNullOrEmpty(id))

@@ -14,7 +14,7 @@
     {
       "type": "Status",
       "value": 4,
-      "targetSelf": false,
+      "targetSelf": true,
       "targetOthers": false,
       "statusType": "CardFollowUp",
       "duration": 0,
