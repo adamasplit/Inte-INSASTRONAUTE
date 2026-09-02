@@ -15,9 +15,17 @@ public class RestManager : MonoBehaviour
     private float enchantPreviewDelay = 1f;
     private float enchantExitDuration = 1f;
     [SerializeField] private float enchantExitScreenMargin = 64f;
+
+    /// <summary>
+    /// Le temps qu'on laisse au joueur pour voir la dernière charge partir avant que le
+    /// feu de camp se referme tout seul.
+    /// </summary>
+    [SerializeField] private float autoReturnDelay = 0.8f;
+
     CardInstance selectedCard;
     RestCardController selectedController;
     bool isEnchanting;
+    Coroutine autoReturnRoutine;
     readonly STSCompletionGate completionGate = new STSCompletionGate();
 
     async void Start()
@@ -82,6 +90,7 @@ public class RestManager : MonoBehaviour
             RunManager.Instance.restCharges--;
         }
         UpdateChargesDisplay();
+        ReturnToMapIfSpent();
     }
 
     /// <summary>
@@ -114,6 +123,7 @@ public class RestManager : MonoBehaviour
         }
 
         UpdateChargesDisplay();
+        ReturnToMapIfSpent();
     }
 
     // ---------------- ENCHANT ----------------
@@ -133,31 +143,43 @@ public class RestManager : MonoBehaviour
         selectedCard = controller.Card;
         selectedController.SetSelected(true);
 
+        int available = RunManager.Instance != null ? RunManager.Instance.restCharges : 0;
+
+        // On ne propose que les niveaux qu'on peut payer. Les trois étaient offerts quoi qu'il
+        // arrive, et EnchantRoutine repartait en silence quand les charges manquaient : le clic
+        // ne faisait rien, ne disait rien, et la carte restait là — au point de passer pour une
+        // carte impossible à enchanter. Le repos, lui, dépense toutes les charges restantes tant
+        // que les PV ne sont pas pleins, donc se soigner d'abord laisse zéro charge et rend
+        // chaque clic muet.
         var options = new List<PanelOption>();
-
-        options.Add(new PanelOption
+        for (int level = 1; level <= 3; level++)
         {
-            text = "Niveau 1 (1 charge)",
-            icon = Resources.Load<Sprite>("STS/Icons/Enchant1"),
-            action = () => {OnEnchant(1); }
-        });
+            if (level > available)
+                continue;
 
-        options.Add(new PanelOption
-        {
-            text = "Niveau 2 (2 charges)",
-            icon = Resources.Load<Sprite>("STS/Icons/Enchant2"),
-            action = () => OnEnchant(2)
-        });
-
-        options.Add(new PanelOption
-        {
-            text = "Niveau 3 (3 charges)",
-            icon = Resources.Load<Sprite>("STS/Icons/Enchant3"),
-            action = () => OnEnchant(3)
-        });
+            int charges = level;
+            options.Add(new PanelOption
+            {
+                text = $"Niveau {charges} ({charges} charge" + (charges > 1 ? "s)" : ")"),
+                icon = Resources.Load<Sprite>($"STS/Icons/Enchant{charges}"),
+                action = () => OnEnchant(charges)
+            });
+        }
 
         enchantPanel.gameObject.SetActive(true);
-        enchantPanel.Show("Enchanter la carte", options);
+        if (options.Count == 0)
+        {
+            options.Add(new PanelOption
+            {
+                text = "Pas assez de charges",
+                action = () => { }
+            });
+            enchantPanel.Show("Enchanter la carte — aucune charge restante", options);
+            return;
+        }
+
+        enchantPanel.Show($"Enchanter la carte ({available} charge"
+            + (available > 1 ? "s" : "") + ")", options);
     }
 
     public void OnEnchant(int charges)
@@ -210,7 +232,14 @@ public class RestManager : MonoBehaviour
             yield break;
 
         if (RunManager.Instance.restCharges < charges)
+        {
+            // Ne devrait plus arriver : le panneau ne propose que ce qui est payable. On garde la
+            // garde, mais elle dit désormais pourquoi rien ne se passe.
+            Debug.LogWarning($"[STS-REST] Enchantement à {charges} charge(s) refusé : "
+                + $"{RunManager.Instance.restCharges} disponible(s).");
+            UpdateChargesDisplay();
             yield break;
+        }
 
         isEnchanting = true;
         enchantPanel.gameObject.SetActive(false);
@@ -309,6 +338,33 @@ public class RestManager : MonoBehaviour
         BuildDeck();
         UpdateChargesDisplay();
         isEnchanting = false;
+        ReturnToMapIfSpent();
+    }
+
+    /// <summary>
+    /// Referme le feu de camp dès qu'il n'y reste plus rien à dépenser.
+    ///
+    /// <para>Le bouton de retour ne sert plus qu'à partir avant d'avoir tout dépensé : sans
+    /// charges, il était la seule chose à cliquer, et le joueur devait le trouver pour sortir
+    /// d'un écran qui ne lui proposait plus rien.</para>
+    ///
+    /// <para>Ne se déclenche jamais à l'entrée : on ne passe ici qu'après une action, donc un
+    /// feu de camp ouvert sans charge — ce que le serveur ne fait pas — resterait ouvert.</para>
+    /// </summary>
+    void ReturnToMapIfSpent()
+    {
+        if (autoReturnRoutine != null || isEnchanting)
+            return;
+        if (RunManager.Instance == null || RunManager.Instance.restCharges > 0)
+            return;
+
+        autoReturnRoutine = StartCoroutine(AutoReturnRoutine());
+    }
+
+    private IEnumerator AutoReturnRoutine()
+    {
+        yield return new WaitForSeconds(autoReturnDelay);
+        ReturnToMap();
     }
     public async void ReturnToMap()
     {

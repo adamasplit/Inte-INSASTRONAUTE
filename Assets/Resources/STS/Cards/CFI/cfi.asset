@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: cfi
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: cfi
-  cardName: Attente interminable + Stock de potions
+  cardName: Attente interminable + Potion magique
   collectionCardId: CFI
   multiplayerExclusive: 0
   characterLevel: 0
@@ -27,8 +27,25 @@ MonoBehaviour:
     value: -15
     targetSelf: 0
     targetOthers: 0
-    statusType: 14
-    duration: 0
+    statusType: 16
+    duration: 2
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 2
+    value: 10
+    targetSelf: 1
+    targetOthers: 0
+    statusType: 16
+    duration: 2
     description: 
     cardID: 
     index: 0

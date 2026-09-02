@@ -56,6 +56,8 @@ public class MultiplayerDeckPanel : MonoBehaviour
     [SerializeField] private TMP_InputField deckNameInput;
     [SerializeField] private Button saveDeckButton;
     [SerializeField] private Button loadDeckButton;
+    [SerializeField] private Button deleteDeckButton;
+    [SerializeField] private TextMeshProUGUI deleteDeckButtonLabel;
 
     [Header("Labels")]
     [SerializeField] private TextMeshProUGUI counterText;
@@ -75,6 +77,13 @@ public class MultiplayerDeckPanel : MonoBehaviour
     private enum UnlockFilterState { Locked, Unlocked }
 
     private MultiplayerMenuController host;
+    // Effacer est irreversible et le deck n'est pas recuperable : comme pour l'abandon d'un
+    // duel, la premiere pression arme et la seconde agit. La cible est memorisee avec
+    // l'armement, sinon changer de deck dans la liste entre les deux pressions effacerait
+    // celui que le joueur venait de selectionner plutot que celui qu'il avait confirme.
+    private const float DeleteConfirmWindowSeconds = 8f;
+    private string pendingDeleteDeckId;
+    private float deleteArmedAt;
     private SelectableCharacter selectedCharacter = SelectableCharacter.EP;
     private int selectedCharacterLevel;
     private bool missingApiResponses;
@@ -148,6 +157,20 @@ public class MultiplayerDeckPanel : MonoBehaviour
         {
             loadDeckButton.onClick.RemoveAllListeners();
             loadDeckButton.onClick.AddListener(() => _ = LoadSelectedDeckPresetAsync());
+        }
+
+        if (deleteDeckButton != null)
+        {
+            deleteDeckButton.onClick.RemoveAllListeners();
+            deleteDeckButton.onClick.AddListener(() => _ = DeleteSelectedDeckPresetAsync());
+        }
+
+        if (savedDecksDropdown != null)
+        {
+            // Changer de deck dans la liste desarme : la confirmation affichee ne parlerait
+            // plus du deck que le joueur a maintenant sous les yeux.
+            savedDecksDropdown.onValueChanged.RemoveAllListeners();
+            savedDecksDropdown.onValueChanged.AddListener(_ => CancelPendingDelete());
         }
     }
 
@@ -789,6 +812,84 @@ public class MultiplayerDeckPanel : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Efface le deck selectionne dans la liste, a la seconde pression.
+    ///
+    /// <para>La liste des decks n'avait aucune sortie : chaque sauvegarde en ajoutait un et
+    /// rien n'en retirait, si bien que le menu deroulant finissait illisible. C'est la seule
+    /// operation qui manquait.</para>
+    ///
+    /// <para>L'identifiant confirme est celui memorise a l'armement, jamais celui que la liste
+    /// affiche au moment du second clic — c'est la meme garantie que celle du desarmement sur
+    /// changement de selection, vue de l'autre bout.</para>
+    /// </summary>
+    private async Task DeleteSelectedDeckPresetAsync()
+    {
+        if (savedDecksDropdown == null || savedDecks.Count == 0
+            || savedDecksDropdown.value < 0 || savedDecksDropdown.value >= savedDecks.Count)
+        {
+            Notify("Aucun deck sauvegardé sélectionné.");
+            return;
+        }
+
+        DeckViewModel selectedDeck = savedDecks[savedDecksDropdown.value];
+        if (selectedDeck == null || string.IsNullOrWhiteSpace(selectedDeck.id))
+        {
+            Notify("Deck sélectionné invalide.");
+            return;
+        }
+
+        bool armedForThisDeck =
+            string.Equals(pendingDeleteDeckId, selectedDeck.id, StringComparison.Ordinal)
+            && Time.unscaledTime - deleteArmedAt < DeleteConfirmWindowSeconds;
+
+        if (!armedForThisDeck)
+        {
+            pendingDeleteDeckId = selectedDeck.id;
+            deleteArmedAt = Time.unscaledTime;
+            RefreshDeleteButtonLabel();
+            Notify($"Effacer « {selectedDeck.name} » ? Appuyez une seconde fois pour confirmer.");
+            return;
+        }
+
+        CancelPendingDelete();
+
+        if (deleteDeckButton != null)
+            deleteDeckButton.interactable = false;
+
+        JToken response = await STSApiClient.DeletePvpDeckAsync(selectedDeck.id);
+
+        if (response == null)
+        {
+            // Le bouton se rouvre ici et pas dans RefreshSavedDecksAsync : sur echec la liste
+            // ne change pas, donc rien d'autre ne le reactiverait.
+            if (deleteDeckButton != null)
+                deleteDeckButton.interactable = savedDecks.Count > 0;
+            Notify("Échec de la suppression du deck.");
+            return;
+        }
+
+        Notify($"Deck « {selectedDeck.name} » effacé.");
+        await RefreshSavedDecksAsync();
+    }
+
+    private void CancelPendingDelete()
+    {
+        pendingDeleteDeckId = null;
+        deleteArmedAt = 0f;
+        RefreshDeleteButtonLabel();
+    }
+
+    private void RefreshDeleteButtonLabel()
+    {
+        if (deleteDeckButtonLabel == null)
+            return;
+
+        deleteDeckButtonLabel.text = string.IsNullOrEmpty(pendingDeleteDeckId)
+            ? "Effacer le deck"
+            : "Confirmer l'effacement";
+    }
+
     private async Task RefreshSavedDecksAsync()
     {
         savedDecks.Clear();
@@ -821,6 +922,15 @@ public class MultiplayerDeckPanel : MonoBehaviour
         {
             loadDeckButton.interactable = savedDecks.Count > 0;
         }
+
+        if (deleteDeckButton != null)
+        {
+            deleteDeckButton.interactable = savedDecks.Count > 0;
+        }
+
+        // La liste vient d'etre reconstruite : une confirmation armee viserait un deck que
+        // cette liste ne contient peut-etre plus.
+        CancelPendingDelete();
     }
 
     private IEnumerable<JToken> ExtractDeckTokens(JToken token)

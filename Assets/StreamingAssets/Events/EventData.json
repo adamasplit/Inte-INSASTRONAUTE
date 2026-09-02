@@ -688,7 +688,7 @@
                                                                     "completionMessage": "Bien joué! Est-ce que les points de défis valent le coup?",
                                                                     "closePanel": true,
                                                                     "previewCardIds": [
-                                                                        "Apogée"
+                                                                        "Mentalité Kaizen"
                                                                     ],
                                                                     "entries": [
                                                                         {
@@ -723,7 +723,7 @@
                                                                         {
                                                                             "type": "AddCard",
                                                                             "value": 1,
-                                                                            "id": "Apogée",
+                                                                            "id": "Mentalité Kaizen",
                                                                             "targetIds": [],
                                                                             "replacementOptions": [],
                                                                             "cardRewardProfile": {

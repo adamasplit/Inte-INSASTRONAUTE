@@ -51,12 +51,35 @@ public class CardInstance
     public CardType Type => overrideType ?? (data != null ? data.type : CardType.Rien);
 
     /// <summary>
-    /// L'illustration de cette carte.
+    /// Vrai pour les copies qu'ITI arrache à l'adversaire, et pour elles seules.
     ///
-    /// <para>Une copie garde celle de la carte dont elle vient quand cette carte en a une. Les
-    /// mouvements ennemis n'en ont pas — ils n'en héritent que d'une vraie carte qui les porte —
-    /// et retombent alors sur l'icône générique de leur famille. C'est ici que la règle vit, et
-    /// pas côté serveur : le catalogue du serveur ne connaît aucune illustration.</para>
+    /// <para>Ce sont les seules cartes que le jeu n'a pas illustrées et à qui il en faut quand
+    /// même une : la relique met en main quelque chose qui n'existe dans aucun catalogue. Tout
+    /// le reste de ce qui arrive ici sans illustration — un mouvement ennemi affiché dans
+    /// l'historique ou dans une intention, une carte regardée hors combat — en manque parce
+    /// qu'il n'en a jamais eu besoin, et lui coller le personnage ITI le faisait passer pour
+    /// une Attaque, une Compétence ou une Puissance qu'il n'est pas.</para>
+    ///
+    /// <para>Se lit sur l'identifiant d'instance : le serveur nomme ses créations d'après la
+    /// source qui les fabrique (<c>GeneratedCardId.fromContext</c>), et c'est le seul endroit
+    /// où la provenance d'une copie survit au voyage.</para>
+    /// </summary>
+    public bool wearsGenericIcon;
+
+    /// <summary>
+    /// Ce que le serveur préfixe aux instances qu'il fabrique pour le Processeur transcendant.
+    /// Doit rester d'accord avec <c>GeneratedCardId.fromContext</c> et l'identifiant rendu par
+    /// <c>ITIRelicHandler.id()</c>.
+    /// </summary>
+    public const string StolenCopyIdPrefix = "gen-ITIRelic-";
+
+    /// <summary>
+    /// L'illustration de cette carte, ou <c>null</c> quand elle n'en a pas.
+    ///
+    /// <para>Une copie garde celle de la carte dont elle vient quand cette carte en a une. Une
+    /// copie volée à un mouvement ennemi n'a rien à garder, et retombe alors sur l'icône
+    /// générique de sa famille et de sa visée. C'est ici que la règle vit, et pas côté serveur :
+    /// le catalogue du serveur ne connaît aucune illustration.</para>
     /// </summary>
     public Sprite Icon
     {
@@ -64,7 +87,7 @@ public class CardInstance
         {
             if (data != null && data.icon != null)
                 return data.icon;
-            return STSCardDatabase.GetGenericIcon(Type);
+            return wearsGenericIcon ? STSCardDatabase.GetGenericIcon(Type, targetingMode) : null;
         }
     }
     public bool HasTag(CardTag tag)
@@ -309,6 +332,7 @@ public class CardInstance
         }
         clone.displayName = displayName;
         clone.overrideType = overrideType;
+        clone.wearsGenericIcon = wearsGenericIcon;
         clone.overrideCost = overrideCost;
         clone.serverDefinitionId = serverDefinitionId;
         return clone;

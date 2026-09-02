@@ -2,9 +2,10 @@ using System.Linq;
 using System.Collections.Generic;
 public class SignalStatus : StatusEffect
 {
+    /// <param name="duration">ignore : Signal vient d'une carte de Puissance et ne s'ecoule pas</param>
     public SignalStatus(int duration)
     {
-        Duration = duration;
+        Duration = -1;
         Name = "Signal";
         buff = true;
         framed = true;
@@ -27,11 +28,10 @@ public class SignalStatus : StatusEffect
     }
     public override string Desc(bool isPlayer)
     {
-        string turns = $"{Duration} tour" + (Duration > 1 ? "s" : "");
         if (isPlayer)
         {
-            return $"Infligez 1 dégât supplémentaire pour chaque groupe de 2 debuffs distincts présents sur les cibles pendant {turns}.";
+            return "Infligez 1 dégât supplémentaire pour chaque groupe de 2 debuffs distincts présents sur les cibles.";
         }
-        return $"Le personnage inflige 1 dégât supplémentaire pour chaque groupe de 2 debuffs distincts présents sur les cibles pendant {turns}.";
+        return "Le personnage inflige 1 dégât supplémentaire pour chaque groupe de 2 debuffs distincts présents sur les cibles.";
     }
 }

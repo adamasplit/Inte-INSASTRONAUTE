@@ -13,6 +13,15 @@ public class Tooltip : MonoBehaviour
     [SerializeField] private float showDuration = 0.12f;
     [SerializeField] private float hideDuration = 0.1f;
 
+    /// <summary>
+    /// Cette infobulle passe devant les autres du même groupe. Lu par
+    /// <see cref="TooltipManager"/> au moment de les empiler.
+    /// </summary>
+    [System.NonSerialized] public bool stacksAbove;
+
+    /// <summary>En train de disparaître : elle occupe encore le calque mais n'y compte plus.</summary>
+    public bool IsHiding { get; private set; }
+
     private CanvasGroup canvasGroup;
     private RectTransform rectTransform;
     private Coroutine transitionRoutine;
@@ -57,6 +66,7 @@ public class Tooltip : MonoBehaviour
 
     private void PlayHideAnimation()
     {
+        IsHiding = true;
         if (!isActiveAndEnabled)
         {
             Destroy(gameObject);

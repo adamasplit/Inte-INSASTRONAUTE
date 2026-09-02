@@ -373,9 +373,37 @@ public static class EffectResolver
                 }
                 yield break;
             }
+            case EffectType.FrameBuffs:
+            case EffectType.FrameDebuffs:
+            {
+                if (ctx.isPreview)
+                    yield break;
+                // Encadrer, c'est mettre un statut hors de portée des dissipations ordinaires ;
+                // le cadre d'or (trueEffect) le met hors de portée de tout. Ce sont exactement
+                // les deux drapeaux que lisent DispelBuff et DispelDebuff pour décider ce
+                // qu'ils peuvent emporter.
+                bool framingBuffs = effect.type == EffectType.FrameBuffs;
+                List<StatusEffect> toFrame = ctx.target.statusEffects
+                    .Where(s => s.buff == framingBuffs && s.debuff != framingBuffs)
+                    .Where(s => effect.trueEffect ? !s.goldFrame : !s.framed)
+                    .ToList();
+                for (int i = 0; (i < effect.value || effect.value == -1) && toFrame.Count > 0; i++)
+                {
+                    StatusEffect status = toFrame[0];
+                    toFrame.RemoveAt(0);
+                    status.framed = true;
+                    if (effect.trueEffect)
+                        status.goldFrame = true;
+                }
+                yield break;
+            }
             case EffectType.DispelBuff:
             {
                 if (ctx.isPreview)
+                    yield break;
+                // Brouillage : le lanceur ne retire plus rien, à personne. Le refus se lit sur
+                // celui qui dissipe et non sur la cible.
+                if (IsDispelBlocked(ctx))
                     yield break;
                 bool removedAny = false;
                 List<StatusEffect> buffsToDispel = ctx.target.statusEffects.Where(s => s.buff && (!s.framed||effect.trueEffect)&&!s.goldFrame).ToList();
@@ -393,6 +421,8 @@ public static class EffectResolver
             case EffectType.DispelDebuff:
             {
                 if (ctx.isPreview)
+                    yield break;
+                if (IsDispelBlocked(ctx))
                     yield break;
                 bool removedAny = false;
                 List<StatusEffect> debuffsToDispel = ctx.target.statusEffects.Where(s => !s.buff && (!s.framed||effect.trueEffect)&&!s.goldFrame).ToList();
@@ -1174,9 +1204,22 @@ public static class EffectResolver
                 return ctx.target != null && IsMultipleOrPrime(ctx.target.armor, strValue);
             case ConditionType.SelfTurnsBeforeTarget:
                 return HasTurnsBeforeTarget(ctx, strValue);
+            case ConditionType.SelfHpAtMost:
+                return ctx.source != null && int.TryParse(strValue, out int selfHpCap)
+                    && ctx.source.currentHP <= selfHpCap;
+            case ConditionType.TargetHpAtMost:
+                return ctx.target != null && int.TryParse(strValue, out int targetHpCap)
+                    && ctx.target.currentHP <= targetHpCap;
             default:
                 return false;
         }
+    }
+
+    /// <summary>Vrai quand celui qui lance l'effet porte Brouillage.</summary>
+    private static bool IsDispelBlocked(EffectContext ctx)
+    {
+        return ctx.source != null
+            && ctx.source.statusEffects.Exists(s => s is DispelBlockStatus);
     }
 
     private static bool IsMultipleOrPrime(int actual, string divisorText)

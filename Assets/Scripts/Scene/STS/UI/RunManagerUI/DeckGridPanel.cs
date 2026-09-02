@@ -34,6 +34,16 @@ public class DeckGridPanel : MonoBehaviour
     [SerializeField] private float cardLocalZ = 0f;
 
     private CardGridItemView selectedItemView;
+    /// <summary>
+    /// Vrai quand le panneau n'est ouvert que pour agrandir une carte venue d'ailleurs.
+    ///
+    /// <para>Dans cet etat il n'y a ni deck, ni titre, ni bouton de fermeture : seulement le
+    /// fond et la carte au centre. Refermer l'apercu referme alors le panneau entier, alors
+    /// qu'en usage normal cela rend simplement la main a la grille.</para>
+    /// </summary>
+    private bool zoomOnly;
+    /// Ce que le mode agrandissement-seul a eteint, et qu'il rallumera en sortant.
+    private readonly List<GameObject> hiddenByZoomOnly = new List<GameObject>();
     private GameObject animatingCardObj;
     private bool isAnimating = false;
     private bool refreshQueued = false;
@@ -57,6 +67,10 @@ public class DeckGridPanel : MonoBehaviour
 
     public void Show(List<CardInstance> deck,string name)
     {
+        // Une ouverture normale annule un eventuel mode agrandissement-seul, sans quoi le
+        // panneau afficherait le deck sans son titre ni son bouton de fermeture.
+        SetZoomOnly(false);
+
         titleText.text = name;
 
         gameObject.SetActive(true);
@@ -128,6 +142,113 @@ public class DeckGridPanel : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Agrandit une carte qui n'appartient pas a ce panneau, avec exactement l'agrandissement
+    /// que le panneau de deck fait deja.
+    ///
+    /// <para>Elle existe pour l'historique des cartes jouees d'un duel, qui voulait ce geste-la
+    /// — la carte qui vient se poser au centre, le fond qui s'assombrit, un clic a cote qui
+    /// referme — et n'avait aucune raison d'en reecrire une version approchante. L'animation est
+    /// litteralement la meme : <see cref="SelectCard"/> et cette methode appellent la meme coroutine,
+    /// donc les deux ne peuvent pas diverger.</para>
+    ///
+    /// <para>Le panneau s'ouvre alors sans son deck : ni grille, ni titre, ni bouton de
+    /// fermeture. Ce qui reste est le fond et la carte, c'est-a-dire l'apercu tout seul.</para>
+    /// </summary>
+    /// <param name="card">La carte a montrer, deja construite.</param>
+    /// <param name="from">
+    /// D'ou la carte part, typiquement la vignette cliquee. Null fait partir l'animation du
+    /// centre, ce qui reste correct quand l'appelant n'a pas de point de depart a offrir.
+    /// </param>
+    public void ZoomExternalCard(CardInstance card, RectTransform from)
+    {
+        if (card == null || isAnimating)
+            return;
+
+        SetZoomOnly(true);
+
+        gameObject.SetActive(true);
+        if (panelCanvasGroup != null)
+        {
+            panelCanvasGroup.alpha = 1f;
+            panelCanvasGroup.blocksRaycasts = true;
+        }
+
+        // Aucune carte de la grille n'est concernee : la grille n'est meme pas montee.
+        selectedItemView = null;
+        HidePreview();
+
+        StartCoroutine(AnimateCardToPreview(card, from, null));
+    }
+
+    /// <summary>
+    /// Entre ou sort du mode agrandissement-seul.
+    ///
+    /// <para>Tout ce que le panneau contient est masque, <b>sauf l'apercu</b> : c'est lui qui
+    /// porte le voile sombre et le clic qui referme, et c'est tout ce qu'un agrandissement
+    /// demande. Le titre, la grille et le bouton de fermeture s'en vont donc ensemble.</para>
+    ///
+    /// <para>Masquer par « tout sauf l'apercu » plutot qu'en nommant le titre, la liste et le
+    /// bouton un par un : la hierarchie n'est pas connue d'ici — la grille vit deux niveaux plus
+    /// bas, sous un ScrollView qui a son propre fond — et un panneau qui gagnerait un element
+    /// demain le laisserait trainer par-dessus la carte agrandie sans que personne y pense.</para>
+    ///
+    /// <para>Seuls les objets qui etaient allumes sont eteints, et eux seuls sont rallumes : on
+    /// ne rend jamais visible quelque chose que la scene avait ferme.</para>
+    /// </summary>
+    private void SetZoomOnly(bool enabled)
+    {
+        if (zoomOnly == enabled)
+            return;
+
+        zoomOnly = enabled;
+        if (enabled)
+            HideEverythingButThePreview();
+        else
+            RestoreWhatZoomOnlyHid();
+    }
+
+    private void HideEverythingButThePreview()
+    {
+        hiddenByZoomOnly.Clear();
+        foreach (Transform child in transform)
+        {
+            GameObject candidate = child.gameObject;
+            if (previewPanel != null && candidate == previewPanel)
+                continue;
+            if (!candidate.activeSelf)
+                continue;
+
+            candidate.SetActive(false);
+            hiddenByZoomOnly.Add(candidate);
+        }
+    }
+
+    private void RestoreWhatZoomOnlyHid()
+    {
+        foreach (GameObject hidden in hiddenByZoomOnly)
+        {
+            if (hidden != null)
+                hidden.SetActive(true);
+        }
+        hiddenByZoomOnly.Clear();
+    }
+
+    /// Referme un agrandissement ouvert depuis l'exterieur, et le panneau avec.
+    private void EndZoomOnly()
+    {
+        if (!zoomOnly)
+            return;
+
+        SetZoomOnly(false);
+        if (panelCanvasGroup != null)
+        {
+            panelCanvasGroup.alpha = 0f;
+            panelCanvasGroup.blocksRaycasts = false;
+        }
+        gameObject.SetActive(false);
+    }
+
     public void SelectCard(CardInstance card, CardGridItemView itemView)
     {
         if (isAnimating) return;
@@ -150,7 +271,8 @@ public class DeckGridPanel : MonoBehaviour
             HidePreview();
         }
         selectedItemView = itemView;
-        StartCoroutine(AnimateCardToPreview(itemView, card));
+        StartCoroutine(AnimateCardToPreview(
+            card, itemView != null ? itemView.GetComponent<RectTransform>() : null, itemView));
     }
 
     void ShowPreview(CardInstance card)
@@ -158,23 +280,41 @@ public class DeckGridPanel : MonoBehaviour
         // No longer used in this flow, but kept for compatibility if needed elsewhere
     }
 
-    System.Collections.IEnumerator AnimateCardToPreview(CardGridItemView itemView, CardInstance card)
+    /// <summary>
+    /// Fait venir <paramref name="card"/> se poser au centre de l'apercu.
+    ///
+    /// <para>Une seule coroutine pour les deux usages — une carte de la grille, ou une carte
+    /// venue d'ailleurs par <see cref="ZoomExternalCard"/> — parce que c'est le geste lui-meme qui
+    /// devait etre partage. En ecrire une seconde copie pour l'historique aurait donne deux
+    /// agrandissements qui se ressemblent aujourd'hui et divergent au premier reglage.</para>
+    /// </summary>
+    /// <param name="from">
+    /// D'ou part la carte. Null la fait partir de sa position d'arrivee, ce qui revient a une
+    /// apparition sur place plutot qu'a un vol depuis un point qu'on n'a pas.
+    /// </param>
+    /// <param name="itemToHide">
+    /// La carte de la grille a effacer pendant l'agrandissement, quand il y en a une. Un
+    /// agrandissement venu de l'exterieur n'en a pas : rien de cette grille ne bouge.
+    /// </param>
+    System.Collections.IEnumerator AnimateCardToPreview(
+        CardInstance card, RectTransform from, CardGridItemView itemToHide)
     {
         isAnimating = true;
-        // Clone the card prefab at the grid item's position
-        var cardObj = Instantiate(cardGridItemPrefab, gridContainer.parent); // parent to gridContainer's parent (should be Canvas)
+
+        // Clone the card prefab at the grid item's position.
+        //
+        // En mode agrandissement-seul la zone de defilement est masquee, et c'est justement
+        // elle qui accueille la copie en usage normal : l'y poser la rendrait invisible. La
+        // copie va donc sur le panneau lui-meme, qui est actif dans les deux cas.
+        Transform cloneParent = zoomOnly ? transform : gridContainer.parent;
+        var cardObj = Instantiate(cardGridItemPrefab, cloneParent);
+        cardObj.transform.SetAsLastSibling();
         animatingCardObj = cardObj;
         var cardView = cardObj.GetComponentInChildren<CardView>();
         if (cardView != null)
             cardView.SetCard(card);
 
-        // Get start and end positions/scales
-        var startRect = itemView.GetComponent<RectTransform>();
         var animRect = cardObj.GetComponent<RectTransform>();
-        var canvas = GetComponentInParent<Canvas>();
-        Vector3 startWorldPos = startRect.transform.position;
-        animRect.position = startWorldPos;
-        animRect.localScale = startRect.localScale;
 
         // Target: center of previewPanel (or screen)
         RectTransform previewRect = previewPanel.GetComponent<RectTransform>();
@@ -185,8 +325,14 @@ public class DeckGridPanel : MonoBehaviour
         float previewWidth = previewHeight * cardAspect;
         Vector3 targetScale = 0.7f*new Vector3(previewWidth / animRect.rect.width, previewHeight / animRect.rect.height, 1f);
 
+        // Sans point de depart, la carte se pose la ou elle doit finir : il n'y a rien a
+        // survoler, et partir d'un coin arbitraire se verrait.
+        animRect.position = from != null ? from.position : targetWorldPos;
+        animRect.localScale = from != null ? from.localScale : targetScale;
+
         // Hide the original grid card during animation
-        itemView.gameObject.SetActive(false);
+        if (itemToHide != null)
+            itemToHide.gameObject.SetActive(false);
 
         float duration = 0.15f;
         float elapsed = 0f;
@@ -211,7 +357,8 @@ public class DeckGridPanel : MonoBehaviour
             previewCanvasGroup.blocksRaycasts = true;
         }
         previewPanel.SetActive(true);
-        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)previewContainer);
+        if (previewContainer != null)
+            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)previewContainer);
 
         isAnimating = false;
     }
@@ -224,8 +371,11 @@ public class DeckGridPanel : MonoBehaviour
             previewCanvasGroup.blocksRaycasts = false;
         }
         previewPanel.SetActive(false);
-        foreach (Transform child in previewContainer)
-            Destroy(child.gameObject);
+        if (previewContainer != null)
+        {
+            foreach (Transform child in previewContainer)
+                Destroy(child.gameObject);
+        }
         // Also destroy the animating card if present
         if (animatingCardObj != null)
         {
@@ -239,6 +389,8 @@ public class DeckGridPanel : MonoBehaviour
         if (SelectionManager.Instance != null && SelectionManager.Instance.selectionMode)
             return;
 
+        SetZoomOnly(false);
+
         if (panelCanvasGroup != null)
         {
             panelCanvasGroup.alpha = 0f;
@@ -249,6 +401,13 @@ public class DeckGridPanel : MonoBehaviour
         if (selectedItemView != null)
             selectedItemView.gameObject.SetActive(true);
     }
+    /// <summary>
+    /// Referme l'apercu, ce que le clic a cote de la carte declenche.
+    ///
+    /// <para>Quand le panneau n'etait ouvert que pour agrandir une carte venue d'ailleurs, il n'y
+    /// a pas de grille a laquelle rendre la main : le meme clic referme donc tout. C'est ce qui
+    /// fait qu'un clic a cote ferme l'historique d'un duel comme il ferme l'apercu d'un deck.</para>
+    /// </summary>
     public void ClearSelection()
     {
         // Restore grid card if needed
@@ -258,6 +417,7 @@ public class DeckGridPanel : MonoBehaviour
         }
         HidePreview();
         selectedItemView = null;
+        EndZoomOnly();
     }
 
     private void OnEnable()
@@ -273,6 +433,11 @@ public class DeckGridPanel : MonoBehaviour
 
     private void QueueGridRefresh()
     {
+        // Ouvert pour agrandir une carte venue d'ailleurs : il n'y a pas de grille montee, et
+        // OnEnable passe pourtant par ici puisque le panneau vient d'etre active.
+        if (zoomOnly)
+            return;
+
         if (refreshQueued || !isActiveAndEnabled)
             return;
 

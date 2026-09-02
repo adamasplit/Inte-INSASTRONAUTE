@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: insaloon
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: insaloon
-  cardName: Tire plus vite que ton ombre
+  cardName: Tir rapide
   collectionCardId: Insaloon
   multiplayerExclusive: 0
   characterLevel: 0
@@ -41,7 +41,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   - type: 0
-    value: 6
+    value: 4
     targetSelf: 0
     targetOthers: 0
     statusType: 0
@@ -56,10 +56,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-    animationType: 0
+    animationType: 7
   - type: 8
     value: 1
-    targetSelf: 0
+    targetSelf: 1
     targetOthers: 0
     statusType: 0
     duration: 0

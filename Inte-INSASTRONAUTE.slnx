@@ -2,8 +2,8 @@
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="LeanCommon.csproj" />
   <Project Path="LeanTransition.csproj" />
-  <Project Path="STS.EditModeTests.csproj" />
   <Project Path="STS.AuthoritativeCombat.csproj" />
+  <Project Path="STS.EditModeTests.csproj" />
   <Project Path="CW.Common.csproj" />
   <Project Path="MackySoft.SerializeReferenceExtensions.Editor.csproj" />
   <Project Path="LeanGUI.csproj" />

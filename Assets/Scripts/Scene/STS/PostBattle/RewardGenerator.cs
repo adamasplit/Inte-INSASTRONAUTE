@@ -19,11 +19,12 @@ public static class RewardGenerator
 
         Reward reward = new Reward();
 
+        // CreateDefault donne déjà au boss sa table de rareté (Commune 10 -> Légendaire 100).
+        // Forcer exactRarity = Légendaire par-dessus la rendait inutile : le filtre écartait
+        // tout ce qui n'était pas légendaire, et les poids ne pesaient plus rien.
         CardRewardProfile cardRewardProfile = CardRewardProfile.CreateDefault(result);
         if (result.boss)
         {
-            cardRewardProfile.useExactRarity = true;
-            cardRewardProfile.exactRarity = CardRarity.Legendary;
             cardRewardProfile.choiceCount = 3;
         }
 

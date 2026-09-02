@@ -265,8 +265,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1603807483}
-  - {fileID: 1534055986}
   - {fileID: 935084046}
+  - {fileID: 1534055986}
   - {fileID: 718672209}
   - {fileID: 1240473511}
   m_Father: {fileID: 44879003}
@@ -1345,6 +1345,7 @@ MonoBehaviour:
   chargePrefab: {fileID: 1482060740411714935, guid: 39de7621736cecc44a261d50c45dcd0d, type: 3}
   chargesContainer: {fileID: 434258905}
   enchantExitScreenMargin: 64
+  autoReturnDelay: 0.8
 --- !u!1 &1521776228
 GameObject:
   m_ObjectHideFlags: 0

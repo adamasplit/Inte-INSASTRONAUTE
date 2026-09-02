@@ -68,5 +68,18 @@ public enum StatusType
     Signal,
     Unbiased,
     Production,
-    FullMoonTemp
+    FullMoonTemp,
+
+    // Ajoutés en dernier : cet enum est sérialisé par index dans les ScriptableObjects, donc
+    // insérer ailleurs réécrirait silencieusement le statut de toutes les cartes suivantes.
+    Adaptation,
+    Fervor,
+    Confusion,
+    Overpower,
+    Steadfast,
+    DispelBlock,
+    Smoke,
+    Absorption,
+    TimeCompression,
+    Rage
 }

@@ -926,6 +926,63 @@ public class RunManager : MonoBehaviour
                ?? pvpParticipants.Find(p => p != null && p != local);
     }
 
+    /// <summary>
+    /// Tous les participants de notre camp, nous compris, dans l'ordre des sieges.
+    ///
+    /// <para>En duel c'est nous seul. En 2v2 c'est nous et notre equipier, et en raid nous et
+    /// l'autre joueur — dans les deux cas des allies qu'il faut monter dans la scene, ce que
+    /// « le premier participant de notre equipe » ne disait pas.</para>
+    /// </summary>
+    public List<STSApiClient.StsPvpParticipantSnapshot> AlliedPvpParticipants()
+    {
+        return PvpParticipantsOnOurSide(true);
+    }
+
+    /// Tous les participants d'en face : les adversaires humains, et le boss d'un raid.
+    public List<STSApiClient.StsPvpParticipantSnapshot> OpposingPvpParticipants()
+    {
+        return PvpParticipantsOnOurSide(false);
+    }
+
+    /// <summary>
+    /// Les participants de notre equipe, ou ceux des autres.
+    ///
+    /// <para>Nous passons en tete de notre camp : le premier allie est celui que la scene traite
+    /// comme le joueur — c'est lui qui possede la main et la pioche affichees — et ce ne peut
+    /// etre que nous.</para>
+    /// </summary>
+    private List<STSApiClient.StsPvpParticipantSnapshot> PvpParticipantsOnOurSide(bool sameTeam)
+    {
+        var result = new List<STSApiClient.StsPvpParticipantSnapshot>();
+        if (pvpParticipants == null || pvpParticipants.Count == 0)
+            return result;
+
+        STSApiClient.StsPvpParticipantSnapshot local = LocalPvpParticipant();
+        if (local == null)
+            return result;
+
+        if (sameTeam)
+            result.Add(local);
+
+        foreach (STSApiClient.StsPvpParticipantSnapshot participant in pvpParticipants)
+        {
+            if (participant == null || participant == local)
+                continue;
+            if ((participant.teamIndex == local.teamIndex) == sameTeam)
+                result.Add(participant);
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Etiquette chaque combattant de la scene avec le participant dont il tient la place.
+    ///
+    /// <para>C'est cette etiquette — <c>playerUserId</c>, qui porte en realite l'identifiant du
+    /// combattant — que <c>CombatManager.ResolveCombatantByConvention</c> cherche pour relier
+    /// l'etat autoritatif aux objets affiches. Elle n'etait posee que sur <c>allies[0]</c> et
+    /// <c>enemies[0]</c> : un troisieme ou un quatrieme combattant n'etait relie a rien, et son
+    /// etat n'atterrissait nulle part.</para>
+    /// </summary>
     public void ApplyPvpParticipantDisplayNames(List<Player> allies, List<Character> enemies)
     {
         // Sur la bataille en cours, et sur elle seule. La garde precedente lisait
@@ -935,31 +992,37 @@ public class RunManager : MonoBehaviour
         if (string.IsNullOrWhiteSpace(activePvpBattleId) || pvpParticipants == null || pvpParticipants.Count == 0)
             return;
 
-        STSApiClient.StsPvpParticipantSnapshot localParticipant = LocalPvpParticipant();
-        STSApiClient.StsPvpParticipantSnapshot opponentParticipant = OpponentPvpParticipant();
+        Label(allies != null ? allies.ConvertAll(ally => (Character)ally) : null, AlliedPvpParticipants());
+        Label(enemies, OpposingPvpParticipants());
+    }
 
-        if (allies != null && allies.Count > 0)
-        {
-            Player ally = allies[0];
-            if (ally != null && localParticipant != null)
-            {
-                if (!string.IsNullOrWhiteSpace(localParticipant.displayName))
-                    ally.playerDisplayName = localParticipant.displayName;
-                if (!string.IsNullOrWhiteSpace(localParticipant.userId))
-                    ally.playerUserId = localParticipant.userId;
-            }
-        }
+    /// <summary>
+    /// Pose les etiquettes siege par siege, dans l'ordre.
+    ///
+    /// <para>L'ordre est celui du montage de la scene, qui est lui-meme celui des participants :
+    /// <c>GameManager.SetupPvpBattle</c> cree un combattant par participant, dans cet ordre.
+    /// Les deux listes sont donc parallelles, et la boucle s'arrete a la plus courte plutot que
+    /// de supposer qu'elles ont la meme longueur.</para>
+    /// </summary>
+    private static void Label(
+        List<Character> combatants,
+        List<STSApiClient.StsPvpParticipantSnapshot> participants)
+    {
+        if (combatants == null || participants == null)
+            return;
 
-        if (enemies != null && enemies.Count > 0)
+        int count = Mathf.Min(combatants.Count, participants.Count);
+        for (int index = 0; index < count; index++)
         {
-            Character enemy = enemies[0];
-            if (enemy != null && opponentParticipant != null)
-            {
-                if (!string.IsNullOrWhiteSpace(opponentParticipant.displayName))
-                    enemy.playerDisplayName = opponentParticipant.displayName;
-                if (!string.IsNullOrWhiteSpace(opponentParticipant.userId))
-                    enemy.playerUserId = opponentParticipant.userId;
-            }
+            Character combatant = combatants[index];
+            STSApiClient.StsPvpParticipantSnapshot participant = participants[index];
+            if (combatant == null || participant == null)
+                continue;
+
+            if (!string.IsNullOrWhiteSpace(participant.displayName))
+                combatant.playerDisplayName = participant.displayName;
+            if (!string.IsNullOrWhiteSpace(participant.combatantId))
+                combatant.playerUserId = participant.combatantId;
         }
     }
 }

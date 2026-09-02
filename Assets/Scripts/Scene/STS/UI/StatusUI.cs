@@ -46,7 +46,10 @@ public class StatusUI : MonoBehaviour
                 if (data != null)                
                 {
                     CardInstance tempCard = new CardInstance(data);
-                    TooltipManager.Instance.ShowTooltip(data.cardName,tempCard.GetDescription(), transform.position + new Vector3(0, -1, 0),false);
+                    // Au-dessus du statut qui l'a ouverte : c'est la carte qui est le sujet,
+                    // le statut n'en est que le porteur. L'empilement est fait par le
+                    // gestionnaire, d'où la position identique.
+                    TooltipManager.Instance.ShowTooltip(data.cardName, tempCard.GetDescription(), transform.position, false, true);
                 }
                 else
                 {

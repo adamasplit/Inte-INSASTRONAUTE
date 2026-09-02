@@ -468,26 +468,35 @@ public static class STSCardDatabase
     /// <summary>Le dossier d'icônes, le même que celui dont <c>STSCardData.FromDTO</c> tire les siennes.</summary>
     private const string CardIconFolder = "STS/Icons/Cards/";
 
-    /// <summary>Les deux illustrations génériques : le personnage ITI qui frappe, et qui se défend.</summary>
+    /// <summary>
+    /// Les trois illustrations génériques : le personnage ITI qui frappe, qui agit sur
+    /// l'adversaire, et qui agit sur lui-même.
+    /// </summary>
     private const string GenericAttackIcon = "Attaque";
     private const string GenericSkillIcon = "Compétence";
+    private const string GenericPowerIcon = "Puissance";
 
-    private static readonly Dictionary<CardType, Sprite> genericIcons = new();
+    /// <summary>Mis en cache par nom d'icône : trois entrées au plus, quel que soit le nombre de cartes.</summary>
+    private static readonly Dictionary<string, Sprite> genericIcons = new();
 
     /// <summary>
     /// L'illustration à donner à une carte qui n'en a pas.
     ///
     /// <para>Seules les copies volées par ITI passent par ici : une carte écrite à la main a
     /// toujours son icône, et un mouvement ennemi n'en a que s'il est porté par une vraie carte.
-    /// Les deux sprites sont mis en cache parce que la question se repose à chaque carte
-    /// affichée, et qu'un <c>Resources.Load</c> qui échoue coûte autant qu'un qui réussit.</para>
+    /// Les sprites sont mis en cache parce que la question se repose à chaque carte affichée, et
+    /// qu'un <c>Resources.Load</c> qui échoue coûte autant qu'un qui réussit.</para>
+    ///
+    /// <para>La visée compte autant que la famille : une carte qui frappe montre l'attaque, une
+    /// carte qui n'agit que sur celui qui la joue montre la puissance, et le reste — ce qu'on
+    /// fait subir à l'adversaire sans le frapper — montre la compétence.</para>
     /// </summary>
-    public static Sprite GetGenericIcon(CardType type)
+    public static Sprite GetGenericIcon(CardType type, TargetingMode targeting)
     {
-        if (genericIcons.TryGetValue(type, out Sprite cached))
+        string iconName = GenericIconName(type, targeting);
+        if (genericIcons.TryGetValue(iconName, out Sprite cached))
             return cached;
 
-        string iconName = type == CardType.Attaque ? GenericAttackIcon : GenericSkillIcon;
         Sprite icon = Resources.Load<Sprite>(CardIconFolder + iconName);
         if (icon == null)
         {
@@ -495,8 +504,17 @@ public static class STSCardDatabase
                 $"[STS] Icône générique '{iconName}' introuvable dans {CardIconFolder}. "
                 + "Les copies d'ITI s'afficheront sans illustration.");
         }
-        genericIcons[type] = icon;
+        genericIcons[iconName] = icon;
         return icon;
+    }
+
+    private static string GenericIconName(CardType type, TargetingMode targeting)
+    {
+        if (type == CardType.Attaque)
+            return GenericAttackIcon;
+        if (type == CardType.Pouvoir || targeting == TargetingMode.Player)
+            return GenericPowerIcon;
+        return GenericSkillIcon;
     }
 
     public static STSCardData Get(string id)

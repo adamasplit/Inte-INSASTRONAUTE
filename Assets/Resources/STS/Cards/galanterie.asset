@@ -41,7 +41,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   - type: 6
-    value: 6
+    value: 80
     targetSelf: 1
     targetOthers: 0
     statusType: 0

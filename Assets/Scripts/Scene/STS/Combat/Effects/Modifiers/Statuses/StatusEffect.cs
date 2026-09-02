@@ -17,6 +17,21 @@ public abstract class StatusEffect : StatModifier
     public bool framed=false; // Statuts pouvant être supprimés par des cartes ou des effets de statut (certains indispellables peuvent être supprimés quand même)
     public bool inextendable=false; // Statuts dont la durée ne peut pas être augmentée
     public bool goldFrame=false; // Statuts rares bénéficiant d'une true resistance à la suppression
+
+    /// <summary>
+    /// Les trois caractéristiques que la description d'une carte nomme sans les expliquer.
+    ///
+    /// <para>Elles se lisent comme un statut <c>generic</c> — « Gagnez 2 de Force » — mais ne
+    /// peuvent pas l'être : une valeur négative se dit « Perdez », et le champ <c>generic</c>
+    /// n'a pas ce cas. Elles avaient donc l'abrègement sans l'infobulle qui va avec, et le
+    /// joueur lisait un nom sans jamais pouvoir apprendre ce qu'il fait.</para>
+    /// </summary>
+    public static bool IsNamedStat(StatusType type)
+    {
+        return type == StatusType.Strength
+            || type == StatusType.Dexterity
+            || type == StatusType.Speed;
+    }
     public virtual string IconPath()
     {
         // Class name minus "Status" suffix, e.g., "PoisonStatus" becomes "Poison"
@@ -200,7 +215,18 @@ public abstract class StatusEffect : StatModifier
             StatusType.TimeStop=>new TimeStopStatus(duration),
             StatusType.Signal=>new SignalStatus(duration),
             StatusType.Unbiased=>new UnbiasedStatus(duration),
-            StatusType.Production=>new ProductionStatus(duration),
+            // Production se lit désormais comme Énergie : une valeur signée, pas une durée.
+            StatusType.Production=>new ProductionStatus(value),
+            StatusType.Adaptation=>new AdaptationStatus(),
+            StatusType.Fervor=>new FervorStatus(duration),
+            StatusType.Confusion=>new ConfusionStatus(),
+            StatusType.Overpower=>new OverpowerStatus(),
+            StatusType.Steadfast=>new SteadfastStatus(duration),
+            StatusType.DispelBlock=>new DispelBlockStatus(duration),
+            StatusType.Smoke=>new SmokeStatus(),
+            StatusType.Absorption=>new AbsorptionStatus(),
+            StatusType.TimeCompression=>new TimeCompressionStatus(duration),
+            StatusType.Rage=>new RageStatus(value),
             _ => null
         };
         if (stat == null)

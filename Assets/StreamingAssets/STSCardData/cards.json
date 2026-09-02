@@ -1879,7 +1879,7 @@
     },
     {
       "id": "campinsa",
-      "cardName": "Vous savez, moi je ne crois pas qu'il y ait de bonne ou de mauvaise situation...",
+      "cardName": "Vous savez, moi je ne crois pas qu'il y ait de bonne ou de mauvaise situation. Moi, si je devais résumer ma vie aujourd'hui avec vous, je dirais que c'est d'abord des rencontres. Des gens qui m'ont tendu la main, peut-être à un moment où je ne pouvais pas, où j'étais seul chez moi. Et c'est assez curieux de se dire que les hasards, les rencontres forgent une destinée. Parce que quand on a le goût de la chose, quand on a le goût de la chose bien faite, le beau geste, parfois on ne trouve pas l'interlocuteur en face je dirais, le miroir qui vous aide à avancer. Alors ça n'est pas mon cas, comme je disais là, puisque moi au contraire, j'ai pu : et je dis merci à la vie, je lui dis merci, je chante la vie, je danse la vie, je ne suis qu'amour. Et finalement, quand beaucoup de gens aujourd'hui me disent « mais comment fais-tu pour avoir cette humanité ? », et bien je leur réponds très simplement, je leur dis que c'est ce goût de l'amour ce goût donc qui m'a poussé aujourd'hui à entreprendre une construction mécanique, mais demain qui sait ? Peut-être simplement à me mettre au service de la communauté, à faire le don, le don de soi...",
       "collectionCardId": "Camp'insa",
       "multiplayerExclusive": false,
       "characterLevel": 0,
@@ -1956,6 +1956,74 @@
       "tags": [
         "Exhaust"
       ]
+    },
+    {
+      "id": "atomnium",
+      "cardName": "Atomnium",
+      "collectionCardId": null,
+      "multiplayerExclusive": false,
+      "characterLevel": 0,
+      "iconId": "fated",
+      "cost": 1,
+      "xCost": false,
+      "type": "Attaque",
+      "rarity": "Epic",
+      "targetingMode": "Enemy",
+      "effects": [
+        {
+          "type": "CardSelection",
+          "value": 1,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "Epuisez 1 Atome de votre main pour infliger 16 dégâts à la cible.",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [
+            "Atom"
+          ],
+          "cardSelectionEffect": "Exhaust",
+          "animationType": "Default"
+        },
+        {
+          "type": "Damage",
+          "value": 0,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": " ",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [
+        {
+          "type": "Damage",
+          "kind": "ActionExhausted",
+          "value": 16,
+          "info": "",
+          "description": " "
+        }
+      ],
+      "favoredCharacter": "CFI",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": []
     },
     {
       "id": "biomolecule",
@@ -2079,7 +2147,7 @@
     },
     {
       "id": "cfi",
-      "cardName": "Attente interminable + Stock de potions",
+      "cardName": "Attente interminable + Potion magique",
       "collectionCardId": "CFI",
       "multiplayerExclusive": false,
       "characterLevel": 0,
@@ -2095,8 +2163,27 @@
           "value": -15,
           "targetSelf": false,
           "targetOthers": false,
-          "statusType": "Speed",
-          "duration": 0,
+          "statusType": "Stun",
+          "duration": 2,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "Heal",
+          "value": 10,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Stun",
+          "duration": 2,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -2248,7 +2335,7 @@
       "cost": 1,
       "xCost": false,
       "type": "Attaque",
-      "rarity": "Rare",
+      "rarity": "Uncommon",
       "targetingMode": "Enemy",
       "effects": [
         {
@@ -2295,6 +2382,47 @@
       "animationSpeed": 1.0,
       "startingCount": 0,
       "tags": []
+    },
+    {
+      "id": "cristallisation_x",
+      "cardName": "Cristallisation X",
+      "collectionCardId": null,
+      "multiplayerExclusive": false,
+      "characterLevel": 0,
+      "iconId": "cristal3",
+      "cost": 1,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Rare",
+      "targetingMode": "AllEnemies",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Crystallize",
+          "duration": 3,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "CFI",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Exhaust"
+      ]
     },
     {
       "id": "distillation",
@@ -4986,7 +5114,7 @@
       "multiplayerExclusive": false,
       "characterLevel": 0,
       "iconId": null,
-      "cost": 1,
+      "cost": 0,
       "xCost": false,
       "type": "Attaque",
       "rarity": "Epic",
@@ -5016,7 +5144,7 @@
         {
           "type": "Damage",
           "kind": "Played",
-          "value": 3,
+          "value": 2,
           "info": "",
           "description": ""
         }
@@ -8500,7 +8628,7 @@
         },
         {
           "type": "DelayTurn",
-          "value": 6,
+          "value": 80,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -13205,7 +13333,7 @@
     },
     {
       "id": "insaloon",
-      "cardName": "Tire plus vite que ton ombre",
+      "cardName": "Tir rapide",
       "collectionCardId": "Insaloon",
       "multiplayerExclusive": false,
       "characterLevel": 0,
@@ -13237,7 +13365,7 @@
         },
         {
           "type": "Damage",
-          "value": 6,
+          "value": 4,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -13252,12 +13380,12 @@
           "index": 0,
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
-          "animationType": "Default"
+          "animationType": "ExplosionSmall"
         },
         {
           "type": "Draw",
           "value": 1,
-          "targetSelf": false,
+          "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
           "duration": 0,
@@ -14421,7 +14549,7 @@
         {
           "type": "GainEnergy",
           "value": 1,
-          "targetSelf": false,
+          "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
           "duration": 0,
@@ -14831,6 +14959,47 @@
           "index": 0,
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "ITI",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Exhaust"
+      ]
+    },
+    {
+      "id": "restaurer_corbeille",
+      "cardName": "Ctrl-Z",
+      "collectionCardId": null,
+      "multiplayerExclusive": false,
+      "characterLevel": 0,
+      "iconId": "engrenages",
+      "cost": 1,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Epic",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "CardSelection",
+          "value": 5,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "ExhaustPile",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "ReturnToHand",
           "animationType": "Default"
         }
       ],
@@ -19397,15 +19566,15 @@
       "xCost": false,
       "type": "Attaque",
       "rarity": "Rare",
-      "targetingMode": "Player",
+      "targetingMode": "Enemy",
       "effects": [
         {
-          "type": "CardSelection",
+          "type": "Status",
           "value": -1,
           "targetSelf": true,
           "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
+          "statusType": "Undead",
+          "duration": 5,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -19417,25 +19586,6 @@
           "cardFilterTags": [],
           "cardSelectionEffect": "Exhaust",
           "animationType": "Default"
-        },
-        {
-          "type": "Damage",
-          "value": 0,
-          "targetSelf": false,
-          "targetOthers": false,
-          "statusType": "Strength",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "ExplosionSmall"
         }
       ],
       "modifiers": [
@@ -19689,7 +19839,7 @@
     },
     {
       "id": "site",
-      "cardName": "Maintenance",
+      "cardName": "Erreur 404",
       "collectionCardId": "Sites",
       "multiplayerExclusive": false,
       "characterLevel": 0,
@@ -19705,8 +19855,27 @@
           "value": 0,
           "targetSelf": false,
           "targetOthers": false,
-          "statusType": "TimeStop",
-          "duration": 1,
+          "statusType": "Freeze",
+          "duration": 5,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "Status",
+          "value": 0,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Freeze",
+          "duration": 2,
           "description": "",
           "cardID": "",
           "conditional": false,

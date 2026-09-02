@@ -295,6 +295,12 @@ public class EventManager : MonoBehaviour
             if (!response.eventCompleted)
             {
                 Debug.Log($"[STS-EVENT] L'événement continue : réaffichage des options.");
+                // Le message de fin d'un palier est écrit pour être lu entre deux choix.
+                // Il n'écrase la description que s'il dit quelque chose : la plupart des
+                // options qui en ouvrent d'autres n'en portent pas, et les laisser passer
+                // effaçait le texte de l'événement au premier choix.
+                if (!string.IsNullOrWhiteSpace(response.completionMessage) && description != null)
+                    description.text = response.completionMessage;
                 ShowServerEventOptions();
                 return true;
             }

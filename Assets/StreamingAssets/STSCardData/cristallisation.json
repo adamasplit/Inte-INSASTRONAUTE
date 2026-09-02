@@ -8,7 +8,7 @@
   "cost": 1,
   "xCost": false,
   "type": "Attaque",
-  "rarity": "Rare",
+  "rarity": "Uncommon",
   "targetingMode": "Enemy",
   "effects": [
     {

@@ -13,9 +13,12 @@ public struct HighlightTarget
             return default;
         }
 
-        if (canvas == null)
+        // La caméra de conversion doit être celle du canvas de la CIBLE (le HUD est en
+        // Screen Space Camera), pas celle du canvas du tutoriel passé en argument.
+        Canvas targetCanvas = rt.GetComponentInParent<Canvas>();
+        if (targetCanvas != null)
         {
-            canvas = rt.GetComponentInParent<Canvas>();
+            canvas = targetCanvas.rootCanvas;
         }
 
         if (canvas == null)

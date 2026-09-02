@@ -5,7 +5,7 @@
   "multiplayerExclusive": false,
   "characterLevel": 0,
   "iconId": null,
-  "cost": 1,
+  "cost": 0,
   "xCost": false,
   "type": "Attaque",
   "rarity": "Epic",
@@ -35,7 +35,7 @@
     {
       "type": "Damage",
       "kind": "Played",
-      "value": 3,
+      "value": 2,
       "info": "",
       "description": ""
     }

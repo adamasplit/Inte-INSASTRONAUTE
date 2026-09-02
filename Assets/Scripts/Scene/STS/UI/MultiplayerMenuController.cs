@@ -24,11 +24,28 @@ public class MultiplayerMenuController : MonoBehaviour
     [SerializeField] private Button challengeButton;
     [SerializeField] private TMP_InputField challengeTargetInput;
     [SerializeField] private Toggle friendlyMatchToggle;
+    [SerializeField] private TMP_Dropdown modeDropdown;
+    [SerializeField] private Toggle fillWithAiToggle;
+    [SerializeField] private TextMeshProUGUI modeHintText;
     [SerializeField] private TextMeshProUGUI playerIdText;
 
     [Header("Notification")]
     [SerializeField] private TextMeshProUGUI notificationText;
     [SerializeField] private Button notificationOkButton;
+
+    /// <summary>
+    /// Les formats proposes, dans l'ordre du menu deroulant.
+    ///
+    /// <para>Le nom qui part au serveur est celui de l'enum <c>StsPvpMode</c> : c'est un contrat,
+    /// pas un libelle, et un mode que le serveur ne reconnait pas est refuse plutot que ramene
+    /// au duel. Le libelle, lui, ne sert qu'a l'affichage.</para>
+    /// </summary>
+    private static readonly (string WireName, string Label, int Players)[] PvpModes =
+    {
+        ("ONE_V_ONE", "1v1", 2),
+        ("TWO_V_TWO", "2v2", 4),
+        ("RAID", "Raid (2 vs boss)", 2)
+    };
 
     private readonly List<SelectableCharacter> availableCharacters = new();
     private readonly List<PvpFriend> acceptedFriends = new();
@@ -36,6 +53,7 @@ public class MultiplayerMenuController : MonoBehaviour
     private bool suppressDropdownCallback;
     private bool isQuickMatchQueued;
     private bool quickMatchFriendly;
+    private string quickMatchMode = "ONE_V_ONE";
     private bool isEnteringPvpBattle;
     private int quickMatchGeneration;
     private Coroutine matchWatchRoutine;
@@ -70,6 +88,7 @@ public class MultiplayerMenuController : MonoBehaviour
     private async void Awake()
     {
         BuildCharacterDropdown();
+        BuildModeDropdown();
         WireButtons();
 
         if (multiplayerDeckPanel != null)
@@ -88,6 +107,51 @@ public class MultiplayerMenuController : MonoBehaviour
         {
             await QuickMatchAsync();
         }
+    }
+
+    /// <summary>
+    /// Remplit le menu des formats et le laisse sur le duel.
+    ///
+    /// <para>Rien n'est deduit d'un champ de scene : les options sont reconstruites depuis
+    /// <see cref="PvpModes"/> a chaque ouverture, pour qu'un libelle laisse a la main dans
+    /// l'editeur ne puisse pas envoyer un mode que le serveur refusera.</para>
+    /// </summary>
+    private void BuildModeDropdown()
+    {
+        if (modeDropdown == null)
+            return;
+
+        modeDropdown.onValueChanged.RemoveAllListeners();
+        modeDropdown.ClearOptions();
+
+        var labels = new List<string>();
+        foreach (var mode in PvpModes)
+            labels.Add(mode.Label);
+        modeDropdown.AddOptions(labels);
+
+        modeDropdown.value = 0;
+        modeDropdown.RefreshShownValue();
+        modeDropdown.onValueChanged.AddListener(_ => RefreshModeHint());
+        RefreshModeHint();
+    }
+
+    private (string WireName, string Label, int Players) SelectedPvpMode()
+    {
+        int index = modeDropdown != null ? modeDropdown.value : 0;
+        return index >= 0 && index < PvpModes.Length ? PvpModes[index] : PvpModes[0];
+    }
+
+    /// Dit combien de joueurs le format demande, et ce que le remplissage par l'IA change.
+    private void RefreshModeHint()
+    {
+        if (modeHintText == null)
+            return;
+
+        var mode = SelectedPvpMode();
+        bool fill = fillWithAiToggle != null && fillWithAiToggle.isOn;
+        modeHintText.text = fill
+            ? $"{mode.Label} — {mode.Players} joueur(s) ; les places libres seront tenues par l'IA."
+            : $"{mode.Label} — en attente de {mode.Players} joueur(s).";
     }
 
     private void BuildCharacterDropdown()
@@ -156,6 +220,12 @@ public class MultiplayerMenuController : MonoBehaviour
         {
             notificationOkButton.onClick.RemoveAllListeners();
             notificationOkButton.onClick.AddListener(HideNotification);
+        }
+
+        if (fillWithAiToggle != null)
+        {
+            fillWithAiToggle.onValueChanged.RemoveAllListeners();
+            fillWithAiToggle.onValueChanged.AddListener(_ => RefreshModeHint());
         }
 
         if (challengeTargetInput != null)
@@ -345,10 +415,12 @@ public class MultiplayerMenuController : MonoBehaviour
 
         isQuickMatchQueued = true;
         quickMatchFriendly = friendlyMatchToggle != null && friendlyMatchToggle.isOn;
+        quickMatchMode = SelectedPvpMode().WireName;
+        bool fillWithAi = fillWithAiToggle != null && fillWithAiToggle.isOn;
         int generation = ++quickMatchGeneration;
         UpdateQuickMatchButton();
 
-        STSSceneLoader.Instance?.BeginLoading("Recherche rapide PVP...", true, () => _ = CancelQuickMatchAsync());
+        ShowQueueLoadingScreen();
         ShowNotification("Recherche rapide PVP en cours...");
 
         try
@@ -356,7 +428,12 @@ public class MultiplayerMenuController : MonoBehaviour
             JToken response = await STSApiClient.QuickMatchPvpAsync(new JObject
             {
                 ["friendly"] = quickMatchFriendly,
-                ["skipMatchmaking"] = false
+                ["skipMatchmaking"] = false,
+                ["mode"] = quickMatchMode,
+                // Sans cela, un 2v2 attend quatre joueurs connectes en meme temps. Le
+                // demander explicitement evite de se retrouver entoure de robots sans
+                // l'avoir voulu.
+                ["fillWithAi"] = fillWithAi
             });
 
             if (!isQuickMatchQueued || generation != quickMatchGeneration)
@@ -601,6 +678,28 @@ public class MultiplayerMenuController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Ouvre l'écran d'attente de la recherche, avec de quoi en sortir.
+    ///
+    /// <para>Deux endroits en ont besoin : le lancement de la recherche, et la reprise quand
+    /// une annulation a échoué. Le second l'oubliait, et laissait le joueur toujours en file
+    /// devant un menu qui ne le disait plus et ne proposait plus d'en sortir.</para>
+    ///
+    /// <para>Le rappel ne fait rien si la file est déjà quittée : le bouton reste cliquable
+    /// pendant l'aller-retour avec le serveur.</para>
+    /// </summary>
+    private void ShowQueueLoadingScreen()
+    {
+        STSSceneLoader.Instance?.BeginLoading(
+            "Recherche rapide PVP...",
+            true,
+            () =>
+            {
+                if (isQuickMatchQueued)
+                    _ = CancelQuickMatchAsync();
+            });
+    }
+
     private async Task<bool> CancelQuickMatchAsync(bool showNotification = true, bool resumeOnFailure = true)
     {
         isQuickMatchQueued = false;
@@ -635,6 +734,9 @@ public class MultiplayerMenuController : MonoBehaviour
             isQuickMatchQueued = true;
             UpdateQuickMatchButton();
             StartWatchingForMatchedBattle();
+            // On vient de refermer l'écran d'attente au-dessus, et la recherche continue :
+            // sans ça, le joueur reste en file sans plus rien pour en sortir.
+            ShowQueueLoadingScreen();
             ShowNotification("Impossible d'annuler la recherche. Nouvel essai en cours...");
             return false;
         }

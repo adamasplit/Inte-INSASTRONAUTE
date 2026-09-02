@@ -353,14 +353,18 @@ public class CardView : MonoBehaviour,IPointerClickHandler
             };
             //tooltips.Add(new TooltipData(cardInstance.data.cardName, cardInstance.GetDescription(ctx)));
 
+            // En tête, avant les statuts, les enchantements et les marqueurs : c'est ce que la
+            // carte fait, et le reste n'est là que pour l'expliquer. En queue de liste elle
+            // finissait sous une pile d'infobulles qu'on ne lit qu'après elle.
+            if (showDescription)
+            {
+                tooltips.Add(new TooltipData("Description", cardInstance.lastDescription));
+            }
+
             foreach (var effect in cardInstance.GetEffects())
             {
                 AddStatusTooltip(effect, tooltips, ctx);
                 AddCreatedCardTooltip(effect, tooltips);
-            }
-            if (showDescription)
-            {
-                tooltips.Add(new TooltipData("Description", cardInstance.lastDescription));
             }
         }
 
@@ -547,7 +551,10 @@ public class CardView : MonoBehaviour,IPointerClickHandler
             return;
 
         StatusEffect status = StatusEffect.Factory(effect.statusType, effect.value, effect.duration, effect.cardID,effect.index);
-        if (status == null || !status.generic)
+        // Force, Dextérité et Vitesse ne sont pas `generic` — leur description ne saurait pas
+        // dire « Perdez » — mais la carte les nomme sans les expliquer exactement comme les
+        // autres, et elles ont donc besoin de la même infobulle.
+        if (status == null || !(status.generic || StatusEffect.IsNamedStat(effect.statusType)))
             return;
 
         bool alreadyAdded = tooltips.Exists(t => t.title == status.Name && t.description == status.Desc(effect.targetSelf));
@@ -655,10 +662,11 @@ public class CardView : MonoBehaviour,IPointerClickHandler
 
         if (cardImage != null)
         {
-            // On n'écrase l'illustration du prefab que si on en a vraiment une. Une copie volée
-            // par ITI à un mouvement ennemi sans carte de référence n'a pas d'icône, et l'icône
-            // générique de sa famille peut ne pas encore exister : lui assigner null laissait une
-            // carte qui occupe sa place dans la main sans jamais rien afficher.
+            // On n'écrase l'illustration du prefab que si on en a vraiment une. Beaucoup de
+            // cartes n'en ont pas — un mouvement ennemi n'est illustré que par la vraie carte
+            // qui le porte — et seule une copie volée par ITI se voit prêter l'icône générique
+            // de sa famille, qui peut elle-même manquer : assigner null laissait une carte qui
+            // occupe sa place dans la main sans jamais rien afficher.
             Sprite icon = card.Icon;
             if (icon != null)
                 cardImage.sprite = icon;

@@ -73,11 +73,17 @@ public class STSLoadingScreen : MonoBehaviour
 
         if (loadingText != null)
         {
+            // Un écran qu'on peut quitter est une attente dont personne ne connaît la durée —
+            // c'est la recherche d'adversaire. Le pourcentage y restait bloqué à 0 % et se
+            // lisait comme une panne, alors qu'il n'y a simplement rien à mesurer.
+            if (showCancelAction && !string.IsNullOrWhiteSpace(defaultStatusText))
+            {
+                loadingText.text = defaultStatusText;
+                return;
+            }
+
             int percentage = Mathf.RoundToInt(clampedProgress * 100f);
-            string label = showCancelAction && !string.IsNullOrWhiteSpace(defaultStatusText)
-                ? defaultStatusText
-                : "Chargement...";
-            loadingText.text = $"{label} {percentage}%";
+            loadingText.text = $"Chargement... {percentage}%";
         }
     }
 

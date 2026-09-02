@@ -311,6 +311,20 @@ public class STSApiDebugCombatRequest
     public List<string> relicIds = new();
 }
 
+/// <summary>
+/// Ce que le serveur répond quand on lui demande si le combat de débogage est ouvert.
+///
+/// <para>Les trois champs disent la même chose sous trois angles ; seul <c>available</c>
+/// décide, les deux autres servent à dire dans les journaux ce qui manquait.</para>
+/// </summary>
+[Serializable]
+public class STSApiDebugAvailabilityResponse
+{
+    public bool enabled;
+    public bool allowed;
+    public bool available;
+}
+
 [Serializable]
 public class STSApiDebugCombatResponse
 {
@@ -324,13 +338,36 @@ public class STSApiDebugCombatResponse
 
 public static class STSApiClient
 {
+    /// <summary>
+    /// Un participant d'une bataille multijoueur, tel que le serveur le decrit.
+    ///
+    /// <para>Tous ne sont pas des joueurs. Un siege reste vide d'un 2v2 peut etre tenu par un
+    /// renfort que le serveur joue, et l'adversaire d'un raid est un boss qui n'a pas de compte :
+    /// ceux-la n'ont pas d'<c>userId</c>, et c'est <c>combatantId</c> qui les nomme.</para>
+    /// </summary>
     public sealed class StsPvpParticipantSnapshot
     {
         public string userId;
+        /// Le nom que le serveur donne a ce combattant. Pour un joueur c'est son identifiant
+        /// d'utilisateur ; pour un combattant pilote par le serveur, un identifiant a lui.
+        public string combatantId;
         public string displayName;
         public string selectedCharacter;
         public int teamIndex;
         public int slotIndex;
+        /// Vrai quand ce siege est joue par le serveur plutot que par une personne.
+        public bool isAi;
+        /// L'ennemi des donnees de jeu dont ce boss est tire, ou null s'il n'en est pas un.
+        public string bossEnemyId;
+
+        /// Le nom du portrait a afficher : celui de l'ennemi pour un boss, celui du personnage
+        /// choisi pour tout le reste.
+        public string PortraitName =>
+            !string.IsNullOrWhiteSpace(bossEnemyId)
+                ? bossEnemyId
+                : (string.IsNullOrWhiteSpace(selectedCharacter)
+                    ? SelectableCharacter.EP.ToString()
+                    : selectedCharacter.Trim());
     }
 
     public static async Task<STSApiRunCreateResponse> CreateRunAsync(string character, string clientVersion)
@@ -695,6 +732,43 @@ public static class STSApiClient
         return response;
     }
 
+    /// <summary>
+    /// Demande si le combat de débogage est ouvert à ce joueur-ci, sur ce serveur-ci.
+    ///
+    /// <para>Rien d'autre ne peut répondre sans conséquence : lancer un combat de débogage
+    /// réécrit la run de l'appelant, et l'effacer la vide de sa rencontre en cours. C'est donc
+    /// la seule route de la famille qu'on puisse interroger juste pour savoir.</para>
+    ///
+    /// <para>Un serveur qui ne connaît pas la question — plus ancien que cette route — répond
+    /// comme un serveur qui refuse : on n'affiche rien. C'est le bon défaut, un bouton de
+    /// débogage n'ayant jamais à s'afficher dans le doute.</para>
+    /// </summary>
+    public static async Task<bool> IsDebugCombatAvailableAsync()
+    {
+        try
+        {
+            string json = await ReactApiBridge.RequestAsync("sts.debug.combat.availability");
+            STSApiDebugAvailabilityResponse response =
+                ParseResponse<STSApiDebugAvailabilityResponse>(json);
+            if (response == null)
+            {
+                Debug.Log("[STS-DEBUG] Disponibilité du combat de débogage : pas de réponse.");
+                return false;
+            }
+
+            if (!response.available)
+            {
+                Debug.Log($"[STS-DEBUG] Combat de débogage indisponible (activé={response.enabled}, autorisé={response.allowed}).");
+            }
+            return response.available;
+        }
+        catch (Exception ex)
+        {
+            Debug.Log($"[STS-DEBUG] Disponibilité du combat de débogage inconnue : {ex.Message}");
+            return false;
+        }
+    }
+
     // Debug only: rewrites the run server-side with a hand-picked encounter, deck and relics.
     // Requires app.sts.debug.combat.enabled on the backend, otherwise the route does not exist.
     public static async Task<STSApiDebugCombatResponse> StartDebugCombatAsync(string runId, STSApiDebugCombatRequest request)
@@ -793,6 +867,24 @@ public static class STSApiClient
             return null;
 
         string json = await ReactApiBridge.RequestAsync("sts.pvp.deck.load", new { deckId });
+        return ParseEnvelope(json);
+    }
+
+    /// <summary>
+    /// Efface un deck PVP sauvegarde.
+    ///
+    /// <para>L'identifiant voyage dans le corps et non dans le nom de la requete, comme
+    /// pour <c>sts.pvp.deck.load</c>. Ce n'est pas un choix de style : le pont traite
+    /// <c>sts.pvp.deck.&lt;quelque chose&gt;</c> comme une lecture du deck
+    /// <c>&lt;quelque chose&gt;</c>, donc un identifiant place dans le nom serait lu, pas
+    /// efface.</para>
+    /// </summary>
+    public static async Task<JToken> DeletePvpDeckAsync(string deckId)
+    {
+        if (string.IsNullOrWhiteSpace(deckId))
+            return null;
+
+        string json = await ReactApiBridge.RequestAsync("sts.pvp.deck.delete", new { deckId });
         return ParseEnvelope(json);
     }
 
@@ -928,14 +1020,28 @@ public static class STSApiClient
                 string userId = participant.Value<string>("userId");
                 string displayName = participant.Value<string>("displayName");
                 string selectedCharacter = participant.Value<string>("selectedCharacter");
+                string bossEnemyId = participant.Value<string>("bossEnemyId");
+                string controller = participant.Value<string>("controller");
+                string combatantId = participant.Value<string>("combatantId");
 
                 participants.Add(new StsPvpParticipantSnapshot
                 {
                     userId = userId,
+                    // Les batailles ouvertes avant que les modes existent ne portent pas de
+                    // combatantId : leur combattant est nomme par l'identifiant d'utilisateur,
+                    // ce qui est exactement ce que ce repli reconstitue.
+                    combatantId = string.IsNullOrWhiteSpace(combatantId) ? userId : combatantId,
                     displayName = displayName,
                     selectedCharacter = selectedCharacter,
                     teamIndex = teamIndex,
-                    slotIndex = slotIndex
+                    slotIndex = slotIndex,
+                    // Deux formes se presentent ici. Le DTO servi par l'API porte un booleen
+                    // `ai` ; la colonne `teams` brute, elle, porte `controller: "AI"`. On lit
+                    // les deux plutot que d'imposer laquelle des deux l'appelant a sous la main.
+                    isAi = (participant.Value<bool?>("ai") ?? false)
+                        || string.Equals(controller, "AI", StringComparison.OrdinalIgnoreCase)
+                        || !string.IsNullOrWhiteSpace(bossEnemyId),
+                    bossEnemyId = bossEnemyId
                 });
             }
         }

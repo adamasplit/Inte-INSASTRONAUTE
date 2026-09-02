@@ -16,8 +16,15 @@ public class RewardManager : MonoBehaviour, IRewardFlowHost
 
     public GameObject continueButton;
 
+    /// <summary>
+    /// Le temps qu'on laisse voir la dernière récompense rejoindre l'inventaire avant que
+    /// l'écran se referme tout seul.
+    /// </summary>
+    [SerializeField] float autoContinueDelay = 0.8f;
+
     List<RewardEntryView> activeEntries = new();
     bool goingToMap = true;
+    bool continuing;
     void Start()
     {
         Reward reward = null;
@@ -618,12 +625,36 @@ public class RewardManager : MonoBehaviour, IRewardFlowHost
 
         if (activeEntries.Count == 0)
         {
+            // Le bouton reste affiché : il sert encore à repartir avant d'avoir tout pris,
+            // et il faut bien quelque chose à cliquer si le retour automatique est retardé.
             continueButton.SetActive(true);
+            StartCoroutine(AutoContinueRoutine());
         }
+    }
+
+    /// <summary>
+    /// Repart de lui-même une fois la dernière récompense prise : il ne reste alors rien à
+    /// faire sur cet écran, et le bouton n'y était qu'un passage obligé de plus.
+    ///
+    /// <para>N'est lancé que par une réclamation, donc un écran vide dès l'ouverture — un
+    /// combat sans récompense — attend toujours le joueur plutôt que de défiler tout seul.</para>
+    /// </summary>
+    System.Collections.IEnumerator AutoContinueRoutine()
+    {
+        yield return new WaitForSeconds(autoContinueDelay);
+        Continue();
     }
 
     public void Continue()
     {
+        // Le bouton reste cliquable pendant l'attente du retour automatique : sans ce
+        // verrou, un joueur pressé chargerait la scène deux fois.
+        if (continuing)
+        {
+            return;
+        }
+        continuing = true;
+
         RunManager.Instance.pendingReward = null;
         if (goingToMap)
         {

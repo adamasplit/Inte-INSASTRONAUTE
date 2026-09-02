@@ -148,47 +148,80 @@ public class GameManager : MonoBehaviour
     /// <para><c>RunManager.player</c> n'est pas touché : une run PvE mise en pause pour
     /// jouer un duel doit se retrouver intacte.</para>
     /// </summary>
+    /// <summary>
+    /// Monte la scene d'une bataille multijoueur : un combattant par participant.
+    ///
+    /// <para>Un allie par participant de notre camp, un adversaire par participant d'en face.
+    /// C'etait auparavant un seul de chaque, ecrit en dur, et c'est la seule chose qui empechait
+    /// un 2v2 de s'afficher : le serveur envoyait bien quatre combattants, mais la scene n'avait
+    /// que deux places ou les poser, et <c>CombatManager.ResolveCombatantByConvention</c> ne
+    /// trouvait aucun objet pour les deux autres.</para>
+    ///
+    /// <para>Les points de vie sont un simple gabarit : le premier etat autoritatif apporte les
+    /// vrais, comme il apporte les quatre piles.</para>
+    /// </summary>
     void SetupPvpBattle()
     {
         RunManager run = RunManager.Instance;
-        STSApiClient.StsPvpParticipantSnapshot localParticipant = run.LocalPvpParticipant();
-        STSApiClient.StsPvpParticipantSnapshot opponentParticipant = run.OpponentPvpParticipant();
+        List<STSApiClient.StsPvpParticipantSnapshot> allies = run.AlliedPvpParticipants();
+        List<STSApiClient.StsPvpParticipantSnapshot> opponents = run.OpposingPvpParticipants();
 
         const int PlaceholderHp = 1;
 
-        var localPlayer = new Player(CharacterNameOf(localParticipant), PlaceholderHp)
-        {
-            playerDisplayName = localParticipant != null ? localParticipant.displayName : null,
-            playerUserId = localParticipant != null ? localParticipant.userId : null
-        };
-
         combat.allies.Clear();
-        combat.allies.Add(localPlayer);
-
-        combat.enemies = new List<Character>
+        // Notre siege vient en tete : le premier allie est celui dont la scene affiche la main.
+        foreach (STSApiClient.StsPvpParticipantSnapshot participant in allies)
         {
-            new Enemy(
-                CharacterNameOf(opponentParticipant),
+            combat.allies.Add(new Player(PortraitNameOf(participant), PlaceholderHp)
+            {
+                playerDisplayName = participant != null ? participant.displayName : null,
+                playerUserId = participant != null ? participant.combatantId : null
+            });
+        }
+
+        combat.enemies = new List<Character>();
+        foreach (STSApiClient.StsPvpParticipantSnapshot participant in opponents)
+        {
+            combat.enemies.Add(new Enemy(
+                PortraitNameOf(participant),
                 PlaceholderHp,
-                opponentParticipant != null ? opponentParticipant.userId : null,
-                opponentParticipant != null ? opponentParticipant.displayName : null)
-        };
+                participant != null ? participant.combatantId : null,
+                participant != null ? participant.displayName : null));
+        }
+
+        // Un duel sans participants connus ne doit pas laisser la scene vide : le combat
+        // deviendrait injouable sans que rien ne le dise.
+        if (combat.allies.Count == 0)
+        {
+            Debug.LogWarning("[STS-PVP] No allied participant known for this battle; "
+                + "falling back to a single placeholder player.");
+            combat.allies.Add(new Player(SelectableCharacter.EP.ToString(), PlaceholderHp));
+        }
+        if (combat.enemies.Count == 0)
+        {
+            Debug.LogWarning("[STS-PVP] No opposing participant known for this battle; "
+                + "falling back to a single placeholder opponent.");
+            combat.enemies.Add(new Enemy(SelectableCharacter.EP.ToString(), PlaceholderHp, null, null));
+        }
 
         // Vide : le premier état apporte les quatre piles telles que le serveur les tient.
         combat.deck = new DeckManager();
 
         Debug.Log($"[STS-PVP] Scene set up for battle {run.activePvpBattleId}: "
-            + $"{localPlayer.name} vs {combat.enemies[0].name}");
+            + $"{combat.allies.Count} ally/allies vs {combat.enemies.Count} opponent(s) "
+            + $"[{string.Join(", ", combat.enemies.ConvertAll(enemy => enemy.name))}]");
     }
 
-    /// Le personnage choisi par un participant, qui est aussi le nom du portrait sous
-    /// Resources/STS/Characters. À défaut, EP — le premier de la liste jouable — plutôt
-    /// qu'un nom vide, qui laisserait un emplacement sans image.
-    static string CharacterNameOf(STSApiClient.StsPvpParticipantSnapshot participant)
+    /// <summary>
+    /// Le nom du portrait d'un participant, sous Resources/STS.
+    ///
+    /// <para>Pour un joueur c'est son personnage ; pour le boss d'un raid c'est l'ennemi dont il
+    /// est tire, qui n'a pas de personnage et prendrait sinon le portrait d'EP.</para>
+    /// </summary>
+    static string PortraitNameOf(STSApiClient.StsPvpParticipantSnapshot participant)
     {
-        string selected = participant != null ? participant.selectedCharacter : null;
-        return string.IsNullOrWhiteSpace(selected)
+        return participant == null
             ? SelectableCharacter.EP.ToString()
-            : selected.Trim();
+            : participant.PortraitName;
     }
 }

@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Vous essayez de monter la colline Sainte-Catherine ! Il y a des grandes
     r\xE9compenses \xE0 la cl\xE9, mais le voyage sera difficile..."
   image: {fileID: 0}
+  weight: 1
   options:
   - id: 
     text: Entamer l'ascension
@@ -26,6 +27,27 @@ MonoBehaviour:
       id: 
       targetIds: []
       replacementOptions: []
+      cardRewardProfile:
+        useSelectedCharacterBias: 1
+        useSpecificFavoredCharacter: 0
+        specificFavoredCharacter: 9
+        allowCreatedCards: 0
+        allowUnobtainableCards: 0
+        useExactRarity: 0
+        exactRarity: 0
+        useExactCost: 0
+        exactCost: 0
+        useCostRange: 0
+        minimumCost: 0
+        maximumCost: 0
+        useExactType: 0
+        exactType: 3
+        overrideDefaultWeights: 0
+        rarityWeights: []
+        requiredTags: 
+        excludedTags: 
+        choiceCount: 3
+      cardRewardProfiles: []
     - type: 12
       value: 2
       id: 
@@ -40,6 +62,27 @@ MonoBehaviour:
           id: 
           targetIds: []
           replacementOptions: []
+          cardRewardProfile:
+            useSelectedCharacterBias: 1
+            useSpecificFavoredCharacter: 0
+            specificFavoredCharacter: 9
+            allowCreatedCards: 0
+            allowUnobtainableCards: 0
+            useExactRarity: 0
+            exactRarity: 0
+            useExactCost: 0
+            exactCost: 0
+            useCostRange: 0
+            minimumCost: 0
+            maximumCost: 0
+            useExactType: 0
+            exactType: 3
+            overrideDefaultWeights: 0
+            rarityWeights: []
+            requiredTags: 
+            excludedTags: 
+            choiceCount: 3
+          cardRewardProfiles: []
         - type: 12
           value: 3
           id: 
@@ -54,6 +97,27 @@ MonoBehaviour:
               id: 
               targetIds: []
               replacementOptions: []
+              cardRewardProfile:
+                useSelectedCharacterBias: 1
+                useSpecificFavoredCharacter: 0
+                specificFavoredCharacter: 9
+                allowCreatedCards: 0
+                allowUnobtainableCards: 0
+                useExactRarity: 0
+                exactRarity: 0
+                useExactCost: 0
+                exactCost: 0
+                useCostRange: 0
+                minimumCost: 0
+                maximumCost: 0
+                useExactType: 0
+                exactType: 3
+                overrideDefaultWeights: 0
+                rarityWeights: []
+                requiredTags: 
+                excludedTags: 
+                choiceCount: 3
+              cardRewardProfiles: []
             - type: 12
               value: 6
               id: 
@@ -68,24 +132,129 @@ MonoBehaviour:
                   id: 
                   targetIds: []
                   replacementOptions: []
+                  cardRewardProfile:
+                    useSelectedCharacterBias: 1
+                    useSpecificFavoredCharacter: 0
+                    specificFavoredCharacter: 9
+                    allowCreatedCards: 0
+                    allowUnobtainableCards: 0
+                    useExactRarity: 0
+                    exactRarity: 0
+                    useExactCost: 0
+                    exactCost: 0
+                    useCostRange: 0
+                    minimumCost: 0
+                    maximumCost: 0
+                    useExactType: 0
+                    exactType: 3
+                    overrideDefaultWeights: 0
+                    rarityWeights: []
+                    requiredTags: 
+                    excludedTags: 
+                    choiceCount: 3
+                  cardRewardProfiles: []
                 - type: 11
                   value: 1
-                  id: "Apog\xE9e"
+                  id: "Mentalit\xE9 Kaizen"
                   targetIds: []
                   replacementOptions: []
+                  cardRewardProfile:
+                    useSelectedCharacterBias: 1
+                    useSpecificFavoredCharacter: 0
+                    specificFavoredCharacter: 9
+                    allowCreatedCards: 0
+                    allowUnobtainableCards: 0
+                    useExactRarity: 0
+                    exactRarity: 0
+                    useExactCost: 0
+                    exactCost: 0
+                    useCostRange: 0
+                    minimumCost: 0
+                    maximumCost: 0
+                    useExactType: 0
+                    exactType: 3
+                    overrideDefaultWeights: 0
+                    rarityWeights: []
+                    requiredTags: 
+                    excludedTags: 
+                    choiceCount: 3
+                  cardRewardProfiles: []
                 completionMessage: "Bien jou\xE9! Est-ce que les points de d\xE9fis
                   valent le coup?"
                 closePanel: 1
                 previewCardIds: []
                 runtimeIndex: -1
+              cardRewardProfile:
+                useSelectedCharacterBias: 1
+                useSpecificFavoredCharacter: 0
+                specificFavoredCharacter: 9
+                allowCreatedCards: 0
+                allowUnobtainableCards: 0
+                useExactRarity: 0
+                exactRarity: 0
+                useExactCost: 0
+                exactCost: 0
+                useCostRange: 0
+                minimumCost: 0
+                maximumCost: 0
+                useExactType: 0
+                exactType: 3
+                overrideDefaultWeights: 0
+                rarityWeights: []
+                requiredTags: 
+                excludedTags: 
+                choiceCount: 3
+              cardRewardProfiles: []
             completionMessage: Vous approchez de la fin !
             closePanel: 0
             previewCardIds: []
             runtimeIndex: -1
+          cardRewardProfile:
+            useSelectedCharacterBias: 1
+            useSpecificFavoredCharacter: 0
+            specificFavoredCharacter: 9
+            allowCreatedCards: 0
+            allowUnobtainableCards: 0
+            useExactRarity: 0
+            exactRarity: 0
+            useExactCost: 0
+            exactCost: 0
+            useCostRange: 0
+            minimumCost: 0
+            maximumCost: 0
+            useExactType: 0
+            exactType: 3
+            overrideDefaultWeights: 0
+            rarityWeights: []
+            requiredTags: 
+            excludedTags: 
+            choiceCount: 3
+          cardRewardProfiles: []
         completionMessage: 
         closePanel: 0
         previewCardIds: []
         runtimeIndex: -1
+      cardRewardProfile:
+        useSelectedCharacterBias: 1
+        useSpecificFavoredCharacter: 0
+        specificFavoredCharacter: 9
+        allowCreatedCards: 0
+        allowUnobtainableCards: 0
+        useExactRarity: 0
+        exactRarity: 0
+        useExactCost: 0
+        exactCost: 0
+        useCostRange: 0
+        minimumCost: 0
+        maximumCost: 0
+        useExactType: 0
+        exactType: 3
+        overrideDefaultWeights: 0
+        rarityWeights: []
+        requiredTags: 
+        excludedTags: 
+        choiceCount: 3
+      cardRewardProfiles: []
     completionMessage: 
     closePanel: 0
     previewCardIds: []

@@ -243,7 +243,21 @@ public class Character
         {
             statusEffects.Remove(status);
         }
-    
+
+        // Fumigène mord une fois par statut positif éteint. Compté après coup, sur ce qui vient
+        // d'être retiré, pour qu'un fumigène expirant lui-même dans le même tour ne morde pas :
+        // il n'est plus là pour le faire.
+        int expiredBuffs = toRemove.Count(status => status.buff);
+        if (expiredBuffs > 0)
+        {
+            foreach (var smoke in statusEffects.OfType<SmokeStatus>().ToList())
+            {
+                for (int bite = 0; bite < expiredBuffs; bite++)
+                {
+                    smoke.OnBuffExpired(this);
+                }
+            }
+        }
     }
     public void StartTurn()
     {

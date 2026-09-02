@@ -22,7 +22,11 @@ public static class EventActionFactory
             }
 
             ExecuteEntry(0, option, manager);
-            manager.description.text = option.completionMessage; // Display the completion message if provided
+            // Seulement s'il y en a un : une option qui en ouvre d'autres n'en porte
+            // généralement pas, et l'écrire quand même effaçait la description de
+            // l'événement au moment précis où le joueur en a encore besoin.
+            if (!string.IsNullOrWhiteSpace(option.completionMessage))
+                manager.description.text = option.completionMessage;
         };
     }
 

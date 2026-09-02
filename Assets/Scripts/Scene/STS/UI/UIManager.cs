@@ -58,6 +58,8 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI surrenderPromptText;
     Coroutine combatNoticeRoutine;
     private int pendingDrawAnimations = 0;
+    /// <summary>Une dérive vue pendant une animation, à reprendre dès que la main est posée.</summary>
+    private bool handSyncDeferred;
     private int pendingPlayedCardAnimations = 0;
     private readonly HashSet<CardView> playedCardViews = new();
     public Image backgroundImage;
@@ -597,34 +599,83 @@ public class UIManager : MonoBehaviour
     public void SyncHandFromDeckStateIfDrifted()
     {
         if (combat == null || combat.deck == null || combat.deck.hand == null)
+        {
+            handSyncDeferred = false;
             return;
+        }
 
-        // Which cards are held, not what order they sit in: a reorder is the layout's business
-        // and rebuilding for one would destroy views that are still animating.
-        List<CardInstance> hand = combat.deck.hand;
-        HashSet<string> shown = new HashSet<string>(System.StringComparer.Ordinal);
+        if (!HandHasDrifted())
+        {
+            handSyncDeferred = false;
+            return;
+        }
+
+        // Une reconstruction détruit toutes les vues, celles encore en vol comprises : la main
+        // se téléportait à son état final au milieu d'une pioche, pendant que les sons de la
+        // pioche continuaient de jouer. La dérive est réelle et sera corrigée — mais une fois
+        // les cartes posées, pas pendant leur course.
+        if (HandHasAnimatingCard)
+        {
+            handSyncDeferred = true;
+            return;
+        }
+
+        handSyncDeferred = false;
+        SyncHandFromDeckState();
+    }
+
+    /// <summary>
+    /// La main affichée ne correspond plus à celle que l'état décrit.
+    /// </summary>
+    /// <remarks>
+    /// Compte les exemplaires plutôt que de comparer deux ensembles : deux vues pour une même
+    /// carte se confondaient en une seule entrée, la comparaison ne voyait rien, et le doublon
+    /// restait à l'écran jusqu'à ce qu'autre chose reconstruise la main.
+    ///
+    /// <para>L'ordre, lui, ne compte pas : le rang d'une carte est l'affaire de la disposition,
+    /// et reconstruire pour un simple réagencement coûterait les vues en cours d'animation.</para>
+    /// </remarks>
+    bool HandHasDrifted()
+    {
+        Dictionary<string, int> tally = new Dictionary<string, int>(System.StringComparer.Ordinal);
+        int shownCount = 0;
         foreach (CardView view in currentHandViews)
         {
-            if (view != null && view.cardInstance != null
-                && !string.IsNullOrEmpty(view.cardInstance.instanceId))
-            {
-                shown.Add(view.cardInstance.instanceId);
-            }
+            if (view == null || view.cardInstance == null
+                || string.IsNullOrEmpty(view.cardInstance.instanceId))
+                continue;
+
+            string instanceId = view.cardInstance.instanceId;
+            tally.TryGetValue(instanceId, out int seen);
+            tally[instanceId] = seen + 1;
+            shownCount++;
         }
 
-        HashSet<string> held = new HashSet<string>(System.StringComparer.Ordinal);
-        foreach (CardInstance card in hand)
+        int heldCount = 0;
+        foreach (CardInstance card in combat.deck.hand)
         {
-            if (card != null && !string.IsNullOrEmpty(card.instanceId))
-            {
-                held.Add(card.instanceId);
-            }
+            if (card == null || string.IsNullOrEmpty(card.instanceId))
+                continue;
+
+            if (!tally.TryGetValue(card.instanceId, out int seen) || seen == 0)
+                return true;
+
+            tally[card.instanceId] = seen - 1;
+            heldCount++;
         }
 
-        if (!shown.SetEquals(held))
-        {
-            SyncHandFromDeckState();
-        }
+        return shownCount != heldCount;
+    }
+
+    /// <summary>
+    /// Reprend la reconstruction qu'une animation en cours avait fait remettre à plus tard.
+    /// </summary>
+    void Update()
+    {
+        if (!handSyncDeferred || HandHasAnimatingCard)
+            return;
+
+        SyncHandFromDeckStateIfDrifted();
     }
 
     public void RefreshHandLayout()
@@ -683,6 +734,42 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// La vue qu'une carte entrant en main doit animer.
+    /// </summary>
+    /// <remarks>
+    /// En crée une, sauf si cette carte en a déjà une. La reconstruction de la main et la
+    /// relecture des événements arrivent toutes deux à mettre une carte en main, et la seconde
+    /// ne savait pas que la première était passée : elle fabriquait une deuxième vue pour la même
+    /// carte, et le joueur voyait la carte en double. Les deux disparaissaient d'un coup à la
+    /// première reconstruction venue, ce qui donnait l'impression que jouer l'une défaussait
+    /// l'autre.
+    ///
+    /// <para>Une vue déjà en vol est laissée à son animation : rien à reprendre, et la relancer
+    /// la ferait repartir de la pioche au milieu de sa course. Le null qu'on rend alors dit à
+    /// l'appelant qu'il n'y a rien à animer.</para>
+    /// </remarks>
+    CardView ViewToAnimateInto(CardInstance card)
+    {
+        // Uniquement parmi les vues de la main. GetView regarde aussi la couche d'animation, où
+        // séjourne une carte en train d'en *sortir* : une carte défaussée puis reprise doit
+        // recevoir une vue neuve, pas celle que l'animation de défausse va détruire.
+        CardView existing = null;
+        foreach (CardView view in currentHandViews)
+        {
+            if (IsViewOfCard(view, card))
+            {
+                existing = view;
+                break;
+            }
+        }
+
+        if (existing == null)
+            return CreateHandCard(card);
+
+        return existing.isAnimating ? null : existing;
+    }
+
     public CardView CreateHandCard(CardInstance card)
     {
         GameObject obj = Instantiate(cardButtonPrefab, handPanel);
@@ -713,7 +800,9 @@ public class UIManager : MonoBehaviour
     }
     public void DrawCardAnimated(CardInstance card)
     {
-        CardView view = CreateHandCard(card);
+        CardView view = ViewToAnimateInto(card);
+        if (view == null)
+            return;
 
         RectTransform rect =
             view.rootRect;
@@ -732,10 +821,21 @@ public class UIManager : MonoBehaviour
 
     IEnumerator AnimateDraw(CardView view, Vector3 startPosition, float speedMultiplier, bool arcAwayFromTarget)
     {
+        // La vue peut disparaître à chaque reprise de la coroutine : une synchronisation d'état
+        // autoritative reconstruit la main en entier et détruit les vues en place, celles encore
+        // en vol comprises. Reparenter un Transform détruit lève une NullReferenceException
+        // depuis Transform.SetParent, la coroutine meurt, et pendingDrawAnimations n'est jamais
+        // décrémenté — la pioche suivante attend alors un décalage qui ne cesse de grandir.
+        if (view == null || view.rootRect == null)
+            yield break;
+
         RectTransform rect =
             view.rootRect;
 
         yield return null;
+
+        if (view == null || rect == null)
+            yield break;
 
         rect.SetParent(handPanel, true);
         ReparentKeepScreenPosition(rect, handPanel);
@@ -765,6 +865,9 @@ public class UIManager : MonoBehaviour
             arcAwayFromTarget: arcAwayFromTarget,
             arcAwayDistance: 4f
         );
+
+        if (view == null || rect == null)
+            yield break;
 
         rect.SetParent(handPanel, true);
         ReparentKeepScreenPosition(rect, handPanel);
@@ -1123,7 +1226,9 @@ public IEnumerator AnimateCardToCenter(CardView view)
     }
     public void AddCardAnimated(CardInstance card)
     {
-        CardView view = CreateHandCard(card);
+        CardView view = ViewToAnimateInto(card);
+        if (view == null)
+            return;
 
         RectTransform rect =
             view.rootRect;
@@ -1142,15 +1247,26 @@ public IEnumerator AnimateCardToCenter(CardView view)
 
     IEnumerator AnimateDrawWithStagger(CardView view, Vector3 startPosition, int staggerIndex, float speedMultiplier, bool arcAwayFromTarget)
     {
-        if (staggerIndex > 0)
+        try
         {
-            yield return new WaitForSeconds(0.05f * staggerIndex);
+            if (staggerIndex > 0)
+            {
+                yield return new WaitForSeconds(0.05f * staggerIndex);
+            }
+            if (view == null)
+                yield break;
+
+            SFXManager.Instance?.PlaySound("Draw");
+
+            yield return AnimateDraw(view, startPosition, speedMultiplier, arcAwayFromTarget);
         }
-        SFXManager.Instance.PlaySound("Draw");
-
-        yield return AnimateDraw(view, startPosition, speedMultiplier, arcAwayFromTarget);
-
-        pendingDrawAnimations = Mathf.Max(0, pendingDrawAnimations - 1);
+        finally
+        {
+            // Rendu quoi qu'il arrive. Ce compteur est le décalage entre deux cartes piochées :
+            // s'il n'est pas repris quand l'animation s'interrompt, chaque pioche suivante attend
+            // un peu plus longtemps, jusqu'à ce que les cartes n'apparaissent plus du tout.
+            pendingDrawAnimations = Mathf.Max(0, pendingDrawAnimations - 1);
+        }
     }
     public void TransformCard(CardInstance oldCard, CardInstance newCard)
     {

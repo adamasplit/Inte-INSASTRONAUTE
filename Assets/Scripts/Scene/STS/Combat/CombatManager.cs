@@ -71,6 +71,14 @@ public class CombatManager : MonoBehaviour
 
     public DeckManager deck;
     public UIManager ui;
+
+    /// <summary>
+    /// L'historique partagé des cartes jouées, en duel.
+    ///
+    /// <para>Facultatif : une scène qui ne le branche pas se joue exactement comme avant. Il ne
+    /// sert qu'en multijoueur, l'état PvE ne portant pas d'historique.</para>
+    /// </summary>
+    public PvpCardHistoryPanel cardHistoryPanel;
     public TurnSystem turnSystem;
 
     public CombatState state = new CombatState();
@@ -1353,6 +1361,7 @@ public class CombatManager : MonoBehaviour
         }
 
         ApplyAuthoritativeTimeline(combatToken["timeline"] as JArray);
+        RefreshCardHistory(combatToken);
 
         if (refreshUI && ui != null)
         {
@@ -1616,7 +1625,10 @@ public class CombatManager : MonoBehaviour
                         break;
                     case "TurnStarted":
                         if (combatantRegistry.IsLocalCombatant(combatEvent.Value<string>("combatantId")))
+                        {
                             state.turnCount = Mathf.Max(1, state.turnCount + 1);
+                            state.cardsPlayedThisTurn.Clear();
+                        }
                         handler = DelaySeconds(0.05f);
                         break;
                     case "TurnEnded":
@@ -1755,7 +1767,32 @@ public class CombatManager : MonoBehaviour
             yield break;
         ApplyEventCardOverrides(card, combatEvent);
 
+        RecordCardPlayedInState(actor, card);
+
         yield return PresentCardPlayed(actor, card, ResolveCombatants(combatEvent["targetIds"]));
+    }
+
+    /// <summary>
+    /// Tient le compte des cartes que le joueur a jouées, pour ce qui s'y adosse.
+    /// </summary>
+    /// <remarks>
+    /// <c>state.cardsPlayedThisTurn</c> ne se remplissait que dans la résolution locale, celle
+    /// qu'un combat autoritatif court-circuite. La liste restait donc vide de bout en bout, et
+    /// tout ce qui la lit se taisait : <c>PlayedModifier</c> — « +1 par carte jouée ce tour »,
+    /// comme sur « Dernière ligne droite » — ne s'appliquait jamais, si bien que la carte
+    /// s'affichait à sa valeur de base quel que soit le nombre de cartes déjà jouées. Le serveur,
+    /// lui, comptait juste : la carte frappait plus fort que ce qu'elle annonçait.
+    ///
+    /// <para>Seules les cartes du joueur local comptent : le modificateur parle de « ce que vous
+    /// avez joué ce tour », et y verser les cartes de l'adversaire gonflerait l'affichage.</para>
+    /// </remarks>
+    void RecordCardPlayedInState(Character actor, CardInstance card)
+    {
+        if (state == null || card == null || actor == null || !actor.isLocalPlayer)
+            return;
+
+        state.cardsPlayedThisTurn.Add(card);
+        state.cardsPlayedThisCombat.Add(card);
     }
 
     List<Character> ResolveCombatants(JToken combatantIdsToken)
@@ -1904,22 +1941,63 @@ public class CombatManager : MonoBehaviour
                 continue;
             }
 
-            bool sounded = false;
+            List<Transform> struck = new List<Transform>();
+            bool fires = false;
             foreach (Character target in effectTargets)
             {
                 ctx.target = target;
                 if (!EffectFires(effect, ctx))
                     continue;
 
-                if (!sounded)
-                {
-                    SFXManager.Instance?.PlaySound(effectName);
-                    sounded = true;
-                }
-
+                fires = true;
                 Transform targetView = ui.GetView(target);
                 if (targetView != null)
-                    VFXManager.Instance?.PlayEffect(effect, targetView.position);
+                    struck.Add(targetView);
+            }
+
+            if (!fires)
+                continue;
+
+            StartCoroutine(PlayEffectStrikes(
+                effect,
+                effectName,
+                struck,
+                effect.type == EffectType.Multihit ? Mathf.Max(1, effect.duration) : 1));
+        }
+    }
+
+    /// <summary>
+    /// L'écart entre deux coups d'une même frappe répétée.
+    ///
+    /// <para>Le même que celui que <see cref="ReplayAuthoritativeEvents"/> laisse entre deux
+    /// <c>DamageApplied</c>, pour que chaque impact tombe avec le nombre qu'il retire.</para>
+    /// </summary>
+    const float MultihitStrikeInterval = 0.12f;
+
+    /// <summary>
+    /// Joue le son et l'effet visuel d'un effet, une fois par coup qu'il porte.
+    ///
+    /// <para>Un Multihit frappe <c>duration</c> fois et le serveur en renvoie autant
+    /// d'événements de dégâts, espacés ; l'effet visuel, lui, n'était joué qu'une fois. Une
+    /// attaque à cinq coups montrait donc un seul impact, immédiat, suivi de quatre nombres
+    /// venus de nulle part.</para>
+    ///
+    /// <para>Le premier coup part avant le premier <c>yield</c>, c'est-à-dire au moment même
+    /// où l'appelant lance la coroutine : un effet ordinaire garde exactement le comportement
+    /// qu'il avait.</para>
+    /// </summary>
+    IEnumerator PlayEffectStrikes(EffectEntry effect, string effectName, List<Transform> struck, int hits)
+    {
+        for (int hit = 0; hit < hits; hit++)
+        {
+            if (hit > 0)
+                yield return new WaitForSeconds(MultihitStrikeInterval);
+
+            SFXManager.Instance?.PlaySound(effectName);
+            foreach (Transform view in struck)
+            {
+                if (view != null)
+                    VFXManager.Instance?.PlayEffect(effect, view.position);
             }
         }
     }
@@ -2672,6 +2750,51 @@ public class CombatManager : MonoBehaviour
         return combatantRegistry.Resolve(combatantId);
     }
 
+    /// <summary>
+    /// Met l'historique des cartes jouées à jour depuis l'état qui vient d'arriver.
+    ///
+    /// <para>La liste vient du serveur, la même pour les deux joueurs : c'est ce qui en fait un
+    /// historique partagé plutôt que deux comptes tenus chacun de son côté. Ce qui se fait ici
+    /// est la seule chose que le serveur ne peut pas faire — retrouver la carte derrière chaque
+    /// identifiant de définition, et dire de quel camp vient celui qui l'a jouée.</para>
+    ///
+    /// <para>Le panneau ignore de lui-même un état qui ne dit rien de neuf, sans quoi chaque coup
+    /// joué reconstruirait la colonne et refermerait la carte que le joueur venait d'ouvrir.</para>
+    /// </summary>
+    void RefreshCardHistory(JToken combatToken)
+    {
+        if (cardHistoryPanel == null)
+            return;
+
+        List<PvpPlayedCard> history = PvpPlayedCardHistory.Read(combatToken);
+        cardHistoryPanel.Show(history, ResolveHistoryEntry);
+    }
+
+    PvpCardHistoryPanel.PvpHistoryEntryView ResolveHistoryEntry(PvpPlayedCard played)
+    {
+        // L'instance jouée a quitté la main depuis longtemps ; on rebâtit donc la carte depuis sa
+        // définition plutôt que de la chercher dans les piles, où elle n'est plus.
+        CardInstance card = BuildCardFromDefinition(
+            played.DefinitionId,
+            string.IsNullOrWhiteSpace(played.CardInstanceId)
+                ? "history-" + played.Revision + "-" + played.DefinitionId
+                : "history-" + played.CardInstanceId);
+
+        Character actor = ResolveCombatant(played.ActorId);
+        string actorName = actor != null
+            ? (!string.IsNullOrWhiteSpace(actor.playerDisplayName) ? actor.playerDisplayName : actor.name)
+            : null;
+
+        // Le camp se lit sur le registre, pas sur `isPlayer` : en duel l'adversaire est un joueur
+        // lui aussi, et en 2v2 un allié qui n'est pas nous en est un également.
+        string localTeamId = LocalTeamId();
+        string actorTeamId = combatantRegistry.DescriptorOf(played.ActorId)?.TeamId;
+        bool ours = !string.IsNullOrEmpty(localTeamId)
+            && string.Equals(localTeamId, actorTeamId, StringComparison.Ordinal);
+
+        return new PvpCardHistoryPanel.PvpHistoryEntryView(card, actorName, ours);
+    }
+
     /// Les vivants de l'équipe adverse à `character`, vus par le registre.
     ///
     /// Sur le chemin local le registre est vide : on retombe sur les listes positionnelles,
@@ -2986,6 +3109,166 @@ public class CombatManager : MonoBehaviour
                     card.AddTag(parsedTag);
             }
         }
+
+        ApplyAuthoritativeCardModifiers(card, cardToken["modifiers"]);
+        ApplyAuthoritativeCardAddedEffects(card, cardToken["addedEffects"]);
+        ApplyAuthoritativeCardEnchantments(card, cardToken["enchantments"]);
+
+        // Le seul endroit d'où l'on sait qu'une carte est une copie volée par ITI : le
+        // serveur nomme l'instance d'après la relique qui l'a fabriquée. Une copie est la
+        // seule carte à qui l'on prête une illustration qu'elle n'a pas.
+        string instanceId = cardToken.Value<string>("instanceId") ?? card.instanceId;
+        card.wearsGenericIcon = !string.IsNullOrEmpty(instanceId)
+            && instanceId.StartsWith(CardInstance.StolenCopyIdPrefix, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Les règles de calcul qu'une carte a gagnées pendant le combat.
+    /// </summary>
+    /// <remarks>
+    /// Une sélection de cartes qui rend une carte moins chère ou plus forte ne réécrit pas son
+    /// coût ni ses effets : elle pose un modificateur sur l'instance, et c'est le calcul qui
+    /// s'en sert ensuite. Le client ne lisait que <c>cost</c>, <c>tags</c> et compagnie, jamais
+    /// <c>modifiers</c> — la carte restait donc affichée à son prix et à sa puissance d'origine,
+    /// alors que le serveur, lui, comptait bien la réduction. « Réduire le coût » n'avait
+    /// aucun effet visible, et c'était le cas de presque tout ce qui altère une carte en place.
+    ///
+    /// <para>Remplacés en entier plutôt que fusionnés : l'état fait foi, et un modificateur
+    /// temporaire que le serveur a laissé expirer doit disparaître d'ici aussi.</para>
+    /// </remarks>
+    void ApplyAuthoritativeCardModifiers(CardInstance card, JToken modifiersToken)
+    {
+        if (modifiersToken == null || modifiersToken.Type != JTokenType.Array)
+            return;
+
+        card.addedModifiers.Clear();
+        foreach (JToken modifierToken in modifiersToken)
+        {
+            if (modifierToken == null || modifierToken.Type != JTokenType.Object)
+                continue;
+
+            // « stat » côté serveur, « type » côté client : c'est le même champ.
+            if (!TryParseWireEnum(modifierToken.Value<string>("stat"), out StatType stat))
+                continue;
+            if (!TryParseWireEnum(modifierToken.Value<string>("kind"), out ModifierKind kind))
+                continue;
+
+            ModifierData data = new ModifierData
+            {
+                type = stat,
+                kind = kind,
+                value = modifierToken.Value<int?>("value") ?? 0,
+                info = modifierToken.Value<string>("info") ?? string.Empty,
+                description = modifierToken.Value<string>("description")
+            };
+
+            StatModifier modifier = data.CreateModifier();
+            if (modifier == null)
+                continue;
+
+            modifier.temporary = modifierToken.Value<bool?>("temporary") ?? false;
+            card.addedModifiers.Add(modifier);
+        }
+    }
+
+    /// <summary>
+    /// Lit une valeur d'énumération écrite dans la convention d'en face.
+    /// </summary>
+    /// <remarks>
+    /// Les deux moteurs nomment les mêmes constantes autrement : <c>DEBUFF_ON_SELF</c> ici,
+    /// <c>DebuffOnSelf</c> là. Les visées traversent le fil dans le vocabulaire d'Unity grâce à
+    /// un <c>@JsonValue</c> côté serveur, mais <c>StatType</c> et <c>ModifierKind</c> partent
+    /// sous leur nom Java. Un <c>Enum.TryParse</c> insensible à la casse suffit pour
+    /// <c>FLAT</c>, jamais pour un nom en plusieurs mots : les tirets bas l'arrêtent. On les
+    /// retire donc avant de comparer, ce qui fait coïncider les deux conventions terme à terme.
+    /// </remarks>
+    static bool TryParseWireEnum<T>(string value, out T parsed) where T : struct, Enum
+    {
+        parsed = default;
+        if (string.IsNullOrWhiteSpace(value))
+            return false;
+
+        return Enum.TryParse(value.Replace("_", string.Empty), true, out parsed);
+    }
+
+    /// <summary>Les effets qu'une carte s'est vu greffer pendant le combat.</summary>
+    void ApplyAuthoritativeCardAddedEffects(CardInstance card, JToken effectsToken)
+    {
+        if (effectsToken == null || effectsToken.Type != JTokenType.Array)
+            return;
+
+        card.addedEffects.Clear();
+        foreach (JToken effectToken in effectsToken)
+        {
+            if (effectToken == null || effectToken.Type != JTokenType.Object)
+                continue;
+
+            EffectEntryDTO dto;
+            try
+            {
+                dto = effectToken.ToObject<EffectEntryDTO>();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"[STS-COMBAT] Could not read an added effect: {ex.Message}");
+                continue;
+            }
+
+            if (dto == null)
+                continue;
+
+            EffectEntry effect = EffectEntry.FromDTO(dto);
+            if (effect != null)
+                card.addedEffects.Add(effect);
+        }
+    }
+
+    /// <summary>
+    /// Les enchantements que l'état porte sur cette carte.
+    /// </summary>
+    /// <remarks>
+    /// Le serveur désigne un enchantement par son nom — celui que porte <c>EnchantmentData</c> —
+    /// et non par la valeur d'<c>EnchantType</c>, qui n'est pas toujours le même mot. La
+    /// correspondance se fait donc en demandant son nom à chaque type plutôt qu'en analysant la
+    /// chaîne : une table écrite à la main se serait démarquée dès le premier enchantement ajouté.
+    /// </remarks>
+    void ApplyAuthoritativeCardEnchantments(CardInstance card, JToken enchantmentsToken)
+    {
+        if (enchantmentsToken == null || enchantmentsToken.Type != JTokenType.Array)
+            return;
+
+        card.enchantments.Clear();
+        foreach (JToken enchantmentToken in enchantmentsToken)
+        {
+            if (enchantmentToken == null || enchantmentToken.Type != JTokenType.Object)
+                continue;
+
+            string enchantmentId = enchantmentToken.Value<string>("enchantmentId");
+            int level = enchantmentToken.Value<int?>("level") ?? 1;
+            CardEnchantment enchantment = BuildEnchantmentByName(enchantmentId, level);
+            if (enchantment != null)
+                card.enchantments.Add(enchantment);
+        }
+    }
+
+    static CardEnchantment BuildEnchantmentByName(string enchantmentId, int level)
+    {
+        if (string.IsNullOrWhiteSpace(enchantmentId))
+            return null;
+
+        foreach (EnchantManager.EnchantType type
+            in Enum.GetValues(typeof(EnchantManager.EnchantType)))
+        {
+            CardEnchantment candidate = EnchantManager.GetEnchantByType(type, level);
+            if (candidate?.data != null
+                && string.Equals(candidate.data.name, enchantmentId, StringComparison.Ordinal))
+            {
+                return candidate;
+            }
+        }
+
+        Debug.LogWarning($"[STS-COMBAT] Unknown enchantment '{enchantmentId}'.");
+        return null;
     }
 
     IEnumerator PlayCardRoutine(Character source, CardInstance card, List<Character> targets, bool ignoreEnergy = false, bool createView = false)

@@ -39,12 +39,31 @@ public class CardSelectionController : MonoBehaviour
         root.SetActive(false);
     }
 
+    /// <summary>Une carte que la demande accepte, et que le joueur peut donc désigner.</summary>
+    /// <remarks>
+    /// La demande porte un filtre — telle famille, tel coût, telle étiquette — et le panneau de
+    /// sélection le respectait déjà en ne montrant que les cartes retenues. Choisir dans sa main
+    /// se fait sans panneau, carte par carte, et ce chemin-là ne consultait rien : n'importe
+    /// quelle carte se laissait cocher. Le serveur, lui, refusait la sélection, et le joueur ne
+    /// s'en sortait qu'en devinant les cartes attendues.
+    /// </remarks>
+    public bool Accepts(CardInstance card)
+    {
+        if (currentRequest == null || card == null)
+            return false;
+
+        return currentRequest.filter == null || currentRequest.filter(card);
+    }
+
     public void ToggleCard(CardView card)
     {
         if (currentRequest == null)
             return;
 
         var instance = card.cardInstance;
+
+        if (!Accepts(instance))
+            return;
 
         if (currentRequest.selectedCards.Contains(instance))
         {

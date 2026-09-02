@@ -135,6 +135,14 @@ public static class EffectDescription
                 return MultipleDescription("l'Armure de la cible", effect.conditionValue,false);
             case ConditionType.SelfTurnsBeforeTarget:
                 return $"Si vous avez au moins {effect.conditionValue} tour"+(effect.conditionValue!="1"?"s":"")+" avant celui de la cible, ";
+            case ConditionType.SelfHpAtMost:
+                return effect.conditionValue=="1"
+                    ? "S'il ne vous reste qu'1 PV, "
+                    : $"S'il vous reste au plus {effect.conditionValue} PV, ";
+            case ConditionType.TargetHpAtMost:
+                return effect.conditionValue=="1"
+                    ? "S'il ne reste qu'1 PV à la cible, "
+                    : $"S'il reste au plus {effect.conditionValue} PV à la cible, ";
             default:
                 return "";
         }
@@ -195,10 +203,14 @@ public static class EffectDescription
                     }
                     else
                     {
+                        if (usedValue==0)
+                            {
+                                return $"Appliquez {stat.Name}";
+                            }
                         return $"Appliquez {usedValueText} d{(stat.Name[0]=='A' || stat.Name[0]=='E'|| stat.Name[0]=='I' || stat.Name[0]=='O' || stat.Name[0]=='U'||stat.Name[0]=='É' ? "'" : "e ")}{stat.Name}";
                     }
                 }
-                else if (effect.statusType==StatusType.Strength||effect.statusType==StatusType.Dexterity||effect.statusType==StatusType.Speed)
+                else if (StatusEffect.IsNamedStat(effect.statusType))
                     {
                         string valueText = FormatQuantityForDescription(Mathf.Abs(stat.Value), ctx);
                         if (effect.targetSelf)
@@ -313,6 +325,14 @@ public static class EffectDescription
             case EffectType.DispelDebuff:
             {
                 return $"Dissipez "+dispel(effect.duration)+transform(effect.value, (effect.targetSelf?" tous vos":"tous les"))+" debuff"+(effect.value!=1?"s":"")+(effect.value>0?(effect.targetSelf?" sur vous":" sur la cible"):"")+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
+            }
+            case EffectType.FrameBuffs:
+            {
+                return "Rendez "+transform(effect.value, (effect.targetSelf?" tous vos":"tous les"))+" buff"+(effect.value!=1?"s":"")+(effect.value>0?(effect.targetSelf?" sur vous":" sur la cible"):"")+(effect.trueEffect?" totalement indissipables":" indissipables par les cartes ordinaires");
+            }
+            case EffectType.FrameDebuffs:
+            {
+                return "Rendez "+transform(effect.value, (effect.targetSelf?" tous vos":"tous les"))+" debuff"+(effect.value!=1?"s":"")+(effect.value>0?(effect.targetSelf?" sur vous":" sur la cible"):"")+(effect.trueEffect?" totalement indissipables":" indissipables par les cartes ordinaires");
             }
             case EffectType.EndTurn:
             {

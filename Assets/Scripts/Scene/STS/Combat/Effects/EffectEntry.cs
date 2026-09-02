@@ -93,13 +93,26 @@ public class EffectEntry
         };
     }
 
+    /// <summary>
+    /// Lit une constante d'énumération, dans l'une ou l'autre des deux écritures.
+    /// </summary>
+    /// <remarks>
+    /// Les fiches exportées depuis Unity écrivent <c>DeleteNextTurn</c> ; le serveur, qui nomme
+    /// la même constante en Java, écrit <c>DELETE_NEXT_TURN</c>. Ignorer la casse ne suffit pas
+    /// à réconcilier les deux — les tirets bas restent — alors on les retire avant de comparer.
+    /// Aucune écriture d'Unity n'en contient, donc rien de ce qui se lisait déjà ne change.
+    /// </remarks>
     private static bool TryParseEnum<T>(string value, out T parsed) where T : struct, Enum
     {
         parsed = default;
         if (string.IsNullOrWhiteSpace(value))
             return false;
 
-        return Enum.TryParse(value, true, out parsed);
+        if (Enum.TryParse(value, true, out parsed))
+            return true;
+
+        return value.IndexOf('_') >= 0
+            && Enum.TryParse(value.Replace("_", string.Empty), true, out parsed);
     }
 
     private static EffectType ParseEffectType(string value)

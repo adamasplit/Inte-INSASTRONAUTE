@@ -1,6 +1,6 @@
 {
   "id": "insaloon",
-  "cardName": "Tire plus vite que ton ombre",
+  "cardName": "Tir rapide",
   "collectionCardId": "Insaloon",
   "multiplayerExclusive": false,
   "characterLevel": 0,
@@ -32,7 +32,7 @@
     },
     {
       "type": "Damage",
-      "value": 6,
+      "value": 4,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -47,12 +47,12 @@
       "index": 0,
       "cardFilterTags": [],
       "cardSelectionEffect": "None",
-      "animationType": "Default"
+      "animationType": "ExplosionSmall"
     },
     {
       "type": "Draw",
       "value": 1,
-      "targetSelf": false,
+      "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,

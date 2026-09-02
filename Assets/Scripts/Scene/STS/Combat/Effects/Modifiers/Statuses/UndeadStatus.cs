@@ -3,9 +3,10 @@ public class UndeadStatus : StatusEffect
     public UndeadStatus(int duration)
     {
         Duration = duration;
-        Name = "Mort-vivant";
+        Name = "Zombie";
         debuff = true;
         generic = true;
+        framed=true;
     }
     public override void OnHeal(Character target, ref int healAmount)
     {
