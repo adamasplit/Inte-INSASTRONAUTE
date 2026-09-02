@@ -3,6 +3,7 @@
   "cardName": "Amalgame",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "spirale2",
   "cost": 0,

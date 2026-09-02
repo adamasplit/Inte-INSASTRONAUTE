@@ -3,6 +3,7 @@
   "cardName": "Huile de machine",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "tempo",
   "cost": 1,

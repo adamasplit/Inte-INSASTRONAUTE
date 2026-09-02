@@ -3,6 +3,7 @@
   "cardName": "Cachette",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Buff",
   "cost": 0,

@@ -3,6 +3,7 @@
   "cardName": "Robot autoguidé",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "robot",
   "cost": 1,

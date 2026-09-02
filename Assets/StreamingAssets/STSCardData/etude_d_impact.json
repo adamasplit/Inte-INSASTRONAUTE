@@ -3,6 +3,7 @@
   "cardName": "Étude d'impact",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "blasting",
   "cost": 1,

@@ -3,6 +3,7 @@
   "cardName": "Finance experte",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Affliction",
   "cost": 2,

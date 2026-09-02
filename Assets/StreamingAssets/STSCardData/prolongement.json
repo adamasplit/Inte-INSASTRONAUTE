@@ -3,6 +3,7 @@
   "cardName": "Prolongement",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "prolong",
   "cost": 2,

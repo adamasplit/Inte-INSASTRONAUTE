@@ -3,6 +3,7 @@
   "cardName": "Chant de force",
   "collectionCardId": "Amir",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 1,

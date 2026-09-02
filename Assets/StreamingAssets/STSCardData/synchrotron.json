@@ -3,6 +3,7 @@
   "cardName": "Synchrotron",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Cyclotron",
   "cost": 0,

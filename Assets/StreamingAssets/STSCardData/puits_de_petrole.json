@@ -3,6 +3,7 @@
   "cardName": "Puits de pétrole",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "portail",
   "cost": 1,

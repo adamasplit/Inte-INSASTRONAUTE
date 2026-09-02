@@ -3,6 +3,7 @@
   "cardName": "Piratage",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Foudre",
   "cost": 2,

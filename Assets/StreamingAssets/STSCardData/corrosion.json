@@ -3,6 +3,7 @@
   "cardName": "Corrosion",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "spikes",
   "cost": 0,

@@ -3,6 +3,7 @@
   "cardName": "Recristallisation",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Cristal",
   "cost": 0,

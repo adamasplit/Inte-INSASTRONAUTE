@@ -3,6 +3,7 @@
   "cardName": "Mégagravitron",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Comète",
   "cost": 4,

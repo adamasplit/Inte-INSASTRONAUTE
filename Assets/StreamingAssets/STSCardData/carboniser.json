@@ -3,6 +3,7 @@
   "cardName": "Carboniser",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "fountain",
   "cost": 1,

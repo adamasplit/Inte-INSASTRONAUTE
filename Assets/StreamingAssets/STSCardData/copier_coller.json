@@ -3,6 +3,7 @@
   "cardName": "Copier-coller",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "copy",
   "cost": 1,

@@ -3,6 +3,7 @@
   "cardName": "Hydrocarbure",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "holy",
   "cost": 2,

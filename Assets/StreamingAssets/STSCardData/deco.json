@@ -3,6 +3,7 @@
   "cardName": "Ça c'est ma fusée bat*rd",
   "collectionCardId": "Deco",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 2,

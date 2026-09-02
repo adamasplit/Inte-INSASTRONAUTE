@@ -3,6 +3,7 @@
   "cardName": "Goudron",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Affliction",
   "cost": 1,

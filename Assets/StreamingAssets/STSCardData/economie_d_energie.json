@@ -3,6 +3,7 @@
   "cardName": "Économie d'énergie",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "batterie",
   "cost": 2,

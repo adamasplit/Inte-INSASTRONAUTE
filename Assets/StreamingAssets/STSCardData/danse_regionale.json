@@ -3,6 +3,7 @@
   "cardName": "Danse régionale",
   "collectionCardId": "Limousin",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 3,

@@ -3,6 +3,7 @@
   "cardName": "Fonction de répartition",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Repartition",
   "cost": 1,

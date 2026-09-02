@@ -3,6 +3,7 @@
   "cardName": "Partie réelle",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "blue",
   "cost": 1,

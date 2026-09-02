@@ -3,6 +3,7 @@
   "cardName": "Spectrométrie de masse",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "lionheart",
   "cost": 3,

@@ -3,6 +3,7 @@
   "cardName": "Désignation",
   "collectionCardId": null,
   "multiplayerExclusive": true,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "critique",
   "cost": 0,

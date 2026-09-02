@@ -3,6 +3,7 @@
   "cardName": "Arrêt d'urgence : sanglage de fusée",
   "collectionCardId": "Logistique",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 0,

@@ -3,6 +3,7 @@
   "cardName": "Rayon spectral",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "spectral",
   "cost": 1,

@@ -3,6 +3,7 @@
   "cardName": "Optimisation offensive",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Pouvoir",
   "cost": 2,

@@ -3,6 +3,7 @@
   "cardName": "Frappe ultime",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Frappe ultime",
   "cost": 2,

@@ -3,18 +3,19 @@
   "cardName": "Dette de sommeil",
   "collectionCardId": "Prez",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 2,
   "xCost": false,
-  "type": "Attaque",
+  "type": "Compétence",
   "rarity": "Rare",
   "targetingMode": "Enemy",
   "effects": [
     {
       "type": "Status",
       "value": -1,
-      "targetSelf": true,
+      "targetSelf": false,
       "targetOthers": false,
       "statusType": "Undead",
       "duration": 5,
@@ -31,17 +32,11 @@
       "animationType": "Default"
     }
   ],
-  "modifiers": [
-    {
-      "type": "Damage",
-      "kind": "ActionExhausted",
-      "value": 8,
-      "info": "",
-      "description": ""
-    }
-  ],
+  "modifiers": [],
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": []
+  "tags": [
+    "Exhaust"
+  ]
 }

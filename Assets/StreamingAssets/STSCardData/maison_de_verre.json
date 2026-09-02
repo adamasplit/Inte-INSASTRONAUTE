@@ -3,6 +3,7 @@
   "cardName": "Maison de verre",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "ciel",
   "cost": 0,

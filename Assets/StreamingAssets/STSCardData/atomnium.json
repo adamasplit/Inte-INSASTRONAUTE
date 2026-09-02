@@ -3,6 +3,7 @@
   "cardName": "Atomnium",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "fated",
   "cost": 1,

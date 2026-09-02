@@ -3,6 +3,7 @@
   "cardName": "Noyau",
   "collectionCardId": "Terre",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 3,

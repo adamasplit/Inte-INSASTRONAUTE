@@ -3,6 +3,7 @@
   "cardName": "Frappe électrique",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "thunderblade",
   "cost": 1,

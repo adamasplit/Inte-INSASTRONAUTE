@@ -3,6 +3,7 @@
   "cardName": "Simulation thermique",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "hashmal",
   "cost": 1,

@@ -3,6 +3,7 @@
   "cardName": "Décharge",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "lightning",
   "cost": 0,

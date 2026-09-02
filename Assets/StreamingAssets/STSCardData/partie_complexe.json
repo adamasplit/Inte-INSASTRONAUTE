@@ -3,6 +3,7 @@
   "cardName": "Partie complexe",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "red",
   "cost": 2,

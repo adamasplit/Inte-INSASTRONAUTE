@@ -3,6 +3,7 @@
   "cardName": "Frappe infinie",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "cut",
   "cost": 0,

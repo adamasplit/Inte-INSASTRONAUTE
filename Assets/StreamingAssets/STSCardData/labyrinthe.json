@@ -3,6 +3,7 @@
   "cardName": "Labyrinthe",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "delai",
   "cost": 3,

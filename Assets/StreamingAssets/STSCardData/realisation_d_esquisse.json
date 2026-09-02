@@ -3,6 +3,7 @@
   "cardName": "Réalisation d'esquisse",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "megaflare",
   "cost": 2,

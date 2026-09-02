@@ -3,6 +3,7 @@
   "cardName": "Frappe temporelle",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "time",
   "cost": 1,

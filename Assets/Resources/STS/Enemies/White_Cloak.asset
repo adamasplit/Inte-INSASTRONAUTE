@@ -85,9 +85,65 @@ MonoBehaviour:
       animationType: 4
     nextMoveIndices: 03000000
     weight: 1
-  - card: {fileID: 11400000, guid: 96200ba74d3a37e4a99f53ecd2026f03, type: 2}
+  - card: {fileID: 0}
     moveName: 
-    effects: []
+    effects:
+    - type: 0
+      value: 6
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 3
+      value: 0
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 47
+      duration: 1
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    nextMoveIndices: 01000000
+    weight: 1
+  - card: {fileID: 0}
+    moveName: 
+    effects:
+    - type: 0
+      value: 25
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 4
     nextMoveIndices: 01000000
     weight: 1
   rewardCards: []

@@ -3,6 +3,7 @@
   "cardName": "Vulnérable (Armure mult.5)",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "armor_5",
   "cost": 0,

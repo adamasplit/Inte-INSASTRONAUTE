@@ -3,6 +3,7 @@
   "cardName": "Mur porteur",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Dégâts et Armure",
   "cost": 2,

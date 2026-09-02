@@ -3,6 +3,7 @@
   "cardName": "Resserrage de vis",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "torsion",
   "cost": 1,

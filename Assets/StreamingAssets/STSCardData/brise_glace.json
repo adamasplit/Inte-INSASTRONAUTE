@@ -3,6 +3,7 @@
   "cardName": "Brise-glace",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "rudebuster2",
   "cost": 1,

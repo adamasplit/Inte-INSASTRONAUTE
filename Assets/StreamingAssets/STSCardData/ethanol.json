@@ -3,6 +3,7 @@
   "cardName": "Ethanol",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "purge",
   "cost": 1,

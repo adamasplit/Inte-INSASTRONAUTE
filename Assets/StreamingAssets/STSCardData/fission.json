@@ -3,6 +3,7 @@
   "cardName": "Fission",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Flare",
   "cost": 3,

@@ -3,6 +3,7 @@
   "cardName": "Décontamination totale",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Esuna",
   "cost": 2,

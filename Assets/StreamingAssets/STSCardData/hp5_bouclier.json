@@ -3,6 +3,7 @@
   "cardName": "Bouclier (PV mult.5)",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "hp_5",
   "cost": 0,

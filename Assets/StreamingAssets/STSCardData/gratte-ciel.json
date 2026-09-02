@@ -3,6 +3,7 @@
   "cardName": "Gratte-ciel",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "rempart",
   "cost": 2,

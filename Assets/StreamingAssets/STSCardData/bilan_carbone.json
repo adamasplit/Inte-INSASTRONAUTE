@@ -3,6 +3,7 @@
   "cardName": "Bilan carbone",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Zone",
   "cost": 1,

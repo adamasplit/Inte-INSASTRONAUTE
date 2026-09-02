@@ -3,6 +3,7 @@
   "cardName": "Taraud",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "foreuse",
   "cost": 1,

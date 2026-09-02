@@ -3,6 +3,7 @@
   "cardName": "Pinte de trop",
   "collectionCardId": "Paix Dieu",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 1,

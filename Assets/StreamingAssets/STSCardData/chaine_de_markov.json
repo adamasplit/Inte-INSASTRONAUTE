@@ -3,6 +3,7 @@
   "cardName": "Chaîne de Markov",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "iter2",
   "cost": 3,

@@ -3,6 +3,7 @@
   "cardName": "Soin (PV nb.premier)",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "heal_prime",
   "cost": 0,

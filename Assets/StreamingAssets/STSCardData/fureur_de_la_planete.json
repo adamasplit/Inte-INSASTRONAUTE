@@ -3,6 +3,7 @@
   "cardName": "Fureur de la planète",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "halo",
   "cost": 3,

@@ -8,6 +8,7 @@ public class STSCardDataDTO
     public string cardName;
     public string collectionCardId;
     public bool multiplayerExclusive;
+    public bool pveOnly;
     public int characterLevel;
     public string iconId;
     public int cost;

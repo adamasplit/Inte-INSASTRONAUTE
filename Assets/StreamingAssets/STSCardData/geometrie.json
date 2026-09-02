@@ -3,6 +3,7 @@
   "cardName": "Géométrie",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": true,
   "characterLevel": 0,
   "iconId": "rdm",
   "cost": 0,

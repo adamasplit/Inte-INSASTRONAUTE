@@ -3,6 +3,7 @@
   "cardName": "Itérateur",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "iter",
   "cost": 1,

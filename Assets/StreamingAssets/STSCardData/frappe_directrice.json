@@ -3,6 +3,7 @@
   "cardName": "Frappe directrice",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Night",
   "cost": 1,

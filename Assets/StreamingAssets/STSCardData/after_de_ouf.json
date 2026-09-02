@@ -3,6 +3,7 @@
   "cardName": "After de ouf",
   "collectionCardId": "Bar'ouf",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 2,

@@ -3,6 +3,7 @@
   "cardName": "Inversion de matrice",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Coups",
   "cost": 1,

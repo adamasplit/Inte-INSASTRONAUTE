@@ -3,6 +3,7 @@
   "cardName": "Géo-technique ultime",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "quake",
   "cost": 2,
@@ -13,7 +14,7 @@
   "effects": [
     {
       "type": "Armor",
-      "value": 30,
+      "value": 10,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
@@ -32,7 +33,7 @@
     },
     {
       "type": "Damage",
-      "value": 40,
+      "value": 30,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",

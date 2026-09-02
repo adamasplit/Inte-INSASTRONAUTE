@@ -3,6 +3,7 @@
   "cardName": "Equation imaginaire",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "purple",
   "cost": 2,

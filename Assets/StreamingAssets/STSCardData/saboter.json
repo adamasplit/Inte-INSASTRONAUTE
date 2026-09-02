@@ -3,6 +3,7 @@
   "cardName": "Saboter",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Choc",
   "cost": 1,

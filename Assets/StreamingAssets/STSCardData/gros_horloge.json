@@ -3,6 +3,7 @@
   "cardName": "Gros Horloge",
   "collectionCardId": "Délirium",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 2,

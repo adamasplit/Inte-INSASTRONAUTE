@@ -3,6 +3,7 @@
   "cardName": "Dissipation",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Dissipation",
   "cost": 0,

@@ -3,6 +3,7 @@
   "cardName": "Bonne pratique",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Armure",
   "cost": 0,

@@ -3,6 +3,7 @@
   "cardName": "Centre de masse",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Coups",
   "cost": 2,

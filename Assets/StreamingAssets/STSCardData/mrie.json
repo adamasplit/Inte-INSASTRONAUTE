@@ -3,6 +3,7 @@
   "cardName": "Rafale de salade",
   "collectionCardId": "MRIE",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 2,
@@ -33,7 +34,7 @@
     {
       "type": "EndTurn",
       "value": 0,
-      "targetSelf": false,
+      "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 5,
@@ -52,7 +53,7 @@
     {
       "type": "Status",
       "value": 0,
-      "targetSelf": false,
+      "targetSelf": true,
       "targetOthers": false,
       "statusType": "Regen",
       "duration": 3,

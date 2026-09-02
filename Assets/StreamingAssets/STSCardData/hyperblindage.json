@@ -3,6 +3,7 @@
   "cardName": "Hyperblindage",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Transfert3",
   "cost": 0,

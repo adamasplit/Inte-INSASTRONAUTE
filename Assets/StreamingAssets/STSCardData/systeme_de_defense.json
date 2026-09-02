@@ -3,6 +3,7 @@
   "cardName": "Système de défense",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Dégâts et effet",
   "cost": 1,

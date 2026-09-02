@@ -3,6 +3,7 @@
   "cardName": "Lenteur (PV mult.4)",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "hp_4",
   "cost": 0,

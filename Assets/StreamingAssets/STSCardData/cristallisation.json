@@ -3,6 +3,7 @@
   "cardName": "Cristallisation",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Cristal",
   "cost": 1,

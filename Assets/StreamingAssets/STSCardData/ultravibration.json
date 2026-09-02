@@ -3,6 +3,7 @@
   "cardName": "Ultravibration",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "ultravibration",
   "cost": 1,

@@ -3,6 +3,7 @@
   "cardName": "Création de matière",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "creation",
   "cost": 0,

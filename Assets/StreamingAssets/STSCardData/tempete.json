@@ -3,6 +3,7 @@
   "cardName": "Tempête",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Zone2",
   "cost": 0,

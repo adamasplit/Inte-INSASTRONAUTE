@@ -3,6 +3,7 @@
   "cardName": "Faille système",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "critique",
   "cost": 2,

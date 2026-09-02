@@ -3,6 +3,7 @@
   "cardName": "Remise en état",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "engrenages",
   "cost": 1,

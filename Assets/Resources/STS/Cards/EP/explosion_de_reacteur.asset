@@ -24,7 +24,7 @@ MonoBehaviour:
   rarity: 3
   effects:
   - type: 12
-    value: 6
+    value: 4
     targetSelf: 1
     targetOthers: 0
     statusType: 0

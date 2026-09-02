@@ -3,6 +3,7 @@
   "cardName": "Soutien de satellite",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "satellite",
   "cost": 1,

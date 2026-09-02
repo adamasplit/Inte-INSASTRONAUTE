@@ -3,6 +3,7 @@
   "cardName": "Pression",
   "collectionCardId": "Venus",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 1,

@@ -3,6 +3,7 @@
   "cardName": "Protecteur de la planète",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "sigil",
   "cost": 2,

@@ -3,6 +3,7 @@
   "cardName": "Affaibli (PV mult.3)",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "hp_3_neg",
   "cost": 0,

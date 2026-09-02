@@ -23,13 +23,31 @@ MonoBehaviour:
   type: 1
   rarity: 4
   effects:
-  - type: 30
-    value: 3
+  - type: 16
+    value: -1
     targetSelf: 1
     targetOthers: 0
     statusType: 42
     duration: 0
-    description: 
+    description: "Dissipez tous vos effets positifs et gagnez 5 de Vigueur par effet
+      dissip\xE9."
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 1
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 0
+    targetSelf: 1
+    targetOthers: 0
+    statusType: 42
+    duration: 0
+    description: ' '
     cardID: 
     index: 0
     conditional: 0
@@ -41,7 +59,12 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   targetingMode: 0
-  modifiers: []
+  modifiers:
+  - type: 4
+    kind: 21
+    value: 5
+    info: 
+    description: ' '
   favoredCharacter: 7
   animationSpeed: 1
   startingCount: 0

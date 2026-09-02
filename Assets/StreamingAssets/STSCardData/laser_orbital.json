@@ -3,6 +3,7 @@
   "cardName": "Laser orbital",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "laser",
   "cost": 0,

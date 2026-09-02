@@ -3,6 +3,7 @@
   "cardName": "Isolement thermique",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "vuln",
   "cost": 1,

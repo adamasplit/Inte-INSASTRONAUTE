@@ -3,6 +3,7 @@
   "cardName": "Heures supplémentaires",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "circle",
   "cost": 0,

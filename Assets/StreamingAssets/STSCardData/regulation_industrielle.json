@@ -3,6 +3,7 @@
   "cardName": "Régulation industrielle",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Industrie",
   "cost": 2,

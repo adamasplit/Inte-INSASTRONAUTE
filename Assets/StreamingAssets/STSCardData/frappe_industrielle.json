@@ -3,6 +3,7 @@
   "cardName": "Frappe industrielle",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Industrie",
   "cost": 0,

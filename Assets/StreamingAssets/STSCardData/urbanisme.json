@@ -3,6 +3,7 @@
   "cardName": "Urbanisme",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Transfert2",
   "cost": 2,

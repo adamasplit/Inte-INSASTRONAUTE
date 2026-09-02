@@ -3,6 +3,7 @@
   "cardName": "Surchauffe mécanique",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "feu",
   "cost": 1,

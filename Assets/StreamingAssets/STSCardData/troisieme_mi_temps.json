@@ -3,6 +3,7 @@
   "cardName": "Troisième mi-temps",
   "collectionCardId": "TOSS",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 2,

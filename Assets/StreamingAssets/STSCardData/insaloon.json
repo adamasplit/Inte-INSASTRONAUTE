@@ -3,6 +3,7 @@
   "cardName": "Tir rapide",
   "collectionCardId": "Insaloon",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 0,

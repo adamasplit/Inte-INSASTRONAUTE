@@ -3,6 +3,7 @@
   "cardName": "Pièces de rechange",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "engrenages",
   "cost": 1,

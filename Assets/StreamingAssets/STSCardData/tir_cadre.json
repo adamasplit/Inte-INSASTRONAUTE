@@ -3,6 +3,7 @@
   "cardName": "Tir cadré",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "blitz",
   "cost": 0,

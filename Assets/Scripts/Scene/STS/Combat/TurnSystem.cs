@@ -29,6 +29,10 @@ public class TurnSystem : MonoBehaviour
         // dont celle qui rend la main dès que le combat est autoritatif — c'est-à-dire
         // dans tous les combats qui ont une limite de temps.
         ui?.DisplayTurnCountdown(combat.SecondsLeftInTurn());
+        // Ici pour la même raison que la ligne au-dessus : avant les sorties anticipées, dont
+        // celle qui rend la main dès qu'un combat est autoritatif — c'est-à-dire dans tous les
+        // duels, qui sont justement les seuls à pouvoir attendre le serveur.
+        ui?.DisplayWaitingForServer(combat.IsWaitingForServer);
 
         if (combat.combatEnded || !combat.allowTurn)
             return;

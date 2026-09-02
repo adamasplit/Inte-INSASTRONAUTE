@@ -3,6 +3,7 @@
   "cardName": "Sécurité",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "lock",
   "cost": 1,

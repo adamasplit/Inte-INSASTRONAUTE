@@ -3,6 +3,7 @@
   "cardName": "Energie solaire",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "blasting",
   "cost": 3,

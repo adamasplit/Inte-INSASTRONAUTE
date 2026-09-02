@@ -20,12 +20,12 @@ MonoBehaviour:
   icon: {fileID: 0}
   cost: 2
   xCost: 0
-  type: 0
+  type: 1
   rarity: 2
   effects:
   - type: 3
     value: -1
-    targetSelf: 1
+    targetSelf: 0
     targetOthers: 0
     statusType: 62
     duration: 5
@@ -41,13 +41,8 @@ MonoBehaviour:
     cardSelectionEffect: 1
     animationType: 0
   targetingMode: 1
-  modifiers:
-  - type: 0
-    kind: 20
-    value: 8
-    info: 
-    description: 
+  modifiers: []
   favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
-  tags: 
+  tags: 09000000

@@ -3,6 +3,7 @@
   "cardName": "Artillerie lourde",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "rudebuster2",
   "cost": 2,

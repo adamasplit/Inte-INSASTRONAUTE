@@ -3,6 +3,7 @@
   "cardName": "Contreflèche",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "fleche",
   "cost": 0,

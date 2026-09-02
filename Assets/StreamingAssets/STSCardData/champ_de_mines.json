@@ -3,6 +3,7 @@
   "cardName": "Champ de mines",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Piège",
   "cost": 0,

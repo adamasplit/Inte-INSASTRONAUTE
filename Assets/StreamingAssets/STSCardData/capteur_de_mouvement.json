@@ -3,6 +3,7 @@
   "cardName": "Capteur de mouvement",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": true,
   "characterLevel": 0,
   "iconId": "prescience",
   "cost": 1,

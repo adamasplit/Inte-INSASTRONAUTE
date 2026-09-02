@@ -3,6 +3,7 @@
   "cardName": "Façade",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "wall",
   "cost": 2,

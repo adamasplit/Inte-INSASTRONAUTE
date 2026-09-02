@@ -3,6 +3,7 @@
   "cardName": "Permis de construire",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "megastrength",
   "cost": 1,
@@ -12,13 +13,32 @@
   "targetingMode": "Player",
   "effects": [
     {
-      "type": "DispelBuffsIntoStatus",
-      "value": 3,
+      "type": "DispelBuff",
+      "value": -1,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Vigor",
       "duration": 0,
-      "description": "",
+      "description": "Dissipez tous vos effets positifs et gagnez 5 de Vigueur par effet dissipé.",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": true,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    },
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Vigor",
+      "duration": 0,
+      "description": " ",
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
@@ -31,7 +51,15 @@
       "animationType": "Default"
     }
   ],
-  "modifiers": [],
+  "modifiers": [
+    {
+      "type": "StatusPotency",
+      "kind": "ActionDispelled",
+      "value": 5,
+      "info": "",
+      "description": " "
+    }
+  ],
   "favoredCharacter": "AI",
   "animationSpeed": 1.0,
   "startingCount": 0,

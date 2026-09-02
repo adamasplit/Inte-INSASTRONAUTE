@@ -3,6 +3,7 @@
   "cardName": "Convertisseur analogique",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Cartes",
   "cost": 1,

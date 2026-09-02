@@ -3,6 +3,7 @@
   "cardName": "Aérodynamique",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "aero",
   "cost": 1,

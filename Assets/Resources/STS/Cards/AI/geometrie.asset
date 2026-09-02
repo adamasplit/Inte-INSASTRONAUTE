@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "G\xE9om\xE9trie"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 1
   characterLevel: 0
   icon: {fileID: 21300000, guid: f6cf9798166b2dd48bed6e2bbc58a1b1, type: 3}
   cost: 0

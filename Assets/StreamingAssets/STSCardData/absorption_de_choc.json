@@ -1,0 +1,40 @@
+{
+  "id": "absorption_de_choc",
+  "cardName": "Absorption de choc",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "pveOnly": false,
+  "characterLevel": 0,
+  "iconId": "Désespoir",
+  "cost": 2,
+  "xCost": false,
+  "type": "Pouvoir",
+  "rarity": "Epic",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Absorption",
+      "duration": 10,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "GC",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

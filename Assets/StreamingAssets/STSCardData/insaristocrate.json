@@ -3,6 +3,7 @@
   "cardName": "À mort",
   "collectionCardId": "Ins'aristocrate (campagne)",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 2,

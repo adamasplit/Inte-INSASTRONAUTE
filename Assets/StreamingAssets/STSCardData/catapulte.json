@@ -3,6 +3,7 @@
   "cardName": "Catapulte",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "rocks",
   "cost": 2,

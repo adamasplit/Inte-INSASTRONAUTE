@@ -3,6 +3,7 @@
   "cardName": "Smash final",
   "collectionCardId": "Tournoi",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 0,

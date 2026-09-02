@@ -3,6 +3,7 @@
   "cardName": "Réaction chimique",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Matière2",
   "cost": 0,

@@ -3,6 +3,7 @@
   "cardName": "Mentalité Kaizen",
   "collectionCardId": "Côte Sainte Catherine",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 1,

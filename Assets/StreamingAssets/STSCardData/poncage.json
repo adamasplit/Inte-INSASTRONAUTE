@@ -3,6 +3,7 @@
   "cardName": "Ponçage",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "gant",
   "cost": 0,

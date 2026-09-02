@@ -3,6 +3,7 @@
   "cardName": "Contrepoids",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "strike",
   "cost": 1,

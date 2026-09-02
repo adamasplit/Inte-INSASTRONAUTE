@@ -3,6 +3,7 @@
   "cardName": "Inondation",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "inondation",
   "cost": 0,

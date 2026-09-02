@@ -3,6 +3,7 @@
   "cardName": "Grand prix du parking",
   "collectionCardId": "Insa Racing",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 2,

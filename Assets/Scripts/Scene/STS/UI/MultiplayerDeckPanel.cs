@@ -403,6 +403,10 @@ public class MultiplayerDeckPanel : MonoBehaviour
     private bool IsHiddenFromDeckBuilder(STSCardData card)
     {
         return !IsCompatibleWithCurrentCharacter(card)
+            // Réservée à la campagne : elle n'est pas seulement refusée au moment de valider le
+            // deck, elle n'est jamais montrée. Le pendant de multiplayerExclusive, dans l'autre
+            // sens — le serveur refuse la même carte, ce filtre lui évite d'avoir à le dire.
+            || card.pveOnly
             || card.HasTag(CardTag.Unobtainable)
             || card.HasTag(CardTag.Created)
             || card.HasTag(CardTag.FollowUp);

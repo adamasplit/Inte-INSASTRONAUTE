@@ -3,6 +3,7 @@
   "cardName": "Electromagnétisme",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "thunder",
   "cost": 1,

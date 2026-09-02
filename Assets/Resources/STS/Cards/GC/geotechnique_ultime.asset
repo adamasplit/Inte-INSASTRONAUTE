@@ -24,7 +24,7 @@ MonoBehaviour:
   rarity: 4
   effects:
   - type: 1
-    value: 30
+    value: 10
     targetSelf: 1
     targetOthers: 0
     statusType: 0
@@ -41,7 +41,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   - type: 0
-    value: 40
+    value: 30
     targetSelf: 0
     targetOthers: 0
     statusType: 0

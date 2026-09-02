@@ -3,6 +3,7 @@
   "cardName": "Transition écologique",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "creation",
   "cost": 2,

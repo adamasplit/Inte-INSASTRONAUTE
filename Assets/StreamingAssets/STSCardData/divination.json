@@ -3,6 +3,7 @@
   "cardName": "Divination",
   "collectionCardId": "Chacharlatante",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 3,

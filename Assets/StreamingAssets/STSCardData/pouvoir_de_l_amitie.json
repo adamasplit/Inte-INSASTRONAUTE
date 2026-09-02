@@ -3,6 +3,7 @@
   "cardName": "Pouvoir de l'amitié",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "friendship",
   "cost": 2,

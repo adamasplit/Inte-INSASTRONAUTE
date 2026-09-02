@@ -3,6 +3,7 @@
   "cardName": "Surcharge du feed insta",
   "collectionCardId": "Com",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 1,

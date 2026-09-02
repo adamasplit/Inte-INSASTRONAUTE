@@ -3,6 +3,7 @@
   "cardName": "Formation en béton",
   "collectionCardId": "GCU",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 0,
@@ -70,7 +71,7 @@
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Starting",
+  "favoredCharacter": "GC",
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": []

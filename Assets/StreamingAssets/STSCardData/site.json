@@ -3,6 +3,7 @@
   "cardName": "Erreur 404",
   "collectionCardId": "Sites",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 1,
@@ -33,7 +34,7 @@
     {
       "type": "Status",
       "value": 0,
-      "targetSelf": false,
+      "targetSelf": true,
       "targetOthers": false,
       "statusType": "Freeze",
       "duration": 2,

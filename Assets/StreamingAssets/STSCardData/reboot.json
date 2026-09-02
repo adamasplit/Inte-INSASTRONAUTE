@@ -3,6 +3,7 @@
   "cardName": "Reboot",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "reboot",
   "cost": 0,

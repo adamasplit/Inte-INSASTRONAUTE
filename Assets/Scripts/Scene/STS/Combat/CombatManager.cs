@@ -1404,6 +1404,26 @@ public class CombatManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Vrai quand le duel n'a rien à montrer parce qu'il attend encore le serveur.
+    ///
+    /// <para>La scène de combat est montée avant que le premier état autoritatif n'arrive, et
+    /// ce qu'elle montre pendant ce temps-là n'est pas le combat : les combattants portent les
+    /// points de vie de remplissage posés par <c>GameManager.SetupPvpBattle</c>, la main est
+    /// vide et les piles aussi. C'est vrai, mais illisible, et le joueur n'a aucun moyen de
+    /// savoir que ce n'est qu'une attente.</para>
+    ///
+    /// <para>L'échéance de tour est ce qui départage les deux : le serveur en pose une dès que
+    /// le combat s'ouvre et en repose une à chaque commande acceptée, si bien qu'un duel en
+    /// cours en a toujours une. N'en avoir aucune, c'est n'avoir pas encore reçu d'état — ou
+    /// avoir reçu un état de bataille qui n'a pas commencé.</para>
+    ///
+    /// <para>Un combat terminé n'attend rien : il a son écran de résultat, et le recouvrir d'un
+    /// voile d'attente cacherait précisément ce que le joueur veut lire.</para>
+    /// </summary>
+    public bool IsWaitingForServer =>
+        Mode == CombatMode.Pvp && !combatEnded && !turnCountdown.HasDeadline;
+
+    /// <summary>
     /// « Main 3 · Pioche 12 » pour un combattant dont on n'a pas le droit de voir les
     /// cartes ; null pour tout autre — un ennemi PvE n'a aucune pile enregistrée, et le
     /// joueur local montre sa vraie main.

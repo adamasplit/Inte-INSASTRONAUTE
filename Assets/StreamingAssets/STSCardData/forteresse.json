@@ -3,6 +3,7 @@
   "cardName": "Forteresse mobile",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "ultimate_shield",
   "cost": 5,

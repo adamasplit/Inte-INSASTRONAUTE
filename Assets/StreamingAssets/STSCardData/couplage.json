@@ -3,6 +3,7 @@
   "cardName": "Couplage",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "cycle",
   "cost": 1,

@@ -3,6 +3,7 @@
   "cardName": "Autodécomposer",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Magique",
   "cost": 1,

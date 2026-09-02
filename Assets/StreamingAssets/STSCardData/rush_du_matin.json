@@ -3,6 +3,7 @@
   "cardName": "Rush du matin",
   "collectionCardId": "Café Court",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 0,

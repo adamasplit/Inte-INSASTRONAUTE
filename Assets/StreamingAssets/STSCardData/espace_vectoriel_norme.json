@@ -3,6 +3,7 @@
   "cardName": "Espace vectoriel normé",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "triangulation",
   "cost": 1,

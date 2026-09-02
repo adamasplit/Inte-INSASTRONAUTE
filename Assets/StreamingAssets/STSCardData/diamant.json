@@ -3,6 +3,7 @@
   "cardName": "Diamant",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "diamant",
   "cost": 1,

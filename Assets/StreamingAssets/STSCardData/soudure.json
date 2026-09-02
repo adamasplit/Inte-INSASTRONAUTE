@@ -3,6 +3,7 @@
   "cardName": "Soudure",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "soudure",
   "cost": 0,

@@ -3,6 +3,7 @@
   "cardName": "Fusion de pôles",
   "collectionCardId": "Treso X Goodies",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 1,

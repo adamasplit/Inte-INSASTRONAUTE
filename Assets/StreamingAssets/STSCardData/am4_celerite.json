@@ -3,6 +3,7 @@
   "cardName": "Célérité (Armure mult.4)",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "armor_4",
   "cost": 0,

@@ -3,6 +3,7 @@
   "cardName": "Blocage de parking",
   "collectionCardId": "Fermeture parking visiteur",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 2,

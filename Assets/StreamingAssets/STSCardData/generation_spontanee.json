@@ -3,6 +3,7 @@
   "cardName": "Génération spontanée",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Matière",
   "cost": 1,

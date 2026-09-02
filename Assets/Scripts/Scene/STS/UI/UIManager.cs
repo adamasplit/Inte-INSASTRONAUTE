@@ -48,6 +48,10 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI combatNoticeText;
     public TextMeshProUGUI turnCountdownText;
 
+    [Tooltip("Voile affiché tant que le duel attend le serveur. Doit couvrir le plateau et "
+        + "intercepter les clics : ce qu'il cache n'est pas encore jouable.")]
+    public GameObject waitingForServerOverlay;
+
     [Header("Abandon d'un duel")]
     // Branchez le bouton sur OnSurrenderPressed() et, s'il existe, le bouton d'annulation
     // sur OnSurrenderCancelled(). Tout est null-safe : tant que rien n'est pose dans la
@@ -715,8 +719,20 @@ public class UIManager : MonoBehaviour
                     shouldHighlight = (zone.target == actingPlayer) && (hovered == actingPlayer);
                     break;
 
+                // Une seule cible, comme Enemy : AnyPlayer choisit *un* allié, celui qu'on
+                // vise. GetDisplayTargets ne rend d'ailleurs que celui-là. Cette ligne allumait
+                // tous les alliés vivants — elle ne se servait de `hovered` que pour savoir
+                // qu'on visait quelque chose, jamais pour savoir quoi — si bien que la carte
+                // frappait bien la bonne cible mais que l'affichage en désignait quatre.
+                //
+                // À ne pas confondre avec AllEnemies, AllCharacters et RandomEnemy juste
+                // en dessous : eux touchent, ou peuvent toucher, tout un camp, et allumer
+                // tout ce camp est exactement ce qu'ils doivent faire.
                 case TargetingMode.AnyPlayer:
-                    shouldHighlight = zone.target != null && zone.target.isPlayer && hovered != null && zone.target.IsAlive;
+                    shouldHighlight = zone.target != null
+                        && zone.target == hovered
+                        && zone.target.isPlayer
+                        && zone.target.IsAlive;
                     break;
 
                 case TargetingMode.AllCharacters:
@@ -1052,7 +1068,10 @@ public class UIManager : MonoBehaviour
 
         if (secondsRemaining == null)
         {
-            if (combat != null && combat.Mode == CombatMode.Pvp)
+            // « En attente » ne vaut que pour une attente. Un duel terminé n'a plus de tour et
+            // arrivait pourtant ici : il affichait donc qu'il attendait le serveur, par-dessus
+            // son propre écran de résultat.
+            if (combat != null && combat.IsWaitingForServer)
             {
                 if (!turnCountdownText.gameObject.activeSelf)
                     turnCountdownText.gameObject.SetActive(true);
@@ -1073,6 +1092,26 @@ public class UIManager : MonoBehaviour
         turnCountdownText.text = $"{whole}s";
         turnCountdownText.color = whole <= 5 ? Color.red : Color.white;
     }
+    /// <summary>
+    /// Montre ou cache le voile d'attente du serveur.
+    ///
+    /// <para>Tant qu'aucun état autoritatif n'est arrivé, le plateau montre des points de vie
+    /// de remplissage et des piles vides. Le voile est là pour couvrir ça, et il doit donc
+    /// aussi intercepter les clics : ce qu'il cache n'est pas jouable, et une carte lâchée
+    /// dessus partirait vers un combat qui n'a pas commencé.</para>
+    ///
+    /// <para>Rien n'est branché par défaut. Une scène sans voile se joue exactement comme
+    /// avant — le texte « En attente... » reste alors la seule indication.</para>
+    /// </summary>
+    public void DisplayWaitingForServer(bool waiting)
+    {
+        if (waitingForServerOverlay == null)
+            return;
+
+        if (waitingForServerOverlay.activeSelf != waiting)
+            waitingForServerOverlay.SetActive(waiting);
+    }
+
     Vector2 ScreenToHandLocal(Vector3 screenPos)
     {
         RectTransformUtility.ScreenPointToLocalPointInRectangle(

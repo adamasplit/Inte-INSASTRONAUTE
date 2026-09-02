@@ -3,6 +3,7 @@
   "cardName": "Retard 364 j + 4 h",
   "collectionCardId": "Compte rendu",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 3,

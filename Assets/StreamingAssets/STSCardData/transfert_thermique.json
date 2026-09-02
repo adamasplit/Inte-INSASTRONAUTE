@@ -3,6 +3,7 @@
   "cardName": "Transfert thermique",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Darkness",
   "cost": 2,

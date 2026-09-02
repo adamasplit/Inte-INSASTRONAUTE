@@ -3,6 +3,7 @@
   "cardName": "Milieu continu",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "hp_prime",
   "cost": 2,

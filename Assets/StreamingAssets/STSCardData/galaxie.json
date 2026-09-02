@@ -3,6 +3,7 @@
   "cardName": "Galaxie",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Galaxie",
   "cost": 3,

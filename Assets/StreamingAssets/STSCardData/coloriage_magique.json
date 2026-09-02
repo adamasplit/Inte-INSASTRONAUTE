@@ -3,6 +3,7 @@
   "cardName": "Coloriage magique",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "coloriage",
   "cost": 0,

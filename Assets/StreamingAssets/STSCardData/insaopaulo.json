@@ -3,6 +3,7 @@
   "cardName": "DO BRAZIIIIL",
   "collectionCardId": "Insao Paulo",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 1,

@@ -3,6 +3,7 @@
   "cardName": "Fureur de météore",
   "collectionCardId": "FDM",
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 0,

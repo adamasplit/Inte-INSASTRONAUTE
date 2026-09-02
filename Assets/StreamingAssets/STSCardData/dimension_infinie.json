@@ -3,6 +3,7 @@
   "cardName": "Dimension infinie",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "dimension",
   "cost": 0,

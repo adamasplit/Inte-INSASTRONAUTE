@@ -3,6 +3,7 @@
   "cardName": "Perspective cavalière",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "caval",
   "cost": 2,

@@ -3,6 +3,7 @@
   "cardName": "Acide",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Debuff",
   "cost": 0,

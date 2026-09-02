@@ -3,6 +3,7 @@
   "cardName": "Scan complet",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "garde",
   "cost": 1,

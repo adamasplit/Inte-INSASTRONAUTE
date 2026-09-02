@@ -3,6 +3,7 @@
   "cardName": "Décoration",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "cristal2",
   "cost": 1,

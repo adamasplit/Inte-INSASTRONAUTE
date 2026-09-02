@@ -3,6 +3,7 @@
   "cardName": "Tank",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "tank",
   "cost": 0,

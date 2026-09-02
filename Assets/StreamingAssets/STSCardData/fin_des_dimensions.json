@@ -3,6 +3,7 @@
   "cardName": "Fin des dimensions",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "aura",
   "cost": 3,

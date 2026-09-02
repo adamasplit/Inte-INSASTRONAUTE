@@ -3,6 +3,7 @@
   "cardName": "Béton armé",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "garde",
   "cost": 2,

@@ -1,11 +1,16 @@
 using UnityEngine;
 
 /// <summary>
-/// Confusion : quelle que soit la cible désignée, c'est une autre qui est frappée.
+/// Confusion : le porteur ne joue plus son tour, sa main part toute seule.
 ///
-/// <para>Le tirage garde le bord de la cible voulue — une carte qui vise un allié en frappera un
-/// autre, jamais un ennemi — faute de quoi une carte de soin confuse irait soigner l'adversaire,
-/// ce qui n'est plus de la confusion mais une autre carte.</para>
+/// <para>Le moteur autoritatif joue les cartes à sa place, tirées au hasard, jusqu'à ce que son
+/// énergie ne paie plus rien (CombatOrchestrator / ConfusedTurn côté serveur). Ce n'est donc plus
+/// seulement une visée égarée : c'est le tour entier qui lui est retiré.</para>
+///
+/// <para>Le tirage ne connaît pas les bords : il prend n'importe quel combattant debout, le
+/// lanceur compris. Une attaque confuse peut donc revenir sur celui qui la joue, et un soin confus
+/// partir à l'adversaire. Il gardait autrefois le bord de la cible voulue, mais en duel, où chaque
+/// bord ne compte qu'une tête, ce tirage n'avait rien à choisir et le statut ne faisait rien.</para>
 ///
 /// <para>Le choix de la cible appartient au moteur autoritatif, qui seul décide qui est frappé ;
 /// ce statut porte le cadre, le nom et la description que le client affiche. Cadre d'or, sans
@@ -27,8 +32,10 @@ public class ConfusionStatus : StatusEffect
     {
         if (isPlayer)
         {
-            return "Vos cartes frappent une cible au hasard jusqu'à la fin du tour.";
+            return "Vous ne jouez plus : vos cartes partent seules, au hasard, sur une cible au "
+                + "hasard — vous compris — jusqu'à épuisement de votre énergie.";
         }
-        return "Les cartes de ce personnage frappent une cible au hasard jusqu'à la fin du tour.";
+        return "Ce personnage ne joue plus : ses cartes partent seules, au hasard, sur une cible "
+            + "au hasard — lui compris — jusqu'à épuisement de son énergie.";
     }
 }

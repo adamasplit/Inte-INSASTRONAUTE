@@ -8,6 +8,8 @@ public class STSCardData : ScriptableObject
     public string cardName;
     public string collectionCardId;
     public bool multiplayerExclusive;
+    /// <summary>Réservée à la campagne : jamais proposée par le constructeur de deck.</summary>
+    public bool pveOnly;
     public int characterLevel;
     public Sprite icon;
     public int cost;
@@ -45,6 +47,7 @@ public class STSCardData : ScriptableObject
         dto.cardName = cardName;
         dto.collectionCardId = GetCollectionCardId();
         dto.multiplayerExclusive = multiplayerExclusive;
+        dto.pveOnly = pveOnly;
         dto.characterLevel = characterLevel;
         dto.cost = cost;
         dto.iconId = icon != null ? icon.name : null;
@@ -89,6 +92,7 @@ public class STSCardData : ScriptableObject
         }
         card.collectionCardId = dto.collectionCardId;
         card.multiplayerExclusive = dto.multiplayerExclusive;
+        card.pveOnly = dto.pveOnly;
         card.characterLevel = dto.characterLevel;
         card.icon = (dto.iconId != null && dto.iconId != "") ? Resources.Load<Sprite>("STS/Icons/Cards/" + dto.iconId) : null;
         if (dto.iconId != null && dto.iconId != "" && card.icon == null)

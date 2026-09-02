@@ -3,6 +3,7 @@
   "cardName": "Autodécomposition",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
   "cost": 0,

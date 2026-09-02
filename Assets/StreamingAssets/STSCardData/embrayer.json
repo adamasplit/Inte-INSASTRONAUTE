@@ -3,6 +3,7 @@
   "cardName": "Embrayer",
   "collectionCardId": null,
   "multiplayerExclusive": false,
+  "pveOnly": false,
   "characterLevel": 0,
   "iconId": "embrayage",
   "cost": 2,
