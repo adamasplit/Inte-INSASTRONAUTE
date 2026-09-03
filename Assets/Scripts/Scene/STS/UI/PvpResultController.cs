@@ -22,6 +22,8 @@ public class PvpResultController : MonoBehaviour
 {
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI reasonText;
+    /// Ce que le duel a rapporté ou coûté. Facultatif : sans lui, l'issue s'affiche seule.
+    public TextMeshProUGUI rewardText;
     public CanvasGroup canvasGroup;
 
     void Awake()
@@ -40,6 +42,15 @@ public class PvpResultController : MonoBehaviour
     }
 
     public void Show(TeamOutcome outcome, string opponentName)
+    {
+        Show(outcome, opponentName, null);
+    }
+
+    /// <param name="reward">
+    /// Le classement et les jetons que ce duel a valus, déjà mis en phrase, ou null quand il n'y
+    /// a rien à annoncer — un duel amical, un raid, ou un serveur qui n'a rien renvoyé.
+    /// </param>
+    public void Show(TeamOutcome outcome, string opponentName, string reward)
     {
         string against = string.IsNullOrWhiteSpace(opponentName) ? "" : $" contre {opponentName}";
         string title;
@@ -68,6 +79,12 @@ public class PvpResultController : MonoBehaviour
             titleText.text = title;
         if (reasonText != null)
             reasonText.text = reason;
+
+        if (rewardText != null)
+        {
+            rewardText.text = reward ?? string.Empty;
+            rewardText.gameObject.SetActive(!string.IsNullOrWhiteSpace(reward));
+        }
 
         if (canvasGroup != null)
         {

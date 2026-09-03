@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Filtre
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 81030cfa8dc89e1419926b1935568cd4, type: 3}
   cost: 1
@@ -24,7 +25,7 @@ MonoBehaviour:
   rarity: 2
   effects:
   - type: 3
-    value: 3
+    value: 2
     targetSelf: 0
     targetOthers: 0
     statusType: 44

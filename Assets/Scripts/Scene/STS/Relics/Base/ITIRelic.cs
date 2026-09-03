@@ -20,8 +20,7 @@ public class ITIRelic : BaseRelic
     {
         namesByStage[0] = "Processeur transcendant";
         descriptionsByStage[0] =
-            "Chaque carte jouée contre vous en laisse une copie <color=orange>éthérée</color> "
-            + "et à usage unique dans votre main.";
+            "Chaque carte jouée contre vous en laisse une copie <color=orange>temporaire</color>" + "et <color=orange>à usage unique</color> dans votre main.";
         Upgrade(0);
     }
 }

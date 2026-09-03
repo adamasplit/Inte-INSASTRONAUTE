@@ -10,56 +10,57 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: tournoi
+  m_Name: parrainage
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: tournoi
-  cardName: Smash final
-  collectionCardId: Tournoi
+  id: parrainage
+  cardName: Match !
+  collectionCardId: Parrainage
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
-  cost: 0
+  cost: 2
   xCost: 0
-  type: 0
-  rarity: 4
+  type: 1
+  rarity: 2
   effects:
-  - type: 11
-    value: 10
+  - type: 3
+    value: 2
     targetSelf: 1
     targetOthers: 0
-    statusType: 0
+    statusType: 14
     duration: 0
     description: 
     cardID: 
     index: 0
     conditional: 0
-    conditionType: 3
+    conditionType: 0
     conditionValue: 
     trueEffect: 0
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  - type: 0
-    value: 30
+  - type: 3
+    value: 2
     targetSelf: 0
     targetOthers: 0
-    statusType: 0
+    statusType: 14
     duration: 0
     description: 
     cardID: 
     index: 0
-    conditional: 1
-    conditionType: 3
+    conditional: 0
+    conditionType: 0
     conditionValue: 
     trueEffect: 0
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  targetingMode: 1
+  targetingMode: 6
   modifiers: []
   favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
-  tags: 
+  tags: 09000000

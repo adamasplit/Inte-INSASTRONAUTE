@@ -311,6 +311,13 @@ public class STSApiDebugCombatRequest
     public List<string> relicIds = new();
 }
 
+/// <summary>Ce que le serveur répond quand on lui demande si le mode PvP est ouvert.</summary>
+[Serializable]
+public class STSApiPvpAvailabilityResponse
+{
+    public bool enabled;
+}
+
 /// <summary>
 /// Ce que le serveur répond quand on lui demande si le combat de débogage est ouvert.
 ///
@@ -730,6 +737,48 @@ public static class STSApiClient
             response.events ??= new List<JToken>();
         }
         return response;
+    }
+
+    /// <summary>
+    /// Demande si le mode PvP est ouvert sur ce serveur.
+    ///
+    /// <para>Contrairement au combat de débogage, le doute profite ici au mode : sans réponse
+    /// claire, on le laisse visible. Un serveur qui a vraiment éteint le PvP est un serveur
+    /// joignable, puisque cette route-ci survit à l'extinction et répond ; ne pas obtenir de
+    /// réponse veut donc dire que rien ne répond, et cacher le bouton n'y changerait rien
+    /// alors que le cacher sur un simple hoquet réseau ferait disparaître un mode entier.</para>
+    /// </summary>
+    public static async Task<bool> IsPvpAvailableAsync()
+    {
+        try
+        {
+            string json = await ReactApiBridge.RequestAsync("sts.pvp.availability");
+            STSApiPvpAvailabilityResponse response =
+                ParseResponse<STSApiPvpAvailabilityResponse>(json);
+            if (response == null)
+            {
+                // Un avertissement et non une note : c'est le cas où l'interrupteur du mode ne
+                // marche pas, et il ne doit pas passer inaperçu. La cause habituelle est un
+                // site plus ancien que ce build du jeu — le pont ne connaît pas encore
+                // « sts.pvp.availability » et répond UNKNOWN_REQUEST.
+                Debug.LogWarning(
+                    "[STS-PVP] Pas de réponse à sts.pvp.availability : le mode reste ouvert par "
+                    + "défaut. Si le serveur l'a fermé, c'est que le site n'a pas été redéployé "
+                    + "depuis l'ajout de cette route.");
+                return true;
+            }
+
+            if (!response.enabled)
+            {
+                Debug.Log("[STS-PVP] Le serveur annonce le mode PvP fermé.");
+            }
+            return response.enabled;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[STS-PVP] Disponibilité du mode illisible ({ex.Message}) : le mode reste ouvert.");
+            return true;
+        }
     }
 
     /// <summary>

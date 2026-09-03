@@ -15,6 +15,9 @@ MonoBehaviour:
   id: epi
   cardName: EPI
   collectionCardId: 
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 74f5ca1acb607064abf4a2b03102edcb, type: 3}
   cost: 1
   xCost: 0
@@ -22,7 +25,7 @@ MonoBehaviour:
   rarity: 1
   effects:
   - type: 3
-    value: 3
+    value: 2
     targetSelf: 1
     targetOthers: 0
     statusType: 43

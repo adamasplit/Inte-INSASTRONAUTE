@@ -1499,6 +1499,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PvpResultController
   titleText: {fileID: 300409842}
   reasonText: {fileID: 794583664}
+  rewardText: {fileID: 0}
   canvasGroup: {fileID: 149058112}
 --- !u!1 &168042402
 GameObject:
@@ -3947,7 +3948,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &912995191
 RectTransform:
   m_ObjectHideFlags: 0

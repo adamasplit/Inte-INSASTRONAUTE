@@ -14,7 +14,7 @@
   "effects": [
     {
       "type": "Gravity",
-      "value": 15,
+      "value": 10,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -37,7 +37,7 @@
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
-      "duration": 0,
+      "duration": 50,
       "description": "",
       "cardID": "",
       "conditional": false,

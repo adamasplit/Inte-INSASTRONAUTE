@@ -14,7 +14,7 @@
   "effects": [
     {
       "type": "Status",
-      "value": 3,
+      "value": 2,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Filter",

@@ -26,16 +26,15 @@ public class ConfusionStatus : StatusEffect
         framed = true;
         goldFrame = true;
         inextendable = true;
+        generic = true;
     }
 
     public override string Desc(bool isPlayer)
     {
         if (isPlayer)
         {
-            return "Vous ne jouez plus : vos cartes partent seules, au hasard, sur une cible au "
-                + "hasard — vous compris — jusqu'à épuisement de votre énergie.";
+            return "A votre tour, vous jouez des cartes au hasard sur une cible au hasard.";
         }
-        return "Ce personnage ne joue plus : ses cartes partent seules, au hasard, sur une cible "
-            + "au hasard — lui compris — jusqu'à épuisement de son énergie.";
+        return "Au tour de ce personnage, il joue des cartes au hasard sur une cible au hasard.";
     }
 }

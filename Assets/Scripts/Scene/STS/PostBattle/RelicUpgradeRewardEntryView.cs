@@ -18,7 +18,7 @@ public class RelicUpgradeRewardEntryView : RewardEntryView
     }
     public async void ClaimRelicUpgrade()
     {
-        if (manager != null && !await manager.TryClaimServerRewardAsync(reward))
+        if (manager != null && !(await manager.TryClaimServerRewardAsync(reward)).Accepted)
         {
             return;
         }

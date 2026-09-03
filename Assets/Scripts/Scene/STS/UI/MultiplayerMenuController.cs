@@ -28,6 +28,10 @@ public class MultiplayerMenuController : MonoBehaviour
     [SerializeField] private Toggle fillWithAiToggle;
     [SerializeField] private TextMeshProUGUI modeHintText;
     [SerializeField] private TextMeshProUGUI playerIdText;
+    [Tooltip("Classement du joueur. Facultatif : sans lui, le menu s'affiche comme avant.")]
+    [SerializeField] private TextMeshProUGUI eloText;
+    [Tooltip("Bilan classé du joueur, « V / D ». Facultatif.")]
+    [SerializeField] private TextMeshProUGUI rankedRecordText;
 
     [Header("Notification")]
     [SerializeField] private TextMeshProUGUI notificationText;
@@ -40,6 +44,9 @@ public class MultiplayerMenuController : MonoBehaviour
     /// pas un libelle, et un mode que le serveur ne reconnait pas est refuse plutot que ramene
     /// au duel. Le libelle, lui, ne sert qu'a l'affichage.</para>
     /// </summary>
+    /// Le classement d'un joueur qui n'en a pas encore, tel que le serveur le pose.
+    private const int DefaultElo = 1000;
+
     private static readonly (string WireName, string Label, int Players)[] PvpModes =
     {
         ("ONE_V_ONE", "1v1", 2),
@@ -116,6 +123,37 @@ public class MultiplayerMenuController : MonoBehaviour
     /// <see cref="PvpModes"/> a chaque ouverture, pour qu'un libelle laisse a la main dans
     /// l'editeur ne puisse pas envoyer un mode que le serveur refusera.</para>
     /// </summary>
+    /// <summary>
+    /// Affiche le classement du joueur, et son bilan classé.
+    ///
+    /// <para>C'est le classement qui décide des appariements et de ce qu'une victoire rapporte,
+    /// donc c'est la seule mesure que le joueur a de sa progression en multijoueur. Il n'était
+    /// visible nulle part : le profil le servait déjà, personne ne le lisait.</para>
+    ///
+    /// <para>Les deux champs sont facultatifs, comme le reste du menu : une scène qui ne les
+    /// branche pas s'affiche exactement comme avant.</para>
+    /// </summary>
+    private void DisplayRanking(JToken profile)
+    {
+        if (profile == null)
+            return;
+
+        if (eloText != null)
+        {
+            // Le classement de départ vaut 1000 côté serveur ; un profil qui n'en porte pas est
+            // un profil que le serveur n'a pas encore écrit, pas un joueur à zéro.
+            int elo = profile.Value<int?>("elo") ?? DefaultElo;
+            eloText.text = $"Classement : {elo}";
+        }
+
+        if (rankedRecordText != null)
+        {
+            int wins = profile.Value<int?>("winsRanked") ?? 0;
+            int losses = profile.Value<int?>("lossesRanked") ?? 0;
+            rankedRecordText.text = $"{wins} V / {losses} D";
+        }
+    }
+
     private void BuildModeDropdown()
     {
         if (modeDropdown == null)
@@ -268,6 +306,8 @@ public class MultiplayerMenuController : MonoBehaviour
             {
                 RunManager.Instance.pvpLocalUserId = playerId;
             }
+
+            DisplayRanking(profile);
         }
         catch (Exception ex)
         {

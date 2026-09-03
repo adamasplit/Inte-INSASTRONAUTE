@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Eruption solaire
   collectionCardId: Mercure
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 2
@@ -47,7 +48,7 @@ MonoBehaviour:
     value: 2
     info: 
     description: 
-  favoredCharacter: 9
+  favoredCharacter: 10
   animationSpeed: 1
   startingCount: 0
   tags: 

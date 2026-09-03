@@ -110,6 +110,14 @@ public class CombatManager : MonoBehaviour
     // combatant never showed up would leave LocalCombatantId null, and an emptiness test
     // would rebuild on every state — Register would then throw on a known id.
     private bool combatantRegistryBuilt;
+    /// <summary>
+    /// Vrai dès qu'un état autoritatif exploitable a été appliqué à ce combat.
+    ///
+    /// <para>C'est le signal « il y a quelque chose à montrer ». Il ne redevient jamais faux
+    /// pendant un combat : une resynchronisation rejoue un état, elle ne ramène pas le combat
+    /// à l'écran vide du départ.</para>
+    /// </summary>
+    private bool authoritativeStateApplied;
 
     // L'état autoritatif courant. En PvE c'est aussi RunManager.activeCombat, parce que la
     // run le possède ; en PvP la run n'a rien à voir avec ce combat et ne doit surtout pas
@@ -839,6 +847,7 @@ public class CombatManager : MonoBehaviour
                     {
                         Debug.LogWarning($"[STS-COMBAT] Backend play-card rejected: {response.rejectionCode} {response.rejectionMessage}");
                     }
+                    ApplyRejectedCommandState(response.combat);
                     // A rejection can mean the client's cached revision drifted from the server
                     // (e.g. AI turns advanced in a previous request); resync so play/end-turn keep working.
                     needsResync = true;
@@ -1118,6 +1127,7 @@ public class CombatManager : MonoBehaviour
         authoritativeMessageQueueRunning = false;
         combatantRegistry.Clear();
         combatantRegistryBuilt = false;
+        authoritativeStateApplied = false;
         combatantPiles.Clear();
         authoritativeTimelinePendingSelfDelays.Clear();
     }
@@ -1213,6 +1223,11 @@ public class CombatManager : MonoBehaviour
                 if (!response.accepted)
                 {
                     Debug.LogWarning($"[STS-COMBAT] Backend end-turn rejected: {response.rejectionCode} {response.rejectionMessage}");
+                    // Le refus voyage avec l'état sur lequel il a été prononcé, et cet état est
+                    // la raison du refus. Le jeter pour aller le redemander laissait le client
+                    // sur sa version périmée le temps d'un aller-retour — et si le combat était
+                    // fini, sur un combat qu'il ne savait pas fini.
+                    ApplyRejectedCommandState(response.combat);
                     needsResync = true;
                 }
                 else
@@ -1287,6 +1302,10 @@ public class CombatManager : MonoBehaviour
         if (combatants == null)
             return;
 
+        // Passé les gardes ci-dessus, l'état est exploitable : c'est le moment exact où le
+        // combat cesse d'attendre le serveur.
+        authoritativeStateApplied = true;
+
         if (!combatantRegistryBuilt)
             BuildCombatantRegistry(combatToken);
 
@@ -1346,6 +1365,14 @@ public class CombatManager : MonoBehaviour
         state.turnCount = AuthoritativeCombatStateReducer.ResolveTurnCount(
             state.turnCount,
             combatToken.Value<string>("status"));
+
+        // L'état dit lui-même que le combat est fini, et c'est parfois la seule chose qui le
+        // dise. L'issue ne se lisait que sur l'événement CombatEnded : un client qui l'a manqué
+        // — connexion coupée le temps du dernier tour, état simplement rechargé, fin qui ne se
+        // voit pas sur les PV comme un nul — restait dans un combat que le serveur avait clos.
+        // Il continuait alors d'envoyer des commandes, toutes refusées COMBAT_FINISHED, et
+        // recharger la partie le ramenait exactement au même endroit.
+        RecordAnnouncedOutcomeFromState(combatToken);
 
         if (turnSystem != null && turnSystem.endTurnButton != null)
         {
@@ -1412,16 +1439,17 @@ public class CombatManager : MonoBehaviour
     /// vide et les piles aussi. C'est vrai, mais illisible, et le joueur n'a aucun moyen de
     /// savoir que ce n'est qu'une attente.</para>
     ///
-    /// <para>L'échéance de tour est ce qui départage les deux : le serveur en pose une dès que
-    /// le combat s'ouvre et en repose une à chaque commande acceptée, si bien qu'un duel en
-    /// cours en a toujours une. N'en avoir aucune, c'est n'avoir pas encore reçu d'état — ou
-    /// avoir reçu un état de bataille qui n'a pas commencé.</para>
+    /// <para><b>L'arrivée d'un état est ce qui met fin à l'attente</b>, et non la présence d'une
+    /// échéance de tour. Les deux coïncident en duel, mais pas leurs pannes : un combat sans
+    /// échéance en est un qui n'en aura jamais — c'est le cas de tout le PvE — si bien que la
+    /// moindre erreur sur le mode laissait le voile posé pour toujours. Un combat qui a reçu un
+    /// état, lui, a par définition quelque chose à montrer, quel que soit le mode.</para>
     ///
-    /// <para>Un combat terminé n'attend rien : il a son écran de résultat, et le recouvrir d'un
-    /// voile d'attente cacherait précisément ce que le joueur veut lire.</para>
+    /// <para>Un combat terminé n'attend rien non plus : il a son écran de résultat, et le
+    /// recouvrir d'un voile d'attente cacherait précisément ce que le joueur veut lire.</para>
     /// </summary>
     public bool IsWaitingForServer =>
-        Mode == CombatMode.Pvp && !combatEnded && !turnCountdown.HasDeadline;
+        Mode == CombatMode.Pvp && !combatEnded && !authoritativeStateApplied;
 
     /// <summary>
     /// « Main 3 · Pioche 12 » pour un combattant dont on n'a pas le droit de voir les
@@ -1743,6 +1771,61 @@ public class CombatManager : MonoBehaviour
     /// d'agir tout de suite : les événements qui suivent dans le même lot doivent finir de
     /// se jouer, et c'est ResolveCombatEndRoutine qui conclut, une fois les animations
     /// terminées.
+    /// <summary>
+    /// Lit l'issue sur l'état plutôt que sur l'événement qui l'annonce.
+    /// </summary>
+    /// <remarks>
+    /// Même correspondance que <see cref="RecordAnnouncedOutcome"/>, depuis l'autre source : le
+    /// vainqueur est absent du JSON quand le combat est nul, et c'est le statut qui dit alors
+    /// qu'il est fini. Ne dit jamais le contraire de ce qui a déjà été annoncé — un état encore
+    /// en cours ne rouvre pas un combat qu'un événement a fermé.
+    /// </remarks>
+    void RecordAnnouncedOutcomeFromState(JToken combatToken)
+    {
+        if (combatToken == null || announcedOutcome != TeamOutcome.None)
+            return;
+
+        string status = combatToken.Value<string>("status");
+        if (!string.Equals(status, "FINISHED", StringComparison.OrdinalIgnoreCase))
+            return;
+
+        string localTeamId = LocalTeamId();
+        if (string.IsNullOrEmpty(localTeamId))
+            return;
+
+        switch (CombatOutcomeSource.FromWinner(combatToken.Value<string>("winnerTeamId"), localTeamId))
+        {
+            case CombatOutcome.Victory: announcedOutcome = TeamOutcome.Victory; break;
+            case CombatOutcome.Defeat:  announcedOutcome = TeamOutcome.Defeat;  break;
+            case CombatOutcome.Draw:    announcedOutcome = TeamOutcome.Draw;    break;
+            default:                    announcedOutcome = TeamOutcome.None;    break;
+        }
+    }
+
+    /// <summary>
+    /// Applique l'état qu'un refus rapporte avec lui.
+    /// </summary>
+    /// <remarks>
+    /// Un refus n'a rien fait bouger, mais il a été prononcé sur un état, et c'est celui-là que
+    /// le client aurait dû avoir. Sans rejouer d'événements : rien ne s'est produit, il n'y a
+    /// qu'un état à recopier. La disposition de la main est laissée tranquille tant qu'une carte
+    /// vole encore, comme partout ailleurs.
+    /// </remarks>
+    void ApplyRejectedCommandState(JToken combat)
+    {
+        if (combat == null || combat.Type != JTokenType.Object)
+            return;
+
+        try
+        {
+            ApplyAuthoritativeCombatState(combat, true);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[STS-COMBAT] Could not apply the state a rejection carried: {ex.Message}");
+        }
+    }
+
     void RecordAnnouncedOutcome(JToken combatEvent)
     {
         string localTeamId = LocalTeamId();
@@ -4015,7 +4098,24 @@ public class CombatManager : MonoBehaviour
 
         ReactCombatBridge.Disconnect();
 
-        bool panelHasTheFloor = ui != null && ui.ShowPvpResult(outcome, opponentName);
+        // Ce que le duel a valu vient du serveur : lui seul connaît les classements d'avant, et
+        // ils ont déjà bougé. On l'attend brièvement plutôt que d'annoncer une issue sans son
+        // enjeu, mais jamais au point de retenir l'écran de résultat si le serveur ne répond pas.
+        string reward = null;
+        Task<JToken> battleTask = FetchSettledBattleAsync();
+        if (battleTask != null)
+        {
+            float deadline = Time.unscaledTime + PvpRewardFetchTimeoutSeconds;
+            while (!battleTask.IsCompleted && Time.unscaledTime < deadline)
+                yield return null;
+
+            // Pas IsCompletedSuccessfully : le reste du fichier teste l'achevement puis l'echec
+            // a la main, et un duel ne doit pas dependre d'une API de Task selon le profil .NET.
+            if (battleTask.IsCompleted && !battleTask.IsFaulted && !battleTask.IsCanceled)
+                reward = PvpRewardSummary.Describe(battleTask.Result, RunManager.Instance?.pvpLocalUserId);
+        }
+
+        bool panelHasTheFloor = ui != null && ui.ShowPvpResult(outcome, opponentName, reward);
         if (panelHasTheFloor)
             yield break;
 
@@ -4023,6 +4123,23 @@ public class CombatManager : MonoBehaviour
 
         RunManager.Instance?.EndPvpBattle();
         STSSceneLoader.Instance?.LoadScene("STS_MultiplayerMenu");
+    }
+
+    /// Combien de temps on attend le bilan du duel avant de montrer l'issue sans lui.
+    private const float PvpRewardFetchTimeoutSeconds = 3f;
+
+    /// <summary>
+    /// La bataille telle que le serveur la tient une fois réglée, d'où se lisent les gains.
+    ///
+    /// <para>Null quand il n'y a pas de duel à relire — ce qui rend l'appelant muet sur les
+    /// gains plutôt que de le faire attendre pour rien.</para>
+    /// </summary>
+    Task<JToken> FetchSettledBattleAsync()
+    {
+        string battleId = RunManager.Instance != null ? RunManager.Instance.activePvpBattleId : null;
+        return string.IsNullOrWhiteSpace(battleId)
+            ? null
+            : STSApiClient.GetPvpBattleStateAsync(battleId);
     }
 
     /// Le nom sous lequel l'adversaire s'est présenté, à défaut le nom de son personnage.

@@ -122,9 +122,9 @@ public class EventRewardManager : MonoBehaviour, IRewardFlowHost
         onComplete = null;
     }
 
-    public Task<bool> TryClaimServerRewardAsync(RewardItem rewardItem, string selectedCardId = null)
+    public Task<RewardClaim> TryClaimServerRewardAsync(RewardItem rewardItem, string selectedCardId = null)
     {
-        return Task.FromResult(true);
+        return Task.FromResult(RewardClaim.Local);
     }
 
     private void ArmContinueButtonFailSafe()

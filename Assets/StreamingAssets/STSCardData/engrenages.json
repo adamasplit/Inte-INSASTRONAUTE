@@ -10,7 +10,7 @@
   "xCost": false,
   "type": "Attaque",
   "rarity": "Uncommon",
-  "targetingMode": "Player",
+  "targetingMode": "Enemy",
   "effects": [
     {
       "type": "Damage",
@@ -71,7 +71,7 @@
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Aucun",
+  "favoredCharacter": "MECA",
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": []

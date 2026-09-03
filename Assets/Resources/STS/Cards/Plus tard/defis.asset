@@ -13,15 +13,34 @@ MonoBehaviour:
   m_Name: defis
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: defis
-  cardName: 
-  collectionCardId: 
-  collectionCard: {fileID: 0}
+  cardName: Cap ou pas cap
+  collectionCardId: "D\xE9fis"
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 0}
-  cost: 0
+  cost: 1
   xCost: 0
-  type: 0
-  rarity: 0
-  effects: []
+  type: 2
+  rarity: 3
+  effects:
+  - type: 0
+    value: 0
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: 
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 11

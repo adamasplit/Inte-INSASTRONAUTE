@@ -16,8 +16,9 @@ MonoBehaviour:
   cardName: Ravalement
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 2f7fda6d15d1897479a485fe09b36417, type: 3}
   cost: 1
   xCost: 0
   type: 1

@@ -67,27 +67,10 @@ MonoBehaviour:
     moveName: 
     effects:
     - type: 0
-      value: 4
+      value: 22
       targetSelf: 0
       targetOthers: 0
       statusType: 0
-      duration: 0
-      description: 
-      cardID: 
-      index: 0
-      conditional: 0
-      conditionType: 0
-      conditionValue: 
-      trueEffect: 0
-      cardSelectionSource: 0
-      cardFilterTags: 
-      cardSelectionEffect: 0
-      animationType: 0
-    - type: 1
-      value: 3
-      targetSelf: 1
-      targetOthers: 0
-      statusType: 1
       duration: 0
       description: 
       cardID: 

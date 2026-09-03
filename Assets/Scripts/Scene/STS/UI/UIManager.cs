@@ -1035,9 +1035,15 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public bool ShowPvpResult(TeamOutcome outcome, string opponentName)
     {
+        return ShowPvpResult(outcome, opponentName, null);
+    }
+
+    /// <param name="reward">Ce que le duel a valu, déjà mis en phrase, ou null.</param>
+    public bool ShowPvpResult(TeamOutcome outcome, string opponentName, string reward)
+    {
         if (pvpResultController != null)
         {
-            pvpResultController.Show(outcome, opponentName);
+            pvpResultController.Show(outcome, opponentName, reward);
             return true;
         }
 
@@ -1050,6 +1056,9 @@ public class UIManager : MonoBehaviour
             case TeamOutcome.Draw:    message = $"Match nul{against}."; break;
             default:                  message = "Duel terminé."; break;
         }
+
+        if (!string.IsNullOrWhiteSpace(reward))
+            message += " " + reward;
 
         Debug.Log($"[STS-PVP] {message}");
         ShowCombatNotice(message);
@@ -1106,11 +1115,25 @@ public class UIManager : MonoBehaviour
     public void DisplayWaitingForServer(bool waiting)
     {
         if (waitingForServerOverlay == null)
+        {
+            // Dit une seule fois, et seulement quand le voile aurait servi : un objet posé dans
+            // la scène mais laissé non branché ici ne s'allume ni ne s'éteint jamais, et reste
+            // donc affiché tel qu'il a été enregistré. Sans cette ligne, la panne ressemble à
+            // « le voile ne se referme pas » alors que rien ne l'a jamais touché.
+            if (waiting && !warnedAboutMissingWaitingOverlay)
+            {
+                warnedAboutMissingWaitingOverlay = true;
+                Debug.LogWarning("[STS-PVP] UIManager.waitingForServerOverlay n'est branché sur "
+                    + "rien : le voile d'attente ne sera ni affiché ni masqué par le combat.");
+            }
             return;
+        }
 
         if (waitingForServerOverlay.activeSelf != waiting)
             waitingForServerOverlay.SetActive(waiting);
     }
+
+    private bool warnedAboutMissingWaitingOverlay;
 
     Vector2 ScreenToHandLocal(Vector3 screenPos)
     {

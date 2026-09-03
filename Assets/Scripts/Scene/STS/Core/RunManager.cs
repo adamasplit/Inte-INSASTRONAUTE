@@ -40,7 +40,6 @@ public class RunManager : MonoBehaviour
     public STSApiActiveEncounterState activeEncounter;
     public JToken activeCombat;
     public JToken activeEvent;
-    public JToken serverRunInventoryPatch;
     public JToken serverAccountInventoryPatch;
     public List<JToken> serverPendingRewards = new();
     public STSApiMapPatchState serverMapPatch;
@@ -373,7 +372,6 @@ public class RunManager : MonoBehaviour
             runId = null;
             apiStatus = null;
             dataVersion = null;
-            serverRunInventoryPatch = null;
             serverAccountInventoryPatch = null;
             serverPendingRewards.Clear();
             serverMapPatch = null;
@@ -735,7 +733,6 @@ public class RunManager : MonoBehaviour
                 player.currentHP = response.player.currentHp;
                 ApplyServerRestCharges(response.player);
             }
-            serverRunInventoryPatch = response.runInventoryPatch;
             serverAccountInventoryPatch = response.accountInventoryPatch;
             serverPendingRewards = response.pendingRewards ?? new List<JToken>();
             ApplyRunInventoryPatch(response.runInventoryPatch);
@@ -775,7 +772,6 @@ public class RunManager : MonoBehaviour
             ApplyServerRestCharges(response.player);
         }
 
-        serverRunInventoryPatch = response.runInventoryPatch;
         serverAccountInventoryPatch = response.accountInventoryPatch;
         serverPendingRewards = response.pendingRewards ?? new List<JToken>();
         ApplyRunInventoryPatch(response.runInventoryPatch);

@@ -16,15 +16,16 @@ MonoBehaviour:
   cardName: Rafale de salade
   collectionCardId: MRIE
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
-  cost: 2
+  cost: 3
   xCost: 0
   type: 0
   rarity: 4
   effects:
   - type: 7
-    value: 10
+    value: 4
     targetSelf: 0
     targetOthers: 0
     statusType: 0

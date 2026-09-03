@@ -5,7 +5,7 @@ public class AIRelic:BaseRelic
     public AIRelic():base()
     {
         namesByStage[0] = "Intemporalité";
-        descriptionsByStage[0] = "Les effets appliqués durent 2 tours de plus.";
+        descriptionsByStage[0] = "Les <color=orange>effets de statut</color> appliqués durent 2 tours de plus.";
         Upgrade(0);
     }
     public override bool CanApplyStatus(StatusEffect status,Character target)

@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "D\xE9capage"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 0c335ac5eb6bcdc45b8f8ac2813197de, type: 3}
   cost: 1
@@ -24,7 +25,7 @@ MonoBehaviour:
   rarity: 1
   effects:
   - type: 19
-    value: 15
+    value: 10
     targetSelf: 0
     targetOthers: 0
     statusType: 0
@@ -45,7 +46,7 @@ MonoBehaviour:
     targetSelf: 0
     targetOthers: 0
     statusType: 0
-    duration: 0
+    duration: 50
     description: 
     cardID: 
     index: 0

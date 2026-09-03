@@ -292,16 +292,16 @@ public class RewardManager : MonoBehaviour, IRewardFlowHost
         }
     }
 
-    public async Task<bool> TryClaimServerRewardAsync(RewardItem rewardItem, string selectedCardId = null)
+    public async Task<RewardClaim> TryClaimServerRewardAsync(RewardItem rewardItem, string selectedCardId = null)
     {
         if (rewardItem == null || string.IsNullOrWhiteSpace(rewardItem.serverRewardId))
         {
-            return true;
+            return RewardClaim.Local;
         }
 
         if (RunManager.Instance == null || string.IsNullOrWhiteSpace(RunManager.Instance.runId) || RunManager.Instance.unrestrictedMode)
         {
-            return true;
+            return RewardClaim.Local;
         }
 
         try
@@ -315,20 +315,67 @@ public class RewardManager : MonoBehaviour, IRewardFlowHost
             if (response == null || !response.accepted)
             {
                 Debug.LogWarning($"[STS-RUN] Reward claim rejected for rewardId={rewardItem.serverRewardId}.");
-                return false;
+                return RewardClaim.Refused;
             }
 
-            RunManager.Instance.serverRunInventoryPatch = response.runInventory;
             RunManager.Instance.serverPendingRewards = response.pendingRewards != null
                 ? new List<JToken>(response.pendingRewards)
                 : new List<JToken>();
-            return true;
+            return RewardClaim.Granted(GrantedCard(response.runInventory, selectedCardId));
         }
         catch (Exception ex)
         {
             Debug.LogWarning($"[STS-RUN] Reward claim failed for rewardId={rewardItem.serverRewardId}: {ex.Message}");
-            return false;
+            return RewardClaim.Refused;
         }
+    }
+
+    /// <summary>
+    /// La carte que le serveur vient d'inscrire à son deck, telle qu'il l'a inscrite.
+    /// </summary>
+    /// <remarks>
+    /// <para>La réponse porte l'inventaire entier plutôt qu'un delta : la carte gagnée est
+    /// celle du <c>cardId</c> choisi dont l'identifiant d'instance manque encore au deck du
+    /// client. C'est cet identifiant qui compte — c'est par lui que le feu de camp désignera
+    /// plus tard la carte à enchanter, et le serveur ne connaît que le sien.</para>
+    ///
+    /// <para>Rien ne correspond hors ligne, ni si la récompense n'était pas une carte :
+    /// l'appelant garde alors la sienne, faute de mieux.</para>
+    /// </remarks>
+    static CardInstance GrantedCard(JToken runInventory, string selectedCardId)
+    {
+        if (runInventory == null || string.IsNullOrWhiteSpace(selectedCardId) || RunManager.Instance == null)
+            return null;
+
+        JToken deck = runInventory["deck"];
+        if (deck == null || deck.Type != JTokenType.Array)
+            return null;
+
+        HashSet<string> known = new HashSet<string>(StringComparer.Ordinal);
+        if (RunManager.Instance.deck != null)
+        {
+            foreach (CardInstance owned in RunManager.Instance.deck)
+            {
+                if (owned != null && !string.IsNullOrWhiteSpace(owned.instanceId))
+                    known.Add(owned.instanceId);
+            }
+        }
+
+        foreach (JToken entry in deck)
+        {
+            if (entry == null || entry.Type != JTokenType.Object)
+                continue;
+            if (!string.Equals(entry["cardId"]?.ToString(), selectedCardId, StringComparison.Ordinal))
+                continue;
+
+            string instanceId = entry["instanceId"]?.ToString();
+            if (string.IsNullOrWhiteSpace(instanceId) || known.Contains(instanceId))
+                continue;
+
+            return STSApiClient.ConvertCard(entry.ToObject<STSApiCardState>());
+        }
+
+        return null;
     }
 
     List<CardInstance> ParseCardChoices(JObject obj)

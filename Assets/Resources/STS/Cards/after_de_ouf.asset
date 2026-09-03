@@ -15,6 +15,9 @@ MonoBehaviour:
   id: after_de_ouf
   cardName: After de ouf
   collectionCardId: Bar'ouf
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 0}
   cost: 2
   xCost: 0
@@ -43,4 +46,4 @@ MonoBehaviour:
   favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
-  tags: 
+  tags: 0a000000

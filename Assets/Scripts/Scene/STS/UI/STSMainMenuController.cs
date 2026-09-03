@@ -48,6 +48,7 @@ public class STSMainMenuController : MonoBehaviour
     int overlayFadeVersion;
     int loadButtonRefreshVersion;
     int debugButtonRefreshVersion;
+    int pvpButtonRefreshVersion;
 
     void Awake()
     {
@@ -63,9 +64,10 @@ public class STSMainMenuController : MonoBehaviour
         // Caché avant même la première image : la réponse du serveur arrive une poignée de
         // trames plus tard, et un bouton de débogage qui clignote sur l'écran d'un joueur
         // ordinaire est déjà un bouton de trop.
-        if (debugButton != null)
+        Button debug = ResolveDebugButton();
+        if (debug != null)
         {
-            debugButton.gameObject.SetActive(false);
+            debug.gameObject.SetActive(false);
         }
     }
 
@@ -153,6 +155,7 @@ public class STSMainMenuController : MonoBehaviour
         WireTutorialPromptButtons();
         RefreshLoadButtonState();
         RefreshDebugButtonState();
+        RefreshPvpButtonState();
         HideTutorialPrompt();
         EnsureTutorialButton();
         introSequence?.Play();
@@ -164,10 +167,39 @@ public class STSMainMenuController : MonoBehaviour
         WireTutorialPromptButtons();
         RefreshLoadButtonState();
         RefreshDebugButtonState();
+        RefreshPvpButtonState();
         HideTutorialPrompt();
         EnsureTutorialButton();
         EnsureButtonGoldGlow(loadButton);
         EnsureButtonGoldGlow(pvpButton);
+    }
+
+    /// <summary>
+    /// Retire le bouton du multijoueur quand le serveur annonce le mode fermé.
+    ///
+    /// <para>À l'inverse du bouton de débogage, celui-ci n'est pas caché en attendant la
+    /// réponse : c'est une entrée ordinaire du menu, la réponse habituelle est « ouvert », et
+    /// le faire disparaître puis réapparaître à chaque ouverture du menu se verrait. On ne le
+    /// retire que sur un refus explicite — ce que <see cref="STSApiClient.IsPvpAvailableAsync"/>
+    /// est seul à pouvoir dire, la disponibilité étant la seule route PvP qui réponde encore
+    /// quand le mode est éteint.</para>
+    /// </summary>
+    public async void RefreshPvpButtonState()
+    {
+        if (pvpButton == null)
+        {
+            return;
+        }
+
+        int refreshVersion = ++pvpButtonRefreshVersion;
+        bool available = await STSApiClient.IsPvpAvailableAsync();
+
+        if (refreshVersion != pvpButtonRefreshVersion || pvpButton == null)
+        {
+            return;
+        }
+
+        pvpButton.gameObject.SetActive(available);
     }
 
     /// <summary>
@@ -185,26 +217,89 @@ public class STSMainMenuController : MonoBehaviour
     /// </summary>
     public async void RefreshDebugButtonState()
     {
-        if (debugButton == null)
+        Button debug = ResolveDebugButton();
+        if (debug == null)
         {
             return;
         }
 
         int refreshVersion = ++debugButtonRefreshVersion;
-        debugButton.gameObject.SetActive(false);
+        debug.gameObject.SetActive(false);
 
         bool available = await STSApiClient.IsDebugCombatAvailableAsync();
 
-        if (refreshVersion != debugButtonRefreshVersion || debugButton == null)
+        if (refreshVersion != debugButtonRefreshVersion || debug == null)
         {
             return;
         }
 
-        debugButton.gameObject.SetActive(available);
+        debug.gameObject.SetActive(available);
         if (available)
         {
-            EnsureButtonGoldGlow(debugButton);
+            EnsureButtonGoldGlow(debug);
         }
+    }
+
+    /// <summary>
+    /// Le bouton qui ouvre le menu de débogage, qu'on l'ait désigné dans la scène ou non.
+    ///
+    /// <para>À défaut de référence, on le retrouve par ce qu'il fait : le bouton est relié au
+    /// panneau par un appel persistant posé dans l'éditeur, et cet appel se lit. C'est un lien
+    /// plus sûr qu'un nom d'objet, et surtout plus sûr qu'un champ à remplir à la main — un
+    /// champ oublié laissait le bouton visible pour tout le monde, ce qui est exactement le
+    /// contraire de ce que cet écran doit faire quand il ne sait pas.</para>
+    ///
+    /// <para>Le résultat est gardé dans <see cref="debugButton"/> : la recherche parcourt tous
+    /// les boutons de la scène, et cet écran est réactivé à chaque retour à l'accueil.</para>
+    /// </summary>
+    Button ResolveDebugButton()
+    {
+        if (debugButton != null)
+        {
+            return debugButton;
+        }
+
+        // Inactif au repos : c'est le bouton qui l'allume, donc il faut le chercher éteint.
+        STSDebugCombatPanel panel = FindObjectOfType<STSDebugCombatPanel>(true);
+        if (panel == null)
+        {
+            return null;
+        }
+
+        foreach (Button candidate in FindObjectsOfType<Button>(true))
+        {
+            if (candidate == null || !OpensPanel(candidate, panel.gameObject))
+            {
+                continue;
+            }
+
+            debugButton = candidate;
+            return debugButton;
+        }
+
+        return null;
+    }
+
+    /// <summary>Ce bouton porte-t-il, dans la scène, un appel qui vise cet objet ?</summary>
+    static bool OpensPanel(Button button, GameObject panel)
+    {
+        int calls = button.onClick.GetPersistentEventCount();
+        for (int i = 0; i < calls; i++)
+        {
+            UnityEngine.Object target = button.onClick.GetPersistentTarget(i);
+            if (target == panel)
+            {
+                return true;
+            }
+
+            // Une cible peut être posée sur un composant de l'objet plutôt que sur l'objet.
+            if (target is Component component && component.gameObject == panel)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public async void RefreshLoadButtonState()
@@ -663,9 +758,19 @@ public class STSMainMenuController : MonoBehaviour
         return PlayerPrefs.GetInt(NewGameTutorialPromptKey, 0) == 1;
     }
 
+    /// <summary>
+    /// L'invite a déjà été posée à ce joueur.
+    ///
+    /// <para>Le second terme rattrape ceux qui ont accepté le tutoriel avant que cette clé-ci
+    /// existe : ils ne repassent plus par l'invite — <see cref="OnClick"/> la saute une fois
+    /// qu'elle a été acceptée — donc rien ne pouvait plus la poser, et le bouton leur restait
+    /// caché pour toujours. Un « oui » enregistré ne peut venir que d'une invite affichée,
+    /// c'est donc bien la même chose qu'on lit.</para>
+    /// </summary>
     bool HasBeenOfferedTutorial()
     {
-        return PlayerPrefs.GetInt(TutorialPromptOfferedKey, 0) == 1;
+        return PlayerPrefs.GetInt(TutorialPromptOfferedKey, 0) == 1
+            || HasSeenNewGameTutorialPrompt();
     }
 
     /// <summary>

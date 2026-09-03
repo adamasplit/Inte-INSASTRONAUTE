@@ -79,6 +79,8 @@ public class CardRewardEntryView : RewardEntryView
 
     private IEnumerator SelectCardRoutine(CardInstance card, RewardCardController sourceController)
     {
+        RewardClaim claim = RewardClaim.Local;
+
         if (manager != null)
         {
             string selectedCardId = card != null && card.data != null ? card.data.id : null;
@@ -88,7 +90,7 @@ public class CardRewardEntryView : RewardEntryView
                 yield return null;
             }
 
-            if (claimTask.IsFaulted || claimTask.IsCanceled || !claimTask.Result)
+            if (claimTask.IsFaulted || claimTask.IsCanceled || !claimTask.Result.Accepted)
             {
                 selectionLocked = false;
                 selectedController = null;
@@ -99,9 +101,14 @@ public class CardRewardEntryView : RewardEntryView
                 }
                 yield break;
             }
+
+            claim = claimTask.Result;
         }
 
-        RunManager.Instance.deck.Add(card);
+        // Le deck du serveur fait foi : on prend la carte qu'il a créée, avec son identifiant
+        // d'instance, plutôt que celle de l'affichage — sinon lui et nous ne parlerions plus de
+        // la même carte, et le feu de camp refuserait de l'enchanter.
+        RunManager.Instance.deck.Add(claim.GrantedCard ?? card);
 
         reward.Claim();
 

@@ -1,0 +1,20 @@
+{
+  "id": "chasse_au_tresor",
+  "cardName": "",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "pveOnly": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 0,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Common",
+  "targetingMode": "Player",
+  "effects": [],
+  "modifiers": [],
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

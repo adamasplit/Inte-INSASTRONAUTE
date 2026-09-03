@@ -33,6 +33,23 @@ public class MultiplayerDeckCardItem : MonoBehaviour, IPointerDownHandler, IPoin
             includeToggle.onValueChanged.RemoveAllListeners();
             includeToggle.onValueChanged.AddListener(HandleToggleChanged);
         }
+
+        WireLongPressRelays();
+    }
+
+    private void WireLongPressRelays()
+    {
+        foreach (Graphic graphic in GetComponentsInChildren<Graphic>(true))
+        {
+            if (!graphic.raycastTarget)
+                continue;
+
+            MultiplayerDeckCardLongPressRelay relay = graphic.GetComponent<MultiplayerDeckCardLongPressRelay>();
+            if (relay == null)
+                relay = graphic.gameObject.AddComponent<MultiplayerDeckCardLongPressRelay>();
+
+            relay.SetOwner(this);
+        }
     }
 
     public void Bind(
@@ -148,5 +165,30 @@ public class MultiplayerDeckCardItem : MonoBehaviour, IPointerDownHandler, IPoin
         }
 
         onToggleChanged?.Invoke(cardKey, value);
+    }
+}
+
+public class MultiplayerDeckCardLongPressRelay : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
+{
+    private MultiplayerDeckCardItem owner;
+
+    public void SetOwner(MultiplayerDeckCardItem item)
+    {
+        owner = item;
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        owner?.OnPointerDown(eventData);
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        owner?.OnPointerUp(eventData);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        owner?.OnPointerExit(eventData);
     }
 }

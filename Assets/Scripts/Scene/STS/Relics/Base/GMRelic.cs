@@ -3,7 +3,7 @@ public class GMRelic:BaseRelic
     public GMRelic():base()
     {
         namesByStage[0] = "Oeil impitoyable";
-        descriptionsByStage[0] = "Lorsque vous brisez l'Armure d'un ennemi, son tour est retardé.";
+        descriptionsByStage[0] = "Lorsque vous brisez l'Armure d'un ennemi, son tour est <color=orange>retardé</color>.";
         namesByStage[1] = "Oeil destructeur";
         descriptionsByStage[1] = "Lorsque vous brisez l'Armure d'un ennemi, il perd 10 PV.";
         namesByStage[2] = "Oeil impitoyable+";

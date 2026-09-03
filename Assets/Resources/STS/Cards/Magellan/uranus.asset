@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: _
   collectionCardId: Uranus
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 0
@@ -42,7 +43,7 @@ MonoBehaviour:
     animationType: 0
   targetingMode: 3
   modifiers: []
-  favoredCharacter: 9
+  favoredCharacter: 10
   animationSpeed: 1
   startingCount: 0
   tags: 
