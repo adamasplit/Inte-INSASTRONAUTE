@@ -2486,7 +2486,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &256201634
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9984,12 +9984,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSMainMenuController
   gameButtonText: {fileID: 2116620109}
   loadButton: {fileID: 380415878}
-  pvpButton: {fileID: 256201636}
+  pvpButton: {fileID: 0}
   resumeSceneName: STS_Map
   bootSceneName: STS_Boot
   pvpMenuSceneName: STS_MultiplayerMenu
   tutorialButton: {fileID: 193237445}
   tutorialButtonLabel: Revoir le tutoriel
+  debugButton: {fileID: 0}
   tutorialPromptPanel: {fileID: 470881012}
   acceptTutorialButton: {fileID: 748033901}
   declineTutorialButton: {fileID: 2035889492}
