@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Aegis_Drone
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  id: Aegis Drone
-  enemyName: Aegis Drone
+  id: Aegis_Drone
+  enemyName: Aegis_Drone
   displayName: Robogarde
   maxHP: 22
   pattern: []
@@ -133,7 +133,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
-      animationType: 0
+      animationType: 2
     nextMoveIndices: 00000000
     weight: 1
   rewardCards: []

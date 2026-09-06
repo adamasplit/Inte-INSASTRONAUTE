@@ -17,11 +17,11 @@ public enum TeamOutcome
 
 public class CombatManager : MonoBehaviour
 {
-    // Editor-only cheat: Press Space to win battle by setting all enemy HP to zero
-#if UNITY_EDITOR
-    // Requires Input System package
     void Update()
     {
+        UpdateEndTurnButtonInteractable();
+
+#if UNITY_EDITOR
         #if ENABLE_INPUT_SYSTEM
         if (!combatEnded && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
@@ -54,8 +54,8 @@ public class CombatManager : MonoBehaviour
             TryEndCombatIfNeeded();
         }
         #endif
-    }
 #endif
+    }
 
     // Tracks running and queued card-play coroutines so turn flow can wait reliably.
     private int activeCardPlays = 0;
@@ -135,21 +135,77 @@ public class CombatManager : MonoBehaviour
 
     // Both known transports (STOMP + REST) time out around 5s; anything still "in flight"
     // past that is a stuck flag, not a real pending request, and must not softlock input forever.
-    bool AuthoritativeCommandBusy
+    public bool AuthoritativeCommandBusy
     {
         get
         {
-            if (!authoritativeCommandInFlight)
-                return false;
-
-            if (Time.unscaledTime - authoritativeCommandInFlightSince > AuthoritativeCommandWatchdogSeconds)
+            if (authoritativeCommandInFlight)
             {
-                Debug.LogWarning("[STS-COMBAT] Authoritative command watchdog fired: clearing a stuck in-flight flag.");
-                authoritativeCommandInFlight = false;
-                return false;
+                if (Time.unscaledTime - authoritativeCommandInFlightSince > AuthoritativeCommandWatchdogSeconds)
+                {
+                    Debug.LogWarning("[STS-COMBAT] Authoritative command watchdog fired: clearing a stuck in-flight flag.");
+                    authoritativeCommandInFlight = false;
+                }
+                else
+                {
+                    return true;
+                }
             }
 
-            return true;
+            if (authoritativeMessageQueueRunning || authoritativeMessageQueue.Count > 0)
+                return true;
+
+            return false;
+        }
+    }
+
+    public bool IsLocalPlayerTurn()
+    {
+        if (combatEnded)
+            return false;
+
+        if (UsesAuthoritativeCombat)
+        {
+            if (!authoritativeStateApplied || authoritativeCombatState == null)
+                return false;
+
+            string activeCombatantId = authoritativeCombatState.Value<string>("activeCombatantId");
+            if (string.IsNullOrWhiteSpace(activeCombatantId))
+                return false;
+
+            Character activeCombatant = ResolveCombatant(activeCombatantId);
+            return combatantRegistry.LocalCombatantId != null
+                ? combatantRegistry.IsLocalCombatant(activeCombatantId)
+                : activeCombatant != null && activeCombatant.isPlayer;
+        }
+
+        return allowTurn
+            && turnSystem != null
+            && turnSystem.CurrentCharacter != null
+            && turnSystem.CurrentCharacter.isPlayer;
+    }
+
+    public void UpdateEndTurnButtonInteractable()
+    {
+        if (turnSystem == null || turnSystem.endTurnButton == null)
+            return;
+
+        if (combatEnded)
+        {
+            turnSystem.endTurnButton.interactable = false;
+            return;
+        }
+
+        if (UsesAuthoritativeCombat)
+        {
+            turnSystem.endTurnButton.interactable = IsLocalPlayerTurn() && !AuthoritativeCommandBusy && !CardPlaysRunning;
+        }
+        else
+        {
+            turnSystem.endTurnButton.interactable = allowTurn
+                && turnSystem.CurrentCharacter != null
+                && turnSystem.CurrentCharacter.isPlayer
+                && !CardPlaysRunning;
         }
     }
     private readonly Queue<JObject> authoritativeMessageQueue = new();
@@ -698,6 +754,12 @@ public class CombatManager : MonoBehaviour
                 return;
             }
 
+            if (!IsLocalPlayerTurn())
+            {
+                Debug.LogWarning($"[STS-COMBAT] PlayCard blocked: not local player turn card={card?.displayName ?? "<null>"}");
+                return;
+            }
+
             if (AuthoritativeCommandBusy)
             {
                 Debug.LogWarning($"[STS-COMBAT] PlayCard blocked: authoritative command already in flight card={card?.displayName ?? "<null>"}");
@@ -804,8 +866,12 @@ public class CombatManager : MonoBehaviour
         finally
         {
             authoritativeCommandInFlight = false;
-            activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
         }
+
+        while (authoritativeMessageQueueRunning || authoritativeMessageQueue.Count > 0)
+            yield return null;
+
+        activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
 
         // A lost/unacknowledged command leaves the client's view of whose turn it is stale;
         // re-fetch the authoritative state so the UI does not freeze forever.
@@ -862,8 +928,12 @@ public class CombatManager : MonoBehaviour
         finally
         {
             authoritativeCommandInFlight = false;
-            activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
         }
+
+        while (authoritativeMessageQueueRunning || authoritativeMessageQueue.Count > 0)
+            yield return null;
+
+        activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
 
         if (needsResync)
             yield return RefreshAuthoritativeCombatState();
@@ -1143,6 +1213,12 @@ public class CombatManager : MonoBehaviour
             return;
         }
 
+        if (!IsLocalPlayerTurn())
+        {
+            Debug.LogWarning("[STS-COMBAT] EndTurn blocked: not local player turn.");
+            return;
+        }
+
         if (AuthoritativeCommandBusy)
         {
             Debug.LogWarning("[STS-COMBAT] EndTurn blocked: authoritative command already in flight.");
@@ -1191,8 +1267,12 @@ public class CombatManager : MonoBehaviour
         finally
         {
             authoritativeCommandInFlight = false;
-            activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
         }
+
+        while (authoritativeMessageQueueRunning || authoritativeMessageQueue.Count > 0)
+            yield return null;
+
+        activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
 
         if (needsResyncWebGL)
             yield return RefreshAuthoritativeCombatState();
@@ -1240,8 +1320,12 @@ public class CombatManager : MonoBehaviour
         finally
         {
             authoritativeCommandInFlight = false;
-            activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
         }
+
+        while (authoritativeMessageQueueRunning || authoritativeMessageQueue.Count > 0)
+            yield return null;
+
+        activeCardPlays = Mathf.Max(0, activeCardPlays - 1);
 
         if (needsResync)
             yield return RefreshAuthoritativeCombatState();
@@ -2143,7 +2227,7 @@ public class CombatManager : MonoBehaviour
         }
 
         ui.DrawCardAnimated(card);
-        yield return new WaitForSeconds(0.12f);
+        yield return new WaitForSeconds(0.04f);
     }
 
     void ReplayCardMergedEvent(JToken combatEvent)
@@ -2265,7 +2349,7 @@ public class CombatManager : MonoBehaviour
             {
                 ui.AddCardAnimated(card);
             }
-            yield return new WaitForSeconds(0.12f);
+            yield return new WaitForSeconds(0.04f);
             yield break;
         }
 
@@ -2651,8 +2735,15 @@ public class CombatManager : MonoBehaviour
             if (!TryResolveStatusType(statusToken, out StatusType statusType))
                 continue;
 
+            // Une vue par statut envoyé, jamais deux fois la même. Certains statuts se portent
+            // en plusieurs exemplaires identiques — un Étourdissement retardé garde son propre
+            // décompte, et le serveur en tient donc plusieurs côte à côte — mais tous se
+            // ressemblent trait pour trait : même type, même carte, même index. Sans écarter
+            // ceux qu'une entrée précédente a déjà pris, la seconde retrouvait la première et
+            // l'écrasait, si bien que le client n'en montrait jamais qu'un seul.
             StatusEffect status = target.statusEffects.FirstOrDefault(candidate =>
                 candidate != null
+                && !retained.Contains(candidate)
                 && candidate.statusType == statusType
                 && candidate.index == stateValue.Index
                 && string.Equals(candidate.cardID ?? string.Empty, stateValue.CardId, StringComparison.OrdinalIgnoreCase));

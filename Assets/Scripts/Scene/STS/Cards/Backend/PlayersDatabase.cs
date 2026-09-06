@@ -56,9 +56,19 @@ public static class PlayersDatabase
         List<string> files = await StreamingAssetsLoader.ListJsonFilesAsync("Players");
         Debug.Log($"PlayersDatabase found {files.Count} player JSON files in StreamingAssets.");
 
+        // Toutes les lectures partent ensemble : sur WebGL chacune est une requête HTTP, et les
+        // enchaîner une à une multipliait la durée du repli par le nombre de fichiers.
+        List<Task<string>> reads = new List<Task<string>>(files.Count);
         foreach (string file in files)
         {
-            string json = await StreamingAssetsLoader.ReadAllTextAsync(file);
+            reads.Add(StreamingAssetsLoader.ReadAllTextAsync(file));
+        }
+        string[] fileContents = await Task.WhenAll(reads);
+
+        for (int i = 0; i < files.Count; i++)
+        {
+            string file = files[i];
+            string json = fileContents[i];
             if (string.IsNullOrEmpty(json))
             {
                 Debug.LogWarning($"PlayersDatabase could not read '{file}'.");

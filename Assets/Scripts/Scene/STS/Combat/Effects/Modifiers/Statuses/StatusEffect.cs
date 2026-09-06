@@ -131,6 +131,13 @@ public abstract class StatusEffect : StatModifier
         return true;
     }
     public virtual string Desc(bool isPlayer){return $"\n{Value} (Description inconnue)";}
+    /// <summary>
+    /// Texte utilisé dans la description d'une carte et dans les infobulles de carte.
+    ///
+    /// <para>Renvoie <see cref="Desc"/> par défaut ; à redéfinir quand le texte affiché sur une
+    /// carte doit différer de l'infobulle du statut lui-même.</para>
+    /// </summary>
+    public virtual string CardDesc(bool isPlayer){return Desc(isPlayer);}
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {
         return false;
@@ -227,6 +234,12 @@ public abstract class StatusEffect : StatModifier
             StatusType.Absorption=>new AbsorptionStatus(),
             StatusType.TimeCompression=>new TimeCompressionStatus(duration),
             StatusType.Rage=>new RageStatus(value),
+            StatusType.Momentum=>new MomentumStatus(value),
+            StatusType.Charge=>new ChargeStatus(value),
+            StatusType.Exposure=>new ExposureStatus(value, duration),
+            StatusType.Fortify=>new FortifyStatus(),
+            StatusType.Instability=>new InstabilityStatus(value),
+            StatusType.Precision=>new PrecisionStatus(),
             _ => null
         };
         if (stat == null)

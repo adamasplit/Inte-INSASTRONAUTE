@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -55,6 +56,36 @@ public class STSSceneLoader : MonoBehaviour
     {
         backgroundProgress = Mathf.Max(backgroundProgress, Mathf.Clamp01(progress));
         ApplyProgressToScreen();
+    }
+
+    /// <summary>
+    /// Charge la base de cartes en faisant avancer la barre entre <paramref name="from"/> et
+    /// <paramref name="to"/> au fil des illustrations téléchargées, au lieu de rester figée sur
+    /// <paramref name="from"/> pendant tout le chargement. Quand la base est déjà en mémoire,
+    /// aucun événement n'est émis et la barre saute directement à <paramref name="to"/>.
+    /// </summary>
+    public static async Task LoadCardDatabaseWithProgressAsync(float from, float to)
+    {
+        // L'attente du catalogue est indivisible : on la compte comme la première part de
+        // l'intervalle, puis chaque illustration reçue fait avancer le reste.
+        const float catalogShare = 0.15f;
+
+        void OnSpriteProgress(float progress)
+        {
+            Instance?.SetBackgroundProgress(Mathf.Lerp(from, to, catalogShare + (1f - catalogShare) * progress));
+        }
+
+        STSCardDatabase.CollectionCardSpriteProgress += OnSpriteProgress;
+        try
+        {
+            await STSCardDatabase.LoadAsync();
+        }
+        finally
+        {
+            STSCardDatabase.CollectionCardSpriteProgress -= OnSpriteProgress;
+        }
+
+        Instance?.SetBackgroundProgress(to);
     }
 
     public void LoadScene(string sceneName)

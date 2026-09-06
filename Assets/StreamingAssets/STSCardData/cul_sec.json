@@ -1,7 +1,7 @@
 {
   "id": "cul_sec",
   "cardName": "Cul sec",
-  "collectionCardId": "Khallaghan",
+  "collectionCardId": "O'Kallaghan's",
   "multiplayerExclusive": false,
   "pveOnly": false,
   "characterLevel": 0,
@@ -34,7 +34,7 @@
   ],
   "modifiers": [],
   "favoredCharacter": "Aucun",
-  "animationSpeed": 1.0,
+  "animationSpeed": 1,
   "startingCount": 0,
   "tags": [
     "Exhaust"

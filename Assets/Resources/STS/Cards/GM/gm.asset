@@ -24,29 +24,29 @@ MonoBehaviour:
   type: 2
   rarity: 4
   effects:
-  - type: 12
-    value: 2
-    targetSelf: 1
+  - type: 3
+    value: 1
+    targetSelf: 0
     targetOthers: 0
     statusType: 0
-    duration: 0
+    duration: 1
     description: 
     cardID: 
     index: 0
     conditional: 1
-    conditionType: 20
+    conditionType: 18
     conditionValue: 1
     trueEffect: 0
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  - type: 1
-    value: 10
-    targetSelf: 1
+  - type: 3
+    value: 1
+    targetSelf: 0
     targetOthers: 0
-    statusType: 0
-    duration: 0
+    statusType: 1
+    duration: 1
     description: 
     cardID: 
     index: 0
@@ -58,51 +58,51 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  - type: 0
-    value: 10
+  - type: 3
+    value: 1
     targetSelf: 0
     targetOthers: 0
-    statusType: 0
-    duration: 0
+    statusType: 2
+    duration: 1
     description: 
     cardID: 
     index: 0
     conditional: 1
-    conditionType: 19
+    conditionType: 18
     conditionValue: 3
     trueEffect: 0
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-    animationType: 5
-  - type: 6
-    value: 50
-    targetSelf: 0
+    animationType: 0
+  - type: 3
+    value: 1
+    targetSelf: 1
     targetOthers: 0
-    statusType: 0
-    duration: 0
+    statusType: 3
+    duration: 3
     description: 
     cardID: 
     index: 0
     conditional: 1
-    conditionType: 19
+    conditionType: 18
     conditionValue: 4
     trueEffect: 0
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  - type: 8
-    value: 3
-    targetSelf: 1
+  - type: 3
+    value: 1
+    targetSelf: 0
     targetOthers: 0
-    statusType: 0
-    duration: 0
+    statusType: 4
+    duration: 1
     description: 
     cardID: 
     index: 0
     conditional: 1
-    conditionType: 20
+    conditionType: 18
     conditionValue: 5
     trueEffect: 0
     cardSelectionSource: 0
@@ -110,27 +110,27 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   - type: 3
-    value: 3
+    value: 1
     targetSelf: 0
     targetOthers: 0
-    statusType: 47
-    duration: 3
+    statusType: 5
+    duration: 2
     description: 
     cardID: 
     index: 0
     conditional: 1
-    conditionType: 21
+    conditionType: 18
     conditionValue: 6
     trueEffect: 0
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  - type: 5
-    value: 50
+  - type: 3
+    value: 5
     targetSelf: 1
     targetOthers: 0
-    statusType: 47
+    statusType: 6
     duration: 3
     description: 
     cardID: 
@@ -143,96 +143,351 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  - type: 2
-    value: 5
-    targetSelf: 1
+  - type: 3
+    value: 1
+    targetSelf: 0
     targetOthers: 0
-    statusType: 47
-    duration: 3
+    statusType: 8
+    duration: 1
     description: 
     cardID: 
     index: 0
     conditional: 1
-    conditionType: 20
+    conditionType: 18
     conditionValue: 8
     trueEffect: 0
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  - type: 4
+  - type: 3
+    value: 1
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 9
+    duration: 1
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 19
+    conditionValue: 1
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 1
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 13
+    duration: 1
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 19
+    conditionValue: 2
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: -1
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 14
+    duration: 1
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 19
+    conditionValue: 3
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
     value: 5
     targetSelf: 0
     targetOthers: 0
-    statusType: 47
+    statusType: 19
+    duration: 1
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 19
+    conditionValue: 4
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 5
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 20
+    duration: 2
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 19
+    conditionValue: 5
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 25
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 22
+    duration: 1
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 19
+    conditionValue: 6
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 4
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 25
     duration: 3
     description: 
     cardID: 
     index: 0
     conditional: 1
     conditionType: 19
-    conditionValue: 12
+    conditionValue: 7
     trueEffect: 0
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  - type: 12
+  - type: 3
+    value: 1
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 26
+    duration: 2
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 19
+    conditionValue: 8
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 1
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 16
+    duration: 1
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 19
+    conditionValue: 40
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
     value: 2
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 29
+    duration: 4
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 21
+    conditionValue: 1
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 2
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 37
+    duration: 1
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 21
+    conditionValue: 2
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 2
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 36
+    duration: 1
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 21
+    conditionValue: 3
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 1
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 44
+    duration: 1
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 21
+    conditionValue: 4
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 1
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 47
+    duration: 1
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 21
+    conditionValue: 5
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 10
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 35
+    duration: 4
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 19
+    conditionValue: 2
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 10
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 42
+    duration: 4
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 19
+    conditionValue: 3
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 1
     targetSelf: 1
     targetOthers: 0
-    statusType: 47
-    duration: 3
+    statusType: 15
+    duration: 1
     description: 
     cardID: 
     index: 0
     conditional: 1
-    conditionType: 18
-    conditionValue: 11
+    conditionType: 20
+    conditionValue: 3
     trueEffect: 0
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  - type: 11
-    value: 5
-    targetSelf: 0
-    targetOthers: 0
-    statusType: 47
-    duration: 3
-    description: 
-    cardID: 
-    index: 0
-    conditional: 1
-    conditionType: 19
-    conditionValue: 1
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 0
-    animationType: 0
-  - type: 34
+  - type: 3
     value: 1
-    targetSelf: 0
+    targetSelf: 1
     targetOthers: 0
-    statusType: 47
-    duration: 3
+    statusType: 18
+    duration: 1
     description: 
     cardID: 
     index: 0
     conditional: 1
-    conditionType: 18
-    conditionValue: 1
+    conditionType: 20
+    conditionValue: 4
     trueEffect: 0
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  - type: 34
+  - type: 3
     value: 1
-    targetSelf: 0
+    targetSelf: 1
     targetOthers: 0
-    statusType: 47
+    statusType: 31
+    duration: 3
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 20
+    conditionValue: 5
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 1
+    targetSelf: 1
+    targetOthers: 0
+    statusType: 32
     duration: 3
     description: 
     cardID: 
@@ -240,6 +495,23 @@ MonoBehaviour:
     conditional: 1
     conditionType: 20
     conditionValue: 6
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 3
+    value: 3
+    targetSelf: 1
+    targetOthers: 0
+    statusType: 42
+    duration: 3
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 20
+    conditionValue: 7
     trueEffect: 0
     cardSelectionSource: 0
     cardFilterTags: 

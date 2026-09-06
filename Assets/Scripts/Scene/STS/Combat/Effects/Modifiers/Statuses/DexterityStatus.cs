@@ -51,4 +51,19 @@ public class DexterityStatus : StatusEffect
             return $"Aucun effet.";
         }
     }
+    public override string CardDesc(bool isPlayer)
+    {
+        if (Value > 0)
+        {
+            return $"Augmente l'Armure obtenue.";
+        }
+        else if (Value < 0)
+        {
+            return $"Réduit l'Armure obtenue.";
+        }
+        else
+        {
+            return $"Aucun effet.";
+        }
+    }
 }

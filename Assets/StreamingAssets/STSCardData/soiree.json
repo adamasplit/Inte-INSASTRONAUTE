@@ -35,7 +35,7 @@
     },
     {
       "type": "GainEnergy",
-      "value": 5,
+      "value": 2,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
@@ -57,7 +57,7 @@
   ],
   "modifiers": [],
   "favoredCharacter": "Aucun",
-  "animationSpeed": 1.0,
+  "animationSpeed": 1,
   "startingCount": 0,
   "tags": [
     "Exhaust"

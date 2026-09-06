@@ -6,7 +6,7 @@
   "pveOnly": false,
   "characterLevel": 0,
   "iconId": "grid",
-  "cost": 1,
+  "cost": 3,
   "xCost": false,
   "type": "Compétence",
   "rarity": "Common",
@@ -18,7 +18,7 @@
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
-      "duration": 0,
+      "duration": 1,
       "description": "",
       "cardID": "",
       "conditional": false,
@@ -57,7 +57,7 @@
   ],
   "modifiers": [],
   "favoredCharacter": "AI",
-  "animationSpeed": 1.0,
+  "animationSpeed": 1,
   "startingCount": 0,
   "tags": []
 }

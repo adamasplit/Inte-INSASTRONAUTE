@@ -318,6 +318,12 @@ public class RewardManager : MonoBehaviour, IRewardFlowHost
                 return RewardClaim.Refused;
             }
 
+            if (response.player != null && RunManager.Instance.player != null)
+            {
+                RunManager.Instance.player.maxHP = response.player.maxHp;
+                RunManager.Instance.player.currentHP = response.player.currentHp;
+            }
+
             RunManager.Instance.serverPendingRewards = response.pendingRewards != null
                 ? new List<JToken>(response.pendingRewards)
                 : new List<JToken>();

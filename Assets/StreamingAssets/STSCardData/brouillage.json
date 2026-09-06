@@ -13,8 +13,8 @@
   "targetingMode": "Player",
   "effects": [],
   "modifiers": [],
-  "favoredCharacter": "PERF",
-  "animationSpeed": 1.0,
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 1,
   "startingCount": 0,
   "tags": [
     "Created",

@@ -151,10 +151,10 @@ public class DeckManager
         if (ShouldBypassLocalDeckMutations())
             return;
 
+        RemoveTemporaryModifiers();
         for (int i = hand.Count - 1; i >= 0; i--)
         {
             CardInstance card = hand[i];
-            card.RemoveTemporaryModifiers();
             if (card.HasEnchantment("Mécanique")||card.HasTag(CardTag.Automatic))
             {
                 combatManager.PlayCard(combatManager.player, card, new List<Character> { combatManager.enemies[UnityEngine.Random.Range(0, combatManager.enemies.Count)] },true);
@@ -169,6 +169,18 @@ public class DeckManager
 
             OnCardDiscarded?.Invoke(card);
         }
+    }
+
+    void RemoveTemporaryModifiers()
+    {
+        foreach (CardInstance card in drawPile)
+            card.RemoveTemporaryModifiers();
+        foreach (CardInstance card in hand)
+            card.RemoveTemporaryModifiers();
+        foreach (CardInstance card in discardPile)
+            card.RemoveTemporaryModifiers();
+        foreach (CardInstance card in exhaustPile)
+            card.RemoveTemporaryModifiers();
     }
     public void AddCardToHand(string cardID)
     {

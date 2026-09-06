@@ -17,8 +17,7 @@ public class GameManager : MonoBehaviour
         try
         {
             STSSceneLoader.Instance?.SetBackgroundProgress(0.12f);
-            await STSCardDatabase.LoadAsync();
-            STSSceneLoader.Instance?.SetBackgroundProgress(0.40f);
+            await STSSceneLoader.LoadCardDatabaseWithProgressAsync(0.12f, 0.40f);
             await EnemyDataDatabase.LoadAsync();
             STSSceneLoader.Instance?.SetBackgroundProgress(0.62f);
             await EnemyPoolDatabase.LoadAsync();

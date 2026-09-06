@@ -18,7 +18,7 @@
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Undead",
-      "duration": 5,
+      "duration": 99,
       "description": "",
       "cardID": "",
       "conditional": false,
@@ -34,7 +34,7 @@
   ],
   "modifiers": [],
   "favoredCharacter": "Aucun",
-  "animationSpeed": 1.0,
+  "animationSpeed": 1,
   "startingCount": 0,
   "tags": [
     "Exhaust"

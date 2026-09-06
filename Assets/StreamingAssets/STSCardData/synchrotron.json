@@ -53,7 +53,7 @@
     {
       "type": "Draw",
       "value": 3,
-      "targetSelf": false,
+      "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
@@ -72,7 +72,7 @@
   ],
   "modifiers": [],
   "favoredCharacter": "EP",
-  "animationSpeed": 1.0,
+  "animationSpeed": 1,
   "startingCount": 0,
   "tags": []
 }

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Donu
   enemyName: Donu
   displayName: Donu
-  maxHP: 16
+  maxHP: 21
   pattern: []
   randomStart: 0
   movePattern:

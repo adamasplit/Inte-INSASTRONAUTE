@@ -297,6 +297,7 @@ public class STSApiClaimRewardRequest
 public class STSApiClaimRewardResponse
 {
     public bool accepted;
+    public STSApiPlayerState player;
     public JToken runInventory;
     public List<JToken> pendingRewards = new();
 }

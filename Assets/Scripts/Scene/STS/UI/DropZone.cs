@@ -174,13 +174,49 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         if (actionSpriteRoutine != null)
             StopCoroutine(actionSpriteRoutine);
 
-        actionSpriteRoutine = StartCoroutine(ActionSpriteRoutine(actionSprite, duration));
+        bool performLunge = (variant != 4) && (target != null && !target.isPlayer);
+        actionSpriteRoutine = StartCoroutine(ActionSpriteRoutine(actionSprite, duration, performLunge));
     }
 
-    IEnumerator ActionSpriteRoutine(Sprite actionSprite, float duration)
+    IEnumerator ActionSpriteRoutine(Sprite actionSprite, float duration, bool performLunge)
     {
         image.sprite = actionSprite;
-        yield return new WaitForSeconds(duration);
+
+        if (performLunge && imageRect != null)
+        {
+            Vector2 originalPosition = imageRect.anchoredPosition;
+            float moveDistance = 50f;
+            Vector2 lungeDirection = Vector2.down;
+            Vector2 targetPosition = originalPosition + lungeDirection * moveDistance;
+
+            float punchDuration = duration * 0.35f;
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+
+                float positionT;
+                if (elapsed <= punchDuration)
+                {
+                    positionT = Mathf.Clamp01(elapsed / punchDuration);
+                    imageRect.anchoredPosition = Vector2.Lerp(originalPosition, targetPosition, positionT);
+                }
+                else
+                {
+                    positionT = Mathf.Clamp01((elapsed - punchDuration) / (duration - punchDuration));
+                    imageRect.anchoredPosition = Vector2.Lerp(targetPosition, originalPosition, positionT);
+                }
+
+                yield return null;
+            }
+
+            imageRect.anchoredPosition = originalPosition;
+        }
+        else
+        {
+            yield return new WaitForSeconds(duration);
+        }
 
         if (!deathAnimationPlayed && baseSprite != null)
             image.sprite = baseSprite;
@@ -413,6 +449,12 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
         isHovered = false;
 
+        if (combat != null && (combat.AuthoritativeCommandBusy || combat.CardPlaysRunning || !combat.IsLocalPlayerTurn()))
+        {
+            Debug.LogWarning($"[STS-INPUT] drop blocked: combat busy or not local player turn busy={combat.AuthoritativeCommandBusy} cardPlaysRunning={combat.CardPlaysRunning} isTurn={combat.IsLocalPlayerTurn()}");
+            return;
+        }
+
         var drag = eventData.pointerDrag?.GetComponentInParent<CardDrag>();
         drag?.Destroy();
         var cardView = drag?.GetComponentInChildren<CardView>();
@@ -563,11 +605,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     public IEnumerator FlashWhite()
     {
         Color originalColor = image.color;
-        Vector2 originalPosition = imageRect.anchoredPosition;
-        float moveDistance = 50f;
-        Vector2 targetPosition = originalPosition + (target != null && target.isPlayer ? Vector2.zero : Vector2.down) * moveDistance;
         float duration = 0.2f;
-        float punchDuration = duration * 0.35f;
 
         image.color = Color.white;
         float elapsed = 0f;
@@ -576,24 +614,10 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             elapsed += Time.deltaTime;
             float colorT = Mathf.Clamp01(elapsed / duration);
             image.color = Color.Lerp(Color.white, originalColor, colorT);
-
-            float positionT;
-            if (elapsed <= punchDuration)
-            {
-                positionT = Mathf.Clamp01(elapsed / punchDuration);
-                imageRect.anchoredPosition = Vector2.Lerp(originalPosition, targetPosition, positionT);
-            }
-            else
-            {
-                positionT = Mathf.Clamp01((elapsed - punchDuration) / (duration - punchDuration));
-                imageRect.anchoredPosition = Vector2.Lerp(targetPosition, originalPosition, positionT);
-            }
-
             yield return null;
         }
 
         image.color = originalColor;
-        imageRect.anchoredPosition = originalPosition;
     }
 
     public IEnumerator PlayDeathAnimation(float duration = 0.65f)

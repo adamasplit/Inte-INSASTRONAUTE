@@ -140,7 +140,7 @@ MonoBehaviour:
     moveName: 
     effects:
     - type: 1
-      value: 12
+      value: 8
       targetSelf: 1
       targetOthers: 0
       statusType: 31

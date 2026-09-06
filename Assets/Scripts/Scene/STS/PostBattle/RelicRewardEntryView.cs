@@ -18,12 +18,23 @@ public class RelicRewardEntryView : RewardEntryView
 
     public async void ClaimRelic()
     {
+        bool serverBacked = !string.IsNullOrWhiteSpace(reward.serverRewardId);
         if (manager != null && !(await manager.TryClaimServerRewardAsync(reward)).Accepted)
         {
             return;
         }
 
-        reward.Claim();
+        if (serverBacked)
+        {
+            // The server has already recorded the relic and its OnAcquire effect.
+            // Keep the client inventory in sync without applying that effect twice.
+            RunManager.Instance.relics.Add(reward.relic);
+            reward.claimed = true;
+        }
+        else
+        {
+            reward.Claim();
+        }
 
         StartCoroutine(Collapse());
     }

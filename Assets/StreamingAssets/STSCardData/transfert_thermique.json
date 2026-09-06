@@ -14,7 +14,7 @@
   "effects": [
     {
       "type": "Damage",
-      "value": 5,
+      "value": 8,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -38,11 +38,11 @@
       "kind": "DebuffOnSelf",
       "value": 8,
       "info": "",
-      "description": ""
+      "description": "Les dégâts sont multipliés par votre nombre d'effets négatifs"
     }
   ],
   "favoredCharacter": "EP",
-  "animationSpeed": 1.0,
+  "animationSpeed": 1,
   "startingCount": 0,
   "tags": []
 }

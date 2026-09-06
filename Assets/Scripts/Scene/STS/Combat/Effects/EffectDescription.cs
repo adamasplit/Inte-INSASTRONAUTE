@@ -199,7 +199,7 @@ public static class EffectDescription
                     string usedValueText = FormatQuantityForDescription(usedValue, ctx);
                     if (effect.targetSelf)
                     {
-                        return $"Gagnez {usedValueText} de {stat.Name}";
+                        return $"{(stat.debuff?"Subissez":"Gagnez")} {usedValueText} de {stat.Name}";
                     }
                     else
                     {
@@ -231,7 +231,7 @@ public static class EffectDescription
                 else
                     {
                         //Remove last character if it's a dot or a plus sign
-                        string desc= stat.Desc(effect.targetSelf);
+                        string desc= stat.CardDesc(effect.targetSelf);
                         if (desc.EndsWith(".") || desc.EndsWith("+"))
                         {
                             desc = desc.Substring(0, desc.Length - 1);

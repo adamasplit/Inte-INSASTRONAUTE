@@ -52,4 +52,19 @@ public class StrengthStatus : StatusEffect
             return $"Aucun effet.";
         }
     }
+    public override string CardDesc(bool isPlayer)
+    {
+        if (Value > 0)
+        {
+            return $"Augmente les dégâts infligés.";
+        }
+        else if (Value < 0)
+        {
+            return $"Réduit les dégâts infligés.";
+        }
+        else
+        {
+            return $"Aucun effet.";
+        }
+    }
 }

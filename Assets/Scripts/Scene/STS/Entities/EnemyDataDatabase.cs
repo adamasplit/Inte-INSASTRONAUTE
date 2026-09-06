@@ -226,11 +226,21 @@ public static class EnemyDataDatabase
         List<string> files = await StreamingAssetsLoader.ListJsonFilesAsync("EnemyData");
         Debug.Log($"EnemyDataDatabase found {files.Count} enemy JSON files.");
 
+        // Toutes les lectures partent ensemble : sur WebGL chacune est une requête HTTP, et les
+        // enchaîner une à une multipliait la durée du repli par le nombre de fichiers.
+        List<Task<string>> reads = new List<Task<string>>(files.Count);
         foreach (string file in files)
         {
+            reads.Add(StreamingAssetsLoader.ReadAllTextAsync(file));
+        }
+        string[] fileContents = await Task.WhenAll(reads);
+
+        for (int i = 0; i < files.Count; i++)
+        {
+            string file = files[i];
             try
             {
-                string fileJson = await StreamingAssetsLoader.ReadAllTextAsync(file);
+                string fileJson = fileContents[i];
                 if (string.IsNullOrEmpty(fileJson))
                     continue;
 

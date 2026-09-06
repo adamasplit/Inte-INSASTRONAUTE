@@ -106,8 +106,13 @@ public class STSMainMenuController : MonoBehaviour
 
     async Task<bool> TryContinueExistingRunAsync()
     {
+        bool loadingStarted = false;
         try
         {
+            STSSceneLoader.Instance?.BeginLoading("Reprise de la partie...");
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.05f);
+            loadingStarted = true;
+
             STSApiCurrentRunResponse currentRun = await STSApiClient.CurrentRunAsync();
             if (currentRun == null || !currentRun.hasRun || currentRun.run == null)
             {
@@ -123,10 +128,15 @@ public class STSMainMenuController : MonoBehaviour
 
             RunManager.Instance.OnRunEnd(true, false);
 
-            await STSCardDatabase.LoadAsync();
-            await PlayersDatabase.LoadAsync();
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.12f);
+            Task playersLoadTask = PlayersDatabase.LoadAsync();
+            await STSSceneLoader.LoadCardDatabaseWithProgressAsync(0.12f, 0.36f);
+            await playersLoadTask;
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.44f);
             await EnemyDataDatabase.LoadAsync();
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.62f);
             await EnemyPoolDatabase.LoadAsync();
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.78f);
 
             if (!RunManager.Instance.ApplyRemoteRunIfAvailable(currentRun.run))
             {
@@ -139,6 +149,7 @@ public class STSMainMenuController : MonoBehaviour
             }
 
             STSRunAuditSystem.RecordRunStarted(RunManager.Instance);
+            STSSceneLoader.Instance?.SetBackgroundProgress(0.90f);
             STSSceneLoader.Instance?.LoadScene(RunManager.Instance.ResolveRemoteResumeScene());
             return true;
         }
@@ -146,6 +157,13 @@ public class STSMainMenuController : MonoBehaviour
         {
             Debug.LogWarning($"Failed to continue existing run from main menu: {ex.Message}");
             return false;
+        }
+        finally
+        {
+            if (loadingStarted)
+            {
+                STSSceneLoader.Instance?.EndLoading();
+            }
         }
     }
 

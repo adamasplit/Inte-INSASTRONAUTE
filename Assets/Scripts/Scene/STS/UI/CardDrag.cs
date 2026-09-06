@@ -37,6 +37,12 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
             return;
         }
 
+        if (combat != null && (combat.AuthoritativeCommandBusy || combat.CardPlaysRunning || !combat.IsLocalPlayerTurn()))
+        {
+            Debug.LogWarning($"[STS-INPUT] drag-begin blocked: combat busy or not local player turn busy={combat.AuthoritativeCommandBusy} cardPlaysRunning={combat.CardPlaysRunning} isTurn={combat.IsLocalPlayerTurn()}");
+            return;
+        }
+
         Debug.Log($"[STS-INPUT] drag-begin card={cardView.cardInstance?.displayName ?? "<null>"} instanceId={cardView.cardInstance?.instanceId ?? "<null>"} mode={cardView.cardInstance?.targetingMode.ToString() ?? "<null>"}");
 
         cardPlayedByDrop = false;
@@ -118,32 +124,39 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
 
         if (!cardPlayedByDrop && cardView.cardInstance != null)
         {
-            Character target = GetHoveredTarget(eventData);
-            TargetingMode mode = cardView.cardInstance.targetingMode;
-            bool canPlayFromDropArea = IsInAllowedDropArea(mode, eventData);
-
-            Debug.Log($"[STS-INPUT] drag-end card={cardView.cardInstance.displayName} instanceId={cardView.cardInstance.instanceId} mode={mode} dropArea={canPlayFromDropArea} target={(target != null ? target.name : "<none>")} playedByDrop={cardPlayedByDrop}");
-
-            if (!canPlayFromDropArea)
+            if (combat != null && (combat.AuthoritativeCommandBusy || combat.CardPlaysRunning || !combat.IsLocalPlayerTurn()))
             {
-                // Released outside an allowed drop area for this targeting mode.
-            }
-            else if (RequiresExplicitTarget(mode) && target == null)
-            {
-                // No valid selected target at release time: do not auto-play.
+                Debug.LogWarning($"[STS-INPUT] drag-end blocked: combat busy or not local player turn busy={combat.AuthoritativeCommandBusy} cardPlaysRunning={combat.CardPlaysRunning} isTurn={combat.IsLocalPlayerTurn()}");
             }
             else
             {
-                List<Character> targets = combat.GetDisplayTargets(mode, target);
-                if (targets.Count > 0)
+                Character target = GetHoveredTarget(eventData);
+                TargetingMode mode = cardView.cardInstance.targetingMode;
+                bool canPlayFromDropArea = IsInAllowedDropArea(mode, eventData);
+
+                Debug.Log($"[STS-INPUT] drag-end card={cardView.cardInstance.displayName} instanceId={cardView.cardInstance.instanceId} mode={mode} dropArea={canPlayFromDropArea} target={(target != null ? target.name : "<none>")} playedByDrop={cardPlayedByDrop}");
+
+                if (!canPlayFromDropArea)
                 {
-                    Debug.Log($"[STS-INPUT] drag-end submitting card={cardView.cardInstance.displayName} targets={targets.Count}");
-                    combat.PlayCard(combat.GetActingPlayer(), cardView.cardInstance, targets);
-                    cardPlayedByDrop = true;
+                    // Released outside an allowed drop area for this targeting mode.
+                }
+                else if (RequiresExplicitTarget(mode) && target == null)
+                {
+                    // No valid selected target at release time: do not auto-play.
                 }
                 else
                 {
-                    Debug.LogWarning($"[STS-INPUT] drag-end blocked: no display targets for card={cardView.cardInstance.displayName} mode={mode}");
+                    List<Character> targets = combat.GetDisplayTargets(mode, target);
+                    if (targets.Count > 0)
+                    {
+                        Debug.Log($"[STS-INPUT] drag-end submitting card={cardView.cardInstance.displayName} targets={targets.Count}");
+                        combat.PlayCard(combat.GetActingPlayer(), cardView.cardInstance, targets);
+                        cardPlayedByDrop = true;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[STS-INPUT] drag-end blocked: no display targets for card={cardView.cardInstance.displayName} mode={mode}");
+                    }
                 }
             }
         }

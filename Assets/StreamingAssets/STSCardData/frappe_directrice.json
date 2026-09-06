@@ -38,11 +38,18 @@
       "kind": "DebuffOnTarget",
       "value": 1,
       "info": "",
-      "description": ""
+      "description": "Se rejoue pour chaque effet sur la cible"
+    },
+{
+      "type": "ReplayCount",
+      "kind": "BuffOnTarget",
+      "value": 1,
+      "info": "",
+      "description": " "
     }
   ],
   "favoredCharacter": "AI",
-  "animationSpeed": 1.0,
+  "animationSpeed": 1,
   "startingCount": 0,
   "tags": []
 }

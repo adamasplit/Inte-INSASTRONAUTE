@@ -81,5 +81,13 @@ public enum StatusType
     Smoke,
     Absorption,
     TimeCompression,
-    Rage
+    Rage,
+
+    // Gardés à la fin : les ScriptableObjects sérialisent cette valeur par index.
+    Momentum,
+    Charge,
+    Exposure,
+    Fortify,
+    Instability,
+    Precision
 }

@@ -38,7 +38,7 @@
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
-      "description": "",
+      "description": "Tous vos effets positifs sont consommés pour rajouter 4 dégâts par effet à cette carte",
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
@@ -76,11 +76,11 @@
       "kind": "BuffOnSelf",
       "value": 4,
       "info": "",
-      "description": ""
+      "description": " "
     }
   ],
   "favoredCharacter": "EP",
-  "animationSpeed": 1.0,
+  "animationSpeed": 1,
   "startingCount": 0,
   "tags": []
 }

@@ -14,12 +14,25 @@ public static class STSCardDatabase
         public List<STSCardDataDTO> cards;
     }
 
+    [System.Serializable]
+    private class BridgeCardsResponseWrapper
+    {
+        public bool ok;
+        public CardDatabaseWrapper data;
+    }
+
     static Dictionary<string, STSCardData> cardDict;
     static Dictionary<string, Sprite> collectionCardSpriteById;
     static bool isLoaded;
     static Task loadTask;
     static Task collectionCardSpriteLoadTask;
     static bool collectionSpritesInitialized;
+
+    /// <summary>
+    /// Progrès du téléchargement des illustrations (0 à 1), émis à chaque illustration reçue.
+    /// L'écran de chargement s'y abonne pour faire avancer la barre au lieu de rester figée.
+    /// </summary>
+    public static event Action<float> CollectionCardSpriteProgress;
 
     public static List<STSCardData> allCards;
 
@@ -78,7 +91,7 @@ public static class STSCardDatabase
         List<string> files = await StreamingAssetsLoader.ListJsonFilesAsync("STSCardData");
         Debug.Log($"STSCardDatabase found {files.Count} card JSON files.");
 
-        int perFileLoaded = 0;
+        List<string> perCardFiles = new List<string>(files.Count);
         foreach (string file in files)
         {
             if (string.Equals(file, "STSCardData/cards.json", StringComparison.OrdinalIgnoreCase)
@@ -88,9 +101,25 @@ public static class STSCardDatabase
                 continue;
             }
 
+            perCardFiles.Add(file);
+        }
+
+        // Toutes les lectures partent ensemble : sur WebGL chacune est une requête HTTP, et les
+        // enchaîner une à une multipliait la durée du repli par le nombre de cartes.
+        List<Task<string>> reads = new List<Task<string>>(perCardFiles.Count);
+        foreach (string file in perCardFiles)
+        {
+            reads.Add(StreamingAssetsLoader.ReadAllTextAsync(file));
+        }
+        string[] fileContents = await Task.WhenAll(reads);
+
+        int perFileLoaded = 0;
+        for (int i = 0; i < perCardFiles.Count; i++)
+        {
+            string file = perCardFiles[i];
             try
             {
-                string json = await StreamingAssetsLoader.ReadAllTextAsync(file);
+                string json = fileContents[i];
                 if (string.IsNullOrEmpty(json))
                     continue;
 
@@ -178,7 +207,10 @@ public static class STSCardDatabase
 
         try
         {
-            List<STSCardDataDTO> remoteCards = ParseRemoteCards(json);
+            // Le pont React émet toujours { ok, data: { cards } } : on désérialise cette forme
+            // directement (une seule passe sur le texte, sans DOM JToken), et on ne retombe sur
+            // la recherche récursive que si la forme du pont venait à changer.
+            List<STSCardDataDTO> remoteCards = ParseRemoteCardsFast(json) ?? ParseRemoteCards(json);
             if (remoteCards == null || remoteCards.Count == 0)
             {
                 Debug.LogWarning("STSCardDatabase could not find a cards array in the React bridge payload.");
@@ -217,6 +249,25 @@ public static class STSCardDatabase
         {
             Debug.LogWarning($"Failed to load cards through the React bridge: {ex}");
             return false;
+        }
+    }
+
+    static List<STSCardDataDTO> ParseRemoteCardsFast(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return null;
+
+        try
+        {
+            BridgeCardsResponseWrapper wrapper = JsonConvert.DeserializeObject<BridgeCardsResponseWrapper>(json);
+            if (wrapper == null || !wrapper.ok || wrapper.data == null)
+                return null;
+
+            return wrapper.data.cards;
+        }
+        catch (System.Exception)
+        {
+            return null;
         }
     }
 
@@ -435,17 +486,33 @@ public static class STSCardDatabase
             }
         }
 
+        List<string> idsToLoad = new List<string>(uniqueCollectionCardIds.Count);
         foreach (string collectionCardId in uniqueCollectionCardIds)
         {
-            if (collectionCardSpriteById.ContainsKey(collectionCardId))
-                continue;
-
-            Sprite sprite = await STSCollectionCardApi.LoadSpriteAsync(collectionCardId);
-            if (sprite != null)
+            if (!collectionCardSpriteById.ContainsKey(collectionCardId))
             {
-                collectionCardSpriteById[collectionCardId] = sprite;
+                idsToLoad.Add(collectionCardId);
             }
         }
+
+        // Signale que le catalogue est là et que la phase illustrations commence.
+        CollectionCardSpriteProgress?.Invoke(0f);
+
+        // Les téléchargements partent tous ensemble au lieu de s'enchaîner : le navigateur
+        // limite de lui-même les connexions simultanées, et le temps total devient celui du
+        // plus lent des lots plutôt que la somme de toutes les latences.
+        int completed = 0;
+        List<Task> downloads = new List<Task>(idsToLoad.Count);
+        foreach (string collectionCardId in idsToLoad)
+        {
+            downloads.Add(DownloadCollectionCardSpriteAsync(collectionCardId, () =>
+            {
+                completed++;
+                CollectionCardSpriteProgress?.Invoke(Mathf.Clamp01((float)completed / idsToLoad.Count));
+            }));
+        }
+
+        await Task.WhenAll(downloads);
 
         collectionSpritesInitialized = true;
         if (collectionCardSpriteById.Count == uniqueCollectionCardIds.Count)
@@ -463,6 +530,17 @@ public static class STSCardDatabase
 
             Debug.LogWarning($"STSCardDatabase cached {collectionCardSpriteById.Count}/{uniqueCollectionCardIds.Count} collection card sprites. Missing: {string.Join(", ", missingSprites)}");
         }
+    }
+
+    static async Task DownloadCollectionCardSpriteAsync(string collectionCardId, Action onCompleted)
+    {
+        Sprite sprite = await STSCollectionCardApi.LoadSpriteAsync(collectionCardId);
+        if (sprite != null)
+        {
+            collectionCardSpriteById[collectionCardId] = sprite;
+        }
+
+        onCompleted?.Invoke();
     }
 
     /// <summary>Le dossier d'icônes, le même que celui dont <c>STSCardData.FromDTO</c> tire les siennes.</summary>

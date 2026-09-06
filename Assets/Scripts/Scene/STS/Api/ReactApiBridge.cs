@@ -31,6 +31,11 @@ public class ReactApiBridge : MonoBehaviour
         public object body;
     }
 
+    private sealed class BridgeResponseEnvelope
+    {
+        public string id;
+    }
+
     private sealed class BridgeResponse
     {
         public string id;
@@ -259,9 +264,12 @@ public class ReactApiBridge : MonoBehaviour
         string requestId = null;
         try
         {
-            JObject response = JObject.Parse(json);
-            requestId = response["id"]?.ToString();
-            Debug.Log($"React bridge response parsed with id '{requestId}' and keys: {string.Join(", ", response.Properties())}");
+            // On ne lit que l'enveloppe : un JObject.Parse ici matérialiserait le DOM de toute
+            // la réponse (le catalogue de cartes entier) juste pour en extraire l'id, puis la
+            // base destinataire reconstruirait ce DOM une seconde fois pour se désérialiser.
+            BridgeResponseEnvelope envelope = JsonConvert.DeserializeObject<BridgeResponseEnvelope>(json);
+            requestId = envelope?.id;
+            Debug.Log($"React bridge response parsed with id '{requestId}'.");
         }
         catch (Exception ex)
         {

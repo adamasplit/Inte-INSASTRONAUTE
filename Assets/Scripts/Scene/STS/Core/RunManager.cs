@@ -130,9 +130,11 @@ public class RunManager : MonoBehaviour
             }
 
             STSSceneLoader.Instance?.SetBackgroundProgress(0.12f);
-            await STSCardDatabase.LoadAsync();
-            STSSceneLoader.Instance?.SetBackgroundProgress(0.36f);
-            await PlayersDatabase.LoadAsync();
+            // Les personnages ne dépendent pas des cartes : leur requête part pendant que les
+            // cartes et leurs illustrations se chargent.
+            Task playersLoadTask = PlayersDatabase.LoadAsync();
+            await STSSceneLoader.LoadCardDatabaseWithProgressAsync(0.12f, 0.36f);
+            await playersLoadTask;
             STSSceneLoader.Instance?.SetBackgroundProgress(0.44f);
             await EnemyDataDatabase.LoadAsync();
             STSSceneLoader.Instance?.SetBackgroundProgress(0.56f);

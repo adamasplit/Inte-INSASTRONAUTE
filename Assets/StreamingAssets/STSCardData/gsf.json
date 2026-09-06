@@ -33,10 +33,10 @@
     },
     {
       "type": "Status",
-      "value": 2,
+      "value": 6,
       "targetSelf": true,
       "targetOthers": false,
-      "statusType": "Haste",
+      "statusType": "Speed",
       "duration": 4,
       "description": "",
       "cardID": "",
@@ -53,7 +53,7 @@
   ],
   "modifiers": [],
   "favoredCharacter": "Aucun",
-  "animationSpeed": 1.0,
+  "animationSpeed": 1,
   "startingCount": 0,
   "tags": [
     "Exhaust"

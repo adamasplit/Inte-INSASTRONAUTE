@@ -557,9 +557,9 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         if (status == null || !(status.generic || StatusEffect.IsNamedStat(effect.statusType)))
             return;
 
-        bool alreadyAdded = tooltips.Exists(t => t.title == status.Name && t.description == status.Desc(effect.targetSelf));
+        bool alreadyAdded = tooltips.Exists(t => t.title == status.Name && t.description == status.CardDesc(effect.targetSelf));
         if (!alreadyAdded)
-            tooltips.Add(new TooltipData(status.Name, status.Desc(effect.targetSelf)));
+            tooltips.Add(new TooltipData(status.Name, status.CardDesc(effect.targetSelf)));
     }
 
     private void AddCreatedCardTooltip(EffectEntry effect, List<TooltipData> tooltips)
