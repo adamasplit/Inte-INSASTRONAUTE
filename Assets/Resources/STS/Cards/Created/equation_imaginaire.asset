@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Equation imaginaire
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: d1b59f082a4ad154f997bc9f9d69917d, type: 3}
   cost: 2

@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Perspective cavali\xE8re"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 2d0c6b144c619094f85b5c5e8d5fbbe3, type: 3}
   cost: 2

@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: sample2
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: sample2
-  cardName: 
+  cardName: sample2
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 0

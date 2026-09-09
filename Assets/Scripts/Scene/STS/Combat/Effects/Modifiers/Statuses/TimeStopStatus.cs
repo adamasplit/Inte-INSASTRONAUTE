@@ -34,8 +34,8 @@ public class TimeStopStatus : StatusEffect
         string turns = $"{Duration} tour" + (Duration > 1 ? "s" : "");
         if (isPlayer)
         {
-            return $"Vous ne perdez pas de PV pendant {turns}, mais les dégâts accumulés vous seront infligés (×1.5) à la fin de votre prochain tour.";
+            return $"Vous ne perdez pas de PV pendant {turns}, mais les dégâts accumulés vous seront infligés (×1.5) quand l'effet se termine.";
         }
-        return $"Le personnage ne perd pas de PV pendant {turns}, mais les dégâts accumulés lui seront infligés (×1.5) à la fin de son prochain tour.";
+        return $"Le personnage ne perd pas de PV pendant {turns}, mais les dégâts accumulés lui seront infligés (×1.5) quand l'effet se termine.";
     }
 }

@@ -42,10 +42,17 @@ public static class PvpDeckEligibility
     /// <param name="collectionCardId">
     /// L'identifiant de collection de la carte, vide quand elle n'en a pas.
     /// </param>
-    /// <param name="owned">Le joueur possède-t-il cette carte de collection.</param>
-    /// <param name="multiplayerExclusive">La carte est-elle réservée au multijoueur.</param>
-    /// <param name="requiredCharacterLevel">Le niveau qu'elle exige, le cas échéant.</param>
-    /// <param name="characterLevel">Le niveau atteint par le joueur.</param>
+    /// <param name="owned">
+    /// Le joueur a-t-il débloqué cette carte — par la collection pour celles qui y sont liées,
+    /// par une fin de run pour les autres. Toute carte de campagne est verrouillée par défaut ;
+    /// il n'y a plus de passe-droit pour celles sans lien de collection.
+    /// </param>
+    /// <param name="multiplayerExclusive">
+    /// Non consulté ici : une exclusive multi se débloque désormais comme les autres, par fin de
+    /// run, et non plus par niveau de personnage.
+    /// </param>
+    /// <param name="requiredCharacterLevel">Non consulté, voir <paramref name="multiplayerExclusive"/>.</param>
+    /// <param name="characterLevel">Non consulté, voir <paramref name="multiplayerExclusive"/>.</param>
     public static bool IsUsable(
         string collectionCardId,
         bool owned,
@@ -53,18 +60,7 @@ public static class PvpDeckEligibility
         int requiredCharacterLevel,
         int characterLevel)
     {
-        // Une exclusive multi ne s'achète pas, elle se débloque.
-        if (multiplayerExclusive)
-        {
-            return characterLevel >= requiredCharacterLevel;
-        }
-
-        // Pas d'identifiant de collection : la carte appartient au jeu de base.
-        if (string.IsNullOrWhiteSpace(collectionCardId))
-        {
-            return true;
-        }
-
         return owned;
     }
 }
+

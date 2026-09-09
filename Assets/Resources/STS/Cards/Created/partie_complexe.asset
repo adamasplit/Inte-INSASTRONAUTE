@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Partie complexe
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: cf442b324d7c02c489263ee007084a05, type: 3}
   cost: 2

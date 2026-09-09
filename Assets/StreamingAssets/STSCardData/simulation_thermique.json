@@ -6,39 +6,20 @@
   "pveOnly": false,
   "characterLevel": 0,
   "iconId": "hashmal",
-  "cost": 1,
+  "cost": 2,
   "xCost": false,
   "type": "Compétence",
   "rarity": "Rare",
-  "targetingMode": "AllCharacters",
+  "targetingMode": "Enemy",
   "effects": [
     {
       "type": "Status",
-      "value": 6,
+      "value": 0,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Burn",
-      "duration": 4,
-      "description": "",
-      "cardID": "",
-      "conditional": false,
-      "conditionType": "KillingBlow",
-      "conditionValue": "",
-      "trueEffect": false,
-      "cardSelectionSource": "Hand",
-      "index": 0,
-      "cardFilterTags": [],
-      "cardSelectionEffect": "None",
-      "animationType": "Default"
-    },
-    {
-      "type": "AdvanceTurn",
-      "value": 30,
-      "targetSelf": true,
-      "targetOthers": false,
-      "statusType": "Burn",
-      "duration": 6,
-      "description": "",
+      "duration": 0,
+      "description": "Doublez la Brûlure de la cible",
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
@@ -51,9 +32,19 @@
       "animationType": "Default"
     }
   ],
-  "modifiers": [],
+  "modifiers": [
+    {
+      "type": "StatusDuration",
+      "kind": "SpecificStatusOnTarget",
+      "value": 1,
+      "info": "Burn",
+      "description": " "
+    }
+  ],
   "favoredCharacter": "EP",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": []
+  "tags": [
+    "Exhaust"
+  ]
 }

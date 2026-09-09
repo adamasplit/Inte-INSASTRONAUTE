@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Dette de sommeil
   collectionCardId: Prez
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 2
@@ -28,7 +29,7 @@ MonoBehaviour:
     targetSelf: 0
     targetOthers: 0
     statusType: 62
-    duration: 5
+    duration: 99
     description: 
     cardID: 
     index: 0

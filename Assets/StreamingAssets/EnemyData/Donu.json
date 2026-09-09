@@ -2,7 +2,7 @@
   "id": "Donu",
   "enemyName": "Donu",
   "displayName": "Donu",
-  "maxHP": 16,
+  "maxHP": 21,
   "randomStart": false,
   "patternCardIds": [],
   "movePattern": [

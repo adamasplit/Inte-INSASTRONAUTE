@@ -2,28 +2,28 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEngine;
 
 public static class EnemyDataJsonExporter
 {
-    private const string SourceJsonPath = "Assets/StreamingAssets/EnemyData/enemies.json";
+    private const string SourceFolder = "Assets/StreamingAssets/EnemyData";
     private const string TargetFolder = "Assets/Resources/STS/Enemies";
 
     [MenuItem("Tools/Export STS Enemy Data to ScriptableObjects")]
     public static void ExportEnemyDataToScriptableObjects()
     {
-        if (!File.Exists(SourceJsonPath))
+        if (!Directory.Exists(SourceFolder))
         {
-            Debug.LogError($"Enemy JSON not found at '{SourceJsonPath}'.");
+            Debug.LogError($"Enemy JSON folder not found at '{SourceFolder}'.");
             return;
         }
 
-        string json = File.ReadAllText(SourceJsonPath);
-        EnemyDataWrapper wrapper = JsonConvert.DeserializeObject<EnemyDataWrapper>(json);
-        if (wrapper == null || wrapper.enemies == null)
+        List<EnemyDataDTO> enemies = ReadEnemyDtos(out int fromBundle);
+        if (enemies.Count == 0)
         {
-            Debug.LogError("Failed to deserialize enemy JSON.");
+            Debug.LogError($"No enemy found in '{SourceFolder}'.");
             return;
         }
 
@@ -31,7 +31,7 @@ public static class EnemyDataJsonExporter
         EnsureFolderExists(TargetFolder);
 
         int exportedCount = 0;
-        foreach (EnemyDataDTO dto in wrapper.enemies)
+        foreach (EnemyDataDTO dto in enemies)
         {
             if (dto == null)
             {
@@ -64,7 +64,108 @@ public static class EnemyDataJsonExporter
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log($"Exported {exportedCount} enemies to '{TargetFolder}'.");
+        Debug.Log($"Exported {exportedCount} enemies to '{TargetFolder}' " +
+                  $"({exportedCount - fromBundle} depuis les fichiers par ennemi, {fromBundle} depuis enemies.json).");
+    }
+
+    /// <summary>
+    /// Les fichiers par ennemi font foi ; enemies.json ne sert que de repli pour ceux qu'ils
+    /// ne couvrent pas. Le recueil est régénéré séparément et se retrouve régulièrement en
+    /// retard sur les fichiers individuels : le lire seul recréait les assets à partir de
+    /// valeurs périmées (Deca, Donu, Asteroid_Adept, Cultist en septembre 2026).
+    /// </summary>
+    private static List<EnemyDataDTO> ReadEnemyDtos(out int fromBundle)
+    {
+        List<EnemyDataDTO> perEnemy = new();
+        List<EnemyDataDTO> bundled = new();
+
+        string[] files = Directory.GetFiles(SourceFolder, "*.json");
+        Array.Sort(files, StringComparer.OrdinalIgnoreCase);
+
+        foreach (string file in files)
+        {
+            JToken token;
+            try
+            {
+                token = JToken.Parse(File.ReadAllText(file));
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError($"Failed to parse '{file}': {exception.Message}");
+                continue;
+            }
+
+            if (token is not JObject obj)
+            {
+                continue;
+            }
+
+            try
+            {
+                if (obj["enemies"] is JArray array)
+                {
+                    List<EnemyDataDTO> parsed = array.ToObject<List<EnemyDataDTO>>();
+                    if (parsed != null)
+                    {
+                        bundled.AddRange(parsed);
+                    }
+                }
+                else if (obj["id"] != null || obj["enemyName"] != null)
+                {
+                    EnemyDataDTO dto = obj.ToObject<EnemyDataDTO>();
+                    if (dto != null)
+                    {
+                        perEnemy.Add(dto);
+                    }
+                }
+
+                // Les autres JSON du dossier (index.json…) ne décrivent pas d'ennemi.
+            }
+            catch (JsonException exception)
+            {
+                Debug.LogError($"Failed to deserialize '{file}': {exception.Message}");
+            }
+        }
+
+        List<EnemyDataDTO> result = new(perEnemy.Count + bundled.Count);
+        HashSet<string> seen = new(StringComparer.OrdinalIgnoreCase);
+        fromBundle = 0;
+
+        foreach (EnemyDataDTO dto in perEnemy)
+        {
+            string key = KeyOf(dto);
+            if (key != null && seen.Add(key))
+            {
+                result.Add(dto);
+            }
+        }
+
+        foreach (EnemyDataDTO dto in bundled)
+        {
+            string key = KeyOf(dto);
+            if (key != null && seen.Add(key))
+            {
+                result.Add(dto);
+                fromBundle++;
+            }
+        }
+
+        return result;
+    }
+
+    private static string KeyOf(EnemyDataDTO dto)
+    {
+        if (dto == null)
+        {
+            return null;
+        }
+
+        if (!string.IsNullOrWhiteSpace(dto.id))
+        {
+            return dto.id;
+        }
+
+        return string.IsNullOrWhiteSpace(dto.enemyName) ? null : dto.enemyName;
     }
 
     private static void PopulateEnemyAsset(EnemyData enemy, EnemyDataDTO dto, Dictionary<string, STSCardData> cardLookup)
@@ -219,11 +320,5 @@ public static class EnemyDataJsonExporter
 
             currentPath = nextPath;
         }
-    }
-
-    [Serializable]
-    private class EnemyDataWrapper
-    {
-        public List<EnemyDataDTO> enemies;
     }
 }

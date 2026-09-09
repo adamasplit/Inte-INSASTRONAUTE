@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Vol
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 762b598acd39419499d53fcf1a0c66a0, type: 3}
   cost: 3

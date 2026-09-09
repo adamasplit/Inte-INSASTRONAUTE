@@ -13,24 +13,24 @@ MonoBehaviour:
   m_Name: ep
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: ep
-  cardName: TOUJOURS PLUS DE FLAMMES !!!!!!
+  cardName: '      '
   collectionCardId: EP
   multiplayerExclusive: 0
   pveOnly: 0
   characterLevel: 0
-  icon: {fileID: 21300000, guid: 547c0d6c5953f0e478beef0f90aed0c0, type: 3}
-  cost: 3
+  icon: {fileID: 0}
+  cost: 10
   xCost: 0
-  type: 1
+  type: 2
   rarity: 4
   effects:
   - type: 3
-    value: 0
-    targetSelf: 0
+    value: 1
+    targetSelf: 1
     targetOthers: 0
-    statusType: 20
-    duration: 0
-    description: "Changez l'armure de la cible en Br\xFBlure"
+    statusType: 90
+    duration: 1
+    description: ' '
     cardID: 
     index: 0
     conditional: 0
@@ -41,12 +41,29 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  - type: 20
-    value: 0
-    targetSelf: 0
+  - type: 6
+    value: 150
+    targetSelf: 1
     targetOthers: 0
-    statusType: 20
-    duration: 0
+    statusType: 90
+    duration: 1
+    description: ' '
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 18
+    value: 0
+    targetSelf: 1
+    targetOthers: 0
+    statusType: 90
+    duration: 1
     description: ' '
     cardID: 
     index: 0
@@ -59,13 +76,8 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   targetingMode: 0
-  modifiers:
-  - type: 5
-    kind: 13
-    value: 1
-    info: 
-    description: ' '
-  favoredCharacter: 9
+  modifiers: []
+  favoredCharacter: 0
   animationSpeed: 1
   startingCount: 0
   tags: 

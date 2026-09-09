@@ -15,7 +15,9 @@ MonoBehaviour:
   id: frappe_ultime
   cardName: Frappe ultime
   collectionCardId: 
-  collectionCard: {fileID: 0}
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 5b0ac42a3a3e10646ad939ebacecf494, type: 3}
   cost: 2
   xCost: 0

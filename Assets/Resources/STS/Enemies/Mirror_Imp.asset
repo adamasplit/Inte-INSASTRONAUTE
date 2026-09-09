@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Mirror_Imp
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  id: Mirror Imp
-  enemyName: Mirror Imp
+  id: Mirror_Imp
+  enemyName: Mirror_Imp
   displayName: Mirror Imp
   maxHP: 26
   pattern: []

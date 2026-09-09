@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Fusion de p\xF4les"
   collectionCardId: Treso X Goodies
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 1

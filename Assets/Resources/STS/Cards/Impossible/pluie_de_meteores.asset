@@ -15,6 +15,9 @@ MonoBehaviour:
   id: pluie_de_meteores
   cardName: "Pluie de m\xE9t\xE9ores"
   collectionCardId: 
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 84078fbe0ab02ac4dbf013bde1dd2182, type: 3}
   cost: 2
   xCost: 0

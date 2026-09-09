@@ -13,19 +13,19 @@ MonoBehaviour:
   m_Name: EnemyPool
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPool
   maxAct: 3
-  baseHpScaling: 1.2
+  baseHpScaling: 2.2
   actHpScaling:
-  - 0.5
-  - 1.2
-  - 2
-  - 3
+  - 0
+  - 1
+  - 1.8
+  - 2.7
   enemies:
   - displayName: "3 ennemis diff\xE9rents"
     enemies:
     - {fileID: 11400000, guid: cd6d3998007ee2a4fa40288240d496fc, type: 2}
     - {fileID: 11400000, guid: 030305c5255494040b1aa2598d91e63d, type: 2}
     - {fileID: 11400000, guid: 931c0fae846614e41adfb2bda056c8c7, type: 2}
-    minFloor: 7
+    minFloor: 4
     maxFloor: -1
     minAct: 1
     maxAct: 1
@@ -57,7 +57,7 @@ MonoBehaviour:
     enemies:
     - {fileID: 11400000, guid: cd6d3998007ee2a4fa40288240d496fc, type: 2}
     - {fileID: 11400000, guid: cd6d3998007ee2a4fa40288240d496fc, type: 2}
-    minFloor: 7
+    minFloor: 3
     maxFloor: -1
     minAct: -1
     maxAct: 0
@@ -87,11 +87,11 @@ MonoBehaviour:
   - displayName: 5
     enemies:
     - {fileID: 11400000, guid: 845a5b5209525f6478d6a650c1e11882, type: 2}
-    minFloor: -1
+    minFloor: 0
     maxFloor: -1
-    minAct: -1
+    minAct: 0
     maxAct: 0
-    weight: 1
+    weight: 0.3
     elite: 1
     boss: 0
   - displayName: Act2 elite1
@@ -111,7 +111,7 @@ MonoBehaviour:
     maxFloor: -1
     minAct: 1
     maxAct: 1
-    weight: 1
+    weight: 0.1
     elite: 1
     boss: 0
   - displayName: Act2 elite3
@@ -128,7 +128,7 @@ MonoBehaviour:
     enemies:
     - {fileID: 11400000, guid: 5ebca3933452ea94382f9b4b7a5095e5, type: 2}
     - {fileID: 11400000, guid: 608eaf8a8bf48ba4eba40360729054f7, type: 2}
-    minFloor: 5
+    minFloor: 3
     maxFloor: -1
     minAct: -1
     maxAct: 0
@@ -202,9 +202,9 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 5ebca3933452ea94382f9b4b7a5095e5, type: 2}
     minFloor: 0
     maxFloor: 6
-    minAct: -1
+    minAct: 0
     maxAct: 0
-    weight: 0.9
+    weight: 0.4
     elite: 0
     boss: 0
   - displayName: Soldat
@@ -492,7 +492,7 @@ MonoBehaviour:
     enemies:
     - {fileID: 11400000, guid: aab42b48b8457a741a9955ba5b39a729, type: 2}
     - {fileID: 11400000, guid: fe62939fc406e6d44bd3b4c86bf90724, type: 2}
-    minFloor: 6
+    minFloor: 4
     maxFloor: -1
     minAct: 0
     maxAct: 0
@@ -564,7 +564,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 64344eff1ac3b2942b1207f634f6beb7, type: 2}
     minFloor: 0
     maxFloor: 4
-    minAct: -1
+    minAct: 0
     maxAct: 0
     weight: 0.7
     elite: 0
@@ -584,7 +584,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 3b57f1fe192c7f14f80437ed3c9ad395, type: 2}
     minFloor: 0
     maxFloor: 5
-    minAct: -1
+    minAct: 0
     maxAct: 0
     weight: 1
     elite: 0
@@ -604,10 +604,10 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 3b57f1fe192c7f14f80437ed3c9ad395, type: 2}
     - {fileID: 11400000, guid: 64344eff1ac3b2942b1207f634f6beb7, type: 2}
     minFloor: 7
-    maxFloor: -1
-    minAct: -1
+    maxFloor: 0
+    minAct: 0
     maxAct: 0
-    weight: 0.8
+    weight: 0.4
     elite: 0
     boss: 0
   - displayName: The Devourer of Gods
@@ -640,7 +640,7 @@ MonoBehaviour:
     maxFloor: 4
     minAct: 0
     maxAct: 0
-    weight: 0.3
+    weight: 0.1
     elite: 0
     boss: 0
   - displayName: Scourge 3
@@ -648,11 +648,11 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 420badeef2823eb4cb1bcc670cda7d5a, type: 2}
     - {fileID: 11400000, guid: 420badeef2823eb4cb1bcc670cda7d5a, type: 2}
     - {fileID: 11400000, guid: 420badeef2823eb4cb1bcc670cda7d5a, type: 2}
-    minFloor: -1
-    maxFloor: -1
+    minFloor: 5
+    maxFloor: 10
     minAct: 0
     maxAct: 0
-    weight: 0.7
+    weight: 0.3
     elite: 1
     boss: 0
   - displayName: Astrum Aureus
@@ -664,4 +664,51 @@ MonoBehaviour:
     maxAct: 2
     weight: 1
     elite: 1
+    boss: 0
+  - displayName: MultiInvaders
+    enemies:
+    - {fileID: 11400000, guid: 5ebca3933452ea94382f9b4b7a5095e5, type: 2}
+    - {fileID: 11400000, guid: 5ebca3933452ea94382f9b4b7a5095e5, type: 2}
+    - {fileID: 11400000, guid: 5ebca3933452ea94382f9b4b7a5095e5, type: 2}
+    - {fileID: 11400000, guid: 5ebca3933452ea94382f9b4b7a5095e5, type: 2}
+    - {fileID: 11400000, guid: 5ebca3933452ea94382f9b4b7a5095e5, type: 2}
+    minFloor: 6
+    maxFloor: 10
+    minAct: 0
+    maxAct: 0
+    weight: 1
+    elite: 0
+    boss: 0
+  - displayName: Army
+    enemies:
+    - {fileID: 11400000, guid: 608eaf8a8bf48ba4eba40360729054f7, type: 2}
+    - {fileID: 11400000, guid: 608eaf8a8bf48ba4eba40360729054f7, type: 2}
+    minFloor: 6
+    maxFloor: 10
+    minAct: 0
+    maxAct: 0
+    weight: 0.8
+    elite: 0
+    boss: 0
+  - displayName: Officier et soldats
+    enemies:
+    - {fileID: 11400000, guid: 608eaf8a8bf48ba4eba40360729054f7, type: 2}
+    - {fileID: 11400000, guid: 85c410f17db55464eb18ddba4075ca0f, type: 2}
+    - {fileID: 11400000, guid: 608eaf8a8bf48ba4eba40360729054f7, type: 2}
+    minFloor: 6
+    maxFloor: 10
+    minAct: 1
+    maxAct: 1
+    weight: 0.8
+    elite: 0
+    boss: 0
+  - displayName: Officier et soldats
+    enemies:
+    - {fileID: 11400000, guid: bb7ddcfd9001a9c42b0afbd2b0988afb, type: 2}
+    minFloor: 6
+    maxFloor: 10
+    minAct: 2
+    maxAct: 2
+    weight: 0.8
+    elite: 0
     boss: 0

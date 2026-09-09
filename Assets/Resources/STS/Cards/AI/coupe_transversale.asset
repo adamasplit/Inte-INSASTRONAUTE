@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Coupe transversale
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 536616779aceca04184dc8ef91627ced, type: 3}
   cost: 1

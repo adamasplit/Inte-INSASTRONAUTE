@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "\xC9quilibrage d'emploi du temps"
   collectionCardId: Ingenieur humaniste
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 0

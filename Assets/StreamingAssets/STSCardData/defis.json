@@ -6,19 +6,19 @@
   "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
-  "cost": 1,
+  "cost": 2,
   "xCost": false,
   "type": "Pouvoir",
   "rarity": "Epic",
   "targetingMode": "Player",
   "effects": [
     {
-      "type": "Damage",
-      "value": 0,
+      "type": "Status",
+      "value": 2,
       "targetSelf": false,
       "targetOthers": false,
-      "statusType": "Strength",
-      "duration": 0,
+      "statusType": "Provocation",
+      "duration": 2,
       "description": "",
       "cardID": "",
       "conditional": false,
@@ -33,7 +33,7 @@
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Starting",
+  "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": []

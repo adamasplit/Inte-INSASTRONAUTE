@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Rayon spectral
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 8e67a498549653e4dbed75e34eaccb4e, type: 3}
   cost: 1

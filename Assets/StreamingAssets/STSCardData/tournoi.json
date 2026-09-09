@@ -1,21 +1,40 @@
 {
   "id": "tournoi",
-  "cardName": "Smash final",
+  "cardName": "Carapace bleue",
   "collectionCardId": "Tournoi",
   "multiplayerExclusive": false,
   "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
-  "cost": 0,
+  "cost": 2,
   "xCost": false,
   "type": "Attaque",
   "rarity": "Legendary",
   "targetingMode": "Enemy",
   "effects": [
     {
-      "type": "LoseHP",
-      "value": 10,
-      "targetSelf": true,
+      "type": "Status",
+      "value": 1,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Stun",
+      "duration": 1,
+      "description": "",
+      "cardID": "",
+      "conditional": true,
+      "conditionType": "TargetHpHigherThanSelf",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    },
+    {
+      "type": "Damage",
+      "value": 8,
+      "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
@@ -29,31 +48,14 @@
       "index": 0,
       "cardFilterTags": [],
       "cardSelectionEffect": "None",
-      "animationType": "Default"
-    },
-    {
-      "type": "Damage",
-      "value": 30,
-      "targetSelf": false,
-      "targetOthers": false,
-      "statusType": "Strength",
-      "duration": 0,
-      "description": "",
-      "cardID": "",
-      "conditional": true,
-      "conditionType": "FirstTimePlayingThisCardThisCombat",
-      "conditionValue": "",
-      "trueEffect": false,
-      "cardSelectionSource": "Hand",
-      "index": 0,
-      "cardFilterTags": [],
-      "cardSelectionEffect": "None",
-      "animationType": "Default"
+      "animationType": "ExplosionSmall"
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Impossible",
+  "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": []
+  "tags": [
+    "Exhaust"
+  ]
 }

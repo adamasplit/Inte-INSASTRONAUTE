@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Innovation
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 27c55ef302fc5bf4e87eb0bac03d0419, type: 3}
   cost: 3

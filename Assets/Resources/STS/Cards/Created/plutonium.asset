@@ -15,6 +15,9 @@ MonoBehaviour:
   id: plutonium
   cardName: Plutonium
   collectionCardId: 
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: e77e944a0475cd34eb844c24eacd86df, type: 3}
   cost: 0
   xCost: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: wei
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: wei
-  cardName: 
+  cardName: wei
   collectionCardId: 
   multiplayerExclusive: 0
   pveOnly: 0

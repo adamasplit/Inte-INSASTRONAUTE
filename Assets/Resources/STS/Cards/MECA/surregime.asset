@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Surr\xE9gime"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 5f4f6d3d104f93f4c87e665068f6a655, type: 3}
   cost: 2

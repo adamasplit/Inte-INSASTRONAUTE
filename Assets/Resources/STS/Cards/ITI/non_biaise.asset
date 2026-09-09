@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Non biais\xE9"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: a411f166862f6464fb669de8264e4ff9, type: 3}
   cost: 1

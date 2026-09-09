@@ -199,7 +199,7 @@ public static class EffectDescription
                     string usedValueText = FormatQuantityForDescription(usedValue, ctx);
                     if (effect.targetSelf)
                     {
-                        return $"{(stat.debuff?"Subissez":"Gagnez")} {usedValueText} de {stat.Name}";
+                        return $"{(stat.debuff?"Subissez":"Gagnez")} {(usedValue > 0 ? $"{usedValueText} de " : "")}{stat.Name}";
                     }
                     else
                     {
@@ -397,6 +397,7 @@ public static class EffectDescription
                         CardSelectionEffect.AddArmorEffect => $"Ajoutez {effect.duration} d'Armure à toutes les cartes{filterSuffix} de {source}",
                         CardSelectionEffect.AddExhaustTag => $"Rendez toutes les cartes{filterSuffix} de {source} Éphémères",
                         CardSelectionEffect.AddAutomaticTag => $"Rendez toutes les cartes{filterSuffix} de {source} Automatiques",
+                        CardSelectionEffect.CopyToHand => $"Ajoutez une copie de toutes les cartes{filterSuffix} de {source} à votre main",
                         _ => $"Appliquez l'effet {effect.cardSelectionEffect} à toutes les cartes{filterSuffix} de {source}",
                         
                     };
@@ -421,6 +422,7 @@ public static class EffectDescription
                     CardSelectionEffect.AddArmorEffect => $"ajoutez-{(effect.value!=1?"leur":"lui")} {effect.duration} d'Armure",
                     CardSelectionEffect.AddExhaustTag => "rendez-"+pl+" Éphémère"+(effect.value!=1?"s":""),
                     CardSelectionEffect.AddAutomaticTag => "rendez-"+pl+" Automatique"+(effect.value!=1?"s":""),
+                    CardSelectionEffect.CopyToHand => "ajoutez une copie de "+(effect.value!=1?"chacune d'elles":"celle-ci")+" à votre main",
                     _ => effect.cardSelectionEffect.ToString()
                 };
                 string cardStr = effect.value!=-1? $"Choisissez {effect.value.ToString()}" : "Prenez toutes les";

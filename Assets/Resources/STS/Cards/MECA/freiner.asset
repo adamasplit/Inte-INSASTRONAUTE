@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Freiner
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 7d24a4be4859bc3489d5349221ee862b, type: 3}
   cost: 0

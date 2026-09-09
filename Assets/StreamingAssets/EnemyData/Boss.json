@@ -155,27 +155,8 @@
       "moveName": "",
       "effects": [
         {
-          "type": "Armor",
-          "value": 12,
-          "targetSelf": true,
-          "targetOthers": false,
-          "statusType": "Shielding",
-          "duration": 0,
-          "description": "",
-          "cardID": "",
-          "conditional": false,
-          "conditionType": "KillingBlow",
-          "conditionValue": "",
-          "trueEffect": false,
-          "cardSelectionSource": "Hand",
-          "index": 0,
-          "cardFilterTags": [],
-          "cardSelectionEffect": "None",
-          "animationType": "Default"
-        },
-        {
           "type": "Status",
-          "value": 3,
+          "value": 8,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Vigor",
@@ -219,7 +200,7 @@
           "index": 0,
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
-          "animationType": "Default"
+          "animationType": "Magic"
         },
         {
           "type": "Status",

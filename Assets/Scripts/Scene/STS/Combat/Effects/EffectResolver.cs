@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System;
 public static class EffectResolver
 {
     public static void Preview(EffectEntry effect, EffectContext ctx)
@@ -363,6 +364,7 @@ public static class EffectResolver
                 if (ctx.isPreview)
                     yield break;
                 List<StatusEffect> debuffsToTransfer = ctx.source.statusEffects.Where(s => !s.buff && (!s.framed||effect.trueEffect)&&!s.goldFrame).ToList();
+                int transferredCount = 0;
                 for (int i = 0; (i < effect.value || effect.value == -1) && debuffsToTransfer.Count > 0; i++)
                 {
                     StatusEffect debuff = debuffsToTransfer[0];
@@ -370,6 +372,15 @@ public static class EffectResolver
                     StatusEffect dispelled=debuff.Dispel(effect.duration);
                     ctx.state.effectsDispelled++;
                     ctx.target.AddStatus(dispelled);
+                    transferredCount++;
+                }
+                if (transferredCount > 0)
+                {
+                    GrandeOeuvreStatus grandeOeuvre = ctx.source.statusEffects.OfType<GrandeOeuvreStatus>().FirstOrDefault();
+                    if (grandeOeuvre != null)
+                    {
+                        ctx.source.AddStatus(new VigorStatus(grandeOeuvre.Value));
+                    }
                 }
                 yield break;
             }
@@ -665,7 +676,7 @@ public static class EffectResolver
                                     if (!deck.hand.Contains(card)) deck.AddToHand(card);
                                     break;
                                 case CardSelectionEffect.Enchant:
-                                    EnchantManager.ApplyEnchant(card, Random.Range(1, 15));
+                                    EnchantManager.ApplyEnchant(card, UnityEngine.Random.Range(1, 15));
                                     break;
                                 case CardSelectionEffect.Unenchant:
                                     card.enchantments.Clear();
@@ -736,6 +747,11 @@ public static class EffectResolver
                                 case CardSelectionEffect.AddAutomaticTag:
                                     card.AddTag(CardTag.Automatic);
                                     break;
+                                case CardSelectionEffect.CopyToHand:
+                                    CardInstance copy = card.Clone();
+                                    copy.instanceId = Guid.NewGuid().ToString("N");
+                                    deck.AddToHand(copy);
+                                    break;
                                 default:
                                     break;
                             }
@@ -787,7 +803,9 @@ public static class EffectResolver
                         yield break;
 
                     List<STSCardData> candidates = STSCardDatabase.allCards
-                        .Where(card => card != null && MatchesCardFilters(card, effect.cardFilterTags))
+                        .Where(card => card != null
+                            && card.favoredCharacter != SelectableCharacter.Starting
+                            && MatchesCardFilters(card, effect.cardFilterTags))
                         .ToList();
 
                     if (candidates.Count == 0)
@@ -1322,7 +1340,7 @@ public static class EffectResolver
     {
         for (int i = list.Count - 1; i > 0; i--)
         {
-            int swapIndex = Random.Range(0, i + 1);
+            int swapIndex = UnityEngine.Random.Range(0, i + 1);
             (list[i], list[swapIndex]) = (list[swapIndex], list[i]);
         }
     }

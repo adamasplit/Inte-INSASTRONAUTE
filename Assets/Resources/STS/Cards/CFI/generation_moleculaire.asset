@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "G\xE9n\xE9ration mol\xE9culaire"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 2b30408d03a2e504495d8fd35b159bcd, type: 3}
   cost: 1

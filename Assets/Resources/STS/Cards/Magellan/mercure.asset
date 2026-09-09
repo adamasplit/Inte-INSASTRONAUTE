@@ -19,18 +19,18 @@ MonoBehaviour:
   pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
-  cost: 2
+  cost: 1
   xCost: 0
   type: 2
   rarity: 3
   effects:
   - type: 3
-    value: 1
+    value: 0
     targetSelf: 1
     targetOthers: 0
     statusType: 0
     duration: 0
-    description: 
+    description: "Gagnez en Force du double de votre nombre d'effets n\xE9gatifs."
     cardID: 
     index: 0
     conditional: 0
@@ -47,8 +47,8 @@ MonoBehaviour:
     kind: 3
     value: 2
     info: 
-    description: 
-  favoredCharacter: 10
+    description: ' '
+  favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
   tags: 

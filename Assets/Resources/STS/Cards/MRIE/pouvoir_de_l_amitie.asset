@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Pouvoir de l'amiti\xE9"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 5d33578d2b01378439ebd0f2ff444cf2, type: 3}
   cost: 2

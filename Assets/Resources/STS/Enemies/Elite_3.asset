@@ -18,7 +18,6 @@ MonoBehaviour:
   maxHP: 45
   pattern:
   - {fileID: 11400000, guid: 6246dcd0d58203c4ab020d1b25cdde07, type: 2}
-  - {fileID: 11400000, guid: c81fe9c9fcbafbc4196a821088811f19, type: 2}
   - {fileID: 11400000, guid: 3746bd040a2bae743abad70f31212e3b, type: 2}
   - {fileID: 11400000, guid: 9050fa5b55e517842aa6b728b0c04bc4, type: 2}
   - {fileID: 11400000, guid: 9f428fb64ea62914f96f28340ffafb71, type: 2}

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Asteroid_Adept
   enemyName: Asteroid_Adept
   displayName: 
-  maxHP: 20
+  maxHP: 28
   pattern: []
   randomStart: 0
   movePattern:

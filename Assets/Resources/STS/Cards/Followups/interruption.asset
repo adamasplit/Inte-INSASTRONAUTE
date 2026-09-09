@@ -15,7 +15,9 @@ MonoBehaviour:
   id: interruption
   cardName: Interruption
   collectionCardId: 
-  collectionCard: {fileID: 0}
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 0}
   cost: 0
   xCost: 0

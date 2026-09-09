@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Forge_Warden
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  id: Forge Warden
-  enemyName: Forge Warden
+  id: Forge_Warden
+  enemyName: Forge_Warden
   displayName: Garde
   maxHP: 40
   pattern: []

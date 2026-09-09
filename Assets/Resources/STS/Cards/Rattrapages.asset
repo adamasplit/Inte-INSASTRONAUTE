@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: rattrapages
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: 
+  id: rattrapages
   cardName: Rattrapages
   collectionCardId: Rattrapages
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 0}
   cost: 0
   xCost: 0

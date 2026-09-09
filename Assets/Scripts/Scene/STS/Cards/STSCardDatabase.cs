@@ -95,6 +95,7 @@ public static class STSCardDatabase
         foreach (string file in files)
         {
             if (string.Equals(file, "STSCardData/cards.json", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(file, "STSCardData/implemented_power_passives.json", StringComparison.OrdinalIgnoreCase)
                 || file.EndsWith("/cards.json", StringComparison.OrdinalIgnoreCase)
                 || file.EndsWith("\\cards.json", StringComparison.OrdinalIgnoreCase))
             {
@@ -631,8 +632,12 @@ public static class STSCardDatabase
             return null;
         }
 
-        int index = UnityEngine.Random.Range(0, allCards.Count);
-        return allCards[index];
+        List<STSCardData> randomCards = allCards.FindAll(c => c != null && c.favoredCharacter != SelectableCharacter.Starting);
+        if (randomCards.Count == 0)
+            return null;
+
+        int index = UnityEngine.Random.Range(0, randomCards.Count);
+        return randomCards[index];
     }
     public static STSCardData GetRandomCard(SelectableCharacter character)
     {
@@ -642,7 +647,10 @@ public static class STSCardDatabase
             return null;
         }
 
-        List<STSCardData> favoredCards = allCards.FindAll(c => c != null && c.favoredCharacter == character && c.HasTag(CardTag.Created));
+        List<STSCardData> favoredCards = allCards.FindAll(c => c != null
+            && c.favoredCharacter != SelectableCharacter.Starting
+            && c.favoredCharacter == character
+            && c.HasTag(CardTag.Created));
         if (favoredCards != null && favoredCards.Count > 0)
         {
             int index = UnityEngine.Random.Range(0, favoredCards.Count);

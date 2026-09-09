@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Puissance n\xE9gative"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 19f82bfdbba6713458cfb08374a18218, type: 3}
   cost: 2

@@ -3,10 +3,10 @@ public class InstabilityStatus : StatusEffect
     public InstabilityStatus(int value)
     {
         Value = value;
+        maxValue = 3;
         Duration = -1;
         Name = "Instabilité";
         debuff = true;
-        generic=true;
     }
 
     public override string Desc(bool isPlayer)

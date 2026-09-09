@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: tms
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: tms
-  cardName: 
+  cardName: tms
   collectionCardId: 
   multiplayerExclusive: 0
   pveOnly: 0

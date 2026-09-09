@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Bouclier (PV mult.5)
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 1ee3fbf0178ec5e41a306801f62914b0, type: 3}
   cost: 0

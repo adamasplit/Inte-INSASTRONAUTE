@@ -5,7 +5,6 @@
   "maxHP": 13,
   "randomStart": false,
   "patternCardIds": [
-    "acide",
     "autodecomposer"
   ],
   "movePattern": [

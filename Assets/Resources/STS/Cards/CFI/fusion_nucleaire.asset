@@ -15,6 +15,9 @@ MonoBehaviour:
   id: fusion_nucleaire
   cardName: "Fusion nucl\xE9aire"
   collectionCardId: 
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 8e77f7dedd24c67449e077edba862ed9, type: 3}
   cost: 1
   xCost: 0

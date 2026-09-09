@@ -81,6 +81,12 @@ public static class BattleCalculator
                 value = Mathf.Max(value, baseValue);
             }
         }
+        if (type == StatType.Damage && ctx.card != null && ctx.source != null
+            && ctx.card.Type == CardType.Attaque && ctx.targets != null && ctx.targets.Count == 1
+            && ctx.source.statusEffects.Exists(status => status is PrecisionStatus) && value < baseValue)
+        {
+            value = baseValue;
+        }
         return value;
     }
     public static string GetModifiedDescription(int baseValue, StatType type, EffectContext ctx)

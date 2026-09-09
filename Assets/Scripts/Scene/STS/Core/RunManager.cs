@@ -324,6 +324,18 @@ public class RunManager : MonoBehaviour
         return unlocked;
     }
 
+    /// <summary>
+    /// Applique les cartes que le serveur a réellement débloquées pour un retrait, à la place du
+    /// tirage local : seul lui sait si ce joueur a droit au déblocage complet (réservé aux
+    /// administrateurs pour l'instant), donc c'est sa réponse qui décide de ce que ce panneau
+    /// affiche, pas la formule locale.
+    /// </summary>
+    public void ApplyServerRunEndUnlocks(List<STSCardData> unlockedCards)
+    {
+        runEndUnlocksGranted = true;
+        lastRunEndUnlockedCards = unlockedCards ?? new List<STSCardData>();
+    }
+
     public void OnRunEnd(bool clearSave, bool resetRemoteRun)
     {
         string currentScene = SceneManager.GetActiveScene().name;

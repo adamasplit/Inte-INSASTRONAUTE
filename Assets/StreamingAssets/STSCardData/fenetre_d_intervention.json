@@ -1,0 +1,40 @@
+{
+  "id": "fenetre_d_intervention",
+  "cardName": "Fenetre d'intervention",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "pveOnly": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 3,
+  "xCost": false,
+  "type": "Pouvoir",
+  "rarity": "Epic",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 0,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "PowerPassive",
+      "duration": 0,
+      "description": "",
+      "cardID": "fenetre_d_intervention",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Starting",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

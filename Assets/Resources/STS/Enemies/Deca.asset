@@ -61,6 +61,23 @@ MonoBehaviour:
       cardFilterTags: 
       cardSelectionEffect: 0
       animationType: 0
+    - type: 0
+      value: 5
+      targetSelf: 0
+      targetOthers: 0
+      statusType: 8
+      duration: 3
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 7
     nextMoveIndices: 
     weight: 0
   - card: {fileID: 0}

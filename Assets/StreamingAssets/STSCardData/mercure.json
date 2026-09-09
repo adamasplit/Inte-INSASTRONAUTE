@@ -6,7 +6,7 @@
   "pveOnly": false,
   "characterLevel": 0,
   "iconId": null,
-  "cost": 2,
+  "cost": 1,
   "xCost": false,
   "type": "Pouvoir",
   "rarity": "Epic",
@@ -14,12 +14,12 @@
   "effects": [
     {
       "type": "Status",
-      "value": 1,
+      "value": 0,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
-      "description": "",
+      "description": "Gagnez en Force du double de votre nombre d'effets négatifs.",
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
@@ -38,10 +38,10 @@
       "kind": "DebuffOnSelf",
       "value": 2,
       "info": "",
-      "description": ""
+      "description": " "
     }
   ],
-  "favoredCharacter": "Impossible",
+  "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": []

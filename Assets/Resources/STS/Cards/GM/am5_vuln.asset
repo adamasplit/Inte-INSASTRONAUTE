@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Vuln\xE9rable (Armure mult.5)"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 6fe6dc3c784d2994a9efbace2a3d2274, type: 3}
   cost: 0

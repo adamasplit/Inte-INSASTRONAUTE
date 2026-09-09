@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Elite_1
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  id: Elite 1
-  enemyName: Elite 1
+  id: Elite_1
+  enemyName: Elite_1
   displayName: Mage dimensionnel
   maxHP: 70
   pattern:

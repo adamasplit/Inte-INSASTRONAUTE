@@ -15,7 +15,9 @@ MonoBehaviour:
   id: diamant
   cardName: Diamant
   collectionCardId: 
-  collectionCard: {fileID: 0}
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 33311d51c6b42414b9929b094cd44402, type: 3}
   cost: 1
   xCost: 0
@@ -30,6 +32,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -37,6 +40,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   - type: 3
     value: 2
     targetSelf: 1
@@ -45,6 +49,7 @@ MonoBehaviour:
     duration: 0
     description: 
     cardID: 
+    index: 0
     conditional: 0
     conditionType: 0
     conditionValue: 
@@ -52,6 +57,7 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
+    animationType: 0
   targetingMode: 0
   modifiers: []
   favoredCharacter: 4

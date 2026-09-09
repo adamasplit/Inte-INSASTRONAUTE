@@ -1,0 +1,40 @@
+{
+  "id": "reaction_en_cascade",
+  "cardName": "Reaction en cascade",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "pveOnly": false,
+  "characterLevel": 0,
+  "iconId": "Debuff",
+  "cost": 1,
+  "xCost": false,
+  "type": "Pouvoir",
+  "rarity": "Rare",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 3,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Instability",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Starting",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

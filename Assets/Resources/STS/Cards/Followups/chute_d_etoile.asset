@@ -15,6 +15,9 @@ MonoBehaviour:
   id: chute_d_etoile
   cardName: "Chute d'\xE9toile"
   collectionCardId: 
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: ecca81ce7d5f6ab4b959903af5a87559, type: 3}
   cost: 0
   xCost: 0

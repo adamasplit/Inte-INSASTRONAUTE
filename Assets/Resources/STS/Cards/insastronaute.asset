@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Frapp'astrale
   collectionCardId: Ins'astronaute
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 1

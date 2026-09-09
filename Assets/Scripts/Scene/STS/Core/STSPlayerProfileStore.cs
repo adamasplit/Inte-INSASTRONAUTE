@@ -80,17 +80,18 @@ public static class STSPlayerProfileStore
         return unlocked;
     }
 
-    // Mirrors the server-authoritative formula in StsPvpService so the client preview matches what actually gets granted.
-    // Retreat: 0/1/3/6/... unlocks for 0/1/2/3/... bosses defeated. Game over: 1 unlock if any boss was defeated, else 0.
+    // Mirrors the server-authoritative rule in StsPvpService so the client preview matches what actually gets granted.
+    // Retreat unlocks every eligible deck card, no draw involved; game over grants 1 consolation card if any boss was defeated, else 0.
+    // Only reached for unrestricted/offline runs now: real runs get their answer from the server's
+    // (admin-gated) retire response instead, in RetreatManager.ApplyRetireUnlocks.
     private static int RunEndUnlockCount(bool wasRetreat, int act)
     {
-        int normalizedAct = Mathf.Max(0, act);
         if (wasRetreat)
         {
-            int bossesDefeated = normalizedAct;
-            return bossesDefeated * (bossesDefeated + 1) / 2;
+            return int.MaxValue;
         }
 
+        int normalizedAct = Mathf.Max(0, act);
         return normalizedAct > 0 ? 1 : 0;
     }
 

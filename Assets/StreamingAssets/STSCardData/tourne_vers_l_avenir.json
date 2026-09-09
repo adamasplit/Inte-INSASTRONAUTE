@@ -1,0 +1,40 @@
+{
+  "id": "tourne_vers_l_avenir",
+  "cardName": "Tourné vers l'avenir",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "pveOnly": false,
+  "characterLevel": 0,
+  "iconId": "Avenir",
+  "cost": 3,
+  "xCost": false,
+  "type": "Pouvoir",
+  "rarity": "Legendary",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 3,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Avenir",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "MRIE",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Acc\xE9l\xE9rer"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 26df9c628a5dbab45b73361fc3d00fa3, type: 3}
   cost: 1

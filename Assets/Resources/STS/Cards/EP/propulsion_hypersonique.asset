@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Propulsion hypersonique
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 22e1df2e2945da843bb81be496f0908f, type: 3}
   cost: 2

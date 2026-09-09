@@ -15,6 +15,9 @@ MonoBehaviour:
   id: tp_d_ana
   cardName: TP d'Ana
   collectionCardId: 
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 1a3301914636a8d4ab53ce67517aaf60, type: 3}
   cost: 1
   xCost: 0

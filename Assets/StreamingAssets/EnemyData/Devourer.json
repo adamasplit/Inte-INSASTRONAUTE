@@ -42,7 +42,7 @@
       "effects": [
         {
           "type": "CardSelection",
-          "value": 1,
+          "value": 2,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",

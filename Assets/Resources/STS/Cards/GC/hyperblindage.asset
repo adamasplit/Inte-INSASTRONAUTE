@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Hyperblindage
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 69d8a5cf4c2796043869740fafe1745e, type: 3}
   cost: 0

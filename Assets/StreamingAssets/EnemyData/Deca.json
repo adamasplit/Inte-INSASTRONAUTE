@@ -2,7 +2,7 @@
   "id": "Deca",
   "enemyName": "Deca",
   "displayName": "",
-  "maxHP": 16,
+  "maxHP": 21,
   "randomStart": false,
   "patternCardIds": [],
   "movePattern": [
@@ -55,6 +55,25 @@
           "cardFilterTags": [],
           "cardSelectionEffect": "None",
           "animationType": "Default"
+        },
+        {
+          "type": "Damage",
+          "value": 5,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Slow",
+          "duration": 3,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "ExplosionSmall"
         }
       ],
       "nextMoveIndices": [],

@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Vibration
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 4a198ba8e29ac55448edfe249721f9d7, type: 3}
   cost: 0

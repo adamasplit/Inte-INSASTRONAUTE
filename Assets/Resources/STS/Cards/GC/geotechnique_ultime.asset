@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "G\xE9o-technique ultime"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 54a5da500e5b740429e6acfab50a4857, type: 3}
   cost: 2

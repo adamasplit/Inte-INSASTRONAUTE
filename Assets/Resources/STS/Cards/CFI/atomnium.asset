@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Atomnium
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 8d862027116621741aa4a574bfa497ed, type: 3}
   cost: 1

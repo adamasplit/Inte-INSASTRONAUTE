@@ -58,14 +58,14 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  targetingMode: 0
+  targetingMode: 1
   modifiers:
   - type: 5
     kind: 15
     value: 1
     info: 
-    description: 
-  favoredCharacter: 11
+    description: ' '
+  favoredCharacter: 3
   animationSpeed: 1
   startingCount: 0
   tags: 

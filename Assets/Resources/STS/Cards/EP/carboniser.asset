@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Carboniser
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 5185460d034785c4e836806c6f9fcd69, type: 3}
   cost: 1

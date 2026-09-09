@@ -55,7 +55,7 @@
     {
       "type": "Damage",
       "kind": "ArmorScaling",
-      "value": 10,
+      "value": 20,
       "info": "",
       "description": ""
     }

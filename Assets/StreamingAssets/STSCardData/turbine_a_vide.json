@@ -1,0 +1,20 @@
+{
+  "id": "turbine_a_vide",
+  "cardName": "turbine_a_vide",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "pveOnly": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 3,
+  "xCost": false,
+  "type": "Rien",
+  "rarity": "Epic",
+  "targetingMode": "Player",
+  "effects": [],
+  "modifiers": [],
+  "favoredCharacter": "Starting",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

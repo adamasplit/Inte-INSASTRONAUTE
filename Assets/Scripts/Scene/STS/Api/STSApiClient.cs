@@ -255,6 +255,7 @@ public class STSApiRunRetireResponse
     public long scorePerToken;
     public string rounding;
     public long minimumReward;
+    public List<string> pvpUnlockedCardNames = new();
 }
 
 [Serializable]

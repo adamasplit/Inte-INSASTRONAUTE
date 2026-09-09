@@ -15,6 +15,9 @@ MonoBehaviour:
   id: hate
   cardName: "H\xE2te"
   collectionCardId: 
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: b019c58566e61fe41ada707e0ec31d2b, type: 3}
   cost: 0
   xCost: 0

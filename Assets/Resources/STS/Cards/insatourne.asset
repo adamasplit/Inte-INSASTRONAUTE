@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Pause de tournage
   collectionCardId: Insatourne
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 1
@@ -28,7 +29,7 @@ MonoBehaviour:
     targetSelf: 0
     targetOthers: 0
     statusType: 64
-    duration: 1
+    duration: 3
     description: 
     cardID: 
     index: 0

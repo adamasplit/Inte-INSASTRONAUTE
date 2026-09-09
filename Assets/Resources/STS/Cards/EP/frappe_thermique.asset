@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Frappe thermique
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: d58f638fe50664a46ad981675262fed3, type: 3}
   cost: 1

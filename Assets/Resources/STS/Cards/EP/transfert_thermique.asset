@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Transfert thermique
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 5495b4e2783f4bf4d885035611c71ad6, type: 3}
   cost: 2
@@ -24,7 +25,7 @@ MonoBehaviour:
   rarity: 0
   effects:
   - type: 0
-    value: 5
+    value: 8
     targetSelf: 0
     targetOthers: 0
     statusType: 0
@@ -46,7 +47,7 @@ MonoBehaviour:
     kind: 3
     value: 8
     info: 
-    description: 
+    description: "Les d\xE9g\xE2ts sont multipli\xE9s par votre nombre d'effets n\xE9gatifs"
   favoredCharacter: 0
   animationSpeed: 1
   startingCount: 0

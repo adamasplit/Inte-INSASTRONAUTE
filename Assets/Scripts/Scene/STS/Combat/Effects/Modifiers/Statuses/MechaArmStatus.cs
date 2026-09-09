@@ -4,6 +4,7 @@ public class MechaArmStatus : StatusEffect
     public MechaArmStatus(int value)
     {
         Value=value;
+        maxValue = 3;
         Name = "Bras mécatronique";
         Duration = -1;
         buff=true;

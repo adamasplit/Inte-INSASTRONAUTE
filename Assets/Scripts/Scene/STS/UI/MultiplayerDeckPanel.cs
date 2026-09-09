@@ -428,11 +428,10 @@ public class MultiplayerDeckPanel : MonoBehaviour
     /// Délègue à la règle du serveur, au lieu de la redire ici.
     /// </summary>
     /// <remarks>
-    /// Ce code exigeait de posséder toute carte non exclusive. Le serveur, lui, ne
-    /// restreint que celles liées à une carte de collection — quarante-deux sur trois
-    /// cent cinquante. Un joueur sans collection voyait donc une grille vide, ne
-    /// pouvait composer aucun deck, et se voyait refuser toute recherche de combat
-    /// faute d'en avoir un. Le multijoueur était fermé à qui n'avait jamais scanné.
+    /// Toute carte de campagne est verrouillée par défaut ; <c>owned</c> vient de la
+    /// collection pour celles qui y sont liées, et d'une fin de run (retrait ou game
+    /// over) pour toutes les autres — y compris les exclusives multijoueur, qui ne se
+    /// débloquent plus par niveau de personnage.
     /// </remarks>
     private bool IsUnlocked(STSCardData card, bool owned)
     {
@@ -599,12 +598,9 @@ public class MultiplayerDeckPanel : MonoBehaviour
     {
         if (!entry.unlocked)
         {
-            if (entry.card.multiplayerExclusive)
-            {
-                return $"Niv. requis: {entry.card.characterLevel}";
-            }
-
-            return "Carte non obtenue";
+            // Every non-campaign card is locked the same way now: earned at a run's end
+            // (retreat or game over), not bought with a character level.
+            return "Carte non débloquée";
         }
 
         if (!entry.characterCompatible)

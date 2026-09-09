@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Lenteur (PV mult.4)
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: f9bfcdfad7c55bf41a7753f6a8509d4e, type: 3}
   cost: 0

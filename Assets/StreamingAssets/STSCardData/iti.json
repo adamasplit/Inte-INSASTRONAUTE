@@ -10,7 +10,7 @@
   "xCost": false,
   "type": "Attaque",
   "rarity": "Epic",
-  "targetingMode": "Player",
+  "targetingMode": "Enemy",
   "effects": [
     {
       "type": "Multihit",
@@ -57,10 +57,10 @@
       "kind": "DamageDealtWithLastAction",
       "value": 1,
       "info": "",
-      "description": ""
+      "description": " "
     }
   ],
-  "favoredCharacter": "Starting",
+  "favoredCharacter": "ITI",
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": []

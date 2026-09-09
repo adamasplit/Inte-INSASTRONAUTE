@@ -22,8 +22,8 @@ public class DispelBlockStatus : StatusEffect
         string turns = $"{Duration} tour" + (Duration > 1 ? "s" : "");
         if (isPlayer)
         {
-            return $"Vous ne pouvez retirer aucun statut, sur personne, pendant {turns}.";
+            return $"Vous ne pouvez retirer aucun statut pendant {turns}.";
         }
-        return $"Ce personnage ne peut retirer aucun statut, sur personne, pendant {turns}.";
+        return $"Ce personnage ne peut retirer aucun statut pendant {turns}.";
     }
 }

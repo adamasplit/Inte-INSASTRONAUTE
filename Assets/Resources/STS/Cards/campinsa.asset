@@ -31,6 +31,7 @@ MonoBehaviour:
     \xE0 faire le don, le don de soi..."
   collectionCardId: Camp'insa
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 1

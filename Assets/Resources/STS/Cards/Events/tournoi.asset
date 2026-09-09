@@ -13,20 +13,37 @@ MonoBehaviour:
   m_Name: tournoi
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: tournoi
-  cardName: Smash final
+  cardName: Carapace bleue
   collectionCardId: Tournoi
   multiplayerExclusive: 0
   pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
-  cost: 0
+  cost: 2
   xCost: 0
   type: 0
   rarity: 4
   effects:
-  - type: 11
-    value: 10
-    targetSelf: 1
+  - type: 3
+    value: 1
+    targetSelf: 0
+    targetOthers: 0
+    statusType: 16
+    duration: 1
+    description: 
+    cardID: 
+    index: 0
+    conditional: 1
+    conditionType: 12
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 
+    cardSelectionEffect: 0
+    animationType: 0
+  - type: 0
+    value: 8
+    targetSelf: 0
     targetOthers: 0
     statusType: 0
     duration: 0
@@ -40,27 +57,10 @@ MonoBehaviour:
     cardSelectionSource: 0
     cardFilterTags: 
     cardSelectionEffect: 0
-    animationType: 0
-  - type: 0
-    value: 30
-    targetSelf: 0
-    targetOthers: 0
-    statusType: 0
-    duration: 0
-    description: 
-    cardID: 
-    index: 0
-    conditional: 1
-    conditionType: 3
-    conditionValue: 
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 0
-    animationType: 0
+    animationType: 7
   targetingMode: 1
   modifiers: []
-  favoredCharacter: 10
+  favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
-  tags: 
+  tags: 09000000

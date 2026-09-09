@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Labyrinthe
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 049869ce55c9e9447aeb1c680e117974, type: 3}
   cost: 3

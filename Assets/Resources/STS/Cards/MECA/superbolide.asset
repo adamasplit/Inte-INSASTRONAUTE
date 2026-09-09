@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Superbolide
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 406c9eafbf0a2b246a75bc88435c4bd6, type: 3}
   cost: 1

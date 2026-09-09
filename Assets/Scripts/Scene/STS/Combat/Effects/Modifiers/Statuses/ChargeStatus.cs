@@ -3,6 +3,7 @@ public class ChargeStatus : StatusEffect
     public ChargeStatus(int value)
     {
         Value = value;
+        maxValue = 3;
         Duration = -1;
         Name = "Charge";
         buff = true;

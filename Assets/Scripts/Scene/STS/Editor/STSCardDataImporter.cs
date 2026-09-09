@@ -135,13 +135,13 @@ public class STSCardDataImporter : EditorWindow
         string[] files = Directory.GetFiles(source, "*.json", depth);
         Array.Sort(files, StringComparer.OrdinalIgnoreCase);
 
-        List<CardSource> parsed = new();
-        Dictionary<string, string> seenIds = new(StringComparer.Ordinal);
+        List<CardSource> perCardFiles = new();
+        List<CardSource> bundledFiles = new();
         int ignoredFiles = 0;
 
         foreach (string file in files)
         {
-            if (!TryReadCards(file, out List<STSCardDataDTO> dtos, out string readError))
+            if (!TryReadCards(file, out List<STSCardDataDTO> dtos, out bool isBundle, out string readError))
             {
                 if (readError != null)
                 {
@@ -164,15 +164,40 @@ public class STSCardDataImporter : EditorWindow
                     continue;
                 }
 
-                if (seenIds.TryGetValue(dto.id, out string firstFile))
-                {
-                    log.Add($"[doublon] '{dto.id}' déjà lu dans {ShortPath(firstFile, source)}, occurrence de {ShortPath(file, source)} ignorée.");
-                    continue;
-                }
-
-                seenIds.Add(dto.id, file);
-                parsed.Add(new CardSource { dto = dto, file = file });
+                (isBundle ? bundledFiles : perCardFiles).Add(new CardSource { dto = dto, file = file });
             }
+        }
+
+        // Même priorité qu'au runtime (STSCardDatabase) : les fichiers par carte font foi,
+        // un recueil comme cards.json ne sert que de repli pour les cartes qu'ils ne couvrent
+        // pas. Sans ça l'ordre alphabétique fait gagner cards.json, qui est un export souvent
+        // plus ancien, et l'import ne réécrit que les valeurs déjà présentes dans les assets.
+        List<CardSource> parsed = new(perCardFiles.Count + bundledFiles.Count);
+        Dictionary<string, string> seenIds = new(StringComparer.OrdinalIgnoreCase);
+        int shadowed = 0;
+
+        foreach (CardSource entry in perCardFiles)
+        {
+            if (seenIds.TryGetValue(entry.dto.id, out string firstFile))
+            {
+                log.Add($"[doublon] '{entry.dto.id}' déjà défini par {ShortPath(firstFile, source)}, occurrence de {ShortPath(entry.file, source)} ignorée.");
+                continue;
+            }
+
+            seenIds.Add(entry.dto.id, entry.file);
+            parsed.Add(entry);
+        }
+
+        foreach (CardSource entry in bundledFiles)
+        {
+            if (seenIds.ContainsKey(entry.dto.id))
+            {
+                shadowed++;
+                continue;
+            }
+
+            seenIds.Add(entry.dto.id, entry.file);
+            parsed.Add(entry);
         }
 
         if (parsed.Count == 0)
@@ -246,7 +271,7 @@ public class STSCardDataImporter : EditorWindow
                         created++;
                         log.Add($"[créerait] {assetPath}");
                     }
-                    else if (currentPath != assetPath && moveMisplacedAssets)
+                    else if (!PathsMatch(currentPath, assetPath) && moveMisplacedAssets)
                     {
                         moved++;
                         updated++;
@@ -274,7 +299,7 @@ public class STSCardDataImporter : EditorWindow
                     continue;
                 }
 
-                if (currentPath != assetPath && moveMisplacedAssets)
+                if (!PathsMatch(currentPath, assetPath) && moveMisplacedAssets)
                 {
                     string moveError = AssetDatabase.MoveAsset(currentPath, assetPath);
                     if (string.IsNullOrEmpty(moveError))
@@ -302,12 +327,19 @@ public class STSCardDataImporter : EditorWindow
                 }
 
                 EditorUtility.CopySerialized(card, existing);
+                // OnValidate aligne de toute façon l'id sur le nom de fichier : on garde le nom
+                // du fichier existant pour ne pas invalider les références par nom.
                 existing.name = Path.GetFileNameWithoutExtension(currentPath);
                 existing.id = existing.name;
                 EditorUtility.SetDirty(existing);
                 DestroyImmediate(card);
                 updated++;
                 log.Add($"[mis à jour] {currentPath}");
+
+                if (!string.Equals(existing.name, entry.dto.id, StringComparison.Ordinal))
+                {
+                    log.Add($"[nom] '{entry.dto.id}' est stocké dans '{existing.name}.asset' : l'id de l'asset reste '{existing.name}'.");
+                }
             }
         }
         finally
@@ -330,6 +362,10 @@ public class STSCardDataImporter : EditorWindow
         }
 
         builder.Append($", {skipped} ignorée(s), {failed} en erreur — sur {parsed.Count} carte(s) lues dans {files.Length} fichier(s).");
+        if (shadowed > 0)
+        {
+            builder.Append($" {shadowed} entrée(s) de recueil (cards.json…) écartée(s) au profit du fichier individuel de la carte.");
+        }
         summary = builder.ToString();
         Debug.Log(summary);
     }
@@ -339,9 +375,10 @@ public class STSCardDataImporter : EditorWindow
     /// un tableau de cartes, ou une enveloppe <c>{ "cards": [...] }</c> (cards.json).
     /// Renvoie false sans erreur pour un JSON qui n'est pas une carte (index.json).
     /// </summary>
-    private static bool TryReadCards(string file, out List<STSCardDataDTO> dtos, out string error)
+    private static bool TryReadCards(string file, out List<STSCardDataDTO> dtos, out bool isBundle, out string error)
     {
         dtos = null;
+        isBundle = false;
         error = null;
 
         JToken token;
@@ -361,13 +398,18 @@ public class STSCardDataImporter : EditorWindow
             if (obj["cards"] is JArray wrapped)
             {
                 cardsToken = wrapped;
+                isBundle = true;
             }
             else if (obj["id"] == null && obj["cardName"] == null)
             {
                 return false;
             }
         }
-        else if (!(token is JArray))
+        else if (token is JArray)
+        {
+            isBundle = true;
+        }
+        else
         {
             return false;
         }
@@ -454,9 +496,14 @@ public class STSCardDataImporter : EditorWindow
         }
     }
 
+    /// <summary>
+    /// Indexe les cartes déjà présentes sous la racine, par nom de fichier et par id, en
+    /// ignorant la casse : des assets comme 'Octogone.asset' portent un id 'octogone', et une
+    /// comparaison sensible à la casse en créait un doublon dans le dossier du personnage.
+    /// </summary>
     private static Dictionary<string, string> BuildExistingAssetPaths(string root)
     {
-        Dictionary<string, string> paths = new(StringComparer.Ordinal);
+        Dictionary<string, string> paths = new(StringComparer.OrdinalIgnoreCase);
         if (!AssetDatabase.IsValidFolder(root))
         {
             return paths;
@@ -466,9 +513,24 @@ public class STSCardDataImporter : EditorWindow
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
             paths[Path.GetFileNameWithoutExtension(path)] = path;
+
+            STSCardData card = AssetDatabase.LoadAssetAtPath<STSCardData>(path);
+            if (card != null && !string.IsNullOrWhiteSpace(card.id) && !paths.ContainsKey(card.id))
+            {
+                paths[card.id] = path;
+            }
         }
 
         return paths;
+    }
+
+    /// <summary>
+    /// Comparaison de chemins insensible a la casse : sous Windows 'Acide.asset' et
+    /// 'acide.asset' designent le meme fichier, et un MoveAsset entre les deux echoue.
+    /// </summary>
+    private static bool PathsMatch(string a, string b)
+    {
+        return string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
     }
 
     private static string SanitizeFileName(string raw)

@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Erreur fatale
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 3b23c0a129317d341b227cfe4d13e98b, type: 3}
   cost: 2

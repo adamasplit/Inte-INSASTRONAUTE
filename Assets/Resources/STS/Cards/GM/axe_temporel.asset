@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Compression temporelle
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: a9b88bf9b72048c45a335ffaed6b4893, type: 3}
   cost: 1

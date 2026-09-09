@@ -40,7 +40,7 @@
       "info": "",
       "description": "Se rejoue pour chaque effet sur la cible"
     },
-{
+    {
       "type": "ReplayCount",
       "kind": "BuffOnTarget",
       "value": 1,
@@ -49,7 +49,7 @@
     }
   ],
   "favoredCharacter": "AI",
-  "animationSpeed": 1,
+  "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": []
 }

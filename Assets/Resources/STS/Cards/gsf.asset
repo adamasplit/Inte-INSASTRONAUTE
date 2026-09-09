@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Gestion Stress et Fatigue
   collectionCardId: GSF
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 0
@@ -41,10 +42,10 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   - type: 3
-    value: 2
+    value: 6
     targetSelf: 1
     targetOthers: 0
-    statusType: 9
+    statusType: 14
     duration: 4
     description: 
     cardID: 

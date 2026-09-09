@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: chasse_au_tresor
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: chasse_au_tresor
-  cardName: 
+  cardName: chasse_au_tresor
   collectionCardId: 
   multiplayerExclusive: 0
   pveOnly: 0

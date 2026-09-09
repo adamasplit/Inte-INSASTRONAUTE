@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Coloriage magique
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 2de3157a45cbe614d9fa34b275ee1091, type: 3}
   cost: 0

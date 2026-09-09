@@ -15,6 +15,9 @@ MonoBehaviour:
   id: mise_en_cage
   cardName: Mise en cage
   collectionCardId: La Suite
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 0}
   cost: 1
   xCost: 0

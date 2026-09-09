@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Mentalit\xE9 Kaizen"
   collectionCardId: "C\xF4te Sainte Catherine"
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 1

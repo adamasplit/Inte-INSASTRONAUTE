@@ -16,6 +16,8 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
     public TimelineUI timelineUI;
     public CombatManager combat;
     public GameObject arrowPrefab;
+    /// Le voile de Confusion, posé au-dessus de la carte : le joueur ne choisit plus ce qu'il joue.
+    public GameObject confusionOverlay;
     private ArrowUI arrow;
     bool cardPlayedByDrop;
     void Awake()
@@ -53,28 +55,7 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
         startPos = rect.anchoredPosition;
         transform.localScale = Vector3.one * 1.1f;
         group.blocksRaycasts = false;
-        Canvas canvas =  GameObject.Find("ArrowCanvas").GetComponent<Canvas>();
-        if (canvas == null)
-        {
-            Debug.LogError("No canvas found for arrow");
-            return;
-        }
-        GameObject arrowObject = Instantiate(arrowPrefab, canvas.transform);
-        if (arrowObject == null)
-        {
-            Debug.LogError("Arrow prefab not found!");
-            return;
-        }
-        arrow = arrowObject.GetComponent<ArrowUI>();
-        if (arrow == null)
-        {
-            Debug.LogError("ArrowUI component not found on arrow prefab!");
-            return;
-        }
-        else
-        {
-            arrow.Init(this);
-        }
+        CreateArrow();
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -98,12 +79,8 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
         );
         Vector2 end = eventData.position;
 
-        if (arrow == null)
-        {
-            Debug.LogError("ArrowUI component not found!");
-            return;
-        }
-        arrow.UpdateArrow(start, end);
+        if (arrow != null)
+            arrow.UpdateArrow(start, end);
 
         var sim = turnSystem.SimulateCard(turnSystem.timeline, cardView.cardInstance, GetDisplayTargets(target));
         var future = turnSystem.GetFuture(sim,10);
@@ -180,13 +157,45 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
             cardView.isDragging = false;
         }
         transform.localScale = Vector3.one;
-        if (arrow != null) Destroy(arrow.gameObject);
+        DestroyArrow();
         ui.Deselect();
+    }
+
+    void CreateArrow()
+    {
+        GameObject arrowCanvasObject = GameObject.Find("ArrowCanvas");
+        Canvas arrowCanvas = arrowCanvasObject != null
+            ? arrowCanvasObject.GetComponent<Canvas>()
+            : null;
+        if (arrowCanvas == null || arrowPrefab == null)
+        {
+            Debug.LogWarning("[STS-INPUT] Arrow UI unavailable; continuing drag without it.");
+            return;
+        }
+
+        GameObject arrowObject = Instantiate(arrowPrefab, arrowCanvas.transform);
+        arrow = arrowObject.GetComponent<ArrowUI>()
+            ?? arrowObject.GetComponentInChildren<ArrowUI>(true);
+        if (arrow == null)
+        {
+            Debug.LogWarning("[STS-INPUT] Arrow prefab has no ArrowUI; continuing drag without it.");
+            Destroy(arrowObject);
+            return;
+        }
+
+        arrow.Init(this);
     }
 
     public void Destroy()
     {
-        if (arrow != null) Destroy(arrow.gameObject);
+        DestroyArrow();
+    }
+
+    void DestroyArrow()
+    {
+        if (arrow != null)
+            Destroy(arrow.gameObject);
+        arrow = null;
     }
 
     public void NotifyCardPlayedFromDrop()
@@ -245,7 +254,24 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
     }
     void Update()
     {
-        if (cardView == null) Destroy(gameObject);
+        if (cardView == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        RefreshConfusionOverlay();
+    }
+
+    void RefreshConfusionOverlay()
+    {
+        if (confusionOverlay == null)
+            return;
+
+        Player acting = combat != null ? combat.GetActingPlayer() : null;
+        bool confused = acting != null && acting.HasStatus("Confusion");
+        if (confusionOverlay.activeSelf != confused)
+            confusionOverlay.SetActive(confused);
     }
 
 }

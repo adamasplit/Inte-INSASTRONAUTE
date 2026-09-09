@@ -35,6 +35,14 @@ public class PvpCardHistoryPanel : MonoBehaviour
     [SerializeField] private ScrollRect scrollRect;
     [SerializeField] private TextMeshProUGUI emptyLabel;
 
+    [Header("Bouton bascule")]
+    [Tooltip("Replie ou déplie la colonne. Caché comme le panneau tant qu'il n'y a rien à montrer.")]
+    [SerializeField] private Button toggleButton;
+    [Tooltip("Facultatif : affiche l'état replié/déplié.")]
+    [SerializeField] private TextMeshProUGUI toggleButtonLabel;
+    [SerializeField] private string expandedLabel = "▼";
+    [SerializeField] private string collapsedLabel = "▲";
+
     [Header("Carte agrandie")]
     [Tooltip("Laisser vide : le panneau de deck de la scène de boot est trouvé tout seul.")]
     [SerializeField] private DeckGridPanel zoomPanel;
@@ -47,11 +55,40 @@ public class PvpCardHistoryPanel : MonoBehaviour
 
     private readonly List<GameObject> spawnedEntries = new();
     private List<PvpPlayedCard> shownHistory;
+    private bool hasContent;
+    private bool collapsed;
 
     private void Awake()
     {
-        // Rien tant que rien n'a été joué.
-        SetVisible(false);
+        if (toggleButton != null)
+            toggleButton.onClick.AddListener(ToggleCollapsed);
+
+        // Rien tant que rien n'a été joué : cache aussi le bouton, pas seulement la liste.
+        ApplyVisibility();
+    }
+
+    /// <summary>
+    /// Replie ou déplie la colonne sans toucher à son contenu.
+    ///
+    /// <para>Le bouton, lui, reste visible tant qu'il y a un historique à rouvrir : seul
+    /// l'absence de contenu — un combat PvE, un duel où rien n'a encore été joué — le cache,
+    /// comme le panneau lui-même.</para>
+    /// </summary>
+    private void ToggleCollapsed()
+    {
+        collapsed = !collapsed;
+        ApplyVisibility();
+    }
+
+    private void ApplyVisibility()
+    {
+        SetVisible(hasContent && !collapsed);
+
+        if (toggleButton != null)
+            toggleButton.gameObject.SetActive(hasContent);
+
+        if (toggleButtonLabel != null)
+            toggleButtonLabel.text = collapsed ? collapsedLabel : expandedLabel;
     }
 
     /// <summary>
@@ -137,7 +174,8 @@ public class PvpCardHistoryPanel : MonoBehaviour
         }
 
         bool anything = spawnedEntries.Count > 0;
-        SetVisible(anything);
+        hasContent = anything;
+        ApplyVisibility();
         if (emptyLabel != null)
             emptyLabel.gameObject.SetActive(!anything);
 

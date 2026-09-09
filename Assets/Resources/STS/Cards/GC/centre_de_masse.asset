@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Centre de masse
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 53770f7c52348c641bb46c1fb020948c, type: 3}
   cost: 2

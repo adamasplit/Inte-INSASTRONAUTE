@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Arri\xE8re-cour"
   collectionCardId: Radium
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 1

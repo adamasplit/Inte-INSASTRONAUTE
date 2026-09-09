@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: meca
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
   id: meca
-  cardName: Machine ultime
+  cardName: Galvanisation
   collectionCardId: Mecaca
   multiplayerExclusive: 0
   pveOnly: 0
@@ -25,10 +25,10 @@ MonoBehaviour:
   rarity: 4
   effects:
   - type: 3
-    value: 0
-    targetSelf: 0
+    value: 1
+    targetSelf: 1
     targetOthers: 0
-    statusType: 0
+    statusType: 105
     duration: 0
     description: 
     cardID: 
@@ -43,7 +43,7 @@ MonoBehaviour:
     animationType: 0
   targetingMode: 0
   modifiers: []
-  favoredCharacter: 11
+  favoredCharacter: 1
   animationSpeed: 1
   startingCount: 0
   tags: 

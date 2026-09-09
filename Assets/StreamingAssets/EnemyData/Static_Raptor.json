@@ -35,7 +35,7 @@
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Continuous",
-          "duration": 10,
+          "duration": 5,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -60,7 +60,7 @@
       "effects": [
         {
           "type": "Multihit",
-          "value": 3,
+          "value": 5,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
@@ -108,7 +108,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 5,
+          "value": 8,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Speed",
@@ -127,11 +127,11 @@
         },
         {
           "type": "Status",
-          "value": 2,
+          "value": 1,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Slow",
-          "duration": 2,
+          "duration": 1,
           "description": "",
           "cardID": "",
           "conditional": false,

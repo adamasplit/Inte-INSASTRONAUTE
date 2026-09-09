@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Terre br\xFBl\xE9e..."
   collectionCardId: BAF
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 3

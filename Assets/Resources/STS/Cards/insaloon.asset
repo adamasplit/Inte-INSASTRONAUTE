@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Tir rapide
   collectionCardId: Insaloon
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 0
@@ -23,23 +24,6 @@ MonoBehaviour:
   type: 0
   rarity: 3
   effects:
-  - type: 20
-    value: 1
-    targetSelf: 0
-    targetOthers: 0
-    statusType: 0
-    duration: 0
-    description: 
-    cardID: 
-    index: 0
-    conditional: 0
-    conditionType: 0
-    conditionValue: 
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 0
-    animationType: 0
   - type: 0
     value: 4
     targetSelf: 0

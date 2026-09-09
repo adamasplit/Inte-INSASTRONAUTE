@@ -15,6 +15,9 @@ MonoBehaviour:
   id: brouillage
   cardName: Brouillage
   collectionCardId: 
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: bb68fd50b51e5ab4bb3935f48c539d95, type: 3}
   cost: 1
   xCost: 0
@@ -23,7 +26,7 @@ MonoBehaviour:
   effects: []
   targetingMode: 0
   modifiers: []
-  favoredCharacter: 8
+  favoredCharacter: 10
   animationSpeed: 1
   startingCount: 0
   tags: 060000000800000009000000040000001200000013000000

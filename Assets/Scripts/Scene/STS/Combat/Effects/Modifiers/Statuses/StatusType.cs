@@ -89,5 +89,36 @@ public enum StatusType
     Exposure,
     Fortify,
     Instability,
-    Precision
+    Precision,
+    PowerPassive,
+    Infaillible,
+
+    // Gardés à la fin : les ScriptableObjects sérialisent cette valeur par index.
+    Univers,
+    Megacristal,
+    Fragmentation,
+    Propulsion,
+    Empathie,
+    Avenir,
+    Innocence,
+    MesuresEnvergure,
+
+    // Gardés à la fin : les ScriptableObjects sérialisent cette valeur par index.
+    LamesArdentes,
+    Sublimation,
+    AmeArtiste,
+    GrandeOeuvre,
+    ParcNaturel,
+    Pavillon,
+    SuiteArithmetique,
+    MurOffensif,
+    SeptiemeVitesse,
+    FreinMoteur,
+    Galvanisation,
+    Tenebres,
+
+    // Gardés à la fin : les ScriptableObjects sérialisent cette valeur par index.
+    Provocation,
+    Adrenaline,
+    Miracle
 }

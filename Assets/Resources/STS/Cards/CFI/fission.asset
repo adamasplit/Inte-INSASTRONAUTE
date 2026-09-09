@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Fission
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 547c0d6c5953f0e478beef0f90aed0c0, type: 3}
   cost: 3

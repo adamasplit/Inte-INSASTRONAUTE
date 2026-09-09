@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Choc thermique
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: d3d4e00174c39dd44b8d3be2d348d17d, type: 3}
   cost: 2

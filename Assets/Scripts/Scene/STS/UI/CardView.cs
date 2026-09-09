@@ -199,15 +199,23 @@ public class CardView : MonoBehaviour,IPointerClickHandler
                     rarityColor = new Color(0.86f, 0.08f, 0.24f);
                     break;
             }
+            if (card.data.id=="ep") //Don't show the border for the EP card
+                {
+                    rarityBorder2.enabled = false;
+                    rarityBorder.enabled = false;
+                    SetDescription("");
+                    return;
+                }
             if (rarityBorder != null)
                 rarityBorder.color = rarityColor;
             if (rarityBorder2 != null)
+            {
                 rarityBorder2.color = rarityColor;
+            }
             if (imgBg != null)
                 imgBg.color = rarityColor * 0.5f;
             if (imgOverlay != null)
                 imgOverlay.color = new Color(rarityColor.r, rarityColor.g, rarityColor.b, 0.2f);
-            
             RefreshDescription();
             if (glowOverlay != null)
             {
@@ -478,7 +486,22 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         if (cardInstance == null || cardInstance.data == null)
             return;
 
+        // Comme HasTag : l'union des marqueurs de l'instance (posés par le serveur en combat
+        // autoritaire) et de ceux de la donnée. Ne lire que `data.tags` perdait les marqueurs
+        // serveur — Épuisement, Retenue, etc. — et leurs infobulles avec.
+        List<CardTag> allTags = new List<CardTag>();
+        foreach (CardTag tag in cardInstance.tags)
+        {
+            if (!allTags.Contains(tag))
+                allTags.Add(tag);
+        }
         foreach (CardTag tag in cardInstance.data.tags)
+        {
+            if (!allTags.Contains(tag))
+                allTags.Add(tag);
+        }
+
+        foreach (CardTag tag in allTags)
         {
             (string tagName, string tagDescription) = GetTagDescription(tag);
             if (!string.IsNullOrEmpty(tagDescription))

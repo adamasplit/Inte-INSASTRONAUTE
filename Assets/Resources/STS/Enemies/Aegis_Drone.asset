@@ -133,7 +133,7 @@ MonoBehaviour:
       cardSelectionSource: 0
       cardFilterTags: 
       cardSelectionEffect: 0
-      animationType: 2
+      animationType: 0
     nextMoveIndices: 00000000
     weight: 1
   rewardCards: []

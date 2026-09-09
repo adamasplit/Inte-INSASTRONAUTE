@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Maison de verre
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 2cf7b880f2db3ef4884fce1091301cc9, type: 3}
   cost: 0

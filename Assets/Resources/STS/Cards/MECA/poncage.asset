@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Pon\xE7age"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 74f5ca1acb607064abf4a2b03102edcb, type: 3}
   cost: 0

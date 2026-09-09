@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Destruction (PV nb.premier)
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: d8feb5870119bd244add320007adb259, type: 3}
   cost: 0

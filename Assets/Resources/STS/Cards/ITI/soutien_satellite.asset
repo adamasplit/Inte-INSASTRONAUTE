@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Soutien de satellite
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 23a57bbac27ccb14f9079c85cb76bd87, type: 3}
   cost: 1

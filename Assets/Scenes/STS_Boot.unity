@@ -9984,13 +9984,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSMainMenuController
   gameButtonText: {fileID: 2116620109}
   loadButton: {fileID: 380415878}
-  pvpButton: {fileID: 0}
+  pvpButton: {fileID: 256201636}
   resumeSceneName: STS_Map
   bootSceneName: STS_Boot
   pvpMenuSceneName: STS_MultiplayerMenu
   tutorialButton: {fileID: 193237445}
   tutorialButtonLabel: Revoir le tutoriel
-  debugButton: {fileID: 0}
+  debugButton: {fileID: 998634734}
   tutorialPromptPanel: {fileID: 470881012}
   acceptTutorialButton: {fileID: 748033901}
   declineTutorialButton: {fileID: 2035889492}
@@ -21151,7 +21151,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -50}
+  m_AnchoredPosition: {x: 0, y: -50.00006}
   m_SizeDelta: {x: 0, y: -500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2026764343

@@ -15,6 +15,9 @@ MonoBehaviour:
   id: chute_d_eau
   cardName: "Seau mal plac\xE9"
   collectionCardId: "D\xE9g\xE2t des eaux"
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 0}
   cost: 2
   xCost: 0

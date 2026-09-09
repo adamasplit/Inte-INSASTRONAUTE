@@ -15,7 +15,9 @@ MonoBehaviour:
   id: execution
   cardName: "Ex\xE9cution"
   collectionCardId: 
-  collectionCard: {fileID: 0}
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: e7c84acf50fa33946a7f2b4741049b19, type: 3}
   cost: 2
   xCost: 0

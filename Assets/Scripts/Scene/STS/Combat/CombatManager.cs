@@ -19,7 +19,9 @@ public class CombatManager : MonoBehaviour
 {
     void Update()
     {
+        PumpPendingEndTurn();
         UpdateEndTurnButtonInteractable();
+        ui?.DisplayDisconnected(BridgeConnectionLost);
 
 #if UNITY_EDITOR
         #if ENABLE_INPUT_SYSTEM
@@ -63,6 +65,17 @@ public class CombatManager : MonoBehaviour
     private int activeEffectResolutions = 0;
     public bool CardPlaysRunning => activeCardPlays > 0 || queuedCardPlays > 0;
     private bool resolvingCombatCleanup = false;
+
+    // Un tour demandé pendant qu'une carte se résolvait encore. Il attend ici plutôt que
+    // d'être perdu : le bouton s'était déjà éteint sur la pression, et refuser la demande
+    // laissait un tour que plus rien ne pouvait finir.
+    private bool pendingEndTurnRequest;
+    private bool bridgeDisconnected;
+
+    /// Vrai quand la socket est tombée et que rien ne l'a rouverte : plus aucune commande
+    /// ne part, et seul un rechargement peut y remédier.
+    public bool BridgeConnectionLost =>
+        bridgeDisconnected && UsesAuthoritativeCombat && !combatEnded;
 
     public Player player => allies.FirstOrDefault();
     public List<Player> allies = new();
@@ -198,7 +211,10 @@ public class CombatManager : MonoBehaviour
 
         if (UsesAuthoritativeCombat)
         {
-            turnSystem.endTurnButton.interactable = IsLocalPlayerTurn() && !AuthoritativeCommandBusy && !CardPlaysRunning;
+            turnSystem.endTurnButton.interactable = IsLocalPlayerTurn()
+                && !AuthoritativeCommandBusy
+                && !CardPlaysRunning
+                && !pendingEndTurnRequest;
         }
         else
         {
@@ -625,7 +641,14 @@ public class CombatManager : MonoBehaviour
     {
         Debug.Log($"[STS-BRIDGE] status changed: {status}");
         if (string.Equals(status, "DISCONNECTED", StringComparison.Ordinal))
+        {
+            bridgeDisconnected = true;
             Debug.LogWarning("[STS-BRIDGE] Combat socket disconnected; end turn/play card commands will silently no-op until reconnected.");
+        }
+        else if (string.Equals(status, "CONNECTED", StringComparison.Ordinal))
+        {
+            bridgeDisconnected = false;
+        }
     }
 
     void StartLocalCombatFlow()
@@ -1213,15 +1236,45 @@ public class CombatManager : MonoBehaviour
             return;
         }
 
+        // Asked before the turn question: while a card resolves the state can already name
+        // somebody else, and refusing here lost the request for good.
+        if (AuthoritativeCommandBusy || CardPlaysRunning)
+        {
+            pendingEndTurnRequest = true;
+            Debug.Log("[STS-COMBAT] EndTurn queued: a card is still resolving.");
+            return;
+        }
+
         if (!IsLocalPlayerTurn())
         {
             Debug.LogWarning("[STS-COMBAT] EndTurn blocked: not local player turn.");
             return;
         }
 
-        if (AuthoritativeCommandBusy)
+        StartCoroutine(AuthoritativeEndTurnRoutine());
+    }
+
+    /// Sends the queued end-turn as soon as the card that delayed it has finished resolving.
+    void PumpPendingEndTurn()
+    {
+        if (!pendingEndTurnRequest)
+            return;
+
+        if (!UsesAuthoritativeCombat || combatEnded)
         {
-            Debug.LogWarning("[STS-COMBAT] EndTurn blocked: authoritative command already in flight.");
+            pendingEndTurnRequest = false;
+            return;
+        }
+
+        if (AuthoritativeCommandBusy || CardPlaysRunning)
+            return;
+
+        pendingEndTurnRequest = false;
+
+        // The card may have ended the turn itself: an EndTurn effect, or the caster's death.
+        if (!IsLocalPlayerTurn())
+        {
+            Debug.Log("[STS-COMBAT] Queued EndTurn dropped: the turn is no longer ours.");
             return;
         }
 
@@ -1760,6 +1813,10 @@ public class CombatManager : MonoBehaviour
                         {
                             state.turnCount = Mathf.Max(1, state.turnCount + 1);
                             state.cardsPlayedThisTurn.Clear();
+                            // Mirrors CombatState.ResetTurnStartFlags, which Character.StartTurn
+                            // never reaches under authoritative combat.
+                            state.energySpentThisTurn = 0;
+                            state.energyGainedThisTurn = 0;
                         }
                         handler = DelaySeconds(0.05f);
                         break;
@@ -2313,14 +2370,7 @@ public class CombatManager : MonoBehaviour
 
         if (toKind == PileKind.Exhaust)
         {
-            if (ui.GetView(card) != null)
-            {
-                ui.ExhaustCardAnimated(card);
-            }
-            else
-            {
-                yield return ui.AnimateCardToPile(card, CardSelectionSource.ExhaustPile, movementActor);
-            }
+            ui.ExhaustCardAnimated(card);
             yield return new WaitForSeconds(0.12f);
             yield break;
         }
@@ -2542,6 +2592,9 @@ public class CombatManager : MonoBehaviour
             return;
 
         target.resources.energy = combatEvent.Value<int?>("remainingEnergy") ?? target.resources.energy;
+        // Character.SpendEnergy skips state.energySpentThisTurn under authoritative combat, so
+        // EnergySpentModifier/EnergySpentThreshold would otherwise always read zero here.
+        state.energySpentThisTurn += combatEvent.Value<int?>("amount") ?? 0;
         ui?.RefreshUI(false);
     }
 
@@ -2553,6 +2606,9 @@ public class CombatManager : MonoBehaviour
             return;
 
         target.resources.energy = combatEvent.Value<int?>("resultingEnergy") ?? target.resources.energy;
+        // Same as ReplayEnergySpentEvent: Character.GainEnergy skips state.energyGainedThisTurn
+        // under authoritative combat.
+        state.energyGainedThisTurn += combatEvent.Value<int?>("amount") ?? 0;
         ui?.RefreshUI(false);
     }
 
@@ -3472,7 +3528,7 @@ public class CombatManager : MonoBehaviour
 
         try
         {
-        
+        targets = RedirectProvocationTarget(source, card, targets);
         EffectContext ctxSelf=new EffectContext
             {
                 source = source,
@@ -3927,6 +3983,11 @@ public class CombatManager : MonoBehaviour
 
     public List<Character> GetDisplayTargets(TargetingMode mode, Character hovered)
     {
+        Character source = GetActingPlayer();
+        Character provocationBearer = ProvocationBearerFor(source, mode);
+        if (provocationBearer != null)
+            return new List<Character> { provocationBearer };
+
         switch (mode)
         {
             case TargetingMode.Enemy:
@@ -4032,6 +4093,45 @@ public class CombatManager : MonoBehaviour
         return candidates.Count == 0
             ? new List<Character>()
             : new List<Character> { candidates[UnityEngine.Random.Range(0, candidates.Count)] };
+    }
+
+    /// <summary>
+    /// Provocation détourne les cartes à cible ennemie unique vers le premier porteur hors lanceur.
+    /// Une charge n'est retirée que lorsque ce détour a effectivement lieu.
+    /// </summary>
+    List<Character> RedirectProvocationTarget(
+        Character source,
+        CardInstance card,
+        List<Character> targets)
+    {
+        if (source == null || card == null
+            || (card.targetingMode != TargetingMode.Enemy
+                && card.targetingMode != TargetingMode.RandomEnemy))
+            return targets;
+
+        Character bearer = ProvocationBearerFor(source, card.targetingMode);
+        if (bearer == null)
+            return targets;
+
+        ProvocationStatus provocation = bearer.statusEffects
+            .OfType<ProvocationStatus>()
+            .First(status => status.Value > 0);
+        provocation.Value--;
+        if (provocation.Value == 0)
+            bearer.RemoveStatus(provocation);
+        return new List<Character> { bearer };
+    }
+
+    Character ProvocationBearerFor(Character source, TargetingMode targetingMode)
+    {
+        if (source == null || (targetingMode != TargetingMode.Enemy
+            && targetingMode != TargetingMode.RandomEnemy))
+            return null;
+
+        return GetAllCharacters().FirstOrDefault(candidate => candidate != source
+            && candidate.IsAlive
+            && candidate.statusEffects.Any(status => status is ProvocationStatus
+                && status.Value > 0));
     }
     public void NotifyTurnEnded()
     {

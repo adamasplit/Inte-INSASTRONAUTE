@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "D\xE9coration"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: d85bfd39d0f7d6d42aa79a7addb20ade, type: 3}
   cost: 1

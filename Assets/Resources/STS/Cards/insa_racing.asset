@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Grand prix du parking
   collectionCardId: Insa Racing
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 2
@@ -24,28 +25,11 @@ MonoBehaviour:
   rarity: 2
   effects:
   - type: 3
-    value: -10
-    targetSelf: 0
-    targetOthers: 0
-    statusType: 14
-    duration: 0
-    description: 
-    cardID: 
-    index: 0
-    conditional: 0
-    conditionType: 0
-    conditionValue: 
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 0
-    animationType: 0
-  - type: 3
-    value: 5
+    value: 2
     targetSelf: 1
     targetOthers: 0
-    statusType: 14
-    duration: 0
+    statusType: 108
+    duration: 2
     description: 
     cardID: 
     index: 0
@@ -57,9 +41,9 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  targetingMode: 3
+  targetingMode: 0
   modifiers: []
-  favoredCharacter: 11
+  favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
   tags: 

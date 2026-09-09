@@ -53,7 +53,7 @@
   ],
   "modifiers": [],
   "favoredCharacter": "Impossible",
-  "animationSpeed": 1,
+  "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": [
     "Created",

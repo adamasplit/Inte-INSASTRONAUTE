@@ -1,0 +1,20 @@
+{
+  "id": "stabilisation",
+  "cardName": "stabilisation",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "pveOnly": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 1,
+  "xCost": false,
+  "type": "Rien",
+  "rarity": "Uncommon",
+  "targetingMode": "Player",
+  "effects": [],
+  "modifiers": [],
+  "favoredCharacter": "Starting",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

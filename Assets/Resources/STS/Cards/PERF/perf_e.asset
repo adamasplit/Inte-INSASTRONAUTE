@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Performance \xE9nerg\xE9tique"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 55f21412bc05193448970dcf9879e7bf, type: 3}
   cost: 0

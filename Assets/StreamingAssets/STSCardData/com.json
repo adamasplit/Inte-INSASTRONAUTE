@@ -10,31 +10,12 @@
   "xCost": false,
   "type": "Compétence",
   "rarity": "Uncommon",
-  "targetingMode": "Player",
+  "targetingMode": "AllCharacters",
   "effects": [
     {
-      "type": "Draw",
-      "value": 6,
-      "targetSelf": true,
-      "targetOthers": false,
-      "statusType": "Strength",
-      "duration": 0,
-      "description": "",
-      "cardID": "",
-      "conditional": false,
-      "conditionType": "KillingBlow",
-      "conditionValue": "",
-      "trueEffect": false,
-      "cardSelectionSource": "Hand",
-      "index": 0,
-      "cardFilterTags": [],
-      "cardSelectionEffect": "None",
-      "animationType": "Default"
-    },
-    {
-      "type": "LoseHP",
-      "value": 2,
-      "targetSelf": true,
+      "type": "Status",
+      "value": 3,
+      "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
@@ -55,5 +36,7 @@
   "favoredCharacter": "Aucun",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": []
+  "tags": [
+    "Exhaust"
+  ]
 }

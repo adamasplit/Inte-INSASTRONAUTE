@@ -18,5 +18,6 @@ public enum CardSelectionEffect
     AddDamageEffect,
     AddArmorEffect,
     AddExhaustTag,
-    AddAutomaticTag
+    AddAutomaticTag,
+    CopyToHand
 }

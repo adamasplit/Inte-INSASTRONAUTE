@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Convertisseur analogique
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 5d4ef79b2635e8d4b80b8c7ee16469f3, type: 3}
   cost: 1

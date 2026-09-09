@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Frappe directrice
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 33bf8384efc214642af3e69950c61eba, type: 3}
   cost: 1
@@ -46,7 +47,12 @@ MonoBehaviour:
     kind: 7
     value: 1
     info: 
-    description: 
+    description: Se rejoue pour chaque effet sur la cible
+  - type: 11
+    kind: 8
+    value: 1
+    info: 
+    description: ' '
   favoredCharacter: 7
   animationSpeed: 1
   startingCount: 0

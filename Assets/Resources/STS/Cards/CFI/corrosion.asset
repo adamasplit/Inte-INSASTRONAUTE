@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Corrosion
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 9bb7bb2fd2ce21d49994338ad2cb8026, type: 3}
   cost: 0

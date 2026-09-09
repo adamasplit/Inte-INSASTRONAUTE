@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Robot autoguid\xE9"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: e66adab7f4caa7241adba9fbd24b6b12, type: 3}
   cost: 1

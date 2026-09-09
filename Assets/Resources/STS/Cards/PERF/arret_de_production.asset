@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Arr\xEAt de production"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: bb2c5eefbb29a2e439a70286e59fc272, type: 3}
   cost: 1

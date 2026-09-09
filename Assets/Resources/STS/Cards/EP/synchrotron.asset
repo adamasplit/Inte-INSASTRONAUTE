@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Synchrotron
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 4ab8197107962c948b56475a99197704, type: 3}
   cost: 0
@@ -59,7 +60,7 @@ MonoBehaviour:
     animationType: 0
   - type: 8
     value: 3
-    targetSelf: 0
+    targetSelf: 1
     targetOthers: 0
     statusType: 0
     duration: 0

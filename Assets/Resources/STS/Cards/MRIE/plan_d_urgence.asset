@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Plan d'urgence
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 5b6bfcfb460c44d42b42d7e613dbe9da, type: 3}
   cost: 0

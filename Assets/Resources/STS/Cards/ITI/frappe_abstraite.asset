@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Frappe abstraite
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 4b518765d3745474b8342f281b620282, type: 3}
   cost: 1

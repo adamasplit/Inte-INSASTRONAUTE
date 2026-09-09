@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Attente interminable + Potion magique
   collectionCardId: CFI
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 3

@@ -208,6 +208,6 @@
   "rewardCardIds": [],
   "startingStatus": "Regulator",
   "startingStatusDuration": 0,
-  "startingStatusValue": 5,
+  "startingStatusValue": 25,
   "startingStatusInfo": ""
 }

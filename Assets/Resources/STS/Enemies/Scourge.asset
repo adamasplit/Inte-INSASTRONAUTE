@@ -23,7 +23,7 @@ MonoBehaviour:
     moveName: 
     effects:
     - type: 0
-      value: 5
+      value: 6
       targetSelf: 0
       targetOthers: 0
       statusType: 0
@@ -67,7 +67,7 @@ MonoBehaviour:
     moveName: 
     effects:
     - type: 3
-      value: 1
+      value: 2
       targetSelf: 1
       targetOthers: 0
       statusType: 0

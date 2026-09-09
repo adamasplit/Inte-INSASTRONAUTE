@@ -7,7 +7,7 @@
   "patternCardIds": [],
   "movePattern": [
     {
-      "cardId": "lionheart",
+      "cardId": null,
       "moveName": "",
       "effects": [],
       "nextMoveIndices": [
@@ -214,9 +214,7 @@
       "weight": 0
     }
   ],
-  "rewardCardIds": [
-    "lionheart"
-  ],
+  "rewardCardIds": [],
   "startingStatus": "Strength",
   "startingStatusDuration": 0,
   "startingStatusValue": 0,

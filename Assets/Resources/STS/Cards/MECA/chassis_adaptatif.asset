@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Ch\xE2ssis adaptatif"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: de75bd40f51b27b4f803d1b9f02f97d3, type: 3}
   cost: 1

@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Frappe d\xE9terministe"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 648e49816be8e7344a90ba0715f88414, type: 3}
   cost: 2
@@ -41,7 +42,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   - type: 16
-    value: -1
+    value: 2
     targetSelf: 0
     targetOthers: 0
     statusType: 0

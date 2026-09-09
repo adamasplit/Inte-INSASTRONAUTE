@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Copier-coller
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: f6a3dcad5f6c79644950077316ea53fa, type: 3}
   cost: 1

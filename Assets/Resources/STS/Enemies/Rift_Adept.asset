@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152b8987c9c309f4b8ae4c43c5ebe659, type: 3}
   m_Name: Rift_Adept
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  id: Rift Adept
-  enemyName: Rift Adept
+  id: Rift_Adept
+  enemyName: Rift_Adept
   displayName: Mage de l'espace
   maxHP: 24
   pattern: []

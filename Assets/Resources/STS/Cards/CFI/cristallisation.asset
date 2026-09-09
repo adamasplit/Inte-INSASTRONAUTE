@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Cristallisation
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: c5918bc068e122047892cee925387e2c, type: 3}
   cost: 1

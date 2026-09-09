@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "Sph\xE8re de l'espace infini"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: d3a68ccabd8637a44ab10f8c2c1bcc07, type: 3}
   cost: 3

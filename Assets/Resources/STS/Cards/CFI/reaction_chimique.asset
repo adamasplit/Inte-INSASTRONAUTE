@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "R\xE9action chimique"
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: a267284f43d85b145989848fc875a894, type: 3}
   cost: 0

@@ -52,6 +52,11 @@ public class UIManager : MonoBehaviour
         + "intercepter les clics : ce qu'il cache n'est pas encore jouable.")]
     public GameObject waitingForServerOverlay;
 
+    [Tooltip("Voile affiché quand la socket de combat est tombée. Doit couvrir le plateau, "
+        + "intercepter les clics et inviter à recharger la page : plus aucune commande ne part.")]
+    public GameObject disconnectedOverlay;
+    bool warnedAboutMissingDisconnectedOverlay;
+
     [Header("Abandon d'un duel")]
     // Branchez le bouton sur OnSurrenderPressed() et, s'il existe, le bouton d'annulation
     // sur OnSurrenderCancelled(). Tout est null-safe : tant que rien n'est pose dans la
@@ -291,6 +296,10 @@ public class UIManager : MonoBehaviour
 
         if (combat.Mode == CombatMode.Pvp)
             WireRunHeaderForPvp();
+
+        // Une scène enregistrée avec le voile visible le laissait tel quel jusqu'à ce que
+        // TurnSystem le baisse — c'est-à-dire jamais, si son champ ui n'est pas branché.
+        DisplayWaitingForServer(combat.IsWaitingForServer);
 
         InitSurrender();
         //CreateInitialHand();
@@ -676,6 +685,11 @@ public class UIManager : MonoBehaviour
     /// </summary>
     void Update()
     {
+        // Le voile est piloté ici en plus de TurnSystem : lui seul le baissait, et il ne le
+        // fait que si son champ ui est branché dans la scène. Sans ça, un voile resté visible
+        // en PvE intercepte les clics et rien ne le rouvre.
+        DisplayWaitingForServer(combat != null && combat.IsWaitingForServer);
+
         if (!handSyncDeferred || HandHasAnimatingCard)
             return;
 
@@ -1111,9 +1125,16 @@ public class UIManager : MonoBehaviour
     ///
     /// <para>Rien n'est branché par défaut. Une scène sans voile se joue exactement comme
     /// avant — le texte « En attente... » reste alors la seule indication.</para>
+    ///
+    /// <para>Un combat de run ne peut jamais le lever : il n'attend aucun serveur pour jouer,
+    /// et un voile posé là par erreur bloque les clics sans que rien ne vienne le retirer. La
+    /// condition est réécrite ici plutôt que confiée à l'appelant, parce qu'un voile ouvert à
+    /// tort ne se voit pas dans le code de l'appelant mais dans une partie injouable.</para>
     /// </summary>
     public void DisplayWaitingForServer(bool waiting)
     {
+        waiting = waiting && combat != null && combat.Mode == CombatMode.Pvp;
+
         if (waitingForServerOverlay == null)
         {
             // Dit une seule fois, et seulement quand le voile aurait servi : un objet posé dans
@@ -1131,6 +1152,34 @@ public class UIManager : MonoBehaviour
 
         if (waitingForServerOverlay.activeSelf != waiting)
             waitingForServerOverlay.SetActive(waiting);
+    }
+
+    /// <summary>
+    /// Montre ou cache le voile de déconnexion.
+    /// </summary>
+    /// <remarks>
+    /// Une socket tombée ne se voit nulle part : les commandes partent dans le vide, la
+    /// partie a l'air simplement figée, et le joueur attend un tour qui ne viendra jamais.
+    /// Le voile est la seule chose qui puisse le lui dire, et il doit intercepter les clics
+    /// pour qu'on cesse d'essayer de jouer un combat qui n'écoute plus.
+    ///
+    /// <para>Rien n'est branché par défaut : une scène sans voile se joue comme avant.</para>
+    /// </remarks>
+    public void DisplayDisconnected(bool disconnected)
+    {
+        if (disconnectedOverlay == null)
+        {
+            if (disconnected && !warnedAboutMissingDisconnectedOverlay)
+            {
+                warnedAboutMissingDisconnectedOverlay = true;
+                Debug.LogWarning("[STS-BRIDGE] UIManager.disconnectedOverlay n'est branché sur "
+                    + "rien : le joueur ne saura pas que la socket est tombée.");
+            }
+            return;
+        }
+
+        if (disconnectedOverlay.activeSelf != disconnected)
+            disconnectedOverlay.SetActive(disconnected);
     }
 
     private bool warnedAboutMissingWaitingOverlay;

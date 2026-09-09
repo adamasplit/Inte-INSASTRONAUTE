@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
   m_Name: troisieme_mi_temps
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: 
+  id: troisieme_mi_temps
   cardName: "Troisi\xE8me mi-temps"
   collectionCardId: TOSS
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 0}
   cost: 2
   xCost: 0

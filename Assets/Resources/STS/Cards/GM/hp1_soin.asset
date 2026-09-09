@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Soin (PV nb.premier)
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 222a332bad8390441892da102b5ac1f7, type: 3}
   cost: 0

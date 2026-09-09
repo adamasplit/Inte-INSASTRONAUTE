@@ -59,8 +59,8 @@
       "moveName": "",
       "effects": [
         {
-          "type": "Status",
-          "value": 3,
+          "type": "Damage",
+          "value": 6,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Poison",
@@ -108,7 +108,7 @@
       "effects": [
         {
           "type": "Damage",
-          "value": 5,
+          "value": 8,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",

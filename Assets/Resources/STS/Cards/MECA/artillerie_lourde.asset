@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Artillerie lourde
   collectionCardId: 
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 21300000, guid: 581d7e824abb06042b75b420350bf952, type: 3}
   cost: 2

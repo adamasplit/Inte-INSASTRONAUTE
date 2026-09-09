@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: Surcharge du feed insta
   collectionCardId: Com
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 1
@@ -23,9 +24,9 @@ MonoBehaviour:
   type: 1
   rarity: 1
   effects:
-  - type: 8
-    value: 6
-    targetSelf: 1
+  - type: 3
+    value: 3
+    targetSelf: 0
     targetOthers: 0
     statusType: 0
     duration: 0
@@ -40,26 +41,9 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 0
-  - type: 11
-    value: 2
-    targetSelf: 1
-    targetOthers: 0
-    statusType: 0
-    duration: 0
-    description: 
-    cardID: 
-    index: 0
-    conditional: 0
-    conditionType: 0
-    conditionValue: 
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 0
-    animationType: 0
-  targetingMode: 0
+  targetingMode: 3
   modifiers: []
   favoredCharacter: 9
   animationSpeed: 1
   startingCount: 0
-  tags: 
+  tags: 09000000

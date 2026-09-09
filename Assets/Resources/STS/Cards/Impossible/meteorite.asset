@@ -15,6 +15,9 @@ MonoBehaviour:
   id: meteorite
   cardName: "M\xE9t\xE9orite"
   collectionCardId: 
+  multiplayerExclusive: 0
+  pveOnly: 0
+  characterLevel: 0
   icon: {fileID: 21300000, guid: 3a5fe83e3a17d9349a1a8fbedce45557, type: 3}
   cost: 2
   xCost: 0
@@ -22,7 +25,7 @@ MonoBehaviour:
   rarity: 5
   effects:
   - type: 0
-    value: 20
+    value: 26
     targetSelf: 0
     targetOthers: 0
     statusType: 0

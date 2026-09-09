@@ -1,0 +1,40 @@
+{
+  "id": "grande_oeuvre",
+  "cardName": "Grande oeuvre",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "pveOnly": false,
+  "characterLevel": 0,
+  "iconId": "GrandeOeuvre",
+  "cost": 2,
+  "xCost": false,
+  "type": "Pouvoir",
+  "rarity": "Rare",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 2,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "GrandeOeuvre",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "AI",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

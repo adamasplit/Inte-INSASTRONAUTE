@@ -14,6 +14,7 @@ public class MultiplayerDeckCardItem : MonoBehaviour, IPointerDownHandler, IPoin
     [Header("Long Press Preview")]
     [SerializeField] private float longPressDuration = 0.5f;
     [SerializeField] private float longPressScale = 1.65f;
+    [SerializeField] private int longPressSortingOrder = 1000;
 
     private string cardKey;
     private Action<string, bool> onToggleChanged;
@@ -23,6 +24,9 @@ public class MultiplayerDeckCardItem : MonoBehaviour, IPointerDownHandler, IPoin
     private bool ignoreNextToggle;
     private float pointerDownTime;
     private Vector3 initialScale;
+    private Canvas previewCanvas;
+    private bool initialCanvasOverrideSorting;
+    private int initialCanvasSortingOrder;
 
     public string CardKey => cardKey;
 
@@ -111,9 +115,21 @@ public class MultiplayerDeckCardItem : MonoBehaviour, IPointerDownHandler, IPoin
 
         previewing = true;
         initialScale = transform.localScale;
-        transform.SetAsLastSibling();
+        ShowAboveGrid();
         transform.localScale = initialScale * longPressScale;
         cardView?.ShowCardTooltips(false, true, true);
+    }
+
+    private void ShowAboveGrid()
+    {
+        previewCanvas = GetComponent<Canvas>();
+        if (previewCanvas == null)
+            previewCanvas = gameObject.AddComponent<Canvas>();
+
+        initialCanvasOverrideSorting = previewCanvas.overrideSorting;
+        initialCanvasSortingOrder = previewCanvas.sortingOrder;
+        previewCanvas.overrideSorting = true;
+        previewCanvas.sortingOrder = longPressSortingOrder;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -149,6 +165,11 @@ public class MultiplayerDeckCardItem : MonoBehaviour, IPointerDownHandler, IPoin
         previewing = false;
         ignoreNextToggle = true;
         transform.localScale = initialScale;
+        if (previewCanvas != null)
+        {
+            previewCanvas.overrideSorting = initialCanvasOverrideSorting;
+            previewCanvas.sortingOrder = initialCanvasSortingOrder;
+        }
         cardView?.Deselect();
     }
 

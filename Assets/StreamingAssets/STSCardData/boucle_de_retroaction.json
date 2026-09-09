@@ -1,0 +1,20 @@
+{
+  "id": "boucle_de_retroaction",
+  "cardName": "boucle_de_retroaction",
+  "collectionCardId": null,
+  "multiplayerExclusive": false,
+  "pveOnly": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 2,
+  "xCost": false,
+  "type": "Rien",
+  "rarity": "Rare",
+  "targetingMode": "Player",
+  "effects": [],
+  "modifiers": [],
+  "favoredCharacter": "Starting",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

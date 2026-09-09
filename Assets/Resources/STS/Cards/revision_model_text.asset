@@ -16,6 +16,7 @@ MonoBehaviour:
   cardName: "R\xE9vision Model Text"
   collectionCardId: Souillard
   multiplayerExclusive: 0
+  pveOnly: 0
   characterLevel: 0
   icon: {fileID: 0}
   cost: 1

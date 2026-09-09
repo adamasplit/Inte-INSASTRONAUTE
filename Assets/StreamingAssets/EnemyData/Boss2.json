@@ -16,7 +16,7 @@
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Shielding",
-          "duration": 8,
+          "duration": 4,
           "description": "",
           "cardID": "",
           "conditional": false,

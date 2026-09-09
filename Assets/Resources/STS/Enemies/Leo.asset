@@ -19,7 +19,7 @@ MonoBehaviour:
   pattern: []
   randomStart: 1
   movePattern:
-  - card: {fileID: 11400000, guid: fb7533c4c667aee489673aafd3f5973f, type: 2}
+  - card: {fileID: 0}
     moveName: 
     effects: []
     nextMoveIndices: 010000000200000003000000
@@ -67,10 +67,27 @@ MonoBehaviour:
     moveName: 
     effects:
     - type: 0
-      value: 22
+      value: 4
       targetSelf: 0
       targetOthers: 0
       statusType: 0
+      duration: 0
+      description: 
+      cardID: 
+      index: 0
+      conditional: 0
+      conditionType: 0
+      conditionValue: 
+      trueEffect: 0
+      cardSelectionSource: 0
+      cardFilterTags: 
+      cardSelectionEffect: 0
+      animationType: 0
+    - type: 1
+      value: 3
+      targetSelf: 1
+      targetOthers: 0
+      statusType: 1
       duration: 0
       description: 
       cardID: 
@@ -163,8 +180,7 @@ MonoBehaviour:
       animationType: 0
     nextMoveIndices: 0300000002000000
     weight: 0
-  rewardCards:
-  - {fileID: 11400000, guid: fb7533c4c667aee489673aafd3f5973f, type: 2}
+  rewardCards: []
   startingStatus: 0
   startingStatusDuration: 0
   startingStatusValue: 0

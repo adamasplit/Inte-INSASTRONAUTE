@@ -194,7 +194,7 @@ public class RetreatManager : MonoBehaviour
                 return;
             }
 
-            RunManager.Instance.GrantRunEndUnlocks(true);
+            ApplyRetireUnlocks();
             STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Boot", "final_act_continue");
             ReturnToMenuAfterUnlockPanel();
             return;
@@ -240,15 +240,13 @@ public class RetreatManager : MonoBehaviour
                 RestoreRetreatControls();
                 return;
             }
+
+            ApplyRetireUnlocks();
         }
         else
         {
             await EnsureTokenRewardAppliedAsync();
-        }
-
-        if (RunManager.Instance != null)
-        {
-            RunManager.Instance.GrantRunEndUnlocks(true);
+            RunManager.Instance?.GrantRunEndUnlocks(true);
         }
 
         STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Boot", "retreat_menu");
@@ -663,6 +661,41 @@ public class RetreatManager : MonoBehaviour
             buttonCanvasGroup.blocksRaycasts = true;
         }
         leavingRetreat = false;
+    }
+
+    /// <summary>
+    /// Reporte dans <see cref="RunManager"/> les cartes que <see cref="retireResponse"/> a
+    /// réellement débloquées, pour que le panneau de fin de run ne montre que ce que le serveur a
+    /// accordé — vide, donc muet, quand ce joueur n'y a pas droit.
+    /// </summary>
+    private void ApplyRetireUnlocks()
+    {
+        List<STSCardData> unlockedCards = ResolveUnlockedCards(retireResponse?.pvpUnlockedCardNames);
+        RunManager.Instance?.ApplyServerRunEndUnlocks(unlockedCards);
+    }
+
+    private List<STSCardData> ResolveUnlockedCards(List<string> cardNames)
+    {
+        List<STSCardData> resolved = new();
+        if (cardNames == null || STSCardDatabase.allCards == null)
+            return resolved;
+
+        foreach (string name in cardNames)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                continue;
+
+            STSCardData match = STSCardDatabase.allCards.FirstOrDefault(card =>
+                card != null
+                && (string.Equals(card.GetCollectionCardId(), name, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(card.cardName, name, StringComparison.OrdinalIgnoreCase)));
+            if (match != null)
+            {
+                resolved.Add(match);
+            }
+        }
+
+        return resolved;
     }
 
     private void RenderServerRetireSummary(STSApiRunRetireResponse response)
