@@ -13,5 +13,8 @@ public enum CardFilterTag
     Cost3Plus,
     Atom,
     Molecule,
-    Norm
+    Norm,
+    Exhaust,
+    Created,
+    Ethereal
 }

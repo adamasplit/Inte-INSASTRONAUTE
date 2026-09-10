@@ -10338,11 +10338,11 @@
       "effects": [
         {
           "type": "Status",
-          "value": 0,
+          "value": 1,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Miracle",
-          "duration": 0,
+          "duration": 1,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -10424,18 +10424,40 @@
     },
     {
       "id": "tms",
-      "cardName": "tms",
-      "collectionCardId": null,
+      "cardName": "Inépuisable",
+      "collectionCardId": "TMS",
       "multiplayerExclusive": false,
       "pveOnly": false,
       "characterLevel": 0,
       "iconId": null,
-      "cost": 0,
+      "cost": 3,
       "xCost": false,
-      "type": "Attaque",
-      "rarity": "Common",
+      "type": "Pouvoir",
+      "rarity": "Legendary",
       "targetingMode": "Player",
-      "effects": [],
+      "effects": [
+        {
+          "type": "CardSelection",
+          "value": -1,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Univers",
+          "duration": 0,
+          "description": "Retirez Épuisement de toutes les cartes de votre deck.",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "AllExceptExhaustPile",
+          "index": 0,
+          "cardFilterTags": [
+            "Exhaust"
+          ],
+          "cardSelectionEffect": "AddRetainTag",
+          "animationType": "Default"
+        }
+      ],
       "modifiers": [],
       "favoredCharacter": "Impossible",
       "animationSpeed": 1.0,
@@ -15848,7 +15870,7 @@
       "pveOnly": false,
       "characterLevel": 0,
       "iconId": "gojo",
-      "cost": 3,
+      "cost": 2,
       "xCost": false,
       "type": "Compétence",
       "rarity": "Legendary",
@@ -17782,6 +17804,111 @@
       ]
     },
     {
+      "id": "analyse",
+      "cardName": "Scan LiDAR",
+      "collectionCardId": null,
+      "multiplayerExclusive": false,
+      "pveOnly": false,
+      "characterLevel": 0,
+      "iconId": "Analyse",
+      "cost": 2,
+      "xCost": false,
+      "type": "Pouvoir",
+      "rarity": "Rare",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 2,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Analyse",
+          "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "ITI",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": []
+    },
+    {
+      "id": "archiver",
+      "cardName": "Archiver",
+      "collectionCardId": null,
+      "multiplayerExclusive": false,
+      "pveOnly": false,
+      "characterLevel": 0,
+      "iconId": "Transfert3",
+      "cost": 2,
+      "xCost": false,
+      "type": "Compétence",
+      "rarity": "Rare",
+      "targetingMode": "Player",
+      "effects": [
+        {
+          "type": "CardSelection",
+          "value": -1,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": "Retirez Épuisement et Éthérée des cartes de votre main.",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [
+            "Exhaust"
+          ],
+          "cardSelectionEffect": "RemoveExhaustTag",
+          "animationType": "Default"
+        },
+        {
+          "type": "CardSelection",
+          "value": -1,
+          "targetSelf": true,
+          "targetOthers": false,
+          "statusType": "Strength",
+          "duration": 0,
+          "description": " ",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [
+            "Ethereal"
+          ],
+          "cardSelectionEffect": "RemoveEtherealTag",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "ITI",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": [
+        "Exhaust"
+      ]
+    },
+    {
       "id": "asservissement",
       "cardName": "Asservissement",
       "collectionCardId": null,
@@ -17800,7 +17927,7 @@
           "value": 15,
           "targetSelf": false,
           "targetOthers": false,
-          "statusType": "Vuln",
+          "statusType": "Slow",
           "duration": 3,
           "description": "",
           "cardID": "",
@@ -17816,10 +17943,10 @@
         },
         {
           "type": "Status",
-          "value": 15,
+          "value": 4,
           "targetSelf": false,
           "targetOthers": false,
-          "statusType": "Slow",
+          "statusType": "Trap",
           "duration": 3,
           "description": "",
           "cardID": "",
@@ -18000,6 +18127,46 @@
           "targetOthers": false,
           "statusType": "Strength",
           "duration": 1,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        }
+      ],
+      "modifiers": [],
+      "favoredCharacter": "ITI",
+      "animationSpeed": 1.0,
+      "startingCount": 0,
+      "tags": []
+    },
+    {
+      "id": "compilation",
+      "cardName": "Compilation",
+      "collectionCardId": null,
+      "multiplayerExclusive": false,
+      "pveOnly": false,
+      "characterLevel": 0,
+      "iconId": "Compilation",
+      "cost": 1,
+      "xCost": false,
+      "type": "Pouvoir",
+      "rarity": "Rare",
+      "targetingMode": "Enemy",
+      "effects": [
+        {
+          "type": "Status",
+          "value": 10,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Compilation",
+          "duration": 0,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -18502,11 +18669,30 @@
       "effects": [
         {
           "type": "LoseHP",
-          "value": 6,
+          "value": 3,
           "targetSelf": false,
           "targetOthers": false,
           "statusType": "Strength",
           "duration": 0,
+          "description": "",
+          "cardID": "",
+          "conditional": false,
+          "conditionType": "KillingBlow",
+          "conditionValue": "",
+          "trueEffect": false,
+          "cardSelectionSource": "Hand",
+          "index": 0,
+          "cardFilterTags": [],
+          "cardSelectionEffect": "None",
+          "animationType": "Default"
+        },
+        {
+          "type": "Status",
+          "value": 6,
+          "targetSelf": false,
+          "targetOthers": false,
+          "statusType": "Trap",
+          "duration": 1,
           "description": "",
           "cardID": "",
           "conditional": false,
@@ -18682,7 +18868,7 @@
         {
           "type": "StatusDuration",
           "kind": "DamageDealtWithLastAction",
-          "value": 1,
+          "value": 2,
           "info": "",
           "description": " "
         }
@@ -19206,11 +19392,11 @@
       "effects": [
         {
           "type": "Status",
-          "value": 10,
+          "value": 6,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "FieldTurnFollowUp",
-          "duration": 2,
+          "duration": 4,
           "description": "",
           "cardID": "Laser orbital",
           "conditional": false,
@@ -23373,8 +23559,8 @@
           "animationType": "Light"
         },
         {
-          "type": "Draw",
-          "value": 2,
+          "type": "GainEnergy",
+          "value": 1,
           "targetSelf": true,
           "targetOthers": false,
           "statusType": "Strength",
@@ -24246,7 +24432,7 @@
       "xCost": false,
       "type": "Pouvoir",
       "rarity": "Epic",
-      "targetingMode": "Player",
+      "targetingMode": "Enemy",
       "effects": [
         {
           "type": "Status",
@@ -24805,7 +24991,7 @@
           "cardFilterTags": [
             "Skill"
           ],
-          "cardSelectionEffect": "ReduceCostTemp",
+          "cardSelectionEffect": "AddRetainTag",
           "animationType": "Default"
         }
       ],

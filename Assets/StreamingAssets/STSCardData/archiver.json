@@ -1,44 +1,25 @@
 {
-  "id": "radium",
-  "cardName": "Arrière-cour",
-  "collectionCardId": "Radium",
+  "id": "archiver",
+  "cardName": "Archiver",
+  "collectionCardId": null,
   "multiplayerExclusive": false,
   "pveOnly": false,
   "characterLevel": 0,
-  "iconId": null,
-  "cost": 1,
+  "iconId": "Transfert3",
+  "cost": 2,
   "xCost": false,
   "type": "Compétence",
   "rarity": "Rare",
   "targetingMode": "Player",
   "effects": [
     {
-      "type": "Draw",
-      "value": 1,
+      "type": "CardSelection",
+      "value": -1,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
-      "description": "",
-      "cardID": "",
-      "conditional": false,
-      "conditionType": "KillingBlow",
-      "conditionValue": "",
-      "trueEffect": false,
-      "cardSelectionSource": "Hand",
-      "index": 0,
-      "cardFilterTags": [],
-      "cardSelectionEffect": "None",
-      "animationType": "Default"
-    },
-    {
-      "type": "CardSelection",
-      "value": 2,
-      "targetSelf": true,
-      "targetOthers": false,
-      "statusType": "Strength",
-      "duration": 1,
-      "description": "",
+      "description": "Retirez Épuisement et Éthérée des cartes de votre main.",
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
@@ -47,15 +28,38 @@
       "cardSelectionSource": "Hand",
       "index": 0,
       "cardFilterTags": [
-        "Skill"
+        "Exhaust"
       ],
-      "cardSelectionEffect": "AddRetainTag",
+      "cardSelectionEffect": "RemoveExhaustTag",
+      "animationType": "Default"
+    },
+    {
+      "type": "CardSelection",
+      "value": -1,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": " ",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [
+        "Ethereal"
+      ],
+      "cardSelectionEffect": "RemoveEtherealTag",
       "animationType": "Default"
     }
   ],
   "modifiers": [],
-  "favoredCharacter": "Aucun",
+  "favoredCharacter": "ITI",
   "animationSpeed": 1.0,
   "startingCount": 0,
-  "tags": []
+  "tags": [
+    "Exhaust"
+  ]
 }

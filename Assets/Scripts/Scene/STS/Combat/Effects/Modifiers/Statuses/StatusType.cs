@@ -120,5 +120,7 @@ public enum StatusType
     // Gardés à la fin : les ScriptableObjects sérialisent cette valeur par index.
     Provocation,
     Adrenaline,
-    Miracle
+    Miracle,
+    Analyse,
+    Compilation
 }

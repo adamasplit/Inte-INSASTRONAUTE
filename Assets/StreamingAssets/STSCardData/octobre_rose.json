@@ -14,11 +14,11 @@
   "effects": [
     {
       "type": "Status",
-      "value": 0,
+      "value": 1,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Miracle",
-      "duration": 0,
+      "duration": 1,
       "description": "",
       "cardID": "",
       "conditional": false,

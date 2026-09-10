@@ -397,6 +397,10 @@ public static class EffectDescription
                         CardSelectionEffect.AddArmorEffect => $"Ajoutez {effect.duration} d'Armure à toutes les cartes{filterSuffix} de {source}",
                         CardSelectionEffect.AddExhaustTag => $"Rendez toutes les cartes{filterSuffix} de {source} Éphémères",
                         CardSelectionEffect.AddAutomaticTag => $"Rendez toutes les cartes{filterSuffix} de {source} Automatiques",
+                        CardSelectionEffect.AddRetainTag => $"Rendez toutes les cartes{filterSuffix} de {source} Retenues",
+                        CardSelectionEffect.RemoveExhaustTag => $"Retirez le marqueur Épuisante des cartes{filterSuffix} de {source}",
+                        CardSelectionEffect.RemoveEtherealTag => $"Retirez le marqueur Éphémère des cartes{filterSuffix} de {source}",
+                        CardSelectionEffect.RemoveExhaustAndEtherealTags => $"Retirez les marqueurs Épuisante et Éphémère des cartes{filterSuffix} de {source}",
                         CardSelectionEffect.CopyToHand => $"Ajoutez une copie de toutes les cartes{filterSuffix} de {source} à votre main",
                         _ => $"Appliquez l'effet {effect.cardSelectionEffect} à toutes les cartes{filterSuffix} de {source}",
                         
@@ -422,6 +426,10 @@ public static class EffectDescription
                     CardSelectionEffect.AddArmorEffect => $"ajoutez-{(effect.value!=1?"leur":"lui")} {effect.duration} d'Armure",
                     CardSelectionEffect.AddExhaustTag => "rendez-"+pl+" Éphémère"+(effect.value!=1?"s":""),
                     CardSelectionEffect.AddAutomaticTag => "rendez-"+pl+" Automatique"+(effect.value!=1?"s":""),
+                    CardSelectionEffect.AddRetainTag => "rendez-"+pl+" Retenue"+(effect.value!=1?"s":""),
+                    CardSelectionEffect.RemoveExhaustTag => "retirez-"+pl+" le marqueur Épuisante",
+                    CardSelectionEffect.RemoveEtherealTag => "retirez-"+pl+" le marqueur Éphémère",
+                    CardSelectionEffect.RemoveExhaustAndEtherealTags => "retirez-"+pl+" les marqueurs Épuisante et Éphémère",
                     CardSelectionEffect.CopyToHand => "ajoutez une copie de "+(effect.value!=1?"chacune d'elles":"celle-ci")+" à votre main",
                     _ => effect.cardSelectionEffect.ToString()
                 };
@@ -588,6 +596,9 @@ public static class EffectDescription
                 CardFilterTag.Atom => "Atome",
                 CardFilterTag.Molecule => "Molécule",
                 CardFilterTag.Norm => "Norme",
+                CardFilterTag.Exhaust => "Épuisante",
+                CardFilterTag.Created => "Créée",
+                CardFilterTag.Ethereal => "Éphémère",
                 _ => tag.ToString()
             });
         }

@@ -10,7 +10,7 @@
   "xCost": false,
   "type": "Pouvoir",
   "rarity": "Epic",
-  "targetingMode": "Player",
+  "targetingMode": "Enemy",
   "effects": [
     {
       "type": "Status",

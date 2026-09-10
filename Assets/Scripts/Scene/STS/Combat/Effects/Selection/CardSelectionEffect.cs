@@ -19,5 +19,9 @@ public enum CardSelectionEffect
     AddArmorEffect,
     AddExhaustTag,
     AddAutomaticTag,
+    AddRetainTag,
+    RemoveExhaustTag,
+    RemoveEtherealTag,
+    RemoveExhaustAndEtherealTags,
     CopyToHand
 }

@@ -204,6 +204,20 @@ public class Character
         }
         status.InsertInto(statusEffects);
         status.OnApply(this);
+        if (status.debuff && combat != null)
+        {
+            foreach (var watcher in combat.GetAllCharacters())
+            {
+                if (watcher == null || watcher == this || !watcher.IsAlive
+                    || !combat.IsHostileTo(watcher, this))
+                    continue;
+
+                foreach (var analysis in watcher.statusEffects.OfType<AnalyseStatus>().ToList())
+                {
+                    watcher.AddArmor(analysis.Value);
+                }
+            }
+        }
     }
     public void RemoveStatus(StatusEffect status)
     {

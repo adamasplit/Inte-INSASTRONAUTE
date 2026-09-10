@@ -30,6 +30,9 @@ public class CardInstance
     public TargetingMode targetingMode;
     public List<CardTag> tags = new();
 
+    /// <summary>Marqueurs retirés pour cette seule copie, qu'ils viennent de la carte ou d'un ajout.</summary>
+    public List<CardTag> removedTags = new();
+
     /// <summary>
     /// La famille de cette copie, quand elle n'est pas celle de sa carte d'origine.
     ///
@@ -92,6 +95,8 @@ public class CardInstance
     }
     public bool HasTag(CardTag tag)
     {
+        if (removedTags.Contains(tag))
+            return false;
         return tags.Contains(tag) || (data != null && data.HasTag(tag));
     }
     public void AddTag(CardTag tag)
@@ -99,6 +104,15 @@ public class CardInstance
         if (!tags.Contains(tag))
         {
             tags.Add(tag);
+        }
+        removedTags.Remove(tag);
+    }
+    public void RemoveTag(CardTag tag)
+    {
+        tags.Remove(tag);
+        if (!removedTags.Contains(tag))
+        {
+            removedTags.Add(tag);
         }
     }
     public CardInstance(STSCardData data)
@@ -329,6 +343,10 @@ public class CardInstance
         foreach (var tag in tags)
         {
             clone.tags.Add(tag);
+        }
+        foreach (var tag in removedTags)
+        {
+            clone.removedTags.Add(tag);
         }
         clone.displayName = displayName;
         clone.overrideType = overrideType;

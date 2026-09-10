@@ -9984,7 +9984,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::STSMainMenuController
   gameButtonText: {fileID: 2116620109}
   loadButton: {fileID: 380415878}
-  pvpButton: {fileID: 256201636}
+  pvpButton: {fileID: 0}
   resumeSceneName: STS_Map
   bootSceneName: STS_Boot
   pvpMenuSceneName: STS_MultiplayerMenu

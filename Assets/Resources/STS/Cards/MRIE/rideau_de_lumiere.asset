@@ -41,8 +41,8 @@ MonoBehaviour:
     cardFilterTags: 
     cardSelectionEffect: 0
     animationType: 6
-  - type: 8
-    value: 2
+  - type: 12
+    value: 1
     targetSelf: 1
     targetOthers: 0
     statusType: 0

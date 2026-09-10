@@ -14,11 +14,11 @@
   "effects": [
     {
       "type": "Status",
-      "value": 10,
+      "value": 6,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "FieldTurnFollowUp",
-      "duration": 2,
+      "duration": 4,
       "description": "",
       "cardID": "Laser orbital",
       "conditional": false,

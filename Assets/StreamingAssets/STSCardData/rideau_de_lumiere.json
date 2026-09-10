@@ -32,8 +32,8 @@
       "animationType": "Light"
     },
     {
-      "type": "Draw",
-      "value": 2,
+      "type": "GainEnergy",
+      "value": 1,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",

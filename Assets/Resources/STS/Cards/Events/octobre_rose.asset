@@ -25,11 +25,11 @@ MonoBehaviour:
   rarity: 2
   effects:
   - type: 3
-    value: 0
+    value: 1
     targetSelf: 1
     targetOthers: 0
     statusType: 109
-    duration: 0
+    duration: 1
     description: 
     cardID: 
     index: 0

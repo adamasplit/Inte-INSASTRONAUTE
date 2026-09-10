@@ -10,44 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab013ebb3e950a4caacf8d1544ef763, type: 3}
-  m_Name: sphere_de_l_espace_infini
+  m_Name: archiver
   m_EditorClassIdentifier: Assembly-CSharp::STSCardData
-  id: sphere_de_l_espace_infini
-  cardName: "Sph\xE8re de l'espace infini"
+  id: archiver
+  cardName: Archiver
   collectionCardId: 
   multiplayerExclusive: 0
   pveOnly: 0
   characterLevel: 0
-  icon: {fileID: 21300000, guid: d3a68ccabd8637a44ab10f8c2c1bcc07, type: 3}
+  icon: {fileID: 21300000, guid: 69d8a5cf4c2796043869740fafe1745e, type: 3}
   cost: 2
   xCost: 0
   type: 1
-  rarity: 4
+  rarity: 2
   effects:
-  - type: 3
-    value: 0
-    targetSelf: 0
-    targetOthers: 0
-    statusType: 71
-    duration: 1
-    description: 
-    cardID: 
-    index: 0
-    conditional: 0
-    conditionType: 0
-    conditionValue: 
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 0
-    animationType: 0
-  - type: 18
-    value: 0
+  - type: 24
+    value: -1
     targetSelf: 1
     targetOthers: 0
-    statusType: 71
-    duration: 1
-    description: 
+    statusType: 0
+    duration: 0
+    description: "Retirez \xC9puisement et \xC9th\xE9r\xE9e des cartes de votre main."
     cardID: 
     index: 0
     conditional: 0
@@ -55,12 +38,29 @@ MonoBehaviour:
     conditionValue: 
     trueEffect: 0
     cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 0
+    cardFilterTags: 0e000000
+    cardSelectionEffect: 20
     animationType: 0
-  targetingMode: 2
+  - type: 24
+    value: -1
+    targetSelf: 1
+    targetOthers: 0
+    statusType: 0
+    duration: 0
+    description: ' '
+    cardID: 
+    index: 0
+    conditional: 0
+    conditionType: 0
+    conditionValue: 
+    trueEffect: 0
+    cardSelectionSource: 0
+    cardFilterTags: 10000000
+    cardSelectionEffect: 21
+    animationType: 0
+  targetingMode: 0
   modifiers: []
-  favoredCharacter: 2
+  favoredCharacter: 3
   animationSpeed: 1
   startingCount: 0
-  tags: 
+  tags: 09000000

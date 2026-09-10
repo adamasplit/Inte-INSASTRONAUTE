@@ -19,6 +19,7 @@ public class CombatManager : MonoBehaviour
 {
     void Update()
     {
+        PumpAuthoritativeMessageQueueWatchdog();
         PumpPendingEndTurn();
         UpdateEndTurnButtonInteractable();
         ui?.DisplayDisconnected(BridgeConnectionLost);
@@ -66,14 +67,13 @@ public class CombatManager : MonoBehaviour
     public bool CardPlaysRunning => activeCardPlays > 0 || queuedCardPlays > 0;
     private bool resolvingCombatCleanup = false;
 
-    // Un tour demandé pendant qu'une carte se résolvait encore. Il attend ici plutôt que
-    // d'être perdu : le bouton s'était déjà éteint sur la pression, et refuser la demande
-    // laissait un tour que plus rien ne pouvait finir.
+    // Un tour demande pendant qu'une carte se resolvait encore. Il attend ici plutot que d'etre
+    // perdu : le bouton s'etait deja eteint sur la pression, et refuser la demande laissait un
+    // tour que plus rien ne pouvait finir.
     private bool pendingEndTurnRequest;
     private bool bridgeDisconnected;
 
-    /// Vrai quand la socket est tombée et que rien ne l'a rouverte : plus aucune commande
-    /// ne part, et seul un rechargement peut y remédier.
+    /// Vrai quand la socket est tombee et que rien ne l'a rouverte : seul un rechargement aide.
     public bool BridgeConnectionLost =>
         bridgeDisconnected && UsesAuthoritativeCombat && !combatEnded;
 
@@ -117,6 +117,9 @@ public class CombatManager : MonoBehaviour
     private bool authoritativeCommandInFlight;
     private float authoritativeCommandInFlightSince;
     private const float AuthoritativeCommandWatchdogSeconds = 8f;
+    // Un seul message rejoue depasse rarement la seconde ; au-dela, la pompe est morte.
+    private const float AuthoritativeReplayStallSeconds = 10f;
+    private float authoritativeMessageQueueHeartbeat;
     private readonly CombatantRegistry<Character> combatantRegistry =
         new CombatantRegistry<Character>();
     // Explicit rather than inferred from the registry being empty: a combat whose local
@@ -1140,8 +1143,10 @@ public class CombatManager : MonoBehaviour
     IEnumerator ProcessAuthoritativeMessageQueue()
     {
         authoritativeMessageQueueRunning = true;
+        authoritativeMessageQueueHeartbeat = Time.unscaledTime;
         while (authoritativeMessageQueue.Count > 0)
         {
+            authoritativeMessageQueueHeartbeat = Time.unscaledTime;
             JObject message = authoritativeMessageQueue.Dequeue();
             string type = message.Value<string>("type");
             IEnumerator subRoutine = null;
@@ -1175,11 +1180,45 @@ public class CombatManager : MonoBehaviour
 
             if (subRoutine != null)
             {
-                yield return subRoutine;
+                // Avance pas a pas plutot qu'en `yield return subRoutine` : une exception dans un
+                // rejeu tuait cette boucle, et le drapeau restait vrai pour toujours -- combat fige,
+                // bouton eteint, page a recharger.
+                while (true)
+                {
+                    bool hasNext = false;
+                    try
+                    {
+                        hasNext = subRoutine.MoveNext();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"[STS-COMBAT] Exception replaying authoritative message type={type}: {ex}");
+                        break;
+                    }
+                    if (!hasNext) break;
+                    authoritativeMessageQueueHeartbeat = Time.unscaledTime;
+                    yield return subRoutine.Current;
+                }
             }
         }
 
         authoritativeMessageQueueRunning = false;
+    }
+
+    /// Relance la pompe quand un rejeu l'a tuee : sans ca le drapeau ne redescend jamais.
+    void PumpAuthoritativeMessageQueueWatchdog()
+    {
+        if (!authoritativeMessageQueueRunning)
+            return;
+
+        if (Time.unscaledTime - authoritativeMessageQueueHeartbeat <= AuthoritativeReplayStallSeconds)
+            return;
+
+        Debug.LogWarning("[STS-COMBAT] Authoritative replay stalled; releasing the queue so the combat can carry on.");
+        authoritativeMessageQueueRunning = false;
+
+        if (authoritativeMessageQueue.Count > 0)
+            StartCoroutine(ProcessAuthoritativeMessageQueue());
     }
 
     /// <summary>
@@ -3528,7 +3567,7 @@ public class CombatManager : MonoBehaviour
 
         try
         {
-        targets = RedirectProvocationTarget(source, card, targets);
+        
         EffectContext ctxSelf=new EffectContext
             {
                 source = source,
@@ -3983,11 +4022,6 @@ public class CombatManager : MonoBehaviour
 
     public List<Character> GetDisplayTargets(TargetingMode mode, Character hovered)
     {
-        Character source = GetActingPlayer();
-        Character provocationBearer = ProvocationBearerFor(source, mode);
-        if (provocationBearer != null)
-            return new List<Character> { provocationBearer };
-
         switch (mode)
         {
             case TargetingMode.Enemy:
@@ -4093,45 +4127,6 @@ public class CombatManager : MonoBehaviour
         return candidates.Count == 0
             ? new List<Character>()
             : new List<Character> { candidates[UnityEngine.Random.Range(0, candidates.Count)] };
-    }
-
-    /// <summary>
-    /// Provocation détourne les cartes à cible ennemie unique vers le premier porteur hors lanceur.
-    /// Une charge n'est retirée que lorsque ce détour a effectivement lieu.
-    /// </summary>
-    List<Character> RedirectProvocationTarget(
-        Character source,
-        CardInstance card,
-        List<Character> targets)
-    {
-        if (source == null || card == null
-            || (card.targetingMode != TargetingMode.Enemy
-                && card.targetingMode != TargetingMode.RandomEnemy))
-            return targets;
-
-        Character bearer = ProvocationBearerFor(source, card.targetingMode);
-        if (bearer == null)
-            return targets;
-
-        ProvocationStatus provocation = bearer.statusEffects
-            .OfType<ProvocationStatus>()
-            .First(status => status.Value > 0);
-        provocation.Value--;
-        if (provocation.Value == 0)
-            bearer.RemoveStatus(provocation);
-        return new List<Character> { bearer };
-    }
-
-    Character ProvocationBearerFor(Character source, TargetingMode targetingMode)
-    {
-        if (source == null || (targetingMode != TargetingMode.Enemy
-            && targetingMode != TargetingMode.RandomEnemy))
-            return null;
-
-        return GetAllCharacters().FirstOrDefault(candidate => candidate != source
-            && candidate.IsAlive
-            && candidate.statusEffects.Any(status => status is ProvocationStatus
-                && status.Value > 0));
     }
     public void NotifyTurnEnded()
     {

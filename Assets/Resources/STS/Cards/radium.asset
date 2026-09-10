@@ -56,7 +56,7 @@ MonoBehaviour:
     trueEffect: 0
     cardSelectionSource: 0
     cardFilterTags: 01000000
-    cardSelectionEffect: 12
+    cardSelectionEffect: 19
     animationType: 0
   targetingMode: 0
   modifiers: []

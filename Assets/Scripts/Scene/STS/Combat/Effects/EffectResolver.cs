@@ -531,6 +531,15 @@ public static class EffectResolver
                                     case CardFilterTag.Molecule:
                                         if (c.HasTag(CardTag.Molecule)) return true;
                                         break;
+                                    case CardFilterTag.Exhaust:
+                                        if (c.HasTag(CardTag.Exhaust)) return true;
+                                        break;
+                                    case CardFilterTag.Created:
+                                        if (c.HasTag(CardTag.Created)) return true;
+                                        break;
+                                    case CardFilterTag.Ethereal:
+                                        if (c.HasTag(CardTag.Ethereal)) return true;
+                                        break;
                                     default:
                                         // Unsupported tags fallthrough
                                         break;
@@ -746,6 +755,19 @@ public static class EffectResolver
                                     break;
                                 case CardSelectionEffect.AddAutomaticTag:
                                     card.AddTag(CardTag.Automatic);
+                                    break;
+                                case CardSelectionEffect.AddRetainTag:
+                                    card.AddTag(CardTag.Retain);
+                                    break;
+                                case CardSelectionEffect.RemoveExhaustTag:
+                                    card.RemoveTag(CardTag.Exhaust);
+                                    break;
+                                case CardSelectionEffect.RemoveEtherealTag:
+                                    card.RemoveTag(CardTag.Ethereal);
+                                    break;
+                                case CardSelectionEffect.RemoveExhaustAndEtherealTags:
+                                    card.RemoveTag(CardTag.Exhaust);
+                                    card.RemoveTag(CardTag.Ethereal);
                                     break;
                                 case CardSelectionEffect.CopyToHand:
                                     CardInstance copy = card.Clone();
@@ -1310,6 +1332,9 @@ public static class EffectResolver
             CardFilterTag.Atom => card.HasTag(CardTag.Atom),
             CardFilterTag.Molecule => card.HasTag(CardTag.Molecule),
             CardFilterTag.Norm => card.HasTag(CardTag.Norm),
+            CardFilterTag.Exhaust => card.HasTag(CardTag.Exhaust),
+            CardFilterTag.Created => card.HasTag(CardTag.Created),
+            CardFilterTag.Ethereal => card.HasTag(CardTag.Ethereal),
             _ => false
         };
     }

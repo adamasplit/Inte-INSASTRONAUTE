@@ -157,7 +157,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         }
     }
 
-    public void PlayActionSprite(int variant, float duration = 0.5f)
+    public void PlayActionSprite(int variant, float duration = 0.2f)
     {
         if (variant <= 0 || image == null || target == null || baseSprite == null || deathAnimationPlayed)
             return;

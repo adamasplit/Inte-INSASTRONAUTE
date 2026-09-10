@@ -20,6 +20,9 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
     public GameObject confusionOverlay;
     private ArrowUI arrow;
     bool cardPlayedByDrop;
+    // Unity delivre OnDrag et OnEndDrag meme quand OnBeginDrag a refuse le glissement : sans
+    // ce drapeau, ils travaillent sur un etat jamais initialise (startPos perime, aucune fleche).
+    bool dragActive;
     void Awake()
     {
         rect = GetComponent<RectTransform>();
@@ -33,6 +36,8 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        dragActive = false;
+
         if (cardView == null || cardView.isAnimating)
         {
             Debug.LogWarning($"[STS-INPUT] drag-begin blocked cardView={(cardView != null)} animating={cardView != null && cardView.isAnimating}");
@@ -55,11 +60,15 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
         startPos = rect.anchoredPosition;
         transform.localScale = Vector3.one * 1.1f;
         group.blocksRaycasts = false;
+        dragActive = true;
         CreateArrow();
     }
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!dragActive)
+            return;
+
         if (cardView == null || cardView.isAnimating)
         {
             return;
@@ -91,9 +100,19 @@ IBeginDragHandler, IDragHandler, IEndDragHandler
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (!dragActive)
+        {
+            DestroyArrow();
+            return;
+        }
+
+        dragActive = false;
+
         if (cardView == null)
         {
             Debug.LogWarning("[STS-INPUT] drag-end blocked: missing CardView");
+            group.blocksRaycasts = true;
+            DestroyArrow();
             return;
         }
 

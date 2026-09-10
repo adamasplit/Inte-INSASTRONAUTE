@@ -55,7 +55,7 @@
     {
       "type": "StatusDuration",
       "kind": "DamageDealtWithLastAction",
-      "value": 1,
+      "value": 2,
       "info": "",
       "description": " "
     }

@@ -265,6 +265,8 @@ public abstract class StatusEffect : StatModifier
             StatusType.Provocation=>new ProvocationStatus(value),
             StatusType.Adrenaline=>new AdrenalineStatus(value),
             StatusType.Miracle=>new MiracleStatus(value),
+            StatusType.Analyse=>new AnalyseStatus(value),
+            StatusType.Compilation=>new CompilationStatus(value),
             _ => null
         };
         if (stat == null)

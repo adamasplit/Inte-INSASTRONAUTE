@@ -28,7 +28,7 @@ MonoBehaviour:
     value: 15
     targetSelf: 0
     targetOthers: 0
-    statusType: 1
+    statusType: 8
     duration: 3
     description: 
     cardID: 
@@ -42,10 +42,10 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   - type: 3
-    value: 15
+    value: 4
     targetSelf: 0
     targetOthers: 0
-    statusType: 8
+    statusType: 29
     duration: 3
     description: 
     cardID: 

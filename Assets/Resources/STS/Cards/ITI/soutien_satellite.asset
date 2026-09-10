@@ -25,11 +25,11 @@ MonoBehaviour:
   rarity: 3
   effects:
   - type: 3
-    value: 10
+    value: 6
     targetSelf: 1
     targetOthers: 0
     statusType: 41
-    duration: 2
+    duration: 4
     description: 
     cardID: Laser orbital
     index: 0
