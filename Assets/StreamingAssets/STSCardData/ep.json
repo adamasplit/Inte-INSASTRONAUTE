@@ -33,7 +33,7 @@
     },
     {
       "type": "DelayTurn",
-      "value": 150,
+      "value": 250,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Propulsion",

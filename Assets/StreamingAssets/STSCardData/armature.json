@@ -14,7 +14,7 @@
   "effects": [
     {
       "type": "CardSelection",
-      "value": 0,
+      "value": 1,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",

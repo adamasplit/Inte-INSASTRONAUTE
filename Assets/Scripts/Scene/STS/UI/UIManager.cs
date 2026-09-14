@@ -299,7 +299,7 @@ public class UIManager : MonoBehaviour
 
         // Une scène enregistrée avec le voile visible le laissait tel quel jusqu'à ce que
         // TurnSystem le baisse — c'est-à-dire jamais, si son champ ui n'est pas branché.
-        DisplayWaitingForServer(combat.IsWaitingForServer);
+        DisplayWaitingForServer(combat.IsWaitingForServer || combat.AuthoritativeReplayStalled);
 
         InitSurrender();
         //CreateInitialHand();
@@ -553,11 +553,28 @@ public class UIManager : MonoBehaviour
 
         if (!skipHandLayout)
             RefreshHandLayout();
+        else
+            handLayoutDeferred = true;
     }
+
+    /// <summary>
+    /// Au-delà, une animation de main n'en est plus une : c'est un drapeau que personne ne
+    /// baissera. Une pioche entière, décalages compris, tient largement en dessous.
+    /// </summary>
+    const float StuckAnimationSeconds = 3f;
 
     // True while any hand card is mid-animation (draw, discard, play, etc.) — a layout run
     // during one of those would fight the animation and snap cards instead of flowing.
-    public bool HandHasAnimatingCard => currentHandViews.Any(view => view != null && view.isAnimating);
+    public bool HandHasAnimatingCard => currentHandViews.Any(view =>
+        view != null && view.isAnimating && view.AnimatingFor < StuckAnimationSeconds);
+
+    /// <summary>
+    /// Une disposition de la main a été sautée parce qu'une carte volait encore : elle est due
+    /// dès que plus rien ne vole. Sans cette dette, rien ne la refaisait — une carte arrivée
+    /// pendant la pioche restait là où elle avait été créée, invisible derrière les autres,
+    /// jusqu'à ce que jouer une carte relance enfin la disposition.
+    /// </summary>
+    bool handLayoutDeferred;
     void CreateInitialHand()
     {
         currentHandViews.Clear();
@@ -617,6 +634,8 @@ public class UIManager : MonoBehaviour
             return;
         }
 
+        RebindHandViews();
+
         if (!HandHasDrifted())
         {
             handSyncDeferred = false;
@@ -635,6 +654,30 @@ public class UIManager : MonoBehaviour
 
         handSyncDeferred = false;
         SyncHandFromDeckState();
+    }
+
+    /// <summary>
+    /// Fait pointer chaque vue sur l'objet que la main tient pour sa carte.
+    /// </summary>
+    /// <remarks>
+    /// L'état autoritatif reconstruit une carte dont la définition a changé — transformée,
+    /// fusionnée — sous le même identifiant d'instance. La vue gardait l'ancien objet : même
+    /// identifiant, donc aucune dérive détectée, mais le nom, le coût et la visée affichés (et
+    /// relus au moment de la jouer) étaient ceux d'une carte qui n'existait plus.
+    /// </remarks>
+    void RebindHandViews()
+    {
+        foreach (CardView view in currentHandViews)
+        {
+            if (view == null || view.cardInstance == null
+                || string.IsNullOrEmpty(view.cardInstance.instanceId))
+                continue;
+
+            CardInstance held = combat.deck.hand.FirstOrDefault(card =>
+                card != null && card.instanceId == view.cardInstance.instanceId);
+            if (held != null && !ReferenceEquals(held, view.cardInstance))
+                view.SetCard(held);
+        }
     }
 
     /// <summary>
@@ -688,17 +731,60 @@ public class UIManager : MonoBehaviour
         // Le voile est piloté ici en plus de TurnSystem : lui seul le baissait, et il ne le
         // fait que si son champ ui est branché dans la scène. Sans ça, un voile resté visible
         // en PvE intercepte les clics et rien ne le rouvre.
-        DisplayWaitingForServer(combat != null && combat.IsWaitingForServer);
+        DisplayWaitingForServer(combat != null && (combat.IsWaitingForServer || combat.AuthoritativeReplayStalled));
 
-        if (!handSyncDeferred || HandHasAnimatingCard)
+        ReleaseStuckHandAnimations();
+
+        if (HandHasAnimatingCard)
             return;
 
-        SyncHandFromDeckStateIfDrifted();
+        if (handSyncDeferred)
+            SyncHandFromDeckStateIfDrifted();
+
+        if (handLayoutDeferred)
+            RefreshHandLayout();
+    }
+
+    /// <summary>
+    /// Baisse le drapeau d'une animation de main qui ne se termine plus.
+    /// </summary>
+    /// <remarks>
+    /// Une coroutine d'animation arrêtée en route ne baisse jamais <c>isAnimating</c>. La carte
+    /// restait figée là où l'animation l'avait laissée — souvent sur la pioche, en petit, dans
+    /// la couche d'animation — et, tant qu'elle « volait », la main ne se disposait ni ne se
+    /// resynchronisait plus. La disposition qui suit la remet à sa place.
+    /// </remarks>
+    void ReleaseStuckHandAnimations()
+    {
+        bool released = false;
+        foreach (CardView view in currentHandViews)
+        {
+            if (view != null && view.isAnimating && view.AnimatingFor >= StuckAnimationSeconds)
+            {
+                Debug.LogWarning($"[STS-HAND] Animation bloquée relâchée pour {view.cardInstance?.displayName ?? "<carte>"}.");
+                view.isAnimating = false;
+                released = true;
+            }
+        }
+        if (released)
+            handLayoutDeferred = true;
     }
 
     public void RefreshHandLayout()
     {
         currentHandViews.RemoveAll(v => v == null);
+        handLayoutDeferred = false;
+
+        // Une vue de la main qui ne vole plus mais qui est restée dans la couche d'animation est
+        // disposée par rapport à cette couche-là : elle se range loin de la main, souvent hors
+        // de l'écran. On la rend à la main avant de la placer.
+        foreach (CardView view in currentHandViews)
+        {
+            if (view.isAnimating || view.isDragging || view.rootRect == null)
+                continue;
+            if (view.rootRect.parent != handPanel)
+                ReparentKeepScreenPosition(view.rootRect, handPanel);
+        }
 
         handLayout.selectedCard = selectedCard;
 
@@ -936,6 +1022,12 @@ public class UIManager : MonoBehaviour
 
         if (view != null)
         {
+            // A played card owns its exit animation already (see DiscardCardAnimated): a
+            // second CardMoved(Exhaust) for the same instance would start a second coroutine
+            // racing the first one on the same RectTransform, destroying it out from under it.
+            if (playedCardViews.Contains(view))
+                return;
+
             currentHandViews.Remove(view);
             StartCoroutine(AnimateExhaust(view));
         }
@@ -967,6 +1059,10 @@ public class UIManager : MonoBehaviour
             endScale: new Vector3(0.4f, 0.4f, 1f)
         );
 
+        // Another coroutine may have destroyed this view while the move above was yielding.
+        if (view == null)
+            yield break;
+
         playedCardViews.Remove(view);
         Destroy(view.gameObject);
     }
@@ -981,6 +1077,10 @@ public class UIManager : MonoBehaviour
         ReparentKeepScreenPosition(rect, animator.animationLayer);
 
         yield return view.PlayExhaustAnimation();
+
+        // Another coroutine may have destroyed this view while the dissolve above was yielding.
+        if (view == null)
+            yield break;
 
         playedCardViews.Remove(view);
         Destroy(view.gameObject);
@@ -1121,19 +1221,22 @@ public class UIManager : MonoBehaviour
     /// <para>Tant qu'aucun état autoritatif n'est arrivé, le plateau montre des points de vie
     /// de remplissage et des piles vides. Le voile est là pour couvrir ça, et il doit donc
     /// aussi intercepter les clics : ce qu'il cache n'est pas jouable, et une carte lâchée
-    /// dessus partirait vers un combat qui n'a pas commencé.</para>
+    /// dessus partirait vers un combat qui n'a pas commencé. Le même voile sert aussi quand la
+    /// pompe d'événements se coince en cours de combat (voir CombatManager.AuthoritativeReplayStalled) :
+    /// la raison diffère, l'affichage est identique.</para>
     ///
     /// <para>Rien n'est branché par défaut. Une scène sans voile se joue exactement comme
     /// avant — le texte « En attente... » reste alors la seule indication.</para>
     ///
-    /// <para>Un combat de run ne peut jamais le lever : il n'attend aucun serveur pour jouer,
-    /// et un voile posé là par erreur bloque les clics sans que rien ne vienne le retirer. La
-    /// condition est réécrite ici plutôt que confiée à l'appelant, parce qu'un voile ouvert à
-    /// tort ne se voit pas dans le code de l'appelant mais dans une partie injouable.</para>
+    /// <para>Un combat local (tutoriel) ne peut jamais le lever : il n'attend aucun serveur
+    /// pour jouer, et un voile posé là par erreur bloque les clics sans que rien ne vienne le
+    /// retirer. La condition est réécrite ici plutôt que confiée à l'appelant, parce qu'un
+    /// voile ouvert à tort ne se voit pas dans le code de l'appelant mais dans une partie
+    /// injouable.</para>
     /// </summary>
     public void DisplayWaitingForServer(bool waiting)
     {
-        waiting = waiting && combat != null && combat.Mode == CombatMode.Pvp;
+        waiting = waiting && combat != null && combat.UsesAuthoritativeCombat;
 
         if (waitingForServerOverlay == null)
         {
@@ -1272,6 +1375,9 @@ public IEnumerator AnimateCardToCenter(CardView view)
             startScale: Vector3.one,
             endScale: new Vector3(0.4f, 0.4f, 1f)
         );
+
+        if (view == null)
+            yield break;
 
         playedCardViews.Remove(view);
         Destroy(view.rootRect.gameObject);

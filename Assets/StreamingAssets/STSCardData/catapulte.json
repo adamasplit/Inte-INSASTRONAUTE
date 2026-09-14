@@ -14,7 +14,7 @@
   "effects": [
     {
       "type": "Damage",
-      "value": 16,
+      "value": 22,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",

@@ -23,6 +23,7 @@ public static class EnemyPoolJsonExporter
         var wrapper = new EnemyPoolDTO
         {
             maxAct = pool.maxAct,
+            startingAct = pool.startingAct,
             baseHpScaling = pool.baseHpScaling,
             actHpScaling = pool.actHpScaling != null ? new List<float>(pool.actHpScaling) : new List<float>()
         };
@@ -68,6 +69,7 @@ public static class EnemyPoolJsonExporter
         }
 
         pool.maxAct = wrapper.maxAct;
+        pool.startingAct = wrapper.startingAct;
         pool.baseHpScaling = wrapper.baseHpScaling;
         pool.actHpScaling = wrapper.actHpScaling != null ? new List<float>(wrapper.actHpScaling) : new List<float>();
         pool.enemies = new List<EncounterEntry>();

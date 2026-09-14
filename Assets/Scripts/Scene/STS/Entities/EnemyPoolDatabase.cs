@@ -67,7 +67,10 @@ public static class EnemyPoolDatabase
     private static async Task<bool> TryLoadFromRemoteApiAsync()
     {
         Debug.Log("EnemyPoolDatabase requesting enemy-pool catalog (sts.catalog.enemy-pool) through React bridge.");
-        string json = await ReactApiBridge.RequestStsCatalogEnemyPoolAsync();
+        string json = await STSRemoteCatalogCache.GetOrFetchAsync(
+            "enemy-pool",
+            () => ReactApiBridge.RequestStsCatalogEnemyPoolAsync()
+        );
         if (string.IsNullOrWhiteSpace(json))
         {
             Debug.LogWarning("EnemyPoolDatabase did not receive an enemy-pool payload from the React bridge.");

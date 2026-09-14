@@ -180,13 +180,19 @@ public class CardInstance
                 text += "<color=red>(Adversaire aléatoire)</color> :\n";
                 break;
         }
+        string effectDesc = "";
         foreach (var e in GetEffects())
         {
             string desc=EffectDescription.Get(e,ctx);
             if (desc!=" "&&e.description!=" ")
             {
-                text += desc + "\n";
+                effectDesc += desc + "\n";
             }
+        }
+        text += effectDesc;
+        if (string.IsNullOrEmpty(effectDesc))
+        {
+            text="";
         }
         foreach (var mod in GetModifiers(false,true))
         {

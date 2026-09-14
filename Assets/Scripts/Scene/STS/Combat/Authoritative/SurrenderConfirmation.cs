@@ -31,9 +31,7 @@ public sealed class SurrenderConfirmation
     /// comme une absence, classement compris. Le taire ferait croire à une sortie gratuite.
     /// </summary>
     public const string Warning =
-        "Abandonner met fin au duel : votre adversaire gagne, et votre classement baisse "
-        + "exactement comme si vous aviez quitté la partie. Appuyez une seconde fois pour "
-        + "confirmer.";
+        "Si vous abandonnez, vous perdrez le combat. Confirmer?";
 
     private readonly double windowSeconds;
     private double armedFor;

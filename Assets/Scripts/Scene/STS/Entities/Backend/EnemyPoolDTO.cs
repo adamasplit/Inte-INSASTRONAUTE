@@ -19,6 +19,11 @@ public class EncounterEntryDTO
 public class EnemyPoolDTO
 {
     public int maxAct = -1;
+
+    /// L'acte de depart, numerote comme le joueur le lit (1 = Acte 1). Lu par le
+    /// serveur, qui est seul a decider de l'acte d'une run.
+    public int startingAct = 1;
+
     public float baseHpScaling = 1f;
     public List<float> actHpScaling = new();
     public List<EncounterEntryDTO> enemies = new();

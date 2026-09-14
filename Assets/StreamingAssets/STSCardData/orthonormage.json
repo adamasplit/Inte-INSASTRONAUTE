@@ -39,7 +39,7 @@
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
-      "duration": 0,
+      "duration": 3,
       "description": "",
       "cardID": "",
       "conditional": false,

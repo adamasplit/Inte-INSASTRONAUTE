@@ -14,7 +14,7 @@
   "effects": [
     {
       "type": "Damage",
-      "value": 5,
+      "value": 18,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -33,7 +33,7 @@
     },
     {
       "type": "LoseHP",
-      "value": 2,
+      "value": 4,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",
@@ -51,11 +51,20 @@
       "animationType": "Default"
     }
   ],
-  "modifiers": [],
+  "modifiers": [
+    {
+      "type": "Damage",
+      "kind": "Flat",
+      "value": 0,
+      "info": "",
+      "description": "Jouer cette carte aura des effets irréversibles..."
+    }
+  ],
   "favoredCharacter": "Impossible",
   "animationSpeed": 1.0,
   "startingCount": 0,
   "tags": [
-    "Unobtainable"
+    "Unobtainable",
+    "SecretUnlock"
   ]
 }

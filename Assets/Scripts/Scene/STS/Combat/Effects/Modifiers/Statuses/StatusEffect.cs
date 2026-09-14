@@ -102,6 +102,26 @@ public abstract class StatusEffect : StatModifier
     {
         owner = target;
     }
+
+    /// <summary>
+    /// Dit au statut qui le porte, sans rien déclencher d'autre.
+    ///
+    /// <para>En combat autoritatif, les statuts sont reconstruits depuis l'état du serveur et
+    /// ne passent jamais par <see cref="OnApply"/> : leur <c>owner</c> restait nul, et tout ce
+    /// qui se lit sur le porteur (une description qui dépend d'un autre statut, un
+    /// modificateur qui compare la cible à son porteur) répondait faux.</para>
+    /// </summary>
+    public void BindOwner(Character target)
+    {
+        owner = target;
+        OnOwnerStatusesChanged();
+    }
+
+    /// <summary>
+    /// Appelé quand les statuts du porteur viennent d'être resynchronisés, pour les statuts
+    /// dont l'affichage dépend d'un autre statut du même porteur.
+    /// </summary>
+    public virtual void OnOwnerStatusesChanged() { }
     public virtual void OnExpire(Character target) { }
     public virtual void OnTurnStart(Character target) { }
     public virtual void OnTurnEnd(Character target)
@@ -267,6 +287,14 @@ public abstract class StatusEffect : StatModifier
             StatusType.Miracle=>new MiracleStatus(value),
             StatusType.Analyse=>new AnalyseStatus(value),
             StatusType.Compilation=>new CompilationStatus(value),
+            StatusType.Chaotic=>new ChaoticStatus(),
+            StatusType.SadismII=>new SadismIIStatus(),
+            StatusType.SadismIII=>new SadismIIIStatus(),
+            StatusType.Astra=>new AstraStatus(),
+            StatusType.Sol=>new SolStatus(duration),
+            StatusType.Luna=>new LunaStatus(duration),
+            StatusType.Critical=>new CriticalStatus(value),
+            StatusType.TimeDistortion=>new TimeDistortionStatus(),
             _ => null
         };
         if (stat == null)

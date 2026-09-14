@@ -262,7 +262,10 @@ public class RetreatManager : MonoBehaviour
             RunManager.Instance.ui.ShowUnlockedCardsPanel(unlockedCards, () =>
             {
                 RunManager.Instance.OnRunEnd(true, false);
-                STSSceneLoader.Instance?.BeginLoading();
+                // Pas de BeginLoading ici : rien ne le refermerait. L'écran de chargement suit
+                // son compteur, et LoadScene l'affiche déjà seul ; un BeginLoading orphelin laissait
+                // le compteur à 1 pour toute la suite de la session, si bien qu'aucun SceneReady ne
+                // pouvait plus masquer l'écran — le menu multijoueur restait figé à 100 %.
                 STSSceneLoader.Instance.LoadScene("STS_Boot");
             });
             return;

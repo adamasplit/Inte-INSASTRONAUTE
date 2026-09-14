@@ -33,6 +33,8 @@ public class STSApiRunCreateResponse
     public STSApiActiveEncounterState activeEncounter;
     public JToken activeCombat;
     public JToken activeEvent;
+    // Etat serveur du pool de cartes secretes pour le compte : jamais deduit cote client.
+    public bool secretCardsUnlocked;
 }
 
 [Serializable]
@@ -286,6 +288,8 @@ public class STSApiCurrentRunResponse
 {
     public bool hasRun;
     public STSApiRunCreateResponse run;
+    // Etat du compte, present meme sans run en cours : le menu principal s'en sert.
+    public bool secretCardsUnlocked;
 }
 
 [Serializable]
@@ -311,6 +315,18 @@ public class STSApiDebugCombatRequest
     public List<string> enemyIds = new();
     public List<string> cardIds = new();
     public List<string> relicIds = new();
+}
+
+/// <summary>
+/// L'état d'une file d'attente : combien de joueurs y cherchent, et combien il en faut.
+/// </summary>
+[Serializable]
+public class STSApiPvpQueueStatusResponse
+{
+    public string mode;
+    public bool friendly;
+    public int waiting;
+    public int required;
 }
 
 /// <summary>Ce que le serveur répond quand on lui demande si le mode PvP est ouvert.</summary>
@@ -742,6 +758,35 @@ public static class STSApiClient
     }
 
     /// <summary>
+    /// Combien de joueurs cherchent en ce moment dans une file donnée.
+    ///
+    /// <para>Rend <c>null</c> plutôt que zéro quand la question n'aboutit pas : « personne ne
+    /// cherche » et « je n'ai pas pu demander » ne se disent pas de la même façon à l'écran, et
+    /// annoncer une file vide sur un hoquet réseau découragerait une recherche qui aurait
+    /// abouti.</para>
+    /// </summary>
+    public static async Task<STSApiPvpQueueStatusResponse> GetPvpQueueStatusAsync(string mode, bool friendly)
+    {
+        try
+        {
+            string json = await ReactApiBridge.RequestAsync(
+                "sts.pvp.matchmaking.queue",
+                new JObject
+                {
+                    ["mode"] = string.IsNullOrWhiteSpace(mode) ? "ONE_V_ONE" : mode,
+                    ["friendly"] = friendly
+                });
+
+            return ParseResponse<STSApiPvpQueueStatusResponse>(json);
+        }
+        catch (Exception ex)
+        {
+            Debug.Log($"[STS-PVP] File d'attente illisible : {ex.Message}");
+            return null;
+        }
+    }
+
+    /// <summary>
     /// Demande si le mode PvP est ouvert sur ce serveur.
     ///
     /// <para>Contrairement au combat de débogage, le doute profite ici au mode : sans réponse
@@ -1123,7 +1168,8 @@ public static class STSApiClient
             map = ConvertMap(response.map != null ? response.map.nodes : null),
             activeEncounter = response.activeEncounter,
             activeCombat = NormalizeOptionalToken(response.activeCombat),
-            activeEvent = NormalizeOptionalToken(response.activeEvent)
+            activeEvent = NormalizeOptionalToken(response.activeEvent),
+            secretCardsUnlocked = response.secretCardsUnlocked
         };
 
         return state;
@@ -1524,4 +1570,6 @@ public class STSApiRunState
     public STSApiActiveEncounterState activeEncounter;
     public JToken activeCombat;
     public JToken activeEvent;
+    // Etat serveur du pool de cartes secretes pour le compte : jamais deduit cote client.
+    public bool secretCardsUnlocked;
 }

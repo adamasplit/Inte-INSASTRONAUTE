@@ -6,7 +6,7 @@
   "pveOnly": false,
   "characterLevel": 0,
   "iconId": "Dégâts et Armure",
-  "cost": 1,
+  "cost": 0,
   "xCost": false,
   "type": "Attaque",
   "rarity": "Uncommon",

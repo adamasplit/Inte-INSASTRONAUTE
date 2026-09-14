@@ -14,7 +14,7 @@
   "effects": [
     {
       "type": "Damage",
-      "value": 1,
+      "value": 3,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -33,7 +33,7 @@
     },
     {
       "type": "DelayTurn",
-      "value": 4,
+      "value": 30,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",

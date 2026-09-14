@@ -30,7 +30,7 @@ MonoBehaviour:
     targetOthers: 0
     statusType: 0
     duration: 0
-    description: "Retirez \xC9puisement et \xC9th\xE9r\xE9e des cartes de votre main."
+    description: "Retirez \xC9puisement et \xC9th\xE9r\xE9e des cartes de votre main"
     cardID: 
     index: 0
     conditional: 0
@@ -38,25 +38,8 @@ MonoBehaviour:
     conditionValue: 
     trueEffect: 0
     cardSelectionSource: 0
-    cardFilterTags: 0e000000
-    cardSelectionEffect: 20
-    animationType: 0
-  - type: 24
-    value: -1
-    targetSelf: 1
-    targetOthers: 0
-    statusType: 0
-    duration: 0
-    description: ' '
-    cardID: 
-    index: 0
-    conditional: 0
-    conditionType: 0
-    conditionValue: 
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 10000000
-    cardSelectionEffect: 21
+    cardFilterTags: 0e00000010000000
+    cardSelectionEffect: 22
     animationType: 0
   targetingMode: 0
   modifiers: []

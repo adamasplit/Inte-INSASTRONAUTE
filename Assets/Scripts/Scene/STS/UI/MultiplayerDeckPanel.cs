@@ -14,6 +14,7 @@ public class MultiplayerDeckPanel : MonoBehaviour
     {
         public string id;
         public string name;
+        public string selectedCharacter;
         public List<string> cardIds = new();
     }
 
@@ -711,9 +712,14 @@ public class MultiplayerDeckPanel : MonoBehaviour
             return;
         }
 
+        string activeDeckName = string.IsNullOrWhiteSpace(deckNameInput != null ? deckNameInput.text : null)
+            ? "Deck Actif"
+            : deckNameInput.text.Trim();
+        bool replacesExisting = HasSavedDeckNamed(activeDeckName);
+
         JObject payload = new JObject
         {
-            ["name"] = string.IsNullOrWhiteSpace(deckNameInput != null ? deckNameInput.text : null) ? "Deck Actif" : deckNameInput.text.Trim(),
+            ["name"] = activeDeckName,
             ["selectedCharacter"] = selectedCharacter.ToString(),
             ["isActive"] = true,
             ["cardIds"] = new JArray(selectedCardKeys.ToArray())
@@ -726,8 +732,13 @@ public class MultiplayerDeckPanel : MonoBehaviour
             return;
         }
 
-        Notify("Deck validé et sauvegardé.");
-        await RefreshSavedDecksAsync();
+        Notify(replacesExisting
+            ? $"Deck « {activeDeckName} » validé et mis à jour."
+            : "Deck validé et sauvegardé.");
+        // Valider est le geste de fin : le deck est enregistré, on revient au menu. Un refus
+        // (taille, sauvegarde échouée) laisse au contraire l'éditeur ouvert pour corriger.
+        ClosePanel();
+        await RefreshSavedDecksAsync(response.Value<string>("id"));
     }
 
     private async Task SaveDeckPresetAsync()
@@ -747,6 +758,7 @@ public class MultiplayerDeckPanel : MonoBehaviour
             ["cardIds"] = new JArray(selectedCardKeys.ToArray())
         };
 
+        bool replacesExisting = HasSavedDeckNamed(name);
         JToken response = await STSApiClient.SavePvpDeckAsync(payload);
         if (response == null)
         {
@@ -754,8 +766,8 @@ public class MultiplayerDeckPanel : MonoBehaviour
             return;
         }
 
-        Notify("Deck sauvegardé.");
-        await RefreshSavedDecksAsync();
+        Notify(replacesExisting ? $"Deck « {name} » mis à jour." : "Deck sauvegardé.");
+        await RefreshSavedDecksAsync(response.Value<string>("id"));
     }
 
     private async Task LoadSelectedDeckPresetAsync()
@@ -890,7 +902,29 @@ public class MultiplayerDeckPanel : MonoBehaviour
             : "Confirmer l'effacement";
     }
 
-    private async Task RefreshSavedDecksAsync()
+    /// <summary>
+    /// Vrai quand un deck de ce personnage porte déjà ce nom : le serveur le remplacera plutôt que
+    /// d'en créer un second (même nom, casse et espaces autour ignorés).
+    ///
+    /// <para>Ne sert qu'au message. Le serveur décide seul de remplacer ; un deck dont le personnage
+    /// n'a pas été renvoyé est traité comme un autre personnage, faute de pouvoir dire mieux.</para>
+    /// </summary>
+    private bool HasSavedDeckNamed(string name)
+    {
+        string key = (name ?? string.Empty).Trim();
+        string character = selectedCharacter.ToString();
+        return savedDecks.Any(d =>
+            d != null
+            && string.Equals((d.name ?? string.Empty).Trim(), key, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(d.selectedCharacter, character, StringComparison.OrdinalIgnoreCase));
+    }
+
+    /// <param name="selectDeckId">
+    /// Le deck à laisser sélectionné une fois la liste reconstruite, typiquement celui qu'on vient
+    /// d'enregistrer. Sans lui la liste revenait toujours sur son premier deck, si bien qu'après
+    /// avoir mis à jour un deck, « Charger » ou « Effacer » visaient un autre que celui affiché.
+    /// </param>
+    private async Task RefreshSavedDecksAsync(string selectDeckId = null)
     {
         savedDecks.Clear();
 
@@ -914,7 +948,11 @@ public class MultiplayerDeckPanel : MonoBehaviour
                 ? new List<string> { "Aucun deck" }
                 : savedDecks.Select(d => d.name).ToList();
             savedDecksDropdown.AddOptions(names);
-            savedDecksDropdown.value = 0;
+            int selectedIndex = string.IsNullOrWhiteSpace(selectDeckId)
+                ? -1
+                : savedDecks.FindIndex(d => string.Equals(d.id, selectDeckId, StringComparison.OrdinalIgnoreCase));
+            savedDecksDropdown.value = Mathf.Max(0, selectedIndex);
+            savedDecksDropdown.RefreshShownValue();
             savedDecksDropdown.interactable = savedDecks.Count > 0;
         }
 
@@ -990,6 +1028,7 @@ public class MultiplayerDeckPanel : MonoBehaviour
         {
             id = id,
             name = name,
+            selectedCharacter = obj.Value<string>("selectedCharacter"),
             cardIds = cardIds
         };
     }
@@ -1233,6 +1272,43 @@ public class MultiplayerDeckPanel : MonoBehaviour
     {
         host?.ShowNotification(message);
         SetStatus(message);
+    }
+
+    /// <summary>
+    /// Les étapes du tutoriel de l'éditeur, joué par le menu à la première ouverture.
+    ///
+    /// <para>Écrites ici plutôt que dans le menu : c'est ce panneau qui connaît ses boutons et
+    /// ses limites de taille.</para>
+    /// </summary>
+    public IReadOnlyList<MultiplayerTutorial.Step> BuildTutorialSteps()
+    {
+        // La grille elle-même grandit avec son contenu : c'est la zone visible qu'on encadre.
+        ScrollRect scroll = gridContainer != null ? gridContainer.GetComponentInParent<ScrollRect>() : null;
+        RectTransform grid = scroll != null ? (RectTransform)scroll.transform : gridContainer as RectTransform;
+
+        return new List<MultiplayerTutorial.Step>
+        {
+            new($"Voici l'éditeur de deck. Votre deck multijoueur doit contenir entre {minDeckSize} et {maxDeckSize} cartes."),
+            new("Voici les cartes accessibles à votre personnage. Touchez une carte pour l'ajouter au deck ou l'en retirer. "
+                + "Les cartes verrouillées se débloquent en terminant des parties en campagne.", grid),
+            new("Ce compteur indique combien de cartes votre deck contient.", AsRect(counterText)),
+            new("Cherchez une carte par son nom, ou filtrez la liste par rareté, par personnage ou par cartes débloquées.",
+                AsRect(searchInput), AsRect(filtersContainer)),
+            new($"« Tout ajouter » met dans le deck toutes les cartes affichées, dans la limite de {maxDeckSize}. "
+                + "« Tout retirer » vide le deck. Combinez-les avec les filtres !",
+                AsRect(addAllButton), AsRect(removeAllButton)),
+            new("Nommez votre deck et sauvegardez-le pour le retrouver plus tard. Sauvegarder sous un nom déjà pris remplace l'ancien deck.",
+                AsRect(deckNameInput), AsRect(saveDeckButton)),
+            new("Vos decks sauvegardés sont ici : chargez-en un, ou supprimez-le (appuyez deux fois pour confirmer).",
+                AsRect(savedDecksDropdown), AsRect(loadDeckButton), AsRect(deleteDeckButton)),
+            new("Enfin, « Valider » fait de ce deck celui que vous jouerez en multijoueur, puis referme l'éditeur.",
+                AsRect(validateButton))
+        };
+    }
+
+    private static RectTransform AsRect(Component component)
+    {
+        return component != null ? component.transform as RectTransform : null;
     }
 
     private void ClosePanel()

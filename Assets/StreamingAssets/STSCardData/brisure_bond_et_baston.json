@@ -14,7 +14,7 @@
   "effects": [
     {
       "type": "Damage",
-      "value": 5,
+      "value": 6,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -33,7 +33,7 @@
     },
     {
       "type": "AdvanceTurn",
-      "value": 15,
+      "value": 55,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",

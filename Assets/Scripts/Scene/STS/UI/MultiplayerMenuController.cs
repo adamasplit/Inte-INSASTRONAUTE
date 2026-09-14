@@ -27,6 +27,13 @@ public class MultiplayerMenuController : MonoBehaviour
     [SerializeField] private TMP_Dropdown modeDropdown;
     [SerializeField] private Toggle fillWithAiToggle;
     [SerializeField] private TextMeshProUGUI modeHintText;
+
+    /// <summary>
+    /// Combien de joueurs cherchent en ce moment dans le mode choisi.
+    ///
+    /// <para>Facultatif : sans lui, le menu se comporte comme avant et n'interroge rien.</para>
+    /// </summary>
+    [SerializeField] private TextMeshProUGUI queueCountText;
     [SerializeField] private TextMeshProUGUI playerIdText;
     [Tooltip("Classement du joueur. Facultatif : sans lui, le menu s'affiche comme avant.")]
     [SerializeField] private TextMeshProUGUI eloText;
@@ -78,6 +85,19 @@ public class MultiplayerMenuController : MonoBehaviour
     /// la recherche.
     private const float MatchPollIntervalSeconds = 3f;
 
+    /// <summary>
+    /// À quelle cadence on recompte les joueurs en file.
+    ///
+    /// <para>Plus lâche que la veille d'appariement : ce n'est qu'un affichage, et une entrée
+    /// de file vit trente secondes sans battement de toute façon. Cinq secondes suffisent à ce
+    /// que le nombre bouge sous les yeux du joueur sans qu'un menu resté ouvert coûte quoi que
+    /// ce soit.</para>
+    /// </summary>
+    private const float QueueCountPollIntervalSeconds = 5f;
+
+    private int queueCountGeneration;
+    private bool warnedAboutUnreadableQueue;
+
     private void OnDestroy()
     {
         if (isQuickMatchQueued && !isEnteringPvpBattle)
@@ -90,6 +110,86 @@ public class MultiplayerMenuController : MonoBehaviour
     private void Start()
     {
         STSSceneLoader.Instance?.SceneReady();
+
+        if (queueCountText != null)
+        {
+            queueCountText.text = "";
+            StartCoroutine(WatchQueueCountRoutine());
+        }
+    }
+
+    /// <summary>
+    /// Recompte la file tant que le menu est ouvert. Unity arrête la boucle en détruisant
+    /// l'objet, donc rien à défaire à la main.
+    /// </summary>
+    private IEnumerator WatchQueueCountRoutine()
+    {
+        while (true)
+        {
+            RefreshQueueCount();
+            yield return new WaitForSeconds(QueueCountPollIntervalSeconds);
+        }
+    }
+
+    /// <summary>
+    /// Demande combien de joueurs cherchent dans le mode et le type de file affichés.
+    ///
+    /// <para>Numéroté comme les autres rafraîchissements du menu : changer de mode relance la
+    /// question, et la réponse de la précédente ne doit pas venir écraser celle de la nouvelle
+    /// avec le compte d'un mode que le joueur ne regarde plus.</para>
+    ///
+    /// <para>Une question sans réponse laisse la ligne vide plutôt que d'annoncer zéro : dire
+    /// « personne » quand on ne sait pas découragerait une recherche qui aurait abouti.</para>
+    /// </summary>
+    private async void RefreshQueueCount()
+    {
+        if (queueCountText == null)
+        {
+            return;
+        }
+
+        int generation = ++queueCountGeneration;
+        string mode = SelectedPvpMode().WireName;
+        bool friendly = friendlyMatchToggle != null && friendlyMatchToggle.isOn;
+
+        STSApiPvpQueueStatusResponse status = await STSApiClient.GetPvpQueueStatusAsync(mode, friendly);
+
+        if (generation != queueCountGeneration || queueCountText == null)
+        {
+            return;
+        }
+
+        if (status == null)
+        {
+            queueCountText.text = "";
+            // La ligne reste vide pour le joueur, volontairement (voir plus haut). Mais une ligne
+            // vide ne dit pas pourquoi, et « la file reste vide » cachait trois pannes qui se
+            // ressemblent toutes : l'éditeur, qui n'envoie aucune requête au pont ; un pont
+            // déployé qui ne connaît pas encore sts.pvp.matchmaking.queue ; un serveur qui n'a
+            // pas encore la route. On le dit une fois dans la console, pour le développeur.
+            if (!warnedAboutUnreadableQueue)
+            {
+                warnedAboutUnreadableQueue = true;
+                Debug.LogWarning("[STS-PVP] Le compte de la file est illisible (réponse nulle). "
+#if UNITY_EDITOR
+                    + "Dans l'éditeur, le pont React n'est jamais appelé : testez en WebGL. "
+#endif
+                    + "Vérifiez que le pont déployé route sts.pvp.matchmaking.queue et que "
+                    + "l'API expose GET /api/sts/pvp/matchmaking/queue.");
+            }
+            return;
+        }
+
+        if (status.waiting <= 0)
+        {
+            queueCountText.text = "Personne ne cherche ce mode en ce moment.";
+            return;
+        }
+
+        int required = Mathf.Max(1, status.required);
+        queueCountText.text = status.waiting > 1
+            ? $"{status.waiting} joueurs en recherche ({status.waiting}/{required} pour lancer)"
+            : $"1 joueur en recherche (1/{required} pour lancer)";
     }
 
     private async void Awake()
@@ -113,7 +213,97 @@ public class MultiplayerMenuController : MonoBehaviour
         if (RunManager.Instance != null && RunManager.Instance.ConsumePvpQuickMatchRequest())
         {
             await QuickMatchAsync();
+            return;
         }
+
+        // Après le chargement, pas avant : le classement et le personnage sont alors affichés,
+        // et le tutoriel parle de ce que le joueur a vraiment sous les yeux.
+        PlayTutorialOnce(MenuTutorialSeenKey, BuildMenuTutorialSteps());
+    }
+
+    private const string MenuTutorialSeenKey = "STS_MultiplayerTutorialSeen";
+    private const string DeckTutorialSeenKey = "STS_MultiplayerDeckTutorialSeen";
+
+    private MultiplayerTutorial tutorial;
+
+    /// <summary>
+    /// Rejoue le tutoriel de l'écran affiché : celui de l'éditeur si le deck est ouvert, celui
+    /// du menu sinon. À brancher sur un bouton d'aide.
+    /// </summary>
+    public void ReplayTutorial()
+    {
+        if (deckPanel != null && deckPanel.activeInHierarchy && multiplayerDeckPanel != null)
+            PlayTutorial(multiplayerDeckPanel.BuildTutorialSteps());
+        else
+            PlayTutorial(BuildMenuTutorialSteps());
+    }
+
+    private void PlayTutorialOnce(string seenKey, IReadOnlyList<MultiplayerTutorial.Step> steps)
+    {
+        if (PlayerPrefs.GetInt(seenKey, 0) == 1)
+            return;
+
+        PlayTutorial(steps, () =>
+        {
+            PlayerPrefs.SetInt(seenKey, 1);
+            PlayerPrefs.Save();
+        });
+    }
+
+    private void PlayTutorial(IReadOnlyList<MultiplayerTutorial.Step> steps, Action onFinished = null)
+    {
+        // Appelé au bout d'un chargement asynchrone : la scène a pu être quittée entre-temps.
+        if (this == null || isQuickMatchQueued || isEnteringPvpBattle)
+            return;
+
+        if (tutorial == null)
+        {
+            Transform anchor = deckPanel != null && deckPanel.activeInHierarchy
+                ? deckPanel.transform
+                : configurationPanel != null ? configurationPanel.transform : transform;
+            Canvas canvas = anchor.GetComponentInParent<Canvas>();
+            TMP_FontAsset font = notificationText != null ? notificationText.font
+                : challengeTargetInput != null && challengeTargetInput.textComponent != null
+                    ? challengeTargetInput.textComponent.font
+                    : null;
+            tutorial = MultiplayerTutorial.Create(canvas != null ? canvas.rootCanvas : null, font);
+        }
+
+        if (tutorial != null)
+            tutorial.Play(steps, onFinished);
+    }
+
+    private static RectTransform AsRect(Component component)
+    {
+        return component != null ? component.transform as RectTransform : null;
+    }
+
+    private IReadOnlyList<MultiplayerTutorial.Step> BuildMenuTutorialSteps()
+    {
+        return new List<MultiplayerTutorial.Step>
+        {
+            new("Bienvenue dans le mode multijoueur ! Voici un rapide tour du menu avant votre premier affrontement."),
+            new("Choisissez ici votre personnage. Il décide des cartes que vous pourrez mettre dans votre deck, "
+                + "et il est enregistré dès que vous le changez.", AsRect(characterDropdown)),
+            new("Ce bouton ouvre l'éditeur de deck de votre personnage : c'est là que vous choisissez les cartes "
+                + "que vous emmènerez au combat.", AsRect(openDeckButton)),
+            new("Choisissez le format de la partie : 1v1, 2v2, ou Raid, où deux joueurs affrontent ensemble un boss.",
+                AsRect(modeDropdown)),
+            new("Avec cette option, l'IA occupe les places libres : la partie se lance sans attendre que tous les joueurs soient là.",
+                AsRect(fillWithAiToggle)),
+            new("En match amical, votre classement n'est pas en jeu. Amicales et classées ont chacune leur file : "
+                + "vous ne croiserez que des joueurs qui ont fait le même choix.", AsRect(friendlyMatchToggle)),
+            new("Ici s'affiche le nombre de joueurs qui cherchent le même format que vous en ce moment.",
+                AsRect(queueCountText)),
+            new("« Partie rapide » lance la recherche d'adversaires. Vous pouvez l'annuler à tout moment depuis l'écran d'attente.",
+                AsRect(quickMatchButton)),
+            new("Pour affronter un ami, tapez son nom ici et choisissez-le dans la liste, puis appuyez sur « Défier ».",
+                AsRect(challengeTargetInput), AsRect(challengeButton)),
+            new("Votre classement et votre bilan de victoires et défaites en parties classées. Ils évoluent à chaque partie classée.",
+                AsRect(eloText), AsRect(rankedRecordText)),
+            new("Ce bouton enregistre votre personnage et vos préférences de partie.", AsRect(saveProfileButton)),
+            new("C'est tout ! Bonne chance dans l'arène.")
+        };
     }
 
     /// <summary>
@@ -169,7 +359,12 @@ public class MultiplayerMenuController : MonoBehaviour
 
         modeDropdown.value = 0;
         modeDropdown.RefreshShownValue();
-        modeDropdown.onValueChanged.AddListener(_ => RefreshModeHint());
+        modeDropdown.onValueChanged.AddListener(_ =>
+        {
+            RefreshModeHint();
+            // Le compte affiché est celui d'une file précise : changer de mode le périme.
+            RefreshQueueCount();
+        });
         RefreshModeHint();
     }
 
@@ -266,6 +461,14 @@ public class MultiplayerMenuController : MonoBehaviour
             fillWithAiToggle.onValueChanged.AddListener(_ => RefreshModeHint());
         }
 
+        if (friendlyMatchToggle != null)
+        {
+            // Les deux files ne se croisent pas : on ne s'apparie qu'entre amicales ou
+            // qu'entre classées, donc basculer change le nombre qu'il faut annoncer.
+            friendlyMatchToggle.onValueChanged.RemoveAllListeners();
+            friendlyMatchToggle.onValueChanged.AddListener(_ => RefreshQueueCount());
+        }
+
         if (challengeTargetInput != null)
         {
             challengeTargetInput.onValueChanged.RemoveAllListeners();
@@ -343,6 +546,7 @@ public class MultiplayerMenuController : MonoBehaviour
         if (multiplayerDeckPanel != null)
         {
             multiplayerDeckPanel.OpenForCharacter(GetSelectedCharacter());
+            PlayTutorialOnce(DeckTutorialSeenKey, multiplayerDeckPanel.BuildTutorialSteps());
         }
     }
 

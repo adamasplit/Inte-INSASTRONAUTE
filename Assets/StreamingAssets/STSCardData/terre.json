@@ -14,11 +14,11 @@
   "effects": [
     {
       "type": "Status",
-      "value": 30,
+      "value": 3,
       "targetSelf": true,
       "targetOthers": false,
-      "statusType": "DamageReduction",
-      "duration": -1,
+      "statusType": "Luna",
+      "duration": 2,
       "description": "",
       "cardID": "",
       "conditional": false,

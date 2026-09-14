@@ -10,6 +10,8 @@ public class SadismIIIStatus:StatusEffect
         buff=true;
         framed=true;
         modifierType = ModifierType.Multiplicative;
+        // Né de SadismStatus.Update plutôt que de Factory, qui est seule à poser le type.
+        statusType = StatusType.SadismIII;
     }
     public override bool AppliesTo(StatType stat, EffectContext ctx)
     {

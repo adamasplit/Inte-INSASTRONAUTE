@@ -36,12 +36,25 @@ public class RewardManager : MonoBehaviour, IRewardFlowHost
             goingToMap = !RunManager.Instance.bossEncounter;
             RunManager.Instance.pendingReward = null;
         }
+        else if (RunManager.Instance != null
+            && !RunManager.Instance.unrestrictedMode
+            && !string.IsNullOrWhiteSpace(RunManager.Instance.runId))
+        {
+            // Run tenue par le serveur, mais aucune récompense de sa part : on n'en invente pas.
+            // Retomber sur une récompense locale montrait des cartes que le serveur n'offre
+            // jamais — des cartes secrètes à un compte qui ne les a pas — et les ajoutait au
+            // deck sans lui.
+            Debug.LogWarning("[STS-RUN] No backend pending rewards for a server-authoritative run; showing no local reward.");
+            reward = new Reward();
+            goingToMap = !RunManager.Instance.bossEncounter;
+            RunManager.Instance.pendingReward = null;
+        }
         else if (RunManager.Instance!=null &&RunManager.Instance.pendingReward != null)
         {
             reward = RunManager.Instance.pendingReward;
             goingToMap = !RunManager.Instance.bossEncounter;
         }
-        else
+        else if (RunManager.Instance == null)
         {
             
             CombatResult result = new CombatResult

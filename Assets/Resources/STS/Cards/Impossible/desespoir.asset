@@ -25,7 +25,7 @@ MonoBehaviour:
   rarity: 5
   effects:
   - type: 0
-    value: 5
+    value: 18
     targetSelf: 0
     targetOthers: 0
     statusType: 0
@@ -42,7 +42,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 1
   - type: 11
-    value: 2
+    value: 4
     targetSelf: 1
     targetOthers: 0
     statusType: 0
@@ -59,8 +59,13 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   targetingMode: 2
-  modifiers: []
+  modifiers:
+  - type: 0
+    kind: 0
+    value: 0
+    info: 
+    description: "Jouer cette carte aura des effets irr\xE9versibles..."
   favoredCharacter: 10
   animationSpeed: 1
   startingCount: 0
-  tags: 07000000
+  tags: 0700000014000000

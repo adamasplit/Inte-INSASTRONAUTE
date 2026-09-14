@@ -119,6 +119,9 @@ public class CombatManager : MonoBehaviour
     private const float AuthoritativeCommandWatchdogSeconds = 8f;
     // Un seul message rejoue depasse rarement la seconde ; au-dela, la pompe est morte.
     private const float AuthoritativeReplayStallSeconds = 10f;
+    // Plus court que le watchdog ci-dessus : le joueur doit voir le voile avant que la pompe
+    // ne soit relancee de force, sans quoi il regarde un plateau fige sans explication.
+    private const float AuthoritativeReplayStallGraceSeconds = 1.5f;
     private float authoritativeMessageQueueHeartbeat;
     private readonly CombatantRegistry<Character> combatantRegistry =
         new CombatantRegistry<Character>();
@@ -1007,6 +1010,14 @@ public class CombatManager : MonoBehaviour
         if (effect.cardSelectionEffect == CardSelectionEffect.None)
             yield break;
 
+        // « Toutes les cartes » ne laisse rien à choisir : on n'envoie rien, et le serveur prend
+        // lui-même chaque carte éligible (CombatEngine.effectiveSelection). Refaire ici son
+        // filtrage à l'identique n'apportait qu'une occasion de diverger — une carte de plus ou
+        // de moins dans une pile, un filtre que ce client ne connaissait pas, et la carte partait
+        // en refus : c'est ce qui arrivait à Inépuisable et à Accélérateur de particules.
+        if (effect.value < 0)
+            yield break;
+
         System.Predicate<CardInstance> predicate = BuildCardSelectionFilter(effect.cardFilterTags);
 
         List<CardInstance> candidates = effect.cardSelectionSource switch
@@ -1122,6 +1133,19 @@ public class CombatManager : MonoBehaviour
                     case CardFilterTag.Molecule:
                         if (candidate.HasTag(CardTag.Molecule)) return true;
                         break;
+                    // Les trois derniers filtres du serveur (CardSelectionResolver.matches), qui
+                    // n'avaient pas de cas ici : une carte filtrée dessus ne trouvait aucun
+                    // candidat et partait avec une sélection vide.
+                    case CardFilterTag.Exhaust:
+                        if (candidate.HasTag(CardTag.Exhaust)) return true;
+                        break;
+                    case CardFilterTag.Created:
+                        if (candidate.HasTag(CardTag.Created)) return true;
+                        break;
+                    case CardFilterTag.Ethereal:
+                        if (candidate.HasTag(CardTag.Ethereal)) return true;
+                        break;
+                    // Exhausted n'accepte rien, ni ici ni sur le serveur.
                     default:
                         break;
                 }
@@ -1628,6 +1652,23 @@ public class CombatManager : MonoBehaviour
         Mode == CombatMode.Pvp && !combatEnded && !authoritativeStateApplied;
 
     /// <summary>
+    /// Vrai quand la pompe d'événements semble bloquée : un rejeu est en cours depuis plus de
+    /// <see cref="AuthoritativeReplayStallGraceSeconds"/> sans le moindre progrès.
+    /// </summary>
+    /// <remarks>
+    /// Ce blocage s'était vu jusqu'ici sans un mot : le tour restait actif, le bouton de fin de
+    /// tour restait éteint, et rien à l'écran ne disait au joueur que quelque chose clochait —
+    /// seul <see cref="PumpAuthoritativeMessageQueueWatchdog"/> finissait par le débloquer, en
+    /// silence, plusieurs secondes plus tard. Ce voile couvre exactement cette attente, en PvE
+    /// comme en duel : les deux passent par la même pompe et peuvent s'y coincer pareil.
+    /// </remarks>
+    public bool AuthoritativeReplayStalled =>
+        UsesAuthoritativeCombat
+        && !combatEnded
+        && authoritativeMessageQueueRunning
+        && Time.unscaledTime - authoritativeMessageQueueHeartbeat > AuthoritativeReplayStallGraceSeconds;
+
+    /// <summary>
     /// « Main 3 · Pioche 12 » pour un combattant dont on n'a pas le droit de voir les
     /// cartes ; null pour tout autre — un ennemi PvE n'a aucune pile enregistrée, et le
     /// joueur local montre sa vraie main.
@@ -2104,6 +2145,9 @@ public class CombatManager : MonoBehaviour
         bool burns = BurnsOnPlay(card);
         if (actorPiles != null)
         {
+            // Une carte jouée depuis la pioche (PERF) en part : sans ce retrait elle restait en
+            // pioche en plus d'arriver en défausse, jusqu'à la prochaine mise à jour d'état.
+            (actorPiles.Pile(PileKind.Draw) as List<CardInstance>)?.Remove(card);
             AuthoritativeCombatStateReducer.MoveCard(
                 actorPiles.Pile(PileKind.Hand) as List<CardInstance>,
                 actorPiles.Pile(burns ? PileKind.Exhaust : PileKind.Discard) as List<CardInstance>,
@@ -2111,6 +2155,13 @@ public class CombatManager : MonoBehaviour
         }
 
         CardView playedView = actor.isPlayer ? ui.GetView(card) : null;
+        // Une carte que le joueur n'a pas tirée de sa main — jouée depuis la pioche par PERF, par
+        // exemple — arrive souvent en rafale : une par coup d'une Multifrappe. Menée au rythme
+        // d'une carte jouée de la main, sans pause et la défausse détachée, chacune se posait au
+        // centre exactement là où la précédente venait de se poser, et trois cartes s'y lisaient
+        // comme une seule. Elles prennent donc le rythme des cartes ennemies, qui attendent leur
+        // tour.
+        bool playedFromHand = playedView != null;
         if (playedView == null)
         {
             Transform sourceView = ui.GetView(actor);
@@ -2134,14 +2185,14 @@ public class CombatManager : MonoBehaviour
         // The server resolves a whole AI turn chain in one round-trip and streams every event
         // back-to-back; without this pause enemy actions replay with no perceptible gap between
         // them, unlike the old local EnemyTurn coroutine which paused 0.2s before/after each move.
-        if (!actor.isPlayer)
+        if (!actor.isPlayer || !playedFromHand)
             yield return new WaitForSeconds(0.2f);
 
         yield return ui.AnimateCardToCenter(playedView);
         playedView.Flash();
             PlayCardEffectFeedback(actor, targets, card);
 
-        if (actor.isPlayer)
+        if (actor.isPlayer && playedFromHand)
         {
             // The card leaves the centre while its effects land, which is what the local combat
             // path does and says in as many words: effects begin exactly when the card starts
@@ -2201,7 +2252,12 @@ public class CombatManager : MonoBehaviour
             Debug.Log($"[STS-VFX] card={card?.displayName ?? "<null>"} effect={effect.type} sfx={effectName} targets={targets.Count}");
 
             List<Character> effectTargets;
-            if (effect.targetSelf)
+            // Vol, transfert et intercalage cochés « sur soi » s'inversent sans changer de cible :
+            // leur effet se voit toujours sur la cible de la carte (EffectResolver.targetsOf).
+            bool flipsWithoutRetargeting = effect.type == EffectType.StealBuff
+                || effect.type == EffectType.TransferDebuff
+                || effect.type == EffectType.CutInTurn;
+            if (effect.targetSelf && !flipsWithoutRetargeting)
             {
                 effectTargets = source != null ? new List<Character> { source } : new List<Character>();
             }
@@ -2527,11 +2583,53 @@ public class CombatManager : MonoBehaviour
         status.cardID = cardId;
         status.index = index;
 
-        status.InsertInto(target.statusEffects);
-        status.OnApply(target);
+        // Le serveur annonce ce que le statut vaut une fois posé (StatusApplied.value, « what
+        // the status holds after the application »), pas ce qu'on vient d'y ajouter. L'empiler
+        // encore ici avec InsertInto comptait la pose deux fois : une Force passée de 3 à 5
+        // s'affichait 8, une durée de 5 tours devenait 10, et ce jusqu'à l'état suivant. On
+        // réécrit donc l'instance que le serveur a fait grossir, là où il l'a fait grossir.
+        StatusEffect stacked = FindStackTarget(target, status);
+        if (stacked != null)
+        {
+            stacked.Value = value;
+            stacked.Duration = duration;
+        }
+        else
+        {
+            target.statusEffects.Add(status);
+            status.OnApply(target);
+        }
+        foreach (StatusEffect held in target.statusEffects)
+            held.OnOwnerStatusesChanged();
 
         ui?.RefreshUI(false);
         yield return FlashCombatantWhite(target);
+    }
+
+    /// <summary>
+    /// Les statuts que le serveur n'empile jamais : chaque pose en fait une instance à part
+    /// (StatusOperations.NEVER_MERGES).
+    /// </summary>
+    static readonly HashSet<StatusType> neverStacking = new()
+    {
+        StatusType.CardFollowUp, StatusType.AnyCardFollowUp, StatusType.FieldTurnFollowUp,
+        StatusType.Trap, StatusType.DamageReduction, StatusType.DelayedStun, StatusType.Link,
+        StatusType.PowerPassive
+    };
+
+    /// <summary>
+    /// L'instance dans laquelle le serveur a fondu cette pose, s'il en a fondu une : même type,
+    /// durée de même signe — la règle de StatusOperations.insert.
+    /// </summary>
+    static StatusEffect FindStackTarget(Character target, StatusEffect incoming)
+    {
+        if (neverStacking.Contains(incoming.statusType))
+            return null;
+
+        return target.statusEffects.FirstOrDefault(existing =>
+            existing != null
+            && existing.statusType == incoming.statusType
+            && Math.Sign(existing.Duration) == Math.Sign(incoming.Duration));
     }
 
     void ReplayStatusRemovedEvent(JToken combatEvent)
@@ -2540,14 +2638,25 @@ public class CombatManager : MonoBehaviour
         if (target == null)
             return;
 
-        List<StatusEffect> toRemove = ResolveMatchingStatuses(target, combatEvent);
-        foreach (StatusEffect status in toRemove)
+        // Un événement par instance touchée, et il dit ce qui en reste : une prise partielle —
+        // voler la moitié d'un buff, dépenser une charge de Provocation — laisse l'instance en
+        // place avec ce reste. On retirait tout, et toutes les instances du type à la fois,
+        // jusqu'à ce que l'état suivant les fasse réapparaître, animation d'apparition comprise.
+        StatusEffect status = ResolveMatchingStatuses(target, combatEvent).FirstOrDefault(s => s != null);
+        if (status != null)
         {
-            if (status == null)
-                continue;
-
-            status.OnExpire(target);
-            target.statusEffects.Remove(status);
+            int remainingValue = combatEvent.Value<int?>("remainingValue") ?? 0;
+            int remainingDuration = combatEvent.Value<int?>("remainingDuration") ?? 0;
+            if (remainingValue != 0 || remainingDuration != 0)
+            {
+                status.Value = remainingValue;
+                status.Duration = remainingDuration != 0 ? remainingDuration : status.Duration;
+            }
+            else
+            {
+                status.OnExpire(target);
+                target.statusEffects.Remove(status);
+            }
         }
 
         ui?.RefreshUI(false);
@@ -2828,7 +2937,13 @@ public class CombatManager : MonoBehaviour
                 ["index"] = stateValue.Index
             };
             if (!TryResolveStatusType(statusToken, out StatusType statusType))
+            {
+                // Un statut que ce client ne connaît pas disparaissait de l'écran sans un mot :
+                // le serveur le porte, le joueur ne le voit pas, et rien ne dit lequel des deux
+                // est en retard sur l'autre. Dit une fois par type, pour ne pas inonder.
+                WarnAboutUnknownStatus(stateValue.StatusType);
                 continue;
+            }
 
             // Une vue par statut envoyé, jamais deux fois la même. Certains statuts se portent
             // en plusieurs exemplaires identiques — un Étourdissement retardé garde son propre
@@ -2866,15 +2981,63 @@ public class CombatManager : MonoBehaviour
             status.Value = IsFollowUpStatusType(statusType)
                 ? Mathf.Max(0, Mathf.Max(1, stateValue.Value) - stateValue.Progress)
                 : stateValue.Value;
+            ApplyAuthoritativeFrame(status, statusType, stateValue.Removable, stateValue.ResistsEverything);
             retained.Add(status);
         }
 
         target.statusEffects.RemoveAll(status => status == null || !retained.Contains(status));
 
+        // Chaque statut apprend qui le porte une fois la liste complète : l'un peut dépendre
+        // d'un autre arrivé après lui dans la même synchronisation (Cristallisation lit
+        // Mégacristal).
+        foreach (StatusEffect status in target.statusEffects)
+            status.BindOwner(target);
+
         // Status effects in authoritative mode are just synced snapshots now — the old client-side
         // tick hooks (OnTurnEnd/OnDamageTaken/etc.) never run, so the only place feedback can come
         // from is detecting changes in this snapshot: appearing/disappearing/changing value.
         PlayStatusChangeFeedback(target, beforeStatuses);
+    }
+
+    /// <summary>Les statuts inconnus déjà signalés, pour n'en parler qu'une fois chacun.</summary>
+    static readonly HashSet<string> unknownStatusesWarnedAbout = new(StringComparer.Ordinal);
+
+    static void WarnAboutUnknownStatus(string statusType)
+    {
+        if (string.IsNullOrWhiteSpace(statusType) || !unknownStatusesWarnedAbout.Add(statusType))
+            return;
+
+        Debug.LogWarning($"[STS-COMBAT] Statut '{statusType}' inconnu de ce client : il ne sera "
+            + "pas affiché. Le serveur connaît un statut que cette version du jeu n'a pas.");
+    }
+
+    /// <summary>Le cadre qu'une espèce de statut porte d'elle-même, lu une fois par espèce.</summary>
+    static readonly Dictionary<StatusType, (bool framed, bool goldFrame)> defaultFrames = new();
+
+    /// <summary>
+    /// Dessine le cadre que le serveur dit, instance par instance.
+    /// </summary>
+    /// <remarks>
+    /// Un cadre ne venait jusqu'ici que du constructeur de la classe : un statut qu'une carte
+    /// venait d'encadrer (FrameBuffs, FrameDebuffs) ou qu'une relique rend inamovible gardait à
+    /// l'écran le cadre de son espèce, alors que le serveur, lui, refusait bien de le retirer.
+    /// Le serveur porte l'exception sur l'instance — <c>removable</c> et
+    /// <c>resistsEverything</c>, nuls quand l'espèce décide — et c'est elle qu'on lit.
+    /// Relu à chaque synchronisation, et remis au défaut de l'espèce quand l'exception disparaît.
+    /// </remarks>
+    static void ApplyAuthoritativeFrame(StatusEffect status, StatusType statusType, bool? removable, bool? resistsEverything)
+    {
+        if (!defaultFrames.TryGetValue(statusType, out var defaults))
+        {
+            StatusEffect pristine = StatusEffect.Factory(statusType, 0, 0);
+            defaults = pristine != null ? (pristine.framed, pristine.goldFrame) : (false, false);
+            defaultFrames[statusType] = defaults;
+        }
+
+        bool gold = resistsEverything ?? defaults.goldFrame;
+        bool framed = gold || (removable.HasValue ? !removable.Value : defaults.framed);
+        status.framed = framed;
+        status.goldFrame = gold;
     }
 
     static bool IsFollowUpStatusType(StatusType statusType)
@@ -4238,7 +4401,12 @@ public class CombatManager : MonoBehaviour
                 STSSceneLoader.Instance?.EndLoading();
                 yield break;
             }
-            RunManager.Instance.pendingReward = RewardGenerator.GenerateReward(result);
+            // Le serveur fait foi : une récompense tirée ici ignore tout ce qu'il sait (pool secret,
+            // raretés, cartes interdites) et finirait affichée dès que ses récompenses manquent.
+            // Seul le mode sans restriction, qui joue déjà hors ligne, en a encore l'usage.
+            RunManager.Instance.pendingReward = RunManager.Instance.unrestrictedMode
+                ? RewardGenerator.GenerateReward(result)
+                : null;
             STSRunAuditSystem.RecordNodeExited(RunManager.Instance, RunManager.Instance.currentNode, RunManager.Instance.currentNode, "STS_Reward", "combat_complete");
             STSSceneLoader.Instance.LoadScene("STS_Reward");
             STSSceneLoader.Instance?.EndLoading();

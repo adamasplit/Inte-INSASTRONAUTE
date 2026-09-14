@@ -1,0 +1,40 @@
+{
+  "id": "porte_a_porte",
+  "cardName": "Porte-à-porte",
+  "collectionCardId": "Colocathon",
+  "multiplayerExclusive": false,
+  "pveOnly": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 2,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Epic",
+  "targetingMode": "AnyPlayer",
+  "effects": [
+    {
+      "type": "CutInTurn",
+      "value": 0,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Aucun",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": []
+}

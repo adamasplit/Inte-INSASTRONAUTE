@@ -199,7 +199,7 @@ public static class EffectDescription
                     string usedValueText = FormatQuantityForDescription(usedValue, ctx);
                     if (effect.targetSelf)
                     {
-                        return $"{(stat.debuff?"Subissez":"Gagnez")} {(usedValue > 0 ? $"{usedValueText} de " : "")}{stat.Name}";
+                        return $"{(stat.debuff?"Subissez":"Gagnez")} {(usedValue > 0 ? $"{usedValueText} {Apostrophe(stat.Name)}" : "")}{stat.Name}";
                     }
                     else
                     {
@@ -207,7 +207,7 @@ public static class EffectDescription
                             {
                                 return $"Appliquez {stat.Name}";
                             }
-                        return $"Appliquez {usedValueText} d{(stat.Name[0]=='A' || stat.Name[0]=='E'|| stat.Name[0]=='I' || stat.Name[0]=='O' || stat.Name[0]=='U'||stat.Name[0]=='É' ? "'" : "e ")}{stat.Name}";
+                        return $"Appliquez {usedValueText} {Apostrophe(stat.Name)}{stat.Name}";
                     }
                 }
                 else if (StatusEffect.IsNamedStat(effect.statusType))
@@ -223,9 +223,9 @@ public static class EffectDescription
                         else
                         {
                             if (stat.Value >= 0)
-                                return (multipleTargets?"Toutes les cibles gagnent":"La cible gagne") + $" {valueText} de {stat.Name}";
+                                return (multipleTargets?"Toutes les cibles gagnent":"La cible gagne") + $" {valueText} {Apostrophe(stat.Name)}{stat.Name}";
                             else
-                                return (multipleTargets?"Toutes les cibles perdent":"La cible perd") + $" {valueText} de {stat.Name}";
+                                return (multipleTargets?"Toutes les cibles perdent":"La cible perd") + $" {valueText} {Apostrophe(stat.Name)}{stat.Name}";
                         }
                     }
                 else
@@ -310,13 +310,18 @@ public static class EffectDescription
             {
                 return $"Ajoutez {FormatQuantityForDescription(effect.value, ctx)} <color=green>{effect.cardID}</color> à votre main";
             }
+            // Coché « sur soi », ces deux effets s'inversent au lieu de viser le lanceur : le vol
+            // prend un debuff à la cible, le transfert lui donne un buff (le serveur les résout
+            // ainsi, voir StealBuffHandler et TransferDebuffHandler).
             case EffectType.StealBuff:
             {
-                return $"Volez "+dispel(effect.duration)+transform(effect.value, " tous les")+" buff"+(effect.value!=1?"s":"")+" de la cible"+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
+                string stolen = effect.targetSelf ? " debuff" : " buff";
+                return $"Volez "+dispel(effect.duration)+transform(effect.value, " tous les")+stolen+(effect.value!=1?"s":"")+" de la cible"+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
             }
             case EffectType.TransferDebuff:
             {
-                return $"Transférez "+dispel(effect.duration)+transform(effect.value, " tous vos")+" debuff"+(effect.value!=1?"s":"")+" de vous à la cible"+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
+                string given = effect.targetSelf ? " buff" : " debuff";
+                return $"Transférez "+dispel(effect.duration)+transform(effect.value, " tous vos")+given+(effect.value!=1?"s":"")+" de vous à la cible"+(effect.trueEffect?" (y compris ceux normalement indissipables)":"");
             }
             case EffectType.DispelBuff:
             {
@@ -604,5 +609,13 @@ public static class EffectDescription
         }
 
         return " " + string.Join(", ", parts);
+    }
+    private static string Apostrophe(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return string.Empty;
+
+        char firstChar = text[0];
+        return (firstChar == 'A' || firstChar == 'E' || firstChar == 'I' || firstChar == 'O' || firstChar == 'U' || firstChar == 'É') ? "d'" : "de ";
     }
 }

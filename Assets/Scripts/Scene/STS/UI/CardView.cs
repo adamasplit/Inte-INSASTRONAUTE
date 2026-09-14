@@ -11,6 +11,13 @@ public class CardView : MonoBehaviour,IPointerClickHandler
     public GameObject genericCardRoot;
     public Image collectionCardImage;
     public Image collectionCardDescBg;
+
+    [Header("Titre des cartes troll")]
+    // Remplace le titre habituel quand l'illustration est une image troll (collectionCardId
+    // en chemin). Son cache se colore comme collectionCardDescBg, d'apres la meme photo.
+    public GameObject trollTitleRoot;
+    public Image trollTitleBg;
+    public TextMeshProUGUI trollNameText;
     public Image cardBg;
     public GameObject specialCardOverlay;
     public Image whiteOverlay;
@@ -30,7 +37,32 @@ public class CardView : MonoBehaviour,IPointerClickHandler
     UIManager ui;
     Character currentTarget;
     bool isInitialized = false;
-    public bool isAnimating;
+    bool animating;
+    float animatingSince;
+
+    /// <summary>
+    /// Vrai pendant qu'une animation déplace la carte ; la disposition de la main la laisse alors
+    /// tranquille, et la resynchronisation de la main attend.
+    /// </summary>
+    /// <remarks>
+    /// Retient depuis quand il est levé : une coroutine interrompue avant de le baisser le
+    /// laissait levé pour toujours, et la main cessait de se disposer et de se resynchroniser —
+    /// des cartes pourtant en main restaient invisibles jusqu'à la carte jouée suivante.
+    /// </remarks>
+    public bool isAnimating
+    {
+        get => animating;
+        set
+        {
+            if (value && !animating)
+                animatingSince = Time.unscaledTime;
+            animating = value;
+        }
+    }
+
+    /// <summary>Depuis combien de secondes l'animation en cours dure, 0 quand il n'y en a pas.</summary>
+    public float AnimatingFor => animating ? Time.unscaledTime - animatingSince : 0f;
+
     public RectTransform rootRect;
     public bool selectionPreview;
     public GameObject selectionHighlight;
@@ -232,6 +264,10 @@ public class CardView : MonoBehaviour,IPointerClickHandler
     public void SetName(string name)
     {
         nameText.text = name;
+        // Le titre troll recopie le nom a l'affichage de l'illustration, qui arrive plus tard ;
+        // un renommage entre-temps ne doit pas le laisser sur l'ancien.
+        if (trollNameText != null)
+            trollNameText.text = name;
     }
     public void SetCost(int cost,bool xCost=false)
     {
@@ -658,6 +694,11 @@ public class CardView : MonoBehaviour,IPointerClickHandler
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
 
+            // Another coroutine can destroy this view mid-dissolve (e.g. a raced discard);
+            // touching rootRect afterwards throws instead of merely ending the animation.
+            if (this == null || rootRect == null)
+                yield break;
+
             float xScale = Mathf.Lerp(startScale.x, 0, t);
             float yScale = Mathf.Lerp(startScale.y, startScale.y * 2f, t);
             rootRect.localScale = new Vector3(xScale, yScale, startScale.z);
@@ -705,6 +746,7 @@ public class CardView : MonoBehaviour,IPointerClickHandler
             collectionCardRoot.SetActive(false);
         if (genericCardRoot != null)
             genericCardRoot.SetActive(true);
+        ShowTrollTitle(false);
         if (descriptionText != null)
             descriptionText.color = Color.white;
         if (nameText != null)
@@ -757,6 +799,9 @@ public class CardView : MonoBehaviour,IPointerClickHandler
         if (nameText != null)
             nameText.transform.localScale = Vector3.one * 0.6f;
 
+        bool trollArtwork = STSCollectionCardApi.IsImagePath(card.data.GetCollectionCardId());
+        ShowTrollTitle(trollArtwork);
+
         if (isTextless)
         {
             if (collectionCardDescBg != null)
@@ -801,7 +846,35 @@ public class CardView : MonoBehaviour,IPointerClickHandler
                 descriptionText.color = textColor;
             if (nameText != null)
                 nameText.color = textColor;
+
+            if (trollArtwork)
+            {
+                // Le titre troll a son propre cache : il prend la couleur de celui de la
+                // description, et son texte le meme contraste.
+                if (trollTitleBg != null)
+                    trollTitleBg.color = sample;
+                if (trollNameText != null)
+                    trollNameText.color = textColor;
+            }
         }
+    }
+
+    /// Bascule entre le titre habituel et celui des cartes troll.
+    ///
+    /// <para>Le titre habituel n'est masque que si le titre troll a bien un texte ou recopier le
+    /// nom : un prefab dont trollNameText n'est pas encore branche garde un titre lisible plutot
+    /// qu'une carte sans nom.</para>
+    private void ShowTrollTitle(bool show)
+    {
+        if (trollTitleRoot != null)
+            trollTitleRoot.SetActive(show);
+
+        bool trollTitleReady = show && trollNameText != null;
+        if (trollTitleReady && nameText != null)
+            trollNameText.text = nameText.text;
+
+        if (nameText != null)
+            nameText.enabled = !trollTitleReady;
     }
 
 

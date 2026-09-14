@@ -43,7 +43,10 @@ public static class EnemyDataDatabase
 
         Debug.Log("EnemyDataDatabase loading enemy catalog through React bridge first.");
 
-        string json = await ReactApiBridge.RequestStsCatalogEnemiesAsync();
+        string json = await STSRemoteCatalogCache.GetOrFetchAsync(
+            "enemies",
+            () => ReactApiBridge.RequestStsCatalogEnemiesAsync()
+        );
         if (string.IsNullOrWhiteSpace(json))
         {
             Debug.LogWarning("EnemyDataDatabase did not receive an enemy catalog payload from the React bridge; falling back to StreamingAssets.");

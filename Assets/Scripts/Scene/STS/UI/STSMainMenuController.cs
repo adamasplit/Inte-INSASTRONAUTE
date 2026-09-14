@@ -174,6 +174,7 @@ public class STSMainMenuController : MonoBehaviour
         RefreshLoadButtonState();
         RefreshDebugButtonState();
         RefreshPvpButtonState();
+        RefreshSecretsUnlockedIndicator();
         HideTutorialPrompt();
         EnsureTutorialButton();
         introSequence?.Play();
@@ -186,10 +187,48 @@ public class STSMainMenuController : MonoBehaviour
         RefreshLoadButtonState();
         RefreshDebugButtonState();
         RefreshPvpButtonState();
+        RefreshSecretsUnlockedIndicator();
         HideTutorialPrompt();
         EnsureTutorialButton();
         EnsureButtonGoldGlow(loadButton);
         EnsureButtonGoldGlow(pvpButton);
+    }
+
+    /// <summary>Active quand le serveur dit que le compte a ouvert le pool de cartes secrètes.</summary>
+    public GameObject secretsUnlockedIndicator;
+    int secretsIndicatorRefreshVersion;
+
+    /// <summary>
+    /// Allume le témoin du pool secret d'après l'état du compte côté serveur.
+    ///
+    /// <para>Interroge le serveur lui-même plutôt que de s'appuyer sur
+    /// <see cref="RefreshLoadButtonState"/> : celui-ci s'épargne l'appel dès qu'une run locale
+    /// existe, et le témoin resterait alors sur sa dernière valeur. Caché tant que la réponse
+    /// n'est pas arrivée, et en cas d'échec : il ne s'allume que sur un « oui » du serveur.</para>
+    /// </summary>
+    public async void RefreshSecretsUnlockedIndicator()
+    {
+        if (secretsUnlockedIndicator == null)
+            return;
+
+        int refreshVersion = ++secretsIndicatorRefreshVersion;
+        secretsUnlockedIndicator.SetActive(false);
+
+        bool unlocked = false;
+        try
+        {
+            STSApiCurrentRunResponse response = await STSApiClient.CurrentRunAsync();
+            unlocked = response != null && response.secretCardsUnlocked;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"Failed to read the secret card unlock state from API: {ex.Message}");
+        }
+
+        if (refreshVersion != secretsIndicatorRefreshVersion || secretsUnlockedIndicator == null)
+            return;
+
+        secretsUnlockedIndicator.SetActive(unlocked);
     }
 
     /// <summary>

@@ -140,7 +140,9 @@ public class EffectEntryDrawer : PropertyDrawer
                 true);
             y += tagsHeight + spacing;
         }
-        if ((EffectType)typeProp.enumValueIndex == EffectType.StealBuff || (EffectType)typeProp.enumValueIndex == EffectType.TransferDebuff || (EffectType)typeProp.enumValueIndex == EffectType.DispelBuff || (EffectType)typeProp.enumValueIndex == EffectType.DispelDebuff)
+        if ((EffectType)typeProp.enumValueIndex == EffectType.StealBuff || (EffectType)typeProp.enumValueIndex == EffectType.TransferDebuff 
+        || (EffectType)typeProp.enumValueIndex == EffectType.DispelBuff || (EffectType)typeProp.enumValueIndex == EffectType.DispelDebuff
+        || (EffectType)typeProp.enumValueIndex == EffectType.FrameBuffs || (EffectType)typeProp.enumValueIndex == EffectType.FrameDebuffs)
         {
             EditorGUI.PropertyField(
                 new Rect(position.x, y, position.width, lineHeight),
@@ -230,7 +232,9 @@ public class EffectEntryDrawer : PropertyDrawer
             height += lineHeight + spacing;
             height += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("cardFilterTags"), true) + spacing;
         }
-        if ((EffectType)typeProp.enumValueIndex == EffectType.StealBuff || (EffectType)typeProp.enumValueIndex == EffectType.TransferDebuff||(EffectType)typeProp.enumValueIndex == EffectType.DispelBuff || (EffectType)typeProp.enumValueIndex == EffectType.DispelDebuff)
+        if ((EffectType)typeProp.enumValueIndex == EffectType.StealBuff || (EffectType)typeProp.enumValueIndex == EffectType.TransferDebuff
+        ||(EffectType)typeProp.enumValueIndex == EffectType.DispelBuff || (EffectType)typeProp.enumValueIndex == EffectType.DispelDebuff
+        || (EffectType)typeProp.enumValueIndex == EffectType.FrameBuffs || (EffectType)typeProp.enumValueIndex == EffectType.FrameDebuffs)
         {
             height += 2 * (lineHeight + spacing); // trueEffect + duration
         }

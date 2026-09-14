@@ -1,5 +1,6 @@
 {
   "maxAct": 3,
+  "startingAct": 1,
   "baseHpScaling": 2.2,
   "actHpScaling": [
     0.0,

@@ -1,0 +1,42 @@
+{
+  "id": "brehan_p",
+  "cardName": "Retard de train",
+  "collectionCardId": "/iticbi1/cards/brehan.jpg",
+  "multiplayerExclusive": false,
+  "pveOnly": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 2,
+  "xCost": false,
+  "type": "Pouvoir",
+  "rarity": "Legendary",
+  "targetingMode": "Player",
+  "effects": [
+    {
+      "type": "Status",
+      "value": 1,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "TimeDistortion",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": [
+    "Secret"
+  ]
+}

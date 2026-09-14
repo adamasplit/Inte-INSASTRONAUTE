@@ -105,7 +105,10 @@ public static class PlayersDatabase
     static async Task<bool> TryLoadFromRemoteApiAsync()
     {
         Debug.Log("PlayersDatabase requesting character catalog (api/sts/catalog/characters) through React bridge.");
-        string json = await ReactApiBridge.RequestStsCatalogCharactersAsync();
+        string json = await STSRemoteCatalogCache.GetOrFetchAsync(
+            "characters",
+            () => ReactApiBridge.RequestStsCatalogCharactersAsync()
+        );
         if (string.IsNullOrWhiteSpace(json))
         {
             Debug.LogWarning("PlayersDatabase did not receive a character catalog payload from the React bridge.");

@@ -165,6 +165,13 @@ public class CardRewardProfile
             return false;
         }
 
+        // Le pool secret ne s'ouvre que sur l'état du compte que le serveur a donné. Sans ce
+        // filtre, toute récompense tirée localement pouvait offrir une carte secrète.
+        if (card.HasTag(CardTag.Secret) && (RunManager.Instance == null || !RunManager.Instance.secretCardsUnlocked))
+        {
+            return false;
+        }
+
         if (!allowCreatedCards && card.HasTag(CardTag.Created))
         {
             return false;

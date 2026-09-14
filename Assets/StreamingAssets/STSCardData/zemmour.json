@@ -1,0 +1,61 @@
+{
+  "id": "zemmour",
+  "cardName": "Retour au pays",
+  "collectionCardId": "/iticbi1/cards/zemmour.jpg",
+  "multiplayerExclusive": false,
+  "pveOnly": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 3,
+  "xCost": false,
+  "type": "Compétence",
+  "rarity": "Rare",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "DispelBuff",
+      "value": -1,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": true,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    },
+    {
+      "type": "DelayTurn",
+      "value": 150,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": true,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Default"
+    }
+  ],
+  "modifiers": [],
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": [
+    "Secret"
+  ]
+}

@@ -28,6 +28,8 @@ public class RunManagerUI : MonoBehaviour
     public Button saveAndReturnToMenuButton;
     public TextMeshProUGUI saveAndReturnToMenuButtonLabel;
     public GameObject unrestrictedRoot;
+    // Active quand le serveur dit que le compte a ouvert le pool de cartes secretes.
+    public GameObject secretsUnlockedIndicator;
 
     [Header("Run End Unlocks")]
     public RunEndUnlockPanel runEndUnlockPanel;
@@ -116,6 +118,14 @@ public class RunManagerUI : MonoBehaviour
         if (canvas.worldCamera == null)
         {
             canvas.worldCamera = Camera.main;
+        }
+
+        // Temoin du pool secret : reflete ce que le serveur dit du compte, pour verifier sans
+        // deviner. Se met a jour a chaque etat de run recu, donc au plus tard apres le combat.
+        if (secretsUnlockedIndicator != null
+            && secretsUnlockedIndicator.activeSelf != RunManager.Instance.secretCardsUnlocked)
+        {
+            secretsUnlockedIndicator.SetActive(RunManager.Instance.secretCardsUnlocked);
         }
 
         SyncUnrestrictedState();

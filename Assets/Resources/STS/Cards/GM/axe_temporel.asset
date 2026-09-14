@@ -25,24 +25,7 @@ MonoBehaviour:
   rarity: 4
   effects:
   - type: 3
-    value: -3
-    targetSelf: 1
-    targetOthers: 0
-    statusType: 67
-    duration: 0
-    description: 
-    cardID: 
-    index: 0
-    conditional: 0
-    conditionType: 23
-    conditionValue: 1
-    trueEffect: 0
-    cardSelectionSource: 0
-    cardFilterTags: 
-    cardSelectionEffect: 0
-    animationType: 0
-  - type: 3
-    value: -1
+    value: -2
     targetSelf: 1
     targetOthers: 0
     statusType: 24
@@ -63,11 +46,11 @@ MonoBehaviour:
     targetSelf: 1
     targetOthers: 0
     statusType: 77
-    duration: 3
+    duration: 5
     description: 
     cardID: 
     index: 0
-    conditional: 1
+    conditional: 0
     conditionType: 23
     conditionValue: 5
     trueEffect: 0

@@ -1,0 +1,97 @@
+{
+  "id": "dog",
+  "cardName": "goofy ahh attack",
+  "collectionCardId": "/iticbi1/cards/dog.jpg",
+  "multiplayerExclusive": false,
+  "pveOnly": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 0,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Epic",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 2,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Thunder"
+    },
+    {
+      "type": "LoseHP",
+      "value": 1,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Thunder"
+    }
+  ],
+  "modifiers": [
+    {
+      "type": "ReplayCount",
+      "kind": "BuffOnSelf",
+      "value": 2,
+      "info": "",
+      "description": "Se rejoue un nombre de fois inconnu."
+    },
+    {
+      "type": "ReplayCount",
+      "kind": "EnergyGained",
+      "value": 2,
+      "info": "",
+      "description": " "
+    },
+    {
+      "type": "ReplayCount",
+      "kind": "ArmorOnSelf",
+      "value": 2,
+      "info": "",
+      "description": " "
+    },
+    {
+      "type": "ReplayCount",
+      "kind": "ArmorOnSelf",
+      "value": 2,
+      "info": "",
+      "description": " "
+    },
+    {
+      "type": "ReplayCount",
+      "kind": "DebuffOnTarget",
+      "value": 2,
+      "info": "",
+      "description": " "
+    }
+  ],
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": [
+    "Secret"
+  ]
+}

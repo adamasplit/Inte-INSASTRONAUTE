@@ -19,5 +19,9 @@ public enum CardTag
     Norm,
     Developer,
     Automatic,
-    Unplayable
+    Unplayable,
+    // Ces deux-la restent en fin d'enum : CardRewardProfile serialise requiredTags/excludedTags
+    // par ordinal, et inserer ailleurs redefinirait en silence les filtres deja poses sur les assets.
+    SecretUnlock, // Jouer une carte qui le porte ouvre le pool secret, definitivement et pour tout le compte.
+    Secret // Ne peut tomber en recompense qu'une fois le pool secret ouvert.
 }

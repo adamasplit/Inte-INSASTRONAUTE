@@ -10,7 +10,17 @@ public readonly struct AuthoritativeStatusState
     public int Index { get; }
     public int Progress { get; }
 
-    public AuthoritativeStatusState(string statusType, int value, int duration, string cardId, int index, int progress)
+    /// <summary>
+    /// Ce que le serveur dit de cette instance-là, par exception à son espèce : false quand
+    /// aucune carte ordinaire ne peut la retirer (encadrée), null quand l'espèce décide.
+    /// </summary>
+    public bool? Removable { get; }
+
+    /// <summary>true quand rien ne peut la retirer (cadre d'or), null quand l'espèce décide.</summary>
+    public bool? ResistsEverything { get; }
+
+    public AuthoritativeStatusState(string statusType, int value, int duration, string cardId, int index, int progress,
+        bool? removable = null, bool? resistsEverything = null)
     {
         StatusType = statusType;
         Value = value;
@@ -18,6 +28,8 @@ public readonly struct AuthoritativeStatusState
         CardId = cardId;
         Index = index;
         Progress = progress;
+        Removable = removable;
+        ResistsEverything = resistsEverything;
     }
 }
 
@@ -74,7 +86,9 @@ public static class AuthoritativeCombatStateReducer
                 token.Value<int?>("duration") ?? -1,
                 token.Value<string>("cardId") ?? string.Empty,
                 token.Value<int?>("index") ?? 0,
-                token.Value<int?>("progress") ?? 0));
+                token.Value<int?>("progress") ?? 0,
+                token.Value<bool?>("removable"),
+                token.Value<bool?>("resistsEverything")));
         }
         return result;
     }

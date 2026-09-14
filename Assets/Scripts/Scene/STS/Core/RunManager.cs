@@ -29,6 +29,8 @@ public class RunManager : MonoBehaviour
     public int? enteredNodeId;
     public bool RegenerateMap = false;
     public int act=0;
+    // Recopie du drapeau serveur : le compte a-t-il ouvert le pool de cartes secretes.
+    public bool secretCardsUnlocked;
     public int restCharges=3;
     public int maxRestCharges=3;
     public RunManagerUI ui;
@@ -432,6 +434,7 @@ public class RunManager : MonoBehaviour
         }
 
         act = remoteState.act;
+        secretCardsUnlocked = remoteState.secretCardsUnlocked;
         currentFloor = remoteState.currentFloor;
         gold = remoteState.gold;
         player = new Player(remoteState.selectedCharacter, Mathf.Max(1, remoteState.playerMaxHp))
@@ -475,6 +478,7 @@ public class RunManager : MonoBehaviour
         }
 
         act = remoteState.act;
+        secretCardsUnlocked = remoteState.secretCardsUnlocked;
         currentFloor = remoteState.currentFloor;
         gold = remoteState.gold;
         player = new Player(remoteState.selectedCharacter, Mathf.Max(1, remoteState.playerMaxHp))

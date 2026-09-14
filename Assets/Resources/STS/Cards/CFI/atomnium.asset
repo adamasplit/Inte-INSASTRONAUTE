@@ -30,8 +30,8 @@ MonoBehaviour:
     targetOthers: 0
     statusType: 0
     duration: 0
-    description: "Epuisez 1 Atome de votre main pour infliger 16 d\xE9g\xE2ts \xE0
-      la cible."
+    description: "Epuisez 1 Atome de votre main pour infliger 19 d\xE9g\xE2ts \xE0
+      la cible"
     cardID: 
     index: 0
     conditional: 0
@@ -63,7 +63,7 @@ MonoBehaviour:
   modifiers:
   - type: 0
     kind: 20
-    value: 16
+    value: 19
     info: 
     description: ' '
   favoredCharacter: 4

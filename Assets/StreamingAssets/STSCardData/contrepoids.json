@@ -33,7 +33,7 @@
     },
     {
       "type": "Damage",
-      "value": 9,
+      "value": 13,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",

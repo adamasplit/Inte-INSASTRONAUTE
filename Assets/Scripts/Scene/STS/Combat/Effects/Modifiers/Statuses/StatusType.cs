@@ -122,5 +122,19 @@ public enum StatusType
     Adrenaline,
     Miracle,
     Analyse,
-    Compilation
+    Compilation,
+    Chaotic,
+
+    // Gardés à la fin : les ScriptableObjects sérialisent cette valeur par index. Ces deux
+    // stades ne se posent jamais depuis une carte ; le serveur les fait naître de Sadism et
+    // les envoie sous ces noms, que le client doit connaître pour les afficher.
+    SadismII,
+    SadismIII,
+
+    // Ajoutés en dernier, pour la même raison : l'index est ce qui est sérialisé.
+    Astra,
+    Sol,
+    Luna,
+    Critical,
+    TimeDistortion
 }

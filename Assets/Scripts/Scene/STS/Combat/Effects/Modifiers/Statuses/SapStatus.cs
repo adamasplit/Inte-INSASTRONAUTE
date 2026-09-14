@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 public class SapStatus : StatusEffect
 {
     public SapStatus()
@@ -9,12 +11,13 @@ public class SapStatus : StatusEffect
         generic = true;
         framed = true;
     }
-    public override void OnTurnStart(Character target)
+    // Chaque Sape est une instance à part, comme un Piège : deux Sapes mordent deux fois.
+    public override void InsertInto(List<StatusEffect> list)
     {
-        target.TakeDamage(1);
+        list.Add(this);
     }
     public override string Desc(bool isPlayer)
     {
-        return $"Inflige 1 dégât au début de chaque tour.";
+        return $"Inflige 1 dégât chaque fois qu'un personnage joue une carte.";
     }
 }

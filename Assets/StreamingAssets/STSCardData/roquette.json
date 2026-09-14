@@ -14,7 +14,7 @@
   "effects": [
     {
       "type": "Damage",
-      "value": 3,
+      "value": 10,
       "targetSelf": false,
       "targetOthers": false,
       "statusType": "Strength",
@@ -33,7 +33,7 @@
     },
     {
       "type": "Heal",
-      "value": 1,
+      "value": 2,
       "targetSelf": true,
       "targetOthers": false,
       "statusType": "Strength",

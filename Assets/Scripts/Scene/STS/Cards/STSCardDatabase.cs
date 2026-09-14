@@ -197,7 +197,10 @@ public static class STSCardDatabase
     static async Task<bool> TryLoadFromRemoteApiAsync()
     {
         Debug.Log("STSCardDatabase requesting card catalog (api/sts/catalog/cards) through React bridge.");
-        string json = await ReactApiBridge.RequestStsCatalogCardsAsync();
+        string json = await STSRemoteCatalogCache.GetOrFetchAsync(
+            "cards",
+            () => ReactApiBridge.RequestStsCatalogCardsAsync()
+        );
         if (string.IsNullOrWhiteSpace(json))
         {
             Debug.LogWarning("STSCardDatabase did not receive a card catalog payload from the React bridge.");
@@ -632,7 +635,11 @@ public static class STSCardDatabase
             return null;
         }
 
-        List<STSCardData> randomCards = allCards.FindAll(c => c != null && c.favoredCharacter != SelectableCharacter.Starting);
+        // Une carte secrète n'arrive au hasard que si le serveur dit le pool ouvert pour ce compte.
+        bool secretsUnlocked = RunManager.Instance != null && RunManager.Instance.secretCardsUnlocked;
+        List<STSCardData> randomCards = allCards.FindAll(c => c != null
+            && c.favoredCharacter != SelectableCharacter.Starting
+            && (secretsUnlocked || !c.HasTag(CardTag.Secret)));
         if (randomCards.Count == 0)
             return null;
 

@@ -32,7 +32,11 @@ public class TurnSystem : MonoBehaviour
         // Ici pour la même raison que la ligne au-dessus : avant les sorties anticipées, dont
         // celle qui rend la main dès qu'un combat est autoritatif — c'est-à-dire dans tous les
         // duels, qui sont justement les seuls à pouvoir attendre le serveur.
-        ui?.DisplayWaitingForServer(combat.IsWaitingForServer);
+        //
+        // AuthoritativeReplayStalled couvre en plus le PvE : la pompe d'événements peut s'y
+        // coincer tout autant, et le joueur mérite le même voile plutôt qu'un plateau figé
+        // sans explication.
+        ui?.DisplayWaitingForServer(combat.IsWaitingForServer || combat.AuthoritativeReplayStalled);
 
         if (combat.combatEnded || !combat.allowTurn)
             return;
@@ -683,16 +687,22 @@ public class TurnSystem : MonoBehaviour
         }
         else
         {
+            // « Placez le prochain tour de la cible juste après le vôtre » : chaque cible passe
+            // juste derrière le tour en cours du lanceur, devant tous les autres, et les cibles
+            // gardent entre elles l'ordre où elles sont nommées — comme le serveur
+            // (CutInTurnHandler). L'ancien calcul mesurait l'écart entre le lanceur et lui-même,
+            // et ne faisait que reculer la cible d'un dixième.
+            float anchorTime = sim.Where(t => t.character == source).Select(t => t.time).DefaultIfEmpty(float.NaN).Min();
+            int place = 1;
             foreach (var target in targets)
             {
-                if (!CanMoveTurn(target, true, true))
+                if (float.IsNaN(anchorTime) || target == source || !CanMoveTurn(target, true, true)
+                    || !sim.Any(t => t.character == target))
                 {
                     continue;
                 }
                 float currentTime = sim.Where(t => t.character == target).Min(t => t.time);
-                float nextTime = sim.Where(t => t.character != target).Min(t => t.time);
-                float earliestTargetTime = sim.Where(t => t.character == source).Min(t => t.time);
-                sim=AdvanceAllTurns(sim, target, nextTime - earliestTargetTime - 0.1f);
+                sim=AdvanceAllTurns(sim, target, currentTime - (anchorTime + 0.1f * place++));
             }
         }
         return sim;
@@ -724,16 +734,19 @@ public class TurnSystem : MonoBehaviour
         }
         else
         {
+            // Même règle que l'aperçu ci-dessus et que le serveur : chaque cible juste derrière
+            // le tour en cours du lanceur.
+            float anchorTime = timeline.Where(t => t.character == source).Select(t => t.time).DefaultIfEmpty(float.NaN).Min();
+            int place = 1;
             foreach (var target in targets)
             {
-                if (!CanMoveTurn(target, true, true))
+                if (float.IsNaN(anchorTime) || target == source || !CanMoveTurn(target, true, true)
+                    || !timeline.Any(t => t.character == target))
                 {
                     continue;
                 }
                 float currentTime = timeline.Where(t => t.character == target).Min(t => t.time);
-                float nextTime = timeline.Where(t => t.character != target).Min(t => t.time);
-                float earliestTargetTime = timeline.Where(t => t.character == source).Min(t => t.time);
-                ApplyAdvanceAllTurns(target, nextTime - earliestTargetTime - 0.1f);
+                ApplyAdvanceAllTurns(target, currentTime - (anchorTime + 0.1f * place++));
             }
         }
     }

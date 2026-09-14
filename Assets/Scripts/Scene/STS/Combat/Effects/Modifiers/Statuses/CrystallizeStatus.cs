@@ -12,13 +12,27 @@ public class CrystallizeStatus : StatusEffect
         debuff=true;
         generic=true;
     }
+
+    /// <summary>
+    /// Mégacristal demande un coup de moins : le compteur s'arrête alors à 2, comme côté
+    /// serveur (StatusReaction.crystallizeThreshold). La valeur dorée de l'icône suit.
+    /// </summary>
+    public override void OnOwnerStatusesChanged()
+    {
+        maxValue = owner != null && owner.statusEffects.Exists(s => s is MegacristalStatus) ? 2 : 3;
+    }
+
     public override string Desc(bool isPlayer)
     {
-        if (Value==maxValue)
+        OnOwnerStatusesChanged();
+        // Le coup qui remplit le compteur est celui qui déclenche l'attaque supplémentaire :
+        // arrivé au maximum, il reste un coup, pas zéro.
+        int hitsLeft = Mathf.Max(1, maxValue - Value + 1);
+        if (hitsLeft == 1)
         {
-            return $"La prochaine fois que la cible subira des dégâts, elle subira une attaque supplémentaire et perdra 1 effet positif.";
+            return $"La prochaine fois que la cible subira des dégâts d'Attaque, elle subira une attaque supplémentaire et perdra 1 effet positif.";
         }
-        return $"Une fois que la cible aura subi des dégâts d'Attaque {maxValue-Value} fois, elle subira une attaque supplémentaire et perdra 1 effet positif.";
+        return $"Une fois que la cible aura subi des dégâts d'Attaque {hitsLeft} fois, elle subira une attaque supplémentaire et perdra 1 effet positif.";
     }
     public override void OnTargetedByCard(Character source, Character target, CardInstance card)
     {

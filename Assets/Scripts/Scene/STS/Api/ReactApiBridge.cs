@@ -227,6 +227,11 @@ public class ReactApiBridge : MonoBehaviour
         );
     }
 
+    public static Task<string> RequestStsCatalogVersionAsync(int timeoutMs = 5000)
+    {
+        return RequestAsync("sts.catalog.version", null, timeoutMs);
+    }
+
     public static Task<string> RequestStsCatalogCharactersAsync(int timeoutMs = 5000)
     {
         return RequestWithAliasesAsync(

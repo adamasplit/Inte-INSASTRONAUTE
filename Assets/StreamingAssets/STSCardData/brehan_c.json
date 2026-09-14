@@ -1,0 +1,95 @@
+{
+  "id": "brehan_c",
+  "cardName": "Anti-antivirus",
+  "collectionCardId": "/iticbi1/cards/brehan.jpg",
+  "multiplayerExclusive": false,
+  "pveOnly": false,
+  "characterLevel": 0,
+  "iconId": null,
+  "cost": 1,
+  "xCost": false,
+  "type": "Attaque",
+  "rarity": "Legendary",
+  "targetingMode": "Enemy",
+  "effects": [
+    {
+      "type": "Damage",
+      "value": 4,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Strength",
+      "duration": 0,
+      "description": "",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Light"
+    },
+    {
+      "type": "DispelSpecificStatus",
+      "value": 1,
+      "targetSelf": false,
+      "targetOthers": false,
+      "statusType": "Artifact",
+      "duration": 0,
+      "description": "Dissipez Artefact sur vous et la cible",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Light"
+    },
+    {
+      "type": "DispelSpecificStatus",
+      "value": 1,
+      "targetSelf": true,
+      "targetOthers": false,
+      "statusType": "Artifact",
+      "duration": 0,
+      "description": " ",
+      "cardID": "",
+      "conditional": false,
+      "conditionType": "KillingBlow",
+      "conditionValue": "",
+      "trueEffect": false,
+      "cardSelectionSource": "Hand",
+      "index": 0,
+      "cardFilterTags": [],
+      "cardSelectionEffect": "None",
+      "animationType": "Light"
+    }
+  ],
+  "modifiers": [
+    {
+      "type": "Damage",
+      "kind": "SpecificStatusOnTarget",
+      "value": 8,
+      "info": "Artifact",
+      "description": "Inflige 8 dégâts en plus par effet dissipé"
+    },
+    {
+      "type": "Damage",
+      "kind": "SpecificStatusOnSelf",
+      "value": 8,
+      "info": "Artifact",
+      "description": " "
+    }
+  ],
+  "favoredCharacter": "Impossible",
+  "animationSpeed": 1.0,
+  "startingCount": 0,
+  "tags": [
+    "Secret"
+  ]
+}

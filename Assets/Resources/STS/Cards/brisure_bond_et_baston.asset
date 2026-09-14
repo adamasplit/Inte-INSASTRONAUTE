@@ -25,7 +25,7 @@ MonoBehaviour:
   rarity: 3
   effects:
   - type: 0
-    value: 5
+    value: 6
     targetSelf: 0
     targetOthers: 0
     statusType: 0
@@ -42,7 +42,7 @@ MonoBehaviour:
     cardSelectionEffect: 0
     animationType: 0
   - type: 5
-    value: 15
+    value: 55
     targetSelf: 1
     targetOthers: 0
     statusType: 0

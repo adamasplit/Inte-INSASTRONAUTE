@@ -11,6 +11,6 @@ public class PavillonStatus : StatusEffect
     }
     public override string Desc(bool isPlayer)
     {
-        return "Quand vous volez ou transférez un effet encadré, gagnez 1 de Force.";
+        return "Quand vous volez, transférez ou dissipez un effet encadré avec une carte, gagnez 1 de Force.";
     }
 }

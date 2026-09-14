@@ -198,17 +198,122 @@ public static class STSCollectionCardApi
         return false;
     }
 
+    private static readonly string[] ImageExtensions =
+        { ".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp" };
+
+    /// Un collectionCardId qui designe une illustration plutot qu'une carte de collection.
+    ///
+    /// <para>Les cartes secretes empruntent les images troll du theme iticbi1, qui sont des
+    /// fichiers statiques du site et non des cartes de la collection : elles n'ont ni entree
+    /// d'API, ni categorie, ni proprietaire. Leur donner le chemin de l'image comme
+    /// collectionCardId evite d'ajouter un second champ que chaque couche devrait porter, du
+    /// ScriptableObject jusqu'au JSON du serveur.</para>
+    ///
+    /// <para>La distinction se lit sur la forme et non sur un drapeau : un nom de carte de
+    /// collection est un nom propre (« Adam »), jamais un chemin. On exige donc un separateur
+    /// ou une extension d'image, ce qu'aucun nom n'a.</para>
+    public static bool IsImagePath(string cardId)
+    {
+        if (string.IsNullOrWhiteSpace(cardId))
+            return false;
+
+        string trimmed = cardId.Trim();
+        if (trimmed.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+            || trimmed.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
+            || trimmed.StartsWith("data:", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (trimmed.IndexOf('/') >= 0 || trimmed.IndexOf('\\') >= 0)
+            return true;
+
+        foreach (string extension in ImageExtensions)
+        {
+            if (trimmed.EndsWith(extension, StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+
+        return false;
+    }
+
+    /// L'entree synthetique d'une illustration referencee par son chemin.
+    ///
+    /// <para>Elle traverse ensuite exactement le meme chargement qu'une vraie carte, ce qui lui
+    /// donne le cache, la deduplication des requetes et le repli Resources sans les reecrire.</para>
+    private static CollectionCardApiEntry ImagePathEntry(string cardId)
+    {
+        return new CollectionCardApiEntry
+        {
+            // Le nom sert de cle de repli Resources : « /iticbi1/cards/sans.jpg » cherchera
+            // « Sprites/Cartes/sans », ce qui est le seul nom local que cette image puisse avoir.
+            name = FileStem(cardId),
+            imageUrl = ResolveImageUrl(cardId),
+        };
+    }
+
+    private static string FileStem(string path)
+    {
+        string trimmed = path.Trim();
+        int lastSlash = trimmed.LastIndexOfAny(new[] { '/', '\\' });
+        string file = lastSlash >= 0 ? trimmed.Substring(lastSlash + 1) : trimmed;
+        int dot = file.LastIndexOf('.');
+        return dot > 0 ? file.Substring(0, dot) : file;
+    }
+
+    /// Rend le chemin chargeable par UnityWebRequest.
+    ///
+    /// <para>Un chemin absolu du site (« /iticbi1/cards/sans.jpg ») ne veut rien dire hors du
+    /// navigateur : hors WebGL il n'y a pas d'origine a laquelle le rattacher. On le raccroche
+    /// donc a l'URL de la page quand il y en a une, et on le laisse tel quel sinon — l'editeur
+    /// tombera alors sur le repli Resources plutot que sur une requete impossible.</para>
+    private static string ResolveImageUrl(string cardId)
+    {
+        string trimmed = cardId.Trim();
+        if (trimmed.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+            || trimmed.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
+            || trimmed.StartsWith("data:", StringComparison.OrdinalIgnoreCase))
+        {
+            return trimmed;
+        }
+
+        string pageUrl = Application.absoluteURL;
+        if (string.IsNullOrWhiteSpace(pageUrl))
+            return trimmed;
+
+        try
+        {
+            return new Uri(new Uri(pageUrl), trimmed).AbsoluteUri;
+        }
+        catch (Exception)
+        {
+            return trimmed;
+        }
+    }
+
     public static bool TryGetCard(string cardId, out CollectionCardApiEntry card)
     {
         card = null;
         if (string.IsNullOrWhiteSpace(cardId))
             return false;
 
+        if (IsImagePath(cardId))
+        {
+            card = ImagePathEntry(cardId);
+            return true;
+        }
+
         return cardsByName.TryGetValue(cardId, out card);
     }
 
     public static bool IsTextless(string cardId)
     {
+        // Une image troll est une photo brute : elle ne porte pas le texte de la carte, mais elle
+        // n'a pas non plus de variante « sans texte » a preferer. Elle se comporte donc comme une
+        // carte de collection qui n'a qu'une illustration, description sur fond opaque comprise.
+        if (IsImagePath(cardId))
+            return false;
+
         return TryGetCard(cardId, out CollectionCardApiEntry card) && !string.IsNullOrWhiteSpace(card.textlessImageUrl);
     }
 
@@ -216,6 +321,9 @@ public static class STSCollectionCardApi
     {
         if (string.IsNullOrWhiteSpace(cardId))
             return null;
+
+        if (IsImagePath(cardId))
+            return ImagePathEntry(cardId);
 
         await EnsureLoadedAsync();
         if (cardsByName.TryGetValue(cardId, out var card))
@@ -237,6 +345,11 @@ public static class STSCollectionCardApi
     {
         if (string.IsNullOrWhiteSpace(cardId))
             return null;
+
+        // Une illustration se charge sans le catalogue : elle n'y figure pas, et l'attendre
+        // ferait dependre les cartes secretes d'une API qui n'a rien a en dire.
+        if (IsImagePath(cardId))
+            return await LoadSpriteAsync(cardId, ImagePathEntry(cardId));
 
         await EnsureLoadedAsync();
         if (cardsByName.TryGetValue(cardId, out var card))

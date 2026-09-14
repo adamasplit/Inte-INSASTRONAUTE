@@ -19,7 +19,7 @@
       "targetOthers": false,
       "statusType": "Strength",
       "duration": 0,
-      "description": "Epuisez 1 Atome de votre main pour infliger 16 dégâts à la cible.",
+      "description": "Epuisez 1 Atome de votre main pour infliger 19 dégâts à la cible",
       "cardID": "",
       "conditional": false,
       "conditionType": "KillingBlow",
@@ -57,7 +57,7 @@
     {
       "type": "Damage",
       "kind": "ActionExhausted",
-      "value": 16,
+      "value": 19,
       "info": "",
       "description": " "
     }
